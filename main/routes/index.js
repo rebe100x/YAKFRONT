@@ -4,18 +4,17 @@
  */
 
 exports.index = function(req, res){
-  res.render('index', { title: 'Home' })
-};
-
-exports.map = function(req, res){
-  res.render('map', { title: 'Yakwala - La carte' })
-};
-
-exports.actu = function(req, res){
-  res.render('actu', { title: 'Yakwala - Le fils info' })
+  res.render('index',{title:'Actu'});
 };
 
 exports.partials = function (req, res) {
   var name = req.params.name;
-  res.render('partials/' + name,{ title: 'infos' });
+  res.render('partials/' + name);
+};
+
+exports.actu_map = function(req, res){
+  res.render('actu/map',{title:'La carte'});
+};
+exports.actu_fils = function(req, res){
+  res.render('actu/fils',{title:'Le fils actu'});
 };

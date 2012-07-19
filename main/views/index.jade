@@ -1,2 +1,32 @@
-h1= title
-p Welcome to #{title}
+extends layout
+
+block body
+	div.navbar.navbar-fixed-top
+		div.navbar-inner
+			.container-fluid
+				a.btn.btn-navbar(data-toggle="collapse",data-target=".nav-collapse") 
+					span.icon-bar
+					span.icon-bar
+					span.icon-bar
+					a.brand(href="#") #{title}
+					
+					div.btn-group.pull-right
+						span 
+							a.btn(href="/user/login") Login
+					div.nav-collapse
+						ul.nav
+							li.active
+								a(href="/map") La carte
+							li
+								a(href="/actu") Le fils d'info
+							li
+								a(href="/actu/new") Poster une info
+							li
+								a(href="/user/login") Login
+							li
+								a(href="/user/logout") Logout
+							li
+								a(href="/api/info") L'info brute	
+	div(ng-view)						
+	
+		

@@ -7,22 +7,23 @@ mixin menu(active)
 					span.icon-bar
 					span.icon-bar
 					a.brand(href="#") #{title}
+					
 					div.btn-group.pull-right
-						a.btn.dropdown-toggle(href="#",data-toggle="dropdown")
-							i.icon-user 
-							span &nbsp;Username&nbsp;
-							span.caret
-						ul.dropdown-menu
-							li
-								a(href="#") Profile
-							li.divider
-							li
-								a(href="#") Sign Out
+						span 
+							a.btn(href="/user/login") Login
 					div.nav-collapse
 						ul.nav
 							li.active
-								a(href="/map") La carte
+								a(href="/actu/map") La carte
 							li
-								a(href="/actu") Le fils d'info
+								a(href="/actu/fils") Le fils d'info
 							li
-								a(href="/api/info") L'info brute
+								a(href="/actu/new") Poster une info
+							li
+								a(href="/user/login") Login
+							li
+								a(href="/user/logout") Logout
+							li
+								a(href="/api/info") L'info brute	
+
+			
