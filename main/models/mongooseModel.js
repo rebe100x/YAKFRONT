@@ -90,12 +90,15 @@ var Zone = new Schema({
 
 Zone.statics.findNear = function (x,y,callback) {
 	var center = [parseFloat(x), parseFloat(y)];
-	var radius = 1000;
+	z = 3;
 
 	  //return this.find( {limit:1, "location" : { "$within" : { "$center" : [center, radius] }}},callback );
-	  return this.find({"location" : {  "$near" : [parseFloat(x),parseFloat(y)] }},[],{limit:1},callback );
+	  return this.find({"location" : {  "$near" : [parseFloat(x),parseFloat(y)], $maxDistance : z }},[],{limit:1},callback );
   //return this.find( { "location" : { "$within" : {,"$box": [[x-1, y-1], [x+1, y+1]]}}},callback );
 }
+
+
+
 Zone.statics.findAll = function (callback) {
   return this.find({}, callback);
 }

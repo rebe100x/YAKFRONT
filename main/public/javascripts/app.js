@@ -28,8 +28,16 @@ angular.module('myApp', ['myApp.filters', 'myApp.services', 'myApp.directives','
         templateUrl: '/actu/map',
         controller: MapCtrl
       }).
+	  when('/newActu', {
+        templateUrl: '/actu/new',
+        controller: NewActuCtrl
+      }).
 	  when('/actu', {
         templateUrl: '/actu/fils',
+        controller: FilsCtrl
+      }).
+	  when('/user', {
+        templateUrl: '/user/login',
         controller: FilsCtrl
       }).
       otherwise({

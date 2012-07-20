@@ -67,6 +67,13 @@ function MapCtrl($scope, $http, $location, $routeParams) {
     });*/ 
 }
 
+function NewActuCtrl($scope, $http, $location, $routeParams) {
+ /*$http.get('/api/infos').
+    success(function(data, status, headers, config) {
+      $scope.infos = data.info;
+    });*/ 
+}
+
 
 function FilsCtrl($scope, $http, $location, $routeParams) {
  $http.get('/api/infos').

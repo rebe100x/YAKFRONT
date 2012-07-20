@@ -19,6 +19,20 @@ var data = {
 
 // GET
 
+exports.user = function (req, res) {
+	var mongoose = require('mongoose'), Schema = mongoose.Schema;
+	var db = mongoose.connect('mongodb://localhost/yakwala');
+	var Info = db.model('Info');
+	
+};
+
+exports.login = function (req, res) {
+	var mongoose = require('mongoose'), Schema = mongoose.Schema;
+	var db = mongoose.connect('mongodb://localhost/yakwala');
+	var User = db.model('User');
+	
+};
+
 exports.infos = function (req, res) {
 	var mongoose = require('mongoose'), Schema = mongoose.Schema;
 	var db = mongoose.connect('mongodb://localhost/yakwala');
@@ -32,13 +46,10 @@ exports.infos = function (req, res) {
 
 exports.zones = function (req, res) {
 	var mongoose = require('mongoose'), Schema = mongoose.Schema;
-	mongoose.set('debug', true);
+	//mongoose.set('debug', true);
 	var db = mongoose.connect('mongodb://localhost/yakwala');
 	var Zone = db.model('Zone');
-	
 	Zone.findNear(req.params.x,req.params.y,function (err, docs){
-	console.log(err);
-	console.log(docs);
 	  res.json({
 		zone: docs
 	  });

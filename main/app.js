@@ -6,6 +6,7 @@
 var express = require('express'),
   routes = require('./routes'),
   api = require('./routes/api'),
+  users = require('./routes/users'),
   db = require('./models/mongooseModel');
 
 var app = module.exports = express.createServer();
@@ -21,6 +22,15 @@ app.configure(function(){
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(express.static(__dirname + '/public'));
+  app.use(express.cookieParser());
+  // Session management
+  app.use(express.session({
+    // Private crypting key
+    "secret": "some private string",
+    // Internal session data storage engine, this is the default engine embedded with connect.
+    // Much more can be found as external modules (Redis, Mongo, Mysql, file...). look at "npm search connect session store"
+    "store":  new express.session.MemoryStore({ reapInterval: 60000 * 10 })
+  }));
   app.use(app.router);
 });
 
@@ -39,15 +49,22 @@ app.get('/', routes.index);
 app.get('/partials/:name', routes.partials);
 app.get('/actu/map', routes.actu_map);
 app.get('/actu/fils', routes.actu_fils);
+app.get('/actu/new', requiresLogin, routes.actu_new);
 
+app.get('/user/login', routes.user_login);
+
+
+
+app.post('/user',routes.user);
 
 // JSON API
 
-app.get('/api/posts', api.posts);
+
 
 app.get('/api/infos', api.infos);
 app.get('/api/zones/:x/:y', api.zones);
 
+app.get('/api/posts', api.posts);
 app.get('/api/post/:id', api.post);
 app.post('/api/post', api.addPost);
 app.put('/api/post/:id', api.editPost);
@@ -55,6 +72,15 @@ app.delete('/api/post/:id', api.deletePost);
 
 // redirect all others to the index (HTML5 history)
 app.get('*', routes.index);
+
+
+function requiresLogin(req,res,next){
+	if(req.session.user){
+		next();
+	}else{
+		res.redirect('/user/login?redir='+req.url);
+	}
+}
 
 // Start server
 

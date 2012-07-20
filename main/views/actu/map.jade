@@ -1,14 +1,21 @@
-div.modal.hide#locationChooser
+div.modal.hide.fade#locationChooser
 	div.modal-header
 		button.close(type="button", data-dismiss="modal") x
 		h3 Choisissez votre zone :
 	div.modal-body
-		p Yakwala ne couvre pas encore la zone où vous vous trouvez, vous pouvez actuellement naviguer sur :
-			ul
-				li.zoneLoc#zone1 Paris, France
-				li.zoneLoc#zone2 Montpellier, France
-				li.zoneLoc#zone3 Egézée, Belgique*
-				
+		p.alertText Yakwala ne couvre pas encore la zone où vous vous trouvez, vous pouvez actuellement naviguer sur :
+			ul.unstyled
+				li.zoneLoc#zone1
+					i.icon-map-marker
+					span  Paris, France
+				li.zoneLoc#zone2 
+					i.icon-map-marker
+					span  Montpellier, France
+				li.zoneLoc#zone3
+					i.icon-map-marker
+					span  Egézée, Belgique
+	div.modal-footer
+		span.btn(data-dismiss="modal") Laissez moi explorer tout seul !
 				
 
 div.container-fluid
@@ -24,17 +31,22 @@ script
 		var geolocalized = 0;
 		var infowindow = null;
 
+		$('#zoneLocButton').click(function(){
+		console.log('zoneloc');
+			$('#locationChooser .modal-body p.alertText').html("Vous pouvez naviguer sur les 3 zones couvertes pour l\'instant sur Yakwala :");
+			$('#locationChooser').modal('show');
+		});
 		$('.zoneLoc').click(updateXY);
 			
 			
-		
-		
+
 		if(navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition(getHTML5Pos,getErrHTML5Pos);
 			
 			
 		}else {
 			console.log("no html5 geoloc");
+			
 		}
 		
 		
@@ -56,17 +68,17 @@ script
 			case 'zone1':
 				x = 48.851875;
 				y = 2.356374;
-				zoom = 10;
+				zoom = 13;
 			break;
 			case 'zone2':
 				x = 43.610787;
 				y = 3.876715;
-				zoom = 13;
+				zoom = 14;
 			break;
 			case 'zone3':
 				x = 50.583346;
 				y = 4.900031;
-				zoom = 16;
+				zoom = 14;
 			break;
 			default:
 				x = 48.851875;
@@ -77,8 +89,7 @@ script
 
 			google.maps.event.addDomListener(window, 'load', initialize(curPos.x,curPos.y,zoom)); 
 			
-		
-		
+		$('#locationChooser').modal('hide');
 	}
 
 	function getHTML5Pos(position) {
@@ -88,16 +99,50 @@ script
 		
 		
 		zoom = 10;
-		$('#locationChooser').modal();
+		//$('#locationChooser').modal();
 		geolocalized = 1;
-		console.log('POSITIONS='+x+' '+y);
-		x = 48.857939;
-		y = 2.352448;
-		x = 43.610787;
-		y = 3.876715;
+		
+		//paris => redirect to Paris
+		//x = 48.857939;
+		//y = 2.352448;
+		//mtpellier => redirect to Montpellier
+		//x = 43.610352;
+		//y = 3.877144;
+		//nimes => redirect to Montpellier
+		//x = 43.834527;
+		//y = 4.372559;
+		//Limoges => no redirect
+		//x = 45.844108;
+		//y =1.274414;
+		//Troies => redirect to Paris
+		x = 48.297812;
+		y = 4.086914;
 		
 		$.getJSON('/api/zones/'+x+'/'+y,function(data) {
-		console.log(data);	
+		
+			if(data.zone.length == 0){
+				$('#locationChooser .modal-body p.alertText').html("Yakwala ne couvre pas encore votre zone géographique, vous pouvez choisir ci dessous votre zone de navigation :");
+				$('#locationChooser').modal('show');
+				console.log('not near area');
+			}else{
+				var zone = new Object(data.zone[0]);
+				
+				console.log(zone.box.br.lat);
+				console.log(x +'>'+ zone.box.tl.lat+' && '+x +'<'+ zone.box.br.lat +'&&'+ y +'<'+ zone.box.tl.lng +'&&'+ y +'>'+ zone.box.br.lng);
+				if(x < zone.box.tl.lat && x > zone.box.br.lat && y > zone.box.tl.lng && y < zone.box.br.lng ){
+					console.log('inside');
+					curPos = {'x':x,'y':y};
+					zoom = 16;
+				}else{
+					console.log('outside');
+					curPos = {'x':zone.location.lat,'y':zone.location.lng};
+					
+				}
+					
+				google.maps.event.addDomListener(window, 'load', initialize(curPos.x,curPos.y,zoom)); 
+			}
+				
+			
 		});
 		google.maps.event.addDomListener(window, 'load', initialize(x,y,zoom)); 
 	}
@@ -152,7 +197,10 @@ script
 				google.maps.event.addListener(marker, 'click', function() {
 					//map.setZoom(8);
 					//map.setCenter(marker.getPosition());
-					var infoContent = "<div class=\'infowindow\' ><img src=\'http://dev.backend.yakwala.com/BACKEND/"+val.thumb+"\' /><div class=\'title\'> "+val.title+"</div><div class=\'content\'>"+val.content.substring(0,250)+"...</div><div class=\'readmore\'><a target=\'_blank\' href=\'"+val.outGoingLink+"\'> Read more</a></div></div>";
+					var dateTmp = new Date(val.creationDate);
+					console.log(val.creationDate);
+					var dateCreation = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
+					var infoContent = "<div class=\'infowindow\' ><img src=\'http://dev.backend.yakwala.com/BACKEND/"+val.thumb+"\' /><div class=\'title\'> "+val.title+" ("+dateCreation+")</div><div class=\'content\'>"+val.content.substring(0,250)+"...</div><div class=\'readmore\'><a target=\'_blank\' href=\'"+val.outGoingLink+"\'> Read more</a></div></div>";
 					infowindow.setContent(infoContent);
 					infowindow.open(map, this);
 				});	
