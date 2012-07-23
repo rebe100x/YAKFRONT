@@ -1,3 +1,7 @@
+include ../mixins/menu.jade
+
+mixin menu()
+
 div.modal.hide.fade#locationChooser
 	div.modal-header
 		button.close(type="button", data-dismiss="modal") x
@@ -206,7 +210,7 @@ script
 				});	
 				
 			});
-			var markerClustererOptions = {gridSize:30,maxZoom: 16};
+			var markerClustererOptions = {gridSize:30,maxZoom: 17};
 			var markerCluster = new MarkerClusterer(map, markers,markerClustererOptions);
 			
 			google.maps.event.addListener(markerCluster, 'click', function(data) {

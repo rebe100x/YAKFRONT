@@ -72,6 +72,7 @@ function NewActuCtrl($scope, $http, $location, $routeParams) {
     success(function(data, status, headers, config) {
       $scope.infos = data.info;
     });*/ 
+	console.log('new actu');
 }
 
 
@@ -80,4 +81,23 @@ function FilsCtrl($scope, $http, $location, $routeParams) {
     success(function(data, status, headers, config) {
       $scope.infos = data.info;
     }); 
+}
+
+
+
+
+
+function UserCtrl($scope, $http, $location, $routeParams) {
+  $scope.form = {};
+  console.log('e');
+   $scope.login = function () {
+   console.log('login');
+    $http.post('/api/users', $scope.form).
+      success(function(data) {
+	  console.log($scope.form);
+	  //if($scope.form)
+        //$location.url('/readPost/' + $routeParams.id);
+      });
+  };
+  
 }

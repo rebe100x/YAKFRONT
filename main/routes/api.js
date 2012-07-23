@@ -19,12 +19,6 @@ var data = {
 
 // GET
 
-exports.user = function (req, res) {
-	var mongoose = require('mongoose'), Schema = mongoose.Schema;
-	var db = mongoose.connect('mongodb://localhost/yakwala');
-	var Info = db.model('Info');
-	
-};
 
 exports.login = function (req, res) {
 	var mongoose = require('mongoose'), Schema = mongoose.Schema;

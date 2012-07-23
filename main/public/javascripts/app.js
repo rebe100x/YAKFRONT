@@ -38,7 +38,11 @@ angular.module('myApp', ['myApp.filters', 'myApp.services', 'myApp.directives','
       }).
 	  when('/user', {
         templateUrl: '/user/login',
-        controller: FilsCtrl
+        controller: UserCtrl
+      }).
+	  when('/login', {
+        templateUrl: '/user/login',
+        controller: UserCtrl
       }).
       otherwise({
         redirectTo: '/'

@@ -34,7 +34,7 @@ Info.statics.findAll = function (callback) {
 [],
 {
     skip:0, // Starting Row
-    limit:10, // Ending Row
+    limit:40, // Ending Row
     sort:{
         creationDate: -1 //Sort by Date Added DESC
     }
@@ -70,7 +70,8 @@ User.methods.encryptPassword = function(password) {
 	}
 	
 User.statics.Authenticate = function(lg,pwd,callback) {
-      return this.findOne({login:lg,password:pwd},callback);
+mongoose.set('debug', true);
+      return this.find({login:lg,password:pwd},[],{limit:1},callback);
     }
 User.makeSalt =  function() {
       return Math.round((new Date().valueOf() * Math.random())) + '';

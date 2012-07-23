@@ -1,5 +1,15 @@
-p There are the last {{infos.length}} infos
-div(ng-repeat='info in infos')
-  h3 {{info.title}}
-  div(ng-bind-html="info.content")
-  
+include ../mixins/menu.jade
+mixin menu()
+
+div#content
+script
+	$(document).ready(function() {
+		$.getJSON('/api/infos',function(data) {
+			var items = [];
+
+			$.each(data.info, function(key,val) {
+				$('#content').append(val.title+'<br>');
+				
+			});
+		});
+	});

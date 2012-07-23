@@ -1,6 +1,12 @@
+include ../mixins/menu.jade
+
+mixin menu('elo')
+
 div.container-fluid
 	div.row-fluid
 		div.span3 
+			- if (flash.warn)
+			p#warn=flash.warn 
 			form(action='/user', method='POST')
 				input(type='hidden', name='redir', value=redir)
 				p

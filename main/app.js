@@ -17,7 +17,7 @@ app.configure(function(){
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
   app.set('view options', {
-    layout: false
+    layout: true
   });
   app.use(express.bodyParser());
   app.use(express.methodOverride());
@@ -46,6 +46,8 @@ app.configure('production', function(){
 // Routes
 
 app.get('/', routes.index);
+
+
 app.get('/partials/:name', routes.partials);
 app.get('/actu/map', routes.actu_map);
 app.get('/actu/fils', routes.actu_fils);
@@ -53,9 +55,36 @@ app.get('/actu/new', requiresLogin, routes.actu_new);
 
 app.get('/user/login', routes.user_login);
 
+app.post('/user',function(req, res){
 
-
-app.post('/user',routes.user);
+	var mongoose = require('mongoose'), Schema = mongoose.Schema;
+	var db = mongoose.connect('mongodb://localhost/yakwala');
+	var User = db.model('User');
+	
+	
+	/*
+	var Info = db.model('Info');
+	Info.findAll(function (err, docs){
+	  console.log(docs);
+	});*/ 
+	
+	
+	User.Authenticate(req.body.login,req.body.password,function(err,user){
+	//console.log(user);
+	console.log(user);
+	
+		if(user){
+			req.session.user = user
+			res.redirect(req.body.redir || '/');
+			
+		}else{
+			req.flash('warn','Login failed');
+			res.render('user/login',{title:'login',locals:{redir:req.body.redir}});
+		}
+		
+	});
+  //res.render('user/login',{title:'Login',locals: {redir : req.query.redir}});
+});
 
 // JSON API
 
@@ -63,6 +92,7 @@ app.post('/user',routes.user);
 
 app.get('/api/infos', api.infos);
 app.get('/api/zones/:x/:y', api.zones);
+app.post('/api/users', api.users);
 
 app.get('/api/posts', api.posts);
 app.get('/api/post/:id', api.post);
@@ -74,6 +104,17 @@ app.delete('/api/post/:id', api.deletePost);
 app.get('*', routes.index);
 
 
+app.dynamicHelpers({
+	session:function(req,res){
+	
+		return req.session;
+	},
+	flash:function(req,res){
+	
+		return req.flash();
+	}
+
+});
 function requiresLogin(req,res,next){
 	if(req.session.user){
 		next();

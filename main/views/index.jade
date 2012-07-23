@@ -1,39 +1,6 @@
-extends layout
+include ./mixins/menu.jade
 
-block body
-	div.navbar.navbar-fixed-top
-		div.navbar-inner
-			.container-fluid
-				a.btn.btn-navbar(data-toggle="collapse",data-target=".nav-collapse") 
-					span.icon-bar
-					span.icon-bar
-					span.icon-bar
-					a.brand(href="#") #{title}
-					
-					div.btn-group.pull-right
-						span
-							a.btn(href="/user/login") 
-								i.icon-user
-								span  Login
-					div.btn-group.pull-right
-						span
-							span.btn#zoneLocButton(title="Naviguez sur une autre zone")
-								i.icon-screenshot			
-						
-					div.nav-collapse
-						ul.nav
-							li.active
-								a(href="/map") La YakwaCarte
-							li
-								a(href="/actu") Le YakwaFeed
-							li
-								a(href="/newActu") Poster une info
-							li
-								a(href="/login") Login
-							li
-								a(href="/logout") Logout
-							li
-								a(href="/api/infos") L'info brute	
-	div(ng-view)						
-	
-		
+mixin menu()
+
+
+elo
