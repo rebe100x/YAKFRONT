@@ -50,6 +50,18 @@ exports.zones = function (req, res) {
 	}); 
 };
 
+exports.cats = function (req, res) {
+	var mongoose = require('mongoose'), Schema = mongoose.Schema;
+	//mongoose.set('debug', true);
+	var db = mongoose.connect('mongodb://localhost/yakwala');
+	var Yakcat = db.model('Yakcat');
+	Yakcat.findAll(function (err, docs){
+	  res.json({
+		cats: docs
+	  });
+	});
+};
+
 exports.posts = function (req, res) {
   var posts = [];
   data.posts.forEach(function (post, i) {

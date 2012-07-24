@@ -1,4 +1,57 @@
+include ../mixins/menu.jade
+include ../mixins/locationChooser.jade
+
+mixin menu('post')
+mixin locationChooser()
+
 div.container-fluid
 	div.row-fluid
-		div.span3
-		div.span9 POST AN ACTU
+		div.span3 
+			- if (flash.warn)
+				div.alert.fade.in
+					button.close(type="button",data-dismiss="alert")
+						x
+					strong=flash.warn
+			form(action='/actu', method='POST')
+				input#yakcatInput(type='hidden', name='yakcatInput', value='')
+				p
+					label(for='title') Titre:
+					input(type='text', name='title', id='title')
+				p
+					label(for='content') Texte:
+					textarea(name='content', id='content')
+				p
+					label(for='category') Catégorie(s):
+					input#yakcat(type="text",data-provide="typeahead", name="category")
+				p
+					label(for='yaktag') Tag(s):
+					input.typeahead(type="text",data-provide="typeahead", name="yaktag")
+				p
+					label(for='freetag') Mots clés:
+					input.typeahead(type="text",data-provide="typeahead", name="freetag")	
+				p
+					input(type='submit', name='submit', id='submit', value='Envoyer')
+		div.span9 right
+		
+		script
+			var yakcat = [];
+			$('#yakcat').typeahead({
+				source: function (typeahead, query) {
+					$.ajax({
+							url: "/api/cats",						
+							success: function( data ) {
+								typeahead.process(data.cats);
+							}
+						})},
+				property: "title",
+				onselect: function(obj) { 
+					$("label[for='category']").after("<div><i class='icon-remove'  onclick='yakcat.cleanArray(\""+obj._id+"\");$(\"#yakcatInput\").val(JSON.stringify(yakcat));$(this).parent().remove();'></i> "+obj.title+"</div>");
+					$('.typeahead').val('').focus();
+					yakcat.push(obj);
+					$("#yakcatInput").val(JSON.stringify(yakcat));
+				}
+				
+			
+			});
+			
+			

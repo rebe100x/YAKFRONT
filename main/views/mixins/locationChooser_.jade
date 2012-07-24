@@ -1,0 +1,21 @@
+﻿mixin locationChooser()
+	div.modal.hide.fade#locationChooser
+		div.modal-header
+			button.close(type="button", data-dismiss="modal") x
+			h3 Choisissez votre zone :
+		div.modal-body
+			p.alertText Yakwala ne couvre pas encore la zone où vous vous trouvez, vous pouvez actuellement naviguer sur :
+				ul.unstyled
+					li.zoneLoc#zone1
+						i.icon-map-marker
+						span  Paris, France
+					li.zoneLoc#zone2 
+						i.icon-map-marker
+						span  Montpellier, France
+					li.zoneLoc#zone3
+						i.icon-map-marker
+						span  Eguézée, Belgique
+		div.modal-footer
+			span.btn(data-dismiss="modal") Laissez moi explorer tout seul !
+
+			

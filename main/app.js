@@ -51,41 +51,13 @@ app.get('/', routes.index);
 app.get('/partials/:name', routes.partials);
 app.get('/actu/map', routes.actu_map);
 app.get('/actu/fils', routes.actu_fils);
-app.get('/actu/new', requiresLogin, routes.actu_new);
+//app.get('/actu/new', requiresLogin, routes.actu_new);
+app.get('/actu/new', routes.actu_new);
 
 app.get('/user/login', routes.user_login);
 
-app.post('/user',function(req, res){
-
-	var mongoose = require('mongoose'), Schema = mongoose.Schema;
-	var db = mongoose.connect('mongodb://localhost/yakwala');
-	var User = db.model('User');
-	
-	
-	/*
-	var Info = db.model('Info');
-	Info.findAll(function (err, docs){
-	  console.log(docs);
-	});*/ 
-	
-	
-	User.Authenticate(req.body.login,req.body.password,function(err,user){
-	//console.log(user);
-	console.log(user);
-	
-		if(user){
-			req.session.user = user
-			res.redirect(req.body.redir || '/');
-			
-		}else{
-			req.flash('warn','Login failed');
-			res.render('user/login',{title:'login',locals:{redir:req.body.redir}});
-		}
-		
-	});
-  //res.render('user/login',{title:'Login',locals: {redir : req.query.redir}});
-});
-
+app.post('/user',routes.user);
+app.post('/actu',routes.actu);
 // JSON API
 
 
@@ -93,6 +65,7 @@ app.post('/user',function(req, res){
 app.get('/api/infos', api.infos);
 app.get('/api/zones/:x/:y', api.zones);
 app.post('/api/users', api.users);
+app.get('/api/cats', api.cats);
 
 app.get('/api/posts', api.posts);
 app.get('/api/post/:id', api.post);

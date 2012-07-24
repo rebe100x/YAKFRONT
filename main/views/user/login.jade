@@ -1,12 +1,17 @@
 include ../mixins/menu.jade
+include ../mixins/locationChooser.jade
 
-mixin menu('elo')
+mixin menu('login')
+mixin locationChooser()
 
 div.container-fluid
 	div.row-fluid
 		div.span3 
 			- if (flash.warn)
-			p#warn=flash.warn 
+				div.alert.fade.in
+					button.close(type="button",data-dismiss="alert")
+						x
+					strong=flash.warn
 			form(action='/user', method='POST')
 				input(type='hidden', name='redir', value=redir)
 				p

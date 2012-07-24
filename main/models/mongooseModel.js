@@ -14,10 +14,26 @@ var mongoose = require('mongoose')
 
 var Info = new Schema({
     title     : { type: String}
-  , outGoingLink       : { type: String, index: true }
-  , content   : { type: String}
+  , content	: {type: String}		
+  , thumb	: {type: String}		
+  , origin	: {type: String}		
+  , access	: {type: Number}
+  , licence	: {type: String}		
+  , outGoingLink       : { type: String, index: true }  
+  , heat	: {type: Number}		
+  , print	: {type: Number}		
+  , yakCat	: {type: [Yakcat]}		
+  , yakTag	: {type: [String]}		
+  , freeTag	: {type: [String]}		
+  , creationDate	: {type: Date}		
+  , lastModifDate	: {type: Date}		
+  , dateEndPrint	: {type: Date}		
+  , address	: {type: String}		
+  , location	: { type : Schema.Types.Mixed, index : '2d'}	
+  , status	: {type: Number}		
+  , user	: {type: Schema.ObjectId}		
+  , zone	: {type: Schema.ObjectId}		
 }, { collection: 'info' });
-
 
 
 Info.statics.findByTitle = function (title, callback) {
@@ -104,3 +120,30 @@ Zone.statics.findAll = function (callback) {
   return this.find({}, callback);
 }
 mongoose.model('Zone', Zone);
+
+
+
+
+
+/*YAKCAT*/
+var Yakcat = new Schema({
+    title     : { type: String, index:true}
+  , path       : { type:String }
+  , pathN       : { type:String, uppercase: true, index:true }
+  , tag       : { type:[String] }
+  , level       : { type:Number }
+  , thumb       : { type:String }
+  , creationDate       : { type:Date }
+  , lastModifDate       : { type:Date }
+  , status       : { type:Number }
+  
+}, { collection: 'yakcat' });
+
+
+
+
+
+Yakcat.statics.findAll = function (callback) {
+  return this.find({},[],{sort:{title:1}}, callback);
+}
+mongoose.model('Yakcat', Yakcat);

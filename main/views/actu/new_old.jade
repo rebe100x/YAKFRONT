@@ -1,0 +1,25 @@
+﻿include ../mixins/menu.jade
+
+mixin menu('e')
+
+div.container-fluid
+	div.row-fluid
+		div.span3 
+			- if (flash.warn)
+				div.alert.fade.in
+					button.close(type="button",data-dismiss="alert")
+						x
+					strong=flash.warn
+			form(action='/actu', method='POST')
+				p
+					label(for='title') Titre:
+					input(type='text', name='title', id='title')
+				p
+					label(for='content') Texte:
+					textarea(name='content', id='content')
+				p
+					label(for='content') Catégorie:
+					textarea(name='category', id='category')
+				p
+					input(type='submit', name='submit', id='submit', value='Envoyer')
+		div.span9 right
