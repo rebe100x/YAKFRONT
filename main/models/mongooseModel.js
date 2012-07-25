@@ -6,12 +6,14 @@
 var mongoose = require('mongoose')
   , Schema = mongoose.Schema;
 
+mongoose.set('debug', true);
+
 /**
  * Schema definition
  */
 
 
-
+//var LocationSchema = new Schema({ lat: Number,lng: Number });
 var Info = new Schema({
     title     : { type: String}
   , content	: {type: String}		
@@ -25,11 +27,11 @@ var Info = new Schema({
   , yakCat	: {type: [Yakcat]}		
   , yakTag	: {type: [String]}		
   , freeTag	: {type: [String]}		
-  , creationDate	: {type: Date}		
-  , lastModifDate	: {type: Date}		
+  , creationDate	: {type: Date, required: true, default: Date.now}		
+  , lastModifDate	: {type: Date, required: true, default: Date.now}		
   , dateEndPrint	: {type: Date}		
   , address	: {type: String}		
-  , location	: { type : Schema.Types.Mixed, index : '2d'}	
+  , location	: { type : { lat: Number, lng: Number }, index : '2d'}	
   , status	: {type: Number}		
   , user	: {type: Schema.ObjectId}		
   , zone	: {type: Schema.ObjectId}		
@@ -86,8 +88,7 @@ User.methods.encryptPassword = function(password) {
 	}
 	
 User.statics.Authenticate = function(lg,pwd,callback) {
-mongoose.set('debug', true);
-      return this.find({login:lg,password:pwd},[],{limit:1},callback);
+      return this.findOne({login:lg,password:pwd},callback);
     }
 User.makeSalt =  function() {
       return Math.round((new Date().valueOf() * Math.random())) + '';

@@ -1,8 +1,13 @@
 $(document).ready(function() {
 
-	/*INIT*/	
-	curPos = {'x':0,'y':0,'z':10};
+	//socket = io.connect('http://localhost:3000');
 	
+	/*INIT*/	
+	curPos = {'x':0,'y':0,'z':13};
+	
+	
+  
+  
 	var geolocalized = 0;
 	var infowindow = null;
 
@@ -19,16 +24,6 @@ $(document).ready(function() {
 	$('.zoneLoc').click(updateXY);
 	
 	
-	if(navigator.geolocation) {
-		navigator.geolocation.getCurrentPosition(getHTML5Pos,getErrHTML5Pos);
-		
-		
-	}else {
-		console.log("no html5 geoloc");
-		
-	}
-	
-	console.log(curPos);
 });
 
 
@@ -62,10 +57,14 @@ function updateXY(){
 	default:
 		x = 48.851875;
 		y = 2.356374;
-		z = 10;
+		z = 13;
 	}
 	curPos = {'x':x,'y':y,'z':z};
 
+	//	socket.emit('position', curPos);
+	
+	//console.log(curPos);
+			
 	$('#locationChooser').modal('hide');
 	
 	if($('#mymap').length > 0){ // only for the map page
@@ -80,7 +79,7 @@ function updateXY(){
 function getHTML5Pos(position) {
 	x = position.coords.latitude;
 	y = position.coords.longitude;
-	z = 10;
+	z = 13;
 	
 	geolocalized = 1;
 	
@@ -116,12 +115,16 @@ function getHTML5Pos(position) {
 				curPos = {'x':x,'y':y,'z':16};
 			}else{
 				console.log('outside');
-				curPos = {'x':zone.location.lat,'y':zone.location.lng,'z':10};
+				curPos = {'x':zone.location.lat,'y':zone.location.lng,'z':13};
 				
 			}
+			
+			//socket.emit('position', curPos);
+	
 				
 			if($('#mymap').length > 0)	
 				google.maps.event.addDomListener(window, 'load', initialize(curPos.x,curPos.y,curPos.z)); 
+			
 		}
 			
 		
@@ -154,6 +157,26 @@ function getErrHTML5Pos(error) {
 	console.log(info);
 }
 
+
+function placeMarker(location,mk) {
+  	
+	$('#latitude').val(location.lat());	
+	$('#longitude').val(location.lng());	
+
+	mk.setVisible(true);
+	mk.setPosition(location);
+	
+	
+	google.maps.event.addListener(mk, 'dragend', function() {
+		var position = mk.getPosition();
+		$('#latitude').val(position.lat());	
+		$('#longitude').val(position.lng());	
+
+	});
+}
+
+
+
 function initialize(x,y,z) {
 console.log('init'+x+'--'+y+'--'+z);
 	var center = new google.maps.LatLng(x,y);
@@ -164,14 +187,21 @@ console.log('init'+x+'--'+y+'--'+z);
 		mapTypeId: google.maps.MapTypeId.ROADMAP
 	});
 
+	var markerLocation = new google.maps.Marker({
+		visible: false,
+		map: map,
+		draggable:true,
+		icon: 'images/beachflag.png'
+	});
+	
 	var markers = [];
 	
 	$.getJSON('/api/infos',function(data) {
 	
 		var items = [];
+		
 		$.each(data.info, function(key,val) {
-		//console.log(val);
-			
+		//console.log(val.location);
 			
 			var latLng = new google.maps.LatLng(val.location['lat'],val.location['lng']);
 			var marker = new google.maps.Marker({position: latLng});
@@ -181,9 +211,16 @@ console.log('init'+x+'--'+y+'--'+z);
 				//map.setZoom(8);
 				//map.setCenter(marker.getPosition());
 				var dateTmp = new Date(val.creationDate);
-				console.log(val.creationDate);
+				//console.log(val.creationDate);
 				var dateCreation = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
-				var infoContent = "<div class=\'infowindow\' ><img src=\'http://dev.backend.yakwala.com/BACKEND/"+val.thumb+"\' /><div class=\'title\'> "+val.title+" ("+dateCreation+")</div><div class=\'content\'>"+val.content.substring(0,250)+"...</div><div class=\'readmore\'><a target=\'_blank\' href=\'"+val.outGoingLink+"\'> Read more</a></div></div>";
+				var infoContent = "<div class=\'infowindow\' >";
+				if(!(typeof val.thumb === 'undefined'))
+					infoContent += "<img src=\'http://dev.backend.yakwala.com/BACKEND/"+val.thumb+"\' />";
+				infoContent += "<div class=\'title\'> "+val.title+" ("+dateCreation+")</div>";
+				infoContent += "<div class=\'content\'>"+val.content.substring(0,250)+"...</div>";
+				if(!(typeof val.outGoingLink === 'undefined'))
+					infoContent += "<div class=\'readmore\'><a target=\'_blank\' href=\'"+val.outGoingLink+"\'> Read more</a></div>";
+				infoContent += "</div>";
 				infowindow.setContent(infoContent);
 				infowindow.open(map, this);
 			});	
@@ -193,9 +230,40 @@ console.log('init'+x+'--'+y+'--'+z);
 		var markerClustererOptions = {gridSize:30,maxZoom: 17};
 		var markerCluster = new MarkerClusterer(map, markers,markerClustererOptions);
 		
+		
+		google.maps.event.addListener(map, 'click', function(event) {
+				placeMarker(event.latLng,markerLocation);
+			});
+			
+		/*
+		var drawingManager = new google.maps.drawing.DrawingManager({
+			drawingMode: google.maps.drawing.OverlayType.MARKER,
+			drawingControl: true,
+			drawingControlOptions: {
+				position: google.maps.ControlPosition.BOTTOM_LEFT,
+				drawingModes: [
+				google.maps.drawing.OverlayType.MARKER,
+				google.maps.drawing.OverlayType.RECTANGLE
+				]
+			},
+			markerOptions: {
+				icon: 'images/beachflag.png'
+			},
+			rectangleOptions: {
+				fillColor: '#FFFFFF',
+				fillOpacity: 0.5,
+				strokeWeight: 2,
+				clickable: false,
+				editable: true,
+				zIndex: 1
+			}
+		});
+		drawingManager.setMap(map);
+		*/
+		/*
 		google.maps.event.addListener(markerCluster, 'click', function(data) {
 			console.log('data'+data);
-		});
+		});*/
 	});
 	
 	

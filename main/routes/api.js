@@ -2,30 +2,7 @@
  * Serve JSON to our AngularJS client
  */
 
-// For a real app, you'd make database requests here.
-// For this example, "data" acts like an in-memory "database"
-var data = {
-  "posts": [
-    {
-      "title": "Lorem ipsum",
-      "text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-    },
-    {
-      "title": "Sed egestas",
-      "text": "Sed egestas, ante et vulputate volutpat, eros pede semper est, vitae luctus metus libero eu augue. Morbi purus libero, faucibus adipiscing, commodo quis, gravida id, est. Sed lectus."
-    }
-  ]
-};
 
-// GET
-
-
-exports.login = function (req, res) {
-	var mongoose = require('mongoose'), Schema = mongoose.Schema;
-	var db = mongoose.connect('mongodb://localhost/yakwala');
-	var User = db.model('User');
-	
-};
 
 exports.infos = function (req, res) {
 	var mongoose = require('mongoose'), Schema = mongoose.Schema;

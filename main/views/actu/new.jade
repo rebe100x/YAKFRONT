@@ -6,7 +6,7 @@ mixin locationChooser()
 
 div.container-fluid
 	div.row-fluid
-		div.span3 
+		div.span3(style='z-index:1;position:relative;background-color:#FFFFFF;padding:15px;') 
 			- if (flash.warn)
 				div.alert.fade.in
 					button.close(type="button",data-dismiss="alert")
@@ -22,36 +22,58 @@ div.container-fluid
 					textarea(name='content', id='content')
 				p
 					label(for='category') Catégorie(s):
-					input#yakcat(type="text",data-provide="typeahead", name="category")
+					input#yakcat(type="text",data-provide="typeahead", name="category", autocomplete="off")
 				p
-					label(for='yaktag') Tag(s):
-					input.typeahead(type="text",data-provide="typeahead", name="yaktag")
+					label(for='latitude') Latitude:
+					input#latitude(type="text",data-provide="typeahead", name="latitude")
 				p
-					label(for='freetag') Mots clés:
-					input.typeahead(type="text",data-provide="typeahead", name="freetag")	
+					label(for='longitude') Longitude:
+					input#longitude(type="text",data-provide="typeahead", name="longitude")
+				p
+					label(for='link') Lien:
+					input.link(type="text",data-provide="typeahead", name="link")
+				
 				p
 					input(type='submit', name='submit', id='submit', value='Envoyer')
-		div.span9 right
+		div.span9(style='z-index:0;') 
+			div#mymap
 		
 		script
-			var yakcat = [];
-			$('#yakcat').typeahead({
-				source: function (typeahead, query) {
-					$.ajax({
-							url: "/api/cats",						
-							success: function( data ) {
-								typeahead.process(data.cats);
-							}
-						})},
-				property: "title",
-				onselect: function(obj) { 
-					$("label[for='category']").after("<div><i class='icon-remove'  onclick='yakcat.cleanArray(\""+obj._id+"\");$(\"#yakcatInput\").val(JSON.stringify(yakcat));$(this).parent().remove();'></i> "+obj.title+"</div>");
-					$('.typeahead').val('').focus();
-					yakcat.push(obj);
-					$("#yakcatInput").val(JSON.stringify(yakcat));
-				}
+			$(document).ready(function() {
+			
 				
 			
+				if(navigator.geolocation) {
+					navigator.geolocation.getCurrentPosition(getHTML5Pos,getErrHTML5Pos);
+				}else {
+					$('#locationChooser').modal('show');
+					x = 48.851875;
+					y = 2.356374;
+					z = 13;
+					google.maps.event.addDomListener(window, 'load', initialize(curPos.x,curPos.y,curPos.z)); 
+				}
+				
+				
+				
+
+				var yakcat = [];
+				$('#yakcat').typeahead({
+					source: function (typeahead, query) {
+						$.ajax({
+								url: "/api/cats",						
+								success: function( data ) {
+									typeahead.process(data.cats);
+								}
+							})},
+					property: "title",
+					onselect: function(obj) { 
+						$("label[for='category']").after("<div><i class='icon-remove'  onclick='yakcat.cleanArray(\""+obj._id+"\");$(\"#yakcatInput\").val(JSON.stringify(yakcat));$(this).parent().remove();'></i> "+obj.title+"</div>");
+						$('#yakcat').val('').focus();
+						yakcat.push(obj);
+						$("#yakcatInput").val(JSON.stringify(yakcat));
+					}
+					
+				
+				});
 			});
-			
-			
+

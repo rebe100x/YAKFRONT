@@ -9,8 +9,21 @@ mixin menu(active)
 					a.brand(href="#") YAKWALA
 					
 					div.btn-group.pull-right
-						span 
-							a.btn(href="/user/login") Login
+						- if (session.user)
+							a.btn.dropdown-toggle(href="#",data-toggle="dropdown")
+								i.icon-user
+								span= ' '+session.user.login+' ';
+								span.caret
+							ul.dropdown-menu
+								li
+									a(href="#") Mon profil
+								li.divider
+								li
+									a(href="#") Quitter
+						- else
+							span 
+								a.btn(href="/user/login") Login
+							
 					div.btn-group.pull-right
 						span
 							span.btn#zoneLocButton(title="Naviguez sur une autre zone")
@@ -19,16 +32,16 @@ mixin menu(active)
 						ul.nav
 							- if (active == 'map')
 								li.active
-									a(href="/actu/map") La Carte
+									a(href="/actu/map") La carte
 							- else
 								li
-									a(href="/actu/map") La Carte
+									a(href="/actu/map") La carte
 							- if(active == 'fils')
 								li.active
-									a(href="/actu/fils") Le Feed
+									a(href="/actu/fils") Le fils d'actu
 							- else
 								li
-									a(href="/actu/fils") Le Feed
+									a(href="/actu/fils") Le fils d'actu
 							- if (active == 'post')
 								li.active
 									a(href="/actu/new") Poster une info
@@ -49,5 +62,3 @@ mixin menu(active)
 									a(href="/user/logout") Logout
 							li
 								a(href="/api/info") L'info brute	
-
-			

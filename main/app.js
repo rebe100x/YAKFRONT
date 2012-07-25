@@ -16,21 +16,16 @@ var app = module.exports = express.createServer();
 app.configure(function(){
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
-  app.set('view options', {
-    layout: true
-  });
+  app.set('view options', {layout: true});
   app.use(express.bodyParser());
-  app.use(express.methodOverride());
   app.use(express.static(__dirname + '/public'));
   app.use(express.cookieParser());
   // Session management
   app.use(express.session({
-    // Private crypting key
-    "secret": "some private string",
-    // Internal session data storage engine, this is the default engine embedded with connect.
-    // Much more can be found as external modules (Redis, Mongo, Mysql, file...). look at "npm search connect session store"
+    "secret": "yakwala2012 info hyper locale",
     "store":  new express.session.MemoryStore({ reapInterval: 60000 * 10 })
   }));
+  app.use(express.methodOverride());
   app.use(app.router);
 });
 
@@ -43,6 +38,10 @@ app.configure('production', function(){
   app.use(express.errorHandler());
 });
 
+
+
+
+	
 // Routes
 
 app.get('/', routes.index);
@@ -51,10 +50,11 @@ app.get('/', routes.index);
 app.get('/partials/:name', routes.partials);
 app.get('/actu/map', routes.actu_map);
 app.get('/actu/fils', routes.actu_fils);
-//app.get('/actu/new', requiresLogin, routes.actu_new);
 app.get('/actu/new', routes.actu_new);
+//app.get('/actu/new', routes.actu_new);
 
 app.get('/user/login', routes.user_login);
+app.get('/user/logout', routes.user_logout);
 
 app.post('/user',routes.user);
 app.post('/actu',routes.actu);
@@ -79,7 +79,6 @@ app.get('*', routes.index);
 
 app.dynamicHelpers({
 	session:function(req,res){
-	
 		return req.session;
 	},
 	flash:function(req,res){
@@ -88,6 +87,11 @@ app.dynamicHelpers({
 	}
 
 });
+
+
+//io = require('socket.io');
+//sio = io.listen(app);
+		
 function requiresLogin(req,res,next){
 	if(req.session.user){
 		next();
@@ -95,7 +99,27 @@ function requiresLogin(req,res,next){
 		res.redirect('/user/login?redir='+req.url);
 	}
 }
-
+function requiresPosition(req,res,next){
+	//delete req.session.position;
+	if(!req.session.position){
+		console.log('session set to :'+req.session.position);
+		sio.sockets.on('connection', function (socket) {
+		  //socket.emit('news', { hello: 'world' });
+		  socket.on('position', function (data) {
+			console.log(data.x);
+			req.session.position = data.x;
+			console.log('session:'+req.session.position);
+			next();
+		  });
+		});
+	}else{
+		console.log('session already set :'+req.session.position);
+		next();
+	}
+		
+	next();
+	
+}
 // Start server
 
 app.listen(3000, function(){

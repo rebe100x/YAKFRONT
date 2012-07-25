@@ -29,7 +29,15 @@ div.container-fluid
 			div#mymap
 script
 	$(document).ready(function() {
-		
+		if(navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(getHTML5Pos,getErrHTML5Pos);
+		}else {
+			$('#locationChooser').modal('show');
+			x = 48.851875;
+			y = 2.356374;
+			z = 13;
+			google.maps.event.addDomListener(window, 'load', initialize(curPos.x,curPos.y,curPos.z)); 
+		}
 		
 	});
 
