@@ -7,11 +7,13 @@ var express = require('express'),
   routes = require('./routes'),
   api = require('./routes/api'),
   users = require('./routes/users'),
-  db = require('./models/mongooseModel');
+  db = require('./models/mongooseModel'),
+  config = require('./confs.js');
 
 var app = module.exports = express.createServer();
 
 // Configuration
+
 
 app.configure(function(){
   app.set('views', __dirname + '/views');
@@ -29,13 +31,14 @@ app.configure(function(){
   app.use(app.router);
 });
 
-
 app.configure('development', function(){
-  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+	conf = config.confs.dev;
+	app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
 
 app.configure('production', function(){
-  app.use(express.errorHandler());
+	conf = config.confs.prod;
+	app.use(express.errorHandler());
 });
 
 
@@ -50,8 +53,8 @@ app.get('/', routes.index);
 app.get('/partials/:name', routes.partials);
 app.get('/actu/map', routes.actu_map);
 app.get('/actu/fils', routes.actu_fils);
-app.get('/actu/new', routes.actu_new);
-//app.get('/actu/new', routes.actu_new);
+app.get('/actu/new', requiresLogin, routes.actu_new);
+
 
 app.get('/user/login', routes.user_login);
 app.get('/user/logout', routes.user_logout);
@@ -122,6 +125,6 @@ function requiresPosition(req,res,next){
 }
 // Start server
 
-app.listen(3000, function(){
+app.listen(conf.port, function(){
   console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
 });

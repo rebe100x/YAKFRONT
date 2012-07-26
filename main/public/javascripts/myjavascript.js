@@ -2,19 +2,11 @@ $(document).ready(function() {
 
 	//socket = io.connect('http://localhost:3000');
 	
-	/*INIT*/	
-	curPos = {'x':0,'y':0,'z':13};
-	
-	
-  
-  
-	var geolocalized = 0;
-	var infowindow = null;
 
 		
-		console.log(curPos);
 	/*bootstrap alert plugin*/
 	$(".alert").alert();
+	
 	/*top locator button which pops up the locatorChooser popup*/
 	$('#zoneLocButton').click(function(){
 			$('#locationChooser .modal-body p.alertText').html("Vous pouvez naviguer sur les 3 zones couvertes pour l\'instant sur Yakwala :");
@@ -177,94 +169,4 @@ function placeMarker(location,mk) {
 
 
 
-function initialize(x,y,z) {
-console.log('init'+x+'--'+y+'--'+z);
-	var center = new google.maps.LatLng(x,y);
-	infowindow = new google.maps.InfoWindow({content: ".",maxWidth : 300});
-	var map = new google.maps.Map(document.getElementById('mymap'), {
-		zoom: z,
-		center: center,
-		mapTypeId: google.maps.MapTypeId.ROADMAP
-	});
 
-	var markerLocation = new google.maps.Marker({
-		visible: false,
-		map: map,
-		draggable:true,
-		icon: 'images/beachflag.png'
-	});
-	
-	var markers = [];
-	
-	$.getJSON('/api/infos',function(data) {
-	
-		var items = [];
-		
-		$.each(data.info, function(key,val) {
-		//console.log(val.location);
-			
-			var latLng = new google.maps.LatLng(val.location['lat'],val.location['lng']);
-			var marker = new google.maps.Marker({position: latLng});
-			markers.push(marker);
-			
-			google.maps.event.addListener(marker, 'click', function() {
-				//map.setZoom(8);
-				//map.setCenter(marker.getPosition());
-				var dateTmp = new Date(val.creationDate);
-				//console.log(val.creationDate);
-				var dateCreation = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
-				var infoContent = "<div class=\'infowindow\' >";
-				if(!(typeof val.thumb === 'undefined'))
-					infoContent += "<img src=\'http://dev.backend.yakwala.com/BACKEND/"+val.thumb+"\' />";
-				infoContent += "<div class=\'title\'> "+val.title+" ("+dateCreation+")</div>";
-				infoContent += "<div class=\'content\'>"+val.content.substring(0,250)+"...</div>";
-				if(!(typeof val.outGoingLink === 'undefined'))
-					infoContent += "<div class=\'readmore\'><a target=\'_blank\' href=\'"+val.outGoingLink+"\'> Read more</a></div>";
-				infoContent += "</div>";
-				infowindow.setContent(infoContent);
-				infowindow.open(map, this);
-			});	
-			
-		});
-		
-		var markerClustererOptions = {gridSize:30,maxZoom: 17};
-		var markerCluster = new MarkerClusterer(map, markers,markerClustererOptions);
-		
-		
-		google.maps.event.addListener(map, 'click', function(event) {
-				placeMarker(event.latLng,markerLocation);
-			});
-			
-		/*
-		var drawingManager = new google.maps.drawing.DrawingManager({
-			drawingMode: google.maps.drawing.OverlayType.MARKER,
-			drawingControl: true,
-			drawingControlOptions: {
-				position: google.maps.ControlPosition.BOTTOM_LEFT,
-				drawingModes: [
-				google.maps.drawing.OverlayType.MARKER,
-				google.maps.drawing.OverlayType.RECTANGLE
-				]
-			},
-			markerOptions: {
-				icon: 'images/beachflag.png'
-			},
-			rectangleOptions: {
-				fillColor: '#FFFFFF',
-				fillOpacity: 0.5,
-				strokeWeight: 2,
-				clickable: false,
-				editable: true,
-				zIndex: 1
-			}
-		});
-		drawingManager.setMap(map);
-		*/
-		/*
-		google.maps.event.addListener(markerCluster, 'click', function(data) {
-			console.log('data'+data);
-		});*/
-	});
-	
-	
-}
