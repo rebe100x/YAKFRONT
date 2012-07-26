@@ -1,4 +1,4 @@
-$(document).ready(function() {
+﻿$(document).ready(function() {
 
 	//socket = io.connect('http://localhost:3000');
 	
@@ -88,25 +88,27 @@ function getHTML5Pos(position) {
 	//x = 45.844108;
 	//y =1.274414;
 	//Troies => redirect to Paris
-	x = 48.297812;
-	y = 4.086914;
+	//x = 48.297812;
+	//y = 4.086914;
+	
+	curPos = {'x':x,'y':y,'z':z};
 	
 	$.getJSON('/api/zones/'+x+'/'+y,function(data) {
 	
 		if(data.zone.length == 0){
-			$('#locationChooser .modal-body p.alertText').html("Yakwala ne couvre pas encore votre zone g�ographique, vous pouvez choisir ci dessous votre zone de navigation :");
+			$('#locationChooser .modal-body p.alertText').html("Yakwala ne couvre pas encore votre zone géographique, vous pouvez choisir ci dessous votre zone de navigation :");
 			$('#locationChooser').modal('show');
-			console.log('not near area');
+			//console.log('not near area');
 		}else{
 			var zone = new Object(data.zone[0]);
 			
-			console.log(zone.box.br.lat);
-			console.log(x +'>'+ zone.box.tl.lat+' && '+x +'<'+ zone.box.br.lat +'&&'+ y +'<'+ zone.box.tl.lng +'&&'+ y +'>'+ zone.box.br.lng);
+			//console.log(zone.box.br.lat);
+			//console.log(x +'>'+ zone.box.tl.lat+' && '+x +'<'+ zone.box.br.lat +'&&'+ y +'<'+ zone.box.tl.lng +'&&'+ y +'>'+ zone.box.br.lng);
 			if(x < zone.box.tl.lat && x > zone.box.br.lat && y > zone.box.tl.lng && y < zone.box.br.lng ){
-				console.log('inside');
+				//console.log('inside');
 				curPos = {'x':x,'y':y,'z':16};
 			}else{
-				console.log('outside');
+				//console.log('outside');
 				curPos = {'x':zone.location.lat,'y':zone.location.lng,'z':13};
 				
 			}
@@ -114,14 +116,16 @@ function getHTML5Pos(position) {
 			//socket.emit('position', curPos);
 	
 				
-			if($('#mymap').length > 0)	
-				google.maps.event.addDomListener(window, 'load', initialize(curPos.x,curPos.y,curPos.z)); 
+			//if($('#mymap').length > 0)	
+			//	google.maps.event.addDomListener(window, 'load', initialize(curPos.x,curPos.y,curPos.z)); 
 			
 		}
-			
+	
+		if($('#mymap').length > 0)
+				google.maps.event.addDomListener(window, 'load', initialize(curPos.x,curPos.y,curPos.z)); 	
 		
 	});
-	//google.maps.event.addDomListener(window, 'load', initialize(x,y,zoom)); 
+	
 }
 
 // On declare la variable survId afin de pouvoir par la suite annuler le suivi de la position
@@ -147,6 +151,13 @@ function getErrHTML5Pos(error) {
 	}
 	geolocalized = 0;
 	console.log(info);
+	//$('#locationChooser').modal('show');
+	x = 48.851875;
+	y = 2.356374;
+	z = 13;
+	curPos = {'x':x,'y':y,'z':z};
+	google.maps.event.addDomListener(window, 'load', initialize(curPos.x,curPos.y,curPos.z)); 
+	
 }
 
 

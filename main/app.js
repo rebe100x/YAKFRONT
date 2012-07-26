@@ -105,18 +105,14 @@ function requiresLogin(req,res,next){
 function requiresPosition(req,res,next){
 	//delete req.session.position;
 	if(!req.session.position){
-		console.log('session set to :'+req.session.position);
 		sio.sockets.on('connection', function (socket) {
 		  //socket.emit('news', { hello: 'world' });
 		  socket.on('position', function (data) {
-			console.log(data.x);
 			req.session.position = data.x;
-			console.log('session:'+req.session.position);
 			next();
 		  });
 		});
 	}else{
-		console.log('session already set :'+req.session.position);
 		next();
 	}
 		

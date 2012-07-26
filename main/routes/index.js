@@ -64,14 +64,14 @@ exports.actu = function(req, res){
 			data.yakCat.push(yakcat[i]._id);
 		}
 	}
-	console.log(req.body);
+	//console.log(req.body);
 	data.title = req.body.title;
 	data.content = req.body.content;
 	data.location = {lat:parseFloat(req.body.latitude),lng:parseFloat(req.body.longitude)};
 	//data.creationDate = new Date();
 	//data.lastModifDate = new Date();
 	data.outGoingLink = req.body.link;
-	console.log(data);
+	//console.log(data);
 	
 	data.save();
 	

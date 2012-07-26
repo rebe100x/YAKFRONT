@@ -38,10 +38,10 @@ script
 		if(navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition(getHTML5Pos,getErrHTML5Pos);
 		}else {
-			$('#locationChooser').modal('show');
 			x = 48.851875;
 			y = 2.356374;
 			z = 13;
+			curPos = {'x':x,'y':y,'z':z};
 			google.maps.event.addDomListener(window, 'load', initialize(curPos.x,curPos.y,curPos.z)); 
 		}		
 	});
