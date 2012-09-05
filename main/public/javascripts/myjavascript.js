@@ -1,6 +1,7 @@
-﻿$(document).ready(function() {
+﻿var socket = io.connect('http://localhost:3000');
+	
+$(document).ready(function() {
 
-	//socket = io.connect('http://localhost:3000');
 	
 
 		
@@ -53,7 +54,7 @@ function updateXY(){
 	}
 	curPos = {'x':x,'y':y,'z':z};
 
-	//	socket.emit('position', curPos);
+	socket.emit('position', curPos);
 	
 	//console.log(curPos);
 			
@@ -95,32 +96,38 @@ function getHTML5Pos(position) {
 	
 	$.getJSON('/api/zones/'+x+'/'+y,function(data) {
 	
+		//TODO : if there are info visible where the user is, dont print the alert, just let him surf
+		// we are very far from any zone
 		if(data.zone.length == 0){
+			//console.log('not near area');
 			$('#locationChooser .modal-body p.alertText').html("Yakwala ne couvre pas encore votre zone géographique, vous pouvez choisir ci dessous votre zone de navigation :");
 			$('#locationChooser').modal('show');
-			//console.log('not near area');
-		}else{
+		}else{ // a zone is not far
 			var zone = new Object(data.zone[0]);
 			
 			//console.log(zone.box.br.lat);
 			//console.log(x +'>'+ zone.box.tl.lat+' && '+x +'<'+ zone.box.br.lat +'&&'+ y +'<'+ zone.box.tl.lng +'&&'+ y +'>'+ zone.box.br.lng);
+			
+			// if we are inside the zone, we take the user location
 			if(x < zone.box.tl.lat && x > zone.box.br.lat && y > zone.box.tl.lng && y < zone.box.br.lng ){
 				//console.log('inside');
 				curPos = {'x':x,'y':y,'z':16};
-			}else{
+			}else{ // we are not far the zone but still out of it : we take the zone center location
 				//console.log('outside');
 				curPos = {'x':zone.location.lat,'y':zone.location.lng,'z':13};
 				
 			}
 			
-			//socket.emit('position', curPos);
-	
-				
+			
+			socket.emit('position', curPos);
+		
+		
 			//if($('#mymap').length > 0)	
 			//	google.maps.event.addDomListener(window, 'load', initialize(curPos.x,curPos.y,curPos.z)); 
 			
 		}
 	
+			
 		if($('#mymap').length > 0)
 				google.maps.event.addDomListener(window, 'load', initialize(curPos.x,curPos.y,curPos.z)); 	
 		
@@ -150,7 +157,7 @@ function getErrHTML5Pos(error) {
 		break;
 	}
 	geolocalized = 0;
-	console.log(info);
+	//console.log(info);
 	//$('#locationChooser').modal('show');
 	x = 48.851875;
 	y = 2.356374;

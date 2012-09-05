@@ -13,6 +13,8 @@ exports.partials = function (req, res) {
 };
 
 exports.actu_map = function(req, res){
+//var util = require('util');
+//res.send(util.inspect(res));
   res.render('actu/map',{title:'La YakwaCarte'});
 };
 exports.actu_new = function(req, res){
@@ -72,7 +74,8 @@ exports.actu = function(req, res){
 	//data.lastModifDate = new Date();
 	data.outGoingLink = req.body.link;
 	//console.log(data);
-	
+	data.print = 1;
+	data.status = 1;
 	data.save();
 	
 	res.render('actu/new',{title:'Poster une actu'});

@@ -6,7 +6,7 @@
 var mongoose = require('mongoose')
   , Schema = mongoose.Schema;
 
-//mongoose.set('debug', true);
+mongoose.set('debug', true);
 
 /**
  * Schema definition
@@ -48,16 +48,36 @@ Info.statics.findAll = function (callback) {
   //return this.find({}, callback);
   
   
-  return this.find({},
-[],
-{
-    skip:0, // Starting Row
-    limit:40, // Ending Row
-    sort:{
-        creationDate: -1 //Sort by Date Added DESC
-    }
-},
-callback);
+  return this.find(
+	{"print":1,"status":1},
+	[],
+	{
+		skip:0, // Starting Row
+		limit:100, // Ending Row
+		sort:{
+			creationDate: -1 //Sort by Date Added DESC
+		}
+	},
+	callback);
+
+}
+
+Info.statics.findAllGeo = function (x1,y1,x2,y2,callback) {
+  //return this.find({}, callback);
+  
+
+  var box = [[parseFloat(x1),parseFloat(y1)],[parseFloat(x2),parseFloat(y2)]];
+  return this.find(
+	{"print":1,"status":1,"location" : {$within:{"$box":box}}},
+	[],
+	{
+		skip:0, // Starting Row
+		limit:100, // Ending Row
+		sort:{
+			creationDate: -1 //Sort by Date Added DESC
+		}
+	},
+	callback);
 
 }
 

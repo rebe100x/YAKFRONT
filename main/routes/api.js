@@ -15,6 +15,17 @@ exports.infos = function (req, res) {
 	}); 
 };
 
+exports.geoinfos = function (req, res) {
+	var mongoose = require('mongoose'), Schema = mongoose.Schema;
+	var db = mongoose.connect('mongodb://localhost/yakwala');
+	var Info = db.model('Info');
+	Info.findAllGeo(req.params.x1,req.params.y1,req.params.x2,req.params.y2,function (err, docs){
+	  res.json({
+		info: docs
+	  });
+	}); 
+};
+
 exports.zones = function (req, res) {
 	var mongoose = require('mongoose'), Schema = mongoose.Schema;
 	//mongoose.set('debug', true);

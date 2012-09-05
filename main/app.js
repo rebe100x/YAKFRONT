@@ -51,7 +51,7 @@ app.get('/', routes.index);
 
 
 app.get('/partials/:name', routes.partials);
-app.get('/actu/map', routes.actu_map);
+app.get('/actu/map', requiresPosition, routes.actu_map);
 app.get('/actu/fils', routes.actu_fils);
 app.get('/actu/new', requiresLogin, routes.actu_new);
 
@@ -66,6 +66,7 @@ app.post('/actu',routes.actu);
 
 
 app.get('/api/infos', api.infos);
+app.get('/api/geoinfos/:x1/:y1/:x2/:y2', api.geoinfos);
 app.get('/api/zones/:x/:y', api.zones);
 app.post('/api/users', api.users);
 app.get('/api/cats', api.cats);
@@ -92,8 +93,8 @@ app.dynamicHelpers({
 });
 
 
-//io = require('socket.io');
-//sio = io.listen(app);
+io = require('socket.io');
+sio = io.listen(app);
 		
 function requiresLogin(req,res,next){
 	if(req.session.user){
@@ -103,12 +104,14 @@ function requiresLogin(req,res,next){
 	}
 }
 function requiresPosition(req,res,next){
-	//delete req.session.position;
+	delete req.session.position;
+	
 	if(!req.session.position){
 		sio.sockets.on('connection', function (socket) {
 		  //socket.emit('news', { hello: 'world' });
 		  socket.on('position', function (data) {
 			req.session.position = data.x;
+			console.log(data);
 			next();
 		  });
 		});
