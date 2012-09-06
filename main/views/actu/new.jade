@@ -1,17 +1,19 @@
 include ../mixins/menu.jade
 include ../mixins/locationChooser.jade
 
+
 mixin menu('post')
 mixin locationChooser()
 
 div.container-fluid
 	div.row-fluid
-		div.span3(style='z-index:1;position:relative;background-color:#FFFFFF;padding:15px;') 
+		div.span3.leftOverMapBox
 			- if (flash.warn)
 				div.alert.fade.in
 					button.close(type="button",data-dismiss="alert")
 						x
 					strong=flash.warn
+			div= title.test
 			form(action='/actu', method='POST')
 				input#yakcatInput(type='hidden', name='yakcatInput', value='')
 				p
@@ -39,15 +41,14 @@ div.container-fluid
 			div#mymap
 		
 	script
+		/*INIT*/	
+		var curPos = {'x':0,'y':0,'z':13};
+		var geolocalized = 0;
+		var infowindow = null;
+
 		$(document).ready(function() {
 		
-			/*INIT*/	
-			curPos = {'x':0,'y':0,'z':13};
-			geolocalized = 0;
-			infowindow = null;
-
-		
-			if(navigator.geolocation) {
+			/*if(navigator.geolocation) {
 				navigator.geolocation.getCurrentPosition(getHTML5Pos,getErrHTML5Pos);
 			}else {
 				$('#locationChooser').modal('show');
@@ -56,11 +57,23 @@ div.container-fluid
 				z = 13;
 				curPos = {'x':x,'y':y,'z':z};
 				google.maps.event.addDomListener(window, 'load', initialize(curPos.x,curPos.y,curPos.z)); 
-			}
+			}*/
+			if($.cookie("geoloc")){
+				curPos = JSON.parse($.cookie("geoloc"));
+				google.maps.event.addDomListener(window, 'load', initialize(curPos.x,curPos.y,curPos.z));
+			}else{
+				if(navigator.geolocation) {
+					navigator.geolocation.getCurrentPosition(getHTML5Pos,getErrHTML5Pos);
+				}else {
+					x = 48.851875;
+					y = 2.356374;
+					z = 13;
+					curPos = {'x':x,'y':y,'z':z};
+					google.maps.event.addDomListener(window, 'load', initialize(curPos.x,curPos.y,curPos.z));
+				}
+			}	
 			
 			
-			
-
 			var yakcat = [];
 			$('#yakcat').typeahead({
 				source: function (typeahead, query) {
@@ -77,13 +90,15 @@ div.container-fluid
 					yakcat.push(obj);
 					$("#yakcatInput").val(JSON.stringify(yakcat));
 				}
-				
-			
 			});
 		});
 
 		function initialize(x,y,z) {
 		
+			// set user cookie ( when user comes back he is located where he stopped browsing )
+			$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000 });
+			console.log(curPos);
+			
 			var center = new google.maps.LatLng(x,y);
 			infowindow = new google.maps.InfoWindow({content: ".",maxWidth : 300});
 			var map = new google.maps.Map(document.getElementById('mymap'), {
@@ -139,35 +154,5 @@ div.container-fluid
 				google.maps.event.addListener(map, 'click', function(event) {
 						placeMarker(event.latLng,markerLocation);
 					});
-					
-				/*
-				var drawingManager = new google.maps.drawing.DrawingManager({
-					drawingMode: google.maps.drawing.OverlayType.MARKER,
-					drawingControl: true,
-					drawingControlOptions: {
-						position: google.maps.ControlPosition.BOTTOM_LEFT,
-						drawingModes: [
-						google.maps.drawing.OverlayType.MARKER,
-						google.maps.drawing.OverlayType.RECTANGLE
-						]
-					},
-					markerOptions: {
-						icon: 'images/beachflag.png'
-					},
-					rectangleOptions: {
-						fillColor: '#FFFFFF',
-						fillOpacity: 0.5,
-						strokeWeight: 2,
-						clickable: false,
-						editable: true,
-						zIndex: 1
-					}
-				});
-				drawingManager.setMap(map);
-				*/
-				/*
-				google.maps.event.addListener(markerCluster, 'click', function(data) {
-					console.log('data'+data);
-				});*/
 			});	
 		}

@@ -3,14 +3,14 @@
 $(document).ready(function() {
 
 	
-
+	
 		
 	/*bootstrap alert plugin*/
 	$(".alert").alert();
 	
 	/*top locator button which pops up the locatorChooser popup*/
 	$('#zoneLocButton').click(function(){
-			$('#locationChooser .modal-body p.alertText').html("Vous pouvez naviguer sur les 3 zones couvertes pour l\'instant sur Yakwala :");
+			$('#locationChooser .modal-body p.alertText').html("");
 			$('#locationChooser').modal('show');
 		});
 	/*locator pop up links*/	
@@ -61,13 +61,13 @@ function updateXY(){
 	$('#locationChooser').modal('hide');
 	
 	if($('#mymap').length > 0){ // only for the map page
+	// NOTE : initialize function is defined in map.jade and in new.jade : just a bit fifferent to deal the insertion
 		google.maps.event.addDomListener(window, 'load', initialize(curPos.x,curPos.y,curPos.z)); 
 	}
 	//return curPos;
-	
-	
-	
 }
+
+
 
 function getHTML5Pos(position) {
 	x = position.coords.latitude;

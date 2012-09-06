@@ -37,6 +37,7 @@ var Info = new Schema({
   , zone	: {type: Schema.ObjectId}		
 }, { collection: 'info' });
 
+Info.index({location : '2d'});
 
 Info.statics.findByTitle = function (title, callback) {
   return this.find({ title: title }, callback);

@@ -13,16 +13,27 @@ exports.partials = function (req, res) {
 };
 
 exports.actu_map = function(req, res){
-//var util = require('util');
+var util = require('util');
 //res.send(util.inspect(res));
-  res.render('actu/map',{title:'La YakwaCarte'});
+//var mongoose = require('mongoose'), Schema = mongoose.Schema;
+//var db = mongoose.connect('mongodb://localhost/yakwala');
+//var Info = db.model('Info');
+//Info.findAll(function (err, docs){
+//	res.render('actu/map',{locals:{infos:docs,title:'testelo'}});
+//});
+	res.render('actu/map');  
 };
 exports.actu_new = function(req, res){
-  res.render('actu/new',{title:'Poster une actu'});
+  res.render('actu/new',{locals:{title:{'test':'Poster une actu'}}});
 };
 exports.actu_fils = function(req, res){
 
-  res.render('actu/fils',{title:'Le fils actu'});
+	var mongoose = require('mongoose'), Schema = mongoose.Schema;
+	var db = mongoose.connect('mongodb://localhost/yakwala');
+	var Info = db.model('Info');
+	Info.findAll(function (err, docs){
+		res.render('actu/fils',{locals:{infos:docs}});
+	}); 
 };
 
 
@@ -69,13 +80,15 @@ exports.actu = function(req, res){
 	//console.log(req.body);
 	data.title = req.body.title;
 	data.content = req.body.content;
-	data.location = {lat:parseFloat(req.body.latitude),lng:parseFloat(req.body.longitude)};
+	// NOTE : in the query below, order is important : in DB we have lat, lng but need to insert in reverse order : lng,lat  (=> bug mongoose ???)
+	data.location = {lng:parseFloat(req.body.longitude),lat:parseFloat(req.body.latitude)};
 	//data.creationDate = new Date();
 	//data.lastModifDate = new Date();
 	data.outGoingLink = req.body.link;
 	//console.log(data);
 	data.print = 1;
 	data.status = 1;
+	data.yakType = 2;
 	data.save();
 	
 	res.render('actu/new',{title:'Poster une actu'});

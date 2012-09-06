@@ -3,9 +3,9 @@ mixin locationChooser()
 	div.modal.hide.fade#locationChooser
 		div.modal-header
 			button.close(type="button", data-dismiss="modal") x
-			h3 Choisissez votre zone :
+			h3 Y a quoi là ?
 		div.modal-body
-			p.alertText Yakwala ne couvre pas encore la zone où vous vous trouvez, vous pouvez actuellement naviguer sur :
+			p.alertText 
 				ul.unstyled
 					li.zoneLoc#zone1
 						i.icon-map-marker
@@ -16,6 +16,8 @@ mixin locationChooser()
 					li.zoneLoc#zone3
 						i.icon-map-marker
 						span  Eghézée, Belgique
+					br	
+					span.btn Ajouter un lieux favori
 		div.modal-footer
 			span.btn(data-dismiss="modal") Laissez moi explorer tout seul !
 

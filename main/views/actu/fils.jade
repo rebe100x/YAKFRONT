@@ -5,6 +5,8 @@ mixin menu('fils')
 mixin locationChooser()
 
 div#content
+	p!= partial('./partials/newsfeed.jade', {infos:infos})
+	
 script
 	$(document).ready(function() {
 		$.getJSON('/api/infos',function(data) {

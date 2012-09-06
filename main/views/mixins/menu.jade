@@ -23,11 +23,36 @@ mixin menu(active)
 						- else
 							span 
 								a.btn(href="/user/login") Login
+					- if (active == 'map' || active == 'post')		
+						div.btn-group.pull-right
 							
-					div.btn-group.pull-right
-						span
-							span.btn#zoneLocButton(title="Naviguez sur une autre zone")
-								i.icon-screenshot		
+							span
+								span.btn(title="All")
+									i.icon-eye-open
+									&nbsp;All								
+								span.btn.btn-info(title="Actu")
+									i.icon-asterisk
+									&nbsp;Actu								
+								span.btn.btn-success(title="Agenda")
+									i.icon-leaf
+									&nbsp;Agenda
+								span.btn.btn-warning(title="Promo")
+									i.icon-signal 
+									&nbsp;Promo
+								span.btn.btn-danger(title="UGC")
+									i.icon-fire
+									&nbsp;Discussion
+							&nbsp;&nbsp;&nbsp;
+							span
+								span.btn#zoneLocButton(title="Mes favoris")
+									i.icon-star 
+									&nbsp;Mes endroits favoris
+							&nbsp;&nbsp;&nbsp;
+							span	
+								span.btn(title="Autour de moi")
+									i.icon-home 
+									&nbsp;Autour de moi
+							&nbsp;&nbsp;&nbsp;
 					div.nav-collapse
 						ul.nav
 							- if (active == 'map')
