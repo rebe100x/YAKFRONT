@@ -74,7 +74,8 @@ exports.actu = function(req, res){
 	if(req.body.yakcatInput.length > 0){
 		var yakcat = eval('('+req.body.yakcatInput+')');
 		for(i=0;i<yakcat.length;i++){
-			data.yakCat.push(yakcat[i]._id);
+		
+			data.yakCat.push(mongoose.Types.ObjectId(yakcat[i]._id));
 		}
 	}
 	//console.log(req.body);

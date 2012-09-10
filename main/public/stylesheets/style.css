@@ -8,6 +8,8 @@ a {
 }
 
 ul#newsfeed{list-style-type:none;}
+.mapHighlighter{cursor:pointer;}
+.mapHighlighter:hover{background-color:#CCCCCC;}
 .highlighted{font-weight:bold;color:red;}
 .row-fluid  .leftOverMapBox{z-index:1;position:relative;background-color:#FFFFFF;padding:15px;}
 .row-fluid  .rightOverMapBox{z-index:1;position:relative;background-color:#FFFFFF;padding:15px;float:right;}
