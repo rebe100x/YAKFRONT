@@ -7,12 +7,26 @@ mixin locationChooser()
 
 div.container-fluid
 	div.row-fluid
-		div.span3
-		div.span9
+		div.span12
 			div#mymap
 	div.row-fluid
 		div.span3.rightOverMapBox
-			ul#newsfeed
+			div#newsfeedContainer
+				span#newsfeedMenu
+					span.btn.btn-info.active(title="Actu", type=1)
+						i.icon-asterisk
+					span.btn.btn-success(title="Discussion", type=4)
+						i.icon-leaf
+					span.btn.btn-warning(title="Agenda", type=2)
+						i.icon-signal 
+					span.btn.btn-danger(title="Infos Pratiques", type=3)
+						i.icon-fire
+					span.btn.btn-inverse(title="Mes alertes", type=5)
+						i.icon-star
+					div#heatModule
+						div#dayPrinter Last 3 days	
+						div#heatSelector
+				ul#newsfeed
 			//p!= partial('./partials/newsfeed.jade', {test:infos})
 			//div elo #{title}
 			//div #{infos}
@@ -26,18 +40,39 @@ script
 	var infoArray = [];
 	var markerClustererOptions = {gridSize:30,maxZoom: 17};
 	var markerCluster = null;
-	
+	var heat = 100;
+	var type = 1;
 	$(document).ready(function() {
 	
+		$( "#heatSelector" ).slider({
+			range: "min",
+			min: 1,
+			max: 100,
+			value: 90,
+			slide: function( event, ui ) {
+				var x = ui.value;
+				console.log(x+' '+Math.floor(2.093333333*Math.pow(10,-5)*Math.pow(x,4) - 4.087333333*Math.pow(10,-3)*Math.pow(x,3) + 2.469666667*Math.pow(10,-1)*Math.pow(x,2) - 8.346666667*x + 360));
+				$( "#dayPrinter" ).html(Math.floor(-7.222723628*Math.pow(10,-7)*Math.pow(x,5) + 2.123355095*Math.pow(10,-4)*Math.pow(x,4) - 2.178300623*Math.pow(10,-2)*Math.pow(x,3) + 0.906040198*Math.pow(x,2) - 16.47223075*x + 360.0000001));
+			}
+		});
+	
+		$('#newsfeedMenu span.btn').click(function(){
+			type = $(this).attr('type');
+			getAndPrintInfo();
+		});
+		
+		drawNewsFeed();
+		$(window).resize(function(){drawNewsFeed();});
 		$('#newsfeed').delegate(".mapHighlighter","click",function(){
 			highlightInfo($(this).attr('infoId'));
-			$(this).parent().addClass('highlighted');
+			$(this).addClass('highlighted');
 		});
+		
 		
 		setInterval(function() {
 			silentMarkerAdder();
 		}, 7000);
-		//console.log(JSON.parse($.cookie("geoloc")));
+		
 		if($.cookie("geoloc")){
 			curPos = JSON.parse($.cookie("geoloc"));
 			google.maps.event.addDomListener(window, 'load', initialize(curPos.x,curPos.y,curPos.z));
@@ -54,6 +89,11 @@ script
 		}	
 	});
 
+	function drawNewsFeed(){		
+		var newsfeedContainerHeight = window.innerHeight-$('#newsfeedContainer').offset().top-70+'px';
+		$('#newsfeedContainer').css('height',newsfeedContainerHeight).slimScroll({height: newsfeedContainerHeight});
+	}
+	
 	function highlightInfo(id){
 		$.each(infoArray,function(key,val){
 			//console.log(val2._id+' == '+val._id);
@@ -125,7 +165,7 @@ script
 	
 	function silentMarkerAdder(){
 		//console.log('silentMarkerAdder');
-		$.getJSON('/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f,function(data) {
+		$.getJSON('/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+heat+'/'+type,function(data) {
 			
 			$.each(data.info, function(key,val) {
 				
@@ -147,7 +187,8 @@ script
 					//console.log('PRINT NEW MARKER');
 					
 					/*PRINT ON THE FEED*/
-					$('#newsfeed').prepend('<li class=\'highlighted\'>'+val.title+'</li>');
+					var uniqueHL = new Date().getTime();
+					$('#newsfeed').prepend('<li class=\'mapHighlighter highlighted '+uniqueHL+'\' infoId=\''+val._id+'\' ><i class=\'icon-eye-open\'></i> '+val.title+'</li>');
 				
 					/*PRINT ON THE MAP*/
 					var latLng = new google.maps.LatLng(val.location['lat'],val.location['lng']);
@@ -156,7 +197,7 @@ script
 					setTimeout(function() {
 						marker.setAnimation(null);
 						markerCluster.addMarker(marker);
-						$('#newsfeed .highlighted').removeClass('highlighted');
+						$('#newsfeed .'+uniqueHL+'.highlighted').removeClass('highlighted');
 					}, 7000);
 					
 					google.maps.event.addListener(marker, 'click', function() {
@@ -183,7 +224,7 @@ script
 		
 		cleanMarkers();
 		//console.log('PRINT');
-		$.getJSON('/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f,function(data) {
+		$.getJSON('/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+heat+'/'+type,function(data) {
 			
 			// empty the news feed
 			$('#newsfeed').html('');
@@ -192,7 +233,7 @@ script
 			
 				/*PRINT ON THE FEED*/
 				
-				$('#newsfeed').append('<li><i class=\'mapHighlighter icon-eye-open\' infoId=\''+val._id+'\' ></i> '+val.title+'</li>');
+				$('#newsfeed').append('<li class=\'mapHighlighter\' infoId=\''+val._id+'\'><i class=\'icon-eye-open\' ></i> '+val.title+'</li>');
 				
 				/*PRINT ON THE MAP*/	
 				

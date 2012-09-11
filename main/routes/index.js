@@ -89,7 +89,7 @@ exports.actu = function(req, res){
 	//console.log(data);
 	data.print = 1;
 	data.status = 1;
-	data.yakType = 2;
+	data.yakType = 4; // UGC
 	data.save();
 	
 	res.render('actu/new',{title:'Poster une actu'});

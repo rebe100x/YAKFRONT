@@ -11,9 +11,6 @@ mongoose.set('debug', true);
 /**
  * Schema definition
  */
-
-
-//var LocationSchema = new Schema({ lat: Number,lng: Number });
 var Info = new Schema({
     title     : { type: String}
   , content	: {type: String}		
@@ -25,8 +22,10 @@ var Info = new Schema({
   , heat	: {type: Number}		
   , print	: {type: Number}		
   , yakCat	: {type: [Yakcat]}		
-  , yakTag	: {type: [String]}		
-  , freeTag	: {type: [String]}		
+  , yakTag	: {type: [String]}
+  , yakType	: {type: [Number]}  
+  , freeTag	: {type: [String]}	
+  , pubDate	: {type: Date, required: true, default: Date.now}		  
   , creationDate	: {type: Date, required: true, default: Date.now}		
   , lastModifDate	: {type: Date, required: true, default: Date.now}		
   , dateEndPrint	: {type: Date}		
@@ -46,9 +45,6 @@ Info.statics.findByLink = function (link, callback) {
   return this.find({ outGoingLink: link }, callback);
 }
 Info.statics.findAll = function (callback) {
-  //return this.find({}, callback);
-  
-  
   return this.find(
 	{"print":1,"status":1},
 	[],
@@ -63,19 +59,25 @@ Info.statics.findAll = function (callback) {
 
 }
 
-Info.statics.findAllGeo = function (x1,y1,x2,y2,callback) {
-  //return this.find({}, callback);
+Info.statics.findAllGeo = function (x1,y1,x2,y2,heat,type,callback) {
   
-
+  var D = new Date();
+  D.setDate(D.getDate()-heat); 
   var box = [[parseFloat(x1),parseFloat(y1)],[parseFloat(x2),parseFloat(y2)]];
   return this.find(
-	{"print":1,"status":1,"location" : {$within:{"$box":box}}},
+	{
+		"print":1,
+		"status":1,
+		"location" : {$within:{"$box":box}},
+		"pubDate":{$gte:D},
+		"yakType" : type
+	},
 	[],
 	{
 		skip:0, // Starting Row
 		limit:100, // Ending Row
 		sort:{
-			creationDate: -1 //Sort by Date Added DESC
+			pubDate: -1 //Sort by Date Added DESC
 		}
 	},
 	callback);

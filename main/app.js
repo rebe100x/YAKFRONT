@@ -66,7 +66,7 @@ app.post('/actu',routes.actu);
 
 
 app.get('/api/infos', api.infos);
-app.get('/api/geoinfos/:x1/:y1/:x2/:y2', api.geoinfos);
+app.get('/api/geoinfos/:x1/:y1/:x2/:y2/:heat/:type', api.geoinfos);
 app.get('/api/zones/:x/:y', api.zones);
 app.post('/api/users', api.users);
 app.get('/api/cats', api.cats);
