@@ -26,13 +26,13 @@ var util = require('util');
 exports.actu_new = function(req, res){
   res.render('actu/new',{locals:{title:{'test':'Poster une actu'}}});
 };
-exports.actu_fils = function(req, res){
+exports.actu_fil = function(req, res){
 
 	var mongoose = require('mongoose'), Schema = mongoose.Schema;
 	var db = mongoose.connect('mongodb://localhost/yakwala');
 	var Info = db.model('Info');
 	Info.findAll(function (err, docs){
-		res.render('actu/fils',{locals:{infos:docs}});
+		res.render('actu/fil',{locals:{infos:docs}});
 	}); 
 };
 
@@ -83,8 +83,14 @@ exports.actu = function(req, res){
 	data.content = req.body.content;
 	// NOTE : in the query below, order is important : in DB we have lat, lng but need to insert in reverse order : lng,lat  (=> bug mongoose ???)
 	data.location = {lng:parseFloat(req.body.longitude),lat:parseFloat(req.body.latitude)};
-	//data.creationDate = new Date();
-	//data.lastModifDate = new Date();
+	data.creationDate = new Date();
+	data.lastModifDate = new Date();
+	data.pubDate = new Date();
+	var now = new Date();
+	var D = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+	var DTS = D.getTime() / 1000 + (3 * 60 * 60 * 24);
+	D.setTime(DTS*1000); 
+	data.dateEndPrint = D;
 	data.outGoingLink = req.body.link;
 	//console.log(data);
 	data.print = 1;

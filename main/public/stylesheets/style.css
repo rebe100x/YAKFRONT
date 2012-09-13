@@ -7,12 +7,20 @@ a {
   color: #00B7FF;
 }
 
-#newsfeedMenu{margin:7px auto;text-align:center;width:100%;float:left;}
-ul#newsfeed{list-style-type:none;margin:7px;}
+
+
+
 .mapHighlighter{cursor:pointer;padding:3px;-webkit-border-radius: 2px;border-radius: 2px;}
 .mapHighlighter:hover{background-color:#F0F0F0;}
 .highlighted{font-weight:bold;color:red;}
-.row-fluid  .leftOverMapBox{z-index:1;position:relative;background-color:#FFFFFF;padding:15px;-webkit-border-radius: 2px;border-radius: 2px;}
-.row-fluid  .rightOverMapBox{z-index:1;position:relative;background-color:#FFFFFF;padding:15px;float:right;height:100%;-webkit-border-radius: 2px;border-radius: 2px;}
-#newsfeedContainer{overflow:auto;height:0px;}
-#heatModule{margin:7px auto;padding:7px;}
+
+.row-fluid  .leftOverMapBox{z-index:1;position:relative;background-color:#FFFFFF;padding:10px;-webkit-border-radius: 2px;border-radius: 2px;}
+.row-fluid  .rightOverMapBox{z-index:1;position:relative;background-color:#FFFFFF;padding:0px;float:right;height:100%;-webkit-border-radius: 2px;border-radius: 2px;background:transparent;}
+
+#newsfeedContainer{overflow:auto;height:auto;}
+#newsfeedMenu{margin:10px auto;padding:10px;text-align:center;width:100%;float:left;opacity:0.85;background:#FFFFFF;}
+#newsfeedMenu #heatModule{margin:10px 20px 10px 0px;padding:7px 15px;}
+#newsfeedMenu #heatModule #dayPrinter{padding: 3px;}
+#newsfeedMenu #heatModule #heatSelector{}
+
+ul#newsfeed{list-style-type:none;width:100%;margin:10px auto;padding:10px 3px;float:left;opacity:0.85;background:#FFFFFF;}

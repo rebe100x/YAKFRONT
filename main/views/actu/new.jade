@@ -13,24 +13,31 @@ div.container-fluid
 					button.close(type="button",data-dismiss="alert")
 						x
 					strong=flash.warn
-			div= title.test
+			legend Poster une info:
 			form(action='/actu', method='POST')
 				input#yakcatInput(type='hidden', name='yakcatInput', value='')
-				p
-					label(for='title') Titre:
-					input(type='text', name='title', id='title')
-				p
-					label(for='content') Texte:
-					textarea(name='content', id='content')
-				p
-					label(for='category') Catégorie(s):
-					input#yakcat(type="text",data-provide="typeahead", name="category", autocomplete="off")
-				p
-					label(for='latitude') Latitude: ( click on the map )
-					input#latitude(type="text",data-provide="typeahead", name="latitude")
-				p
-					label(for='longitude') Longitude: ( click on the map )
-					input#longitude(type="text",data-provide="typeahead", name="longitude")
+				input#placeInput(type='hidden', name='placeInput', value='')
+				div.control-group
+					div.controls
+						input.span12(type='text', name='title', id='title', placeholder='Titre')
+						textarea.span12(name='content', id='content', placeholder='Texte',rows='5')
+				div.control-group
+					label(for='category') Choisissez une ou plusieurs catégories Yakwala:
+					div.controls
+						input#yakcat.span12(type="text",data-provide="typeahead", name="category", autocomplete="off", placeholder='Rechercher...')
+				legend A quel endroit ?
+				div.control-group
+					label(for='Place') Entrer une adresse : 
+					div.controls
+						div.input-append
+							input#place(type="text",data-provide="typeahead", name="place", autocomplete="off", placeholder='Rechercher...') 
+							button.btn#btn-place-adder(type="button") Add
+					p
+						label(for='latitude') Latitude: ( click on the map )
+						input#latitude(type="text",data-provide="typeahead", name="latitude")
+					p
+						label(for='longitude') Longitude: ( click on the map )
+						input#longitude(type="text",data-provide="typeahead", name="longitude")
 				p
 					label(for='link') Lien:
 					input.link(type="text",data-provide="typeahead", name="link")
@@ -45,7 +52,15 @@ div.container-fluid
 		var curPos = {'x':0,'y':0,'z':13};
 		var geolocalized = 0;
 		var infowindow = null;
-
+		var markerLocation = null;
+		var yakcatArray = [];
+		var placeArray = [];
+		var map = new google.maps.Map(document.getElementById('mymap'), {
+				mapTypeId:google.maps.MapTypeId.ROADMAP
+			});
+		var heat = 3; // 3 days
+		var type = 4; // UGC only
+		var bounds = null;
 		$(document).ready(function() {
 		
 			/*if(navigator.geolocation) {
@@ -74,25 +89,81 @@ div.container-fluid
 			}	
 			
 			
-			var yakcat = [];
+			
 			$('#yakcat').typeahead({
+				minLength : 3,
 				source: function (typeahead, query) {
 					$.ajax({
-							url: "/api/cats",						
+							url: "/api/cats",				
 							success: function( data ) {
 								typeahead.process(data.cats);
 							}
 						})},
 				property: "title",
 				onselect: function(obj) { 
-					$("label[for='category']").after("<div><i class='icon-remove'  onclick='yakcat.cleanArray(\""+obj._id+"\");$(\"#yakcatInput\").val(JSON.stringify(yakcat));$(this).parent().remove();'></i> "+obj.title+"</div>");
+					$("label[for='category']").after("<div><i class='icon-remove'  onclick='console.log(yakcatArray);yakcatArray.cleanArray(\""+obj._id+"\");$(\"#yakcatInput\").val(JSON.stringify(yakcatArray));$(this).parent().remove();'></i> "+obj.title+"</div>");
 					$('#yakcat').val('').focus();
-					yakcat.push(obj);
-					$("#yakcatInput").val(JSON.stringify(yakcat));
+					yakcatArray.push(obj);
+					$("#yakcatInput").val(JSON.stringify(yakcatArray));
 				}
 			});
+			
+			
+			$('#place').typeahead({
+				minLength : 3,							
+				source: function (typeahead, query) {
+					$.ajax({
+							url: "/api/places",		
+							success: function( data ) {
+								typeahead.process(data.places);
+							}
+						})},
+				property: "title",
+				onselect: function(obj) { 
+					$('#btn-place-adder').parent().before("<div><i class='icon-remove'  onclick='placeArray.cleanArray(\""+obj._id+"\");$(\"#placeInput\").val(JSON.stringify(placeArray));$(this).parent().remove();'></i> "+obj.title+"</div>");
+					$('#place').val('').focus();
+					placeArray.push(obj);
+					$("#placeInput").val(JSON.stringify(placeArray));
+				}
+			});
+			
+			
+			$('#btn-place-adder').click(function(){
+				
+				var addressString = $('#place').val();
+				if(addressString != "Rechercher..." && addressString != "" && addressString.length > 1){
+					var addressQuery = {"address": addressString,"latLng":map.getCenter(),"bounds":map.getBounds()};
+					var geocoder = new google.maps.Geocoder();
+					geocoder.geocode( addressQuery, function(results, status) {
+						if (status == google.maps.GeocoderStatus.OK) {
+							map.setCenter(results[0].geometry.location);
+							console.log(markerLocation);
+							markerLocation.setVisible(true);
+							markerLocation.setPosition(results[0].geometry.location);
+							google.maps.event.addListener(markerLocation, 'dragend', function(event) {
+								placeMarker(event.latLng,markerLocation);
+							});
+							var placeGmap = {};
+							$('#btn-place-adder').parent().before("<div><i class='icon-remove'  onclick='place.cleanArray(\""+results[0].formatted_address+"\");$(\"#yakcatInput\").val(JSON.stringify(yakcat));$(this).parent().remove();'></i> "+results[0].formatted_address+"</div>");
+						} else {
+							alert("Geocode was not successful for the following reason: " + status);
+						}
+					});
+				}
+				
+				//$(this).parent().before("<div><i class='icon-remove'  onclick='yakcat.cleanArray(\""+gmap._id+"\");$(\"#yakcatInput\").val(JSON.stringify(yakcat));$(this).parent().remove();'></i> "+obj.title+"</div>");
+			});
+			
+		
+			
+
+		
 		});
 
+		
+		/***END READY***/
+		
+		
 		function initialize(x,y,z) {
 		
 			// set user cookie ( when user comes back he is located where he stopped browsing )
@@ -101,22 +172,52 @@ div.container-fluid
 			
 			var center = new google.maps.LatLng(x,y);
 			infowindow = new google.maps.InfoWindow({content: ".",maxWidth : 300});
-			var map = new google.maps.Map(document.getElementById('mymap'), {
-				zoom:z,
-				center:center,
-				mapTypeId:google.maps.MapTypeId.ROADMAP
-			});
+			map.setZoom(z);
+			map.setCenter(center);
 
-			var markerLocation = new google.maps.Marker({
+			
+			markerLocation = new google.maps.Marker({
 				visible:false,
 				map:map,
 				draggable:true,
-				icon:'images/beachflag.png'
+				icon:'images/beachflag.png',
+				position:center
 			});
 			
+			
+			google.maps.event.addListenerOnce(map, 'idle', function(){
+				bounds = this.getBounds();
+				console.log(bounds);
+				getAndPrintInfo();
+				
+			});
+			
+			
+			google.maps.event.addListener(map, 'dragend', function() {
+				bounds = this.getBounds();
+				center = this.getCenter();
+				curPos.x = center.lat();
+				curPos.y = center.lng();
+				$.cookie("geoloc", JSON.stringify(curPos));
+				getAndPrintInfo();
+			});
+			
+			google.maps.event.addListener(map, 'zoom_changed', function() {
+				bounds = this.getBounds();	
+				curPos.z = this.getZoom();
+				$.cookie("geoloc", JSON.stringify(curPos));
+				getAndPrintInfo();
+			});
+			
+		}
+		
+		
+		
+		function getAndPrintInfo(){
+		
 			var markers = [];
 			
-			$.getJSON('/api/infos',function(data) {
+			$.getJSON('/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+heat+'/'+type,function(data) {
 			
 				var items = [];
 				
@@ -155,4 +256,5 @@ div.container-fluid
 						placeMarker(event.latLng,markerLocation);
 					});
 			});	
+		
 		}

@@ -6,7 +6,7 @@
 var mongoose = require('mongoose')
   , Schema = mongoose.Schema;
 
-mongoose.set('debug', true);
+//mongoose.set('debug', true);
 
 /**
  * Schema definition
@@ -46,13 +46,14 @@ Info.statics.findByLink = function (link, callback) {
 }
 Info.statics.findAll = function (callback) {
   return this.find(
-	{"print":1,"status":1},
+	{"status":1},
 	[],
 	{
 		skip:0, // Starting Row
 		limit:100, // Ending Row
+		"yakType" : 1,
 		sort:{
-			creationDate: -1 //Sort by Date Added DESC
+			pubDate: -1 //Sort by Date Added DESC
 		}
 	},
 	callback);
@@ -60,9 +61,10 @@ Info.statics.findAll = function (callback) {
 }
 
 Info.statics.findAllGeo = function (x1,y1,x2,y2,heat,type,callback) {
-  
-  var D = new Date();
-  D.setDate(D.getDate()-heat); 
+  var now = new Date();
+  var D = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+  var DTS = D.getTime() / 1000 - (heat * 60 * 60 * 24);
+  D.setTime(DTS*1000); 
   var box = [[parseFloat(x1),parseFloat(y1)],[parseFloat(x2),parseFloat(y2)]];
   return this.find(
 	{
@@ -163,11 +165,30 @@ var Yakcat = new Schema({
   
 }, { collection: 'yakcat' });
 
-
-
-
-
 Yakcat.statics.findAll = function (callback) {
   return this.find({},[],{sort:{title:1}}, callback);
 }
 mongoose.model('Yakcat', Yakcat);
+
+
+/***************PLACE*/
+var Place = new Schema({
+	title	: { type: String, index:true}
+,	content	: { type: String }
+,	thumb	: { type: String }
+,	origin	: { type: String }
+,	access	: { type:Number }
+,	licence	: { type: String }
+,	outGoingLink	: { type: String }
+,	creationDate	: {type: Date, required: true, default: Date.now}		
+,	lastModifDate	: {type: Date, required: true, default: Date.now}		
+,	location	: { type : { lat: Number, lng: Number }, index : '2d'}	
+,	status	: {type: Number}		
+,	user	: {type: Schema.ObjectId}		
+,	zone	: {type: Schema.ObjectId}
+},{ collection: 'place' });
+
+Place.statics.findAll = function (callback) {
+  return this.find({},[],{sort:{title:1}}, callback);
+}
+mongoose.model('Place', Place);

@@ -10,7 +10,7 @@ div.container-fluid
 		div.span12
 			div#mymap
 	div.row-fluid
-		div.span3.rightOverMapBox
+		div.span4.rightOverMapBox
 			div#newsfeedContainer
 				span#newsfeedMenu
 					span.btn.btn-info.active(title="Actu", type=1)
@@ -24,7 +24,7 @@ div.container-fluid
 					span.btn.btn-inverse(title="Mes alertes", type=5)
 						i.icon-star
 					div#heatModule
-						div#dayPrinter Last 3 days	
+						div#dayPrinter Depuis 3 jours	
 						div#heatSelector
 				ul#newsfeed
 			//p!= partial('./partials/newsfeed.jade', {test:infos})
@@ -40,8 +40,9 @@ script
 	var infoArray = [];
 	var markerClustererOptions = {gridSize:30,maxZoom: 17};
 	var markerCluster = null;
-	var heat = 100;
+	var heat = 3;
 	var type = 1;
+	var bounds = null;
 	$(document).ready(function() {
 	
 		$( "#heatSelector" ).slider({
@@ -51,17 +52,32 @@ script
 			value: 90,
 			slide: function( event, ui ) {
 				var x = ui.value;
-				console.log(x+' '+Math.floor(2.093333333*Math.pow(10,-5)*Math.pow(x,4) - 4.087333333*Math.pow(10,-3)*Math.pow(x,3) + 2.469666667*Math.pow(10,-1)*Math.pow(x,2) - 8.346666667*x + 360));
-				$( "#dayPrinter" ).html(Math.floor(-7.222723628*Math.pow(10,-7)*Math.pow(x,5) + 2.123355095*Math.pow(10,-4)*Math.pow(x,4) - 2.178300623*Math.pow(10,-2)*Math.pow(x,3) + 0.906040198*Math.pow(x,2) - 16.47223075*x + 360.0000001));
+				var y = Math.ceil(-7.222723628*Math.pow(10,-7)*Math.pow(x,5) + 2.123355095*Math.pow(10,-4)*Math.pow(x,4) - 2.178300623*Math.pow(10,-2)*Math.pow(x,3) + 0.906040198*Math.pow(x,2) - 16.47223075*x + 360.0000001);
+				var yText = "";
+				if(y <= 1)
+					yText = "Depuis "+y+" jour";
+				else
+					yText = "Depuis "+y+" jours";
+				$( "#dayPrinter" ).html(yText);
+				heat = y;
+				
+			},
+			change:function(event, ui){
+				getAndPrintInfo();
+				
 			}
 		});
 	
 		$('#newsfeedMenu span.btn').click(function(){
 			type = $(this).attr('type');
+			$('#newsfeedMenu span.btn').removeClass('active');
+			$(this).addClass('active');
 			getAndPrintInfo();
 		});
 		
+		// init news feed
 		drawNewsFeed();
+		$('#newsfeedContainer').mCustomScrollbar({mouseWheel:true,scrollButtons:{enable:true},advanced:{updateOnContentResize: true}});
 		$(window).resize(function(){drawNewsFeed();});
 		$('#newsfeed').delegate(".mapHighlighter","click",function(){
 			highlightInfo($(this).attr('infoId'));
@@ -89,23 +105,43 @@ script
 		}	
 	});
 
-	function drawNewsFeed(){		
-		var newsfeedContainerHeight = window.innerHeight-$('#newsfeedContainer').offset().top-70+'px';
-		$('#newsfeedContainer').css('height',newsfeedContainerHeight).slimScroll({height: newsfeedContainerHeight});
+	function drawNewsFeed(){	
+		
+		var newsfeedContainerHeight = window.innerHeight-$('#newsfeedContainer').offset().top-50+'px';
+		$('#newsfeedContainer').css('height',newsfeedContainerHeight);
 	}
 	
 	function highlightInfo(id){
 		$.each(infoArray,function(key,val){
 			//console.log(val2._id+' == '+val._id);
 				if(val._id == id){
+					// add marker
 					var latLng = new google.maps.LatLng(val.location['lat'],val.location['lng']);
 					var marker = new google.maps.Marker({position: latLng,map:map,visible:true});
-					marker.setAnimation(google.maps.Animation.BOUNCE);
+					//marker.setAnimation(google.maps.Animation.BOUNCE);
+					// add info window
+					var dateTmp = new Date(val.pubDate);
+					var dateCreation = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
+					var infoContent = "<div class=\'infowindow\' >";
+					if(!(typeof val.thumb === 'undefined'))
+						infoContent += "<img src=\'http://dev.backend.yakwala.com/BACKEND/"+val.thumb+"\' />";
+					infoContent += "<div class=\'title\'> "+val.title+" ("+dateCreation+")</div>";
+					infoContent += "<div class=\'content\'>"+val.content.substring(0,250)+"...</div>";
+					if(!(typeof val.outGoingLink === 'undefined'))
+						infoContent += "<div class=\'readmore\'><a target=\'_blank\' href=\'"+val.outGoingLink+"\'> Read more</a></div>";
+					infoContent += "</div>";
+					infowindow.setContent(infoContent);
+					infowindow.open(map,marker);
+					
+					// center map
+					//map.setCenter(latLng);
+					
+					// clear marker ( and infowindow
 					setTimeout(function() {
 						marker.setAnimation(null);
 						marker.setMap(null);
 						$('#newsfeed .highlighted').removeClass('highlighted');
-					}, 3000);
+					}, 10000);
 				}
 			});
 	}
@@ -130,6 +166,7 @@ script
 		google.maps.event.addListenerOnce(map, 'idle', function(){
 			bounds = this.getBounds();
 			getAndPrintInfo();
+			
 		});
 		
 		
@@ -201,7 +238,7 @@ script
 					}, 7000);
 					
 					google.maps.event.addListener(marker, 'click', function() {
-							var dateTmp = new Date(val.creationDate);
+							var dateTmp = new Date(val.pubDate);
 							var dateCreation = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
 							var infoContent = "<div class=\'infowindow\' >";
 							if(!(typeof val.thumb === 'undefined'))
@@ -222,12 +259,20 @@ script
 	
 	function getAndPrintInfo(){
 		
+		
+		drawNewsFeed();
+		
 		cleanMarkers();
-		//console.log('PRINT');
+		console.log('PRINT');
+
 		$.getJSON('/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+heat+'/'+type,function(data) {
 			
 			// empty the news feed
-			$('#newsfeed').html('');
+			if(data.info.length == 0)
+				$('#newsfeed').html('Aucune info !');
+			else
+				$('#newsfeed').html('');
+			
 			
 			$.each(data.info, function(key,val) {
 			
@@ -244,7 +289,7 @@ script
 				markers.push(marker);
 				
 				google.maps.event.addListener(marker, 'click', function() {
-					var dateTmp = new Date(val.creationDate);
+					var dateTmp = new Date(val.pubDate);
 					var dateCreation = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
 					var infoContent = "<div class=\'infowindow\' >";
 					if(!(typeof val.thumb === 'undefined'))

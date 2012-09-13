@@ -1,4 +1,4 @@
-﻿var socket = io.connect('http://localhost:3000');
+﻿//var socket = io.connect('http://localhost:3000');
 	
 $(document).ready(function() {
 
@@ -54,7 +54,7 @@ function updateXY(){
 	}
 	curPos = {'x':x,'y':y,'z':z};
 
-	socket.emit('position', curPos);
+	//socket.emit('position', curPos);
 	
 	//console.log(curPos);
 			
@@ -119,7 +119,7 @@ function getHTML5Pos(position) {
 			}
 			
 			
-			socket.emit('position', curPos);
+			//socket.emit('position', curPos);
 		
 		
 			//if($('#mymap').length > 0)	

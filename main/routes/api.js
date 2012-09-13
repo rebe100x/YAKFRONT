@@ -50,6 +50,20 @@ exports.cats = function (req, res) {
 	});
 };
 
+
+exports.places = function (req, res) {
+	var mongoose = require('mongoose'), Schema = mongoose.Schema;
+	//mongoose.set('debug', true);
+	var db = mongoose.connect('mongodb://localhost/yakwala');
+	var Place = db.model('Place');
+	
+	Place.findAll(function (err, docs){
+	  res.json({
+		places: docs
+	  });
+	});
+};
+
 exports.posts = function (req, res) {
   var posts = [];
   data.posts.forEach(function (post, i) {

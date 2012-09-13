@@ -21,7 +21,7 @@ app.configure(function(){
   app.set('view options', {layout: true});
   app.use(express.bodyParser());
   app.use(express.static(__dirname + '/public'));
-  app.use(express.cookieParser());
+  app.use(express.cookieParser('SAfuBUZ2'));
   // Session management
   app.use(express.session({
     "secret": "yakwala2012 info hyper locale",
@@ -51,8 +51,9 @@ app.get('/', routes.index);
 
 
 app.get('/partials/:name', routes.partials);
-app.get('/actu/map', requiresPosition, routes.actu_map);
-app.get('/actu/fils', routes.actu_fils);
+//app.get('/actu/map', requiresPosition, routes.actu_map);
+app.get('/actu/map', routes.actu_map);
+app.get('/actu/fil', routes.actu_fil);
 app.get('/actu/new', requiresLogin, routes.actu_new);
 
 
@@ -70,6 +71,7 @@ app.get('/api/geoinfos/:x1/:y1/:x2/:y2/:heat/:type', api.geoinfos);
 app.get('/api/zones/:x/:y', api.zones);
 app.post('/api/users', api.users);
 app.get('/api/cats', api.cats);
+app.get('/api/places', api.places);
 
 app.get('/api/posts', api.posts);
 app.get('/api/post/:id', api.post);
@@ -93,8 +95,8 @@ app.dynamicHelpers({
 });
 
 
-io = require('socket.io');
-sio = io.listen(app);
+//io = require('socket.io');
+//sio = io.listen(app);
 		
 function requiresLogin(req,res,next){
 	if(req.session.user){
