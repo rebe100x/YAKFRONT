@@ -25,6 +25,13 @@ for(i=0;i<this.length;i++)
 	if(id==this[i]._id) 
 		this.splice(i, 1);
 }
+Array.prototype.cleanArrayByLocation=function(lng,lat){
+for(i=0;i<this.length;i++){
+console.log(this[i].location.lng+"="+lng);
+	if(lng==this[i].location.lng && lat==this[i].location.lat) 
+		this.splice(i, 1);
+}
+}
 
 
 
@@ -173,18 +180,120 @@ function placeMarker(location,mk) {
 	$('#latitude').val(location.lat());	
 	$('#longitude').val(location.lng());	
 
+	
 	mk.setVisible(true);
 	mk.setPosition(location);
 	
+	//getformattedAddress(location);
 	
 	google.maps.event.addListener(mk, 'dragend', function() {
 		var position = mk.getPosition();
 		$('#latitude').val(position.lat());	
 		$('#longitude').val(position.lng());	
-
+		
+		getformattedAddress(position);
+		
 	});
 }
 
+function getformattedAddress(position){
+	
+	var geoQuery = {"location": position};
+		var geocoder = new google.maps.Geocoder();
+		geocoder.geocode( geoQuery, function(results, status) {
+			if (status == google.maps.GeocoderStatus.OK) {
+				$('#place').val(results[0].formatted_address);
+				var placeGmap = getPlaceFromGmapResult(results);
+				console.log(results);
+				placeArray.push(placeGmap);
+				$("#placeInput").val(JSON.stringify(placeArray));
+				$('#btn-place-adder').parent().before("<div><i class='icon-remove' onclick='placeArray.cleanArrayByLocation("+results[0].geometry.location.Ya+","+results[0].geometry.location.Xa+");$(\"#placeInput\").val(JSON.stringify(placeArray));$(this).parent().remove();'></i> "+results[0].formatted_address+"</div>");
+			} else {
+				var salt = new Date().getTime();
+				$('#btn-place-adder').parent().before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide ("+status+")</div>");
+				setTimeout(function() {
+					$("#alert"+salt).fadeOut();
+				}, 3000);
+				$('#place').select();
+			}
+		});
+}
 
 
+function deletePlaceHTML(placeArray,results,self){
+	
+	
+	
+}
+Array.prototype.inArray=function(needle){
+	var length = this.length;
+    for(var i = 0; i < length; i++) {
+        if(this[i] == needle) return true;
+    }
+    return false;
+}
 
+function getPlaceFromGmapResult(results){
+	
+	var addressGmap = {
+		"street":""
+		,"arr":""
+		,"city":""
+		,"state":""
+		,"area":""
+		,"country":""
+		,"zip":""
+	};
+
+	results[0].address_components.forEach(function(item) { 
+		if(item.types.inArray('route'))
+			addressGmap.street = item.long_name;
+		if(item.types.inArray('	sublocality'))
+			addressGmap.arr = item.long_name;
+		if(item.types.inArray('locality'))
+			addressGmap.city = item.long_name;
+		if(item.types.inArray('administrative_area_level_2'))
+			addressGmap.state = item.long_name;
+		if(item.types.inArray('administrative_area_level_1'))
+			addressGmap.area = item.long_name;
+		if(item.types.inArray('country'))
+			addressGmap.country = item.long_name;
+		if(item.types.inArray('postal_code'))
+			addressGmap.zip = item.long_name;
+	});
+console.log('elo');
+	console.log((results[0].geometry.location.Xa));
+	var placeGmap = {
+		"_id":""
+		,"title":results[0].formatted_address
+		,"content":""
+		,"thumb":""
+		,"origin":"yakwala"
+		,"access":2
+		,"licence":"Yakwala"
+		,"outGoingLink":""
+		,"yakCat":["504d89f4fa9a958808000001"]
+		,"creationDate":new Date()
+		,"lastModifDate":new Date()
+		,"location":{"lng":parseFloat(results[0].geometry.location.Ya),"lat":parseFloat(results[0].geometry.location.Xa)}
+		,"status":2 // need validation
+		,"address": addressGmap
+		};
+		
+	return placeGmap;
+}	
+
+String.prototype.addslashes=function () {
+var str=this.replace(/\\/g,'\\\\');
+str=str.replace(/\'/g,'\\\'');
+str=str.replace(/\"/g,'\\"');
+str=str.replace(/\0/g,'\\0');
+return str;
+}
+String.prototype.stripslashes=function () {
+var str=this.replace(/\\'/g,'\'');
+str=str.replace(/\\"/g,'"');
+str=str.replace(/\\0/g,'\0');
+str=str.replace(/\\\\/g,'\\');
+return str;
+}

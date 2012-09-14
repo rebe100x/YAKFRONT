@@ -18,7 +18,7 @@ var Info = new Schema({
   , origin	: {type: String}		
   , access	: {type: Number}
   , licence	: {type: String}		
-  , outGoingLink       : { type: String, index: true }  
+  , outGoingLink       : { type: String }  
   , heat	: {type: Number}		
   , print	: {type: Number}		
   , yakCat	: {type: [Yakcat]}		
@@ -33,7 +33,8 @@ var Info = new Schema({
   , location	: { type : { lat: Number, lng: Number }, index : '2d'}	
   , status	: {type: Number}		
   , user	: {type: Schema.ObjectId}		
-  , zone	: {type: Schema.ObjectId}		
+  , zone	: {type: Schema.ObjectId}
+  ,	placeId	: {type: Schema.ObjectId}  
 }, { collection: 'info' });
 
 Info.index({location : '2d'});

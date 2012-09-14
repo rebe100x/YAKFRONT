@@ -13,10 +13,13 @@ div.container-fluid
 					button.close(type="button",data-dismiss="alert")
 						x
 					strong=flash.warn
-			legend Poster une info:
+			
 			form(action='/actu', method='POST')
 				input#yakcatInput(type='hidden', name='yakcatInput', value='')
-				input#placeInput(type='hidden', name='placeInput', value='')
+				input#placeInput(type='text', name='placeInput', value='')
+				input#latitude(type="hidden",data-provide="typeahead", name="latitude")
+				input#longitude(type="hidden",data-provide="typeahead", name="longitude")
+				legend Poster une info:
 				div.control-group
 					div.controls
 						input.span12(type='text', name='title', id='title', placeholder='Titre')
@@ -27,20 +30,20 @@ div.container-fluid
 						input#yakcat.span12(type="text",data-provide="typeahead", name="category", autocomplete="off", placeholder='Rechercher...')
 				legend A quel endroit ?
 				div.control-group
-					label(for='Place') Entrer une adresse : 
+					label(for='Place') Clicker sur la carte ou bien entrer une adresse:<br /> 
 					div.controls
 						div.input-append
 							input#place(type="text",data-provide="typeahead", name="place", autocomplete="off", placeholder='Rechercher...') 
 							button.btn#btn-place-adder(type="button") Add
-					p
-						label(for='latitude') Latitude: ( click on the map )
-						input#latitude(type="text",data-provide="typeahead", name="latitude")
-					p
-						label(for='longitude') Longitude: ( click on the map )
-						input#longitude(type="text",data-provide="typeahead", name="longitude")
-				p
-					label(for='link') Lien:
-					input.link(type="text",data-provide="typeahead", name="link")
+						//span.help-block Ajoutez plusieurs adresses et faites apparaître votre info à plusieurs endroits !
+							
+				legend Détails de l'info:					
+				div.control-group
+					div.controls
+						input.link(type="text",data-provide="typeahead", name="link",placeholder='Site web ')
+						input.link(type="text",data-provide="typeahead", name="yaktag",placeholder='Tags ')
+						input.link(type="text",data-provide="typeahead", name="image",placeholder='Image ')
+						
 				
 				p
 					input(type='submit', name='submit', id='submit', value='Envoyer')
@@ -137,16 +140,21 @@ div.container-fluid
 					geocoder.geocode( addressQuery, function(results, status) {
 						if (status == google.maps.GeocoderStatus.OK) {
 							map.setCenter(results[0].geometry.location);
-							console.log(markerLocation);
 							markerLocation.setVisible(true);
 							markerLocation.setPosition(results[0].geometry.location);
-							google.maps.event.addListener(markerLocation, 'dragend', function(event) {
-								placeMarker(event.latLng,markerLocation);
-							});
-							var placeGmap = {};
-							$('#btn-place-adder').parent().before("<div><i class='icon-remove'  onclick='place.cleanArray(\""+results[0].formatted_address+"\");$(\"#yakcatInput\").val(JSON.stringify(yakcat));$(this).parent().remove();'></i> "+results[0].formatted_address+"</div>");
+							placeMarker(results[0].geometry.location,markerLocation);
+							var placeGmap = getPlaceFromGmapResult(results);
+							placeArray.push(placeGmap);
+							$("#placeInput").val(JSON.stringify(placeArray));
+							$('#btn-place-adder').parent().before("<div><i class='icon-remove' onclick='placeArray.cleanArrayByLocation("+results[0].geometry.location.Ya+","+results[0].geometry.location.Xa+");$(\"#placeInput\").val(JSON.stringify(placeArray));$(this).parent().remove();'></i> "+results[0].formatted_address+"</div>");
+							
 						} else {
-							alert("Geocode was not successful for the following reason: " + status);
+							var salt = new Date().getTime();
+							$('#btn-place-adder').parent().before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide ("+status+")</div>");
+							setTimeout(function() {
+								$("#alert"+salt).fadeOut();
+							}, 3000);
+							$('#place').select();
 						}
 					});
 				}
@@ -168,7 +176,7 @@ div.container-fluid
 		
 			// set user cookie ( when user comes back he is located where he stopped browsing )
 			$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000 });
-			console.log(curPos);
+			
 			
 			var center = new google.maps.LatLng(x,y);
 			infowindow = new google.maps.InfoWindow({content: ".",maxWidth : 300});
@@ -187,7 +195,6 @@ div.container-fluid
 			
 			google.maps.event.addListenerOnce(map, 'idle', function(){
 				bounds = this.getBounds();
-				console.log(bounds);
 				getAndPrintInfo();
 				
 			});
@@ -253,8 +260,11 @@ div.container-fluid
 				
 				
 				google.maps.event.addListener(map, 'click', function(event) {
+						getformattedAddress(event.latLng);
 						placeMarker(event.latLng,markerLocation);
+						
 					});
+				
 			});	
 		
 		}

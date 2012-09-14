@@ -70,7 +70,10 @@ exports.actu = function(req, res){
 	var mongoose = require('mongoose'), Schema = mongoose.Schema;
 	var db = mongoose.connect('mongodb://localhost/yakwala');
 	var Info = db.model('Info');
+	var Place = db.model('Place');
 	var data = new Info();
+	var place = new Place();
+	mongoose.set('debug', true);
 	if(req.body.yakcatInput.length > 0){
 		var yakcat = eval('('+req.body.yakcatInput+')');
 		for(i=0;i<yakcat.length;i++){
@@ -82,21 +85,41 @@ exports.actu = function(req, res){
 	data.title = req.body.title;
 	data.content = req.body.content;
 	// NOTE : in the query below, order is important : in DB we have lat, lng but need to insert in reverse order : lng,lat  (=> bug mongoose ???)
-	data.location = {lng:parseFloat(req.body.longitude),lat:parseFloat(req.body.latitude)};
-	data.creationDate = new Date();
-	data.lastModifDate = new Date();
-	data.pubDate = new Date();
-	var now = new Date();
-	var D = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
-	var DTS = D.getTime() / 1000 + (3 * 60 * 60 * 24);
-	D.setTime(DTS*1000); 
-	data.dateEndPrint = D;
-	data.outGoingLink = req.body.link;
-	//console.log(data);
-	data.print = 1;
-	data.status = 1;
-	data.yakType = 4; // UGC
-	data.save();
+	//data.location = {lng:parseFloat(req.body.longitude),lat:parseFloat(req.body.latitude)};
+	
+	//var locTmp = [];
+	//var locTmp =  eval('{' + req.body.placeInput + '}');
+	eval('var locTmp='+req.body.placeInput);
+	console.log(locTmp);
+	locTmp.forEach(function(item) {
+	console.log(item.location);
+		data.location = {lng:parseFloat(item.location.lng),lat:parseFloat(item.location.lat)};
+		// if no id, it means the location comes from gmap => we store it
+		console.log('item_id'+item._id);
+		if(item._id == ""){
+		console.log(item);
+			place.save(item);
+			data.placeId = place._id;
+		}else
+			data.placeId = item._id;
+		
+		data.creationDate = new Date();
+		data.lastModifDate = new Date();
+		data.pubDate = new Date();
+		var now = new Date();
+		var D = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+		var DTS = D.getTime() / 1000 + (3 * 60 * 60 * 24);
+		D.setTime(DTS*1000); 
+		data.dateEndPrint = D;
+		data.outGoingLink = req.body.link;
+		//console.log(data);
+		data.print = 1;
+		data.status = 1;
+		data.yakType = 4; // UGC
+		data.save();
+		console.log('save'+parseFloat(item.location.lng));
+	});
+	
 	
 	res.render('actu/new',{title:'Poster une actu'});
 };
