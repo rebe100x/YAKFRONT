@@ -124,7 +124,7 @@ script
 					var dateCreation = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
 					var infoContent = "<div class=\'infowindow\' >";
 					if(!(typeof val.thumb === 'undefined'))
-						infoContent += "<img src=\'http://dev.backend.yakwala.com/BACKEND/"+val.thumb+"\' />";
+						infoContent += "<img src=\'"+conf.backurl+val.thumb+"\' />";
 					infoContent += "<div class=\'title\'> "+val.title+" ("+dateCreation+")</div>";
 					infoContent += "<div class=\'content\'>"+val.content.substring(0,250)+"...</div>";
 					if(!(typeof val.outGoingLink === 'undefined'))
@@ -242,7 +242,7 @@ script
 							var dateCreation = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
 							var infoContent = "<div class=\'infowindow\' >";
 							if(!(typeof val.thumb === 'undefined'))
-								infoContent += "<img src=\'http://dev.backend.yakwala.com/BACKEND/"+val.thumb+"\' />";
+								infoContent += "<img src=\'"+conf.backurl+val.thumb+"\' />";
 							infoContent += "<div class=\'title\'> "+val.title+" ("+dateCreation+")</div>";
 							infoContent += "<div class=\'content\'>"+val.content.substring(0,250)+"...</div>";
 							if(!(typeof val.outGoingLink === 'undefined'))
@@ -293,7 +293,7 @@ script
 					var dateCreation = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
 					var infoContent = "<div class=\'infowindow\' >";
 					if(!(typeof val.thumb === 'undefined'))
-						infoContent += "<img src=\'http://dev.backend.yakwala.com/BACKEND/"+val.thumb+"\' />";
+						infoContent += "<img src=\'"+conf.backurl+val.thumb+"\' />";
 					infoContent += "<div class=\'title\'> "+val.title+" ("+dateCreation+")</div>";
 					infoContent += "<div class=\'content\'>"+val.content.substring(0,250)+"...</div>";
 					if(!(typeof val.outGoingLink === 'undefined'))

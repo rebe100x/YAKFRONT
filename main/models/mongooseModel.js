@@ -23,7 +23,7 @@ var Info = new Schema({
   , print	: {type: Number}		
   , yakCat	: {type: [Yakcat]}		
   , yakTag	: {type: [String]}
-  , yakType	: {type: [Number]}  
+  , yakType	: {type: Number}  
   , freeTag	: {type: [String]}	
   , pubDate	: {type: Date, required: true, default: Date.now}		  
   , creationDate	: {type: Date, required: true, default: Date.now}		

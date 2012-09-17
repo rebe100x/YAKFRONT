@@ -35,7 +35,7 @@ div.container-fluid
 						div.input-append
 							input#place(type="text",data-provide="typeahead", name="place", autocomplete="off", placeholder='Rechercher...') 
 							button.btn#btn-place-adder(type="button") Add
-						//span.help-block Ajoutez plusieurs adresses et faites apparaître votre info à plusieurs endroits !
+						span.help-block Ajoutez plusieurs adresses et faites apparaître votre info à plusieurs endroits !
 							
 				legend Détails de l'info:					
 				div.control-group
@@ -76,6 +76,25 @@ div.container-fluid
 				curPos = {'x':x,'y':y,'z':z};
 				google.maps.event.addDomListener(window, 'load', initialize(curPos.x,curPos.y,curPos.z)); 
 			}*/
+			
+			
+			
+			// INIT MARKERLOCATION
+			google.maps.event.addListener(map, 'click', function(event) {
+				getformattedAddress(event.latLng);
+				placeMarker(event.latLng,markerLocation);
+				google.maps.event.addListener(markerLocation, 'dragend', function() {
+					var position = markerLocation.getPosition();
+					$('#latitude').val(position.lat());	
+					$('#longitude').val(position.lng());	
+					
+					getformattedAddress(position);
+					
+				});		
+			});
+					
+			
+			
 			if($.cookie("geoloc")){
 				curPos = JSON.parse($.cookie("geoloc"));
 				google.maps.event.addDomListener(window, 'load', initialize(curPos.x,curPos.y,curPos.z));
@@ -259,11 +278,7 @@ div.container-fluid
 				var markerCluster = new MarkerClusterer(map, markers,markerClustererOptions);
 				
 				
-				google.maps.event.addListener(map, 'click', function(event) {
-						getformattedAddress(event.latLng);
-						placeMarker(event.latLng,markerLocation);
-						
-					});
+				
 				
 			});	
 		

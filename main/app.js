@@ -8,7 +8,7 @@ var express = require('express'),
   api = require('./routes/api'),
   users = require('./routes/users'),
   db = require('./models/mongooseModel'),
-  config = require('./confs.js');
+  config = require('./public/javascripts/confs.js');
 
 var app = module.exports = express.createServer();
 
@@ -54,8 +54,8 @@ app.get('/partials/:name', routes.partials);
 //app.get('/actu/map', requiresPosition, routes.actu_map);
 app.get('/actu/map', routes.actu_map);
 app.get('/actu/fil', routes.actu_fil);
-app.get('/actu/new', requiresLogin, routes.actu_new);
-
+app.get('/actu/new', routes.actu_new);
+//app.get('/actu/new', requiresLogin, routes.actu_new);
 
 app.get('/user/login', routes.user_login);
 app.get('/user/logout', routes.user_logout);

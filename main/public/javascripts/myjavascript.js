@@ -1,8 +1,11 @@
 ﻿//var socket = io.connect('http://localhost:3000');
+
+var conf = null;
+	
 	
 $(document).ready(function() {
 
-	
+	conf = confs.dev;
 	
 		
 	/*bootstrap alert plugin*/
@@ -186,14 +189,7 @@ function placeMarker(location,mk) {
 	
 	//getformattedAddress(location);
 	
-	google.maps.event.addListener(mk, 'dragend', function() {
-		var position = mk.getPosition();
-		$('#latitude').val(position.lat());	
-		$('#longitude').val(position.lng());	
-		
-		getformattedAddress(position);
-		
-	});
+	
 }
 
 function getformattedAddress(position){
@@ -202,7 +198,7 @@ function getformattedAddress(position){
 		var geocoder = new google.maps.Geocoder();
 		geocoder.geocode( geoQuery, function(results, status) {
 			if (status == google.maps.GeocoderStatus.OK) {
-				$('#place').val(results[0].formatted_address);
+				$('#place').val(results[0].formatted_address).select();
 				var placeGmap = getPlaceFromGmapResult(results);
 				console.log(results);
 				placeArray.push(placeGmap);
@@ -264,8 +260,7 @@ function getPlaceFromGmapResult(results){
 console.log('elo');
 	console.log((results[0].geometry.location.Xa));
 	var placeGmap = {
-		"_id":""
-		,"title":results[0].formatted_address
+		"title":results[0].formatted_address
 		,"content":""
 		,"thumb":""
 		,"origin":"yakwala"
