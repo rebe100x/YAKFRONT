@@ -38,13 +38,13 @@ app.configure('development', function(){
 	app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
 
-
+/*
 app.configure('production', function(){
 	conf = config.confs.prod;
 	
 	app.use(express.errorHandler());
 });
-
+*/
 	
 var db = routes.db(conf);	
 

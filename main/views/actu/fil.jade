@@ -8,8 +8,9 @@ div#content
 	p!= partial('./partials/newsfeed.jade', {infos:infos})
 	
 script
+
 	$(document).ready(function() {
-		$.getJSON('/api/infos',function(data) {
+		/*$.getJSON('/api/infos',function(data) {
 			var items = [];
 
 			$.each(data.info, function(key,val) {
@@ -17,4 +18,9 @@ script
 				
 			});
 		});
+		*/
+		
+		
+		//var myinfo = JSON.stringify(#{infos});
+		//console.log(myinfo);
 	});

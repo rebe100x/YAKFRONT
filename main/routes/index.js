@@ -29,7 +29,7 @@ exports.actu_map = function(req, res){
 //	res.render('actu/map',{locals:{infos:docs,title:'testelo'}});
 //});
 	
-	res.render('actu/map',{conf: JSON.stringify(conf)});  
+	res.render('actu/map');  
 };
 exports.actu_new = function(req, res){
   res.render('actu/new',{locals:{title:{'test':'Poster une actu'}}});
