@@ -1,12 +1,9 @@
 ﻿//var socket = io.connect('http://localhost:3000');
 
-var conf = null;
 	
 	
 $(document).ready(function() {
 
-	conf = confs.dev;
-	
 		
 	/*bootstrap alert plugin*/
 	$(".alert").alert();

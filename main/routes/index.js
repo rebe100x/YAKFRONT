@@ -13,7 +13,7 @@ exports.partials = function (req, res) {
 };
 
 exports.actu_map = function(req, res){
-var util = require('util');
+//var util = require('util');
 //res.send(util.inspect(res));
 //var mongoose = require('mongoose'), Schema = mongoose.Schema;
 //var db = mongoose.connect('mongodb://localhost/yakwala');
@@ -21,7 +21,8 @@ var util = require('util');
 //Info.findAll(function (err, docs){
 //	res.render('actu/map',{locals:{infos:docs,title:'testelo'}});
 //});
-	res.render('actu/map');  
+	
+	res.render('actu/map',{conf: JSON.stringify(conf)});  
 };
 exports.actu_new = function(req, res){
   res.render('actu/new',{locals:{title:{'test':'Poster une actu'}}});

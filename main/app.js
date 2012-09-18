@@ -8,7 +8,7 @@ var express = require('express'),
   api = require('./routes/api'),
   users = require('./routes/users'),
   db = require('./models/mongooseModel'),
-  config = require('./public/javascripts/confs.js');
+  config = require('./confs.js');
 
 var app = module.exports = express.createServer();
 
@@ -34,6 +34,11 @@ app.configure(function(){
 app.configure('development', function(){
 	conf = config.confs.dev;
 	app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+});
+
+app.configure('preproduction', function(){
+	conf = config.confs.preprod;
+	app.use(express.errorHandler());
 });
 
 app.configure('production', function(){
