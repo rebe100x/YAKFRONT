@@ -5,8 +5,6 @@
 
 
 exports.infos = function (req, res) {
-	var mongoose = require('mongoose'), Schema = mongoose.Schema;
-	var db = mongoose.connect('mongodb://localhost/yakwala');
 	var Info = db.model('Info');
 	Info.findAll(function (err, docs){
 	  res.json({
@@ -16,8 +14,6 @@ exports.infos = function (req, res) {
 };
 
 exports.geoinfos = function (req, res) {
-	var mongoose = require('mongoose'), Schema = mongoose.Schema;
-	var db = mongoose.connect('mongodb://localhost/yakwala');
 	var Info = db.model('Info');
 	Info.findAllGeo(req.params.x1,req.params.y1,req.params.x2,req.params.y2,req.params.heat,req.params.type,function (err, docs){
 	  res.json({
@@ -27,9 +23,6 @@ exports.geoinfos = function (req, res) {
 };
 
 exports.zones = function (req, res) {
-	var mongoose = require('mongoose'), Schema = mongoose.Schema;
-	//mongoose.set('debug', true);
-	var db = mongoose.connect('mongodb://localhost/yakwala');
 	var Zone = db.model('Zone');
 	Zone.findNear(req.params.x,req.params.y,function (err, docs){
 	  res.json({
@@ -39,9 +32,6 @@ exports.zones = function (req, res) {
 };
 
 exports.cats = function (req, res) {
-	var mongoose = require('mongoose'), Schema = mongoose.Schema;
-	//mongoose.set('debug', true);
-	var db = mongoose.connect('mongodb://localhost/yakwala');
 	var Yakcat = db.model('Yakcat');
 	Yakcat.findAll(function (err, docs){
 	  res.json({
@@ -52,9 +42,6 @@ exports.cats = function (req, res) {
 
 
 exports.places = function (req, res) {
-	var mongoose = require('mongoose'), Schema = mongoose.Schema;
-	//mongoose.set('debug', true);
-	var db = mongoose.connect('mongodb://localhost/yakwala');
 	var Place = db.model('Place');
 	
 	Place.findAll(function (err, docs){

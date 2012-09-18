@@ -3,6 +3,13 @@
  * GET home page.
  */
 
+ exports.db = function(conf){
+	mongoose = require('mongoose'), Schema = mongoose.Schema;
+	//mongoose.set('debug', true);
+	db = mongoose.connect('mongodb://localhost/'+conf.dbname);
+	
+ };
+	
 exports.index = function(req, res){
   res.render('index',{title:'Actu'});
 };
@@ -28,9 +35,6 @@ exports.actu_new = function(req, res){
   res.render('actu/new',{locals:{title:{'test':'Poster une actu'}}});
 };
 exports.actu_fil = function(req, res){
-
-	var mongoose = require('mongoose'), Schema = mongoose.Schema;
-	var db = mongoose.connect('mongodb://localhost/yakwala');
 	var Info = db.model('Info');
 	Info.findAll(function (err, docs){
 		res.render('actu/fil',{locals:{infos:docs}});
@@ -49,8 +53,6 @@ exports.user_logout = function(req, res){
 
 exports.user = function(req, res){
 
-	var mongoose = require('mongoose'), Schema = mongoose.Schema;
-	var db = mongoose.connect('mongodb://localhost/yakwala');
 	var User = db.model('User');
 	
 	
@@ -68,8 +70,6 @@ exports.user = function(req, res){
 
 exports.actu = function(req, res){
 
-	var mongoose = require('mongoose'), Schema = mongoose.Schema;
-	var db = mongoose.connect('mongodb://localhost/yakwala');
 	var Info = db.model('Info');
 	var Place = db.model('Place');
 	

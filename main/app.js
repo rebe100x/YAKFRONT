@@ -14,6 +14,7 @@ var app = module.exports = express.createServer();
 
 // Configuration
 
+	
 
 app.configure(function(){
   app.set('views', __dirname + '/views');
@@ -33,20 +34,19 @@ app.configure(function(){
 
 app.configure('development', function(){
 	conf = config.confs.dev;
+	
 	app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
 
-app.configure('preproduction', function(){
-	conf = config.confs.preprod;
-	app.use(express.errorHandler());
-});
 
 app.configure('production', function(){
 	conf = config.confs.prod;
+	
 	app.use(express.errorHandler());
 });
 
-
+	
+var db = routes.db(conf);	
 
 
 	
