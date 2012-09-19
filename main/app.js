@@ -9,8 +9,8 @@ var express = require('express'),
   users = require('./routes/users'),
   db = require('./models/mongooseModel'),
   config = require('./confs.js');
-
-var app = module.exports = express.createServer();
+  
+var app = express();
 
 // Configuration
 
@@ -19,7 +19,7 @@ var app = module.exports = express.createServer();
 app.configure(function(){
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
-  app.set('view options', {layout: true});
+  //app.set('view options', {layout: true});
   app.use(express.bodyParser());
   app.use(express.static(__dirname + '/public'));
   app.use(express.cookieParser('SAfuBUZ2'));
@@ -28,8 +28,15 @@ app.configure(function(){
     "secret": "yakwala2012 info hyper locale",
     "store":  new express.session.MemoryStore({ reapInterval: 60000 * 10 })
   }));
+  app.use(function(req, res, next){
+    res.locals.session = req.session.user;
+	res.locals.redir = req.query.redir;
+    next();
+  });
+  
   app.use(express.methodOverride());
   app.use(app.router);
+  
 });
 
 app.configure('development', function(){
@@ -45,7 +52,8 @@ app.configure('production', function(){
 	app.use(express.errorHandler());
 });
 */
-	
+
+ 
 var db = routes.db(conf);	
 
 
@@ -59,8 +67,8 @@ app.get('/partials/:name', routes.partials);
 //app.get('/actu/map', requiresPosition, routes.actu_map);
 app.get('/actu/map', routes.actu_map);
 app.get('/actu/fil', routes.actu_fil);
-app.get('/actu/new', routes.actu_new);
-//app.get('/actu/new', requiresLogin, routes.actu_new);
+//app.get('/actu/new', routes.actu_new);
+app.get('/actu/new', requiresLogin, routes.actu_new);
 
 app.get('/user/login', routes.user_login);
 app.get('/user/logout', routes.user_logout);
@@ -87,17 +95,6 @@ app.delete('/api/post/:id', api.deletePost);
 // redirect all others to the index (HTML5 history)
 app.get('*', routes.index);
 
-
-app.dynamicHelpers({
-	session:function(req,res){
-		return req.session;
-	},
-	flash:function(req,res){
-	
-		return req.flash();
-	}
-
-});
 
 
 //io = require('socket.io');
@@ -132,5 +129,5 @@ function requiresPosition(req,res,next){
 // Start server
 
 app.listen(conf.port, function(){
-  console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
+  console.log("Express server listening on port %d in %s mode", conf.port, app.settings.env);
 });

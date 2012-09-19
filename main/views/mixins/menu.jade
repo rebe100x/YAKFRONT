@@ -9,10 +9,10 @@ mixin menu(active)
 					a.brand(href="#") YAKWALA
 					
 					div.btn-group.pull-right
-						- if (session.user)
+						- if (session)
 							a.btn.dropdown-toggle(href="#",data-toggle="dropdown")
 								i.icon-user
-								span= ' '+session.user.login+' ';
+								span= ' '+session.login+' ';
 								span.caret
 							ul.dropdown-menu
 								li

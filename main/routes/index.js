@@ -59,9 +59,10 @@ exports.user = function(req, res){
 	User.Authenticate(req.body.login,req.body.password,function(err,user){
 		if(!(typeof(user) == 'undefined' || user === null || user === '')){
 			req.session.user = user;
+			console.log(req.body.redir);
 			res.redirect(req.body.redir || '/');
 		}else{
-			req.flash('warn','Login failed');
+			//req.flash('warn','Login failed');
 			res.render('user/login',{title:'login',locals:{redir:req.body.redir}});
 		}
 	});
@@ -74,7 +75,7 @@ exports.actu = function(req, res){
 	var Place = db.model('Place');
 	
 	var place = new Place();
-	mongoose.set('debug', true);
+	//mongoose.set('debug', true);
 	// NOTE : in the query below, order is important : in DB we have lat, lng but need to insert in reverse order : lng,lat  (=> bug mongoose ???)
 	//info.location = {lng:parseFloat(req.body.longitude),lat:parseFloat(req.body.latitude)};
 	
@@ -97,9 +98,7 @@ exports.actu = function(req, res){
 		
 		info.location = {lng:parseFloat(item.location.lng),lat:parseFloat(item.location.lat)};
 		// if no id, it means the location comes from gmap => we store it
-		console.log('item_id'+item._id);
 		if(item._id == "" || typeof item._id === "undefined"){
-		console.log(item);
 		//[{"_id":"","title":"Place du Carrousel, 75001 Paris, France","content":"","thumb":"","origin":"yakwala","access":2,"licence":"Yakwala","outGoingLink":"","yakCat":["504d89f4fa9a958808000001"],
 		//	"creationDate":"2012-09-17T09:30:05.980Z","lastModifDate":"2012-09-17T09:30:05.980Z","location":{"lng":2.3348863999999594,"lat":48.862492},"status":2,"address":{"street":"Place du Carrousel","arr":"","city":"Paris","state":"Paris","area":"Île-de-France","country":"France","zip":"75001"}}]
 			/*place.title = item.title;
@@ -138,6 +137,17 @@ exports.actu = function(req, res){
 		info.save(function (err) {
 			if (!err) console.log('Success!');
 			else console.log(err);
+		});
+		
+		
+		/**UPLOAD*/
+		console.log(req);
+		var newFile =__dirname+'/static/uploads/photos/'+ req.files.photo.name;
+		fs.rename(req.files.photo.path , newFile, function (data,error) {
+			console.log(data); 
+			if(error) {
+				throw error;
+			}
 		});
 		
 	});

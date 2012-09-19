@@ -1,26 +1,24 @@
-include ../mixins/menu.jade
-include ../mixins/locationChooser.jade
+extends ../layout
+block content
 
-mixin menu('fils')
-mixin locationChooser()
+	include ../mixins/menu.jade
+	include ../mixins/locationChooser.jade
 
-div#content
-	p!= partial('./partials/newsfeed.jade', {infos:infos})
-	
-script
+	mixin menu('fils')
+	mixin locationChooser()
 
-	$(document).ready(function() {
-		/*$.getJSON('/api/infos',function(data) {
-			var items = [];
+	div#content
+		//p!= partial('./partials/newsfeed.jade', {infos:infos})
+		
+	script
 
-			$.each(data.info, function(key,val) {
-				$('#content').append(val.title+'<br>');
-				
+		$(document).ready(function() {
+			$.getJSON('/api/infos',function(data) {
+				var items = [];
+
+				$.each(data.info, function(key,val) {
+					$('#content').append(val.title+'<br>');
+					
+				});
 			});
 		});
-		*/
-		
-		
-		//var myinfo = JSON.stringify(#{infos});
-		//console.log(myinfo);
-	});

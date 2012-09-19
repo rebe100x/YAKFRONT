@@ -23,4 +23,6 @@ html
 		script(src='javascripts/lib/plugin/jquery.cookie.js')
 		script(src='javascripts/lib/plugin/jquery.mousewheel.min.js')
 		script(src='javascripts/lib/plugin/jquery.mCustomScrollbar.min.js')
-	body!= body
+		block head
+	body
+		block content
