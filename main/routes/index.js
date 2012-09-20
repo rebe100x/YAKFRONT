@@ -43,7 +43,8 @@ exports.actu_fil = function(req, res){
 
 
 exports.user_login = function(req, res){
-  res.render('user/login',{title:'Login',locals: {redir : req.query.redir}});
+	delete req.session.message;
+	res.render('user/login',{locals:{redir:req.query.redir}});
 };
 
 exports.user_logout = function(req, res){
@@ -59,11 +60,10 @@ exports.user = function(req, res){
 	User.Authenticate(req.body.login,req.body.password,function(err,user){
 		if(!(typeof(user) == 'undefined' || user === null || user === '')){
 			req.session.user = user;
-			console.log(req.body.redir);
 			res.redirect(req.body.redir || '/');
 		}else{
-			//req.flash('warn','Login failed');
-			res.render('user/login',{title:'login',locals:{redir:req.body.redir}});
+			req.session.message = 'Wrong login or password:';
+			res.redirect('user/login?redir='+req.body.redir);
 		}
 	});
 };
@@ -82,6 +82,55 @@ exports.actu = function(req, res){
 	//var locTmp = [];
 	//var locTmp =  eval('{' + req.body.placeInput + '}');
 	//eval('var locTmp='+req.body.placeInput);
+	
+	
+	/**UPLOAD*/
+		
+	if(req.files.picture){
+		var im = require('imagemagick');
+
+		// get the size
+		im.identify(['-format', '%w', req.files.picture.path], function(err, output){
+		  if (err) throw err
+		  if(output > 512){
+			im.resize({
+				srcPath: req.files.picture.path,
+				dstPath: conf.uploadsDir+'pictures/512_0/'+req.files.picture.name,
+				strip : false,
+				width : 512,
+			}, function(err, stdout, stderr){
+				if (err) throw err
+			});
+		  }else{
+			console.log('COPY'+conf.uploadsDir+'pictures/512_0/'+req.files.picture.name);
+			fs = require('fs');
+			srcFile = fs.createWriteStream(req.files.picture.path);     
+			dstFile = fs.createReadStream(conf.uploadsDir+'/pictures/512_0/'+req.files.picture.name);
+			fs.renameSync(req.files.picture.path,conf.uploadsDir+'/pictures/512_0/'+req.files.picture.name);
+		  }
+		  
+		  
+		})
+		
+		// create thumbnail
+		im.resize({
+			srcPath: req.files.picture.path,
+			dstPath: conf.uploadsDir+'pictures/120_90/'+req.files.picture.name,
+			strip : false,
+			width : 120,
+			height : "90^",
+			customArgs: [
+				 "-gravity", "center"
+				,"-extent", "120x90"
+				]
+			
+		}, function(err, stdout, stderr){
+		if (err) throw err
+		});
+		
+		var infoThumb = req.files.picture.name;
+	}	
+	
 	var locTmp = JSON.parse(req.body.placeInput);
 	
 	locTmp.forEach(function(item) {
@@ -132,22 +181,13 @@ exports.actu = function(req, res){
 		info.print = 1;
 		info.status = 1;
 		info.yakType = 4; // UGC
+		info.thumb = infoThumb;
+		
 		
 		
 		info.save(function (err) {
 			if (!err) console.log('Success!');
 			else console.log(err);
-		});
-		
-		
-		/**UPLOAD*/
-		console.log(req);
-		var newFile =__dirname+'/static/uploads/photos/'+ req.files.photo.name;
-		fs.rename(req.files.photo.path , newFile, function (data,error) {
-			console.log(data); 
-			if(error) {
-				throw error;
-			}
 		});
 		
 	});

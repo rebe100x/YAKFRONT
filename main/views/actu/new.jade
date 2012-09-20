@@ -11,7 +11,7 @@ block content
 	div.container-fluid
 		div.row-fluid
 			div.span3.leftOverMapBox
-				form(action='/actu', method='POST')
+				form(action='/actu', method='POST', enctype='multipart/form-data')
 					input#yakcatInput(type='hidden', name='yakcatInput', value='')
 					input#placeInput(type='text', name='placeInput', value='')
 					input#latitude(type="hidden",data-provide="typeahead", name="latitude")
@@ -43,7 +43,7 @@ block content
 							
 					p
 						div#partial1
-						input.txt#FileUpload(type="file",name="FileUpload")
+						input.txt#picture(type="file",name="picture")
 					p
 						input(type='submit', name='submit', id='submit', value='Envoyer')
 			div.span9(style='z-index:0;') 
@@ -51,6 +51,7 @@ block content
 			
 		script
 			/*INIT*/	
+			var conf = !{conf};
 			var curPos = {'x':0,'y':0,'z':13};
 			var geolocalized = 0;
 			var infowindow = null;
@@ -77,7 +78,7 @@ block content
 				}*/
 				
 				
-				$('#FileUpload').live('change', function () {
+				$('#picture').live('change', function () {
 
 					var fileList = this.files;
 					var file = fileList[0];
@@ -279,11 +280,16 @@ block content
 							//console.log(val.creationDate);
 							var dateCreation = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
 							var infoContent = "<div class=\'infowindow\' >";
-							if(!(typeof val.thumb === 'undefined'))
-								infoContent += "<img src=\'http://dev.backend.yakwala.com/BACKEND/"+val.thumb+"\' />";
+							if(!(typeof val.thumb === 'undefined')){
+								if(val.yaktype == 1)
+									infoContent += "<img src=\'"+conf.backurl+val.thumb+"\' />";
+								else
+									infoContent += "<img src=\'/uploads/pictures/120_90/"+val.thumb+"\' />";
+								
+							}
 							infoContent += "<div class=\'title\'> "+val.title+" ("+dateCreation+")</div>";
 							infoContent += "<div class=\'content\'>"+val.content.substring(0,250)+"...</div>";
-							if(!(typeof val.outGoingLink === 'undefined'))
+							if(!(typeof val.outGoingLink === 'undefined') && val.outGoingLink != '')
 								infoContent += "<div class=\'readmore\'><a target=\'_blank\' href=\'"+val.outGoingLink+"\'> Read more</a></div>";
 							infoContent += "</div>";
 							infowindow.setContent(infoContent);

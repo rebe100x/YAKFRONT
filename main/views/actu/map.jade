@@ -34,9 +34,11 @@ block content
 				//p!= partial('./partials/newsfeed.jade', {test:infos})
 				//div elo #{title}
 				//div #{infos}
+				
 	script
+		
 		/*INIT*/
-		//var conf =!{conf};
+		var conf = !{conf};
 		var curPos = {'x':0,'y':0,'z':0};
 		var geolocalized = 0;
 		var infowindow = null;
@@ -48,6 +50,8 @@ block content
 		var heat = 3;
 		var type = 1;
 		var bounds = null;
+		
+		
 		$(document).ready(function() {
 		
 			$( "#heatSelector" ).slider({
@@ -84,12 +88,22 @@ block content
 			drawNewsFeed();
 			$('#newsfeedContainer').mCustomScrollbar({mouseWheel:true,scrollButtons:{enable:true},advanced:{updateOnContentResize: true}});
 			$(window).resize(function(){drawNewsFeed();});
-			$('#newsfeed').delegate(".mapHighlighter","click",function(){
+			/*
+			$('#newsfeed').delegate(".mapHighlighter","toggle",function(){
 				highlightInfo($(this).attr('infoId'));
 				$(this).addClass('highlighted');
+			},function(){
+				unhighlightInfo($(this).attr('infoId'));
+				$(this).removeClass('highlighted');
 			});
-			
-			
+			*/
+			$('#newsfeed').delegate(".mapHighlighter",'click', function () {
+				var id = $(this).attr('infoId');
+				unhighlightInfo(id,function(){highlightInfo(id);});
+				
+				$(this).addClass('highlighted');
+			});
+
 			setInterval(function() {
 				silentMarkerAdder();
 			}, 7000);
@@ -116,36 +130,58 @@ block content
 			$('#newsfeedContainer').css('height',newsfeedContainerHeight);
 		}
 		
+		function unhighlightInfo(id,callback){
+			$('ul#newsfeed li.highlighted').removeClass('highlighted');
+			$("ul#newsfeed li.mapHighlighterDetails").fadeOut().html('');
+			markerHL.setAnimation(null);
+			markerHL.setVisible(false);
+			
+			if (callback && typeof(callback) === "function") {  
+				callback();  
+			} 
+		}
+		
 		function highlightInfo(id){
 			$.each(infoArray,function(key,val){
 				//console.log(val2._id+' == '+val._id);
 					if(val._id == id){
-						// add marker
+						// hide all markers
+						//hideMarkers(7000);
+						
+						// clean if a marker is already highlighted
+							
 						var latLng = new google.maps.LatLng(val.location['lat'],val.location['lng']);
-						var marker = new google.maps.Marker({position: latLng,map:map,visible:true});
-						//marker.setAnimation(google.maps.Animation.BOUNCE);
+						markerHL.setPosition(latLng);
+						markerHL.setVisible(true);
+						markerHL.setAnimation(google.maps.Animation.BOUNCE);
 						// add info window
 						var dateTmp = new Date(val.pubDate);
 						var dateCreation = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
 						var infoContent = "<div class=\'infowindow\' >";
 						if(!(typeof val.thumb === 'undefined'))
 							infoContent += "<img src=\'"+conf.backurl+val.thumb+"\' />";
-						infoContent += "<div class=\'title\'> "+val.title+" ("+dateCreation+")</div>";
+						//infoContent += "<div class=\'title\'> "+val.title+" ("+dateCreation+")</div>";
 						infoContent += "<div class=\'content\'>"+val.content.substring(0,250)+"...</div>";
 						if(!(typeof val.outGoingLink === 'undefined'))
 							infoContent += "<div class=\'readmore\'><a target=\'_blank\' href=\'"+val.outGoingLink+"\'> Read more</a></div>";
 						infoContent += "</div>";
-						infowindow.setContent(infoContent);
-						infowindow.open(map,marker);
+						//infowindow.setContent(infoContent);
+						//infowindow.open(map,markerHL);
 						
+						$("ul#newsfeed li.mapHighlighterDetails").fadeOut().html('');
+						$("ul#newsfeed li.mapHighlighterDetails[infoid="+id+"]").html(infoContent).fadeIn();
 						// center map
-						//map.setCenter(latLng);
+						map.setCenter(latLng);
 						
-						// clear marker ( and infowindow
+						
+						// clear marker ( and infowindow )
 						setTimeout(function() {
-							marker.setAnimation(null);
-							marker.setMap(null);
-							$('#newsfeed .highlighted').removeClass('highlighted');
+							
+							markerHL.setAnimation(null);
+							markerHL.setVisible(false);
+							$('ul#newsfeed li.highlighted').removeClass('highlighted');
+							toggleFlag = 1;
+							console.log('UNHLTMP'+toggleFlag);
 						}, 10000);
 					}
 				});
@@ -168,6 +204,8 @@ block content
 			markerClustererOptions = {gridSize:30,maxZoom: 17};
 			markerCluster = new MarkerClusterer(map, markers,markerClustererOptions);
 				
+			markerHL = new google.maps.Marker({position: center,map:map,visible:false});
+			
 			google.maps.event.addListenerOnce(map, 'idle', function(){
 				bounds = this.getBounds();
 				getAndPrintInfo();
@@ -202,6 +240,22 @@ block content
 			});
 			
 			markers = [];
+			markerCluster.clearMarkers();
+		}
+		
+		function hideMarkers(ms){
+		console.log('hide');
+		// hide existing markers for ms milisec
+			markerCluster.clearMarkers();
+			$.each(markers,function(key,val){
+					val.setVisible(false);
+			});
+			setInterval(function() {
+				$.each(markers,function(key,val){
+					val.setVisible(true);
+				});
+				markerCluster.addMarkers(markers);
+			}, ms);
 			
 		}
 		
@@ -235,7 +289,9 @@ block content
 						/*PRINT ON THE MAP*/
 						var latLng = new google.maps.LatLng(val.location['lat'],val.location['lng']);
 						var marker = new google.maps.Marker({position: latLng,map:map,visible:true});
+						
 						marker.setAnimation(google.maps.Animation.BOUNCE);
+						
 						setTimeout(function() {
 							marker.setAnimation(null);
 							markerCluster.addMarker(marker);
@@ -268,7 +324,7 @@ block content
 			drawNewsFeed();
 			
 			cleanMarkers();
-			console.log('PRINT');
+			
 
 			$.getJSON('/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+heat+'/'+type,function(data) {
 				
@@ -283,7 +339,8 @@ block content
 				
 					/*PRINT ON THE FEED*/
 					
-					$('#newsfeed').append('<li class=\'mapHighlighter\' infoId=\''+val._id+'\'><i class=\'icon-eye-open\' ></i> '+val.title+'</li>');
+					$('#newsfeed').append('<li class=\'mapHighlighter\' infoId=\''+val._id+'\'><i class=\'icon-eye-open\' ></i> '+val.title+'</li>')
+					.append('<li class=\'mapHighlighterDetails\' infoId=\''+val._id+'\'></li>');
 					
 					/*PRINT ON THE MAP*/	
 					
@@ -292,6 +349,7 @@ block content
 					var latLng = new google.maps.LatLng(val.location['lat'],val.location['lng']);
 					var marker = new google.maps.Marker({position: latLng});
 					markers.push(marker);
+					console.log(markers);
 					
 					google.maps.event.addListener(marker, 'click', function() {
 						var dateTmp = new Date(val.pubDate);

@@ -12,7 +12,8 @@ a {
 
 .mapHighlighter{cursor:pointer;padding:3px;-webkit-border-radius: 2px;border-radius: 2px;}
 .mapHighlighter:hover{background-color:#F0F0F0;}
-.highlighted{font-weight:bold;color:red;}
+.mapHighlighterDetails{display:none;}
+.highlighted{color:red;}
 
 .row-fluid  .leftOverMapBox{z-index:1;position:relative;background-color:#FFFFFF;padding:10px;-webkit-border-radius: 2px;border-radius: 2px;}
 .row-fluid  .rightOverMapBox{z-index:1;position:relative;background-color:#FFFFFF;padding:0px;float:right;height:100%;-webkit-border-radius: 2px;border-radius: 2px;background:transparent;}
@@ -23,4 +24,4 @@ a {
 #newsfeedMenu #heatModule #dayPrinter{padding: 3px;}
 #newsfeedMenu #heatModule #heatSelector{}
 
-ul#newsfeed{list-style-type:none;width:100%;margin:10px auto;padding:10px 3px;float:left;opacity:0.85;background:#FFFFFF;}
+ul#newsfeed{list-style-type:none;width:100%;margin:10px auto;padding:10px 3px;float:left;opacity:0.95;background:#FFFFFF;}

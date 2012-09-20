@@ -9,7 +9,12 @@ block content
 
 	div.container-fluid
 		div.row-fluid
-			div.span3 
+			div.span3
+				- if (message)
+					div.alert.fade.in
+						button.close(type="button",data-dismiss="alert")
+							x
+						strong=message
 				form(action='/user', method='POST')
 					input(type='hidden', name='redir', value=redir)
 					p

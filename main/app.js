@@ -8,7 +8,8 @@ var express = require('express'),
   api = require('./routes/api'),
   users = require('./routes/users'),
   db = require('./models/mongooseModel'),
-  config = require('./confs.js');
+  config = require('./confs.js'),
+  fs = require('fs');
   
 var app = express();
 
@@ -20,7 +21,7 @@ app.configure(function(){
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
   //app.set('view options', {layout: true});
-  app.use(express.bodyParser());
+  app.use(express.bodyParser({keepExtensions: true,uploadDir:__dirname + '/public/uploads/originals'}));
   app.use(express.static(__dirname + '/public'));
   app.use(express.cookieParser('SAfuBUZ2'));
   // Session management
@@ -31,6 +32,8 @@ app.configure(function(){
   app.use(function(req, res, next){
     res.locals.session = req.session.user;
 	res.locals.redir = req.query.redir;
+	res.locals.message = req.session.message;
+	//res.locals.conf = JSON.stringify(config.confs.dev);
     next();
   });
   
@@ -41,19 +44,18 @@ app.configure(function(){
 
 app.configure('development', function(){
 	conf = config.confs.dev;
-	
+	app.locals.conf = JSON.stringify(config.confs.dev);
 	app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
 
-/*
+
 app.configure('production', function(){
 	conf = config.confs.prod;
-	
+	app.locals.conf = JSON.stringify(config.confs.prod);
 	app.use(express.errorHandler());
 });
-*/
 
- 
+ console.log(conf);
 var db = routes.db(conf);	
 
 
@@ -67,8 +69,8 @@ app.get('/partials/:name', routes.partials);
 //app.get('/actu/map', requiresPosition, routes.actu_map);
 app.get('/actu/map', routes.actu_map);
 app.get('/actu/fil', routes.actu_fil);
-//app.get('/actu/new', routes.actu_new);
-app.get('/actu/new', requiresLogin, routes.actu_new);
+app.get('/actu/new', routes.actu_new);
+//app.get('/actu/new', requiresLogin, routes.actu_new);
 
 app.get('/user/login', routes.user_login);
 app.get('/user/logout', routes.user_logout);
@@ -104,6 +106,7 @@ function requiresLogin(req,res,next){
 	if(req.session.user){
 		next();
 	}else{
+		req.session.message = 'Please login to access this section:';
 		res.redirect('/user/login?redir='+req.url);
 	}
 }
