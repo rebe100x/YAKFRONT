@@ -8,47 +8,52 @@ block content
 	mixin menu('post')
 	mixin locationChooser()
 
+				
 	div.container-fluid
 		div.row-fluid
-			div.span3.leftOverMapBox
-				form(action='/actu', method='POST', enctype='multipart/form-data')
-					input#yakcatInput(type='hidden', name='yakcatInput', value='')
-					input#placeInput(type='text', name='placeInput', value='')
-					input#latitude(type="hidden",data-provide="typeahead", name="latitude")
-					input#longitude(type="hidden",data-provide="typeahead", name="longitude")
-					legend Poster une info:
-					div.control-group
-						div.controls
-							input.span12(type='text', name='title', id='title', placeholder='Titre')
-							textarea.span12(name='content', id='content', placeholder='Texte',rows='5')
-					div.control-group
-						label(for='category') Choisissez une ou plusieurs catégories Yakwala:
-						div.controls
-							input#yakcat.span12(type="text",data-provide="typeahead", name="category", autocomplete="off", placeholder='Rechercher...')
-					legend A quel endroit ?
-					div.control-group
-						label(for='Place') Clicker sur la carte ou bien entrer une adresse:<br /> 
-						div.controls
-							div.input-append
-								input#place(type="text",data-provide="typeahead", name="place", autocomplete="off", placeholder='Rechercher...') 
-								button.btn#btn-place-adder(type="button") Add
-							span.help-block Ajoutez plusieurs adresses et faites apparaître votre info à plusieurs endroits !
+				div.span8
+					div#mymap
+				div.span4
+					div#newsPostContainer
+						div#newsPostForm
+							- if (message)
+								each msg in message
+									div.alert.fade.in
+										button.close(type="button",data-dismiss="alert") x
+										strong= msg
+							form(action='/actu', method='POST', enctype='multipart/form-data')
+								input#yakcatInput(type='hidden', name='yakcatInput', value='')
+								input#placeInput(type='hidden', name='placeInput', value='')
+								input#latitude(type="hidden",data-provide="typeahead", name="latitude")
+								input#longitude(type="hidden",data-provide="typeahead", name="longitude")
+								legend Poster une info:
+								div.control-group
+									div.controls
+										input.span12(type='text', name='title', id='title', placeholder='Titre')
+										textarea.span12(name='content', id='content', placeholder='Texte',rows='5')
+								div.control-group
+									label(for='category') Choisissez une ou plusieurs catégories Yakwala:
+									div.controls
+										input#yakcat.span12(type="text",data-provide="typeahead", name="category", autocomplete="off", placeholder='Rechercher...')
+									label(for='tags') Choisissez les tags:
+									div.controls	
+										input.span12(type="text",data-provide="typeahead", name="yaktag",placeholder='Tags ')
+									div.controls
+										span#picturePreview
+										input.span6#picture(type="file",style="display:block",name="picture")
+								legend A quel endroit ?
+								div.control-group
+									label(for='Place') Clicker sur la carte ou bien entrer une adresse:<br /> 
+									div.controls
+										div.input-append
+											input#place(type="text",data-provide="typeahead", name="place", autocomplete="off", placeholder='Rechercher...') 
+											button.btn#btn-place-adder(type="button") Add
+											span.help-inline(style='font-size:0.95em;font-style:italic;') Ajoutez plusieurs adresses <br>et faites apparaître votre info <br>à plusieurs endroits !
+								br
+								button.btn.btn-large.btn-block.btn-inverse(style='width:100%',type='submit', name='submit', id='submit', value='Envoyer') Envoyer
 								
-					legend Détails de l'info:					
-					div.control-group
-						div.controls
-							input.link(type="text",data-provide="typeahead", name="link",placeholder='Site web ')
-							input.link(type="text",data-provide="typeahead", name="yaktag",placeholder='Tags ')
-							input.link(type="text",data-provide="typeahead", name="image",placeholder='Image ')
-							
-					p
-						div#partial1
-						input.txt#picture(type="file",name="picture")
-					p
-						input(type='submit', name='submit', id='submit', value='Envoyer')
-			div.span9(style='z-index:0;') 
-				div#mymap
-			
+								
+				
 		script
 			/*INIT*/	
 			var conf = !{conf};
@@ -77,21 +82,25 @@ block content
 					google.maps.event.addDomListener(window, 'load', initialize(curPos.x,curPos.y,curPos.z)); 
 				}*/
 				
-				
 				$('#picture').live('change', function () {
 
-					var fileList = this.files;
-					var file = fileList[0];
-					var r = new FileReader();
-					r.onload = function () {
-						var binimage = r.result;
-						binimage1 = binimage.replace('data:image/jpeg;base64,', '');
-						var imag = "<img " + "src='" + 
-						"data:image/jpg;base64," + binimage1 + "' style='width:100px'/>";
-						$("#partial1").html(imag);
-
-					};
-					r.readAsDataURL(file);
+					if ( window.FileReader ) {
+						var fileList = this.files;
+						var file = fileList[0];
+						//if ( window.FileReader ) {
+						var r = new FileReader();
+						r.onload = function () {
+							var binimage = r.result;
+							console.log(binimage);
+							binimage1 = binimage.replace('data:image/jpeg;base64,', '');
+							var imag = "<img class='img-rounded' " + "src='" + 
+							"data:image/jpg;base64," + binimage1 + "' style='width:100px'/>";
+							$("#picturePreview").html(imag);
+						};
+						r.readAsDataURL(file);
+					
+					}
+					
 					//r.readAsBinaryString(file);
 
 					
@@ -142,7 +151,7 @@ block content
 							})},
 					property: "title",
 					onselect: function(obj) { 
-						$("label[for='category']").after("<div><i class='icon-remove'  onclick='console.log(yakcatArray);yakcatArray.cleanArray(\""+obj._id+"\");$(\"#yakcatInput\").val(JSON.stringify(yakcatArray));$(this).parent().remove();'></i> "+obj.title+"</div>");
+						$("label[for='category']").after("<div><i class='icon-remove'  onclick='yakcatArray.cleanArray(\""+obj._id+"\");$(\"#yakcatInput\").val(JSON.stringify(yakcatArray));$(this).parent().remove();'></i> "+obj.title+"</div>");
 						$('#yakcat').val('').focus();
 						yakcatArray.push(obj);
 						$("#yakcatInput").val(JSON.stringify(yakcatArray));
@@ -226,7 +235,7 @@ block content
 					visible:false,
 					map:map,
 					draggable:true,
-					icon:'images/beachflag.png',
+					icon:'/images/beachflag.png',
 					position:center
 				});
 				

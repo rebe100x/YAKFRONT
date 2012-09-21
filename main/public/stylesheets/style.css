@@ -15,10 +15,10 @@ a {
 .mapHighlighterDetails{display:none;}
 .highlighted{color:red;}
 
-.row-fluid  .leftOverMapBox{z-index:1;position:relative;background-color:#FFFFFF;padding:10px;-webkit-border-radius: 2px;border-radius: 2px;}
-.row-fluid  .rightOverMapBox{z-index:1;position:relative;background-color:#FFFFFF;padding:0px;float:right;height:100%;-webkit-border-radius: 2px;border-radius: 2px;background:transparent;}
 
-#newsfeedContainer{overflow:auto;height:auto;}
+#newsfeedContainer{overflow:auto;height:auto;background-color:#FFF;opacity:0.90;}
+#newsPostContainer{overflow:auto;height:auto;}
+#newsPostContainer #newsPostForm{margin:0px auto;padding:10px;text-align:left;opacity:0.95;background:#FFFFFF;}
 #newsfeedMenu{margin:10px auto;padding:10px;text-align:center;width:100%;float:left;opacity:0.85;background:#FFFFFF;}
 #newsfeedMenu #heatModule{margin:10px 20px 10px 0px;padding:7px 15px;}
 #newsfeedMenu #heatModule #dayPrinter{padding: 3px;}

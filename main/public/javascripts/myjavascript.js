@@ -27,7 +27,7 @@ for(i=0;i<this.length;i++)
 }
 Array.prototype.cleanArrayByLocation=function(lng,lat){
 for(i=0;i<this.length;i++){
-console.log(this[i].location.lng+"="+lng);
+	//console.log(this[i].location.lng+"="+lng);
 	if(lng==this[i].location.lng && lat==this[i].location.lat) 
 		this.splice(i, 1);
 }
@@ -197,7 +197,7 @@ function getformattedAddress(position){
 			if (status == google.maps.GeocoderStatus.OK) {
 				$('#place').val(results[0].formatted_address).select();
 				var placeGmap = getPlaceFromGmapResult(results);
-				console.log(results);
+				//console.log(results);
 				placeArray.push(placeGmap);
 				$("#placeInput").val(JSON.stringify(placeArray));
 				$('#btn-place-adder').parent().before("<div><i class='icon-remove' onclick='placeArray.cleanArrayByLocation("+results[0].geometry.location.Ya+","+results[0].geometry.location.Xa+");$(\"#placeInput\").val(JSON.stringify(placeArray));$(this).parent().remove();'></i> "+results[0].formatted_address+"</div>");
@@ -254,8 +254,8 @@ function getPlaceFromGmapResult(results){
 		if(item.types.inArray('postal_code'))
 			addressGmap.zip = item.long_name;
 	});
-console.log('elo');
-	console.log((results[0].geometry.location.Xa));
+
+	//console.log((results[0].geometry.location.Xa));
 	var placeGmap = {
 		"title":results[0].formatted_address
 		,"content":""

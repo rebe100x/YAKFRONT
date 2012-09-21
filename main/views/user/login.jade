@@ -12,8 +12,7 @@ block content
 			div.span3
 				- if (message)
 					div.alert.fade.in
-						button.close(type="button",data-dismiss="alert")
-							x
+						button.close(type="button",data-dismiss="alert") x
 						strong=message
 				form(action='/user', method='POST')
 					input(type='hidden', name='redir', value=redir)

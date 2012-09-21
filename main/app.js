@@ -55,7 +55,6 @@ app.configure('production', function(){
 	app.use(express.errorHandler());
 });
 
- console.log(conf);
 var db = routes.db(conf);	
 
 
@@ -68,6 +67,7 @@ app.get('/', routes.index);
 app.get('/partials/:name', routes.partials);
 //app.get('/actu/map', requiresPosition, routes.actu_map);
 app.get('/actu/map', routes.actu_map);
+app.get('/actu/map_test', routes.actu_map_test);
 app.get('/actu/fil', routes.actu_fil);
 app.get('/actu/new', routes.actu_new);
 //app.get('/actu/new', requiresLogin, routes.actu_new);

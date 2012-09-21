@@ -1,4 +1,4 @@
-
+﻿
 /*
  * GET home page.
  */
@@ -20,19 +20,14 @@ exports.partials = function (req, res) {
 };
 
 exports.actu_map = function(req, res){
-//var util = require('util');
-//res.send(util.inspect(res));
-//var mongoose = require('mongoose'), Schema = mongoose.Schema;
-//var db = mongoose.connect('mongodb://localhost/yakwala');
-//var Info = db.model('Info');
-//Info.findAll(function (err, docs){
-//	res.render('actu/map',{locals:{infos:docs,title:'testelo'}});
-//});
-	
 	res.render('actu/map');  
 };
+exports.actu_map_test = function(req, res){
+	res.render('actu/map_test');  
+};
 exports.actu_new = function(req, res){
-  res.render('actu/new',{locals:{title:{'test':'Poster une actu'}}});
+	delete req.session.message;
+  res.render('actu/new');
 };
 exports.actu_fil = function(req, res){
 	var Info = db.model('Info');
@@ -71,127 +66,137 @@ exports.user = function(req, res){
 
 exports.actu = function(req, res){
 
+	var formMessage = new Array();
+	delete req.session.message;
 	var Info = db.model('Info');
 	var Place = db.model('Place');
 	
 	var place = new Place();
 	//mongoose.set('debug', true);
-	// NOTE : in the query below, order is important : in DB we have lat, lng but need to insert in reverse order : lng,lat  (=> bug mongoose ???)
-	//info.location = {lng:parseFloat(req.body.longitude),lat:parseFloat(req.body.latitude)};
-	
-	//var locTmp = [];
-	//var locTmp =  eval('{' + req.body.placeInput + '}');
-	//eval('var locTmp='+req.body.placeInput);
 	
 	
-	/**UPLOAD*/
-		
-	if(req.files.picture){
-		var im = require('imagemagick');
+	console.log(req.files);
+	// we need a title, a location and a user
+	if(req.body.placeInput && req.body.title && req.session.user){
+	
+	
+		console.log(req.files);
+		/**UPLOAD IMAGE*/
+		if(req.files.picture.size){
+			var im = require('imagemagick');
 
-		// get the size
-		im.identify(['-format', '%w', req.files.picture.path], function(err, output){
-		  if (err) throw err
-		  if(output > 512){
+			// get the size
+			im.identify(['-format', '%w', req.files.picture.path], function(err, output){
+			  if (err) throw err
+			  if(output > 512){
+				im.resize({
+					srcPath: req.files.picture.path,
+					dstPath: conf.uploadsDir+'pictures/512_0/'+req.files.picture.name,
+					strip : false,
+					width : 512,
+				}, function(err, stdout, stderr){
+					if (err) throw err
+				});
+			  }else{
+				fs = require('fs');
+				srcFile = fs.createWriteStream(req.files.picture.path);     
+				dstFile = fs.createReadStream(conf.uploadsDir+'/pictures/512_0/'+req.files.picture.name);
+				fs.renameSync(req.files.picture.path,conf.uploadsDir+'/pictures/512_0/'+req.files.picture.name);
+			  }
+			  
+			  
+			})
+			
+			// create thumbnail
 			im.resize({
 				srcPath: req.files.picture.path,
-				dstPath: conf.uploadsDir+'pictures/512_0/'+req.files.picture.name,
+				dstPath: conf.uploadsDir+'pictures/120_90/'+req.files.picture.name,
 				strip : false,
-				width : 512,
+				width : 120,
+				height : "90^",
+				customArgs: [
+					 "-gravity", "center"
+					,"-extent", "120x90"
+					]
+				
 			}, function(err, stdout, stderr){
-				if (err) throw err
+			if (err) throw err
 			});
-		  }else{
-			console.log('COPY'+conf.uploadsDir+'pictures/512_0/'+req.files.picture.name);
-			fs = require('fs');
-			srcFile = fs.createWriteStream(req.files.picture.path);     
-			dstFile = fs.createReadStream(conf.uploadsDir+'/pictures/512_0/'+req.files.picture.name);
-			fs.renameSync(req.files.picture.path,conf.uploadsDir+'/pictures/512_0/'+req.files.picture.name);
-		  }
-		  
-		  
-		})
-		
-		// create thumbnail
-		im.resize({
-			srcPath: req.files.picture.path,
-			dstPath: conf.uploadsDir+'pictures/120_90/'+req.files.picture.name,
-			strip : false,
-			width : 120,
-			height : "90^",
-			customArgs: [
-				 "-gravity", "center"
-				,"-extent", "120x90"
-				]
 			
-		}, function(err, stdout, stderr){
-		if (err) throw err
-		});
+			var infoThumb = req.files.picture.name;
+		}	
 		
-		var infoThumb = req.files.picture.name;
-	}	
-	
-	var locTmp = JSON.parse(req.body.placeInput);
-	
-	locTmp.forEach(function(item) {
-		var info = new Info();
-		if(req.body.yakcatInput.length > 0){
-			var yakcat = eval('('+req.body.yakcatInput+')');
-			for(i=0;i<yakcat.length;i++){
+
+		var locTmp = JSON.parse(req.body.placeInput);
+		
+		locTmp.forEach(function(item) {
+			var info = new Info();
 			
-				info.yakCat.push(mongoose.Types.ObjectId(yakcat[i]._id));
+			if(req.body.yakcatInput.length > 0){
+				var yakcat = eval('('+req.body.yakcatInput+')');
+				for(i=0;i<yakcat.length;i++){
+				
+					info.yakCat.push(mongoose.Types.ObjectId(yakcat[i]._id));
+				}
 			}
-		}
-		info.title = req.body.title;
-		info.content = req.body.content;
-		
-		info.location = {lng:parseFloat(item.location.lng),lat:parseFloat(item.location.lat)};
-		// if no id, it means the location comes from gmap => we store it
-		if(item._id == "" || typeof item._id === "undefined"){
-		//[{"_id":"","title":"Place du Carrousel, 75001 Paris, France","content":"","thumb":"","origin":"yakwala","access":2,"licence":"Yakwala","outGoingLink":"","yakCat":["504d89f4fa9a958808000001"],
-		//	"creationDate":"2012-09-17T09:30:05.980Z","lastModifDate":"2012-09-17T09:30:05.980Z","location":{"lng":2.3348863999999594,"lat":48.862492},"status":2,"address":{"street":"Place du Carrousel","arr":"","city":"Paris","state":"Paris","area":"�le-de-France","country":"France","zip":"75001"}}]
-			/*place.title = item.title;
-			place.content = item.content;
-			place.thumb = item.thumb;
-			place.origin = item.origin;
-			place.thumb = item.thumb;
-			place.access = item.access;
-			place.licence = item.licence;
-			place.outGoingLink = item.outGoingLink;
-			place.thumb = item.thumb;
-			place.thumb = item.thumb;
-			place.save();*/
-			//var itemObj = JSON.parse(item);
-			place = new Place(item);
-			place.save();
-			info.placeId = place._id;
-		}else
-			info.placeId = item._id;
-		
-		info.creationDate = new Date();
-		info.lastModifDate = new Date();
-		info.pubDate = new Date();
-		var now = new Date();
-		var D = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
-		var DTS = D.getTime() / 1000 + (3 * 60 * 60 * 24);
-		D.setTime(DTS*1000); 
-		info.dateEndPrint = D;
-		info.outGoingLink = req.body.link;
-		//console.log(info);
-		info.print = 1;
-		info.status = 1;
-		info.yakType = 4; // UGC
-		info.thumb = infoThumb;
-		
-		
-		
-		info.save(function (err) {
-			if (!err) console.log('Success!');
-			else console.log(err);
+			info.title = req.body.title;
+			info.content = req.body.content;
+			
+			// NOTE : in the query below, order is important : in DB we have lat, lng but need to insert in reverse order : lng,lat  (=> bug mongoose ???)
+			info.location = {lng:parseFloat(item.location.lng),lat:parseFloat(item.location.lat)};
+			// if no id, it means the location comes from gmap => we store it
+			if(item._id == "" || typeof item._id === "undefined"){
+				place = new Place(item);
+				place.save();
+				info.placeId = place._id;
+			}else
+				info.placeId = item._id;
+			
+			info.creationDate = new Date();
+			info.lastModifDate = new Date();
+			info.pubDate = new Date();
+			var now = new Date();
+			var D = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+			var DTS = D.getTime() / 1000 + (3 * 60 * 60 * 24);
+			D.setTime(DTS*1000); 
+			info.dateEndPrint = D;
+			//console.log(info);
+			info.print = 1;
+			info.status = 1;
+			info.yakType = 4; // UGC
+			info.thumb = infoThumb;
+			info.licence = 'Yakwala';
+			info.heat = 80;
+			
+			// security against unidentified users	
+			if(req.session.user){
+				info.user = req.session.user._id;
+				info.save(function (err) {
+					if (!err) console.log('Success!');
+					else console.log(err);
+				});
+			}
+			
+			
 		});
 		
-	});
+		formMessage.push("L'info a été postée !");
+		
+	}else{
+		if(!req.session.user)
+			formMessage.push("Veuillez vous identifier pour poster une info");
+		if(!req.body.title)
+			formMessage.push("Erreur: définissez le titre de l'info");
+		if(!req.body.placeInput)
+			formMessage.push("Erreur: définissez une géolocalisation de l'info");
+		
+		
+		
+		
+	}
+		
 	
+	req.session.message = formMessage;
 	
-	res.render('actu/new',{title:'Poster une actu'});
+	res.redirect('actu/new');
 };
