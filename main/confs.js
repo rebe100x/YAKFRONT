@@ -8,7 +8,7 @@ exports.confs = {
 	
 	},
 	"preprod" : {
-		"backurl":"http://ec2-54-247-18-97.eu-west-1.compute.amazonaws.com/YAKREP/BACKEND/",
+		"backurl":"http://ec2-54-247-18-97.eu-west-1.compute.amazonaws.com/PREPROD/YAKREP/BACKEND/",
 		"port":62501,
 		"dbname":"yakwala_preprod",
 		"env":"PREPROD",

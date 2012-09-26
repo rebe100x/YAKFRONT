@@ -21,6 +21,7 @@ $(document).ready(function() {
 
 
 Array.prototype.cleanArray=function(id){
+console.log(id);
 for(i=0;i<this.length;i++)
 	if(id==this[i]._id) 
 		this.splice(i, 1);

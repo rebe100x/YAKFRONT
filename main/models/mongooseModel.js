@@ -6,7 +6,7 @@
 var mongoose = require('mongoose')
   , Schema = mongoose.Schema;
 
-//mongoose.set('debug', true);
+mongoose.set('debug', true);
 
 /**
  * Schema definition
@@ -93,14 +93,36 @@ mongoose.model('Info', Info);
 /*USERS*/
 var crypto = require('crypto');
 
+
 var User = new Schema({
-    login     : { type: String, index: true}
-  , password       : { type: String , index: true}
+	name	: { type: String, index: true}
+	, bio	: { type: String}
+    , mail	: { type: String, index: true}
+	, web	: { type: String}
+	, tag	: { type: [String], index: true}
+	, thumb	: { type: String}
+	, type	: { type: Number, index: true}
+	, login     : { type: String, index: true}
+	, password       : { type: String , index: true}
+	, usersubsc	: { type: [Schema.ObjectId], index: true}
+	, tagsubsc	: { type: [String], index: true}
+	, placesubsc	: { type: [Schema.ObjectId], index: true}
+	, home	: { type : { lat: Number, lng: Number }, index : '2d'}	
+	, creationDate	: {type: Date, required: true, default: Date.now}		
+	, lastModifDate	: {type: Date, required: true, default: Date.now}		
+	, lastLoginDate	: {type: Date, required: true, default: Date.now}		
+	, status	: {type: Number}		
+  
+  
 }, { collection: 'user' });
 
 
 User.statics.findByLogin = function (login,callback) {
   return this.find({login:login}, callback);
+}
+
+User.statics.findByIds = function (ids,callback) {
+  return this.find({'_id': { $in: ids}}, callback);
 }
 
 User.setters = function(password) {
@@ -119,7 +141,29 @@ User.statics.Authenticate = function(lg,pwd,callback) {
 User.makeSalt =  function() {
       return Math.round((new Date().valueOf() * Math.random())) + '';
     }
-
+	
+User.statics.findAll = function (callback) {
+  return this.find({},[],{sort:{name:1}}, callback);
+}
+	
+User.statics.search = function(string,callback){
+	var input = new RegExp(string,'i');
+	return this.find(
+	{	$or:[ {'login': {$regex:input}}, {'name': {$regex:input}}, {'mail': {$regex:input}} ],
+		"status":1,
+	},
+	[],
+	{
+		
+		skip:0, // Starting Row
+		limit:100, // Ending Row
+		sort:{
+			lastLoginDate: -1 //Sort by Date Added DESC
+		}
+	},
+	callback);
+}
+//.or([{ 'firstName': { $regex: re }}, { 'lastName': { $regex: re }}])
 mongoose.model('User', User);
 
 

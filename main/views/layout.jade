@@ -3,7 +3,7 @@ html
 	head
 		meta(charset='utf8')
 		base(href='/')
-		title Yakwala - #{conf.env}
+		title Yakwala - #{JSON.parse(conf).env}
 		
 		link(rel='stylesheet', href='/stylesheets/gmap.css')
 		link(rel='stylesheet', href='/javascripts/lib/bootstrap/css/bootstrap.css')

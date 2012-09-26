@@ -1,0 +1,95 @@
+extends ../layout
+block content
+
+	include ../mixins/menu.jade
+	include ../mixins/locationChooser.jade
+
+	mixin menu('alerts')
+	mixin locationChooser()
+
+	div.container-fluid
+		div.row-fluid
+			div.span4.yak-sidebar
+				ul.nav.nav-list.yak-sidenav.affix
+					li
+						a(href="/settings/profile",data-nav="profile") Mon profil
+							i.icon-chevron-right
+					li.active
+						a(href="/settings/alerts",data-nav="alerts") Abonnements et Alertes
+							i.icon-chevron-right 		
+					li
+						a(href="/settings/password",data-nav="password") Mot de passe
+							i.icon-chevron-right 
+
+						
+			div.span8
+				- if (message)
+					div.alert.fade.in
+						button.close(type="button",data-dismiss="alert") x
+						strong=message
+				div.content-header
+					div.header-inner
+						h2 Abonnements et alertes
+						p.subheader Abonnez vous aux infos d'autres utilisateurs et configurer vos alertes
+				hr
+				form(action='/alerts', method='POST')
+					input#usersubscInput(type='text', name='usersubscInput', value='')
+					input#placesubscInput(type='hidden', name='placesubscInput', value='')
+					input#tagsubscInput(type='hidden', name='tagsubscInput', value='')
+					div.control-group
+						div.controls
+							p  !{users}
+							label.control-label.label-xlarge(for="usersubsc") Abonnez vous au flux d'un utilisateur :  
+							- each user in JSON.parse(users)
+								p
+									div
+										i.icon-remove(onclick="usersubscArray.cleanArray(\""+user._id+"\");console.log(usersubscArray);$(\"#usersubscInput\").val(JSON.stringify(usersubscArray));$(this).parent().remove();") 
+										= user.name
+							
+								
+							input.input-xlarge#usersubsc(type="text",data-provide="typeahead", name="usersubsc", autocomplete="off", placeholder="Entrer un nom d'utilisateur ou un mot clé..") 
+					div.control-group
+						div.controls
+							div.input-append
+								label.control-label.label-xlarge(for="alert") Abonnez vous à une alerte sur un mot clé :  
+								input#alert(type="text",data-provide="typeahead", name="alert", autocomplete="off", placeholder='Entrer un mot clé...') 
+								button.btn#btn-alert-adder(type="button") Add
+						
+
+					button.btn.btn-large.btn-block.btn-inverse(type='submit', name='submit', id='submit', value='Envoyer') Envoyer
+
+	script
+		/*INIT*/	
+		var conf = !{conf};
+		var usersubscArray = !{users}; 
+		var placesubscArray = [];
+		var tagsubscArray = [];
+		$(document).ready(function() {
+			
+			
+			
+			
+			$('#usersubscInput').val(JSON.stringify(usersubscArray));
+			$('#usersubsc').typeahead({
+					minLength : 3,
+					source: function (typeahead, query) {
+						$.ajax({
+								url: "/api/usersearch/"+query,				
+								success: function( data ) {
+									
+									
+									typeahead.process(data.users);
+								}
+							})},
+					property: "name",
+					onselect: function(obj) { 
+						$("label[for='usersubsc']").after("<div><i class='icon-remove'  onclick='usersubscArray.cleanArray(\""+obj._id+"\");$(\"#usersubscInput\").val(JSON.stringify(usersubscArray));$(this).parent().remove();'></i> "+obj.name+"</div>");
+						$('#usersubsc').val('').focus();
+						usersubscArray.push(obj);
+						$("#usersubscInput").val(JSON.stringify(usersubscArray));
+					}
+				});
+				
+			
+		}); // END READY
+

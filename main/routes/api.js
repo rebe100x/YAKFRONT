@@ -51,6 +51,20 @@ exports.places = function (req, res) {
 	});
 };
 
+
+exports.usersearch = function (req, res) {
+	var User = db.model('User');
+	User.search(req.params.string,function (err, docs){
+	  res.json({
+		users: docs
+	  });
+	});
+};
+
+
+
+
+
 exports.posts = function (req, res) {
   var posts = [];
   data.posts.forEach(function (post, i) {

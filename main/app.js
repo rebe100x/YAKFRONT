@@ -65,18 +65,27 @@ app.get('/', routes.index);
 
 
 app.get('/partials/:name', routes.partials);
-//app.get('/actu/map', requiresPosition, routes.actu_map);
-app.get('/actu/map', routes.actu_map);
-app.get('/actu/map_test', routes.actu_map_test);
-app.get('/actu/fil', routes.actu_fil);
-app.get('/actu/new', routes.actu_new);
-//app.get('/actu/new', requiresLogin, routes.actu_new);
+//app.get('/news/map', requiresPosition, routes.news_map);
+app.get('/news/map', routes.news_map);
+app.get('/news/map_test', routes.news_map_test);
+app.get('/news/feed', routes.news_feed);
+app.get('/news/post', routes.news_post);
+//app.get('/news/post', requiresLogin, routes.news_post);
 
 app.get('/user/login', routes.user_login);
 app.get('/user/logout', routes.user_logout);
 
+app.get('/settings', routes.settings_profil);
+app.get('/settings/profile', routes.settings_profile);
+app.get('/settings/alerts', routes.settings_alerts);
+app.get('/settings/password', routes.settings_password);
+
+
+
 app.post('/user',routes.user);
-app.post('/actu',routes.actu);
+app.post('/news',routes.news);
+app.post('/alerts',routes.alerts);
+app.post('/profile',routes.profile);
 // JSON API
 
 
@@ -87,6 +96,7 @@ app.get('/api/zones/:x/:y', api.zones);
 app.post('/api/users', api.users);
 app.get('/api/cats', api.cats);
 app.get('/api/places', api.places);
+app.get('/api/usersearch/:string', api.usersearch);
 
 app.get('/api/posts', api.posts);
 app.get('/api/post/:id', api.post);

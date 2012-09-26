@@ -1,0 +1,130 @@
+﻿include ../mixins/menu.jade
+
+mixin menu('elo')
+
+
+div.modal.hide#locationChooser
+	div.modal-header
+		button.close(type="button", data-dismiss="modal") x
+		h3 Choisissez votre zone :
+	div.modal-body
+		p Yakwala ne couvre pas encore la zone où vous vous trouvez, vous pouvez actuellement naviguer sur :
+			ul
+				li Paris
+				li Montpellier
+				li Egézée
+	div.modal-footer
+		a.btn(href="#", data-dismiss="modal") Close
+		a.btn.btn-primary(href="#") Save changes
+  
+div.container-fluid
+	div.row-fluid
+		div.span3
+		div.span9
+			div#mymap
+
+	script
+		$(document).ready(function() {
+			
+			x = 48.851875;
+			y = 2.356374;
+			
+			var geolocalized = 0;
+			var infowindow = null;
+
+			
+			if(navigator.geolocation) {
+				navigator.geolocation.getCurrentPosition(getHTML5Pos,getErrHTML5Pos);
+				console.log(x+' '+y);
+				
+			}else {
+				console.log("Shit, again an old browser => no html5 geoloc");
+			}
+			
+			
+			
+			
+			
+			
+			
+			
+
+			
+		});
+
+		
+		
+
+		function getHTML5Pos(position) {
+			x = position.coords.latitude;
+			y = position.coords.longitude;
+			$('#locationChooser').modal();
+			geolocalized = 1;
+			google.maps.event.addDomListener(window, 'load', initialize(x,y)); 
+		}
+
+		// On declare la variable survId afin de pouvoir par la suite annuler le suivi de la position
+		//var survId = navigator.geolocation.watchPosition(getHTML5Pos);
+		//Annule le suivi de la position si necessaire.
+		//navigator.geolocation.clearWatch(survId);
+			
+		function getErrHTML5Pos(error) {
+			var info = "Error while HTML5 geoloc : ";
+			switch(error.code) {
+				case error.TIMEOUT:
+					info += "Timeout !";
+				break;
+				case error.PERMISSION_DENIED:
+				info += "Permission denied";
+				break;
+				case error.POSITION_UNAVAILABLE:
+					info += "Unavailable position";
+				break;
+				case error.UNKNOWN_ERROR:
+				info += "Unknown error";
+				break;
+			}
+			geolocalized = 0;
+			console.log(info);
+		}
+		
+		function initialize(x,y) {
+			var center = new google.maps.LatLng(x,y);
+			infowindow = new google.maps.InfoWindow({content: ".",maxWidth : 300});
+			var map = new google.maps.Map(document.getElementById('mymap'), {
+				zoom: 10,
+				center: center,
+				mapTypeId: google.maps.MapTypeId.ROADMAP
+			});
+	
+			var markers = [];
+			$.getJSON('/api/info',function(data) {
+			//console.log(data.info[0].location);
+				var items = [];
+				$.each(data.info, function(key,val) {
+				//console.log(val);
+					
+					
+					var latLng = new google.maps.LatLng(val.location['lat'],val.location['lng']);
+					var marker = new google.maps.Marker({position: latLng});
+					markers.push(marker);
+					
+					google.maps.event.addListener(marker, 'click', function() {
+						//map.setZoom(8);
+						//map.setCenter(marker.getPosition());
+						var infoContent = "<div class=\'infowindow\' ><img src=\'http://dev.backend.yakwala.com/BACKEND/"+val.thumb+"\' /><div class=\'title\'> "+val.title+"</div><div class=\'content\'>"+val.content.substring(0,250)+"...</div><div class=\'readmore\'><a target=\'_blank\' href=\'"+val.outGoingLink+"\'> Read more</a></div></div>";
+						infowindow.setContent(infoContent);
+						infowindow.open(map, this);
+					});	
+					
+				});
+				var markerClustererOptions = {gridSize:30,maxZoom: 16};
+				var markerCluster = new MarkerClusterer(map, markers,markerClustererOptions);
+				
+				google.maps.event.addListener(markerCluster, 'click', function(data) {
+					console.log('data'+data);
+				});
+			});
+			
+			
+		}
