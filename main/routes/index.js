@@ -70,121 +70,18 @@ exports.news = function(req, res){
 	
 	var place = new Place();
 	//mongoose.set('debug', true);
-	var flagError = 0;
-	var srcPath = '';
-	var srcName = '';
-	var im = require('imagemagick');
 
 	//console.log(req.files);
 	// we need a title, a location and a user
 	if(req.body.placeInput && req.body.title && req.session.user){
 	
-		var infoThumb = '';
+		var drawTool = require('../mylib/drawlib.js');
+		var size = [{"width":120,"height":90},{"width":512,"height":0}];
+		var infoThumb = drawTool.StoreImg(req.files.picture,size,conf);
+		formMessage.push(infoThumb.msg);	
 			
-		/**UPLOAD IMAGE*/
-		if(req.files.picture.size){
-			
-			
-		
-			var srcPathTmp = req.files.picture.path;
-			var srcNameTmp = req.files.picture.name;
-			srcPath = srcPathTmp.replace('.gif', '.jpeg');
-			srcPath = srcPathTmp.replace('.png', '.jpeg');
-			srcPath = srcPathTmp.replace('.jpg', '.jpeg');
-			srcName = srcNameTmp.replace('.gif', '.jpeg');
-			srcName = srcNameTmp.replace('.png', '.jpeg');
-			srcName = srcNameTmp.replace('.jpg', '.jpeg');
-			
-			console.log(srcPathTmp,srcPath);
-			
-			// convert to jpeg
-			im.convert([srcPathTmp,srcPath],function(err,stdout){
-				if(!err){
-					// create thumbnail
-					im.resize({
-						srcPath: srcPath,
-						dstPath: conf.uploadsDir+'pictures/120_90/'+srcName,
-						strip : false,
-						width : 120,
-						height : "90^",
-						customArgs: [
-							 "-gravity", "center"
-							,"-extent", "120x90"
-							]
-						
-					}, function(err, stdout, stderr){
-						if (err) {
-							console.log('error creating thumbnail');
-							flagError = 1;
-							formMessage.push("L'image n'est pas reconnue, essayer avec une autre image !");
-						}else
-							console.log('thumbnail created successfully');
-					});
-					
-					// create the image, up to 512 px width
-					im.identify(['-format', '%w', srcPath], function(err, output){
-					  if (!err){
-						  if(output > 512){
-							im.resize({
-								srcPath: srcPath,
-								dstPath: conf.uploadsDir+'pictures/512_0/'+srcName,
-								strip : false,
-								width : 512,
-							}, function(err, stdout, stderr){
-								if (err){
-									console.log('im.resize du < 512px failed');
-									flagError = 1;
-									formMessage.push("L'image n'est pas reconnue, essayer avec une autre image !");
-									throw err;
-								}else
-									console.log('resize > 512 ok');
-									
-							});
-						  }else{
-							//fs = require('fs');
-							//srcFile = fs.createWriteStream(srcPath);     
-							//dstFile = fs.createReadStream(conf.uploadsDir+'/pictures/512_0/'+req.files.picture.name);
-							//fs.renameSync(srcPath,conf.uploadsDir+'/pictures/512_0/'+req.files.picture.name);
-							
-							im.resize({
-								srcPath: srcPath,
-								dstPath: conf.uploadsDir+'pictures/512_0/'+srcName,
-								strip : false,
-								height : '100%',
-								width : '100%',
-							}, function(err, stdout, stderr){
-								if (err){
-									console.log('im.resize to same size failed');
-									flagError = 1;
-									formMessage.push("L'image n'est pas reconnue, essayer avec une autre image !");
-								}else
-									console.log('resize < 512 ok');
-									
-							});
-						  }
-					  }else{
-						console.log('im.identity failed'+srcPath);
-						flagError = 1;
-						formMessage.push("L'image n'est pas reconnue, essayer avec une autre image !");
-						throw err;
-					  }
-						 
-					})
-				}else{
-					console.log('convert to jpeg failed');
-					flagError = 1;
-					formMessage.push("L'image n'est pas reconnue, essayer avec une autre image !");
-					throw err;
-				}
-					
-			});
-		
-			if(flagError==0)
-				var infoThumb = srcName;
-		}	
-		
 
-		if(flagError == 0 ){
+		if(infoThumb.err == 0 ){
 			
 			var locTmp = JSON.parse(req.body.placeInput);
 			
@@ -222,9 +119,10 @@ exports.news = function(req, res){
 				info.print = 1;
 				info.status = 1;
 				info.yakType = 4; // UGC
-				info.thumb = infoThumb;
+				info.thumb = infoThumb.name;
 				info.licence = 'Yakwala';
 				info.heat = 80;
+				info.freeTag = req.body.freetag.split(',');
 				
 				// security against unidentified users	
 				if(req.session.user){
@@ -261,16 +159,26 @@ exports.news = function(req, res){
 
 /******SETTINGS********/
 exports.settings_profile = function(req, res){
-	res.render('settings/profile');
+	var User = db.model('User');
+	
+	if(req.session.user){
+	
+		User.findById(req.session.user._id,function (err, docs){
+			var user = JSON.stringify(docs);
+			res.render('settings/profile',{user:user});
+		});	
+	}else{
+		req.session.message = "Erreur : vous devez être connecté pour voir votre profil";
+		res.redirect('/user/login?redir=settings/profile');
+	}
 };
-exports.settings_profile = function(req, res){
-	res.render('settings/profile');
-};
+
+
 exports.settings_alerts = function(req, res){
 	var User = db.model('User');
 	
 	if(req.session.user){
-		var users = User.findByIds(req.session.user.usersubsc,function (err, docs){
+		User.findByIds(req.session.user.usersubsc,function (err, docs){
 			var users = JSON.stringify(docs);
 			res.render('settings/alerts',{users:users});
 		});	
@@ -313,3 +221,44 @@ exports.alerts = function(req, res){
 	
 	res.redirect('settings/alerts');
 }
+
+exports.profile = function(req, res){
+		
+	var formMessage = new Array();
+	delete req.session.message;
+	var User = db.model('User');
+	var user = new User();
+				
+	if(req.session.user){
+		console.log(req.body);
+		var avatar = req.body.avatar;
+		var drawTool = require('../mylib/drawlib.js');
+		var size = [{"width":128,"height":128},{"width":48,"height":48}];
+		var infoThumb = drawTool.StoreImg(req.files.avatar,size,conf);
+		formMessage.push(infoThumb.msg);
+		
+		
+		User.update({_id: req.session.user._id}, 
+		{
+			name : req.body.username,
+			web:req.body.web,
+			thumb:infoThumb.name,
+			bio:req.body.bio,
+			tag:req.body.tag.split(',')
+			
+		}, {upsert: true}, function(err){
+			if (!err){
+				console.log('Success!');
+				formMessage.push("Votre profil est enregistré");
+			}
+			else console.log(err);
+		});
+		
+	}else
+		formMessage = "Erreur : vous n'êtes pas connecté !";
+	
+	req.session.message = formMessage;
+	
+	res.redirect('settings/profile');
+}
+

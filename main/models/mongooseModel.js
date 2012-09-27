@@ -61,20 +61,33 @@ Info.statics.findAll = function (callback) {
 
 }
 
-Info.statics.findAllGeo = function (x1,y1,x2,y2,heat,type,callback) {
+Info.statics.findAllGeo = function (x1,y1,x2,y2,heat,type,usersubsc,callback) {
   var now = new Date();
   var D = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
   var DTS = D.getTime() / 1000 - (heat * 60 * 60 * 24);
   D.setTime(DTS*1000); 
   var box = [[parseFloat(x1),parseFloat(y1)],[parseFloat(x2),parseFloat(y2)]];
+  
+  var cond = {
+				"print":1,
+				"status":1,
+				"location" : {$within:{"$box":box}},
+				"pubDate":{$gte:D},
+				"yakType" : type
+			};
+			
+  //alerts				
+  if(type == 5)
+	cond = {
+				"print":1,
+				"status":1,
+				"location" : {$within:{"$box":box}},
+				"pubDate":{$gte:D},
+				"user":{$in:usersubsc}
+			};
+	
   return this.find(
-	{
-		"print":1,
-		"status":1,
-		"location" : {$within:{"$box":box}},
-		"pubDate":{$gte:D},
-		"yakType" : type
-	},
+	cond,
 	[],
 	{
 		skip:0, // Starting Row
@@ -124,6 +137,9 @@ User.statics.findByLogin = function (login,callback) {
 User.statics.findByIds = function (ids,callback) {
   return this.find({'_id': { $in: ids}}, callback);
 }
+User.statics.findById = function (id,callback) {
+  return this.findOne({'_id': id}, callback);
+}
 
 User.setters = function(password) {
 		  this._password = password;
@@ -149,10 +165,11 @@ User.statics.findAll = function (callback) {
 User.statics.search = function(string,callback){
 	var input = new RegExp(string,'i');
 	return this.find(
-	{	$or:[ {'login': {$regex:input}}, {'name': {$regex:input}}, {'mail': {$regex:input}} ],
-		"status":1,
+	{	$or:[ {'login': {$regex:input}}, {'name': {$regex:input}} , {"tag": {$regex:input}} ],
+		
+	"status":1,
 	},
-	[],
+	['_id','tag','name'],
 	{
 		
 		skip:0, // Starting Row

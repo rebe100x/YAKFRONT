@@ -33,12 +33,12 @@ block content
 						p.subheader Abonnez vous aux infos d'autres utilisateurs et configurer vos alertes
 				hr
 				form(action='/alerts', method='POST')
-					input#usersubscInput(type='text', name='usersubscInput', value='')
+					input#usersubscInput(type='hidden', name='usersubscInput', value='')
 					input#placesubscInput(type='hidden', name='placesubscInput', value='')
 					input#tagsubscInput(type='hidden', name='tagsubscInput', value='')
 					div.control-group
 						div.controls
-							p  !{users}
+
 							label.control-label.label-xlarge(for="usersubsc") Abonnez vous au flux d'un utilisateur :  
 							- each user in JSON.parse(users)
 								p
@@ -56,7 +56,7 @@ block content
 								button.btn#btn-alert-adder(type="button") Add
 						
 
-					button.btn.btn-large.btn-block.btn-inverse(type='submit', name='submit', id='submit', value='Envoyer') Envoyer
+					button.btn.btn-large.btn-block.btn-inverse(type='submit', name='submit', id='submit', value='Enregistrer') Enregistrer
 
 	script
 		/*INIT*/	
@@ -76,17 +76,20 @@ block content
 						$.ajax({
 								url: "/api/usersearch/"+query,				
 								success: function( data ) {
-									
-									
 									typeahead.process(data.users);
 								}
 							})},
+					mode: 'multiple',		
 					property: "name",
-					onselect: function(obj) { 
-						$("label[for='usersubsc']").after("<div><i class='icon-remove'  onclick='usersubscArray.cleanArray(\""+obj._id+"\");$(\"#usersubscInput\").val(JSON.stringify(usersubscArray));$(this).parent().remove();'></i> "+obj.name+"</div>");
-						$('#usersubsc').val('').focus();
-						usersubscArray.push(obj);
-						$("#usersubscInput").val(JSON.stringify(usersubscArray));
+					onselect: function(obj) {
+						if(!usersubscArray.inArrayId(obj._id)){
+							$("label[for='usersubsc']").after("<div><i class='icon-remove'  onclick='usersubscArray.cleanArray(\""+obj._id+"\");$(\"#usersubscInput\").val(JSON.stringify(usersubscArray));$(this).parent().remove();'></i> "+obj.name+"</div>");
+							$('#usersubsc').val('').focus();
+							usersubscArray.push(obj);
+							$("#usersubscInput").val(JSON.stringify(usersubscArray));
+						}else{
+							$('#usersubsc').val('').focus();
+						}
 					}
 				});
 				

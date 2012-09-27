@@ -227,6 +227,15 @@ Array.prototype.inArray=function(needle){
     return false;
 }
 
+Array.prototype.inArrayId=function(id){
+	var length = this.length;
+    for(var i = 0; i < length; i++) {
+        if(this[i]._id == id) return true;
+    }
+    return false;
+}
+
+
 function getPlaceFromGmapResult(results){
 	
 	var addressGmap = {

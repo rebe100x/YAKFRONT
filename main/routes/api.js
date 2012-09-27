@@ -15,7 +15,11 @@ exports.infos = function (req, res) {
 
 exports.geoinfos = function (req, res) {
 	var Info = db.model('Info');
-	Info.findAllGeo(req.params.x1,req.params.y1,req.params.x2,req.params.y2,req.params.heat,req.params.type,function (err, docs){
+	if(req.session.user)
+		var usersubsc = req.session.user.usersubsc;
+	else
+		var usersubsc = [];
+	Info.findAllGeo(req.params.x1,req.params.y1,req.params.x2,req.params.y2,req.params.heat,req.params.type,usersubsc,function (err, docs){
 	  res.json({
 		info: docs
 	  });

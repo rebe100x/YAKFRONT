@@ -30,18 +30,93 @@ block content
 				div.content-header
 					div.header-inner
 						h2 Mon profil
-						p.subheader Ces informations sont publiques
+						p.subheader Ces informations sont publiques et permettent aux autres utilisateurs de vous trouver et de suivre vos infos.
 				hr
-				form.form-horizontal(action='/profile', method='POST')
-					div.control-group
-						div.controls
-							label.control-label(for="name") Votre nom :  
-							input(type='text', name='name', id='name')
-					div.control-group
-						div.controls
-							label.control-label(for="bio") Votre biographie :  
-							textarea(name='bio', id='bio',rows='5')
-
-					button.btn.btn-large.btn-block.btn-inverse(type='submit', name='submit', id='submit', value='Envoyer') Envoyer
+				form(action='/profile', method='POST', enctype='multipart/form-data')
+					
+					div.span4
+						div.control-group
+							div.controls
+								label.control-label(for="avatar") Votre photo :  
+								span#avatarPreview
+									img.size100.img-rounded(src='')
+								input#avatar(type="file",style="display:block",name="avatar")
+						div.control-group
+							div.controls
+								label.control-label(for="name") Votre nom :  
+								input#username(type='text', name='username')
+						div.control-group
+							div.controls
+								label.control-label(for="name") Votre site web:  
+								input#web(type='text', name='web')
+						
+					div.span4
+						div.control-group
+							div.controls
+								label.control-label(for="bio") Votre biographie :  
+								textarea(name='bio', id='bio',rows='10')
+					
+						div.control-group
+							div.controls
+								label.control-label(for="name") Mots clés :  
+								input#tag(type='text', name='tag')
+								
+						button.btn.btn-large.btn-block.btn-inverse(type='submit', name='submit', id='submit', value='Envoyer') Envoyer
 				
+		script
+			var conf = !{conf};
+			var user = !{user}; 
+			
+			$(document).ready(function() {
+			
+				// init form
+				$('#username').val(user.name);
+				$('#bio').val(user.bio);
+				$('#tag').val(user.tag);
+				$('#web').val(user.web);
+				
+				if(user.thumb)
+					$('#avatarPreview img').attr('src','/uploads/pictures/128_128/'+user.thumb);
+				else
+					$('#avatarPreview img').attr('src','/images/no-user.png');
+				
+				// hashtag creation from content field
+				$("#bio").keyup(function(event) {
+					var hashtag = [];
+					var rule = new RegExp('#([^\\s]*)','g');
+					var rule2 = new RegExp('[#]','g');
+					var inputStrArray = $(this).val().split(' ');
+					for(i = 0; i< inputStrArray.length;i++){
+						if(inputStrArray[i].match(rule)){
+							hashtag.push(inputStrArray[i]);
+							$('#tag').val(hashtag.toString().replace(rule2,''));
+						}
+					}
+				});
+				
+				$('#avatar').live('change', function () {
 
+					if ( window.FileReader ) {
+						var fileList = this.files;
+						var file = fileList[0];
+						console.log(file.type);
+						//if ( window.FileReader ) {
+						var r = new FileReader();
+						r.onload = function () {
+							var binimage = r.result;
+							//console.log(binimage);
+							
+							binimage1 = binimage.replace('data:'+file.type+';base64,', '');
+							var src = "data:"+file.type+";base64," + binimage1;
+							$("#avatarPreview img").attr('src',src);
+						};
+						r.readAsDataURL(file);
+					
+					}
+					
+					//r.readAsBinaryString(file);
+
+					
+
+				});
+			}); // END READY	

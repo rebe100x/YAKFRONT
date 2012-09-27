@@ -30,12 +30,23 @@ ul#newsfeed li{width:100%;}
 
 #newsNav li{width:33%;}
 
+
+/* Settings Profile
+-------------------------------------------------- */
+
+
 /* Settings Alert
 -------------------------------------------------- */
 .form-horizontal .control-label.label-xlarge {
 width: 270px;
 }
 
+/* image size
+-------------------------------------------------- */
+.size100{
+	width:100px;
+	height:100px;
+}
 
 /* Sidenav
 -------------------------------------------------- */
