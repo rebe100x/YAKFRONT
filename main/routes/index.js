@@ -26,7 +26,12 @@ exports.news_map_test = function(req, res){
 };
 exports.news_post = function(req, res){
 	delete req.session.message;
-  res.render('news/post');
+	if(req.session.user){
+		res.render('news/post');
+	}else{
+		res.redirect('/user/login?redir=news/post');
+	}
+  
 };
 exports.news_feed = function(req, res){
 	var Info = db.model('Info');
@@ -159,6 +164,7 @@ exports.news = function(req, res){
 
 /******SETTINGS********/
 exports.settings_profile = function(req, res){
+	delete req.session.message;
 	var User = db.model('User');
 	
 	if(req.session.user){
@@ -175,50 +181,58 @@ exports.settings_profile = function(req, res){
 
 
 exports.settings_alerts = function(req, res){
+	delete req.session.message;
 	var User = db.model('User');
-	
 	if(req.session.user){
-		User.findByIds(req.session.user.usersubsc,function (err, docs){
+		User.findByIds(req.session.user.usersubs,function (err, docs){
 			var users = JSON.stringify(docs);
-			res.render('settings/alerts',{users:users});
+			res.render('settings/alerts',{users:users,tags:req.session.user.tagsubs});
 		});	
 		
-	}else
+	}else{
+		req.session.message = "Erreur : vous devez être connecté pour gérer vos alertes";
 		res.redirect('/user/login?redir=settings/alerts');
-	
+	}
 	
 	
 };
 exports.alerts = function(req, res){
 
 	var formMessage = new Array();
-	delete req.session.message;
+	//delete req.session.message;
 	var User = db.model('User');
 	var user = new User();
-	var usersubscArray = [];
+	var usersubsArray = [];
 	// user subscribtions
-	if(req.body.usersubscInput.length > 0){
-		var usersubsc = eval('('+req.body.usersubscInput+')');
-		for(i=0;i<usersubsc.length;i++){
-			usersubscArray.push(mongoose.Types.ObjectId(usersubsc[i]._id));
+	if(req.body.usersubsInput.length > 0){
+		var usersubs = eval('('+req.body.usersubsInput+')');
+		for(i=0;i<usersubs.length;i++){
+			usersubsArray.push(mongoose.Types.ObjectId(usersubs[i]._id));
 		}
-		req.session.user.usersubsc = usersubscArray;
+		req.session.user.usersubs = usersubsArray;
+	}
+	
+	// tag subscribtions
+	if(req.body.tagsubsInput.length > 0){
+		var tagsubsArray = req.body.tagsubsInput;
+
+		console.log('tagsubsArray');
+		console.log(tagsubsArray);
+		req.session.user.tagsubs = tagsubsArray;
 	}
 				
 	if(req.session.user){
-		User.update({_id: req.session.user._id}, {usersubsc : usersubscArray}, {upsert: true}, function(err){
-			if (!err){
-				console.log('Success!');
-				formMessage = "Vos alertes sont enregistrées";
-			}
-			else console.log(err);
-		});
+		console.log('Vos alertes sont enregistrées ');
+		formMessage.push("Vos alertes sont enregistrées");
 		
+				
+		User.update({_id: req.session.user._id}, {usersubs : usersubsArray, tagsubs : tagsubsArray}, {upsert: true}, function(err){
+			if (err) console.log(err);
+		});
 	}else
-		formMessage = "Erreur : vous n'êtes pas connecté !";
+		formMessage.push("Erreur : vous n'êtes pas connecté !");
 	
 	req.session.message = formMessage;
-	
 	res.redirect('settings/alerts');
 }
 
@@ -230,32 +244,41 @@ exports.profile = function(req, res){
 	var user = new User();
 				
 	if(req.session.user){
-		console.log(req.body);
 		var avatar = req.body.avatar;
 		var drawTool = require('../mylib/drawlib.js');
 		var size = [{"width":128,"height":128},{"width":48,"height":48}];
 		var infoThumb = drawTool.StoreImg(req.files.avatar,size,conf);
-		formMessage.push(infoThumb.msg);
 		
+		if(infoThumb.msg)
+			formMessage.push(infoThumb.msg);
+		
+		if(infoThumb.name){
+			var cond = {
+				name : req.body.username,
+				web:req.body.web,
+				thumb:infoThumb.name,
+				bio:req.body.bio,
+				tag:req.body.tag.split(',')				
+				};
+		}else
+			var cond = {
+				name : req.body.username,
+				web:req.body.web,
+				bio:req.body.bio,
+				tag:req.body.tag.split(',')				
+				};
 		
 		User.update({_id: req.session.user._id}, 
-		{
-			name : req.body.username,
-			web:req.body.web,
-			thumb:infoThumb.name,
-			bio:req.body.bio,
-			tag:req.body.tag.split(',')
-			
-		}, {upsert: true}, function(err){
+		cond
+		, {upsert: true}, function(err){
 			if (!err){
 				console.log('Success!');
-				formMessage.push("Votre profil est enregistré");
 			}
 			else console.log(err);
 		});
-		
+		formMessage.push("Votre profil est enregistré");
 	}else
-		formMessage = "Erreur : vous n'êtes pas connecté !";
+		formMessage.push("Erreur : vous n'êtes pas connecté !");
 	
 	req.session.message = formMessage;
 	

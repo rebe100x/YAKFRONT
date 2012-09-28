@@ -110,9 +110,9 @@ exports.StoreImg = function(file,size,conf){
 	} // END FILE null
 	else{
 			console.log('file empty');
-			flagError = 1;
-			message.push("L'image n'est pas reconnue, essayer avec une autre image !");
-			throw err;
+			flagError = 0;
+			srcName = '';
+			
 		}
 		
 		

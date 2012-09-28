@@ -3,6 +3,7 @@ block content
 
 	include ../mixins/menu.jade
 	include ../mixins/locationChooser.jade
+	include ../mixins/forms/postForm.jade
 
 
 	mixin menu('post')
@@ -21,37 +22,8 @@ block content
 									div.alert.fade.in
 										button.close(type="button",data-dismiss="alert") x
 										strong= msg
-							form(action='/news', method='POST', enctype='multipart/form-data')
-								input#yakcatInput(type='hidden', name='yakcatInput', value='')
-								input#placeInput(type='hidden', name='placeInput', value='')
-								input#latitude(type="hidden",data-provide="typeahead", name="latitude")
-								input#longitude(type="hidden",data-provide="typeahead", name="longitude")
-								legend Poster une info:
-								div.control-group
-									div.controls
-										input.span12(type='text', name='title', id='title', placeholder='Titre: vous pouvez utiliser des hashtags dans votre texte ( #Halloween )')
-										textarea#content.span12(name='content', placeholder='Texte: vous pouvez utiliser des hashtags dans votre texte ( #Halloween )',rows='5')
-								div.control-group
-									label(for='category') Choisissez une ou plusieurs catégories Yakwala:
-									div.controls
-										input#yakcat.span12(type="text",data-provide="typeahead", name="category", autocomplete="off", placeholder='Rechercher...')
-									label(for='freetag') Ajoutez des mots clés :
-									div.controls	
-										input#freetag.span12(type="text",data-provide="typeahead", name="freetag",placeholder='Par exemple : halloween, déguisements')
-									div.controls
-										span#picturePreview
-										input.span6#picture(type="file",style="display:block",name="picture")
-								legend A quel endroit ?
-								div.control-group
-									label(for='Place') Clicker sur la carte ou bien entrer une adresse:<br /> 
-									div.controls
-										div.input-append
-											input#place(type="text",data-provide="typeahead", name="place", autocomplete="off", placeholder='Rechercher...') 
-											button.btn#btn-place-adder(type="button") Add
-											span.help-inline(style='font-size:0.95em;font-style:italic;') Ajoutez plusieurs adresses <br>et faites apparaître votre info <br>à plusieurs endroits !
-								br
-								button.btn.btn-large.btn-block.btn-inverse(style='width:100%',type='submit', name='submit', id='submit', value='Envoyer') Envoyer
-								
+							
+							mixin postForm(session.type)
 								
 				
 		script
@@ -63,6 +35,11 @@ block content
 			var markerLocation = null;
 			var yakcatArray = [];
 			var placeArray = [];
+			var hashtag = [];
+			var hashtagTmp = [];
+			var rule = new RegExp('#([^\\s]*)','g');
+			var rule2 = new RegExp('[#]','g');
+					
 			var map = new google.maps.Map(document.getElementById('mymap'), {
 					mapTypeId:google.maps.MapTypeId.ROADMAP
 				});
@@ -82,19 +59,21 @@ block content
 					google.maps.event.addDomListener(window, 'load', initialize(curPos.x,curPos.y,curPos.z)); 
 				}*/
 				
-				// hashtag creation from content field
-				$("#content").keyup(function(event) {
-					var hashtag = [];
-					var rule = new RegExp('#([^\\s]*)','g');
-					var rule2 = new RegExp('[#]','g');
-					var inputStrArray = $(this).val().split(' ');
+				// hashtag creation from title field
+				$(".hashtagMaker").keyup(function(event) {
+					hashtagTmp = [];
+					var inputStrArray = ($('#content').val()+' '+$('#title').val()).split(' ');
 					for(i = 0; i< inputStrArray.length;i++){
 						if(inputStrArray[i].match(rule)){
-							hashtag.push(inputStrArray[i]);
-							$('#freetag').val(hashtag.toString().replace(rule2,''));
+							//console.log('PUSH');
+							hashtagTmp.push(inputStrArray[i]);
+							//console.log(hashtagTmp);
+							$('#freetag').val(hashtagTmp.toString().replace(rule2,''));
 						}
 					}
 				});
+				
+				
 				
 				$('#picture').live('change', function () {
 
@@ -167,7 +146,7 @@ block content
 							})},
 					property: "title",
 					onselect: function(obj) { 
-						$("label[for='category']").after("<div><i class='icon-remove'  onclick='yakcatArray.cleanArray(\""+obj._id+"\");$(\"#yakcatInput\").val(JSON.stringify(yakcatArray));$(this).parent().remove();'></i> "+obj.title+"</div>");
+						$("label[for='category']").after("<div><i class='icon-remove icon-pointer'  onclick='yakcatArray.cleanArray(\""+obj._id+"\");$(\"#yakcatInput\").val(JSON.stringify(yakcatArray));$(this).parent().remove();'></i> "+obj.title+"</div>");
 						$('#yakcat').val('').focus();
 						yakcatArray.push(obj);
 						$("#yakcatInput").val(JSON.stringify(yakcatArray));
@@ -186,7 +165,7 @@ block content
 							})},
 					property: "title",
 					onselect: function(obj) { 
-						$('#btn-place-adder').parent().before("<div><i class='icon-remove'  onclick='placeArray.cleanArray(\""+obj._id+"\");$(\"#placeInput\").val(JSON.stringify(placeArray));$(this).parent().remove();'></i> "+obj.title+"</div>");
+						$('#btn-place-adder').parent().before("<div><i class='icon-remove icon-pointer'  onclick='placeArray.cleanArray(\""+obj._id+"\");$(\"#placeInput\").val(JSON.stringify(placeArray));$(this).parent().remove();'></i> "+obj.title+"</div>");
 						$('#place').val('').focus();
 						placeArray.push(obj);
 						$("#placeInput").val(JSON.stringify(placeArray));
@@ -209,7 +188,7 @@ block content
 								var placeGmap = getPlaceFromGmapResult(results);
 								placeArray.push(placeGmap);
 								$("#placeInput").val(JSON.stringify(placeArray));
-								$('#btn-place-adder').parent().before("<div><i class='icon-remove' onclick='placeArray.cleanArrayByLocation("+results[0].geometry.location.Ya+","+results[0].geometry.location.Xa+");$(\"#placeInput\").val(JSON.stringify(placeArray));$(this).parent().remove();'></i> "+results[0].formatted_address+"</div>");
+								$('#btn-place-adder').parent().before("<div><i class='icon-remove icon-pointer' onclick='placeArray.cleanArrayByLocation("+results[0].geometry.location.Ya+","+results[0].geometry.location.Xa+");$(\"#placeInput\").val(JSON.stringify(placeArray));$(this).parent().remove();'></i> "+results[0].formatted_address+"</div>");
 								
 							} else {
 								var salt = new Date().getTime();
@@ -222,7 +201,7 @@ block content
 						});
 					}
 					
-					//$(this).parent().before("<div><i class='icon-remove'  onclick='yakcat.cleanArray(\""+gmap._id+"\");$(\"#yakcatInput\").val(JSON.stringify(yakcat));$(this).parent().remove();'></i> "+obj.title+"</div>");
+					
 				});
 				
 			
@@ -305,14 +284,14 @@ block content
 							//console.log(val.creationDate);
 							var dateCreation = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
 							var infoContent = "<div class=\'infowindow\' >";
-							if(!(typeof val.thumb === 'undefined')){
-							if(val.user == 0 || val.user === undefined)
-								infoContent += "<img src=\'"+conf.backurl+val.thumb+"\' />";
-							else
-								infoContent += "<img src=\'/uploads/pictures/120_90/"+val.thumb+"\' />";
+							if(!(typeof val.thumb === 'undefined') && val.thumb != ''){
+								if(val.user == 0 || val.user === undefined)
+									infoContent += "<img src=\'"+conf.backurl+val.thumb+"\' />";
+								else
+									infoContent += "<img src=\'/uploads/pictures/120_90/"+val.thumb+"\' />";
 							}
-							infoContent += "<div class=\'title\'> "+val.title+" ("+dateCreation+")</div>";
-							infoContent += "<div class=\'content\'>"+val.content.substring(0,250)+"...</div>";
+							infoContent += "<div class=\'title\'> "+val.title.replace(rule2,'')+" ("+dateCreation+")</div>";
+							infoContent += "<div class=\'content\'>"+val.content.substring(0,250).replace(rule2,'')+"...</div>";
 							if(!(typeof val.outGoingLink === 'undefined') && val.outGoingLink != '')
 								infoContent += "<div class=\'readmore\'><a target=\'_blank\' href=\'"+val.outGoingLink+"\'> Read more</a></div>";
 							infoContent += "</div>";

@@ -20,18 +20,24 @@ $(document).ready(function() {
 });
 
 
+Array.prototype.cleanArrayByName=function(str){
+	for(i=0;i<this.length;i++)
+		if(str==this[i]) 
+			this.splice(i, 1);
+}
 Array.prototype.cleanArray=function(id){
-console.log(id);
-for(i=0;i<this.length;i++)
-	if(id==this[i]._id) 
-		this.splice(i, 1);
+	console.log(id);
+	for(i=0;i<this.length;i++)
+		if(id==this[i]._id) 
+			this.splice(i, 1);
 }
+
 Array.prototype.cleanArrayByLocation=function(lng,lat){
-for(i=0;i<this.length;i++){
-	//console.log(this[i].location.lng+"="+lng);
-	if(lng==this[i].location.lng && lat==this[i].location.lat) 
-		this.splice(i, 1);
-}
+	for(i=0;i<this.length;i++){
+		//console.log(this[i].location.lng+"="+lng);
+		if(lng==this[i].location.lng && lat==this[i].location.lat) 
+			this.splice(i, 1);
+	}
 }
 
 

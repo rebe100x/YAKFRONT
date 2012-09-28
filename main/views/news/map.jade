@@ -49,8 +49,9 @@ block content
 		var heat = 3;
 		var type = 1;
 		var bounds = null;
-		
-		
+		var infoContent = '';
+		var rule = new RegExp('#([^\\s]*)','g');
+		var rule2 = new RegExp('[#]','g');
 		$(document).ready(function() {
 		
 			$( "#heatSelector" ).slider({
@@ -96,11 +97,9 @@ block content
 				$(this).removeClass('highlighted');
 			});
 			*/
+			
 			$('#newsfeed').delegate(".mapHighlighter",'click', function () {
-				var id = $(this).attr('infoId');
-				unhighlightInfo(id,function(){highlightInfo(id);});
-				
-				$(this).addClass('highlighted');
+				unhighlightInfo($(this),highlightInfo);
 			});
 
 			setInterval(function() {
@@ -124,71 +123,59 @@ block content
 		});
 
 		function drawNewsFeed(){	
-			
 			var newsfeedContainerHeight = window.innerHeight-$('#newsfeedContainer').offset().top-50+'px';
 			$('#newsfeedContainer').css('height',newsfeedContainerHeight);
 		}
 		
-		function unhighlightInfo(id,callback){
-			$('ul#newsfeed li.highlighted').removeClass('highlighted');
-			$("ul#newsfeed li.mapHighlighterDetails").fadeOut().html('');
+		function unhighlightInfo(obj,callback){
+		console.log('HIDE');
+			
 			markerHL.setAnimation(null);
 			markerHL.setVisible(false);
 			
 			if (callback && typeof(callback) === "function") {  
-				callback();  
+				callback(obj);  
 			} 
+			
+		
 		}
 		
-		function highlightInfo(id){
+		function highlightInfo(obj){
+		console.log('SHOW');
+			var id = obj.attr('infoId');
+			
 			$.each(infoArray,function(key,val){
 				//console.log(val2._id+' == '+val._id);
-					if(val._id == id){
-						// hide all markers
-						//hideMarkers(7000);
+				if(val._id == id){
+					// hide all markers
+					//hideMarkers(7000);
+					
+					// clean if a marker is already highlighted
 						
-						// clean if a marker is already highlighted
-							
-						var latLng = new google.maps.LatLng(val.location['lat'],val.location['lng']);
-						markerHL.setPosition(latLng);
-						markerHL.setVisible(true);
-						markerHL.setAnimation(google.maps.Animation.BOUNCE);
-						// add info window
-						var dateTmp = new Date(val.pubDate);
-						var dateCreation = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
-						var infoContent = "<div class=\'infowindow\' >";
-						if(!(typeof val.thumb === 'undefined')){
-							if(val.user == 0 || val.user === undefined)
-								infoContent += "<img src=\'"+conf.backurl+val.thumb+"\' />";
-							else
-								infoContent += "<img src=\'/uploads/pictures/120_90/"+val.thumb+"\' />";
-						}
-							
-						//infoContent += "<div class=\'title\'> "+val.title+" ("+dateCreation+")</div>";
-						infoContent += "<div class=\'content\'>"+val.content.substring(0,250)+"...</div>";
-						if(!(typeof val.outGoingLink === 'undefined'))
-							infoContent += "<div class=\'readmore\'><a target=\'_blank\' href=\'"+val.outGoingLink+"\'> Read more</a></div>";
-						infoContent += "</div>";
-						//infowindow.setContent(infoContent);
-						//infowindow.open(map,markerHL);
+					var latLng = new google.maps.LatLng(val.location['lat'],val.location['lng']);
+					markerHL.setPosition(latLng);
+					markerHL.setVisible(true);
+					markerHL.setAnimation(google.maps.Animation.BOUNCE);
+				
+					
+					//$("ul#newsfeed li.mapHighlighterDetails").fadeOut().html('');
+					//$("ul#newsfeed li.mapHighlighterDetails[infoid="+id+"]").fadeIn();
+				
+					// center map
+					map.setCenter(latLng);
+					
+					/*
+					// clear marker ( and infowindow )
+					setTimeout(function() {
 						
-						$("ul#newsfeed li.mapHighlighterDetails").fadeOut().html('');
-						$("ul#newsfeed li.mapHighlighterDetails[infoid="+id+"]").html(infoContent).fadeIn();
-						// center map
-						map.setCenter(latLng);
-						
-						
-						// clear marker ( and infowindow )
-						setTimeout(function() {
-							
-							markerHL.setAnimation(null);
-							markerHL.setVisible(false);
-							$('ul#newsfeed li.highlighted').removeClass('highlighted');
-							toggleFlag = 1;
-							//console.log('UNHLTMP'+toggleFlag);
-						}, 10000);
-					}
-				});
+						markerHL.setAnimation(null);
+						markerHL.setVisible(false);
+						//$('ul#newsfeed li.highlighted').removeClass('highlighted');
+						toggleFlag = 1;
+						//console.log('UNHLTMP'+toggleFlag);
+					}, 10000);*/
+				}
+			});
 		}
 
 		function initialize(x,y,z){
@@ -286,10 +273,24 @@ block content
 					if(flagExists == 0){
 						//console.log('PRINT NEW MARKER');
 						
-						/*PRINT ON THE FEED*/
 						var uniqueHL = new Date().getTime();
-						$('#newsfeed').prepend('<li class=\'mapHighlighter highlighted '+uniqueHL+'\' infoId=\''+val._id+'\' ><i class=\'icon-eye-open\'></i> '+val.title+'</li>');
-					
+						
+						var dateTmp = new Date(val.pubDate);
+						var dateCreation = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
+						infoContent = "<div class=\'infowindow\' >";
+						if(!(typeof val.thumb === 'undefined') && val.thumb != ''){
+						if(val.user == 0 || val.user === undefined)
+								infoContent += "<img src=\'"+conf.backurl+val.thumb+"\' />";
+							else
+								infoContent += "<img src=\'/uploads/pictures/120_90/"+val.thumb+"\' />";
+						}
+						infoContent += "<div class=\'title\'> "+val.title.replace(rule2,'')+" ("+dateCreation+")";
+						if(!(typeof val.outGoingLink === 'undefined'))
+							infoContent += "<div class=\'readmore\'><a target=\'_blank\' href=\'"+val.outGoingLink+"\'> >> lire l\'article</a></div>";
+						infoContent += "</div>";
+						infoContent += "<div class=\'content\'>"+val.content.substring(0,250).replace(rule2,'')+"...</div>";
+						infoContent += "</div>";
+						
 						/*PRINT ON THE MAP*/
 						var latLng = new google.maps.LatLng(val.location['lat'],val.location['lng']);
 						var marker = new google.maps.Marker({position: latLng,map:map,visible:true});
@@ -299,28 +300,40 @@ block content
 						setTimeout(function() {
 							marker.setAnimation(null);
 							markerCluster.addMarker(marker);
-							$('#newsfeed .'+uniqueHL+'.highlighted').removeClass('highlighted');
 						}, 7000);
+						
 						
 						google.maps.event.addListener(marker, 'click', function() {
 								var dateTmp = new Date(val.pubDate);
 								var dateCreation = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
-								var infoContent = "<div class=\'infowindow\' >";
-								if(!(typeof val.thumb === 'undefined')){
+								infoContent = "<div class=\'infowindow\' >";
+								if(!(typeof val.thumb === 'undefined') && val.thumb != ''){
 								if(val.user == 0 || val.user === undefined)
 										infoContent += "<img src=\'"+conf.backurl+val.thumb+"\' />";
 									else
 										infoContent += "<img src=\'/uploads/pictures/120_90/"+val.thumb+"\' />";
 								}
-								infoContent += "<div class=\'title\'> "+val.title+" ("+dateCreation+")</div>";
-								infoContent += "<div class=\'content\'>"+val.content.substring(0,250)+"...</div>";
+								infoContent += "<div class=\'title\'> "+val.title.replace(rule2,'')+" ("+dateCreation+")";
 								if(!(typeof val.outGoingLink === 'undefined'))
-									infoContent += "<div class=\'readmore\'><a target=\'_blank\' href=\'"+val.outGoingLink+"\'> Read more</a></div>";
+									infoContent += "<div class=\'readmore\'><a target=\'_blank\' href=\'"+val.outGoingLink+"\'> >> lire l\'article</a></div>";
+								infoContent += "</div>";
+								infoContent += "<div class=\'content\'>"+val.content.substring(0,250).replace(rule2,'')+"...</div>";
 								infoContent += "</div>";
 								infowindow.setContent(infoContent);
 								infowindow.open(map, this);
+								
 							});	
+						
+							
+							
+						/*PRINT ON THE FEED*/
+						//$('#newsfeed').append('<li class=\'mapHighlighter\' infoId=\''+val._id+'\'><i class=\'icon-eye-open\' ></i> '+val.title+'</li>')
+						$('#newsfeed').append('<li class=\'mapHighlighterDetails\' infoId=\''+val._id+'\'>'+infoContent+'</li>');	
+
 						infoArray.push(val);	
+						
+						
+						
 					}
 				});
 			});
@@ -345,10 +358,6 @@ block content
 				
 				$.each(data.info, function(key,val) {
 				
-					/*PRINT ON THE FEED*/
-					
-					$('#newsfeed').append('<li class=\'mapHighlighter\' infoId=\''+val._id+'\'><i class=\'icon-eye-open\' ></i> '+val.title+'</li>')
-					.append('<li class=\'mapHighlighterDetails\' infoId=\''+val._id+'\'></li>');
 					
 					/*PRINT ON THE MAP*/	
 					
@@ -359,24 +368,51 @@ block content
 					markers.push(marker);
 					//console.log(markers);
 					
+					var dateTmp = new Date(val.pubDate);
+					var dateCreation = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
+					infoContent = "<div class=\'infowindow mapHighlighter\' infoId='"+val._id+"'>";
+					if(!(typeof val.thumb === 'undefined') && val.thumb != ''){
+					if(val.user == 0 || val.user === undefined)
+							infoContent += "<img src=\'"+conf.backurl+val.thumb+"\' />";
+						else
+							infoContent += "<img src=\'/uploads/pictures/120_90/"+val.thumb+"\' />";
+					}
+					infoContent += "<div class=\'title\'> "+val.title.replace(rule2,'')+" ("+dateCreation+")";
+					infoContent += "</div>";
+					infoContent += "<div class=\'content\'>"+val.content.substring(0,250).replace(rule2,'')+"...</div>";
+					if(!(typeof val.outGoingLink === 'undefined'))
+						infoContent += "<div class=\'readmore\'><a target=\'_blank\' href=\'"+val.outGoingLink+"\'> >> lire l\'article</a></div>";
+					
+					infoContent += "</div>";
+					
+					
 					google.maps.event.addListener(marker, 'click', function() {
 						var dateTmp = new Date(val.pubDate);
 						var dateCreation = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
-						var infoContent = "<div class=\'infowindow\' >";
-						if(!(typeof val.thumb === 'undefined')){
-							if(val.user == 0 || val.user === undefined)
+						infoContent = "<div class=\'infowindow\' >";
+						if(!(typeof val.thumb === 'undefined') && val.thumb != ''){
+						if(val.user == 0 || val.user === undefined)
 								infoContent += "<img src=\'"+conf.backurl+val.thumb+"\' />";
 							else
 								infoContent += "<img src=\'/uploads/pictures/120_90/"+val.thumb+"\' />";
 						}
-						infoContent += "<div class=\'title\'> "+val.title+" ("+dateCreation+")</div>";
-						infoContent += "<div class=\'content\'>"+val.content.substring(0,250)+"...</div>";
+						infoContent += "<div class=\'title\'> "+val.title.replace(rule2,'')+" ("+dateCreation+")";
 						if(!(typeof val.outGoingLink === 'undefined'))
-							infoContent += "<div class=\'readmore\'><a target=\'_blank\' href=\'"+val.outGoingLink+"\'> Read more</a></div>";
+							infoContent += "<div class=\'readmore\'><a target=\'_blank\' href=\'"+val.outGoingLink+"\'> >> lire l\'article</a></div>";
+						infoContent += "</div>";
+						infoContent += "<div class=\'content\'>"+val.content.substring(0,250).replace(rule2,'')+"...</div>";
 						infoContent += "</div>";
 						infowindow.setContent(infoContent);
 						infowindow.open(map, this);
+					
 					});	
+					
+					
+				
+					/*PRINT ON THE FEED*/
+					//$('#newsfeed').append('<li class=\'mapHighlighter\' infoId=\''+val._id+'\'><i class=\'icon-eye-open\' ></i> '+val.title+'</li>')
+					$('#newsfeed').append('<li class=\'mapHighlighterDetails\' infoId=\''+val._id+'\'>'+infoContent+'</li>');
+					
 					
 				});
 				

@@ -9,7 +9,8 @@ block content
 
 	div.container-fluid
 		div.row-fluid
-			div.span3
+			div.span4
+			div.span4
 				- if (message)
 					div.alert.fade.in
 						button.close(type="button",data-dismiss="alert") x
@@ -24,7 +25,11 @@ block content
 						input(type='text', name='password', id='password')
 					p
 						input(type='submit', name='submit', id='submit', value='login' ) 
-			div.span9 right
+			div.span4
 				
-				
+	script
+		$(document).ready(function() {
+			$('#login').focus();
+		
+		});
 

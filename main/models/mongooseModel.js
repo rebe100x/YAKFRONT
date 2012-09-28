@@ -61,7 +61,7 @@ Info.statics.findAll = function (callback) {
 
 }
 
-Info.statics.findAllGeo = function (x1,y1,x2,y2,heat,type,usersubsc,callback) {
+Info.statics.findAllGeo = function (x1,y1,x2,y2,heat,type,usersubs,tagsubs,callback) {
   var now = new Date();
   var D = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
   var DTS = D.getTime() / 1000 - (heat * 60 * 60 * 24);
@@ -83,7 +83,8 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,heat,type,usersubsc,callback) {
 				"status":1,
 				"location" : {$within:{"$box":box}},
 				"pubDate":{$gte:D},
-				"user":{$in:usersubsc}
+				$or:[ {"user":{$in:usersubs}}, {"freeTag": {$in:tagsubs}} ],
+				
 			};
 	
   return this.find(
@@ -117,9 +118,9 @@ var User = new Schema({
 	, type	: { type: Number, index: true}
 	, login     : { type: String, index: true}
 	, password       : { type: String , index: true}
-	, usersubsc	: { type: [Schema.ObjectId], index: true}
-	, tagsubsc	: { type: [String], index: true}
-	, placesubsc	: { type: [Schema.ObjectId], index: true}
+	, usersubs	: { type: [Schema.ObjectId], index: true}
+	, tagsubs	: { type: [String], index: true}
+	, placesubs	: { type: [Schema.ObjectId], index: true}
 	, home	: { type : { lat: Number, lng: Number }, index : '2d'}	
 	, creationDate	: {type: Date, required: true, default: Date.now}		
 	, lastModifDate	: {type: Date, required: true, default: Date.now}		

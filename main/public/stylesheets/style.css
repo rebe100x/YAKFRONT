@@ -10,9 +10,9 @@ a {
 
 
 
-.mapHighlighter{cursor:pointer;padding:3px;-webkit-border-radius: 2px;border-radius: 2px;}
+.mapHighlighter{cursor:pointer;-webkit-border-radius: 2px;border-radius: 2px;}
 .mapHighlighter:hover{background-color:#F0F0F0;}
-.mapHighlighterDetails{display:none;}
+.mapHighlighterDetails{display:block;}
 .highlighted{color:red;}
 
 
@@ -24,12 +24,19 @@ a {
 #newsfeedMenu #heatModule #dayPrinter{padding: 3px;}
 #newsfeedMenu #heatModule #heatSelector{}
 
-ul#newsfeed{list-style-type:none;width:100%;margin:10px auto;padding:10px 3px;float:left;opacity:0.95;background:#FFFFFF;}
+ul#newsfeed{list-style-type:none;width:100%;margin:10px auto;padding:10px 0px;float:left;opacity:0.95;background:#FFFFFF;}
 ul#newsfeed li{width:100%;}
-.infowindow{width:100%;}
+.infowindow{width:95%;margin:0px 5px;font-size:0.95em;}
+.infowindow .readmore{float:right;margin:-5px 0px 10px 0px;font-style:italic;font-size:0.8em;}
+.infowindow .readmore a{color:#0C0C0C;}
 
 #newsNav li{width:33%;}
 
+
+/* general
+-------------------------------------------------- */
+.icon-pointer{cursor:pointer;margin:2px;}
+.icon-pointer:hover{opacity:0.7;}
 
 /* Settings Profile
 -------------------------------------------------- */
