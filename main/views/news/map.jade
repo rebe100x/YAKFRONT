@@ -128,8 +128,6 @@ block content
 		}
 		
 		function unhighlightInfo(obj,callback){
-		console.log('HIDE');
-			
 			markerHL.setAnimation(null);
 			markerHL.setVisible(false);
 			
@@ -141,7 +139,6 @@ block content
 		}
 		
 		function highlightInfo(obj){
-		console.log('SHOW');
 			var id = obj.attr('infoId');
 			
 			$.each(infoArray,function(key,val){

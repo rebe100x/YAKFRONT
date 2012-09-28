@@ -128,7 +128,7 @@ function requiresPosition(req,res,next){
 		  //socket.emit('news', { hello: 'world' });
 		  socket.on('position', function (data) {
 			req.session.position = data.x;
-			console.log(data);
+			//console.log(data);
 			next();
 		  });
 		});
