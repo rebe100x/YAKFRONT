@@ -9,19 +9,19 @@ mixin postForm(type)
 			div.control-group
 				div.controls
 					input.span12.hashtagMaker(type='text', name='title', id='title', placeholder='Titre: vous pouvez utiliser des hashtags dans votre texte ( #Halloween )')
-					textarea#content.span12.hashtagMaker(name='content', placeholder='Texte: vous pouvez utiliser des hashtags dans votre texte ( #Halloween )',rows='5')
+					textarea#content.span12.hashtagMaker(name='content', placeholder='Texte: vous pouvez utiliser des hashtags dans votre texte ( #Halloween )',rows='3')
 			div.control-group
 				label(for='category') Choisissez la rubrique danslaquelle votre info apparaitra:
 				div.controls
 					label.radio.inline Actu
-						input#option1(type="radio", name="option1", value="1" , checked) 
+						input#option1(type="radio", name="yakType", value="1" , checked) 
 					- if(type != 2)
 						label.radio.inline Discussion
-							input#option4(type="radio", name="options4", value="4")
+							input#option4(type="radio", name="yakType", value="4")
 					label.radio.inline Agenda
-						input#option2(type="radio", name="options2", value="2")
+						input#option2(type="radio", name="yakType", value="2")
 					label.radio.inline Infos&nbsp;pratiques
-						input#options3(type="radio", name="option3", value="2")
+						input#options3(type="radio", name="yakType", value="3")
 			div.control-group
 				label(for='category') Choisissez une ou plusieurs thèmes:
 				div.controls

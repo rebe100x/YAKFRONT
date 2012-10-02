@@ -6,7 +6,7 @@
 var mongoose = require('mongoose')
   , Schema = mongoose.Schema;
 
-//mongoose.set('debug', true);
+mongoose.set('debug', true);
 
 /**
  * Schema definition
@@ -67,13 +67,12 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,heat,type,usersubs,tagsubs,callb
   var DTS = D.getTime() / 1000 - (heat * 60 * 60 * 24);
   D.setTime(DTS*1000); 
   var box = [[parseFloat(x1),parseFloat(y1)],[parseFloat(x2),parseFloat(y2)]];
-  
   var cond = {
 				"print":1,
 				"status":1,
 				"location" : {$within:{"$box":box}},
 				"pubDate":{$gte:D},
-				"yakType" : type
+				"yakType" : {$in:type}
 			};
 			
   //alerts				

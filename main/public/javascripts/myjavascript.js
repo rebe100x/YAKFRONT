@@ -19,6 +19,9 @@ $(document).ready(function() {
 	
 });
 
+function cl(str){
+	console.log(str);
+}
 
 Array.prototype.cleanArrayByName=function(str){
 	for(i=0;i<this.length;i++)

@@ -3,7 +3,7 @@ block content
 
 	include ../mixins/menu.jade
 	include ../mixins/locationChooser.jade
-
+	include ../mixins/forms/profileForm.jade
 	mixin menu('profile')
 	mixin locationChooser()
 
@@ -32,40 +32,15 @@ block content
 						h2 Mon profil
 						p.subheader Ces informations sont publiques et permettent aux autres utilisateurs de vous trouver et de suivre vos infos.
 				hr
-				form(action='/profile', method='POST', enctype='multipart/form-data')
-					
-					div.span4
-						div.control-group
-							div.controls
-								label.control-label(for="avatar") Votre photo :  
-								span#avatarPreview
-									img.size100.img-rounded(src='')
-								input#avatar(type="file",style="display:block",name="avatar")
-						div.control-group
-							div.controls
-								label.control-label(for="name") Votre nom :  
-								input#username(type='text', name='username')
-						div.control-group
-							div.controls
-								label.control-label(for="name") Votre site web:  
-								input#web(type='text', name='web')
-						
-					div.span4
-						div.control-group
-							div.controls
-								label.control-label(for="bio") Votre biographie :  
-								textarea(name='bio', id='bio',rows='10')
-					
-						div.control-group
-							div.controls
-								label.control-label(for="name") Mots clés :  
-								input#tag(type='text', name='tag')
-								
-						button.btn.btn-large.btn-block.btn-inverse(type='submit', name='submit', id='submit', value='Envoyer') Envoyer
+				mixin profileForm(session.type)
 				
 		script
 			var conf = !{conf};
 			var user = !{user}; 
+			var hashtag = [];
+			var hashtagTmp = [];
+			var rule = new RegExp('#([^\\s]*)','g');
+			var rule2 = new RegExp('[#]','g');
 			
 			$(document).ready(function() {
 			
@@ -74,22 +49,24 @@ block content
 				$('#bio').val(user.bio);
 				$('#tag').val(user.tag);
 				$('#web').val(user.web);
+				$('#taginit').val(user.tag);
 				
 				if(user.thumb)
 					$('#avatarPreview img').attr('src','/uploads/pictures/128_128/'+user.thumb);
 				else
 					$('#avatarPreview img').attr('src','/images/no-user.png');
 				
-				// hashtag creation from content field
+				
+				// hashtag creation from title field
 				$("#bio").keyup(function(event) {
-					var hashtag = [];
-					var rule = new RegExp('#([^\\s]*)','g');
-					var rule2 = new RegExp('[#]','g');
-					var inputStrArray = $(this).val().split(' ');
+					hashtagTmp = [];
+					var inputStrArray = ($(this).val()).split(' ');
+					cl(inputStrArray);
 					for(i = 0; i< inputStrArray.length;i++){
 						if(inputStrArray[i].match(rule)){
-							hashtag.push(inputStrArray[i]);
-							$('#tag').val(hashtag.toString().replace(rule2,''));
+							hashtagTmp.push(inputStrArray[i]);
+							hashtagTmp.push($('#taginit').val());
+							$('#tag').val(hashtagTmp.toString().replace(rule2,''));
 						}
 					}
 				});
@@ -119,4 +96,37 @@ block content
 					
 
 				});
+				
+				$('#city').typeahead({
+					minLength : 3,							
+					source: function (typeahead, query) {
+						if(query.length > 3){
+							$("#city").css({'background-image':'url(\'images/loader.gif\')','padding-left':'20px'});
+							var addressQuery = {"address": query};
+							var geocoder = new google.maps.Geocoder();
+							geocoder.geocode( addressQuery, function(results, status) {
+								if (status == google.maps.GeocoderStatus.OK) {
+									//results[0].geometry.location
+									typeahead.process(results);
+								} else {
+									var salt = new Date().getTime();
+									$('#city').parent().before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide ("+status+")</div>");
+									setTimeout(function() {
+										$("#alert"+salt).fadeOut();
+									}, 3000);
+									$('#city').select();
+								}
+							});
+						}
+					},
+					property: "formatted_address",
+					onselect: function(obj) { 
+						$("#city").css({'background-image': 'none','padding-left':'0px'});
+						$('#cityTarget').html("<div>"+obj.formatted_address+"</div>");
+						$('#city').val('').focus();
+						$('#home').val(obj.geometry.location);
+					}
+				});
+				
+				
 			}); // END READY	

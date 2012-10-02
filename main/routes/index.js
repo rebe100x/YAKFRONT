@@ -123,7 +123,11 @@ exports.news = function(req, res){
 				//console.log(info);
 				info.print = 1;
 				info.status = 1;
-				info.yakType = 4; // UGC
+				console.log(req.body.yakType);
+				if(req.body.yakType > 0 )
+					info.yakType = req.body.yakType; 
+				else
+					info.yakType = 4; // UGC
 				info.thumb = infoThumb.name;
 				info.licence = 'Yakwala';
 				info.heat = 80;
@@ -186,7 +190,9 @@ exports.settings_alerts = function(req, res){
 	if(req.session.user){
 		User.findByIds(req.session.user.usersubs,function (err, docs){
 			var users = JSON.stringify(docs);
-			res.render('settings/alerts',{users:users,tags:req.session.user.tagsubs});
+			
+			var tags = JSON.stringify(req.session.user.tagsubs);
+			res.render('settings/alerts',{users:users,tags:tags});
 		});	
 		
 	}else{
@@ -203,6 +209,7 @@ exports.alerts = function(req, res){
 	var User = db.model('User');
 	var user = new User();
 	var usersubsArray = [];
+	var tagsubsArray = [];
 	// user subscribtions
 	if(req.body.usersubsInput.length > 0){
 		var usersubs = eval('('+req.body.usersubsInput+')');
@@ -214,10 +221,11 @@ exports.alerts = function(req, res){
 	
 	// tag subscribtions
 	if(req.body.tagsubsInput.length > 0){
-		var tagsubsArray = req.body.tagsubsInput;
+		var tagsubs = eval('('+req.body.tagsubsInput+')');
+		for(i=0;i<tagsubs.length;i++){
+			tagsubsArray.push(tagsubs[i]);
+		}
 
-		console.log('tagsubsArray');
-		console.log(tagsubsArray);
 		req.session.user.tagsubs = tagsubsArray;
 	}
 				

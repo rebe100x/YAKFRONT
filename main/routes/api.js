@@ -15,15 +15,17 @@ exports.infos = function (req, res) {
 
 exports.geoinfos = function (req, res) {
 	var Info = db.model('Info');
+	var type = [];
+	type = req.params.type.split(',');
 	if(req.session.user){
 		var usersubs= req.session.user.usersubs;
-		var tagsubs= JSON.parse(req.session.user.tagsubs);
+		var tagsubs= req.session.user.tagsubs;
 	}
 	else{
 		var usersubs = [];
 		var tagsubs = [];
 	}
-	Info.findAllGeo(req.params.x1,req.params.y1,req.params.x2,req.params.y2,req.params.heat,req.params.type,usersubs,tagsubs,function (err, docs){
+	Info.findAllGeo(req.params.x1,req.params.y1,req.params.x2,req.params.y2,req.params.heat,type,usersubs,tagsubs,function (err, docs){
 	  res.json({
 		info: docs
 	  });
