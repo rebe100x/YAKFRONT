@@ -39,9 +39,7 @@ block content
 		/*INIT*/
 		var conf = !{conf};
 		var user = [!{user}];
-		if(user.length)
-			user = JSON.parse(JSON.stringify(!{user}));
-			
+		var logged = 0;
 		//var user = JSON.parse(JSON.stringify({!{user}}));
 		
 		var curPos = {'x':0,'y':0,'z':0};
@@ -63,8 +61,12 @@ block content
 		
 		/*READY FUNCTIONS*/
 		$(document).ready(function() {
+		if(user.length){
+			user = JSON.parse(JSON.stringify(!{user}));
+			logged = 1;
+		}
 		console.log(user);
-		if(user === null || user === undefined){
+		if( logged){
 				console.log('elo');
 				$.each(user.favplace,function(key,val){
 					$('ul#favplacelist').append("<li lat='"+val.location.lat+"' lng='"+val.location.lng+"' class='zoneLoc'><i class='icon-map-marker'></i><span> "+val.name+"</span></li>");
