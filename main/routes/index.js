@@ -104,7 +104,9 @@ exports.news = function(req, res){
 				
 				// NOTE : in the query below, order is important : in DB we have lat, lng but need to insert in reverse order : lng,lat  (=> bug mongoose ???)
 				info.location = {lng:parseFloat(item.location.lng),lat:parseFloat(item.location.lat)};
+				info.address = item.title;
 				// if no id, it means the location comes from gmap => we store it
+				
 				if(item._id == "" || typeof item._id === "undefined"){
 					place = new Place(item);
 					place.save();
@@ -123,7 +125,6 @@ exports.news = function(req, res){
 				//console.log(info);
 				info.print = 1;
 				info.status = 1;
-				console.log(req.body.yakType);
 				if(req.body.yakType > 0 )
 					info.yakType = req.body.yakType; 
 				else
@@ -260,20 +261,25 @@ exports.profile = function(req, res){
 		if(infoThumb.msg)
 			formMessage.push(infoThumb.msg);
 		
+		var location = JSON.parse(req.body.location);
 		if(infoThumb.name){
 			var cond = {
 				name : req.body.username,
 				web:req.body.web,
 				thumb:infoThumb.name,
 				bio:req.body.bio,
-				tag:req.body.tag.split(',')				
+				tag:req.body.tag.split(','),
+				location :{lng:parseFloat(location.lng),lat:parseFloat(location.lat)},
+				address :req.body.address,
 				};
 		}else
 			var cond = {
 				name : req.body.username,
 				web:req.body.web,
 				bio:req.body.bio,
-				tag:req.body.tag.split(',')				
+				tag:req.body.tag.split(',')	,
+				location :{lng:parseFloat(location.lng),lat:parseFloat(location.lat)},
+				address :JSON.parse(req.body.address),				
 				};
 		
 		User.update({_id: req.session.user._id}, 

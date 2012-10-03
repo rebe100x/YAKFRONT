@@ -50,6 +50,12 @@ block content
 				$('#tag').val(user.tag);
 				$('#web').val(user.web);
 				$('#taginit').val(user.tag);
+				if(user.address.city)
+					$('#cityTarget').html(user.address.city);
+				if(user.address.zip)
+					$('#cityTarget').append(', '+user.address.zip);
+				if(user.address.country)
+					$('#cityTarget').append(', '+user.address.country);
 				
 				if(user.thumb)
 					$('#avatarPreview img').attr('src','/uploads/pictures/128_128/'+user.thumb);
@@ -61,7 +67,6 @@ block content
 				$("#bio").keyup(function(event) {
 					hashtagTmp = [];
 					var inputStrArray = ($(this).val()).split(' ');
-					cl(inputStrArray);
 					for(i = 0; i< inputStrArray.length;i++){
 						if(inputStrArray[i].match(rule)){
 							hashtagTmp.push(inputStrArray[i]);
@@ -91,26 +96,29 @@ block content
 					
 					}
 					
-					//r.readAsBinaryString(file);
-
-					
-
 				});
 				
 				$('#city').typeahead({
 					minLength : 3,							
 					source: function (typeahead, query) {
+						
 						if(query.length > 3){
 							$("#city").css({'background-image':'url(\'images/loader.gif\')','padding-left':'20px'});
-							var addressQuery = {"address": query};
+							var addressQuery = {"address": query,"region":"fr" };
 							var geocoder = new google.maps.Geocoder();
 							geocoder.geocode( addressQuery, function(results, status) {
 								if (status == google.maps.GeocoderStatus.OK) {
 									//results[0].geometry.location
 									typeahead.process(results);
-								} else {
+								} 
+								
+								if(status == google.maps.GeocoderStatus.ZERO_RESULTS){}
+									
+								if( status == google.maps.GeocoderStatus.INVALID_REQUEST 
+									|| status == google.maps.GeocoderStatus.REQUEST_DENIED  
+									|| status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT){
 									var salt = new Date().getTime();
-									$('#city').parent().before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide ("+status+")</div>");
+									$('#cityTarget').html("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide ("+status+")</div>");
 									setTimeout(function() {
 										$("#alert"+salt).fadeOut();
 									}, 3000);
@@ -124,7 +132,10 @@ block content
 						$("#city").css({'background-image': 'none','padding-left':'0px'});
 						$('#cityTarget').html("<div>"+obj.formatted_address+"</div>");
 						$('#city').val('').focus();
-						$('#home').val(obj.geometry.location);
+						var placeGmap = getPlaceFromGmapResult(obj);
+						
+						$('#location').val(JSON.stringify(placeGmap.location));
+						$('#address').val(JSON.stringify(placeGmap.address));
 					}
 				});
 				

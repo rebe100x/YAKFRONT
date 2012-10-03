@@ -2,7 +2,8 @@ mixin profileForm(type)
 	- if(session.type > 1)
 		form(action='/profile', method='POST', enctype='multipart/form-data')
 			input#taginit(type='hidden', name='taginit', value='')
-			input#home(type='hidden', name='home', value='')
+			input#location(type='hidden', name='location', value='')
+			input#address(type='hidden', name='address', value='')
 			div.span4
 				div.control-group
 					div.controls
@@ -16,8 +17,9 @@ mixin profileForm(type)
 						input#username(type='text', name='username')
 				div.control-group
 					div.controls
-						label.control-label(for="name") Votre ville:  
-						input#city(type='text', name='city', placeholder='Chercher...')
+						label.control-label(for="name") Votre ville: 
+							span#cityTarget
+						input#city.searchInput(type='text', name='city', placeholder='Chercher...', autocomplete="off",)
 				div.control-group
 					div.controls
 						label.control-label(for="name") Votre site web:  
@@ -26,7 +28,7 @@ mixin profileForm(type)
 			div.span4
 				div.control-group
 					div.controls
-						label.control-label(for="bio") Votre biographie :  
+						label.control-label(for="bio") Une description de votre activité :  
 						textarea(name='bio', id='bio',rows='10')
 			
 				div.control-group
@@ -38,6 +40,9 @@ mixin profileForm(type)
 		
 	- if(type == 1)
 		form(action='/profile', method='POST', enctype='multipart/form-data')
+			input#taginit(type='hidden', name='taginit', value='')
+			input#location(type='hidden', name='location', value='')
+			input#address(type='hidden', name='address', value='')
 			div.span4
 				div.control-group
 					div.controls
@@ -49,6 +54,11 @@ mixin profileForm(type)
 					div.controls
 						label.control-label(for="name") Votre nom :  
 						input#username(type='text', name='username')
+				div.control-group
+					div.controls
+						label.control-label(for="name") Votre ville: 
+							span#cityTarget
+						input#city.searchInput(type='text', name='city', placeholder='Chercher...', autocomplete="off",)
 				div.control-group
 					div.controls
 						label.control-label(for="name") Votre site web:  

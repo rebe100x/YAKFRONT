@@ -8,6 +8,26 @@ var mongoose = require('mongoose')
 
 mongoose.set('debug', true);
 
+/*
+var Address = new Schema({
+	street_number : String
+	, street     : String
+	, arr     : String
+	, city      : String
+	, state      : String
+	, country      : String
+	, area      : String
+	, zip      : String
+});
+mongoose.model('Address', Address);	
+*/
+
+var Point = new Schema({
+	  name : String
+	, location	: { type : { lat: Number, lng: Number }}	
+});
+mongoose.model('Point', Point);
+	
 /**
  * Schema definition
  */
@@ -29,7 +49,7 @@ var Info = new Schema({
   , creationDate	: {type: Date, required: true, default: Date.now}		
   , lastModifDate	: {type: Date, required: true, default: Date.now}		
   , dateEndPrint	: {type: Date}		
-  , address	: {type: String}		
+  , address	: {type : String}	
   , location	: { type : { lat: Number, lng: Number }, index : '2d'}	
   , status	: {type: Number}		
   , user	: {type: Schema.ObjectId}		
@@ -120,7 +140,18 @@ var User = new Schema({
 	, usersubs	: { type: [Schema.ObjectId], index: true}
 	, tagsubs	: { type: [String], index: true}
 	, placesubs	: { type: [Schema.ObjectId], index: true}
-	, home	: { type : { lat: Number, lng: Number }, index : '2d'}	
+	, location	: { type : { lat: Number, lng: Number }, index : '2d'}	
+	, address	: { type : { 
+								street_number: String,
+								street: String,
+								arr: String,
+								city: String,
+								state: String,
+								area: String,
+								country: String,
+								zip: String}
+							}
+	, favplace : [Point]
 	, creationDate	: {type: Date, required: true, default: Date.now}		
 	, lastModifDate	: {type: Date, required: true, default: Date.now}		
 	, lastLoginDate	: {type: Date, required: true, default: Date.now}		
@@ -244,7 +275,17 @@ var Place = new Schema({
 ,	outGoingLink	: { type: String }
 ,	creationDate	: {type: Date, required: true, default: Date.now}		
 ,	lastModifDate	: {type: Date, required: true, default: Date.now}		
-,	location	: { type : { lat: Number, lng: Number }, index : '2d'}	
+,	location	: { type : { lat: Number, lng: Number }, index : '2d'}
+,	address		: { type : { 
+								street_number: String,
+								street: String,
+								arr: String,
+								city: String,
+								state: String,
+								area: String,
+								country: String,
+								zip: String}
+							}
 ,	status	: {type: Number}		
 ,	user	: {type: Schema.ObjectId}		
 ,	zone	: {type: Schema.ObjectId}

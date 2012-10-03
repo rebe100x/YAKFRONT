@@ -1,7 +1,7 @@
 ﻿//var socket = io.connect('http://localhost:3000');
 
 	
-	
+/*READY FUNCTIONS*/	
 $(document).ready(function() {
 
 		
@@ -14,12 +14,89 @@ $(document).ready(function() {
 			$('#locationChooser').modal('show');
 		});
 	/*locator pop up links*/	
-	$('.zoneLoc').click(updateXY);
+	//$('.zoneLoc').click(updateXY);
+	if(user){
+		$.each(user.favplace,function(key,val){
+			$('ul#favplacelist').append("<li lat='"+val.location.lat+"' lng='"+val.location.lng+"' class='zoneLoc'><i class='icon-map-marker'></i><span> "+val.name+"</span></li>");
+		});
+	}else{case 'zone1':
+		x = 48.851875;
+		y = 2.356374;
+		z = 13;
+	break;
+	case 'zone2':
+		x = 43.610787;
+		y = 3.876715;
+		z = 14;
+	break;
+	case 'zone3':
+		x = 50.583346;
+		y = 4.900031;
+		z = 14;
+		$('ul#favplacelist').append("<li lat='48.851875' lng='2.356374' class='zoneLoc'><i class='icon-map-marker'></i><span> Paris, France</span></li>");
+		$('ul#favplacelist').append("<li lat='43.610787' lng='3.876715' class='zoneLoc'><i class='icon-map-marker'></i><span> Montpellier, France</span></li>");
+		$('ul#favplacelist').append("<li lat='50.583346' lng='4.900031' class='zoneLoc'><i class='icon-map-marker'></i><span> Eghézée, Belgique</span></li>");
+	}
+		
+	$('ul#favplacelist').delegate("li.zoneLoc",'click', function () {
+				var lat = parseFloat($(this).attr('lat'));
+				var lng = parseFloat($(this).attr('lng'));	
+				console.log('elo');		
+				moveMap(lat,lng);
+			});
 	
 	
+	
+	$('#favplace').typeahead({
+		minLength : 3,							
+		source: function (typeahead, query) {
+			
+			if(query.length > 3){
+				$("#favplace").addClass('searching');
+				var addressQuery = {"address": query ,"region":"fr"};
+				var geocoder = new google.maps.Geocoder();
+				geocoder.geocode( addressQuery, function(results, status) {
+					if (status == google.maps.GeocoderStatus.OK) {
+						typeahead.process(results);
+					} 
+					
+					if(status == google.maps.GeocoderStatus.ZERO_RESULTS){}
+						
+					if( status == google.maps.GeocoderStatus.INVALID_REQUEST 
+						|| status == google.maps.GeocoderStatus.REQUEST_DENIED  
+						|| status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT){
+						var salt = new Date().getTime();
+						$('#favplace').before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide ("+status+")</div>");
+						setTimeout(function() {
+							$("#alert"+salt).fadeOut();
+						}, 3000);
+						$('#favplace').select();
+					}
+				});
+			}
+		},
+		property: "formatted_address",
+		onselect: function(obj) { 
+			$("#favplace").removeClass('searching');
+			var placeGmap = getPlaceFromGmapResult(obj);
+			var point = new Object();
+			point.name = placeGmap.title;
+			point.location = placeGmap.location;
+			$.post('api/favplace', {'place':point},function(data) {
+				$('#favplacelist').append("<li lat='"+placeGmap.location.lat+"' lng='"+placeGmap.location.lng+"' class='zoneLoc'><i class='icon-map-marker'></i><span> "+obj.formatted_address+"</span></li>");
+				$('#favplace').val('').focus();
+			});
+			
+			//var placeGmap = getPlaceFromGmapResult(obj);
+			
+			//$('#location').val(JSON.stringify(placeGmap.location));
+			//$('#address').val(JSON.stringify(placeGmap.address));
+		}
+	});
 });
+/*END READY FUNCTIONS*/
 
-function cl(str){
+function csl(str){
 	console.log(str);
 }
 
@@ -44,9 +121,18 @@ Array.prototype.cleanArrayByLocation=function(lng,lat){
 }
 
 
+function moveMap(lat,lng){
+
+	var latLng = new google.maps.LatLng(lat,lng);
+	$('#locationChooser').modal('hide');
+	if($('#mymap').length > 0){ // only for the map page
+		google.maps.event.addDomListener(window, 'load', initialize(lat,lng,10)); 
+	}
+	
+}
 
 function updateXY(){
-			
+		
 	var id = $(this).attr('id');
 	switch(id){
 	case 'zone1':
@@ -206,7 +292,7 @@ function getformattedAddress(position){
 		geocoder.geocode( geoQuery, function(results, status) {
 			if (status == google.maps.GeocoderStatus.OK) {
 				$('#place').val(results[0].formatted_address).select();
-				var placeGmap = getPlaceFromGmapResult(results);
+				var placeGmap = getPlaceFromGmapResult(results[0]);
 				//console.log(results);
 				placeArray.push(placeGmap);
 				$("#placeInput").val(JSON.stringify(placeArray));
@@ -245,10 +331,11 @@ Array.prototype.inArrayId=function(id){
 }
 
 
-function getPlaceFromGmapResult(results){
+function getPlaceFromGmapResult(result){
 	
 	var addressGmap = {
-		"street":""
+		"street_number":""
+		,"street":""
 		,"arr":""
 		,"city":""
 		,"state":""
@@ -257,7 +344,9 @@ function getPlaceFromGmapResult(results){
 		,"zip":""
 	};
 
-	results[0].address_components.forEach(function(item) { 
+	result.address_components.forEach(function(item) { 
+		if(item.types.inArray('street_number'))
+			addressGmap.street_number = item.long_name;
 		if(item.types.inArray('route'))
 			addressGmap.street = item.long_name;
 		if(item.types.inArray('	sublocality'))
@@ -273,20 +362,19 @@ function getPlaceFromGmapResult(results){
 		if(item.types.inArray('postal_code'))
 			addressGmap.zip = item.long_name;
 	});
-
-	//console.log((results[0].geometry.location.Xa));
+	//console.log((result.geometry.location.Xa));
 	var placeGmap = {
-		"title":results[0].formatted_address
+		"title":result.formatted_address
 		,"content":""
 		,"thumb":""
-		,"origin":"yakwala"
+		,"origin":"gmap"
 		,"access":2
-		,"licence":"Yakwala"
+		,"licence":"gmap"
 		,"outGoingLink":""
 		,"yakCat":["504d89f4fa9a958808000001"]
 		,"creationDate":new Date()
 		,"lastModifDate":new Date()
-		,"location":{"lng":parseFloat(results[0].geometry.location.Ya),"lat":parseFloat(results[0].geometry.location.Xa)}
+		,"location":{"lng":parseFloat(result.geometry.location.Ya),"lat":parseFloat(result.geometry.location.Xa)}
 		,"status":2 // need validation
 		,"address": addressGmap
 		};

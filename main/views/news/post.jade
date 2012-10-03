@@ -185,7 +185,7 @@ block content
 								markerLocation.setVisible(true);
 								markerLocation.setPosition(results[0].geometry.location);
 								placeMarker(results[0].geometry.location,markerLocation);
-								var placeGmap = getPlaceFromGmapResult(results);
+								var placeGmap = getPlaceFromGmapResult(results[0]);
 								placeArray.push(placeGmap);
 								$("#placeInput").val(JSON.stringify(placeArray));
 								$('#btn-place-adder').parent().before("<div><i class='icon-remove icon-pointer' onclick='placeArray.cleanArrayByLocation("+results[0].geometry.location.Ya+","+results[0].geometry.location.Xa+");$(\"#placeInput\").val(JSON.stringify(placeArray));$(this).parent().remove();'></i> "+results[0].formatted_address+"</div>");

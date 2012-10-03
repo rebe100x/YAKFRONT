@@ -31,6 +31,7 @@ app.configure(function(){
   }));
   app.use(function(req, res, next){
     res.locals.session = req.session.user;
+	res.locals.user = JSON.stringify(req.session.user);
 	res.locals.redir = req.query.redir;
 	res.locals.message = req.session.message;
 	//res.locals.conf = JSON.stringify(config.confs.dev);
@@ -45,6 +46,7 @@ app.configure(function(){
 app.configure('development', function(){
 	conf = config.confs.dev;
 	app.locals.conf = JSON.stringify(config.confs.dev);
+	
 	app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
 
@@ -97,6 +99,9 @@ app.post('/api/users', api.users);
 app.get('/api/cats', api.cats);
 app.get('/api/places', api.places);
 app.get('/api/usersearch/:string', api.usersearch);
+
+app.post('/api/favplace', api.addfavplace);
+
 
 app.get('/api/posts', api.posts);
 app.get('/api/post/:id', api.post);

@@ -38,6 +38,12 @@ block content
 		
 		/*INIT*/
 		var conf = !{conf};
+		var user = [!{user}];
+		if(user.length)
+			user = JSON.parse(JSON.stringify(!{user}));
+			
+		//var user = JSON.parse(JSON.stringify({!{user}}));
+		
 		var curPos = {'x':0,'y':0,'z':0};
 		var geolocalized = 0;
 		var infowindow = null;
@@ -52,8 +58,24 @@ block content
 		var infoContent = '';
 		var rule = new RegExp('#([^\\s]*)','g');
 		var rule2 = new RegExp('[#]','g');
+		
+		
+		
+		/*READY FUNCTIONS*/
 		$(document).ready(function() {
 		
+			$('#arroundme').click(function(){
+				if(user.login){
+					if(user.location){
+						var latLng = new google.maps.LatLng(user.location['lat'],user.location['lng']);
+						map.setCenter(latLng);
+					}else{
+						window.location = '/settings/profile';
+					}
+				}else
+					window.location = '/user/login';
+			});
+			
 			$( "#heatSelector" ).slider({
 				range: "min",
 				min: 1,
@@ -79,18 +101,23 @@ block content
 		
 			$('#newsfeedMenu span.btn').click(function(){
 				var curtype = $(this).attr('type');
-				
-				if($(this).hasClass('active')){
-					$(this).removeClass('active');
-					type.cleanArrayByName(curtype);
-				}
-				else{
+				if(curtype == 5){
+					$('#newsfeedMenu span.btn').removeClass('active');
 					$(this).addClass('active');
-					type.push(curtype);
+					type = [5];
+					
+				}else{
+					$('#newsfeedMenu span.btn[type="5"]').removeClass('active');
+					if($(this).hasClass('active')){
+						$(this).removeClass('active');
+						type.cleanArrayByName(curtype);	
+					}
+					else{
+						$(this).addClass('active');
+						type.push(curtype);
+					}
 				}
 				
-				
-				console.log(type.toString());
 				getAndPrintInfo();
 			});
 			

@@ -61,6 +61,26 @@ exports.places = function (req, res) {
 	});
 };
 
+exports.addfavplace = function (req, res) {
+	var User = db.model('User');
+	
+	if(req.session.user){
+		console.log(req.body.place);
+			req.session.favplace.push(req.body.place);
+			User.update({_id:req.session.user._id},{$push:{"favplace":req.body.place}}, function(err){
+				console.log(err);
+				
+			});
+			
+			res.json('saved');
+		
+	}else{
+		req.session.message = "Erreur : vous devez être connecté pour sauver vos favoris";
+		res.redirect('/user/login');
+	}
+	
+	
+};
 
 exports.usersearch = function (req, res) {
 	var User = db.model('User');
