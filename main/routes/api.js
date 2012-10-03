@@ -66,7 +66,7 @@ exports.addfavplace = function (req, res) {
 	
 	if(req.session.user){
 		console.log(req.body.place);
-			req.session.favplace.push(req.body.place);
+			req.session.user.favplace.push(req.body.place);
 			User.update({_id:req.session.user._id},{$push:{"favplace":req.body.place}}, function(err){
 				console.log(err);
 				

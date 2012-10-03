@@ -1,6 +1,7 @@
 ﻿//var socket = io.connect('http://localhost:3000');
 
-	
+
+		
 /*READY FUNCTIONS*/	
 $(document).ready(function() {
 
@@ -15,36 +16,7 @@ $(document).ready(function() {
 		});
 	/*locator pop up links*/	
 	//$('.zoneLoc').click(updateXY);
-	if(user){
-		$.each(user.favplace,function(key,val){
-			$('ul#favplacelist').append("<li lat='"+val.location.lat+"' lng='"+val.location.lng+"' class='zoneLoc'><i class='icon-map-marker'></i><span> "+val.name+"</span></li>");
-		});
-	}else{case 'zone1':
-		x = 48.851875;
-		y = 2.356374;
-		z = 13;
-	break;
-	case 'zone2':
-		x = 43.610787;
-		y = 3.876715;
-		z = 14;
-	break;
-	case 'zone3':
-		x = 50.583346;
-		y = 4.900031;
-		z = 14;
-		$('ul#favplacelist').append("<li lat='48.851875' lng='2.356374' class='zoneLoc'><i class='icon-map-marker'></i><span> Paris, France</span></li>");
-		$('ul#favplacelist').append("<li lat='43.610787' lng='3.876715' class='zoneLoc'><i class='icon-map-marker'></i><span> Montpellier, France</span></li>");
-		$('ul#favplacelist').append("<li lat='50.583346' lng='4.900031' class='zoneLoc'><i class='icon-map-marker'></i><span> Eghézée, Belgique</span></li>");
-	}
-		
-	$('ul#favplacelist').delegate("li.zoneLoc",'click', function () {
-				var lat = parseFloat($(this).attr('lat'));
-				var lng = parseFloat($(this).attr('lng'));	
-				console.log('elo');		
-				moveMap(lat,lng);
-			});
-	
+
 	
 	
 	$('#favplace').typeahead({
