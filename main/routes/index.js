@@ -270,7 +270,7 @@ exports.profile = function(req, res){
 				bio:req.body.bio,
 				tag:req.body.tag.split(','),
 				location :{lng:parseFloat(location.lng),lat:parseFloat(location.lat)},
-				address :req.body.address,
+				address :req.body.address,				
 				};
 		}else
 			var cond = {
@@ -279,8 +279,10 @@ exports.profile = function(req, res){
 				bio:req.body.bio,
 				tag:req.body.tag.split(',')	,
 				location :{lng:parseFloat(location.lng),lat:parseFloat(location.lat)},
-				address :JSON.parse(req.body.address),				
+				address :req.body.address,				
 				};
+		
+		req.session.user.location = location;
 		
 		User.update({_id: req.session.user._id}, 
 		cond

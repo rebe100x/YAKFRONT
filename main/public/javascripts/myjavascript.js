@@ -1,4 +1,4 @@
-﻿//var socket = io.connect('http://localhost:3000');
+//var socket = io.connect('http://localhost:3000');
 
 
 		
@@ -25,9 +25,21 @@ $(document).ready(function() {
 			
 			if(query.length > 3){
 				$("#favplace").addClass('searching');
-				var addressQuery = {"address": query ,"region":"fr"};
+				console.log("encode"+encodeURIComponent(query));
+				console.log("nomal"+query);
+				/*
+				var urlgmap = "http://maps.googleapis.com/maps/api/geocode/json?address=%C3%A9gh%C3%A9z%C3%A9e&sensor=false";
+				$.post(urlgmap,function(data){
+					var results = JSON.parse(data);
+					if(results.status == 'OK')
+						typeahead.process(data);
+				});*/
+				
+				
+				var addressQuery = {"address": query ,"region":"fr","language":"fr"};
 				var geocoder = new google.maps.Geocoder();
 				geocoder.geocode( addressQuery, function(results, status) {
+				
 					if (status == google.maps.GeocoderStatus.OK) {
 						typeahead.process(results);
 					} 
@@ -54,8 +66,8 @@ $(document).ready(function() {
 			var point = new Object();
 			point.name = placeGmap.title;
 			point.location = placeGmap.location;
-			$.post('api/favplace', {'place':point},function(data) {
-				$('#favplacelist').append("<li lat='"+placeGmap.location.lat+"' lng='"+placeGmap.location.lng+"' class='zoneLoc'><i class='icon-map-marker'></i><span> "+obj.formatted_address+"</span></li>");
+			$.post('api/favplace', {'place':point},function(id) {
+				$('#favplacelist').append("<li pointId='"+id+"' lat='"+placeGmap.location.lat+"' lng='"+placeGmap.location.lng+"' class='zoneLoc'><i class='icon-map-marker'></i><span> "+obj.formatted_address+"</span><i class='icon-remove icon-pointer'  onclick='removefavPlace($(this));'></i></li>");
 				$('#favplace').val('').focus();
 			});
 			
@@ -67,6 +79,16 @@ $(document).ready(function() {
 	});
 });
 /*END READY FUNCTIONS*/
+
+function removefavPlace(obj){
+	console.log('REMOVE');
+	obj.parent().remove();
+	
+	$.post('api/delfavplace', {'pointId':obj.parent().attr('pointId')},function(data) {
+				
+				
+			});
+}
 
 function csl(str){
 	console.log(str);
@@ -94,7 +116,9 @@ Array.prototype.cleanArrayByLocation=function(lng,lat){
 
 
 function moveMap(lat,lng){
-
+	curPos.x = lat;
+	curPos.y = lng;
+	$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000 });
 	var latLng = new google.maps.LatLng(lat,lng);
 	$('#locationChooser').modal('hide');
 	if($('#mymap').length > 0){ // only for the map page

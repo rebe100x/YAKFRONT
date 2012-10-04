@@ -63,16 +63,40 @@ exports.places = function (req, res) {
 
 exports.addfavplace = function (req, res) {
 	var User = db.model('User');
+	var Point = db.model('Point');
 	
 	if(req.session.user){
-		console.log(req.body.place);
-			req.session.user.favplace.push(req.body.place);
-			User.update({_id:req.session.user._id},{$push:{"favplace":req.body.place}}, function(err){
+		var point = new Point(req.body.place);	
+		console.log(point);
+		req.session.user.favplace.push(point);
+		
+		User.update({_id:req.session.user._id},{$push:{"favplace":point}}, function(err,docs){			
+			res.json(point._id);
+		});
+	}else{
+		req.session.message = "Erreur : vous devez être connecté pour sauver vos favoris";
+		res.redirect('/user/login');
+	}
+	
+	
+};
+
+exports.delfavplace = function (req, res) {
+	var User = db.model('User');
+	
+	if(req.session.user){
+			var pointId = req.body.pointId;
+			console.log(req.session.user.favplace);
+			for(i=0;i<req.session.user.favplace.length;i++)
+				if(pointId==req.session.user.favplace[i]._id) 
+					req.session.user.favplace.splice(i, 1);
+			User.update({_id:req.session.user._id},{$pull:{"favplace":pointId}}, function(err){
 				console.log(err);
+				res.json('del');
 				
 			});
 			
-			res.json('saved');
+			
 		
 	}else{
 		req.session.message = "Erreur : vous devez être connecté pour sauver vos favoris";

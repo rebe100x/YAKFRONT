@@ -15,8 +15,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * This is an extension to Bootstrap Typeahead that adds minimal but powerful
- * extensions.
  * ============================================================ */
 
 !function( $ ){
@@ -36,27 +34,6 @@
     this.shown = false
     this.listen()
   }
-
-  var makeSortString = (function() {
-    var translate_re = /[àáâãäåæçèéêëìíîïñòóôõöœùúûüýÿ]/g;
-    return function(s) {
-      var translate = {
-        'à': 'a', 'á': 'a', 'â': 'a', 'ã': 'a', 'ä': 'a', 'å': 'a',
-        'æ': 'ae',
-        'ç': 'c',
-        'è': 'e', 'é': 'e', 'ê': 'e', 'ë': 'e',
-        'ì': 'i', 'í': 'i', 'î': 'i', 'ï': 'i',
-        'ñ': 'n',
-        'ò': 'o', 'ó': 'o', 'ô': 'o', 'õ': 'o', 'ö': 'o',
-        'œ': 'oe',
-        'ù': 'u', 'ú': 'u', 'û': 'u', 'ü': 'u',
-        'ý': 'y', 'ÿ': 'y',
-      };
-      return ( s.replace(translate_re, function(match) {
-        return translate[match];
-      }) );
-    }
-  })();
 
   Typeahead.prototype = {
 
@@ -106,11 +83,11 @@
 
       this.query = this.$element.val()
 
-      if (typeof this.source == "function")
+      if (typeof this.source == "function") 
         value = this.source(this, this.query)
         if (value)
           this.process(value)
-      else
+      else 
         this.process(this.source)
     }
 
@@ -129,14 +106,8 @@
       }
 
       items = $.grep(results, function (item) {
-        if (!that.strings)
-          if($.inArray(that.options.property, item)) {
-            if(typeof item != 'undefined') {
-              item = item[that.options.property]
-            } else {
-              item = '';
-            }
-          }
+        if (!that.strings && typeof(item) != 'undefined' )
+          item = item[that.options.property]
         if (that.matcher(item)) return item
       })
 
@@ -150,7 +121,8 @@
     }
 
   , matcher: function (item) {
-      return ~makeSortString(item.toLowerCase()).indexOf(makeSortString(this.query.toLowerCase()))
+		if(typeof(item) != 'undefined')
+			return ~item.toLowerCase().indexOf(this.query.toLowerCase())
     }
 
   , sorter: function (items) {
@@ -173,33 +145,9 @@
     }
 
   , highlighter: function (item) {
-      var search_item = makeSortString(item.toLowerCase());
-      var query = makeSortString(this.query.toLowerCase());
-      search_item = search_item.replace(new RegExp('(' + query + ')', 'ig'), function ($1, match) {
+      return item.replace(new RegExp('(' + this.query + ')', 'ig'), function ($1, match) {
         return '<strong>' + match + '</strong>'
-      });
-
-      item = item.split('');
-      var re = new RegExp('<strong>(' + query + ')<\/strong>', 'ig');
-      console.log(re);
-      var reg_match_count = 0;
-      var mod = 0;
-      var arr_count = 0;
-      var reexec = [];
-      while(reexec = re.exec(search_item)) {
-        var index = re.lastIndex - reexec[0].length - reg_match_count + mod;
-        reg_match_count += reexec[0].length;
-        item.splice(arr_count + index, 0, '<strong>');
-        arr_count += 1;
-        item.splice(arr_count + index + reexec[1].length, 0, '</strong>');
-        arr_count += 1;
-
-        mod += 1;
-      }
-
-      item = item.join('');
-
-      return item;
+      })
     }
 
   , render: function (items) {

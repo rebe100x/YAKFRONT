@@ -13,14 +13,7 @@ block content
 				div#mymap
 			div.span4
 				div#newsfeedContainer
-					span#newsNav				
-						ul.nav.nav-tabs
-							li.active
-								a.newsNavItem#newsFeed(href="#") Fil d'info
-							li
-								a.newsNavItem#newsPost(href="#") Poster une info
-							li
-								a.newsNavItem#newsSearch(href="#") Rechercher une info
+					
 							
 					span#newsfeedMenu
 						span.btn.btn-info.active(title="Actu", type=1)
@@ -38,6 +31,17 @@ block content
 						div#heatModule
 							div#dayPrinter Depuis 3 jours	
 							div#heatSelector
+					span#newsNav				
+						ul.nav.nav-tabs
+							li.active
+								a.newsNavItem#newsFeed(href="#") Le fil
+							li
+								a.newsNavItem#newsPost(href="#") Poster
+							li
+								a.newsNavItem#newsSearch(href="#") Rechercher
+							li
+								a.newsNavItem#newsMyPost(href="#") Mes posts	
+								
 					ul#newsfeed
 				//p!= partial('./partials/newsfeed.jade', {test:infos})
 				//div elo #{title}
@@ -62,6 +66,7 @@ block content
 		
 		$(document).ready(function() {
 		
+			$( "#tabs" ).tabs();
 			$( "#heatSelector" ).slider({
 				range: "min",
 				min: 1,

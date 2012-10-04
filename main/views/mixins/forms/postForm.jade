@@ -2,7 +2,7 @@ mixin postForm(type)
 	- if(session.type > 1)
 		form(action='/news', method='POST', enctype='multipart/form-data')
 			input#yakcatInput(type='hidden', name='yakcatInput', value='')
-			input#placeInput(type='text', name='placeInput', value='')
+			input#placeInput(type='hidden', name='placeInput', value='')
 			input#latitude(type="hidden",data-provide="typeahead", name="latitude")
 			input#longitude(type="hidden",data-provide="typeahead", name="longitude")
 			legend Poster une info:

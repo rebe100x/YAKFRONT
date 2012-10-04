@@ -25,6 +25,9 @@ a {
 #newsfeedMenu #heatModule #dayPrinter{padding: 3px;}
 #newsfeedMenu #heatModule #heatSelector{}
 
+#newsNav{width:100%;margin:10px auto;padding:10px 0px;float:left;opacity:0.95;background:#FFFFFF;}
+
+
 ul#newsfeed{list-style-type:none;width:100%;margin:10px auto;padding:10px 0px;float:left;opacity:0.95;background:#FFFFFF;}
 ul#newsfeed li{width:100%;}
 ul#newsfeed li.highlighted .mapHighlighter{background-color:#F0F0F0;}
@@ -32,7 +35,7 @@ ul#newsfeed li.highlighted .mapHighlighter{background-color:#F0F0F0;}
 .infowindow .readmore{float:right;margin:5px 0px 10px 0px;font-style:italic;font-size:0.8em;}
 .infowindow .readmore a{color:#0C0C0C;}
 
-#newsNav li{width:33%;}
+
 
 
 /* general

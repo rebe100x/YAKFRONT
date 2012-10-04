@@ -101,6 +101,7 @@ app.get('/api/places', api.places);
 app.get('/api/usersearch/:string', api.usersearch);
 
 app.post('/api/favplace', api.addfavplace);
+app.post('/api/delfavplace', api.delfavplace);
 
 
 app.get('/api/posts', api.posts);
