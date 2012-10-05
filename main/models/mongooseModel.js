@@ -6,7 +6,7 @@
 var mongoose = require('mongoose')
   , Schema = mongoose.Schema;
 
-mongoose.set('debug', true);
+//mongoose.set('debug', true);
 
 /*
 var Address = new Schema({

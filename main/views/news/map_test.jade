@@ -2,10 +2,11 @@ extends ../layout
 block content
 	include ../mixins/menu.jade
 	include ../mixins/locationChooser.jade
-
+	include ../mixins/forms/postForm.jade
+	
 	mixin menu('map')
 	mixin locationChooser()
-
+	
 
 	div.container-fluid
 		div.row-fluid
@@ -33,16 +34,15 @@ block content
 							div#heatSelector
 					span#newsNav				
 						ul.nav.nav-tabs
-							li.active
+							li.active(contentToLoad="newsfeedContent")
 								a.newsNavItem#newsFeed(href="#") Le fil
-							li
+							li(contentToLoad="newspostContent")
 								a.newsNavItem#newsPost(href="#") Poster
-							li
-								a.newsNavItem#newsSearch(href="#") Rechercher
-							li
-								a.newsNavItem#newsMyPost(href="#") Mes posts	
-								
-					ul#newsfeed
+							
+					span#newsfeedContent			
+						ul#newsfeed.tabContent
+					span#newspostContent
+						mixin postForm(session.type)
 				//p!= partial('./partials/newsfeed.jade', {test:infos})
 				//div elo #{title}
 				//div #{infos}
@@ -66,7 +66,23 @@ block content
 		
 		$(document).ready(function() {
 		
-			$( "#tabs" ).tabs();
+			
+
+			$('#newsNav li').click(function(){
+				event.preventDefault();
+				if(!$(this).hasClass('active')){
+					$('#newsNav li').removeClass('active');	
+					$(this).addClass('active');
+					var contentToLoad = $(this).attr('contentToLoad');
+					
+					$('.tabContent').fadeOut(function(){
+						console.log(contentToLoad);
+							$('#'+contentToLoad).fadeIn();	
+					});
+					
+				}
+					
+			});
 			$( "#heatSelector" ).slider({
 				range: "min",
 				min: 1,

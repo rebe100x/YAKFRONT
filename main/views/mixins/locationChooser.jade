@@ -7,12 +7,13 @@ mixin locationChooser()
 			p.alertText 
 				ul#favplacelist.unstyled
 				br	
-				div.control-group
-					div.controls
-						label(for='favplace') Ajouter des lieux favoris : 
-						div.input-append
-							input#favplace.searchInput(type="text",data-provide="typeahead", name="favplace", autocomplete="off", placeholder='Rechercher...') 
-							button.btn#btn-favplace-adder(type="button") Add
+				- if(session)
+					div.control-group
+						div.controls
+							label(for='favplace') Ajouter des lieux favoris : 
+							div.input-append
+								input#favplace.searchInput(type="text",data-provide="typeahead", name="favplace", autocomplete="off", placeholder='Rechercher...') 
+								button.btn#btn-favplace-adder(type="button") Add
 		div.modal-footer
 			span.btn(data-dismiss="modal") Laissez moi explorer tout seul !
 

@@ -1,0 +1,9 @@
+mixin searchForm()
+	- if (message)
+		div.alert.fade.in
+			button.close(type="button",data-dismiss="alert") x
+			strong=message
+	form.form-search
+		div.input-append
+			input#login(type="text",name="login", autocomplete="on", placeholder='...')
+			button.btn Chercher

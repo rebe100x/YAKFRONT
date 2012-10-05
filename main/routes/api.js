@@ -32,6 +32,7 @@ exports.geoinfos = function (req, res) {
 	}); 
 };
 
+
 exports.zones = function (req, res) {
 	var Zone = db.model('Zone');
 	Zone.findNear(req.params.x,req.params.y,function (err, docs){
@@ -86,11 +87,11 @@ exports.delfavplace = function (req, res) {
 	
 	if(req.session.user){
 			var pointId = req.body.pointId;
-			console.log(req.session.user.favplace);
 			for(i=0;i<req.session.user.favplace.length;i++)
 				if(pointId==req.session.user.favplace[i]._id) 
 					req.session.user.favplace.splice(i, 1);
-			User.update({_id:req.session.user._id},{$pull:{"favplace":pointId}}, function(err){
+					 //{$pull: {attendees: {_id: ObjectId( "4f8dfb06ee21783d7134503a" )}}})
+			User.update({_id:req.session.user._id},{$pull:{favplace:{_id:pointId}}}, function(err){
 				console.log(err);
 				res.json('del');
 				

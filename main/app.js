@@ -34,6 +34,7 @@ app.configure(function(){
 	res.locals.user = JSON.stringify(req.session.user);
 	res.locals.redir = req.query.redir;
 	res.locals.message = req.session.message;
+	res.locals.type = req.session.type;
 	//res.locals.conf = JSON.stringify(config.confs.dev);
     next();
   });

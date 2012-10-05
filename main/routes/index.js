@@ -19,7 +19,14 @@ exports.partials = function (req, res) {
 };
 
 exports.news_map = function(req, res){
-	res.render('news/map');  
+	if(typeof(req.session.type) == 'undefined' || req.session.type === null ){
+		var type = new Array();
+		type.push(1);
+		req.session.type = type;
+		
+	}	
+	
+	res.render('news/map',{type:req.session.type});  
 };
 exports.news_map_test = function(req, res){
 	res.render('news/map_test');  
@@ -72,7 +79,7 @@ exports.news = function(req, res){
 	delete req.session.message;
 	var Info = db.model('Info');
 	var Place = db.model('Place');
-	
+	var theYakType = 4; // UGC
 	var place = new Place();
 	//mongoose.set('debug', true);
 
@@ -80,6 +87,10 @@ exports.news = function(req, res){
 	// we need a title, a location and a user
 	if(req.body.placeInput && req.body.title && req.session.user){
 	
+		if(req.body.yakType > 0 )
+			theYakType = req.body.yakType; 
+		
+			
 		var drawTool = require('../mylib/drawlib.js');
 		var size = [{"width":120,"height":90},{"width":512,"height":0}];
 		var infoThumb = drawTool.StoreImg(req.files.picture,size,conf);
@@ -90,6 +101,7 @@ exports.news = function(req, res){
 			
 			var locTmp = JSON.parse(req.body.placeInput);
 			
+					
 			locTmp.forEach(function(item) {
 				var info = new Info();
 				
@@ -125,10 +137,7 @@ exports.news = function(req, res){
 				//console.log(info);
 				info.print = 1;
 				info.status = 1;
-				if(req.body.yakType > 0 )
-					info.yakType = req.body.yakType; 
-				else
-					info.yakType = 4; // UGC
+				info.yakType = theYakType;
 				info.thumb = infoThumb.name;
 				info.licence = 'Yakwala';
 				info.heat = 80;
@@ -162,8 +171,11 @@ exports.news = function(req, res){
 	}
 	
 	req.session.message = formMessage;
-	
-	res.redirect('news/post');
+	for(i=0;i<req.session.type.length;i++)
+		if(theYakType==req.session.type[i]) 
+			req.session.type.splice(i, 1);
+	req.session.type.push(theYakType);
+	res.redirect('news/map');
 };
 
 
