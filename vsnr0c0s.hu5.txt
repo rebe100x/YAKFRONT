@@ -1,0 +1,26 @@
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Changes to be committed:
+#   (use "git reset HEAD <file>..." to unstage)
+#
+#	deleted:    main/public/javascripts/lib/jquery/css/custom-theme/images/ui-bg_flat_0_aaaaaa_40x100.png
+#	deleted:    main/public/javascripts/lib/jquery/css/custom-theme/images/ui-bg_glass_65_ffffff_1x400.png
+#	deleted:    main/public/javascripts/lib/jquery/css/custom-theme/images/ui-bg_glass_75_dadada_1x400.png
+#	deleted:    main/public/javascripts/lib/jquery/css/custom-theme/images/ui-bg_glass_75_e6e6e6_1x400.png
+#	deleted:    main/public/javascripts/lib/jquery/css/custom-theme/images/ui-bg_glass_75_ffffff_1x400.png
+#	deleted:    main/public/javascripts/lib/jquery/css/custom-theme/images/ui-bg_highlight-soft_75_cccccc_1x100.png
+#	deleted:    main/public/javascripts/lib/jquery/css/custom-theme/images/ui-icons_454545_256x240.png
+#	deleted:    main/public/javascripts/lib/jquery/css/custom-theme/images/ui-icons_888888_256x240.png
+#	deleted:    main/public/javascripts/lib/jquery/css/custom-theme/jquery-ui-1.8.21.custom.css
+#	deleted:    main/public/uploads/pictures/120_90/6837716862_5c1c74a1bc_c.jpg
+#	deleted:    main/views/actu/actu.jade
+#	deleted:    main/views/actu/fil.jade
+#	deleted:    main/views/actu/map - Copie.jade
+#	deleted:    main/views/actu/map.jade
+#	deleted:    main/views/actu/map_test.jade
+#	deleted:    main/views/actu/new.jade
+#	deleted:    main/views/actu/new_old.jade
+#
+
