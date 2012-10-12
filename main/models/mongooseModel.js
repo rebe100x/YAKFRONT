@@ -6,7 +6,7 @@
 var mongoose = require('mongoose')
   , Schema = mongoose.Schema;
 
-//mongoose.set('debug', true);
+mongoose.set('debug', true);
 
 /*
 var Address = new Schema({
@@ -276,6 +276,7 @@ var Place = new Schema({
 ,	creationDate	: {type: Date, required: true, default: Date.now}		
 ,	lastModifDate	: {type: Date, required: true, default: Date.now}		
 ,	location	: { type : { lat: Number, lng: Number }, index : '2d'}
+,	formatted_address : { type: String }
 ,	address		: { type : { 
 								street_number: String,
 								street: String,

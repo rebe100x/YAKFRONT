@@ -532,7 +532,7 @@ block content
 						infoContent += "<div class=\'title\'> "+val.title.replace(rule2,'')+" ("+dateCreation+")";
 						infoContent += "</div>";
 						infoContent += "<div class=\'content\'>"+val.content.substring(0,250).replace(rule2,'')+"...</div>";
-						if(!(typeof val.outGoingLink === 'undefined'))
+						if(!(typeof val.outGoingLink === 'undefined') && val.outGoingLink != '')
 							infoContent += "<div class=\'readmore\'><a target=\'_blank\' href=\'"+val.outGoingLink+"\'> >> lire l\'article</a></div>";
 						
 						infoContent += "</div>";
@@ -635,7 +635,7 @@ block content
 					infoContent += "<div class=\'title\'> "+val.title.replace(rule2,'')+" ("+dateCreation+")";
 					infoContent += "</div>";
 					infoContent += "<div class=\'content\'>"+val.content.substring(0,250).replace(rule2,'')+"...</div>";
-					if(!(typeof val.outGoingLink === 'undefined'))
+					if(!(typeof val.outGoingLink === 'undefined') && val.outGoingLink != '')
 						infoContent += "<div class=\'readmore\'><a target=\'_blank\' href=\'"+val.outGoingLink+"\'> >> lire l\'article</a></div>";
 					infoContent += "<div>"+val.address+"</div>";
 					infoContent += "</div>";
@@ -662,7 +662,7 @@ block content
 								infoContent += "<img src=\'/uploads/pictures/120_90/"+val.thumb+"\' />";
 						}
 						infoContent += "<div class=\'title\'> "+val.title.replace(rule2,'')+" ("+dateCreation+")";
-						if(!(typeof val.outGoingLink === 'undefined'))
+						if(!(typeof val.outGoingLink === 'undefined') && val.outGoingLink != '')
 							infoContent += "<div class=\'readmore\'><a target=\'_blank\' href=\'"+val.outGoingLink+"\'> >> lire l\'article</a></div>";
 						infoContent += "</div>";
 						infoContent += "<div class=\'content\'>"+val.content.substring(0,250).replace(rule2,'')+"...</div>";
