@@ -71,7 +71,7 @@ Info.statics.findAll = function (callback) {
 	[],
 	{
 		skip:0, // Starting Row
-		limit:100, // Ending Row
+		limit:50, // Ending Row
 		"yakType" : 1,
 		sort:{
 			pubDate: -1 //Sort by Date Added DESC
@@ -81,41 +81,74 @@ Info.statics.findAll = function (callback) {
 
 }
 
-Info.statics.findAllGeo = function (x1,y1,x2,y2,heat,type,usersubs,tagsubs,callback) {
-  var now = new Date();
-  var D = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
-  var DTS = D.getTime() / 1000 - (heat * 60 * 60 * 24);
-  D.setTime(DTS*1000); 
-  var box = [[parseFloat(x1),parseFloat(y1)],[parseFloat(x2),parseFloat(y2)]];
-  var cond = {
-				"print":1,
-				"status":1,
-				"location" : {$within:{"$box":box}},
-				"pubDate":{$gte:D},
-				"yakType" : {$in:type}
-			};
-			
-  //alerts				
-  if(type == 5)
-	cond = {
+Info.statics.findAllGeo = function (x1,y1,x2,y2,heat,type,str,usersubs,tagsubs,callback) {
+	var now = new Date();
+	var D = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+	var DTS = D.getTime() / 1000 - (heat * 60 * 60 * 24);
+	D.setTime(DTS*1000); 
+	var box = [[parseFloat(x1),parseFloat(y1)],[parseFloat(x2),parseFloat(y2)]];
+
+	var searchStr = "";
+	if(str != 'null' && str.length > 0){
+		searchStr = new RegExp(str,'i');
+		
+		
+		
+		
+		
+		// all types
+		var cond = {
+			"print":1,
+			"status":1,
+			"location" : {$within:{"$box":box}},
+			"pubDate":{$gte:D},
+			"yakType" : {$in:type},
+			$or:[ {'title': {$regex:searchStr}}, {'content': {$regex:searchStr}} , {"tag": {$regex:searchStr}}, {"yakCat": {$regex:searchStr}}, {"freeTag": {$regex:searchStr}} , {"yakTag": {$regex:searchStr}}],	
+		};
+
+		//alerts				
+		if(type == 5){
+			cond = {
 				"print":1,
 				"status":1,
 				"location" : {$within:{"$box":box}},
 				"pubDate":{$gte:D},
 				$or:[ {"user":{$in:usersubs}}, {"freeTag": {$in:tagsubs}} ],
-				
+				$or:[ {'title': {$regex:searchStr}}, {'content': {$regex:searchStr}} , {"tag": {$regex:searchStr}}, {"yakCat": {$regex:searchStr}}, {"freeTag": {$regex:searchStr}} , {"yakTag": {$regex:searchStr}}],	
 			};
-	
-  return this.find(
-	cond,
-	[],
-	{
-		skip:0, // Starting Row
-		limit:100, // Ending Row
-		sort:{
-			pubDate: -1 //Sort by Date Added DESC
 		}
-	},
+		
+		
+	}else{
+		var cond = {
+			"print":1,
+			"status":1,
+			"location" : {$within:{"$box":box}},
+			"pubDate":{$gte:D},
+			"yakType" : {$in:type}
+		};
+
+		//alerts				
+		if(type == 5)
+			cond = {
+				"print":1,
+				"status":1,
+				"location" : {$within:{"$box":box}},
+				"pubDate":{$gte:D},
+				$or:[ {"user":{$in:usersubs}}, {"freeTag": {$in:tagsubs}} ],
+			};
+	}
+	
+	return this.find(
+		cond,
+		[],
+		{
+			skip:0, // Starting Row
+			limit:100, // Ending Row
+			sort:{
+				pubDate: -1 //Sort by Date Added DESC
+			}
+		},
 	callback);
 
 }

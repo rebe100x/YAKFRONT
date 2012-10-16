@@ -343,7 +343,7 @@ function getPlaceFromGmapResult(result){
 	result.address_components.forEach(function(item) { 
 		if(item.types.inArray('street_number'))
 			addressGmap.street_number = item.long_name;
-		if(item.types.inArray('route'))
+		if(item.types.inArray('route') || item.types.inArray('transit_station'))
 			addressGmap.street = item.long_name;
 		if(item.types.inArray('	sublocality'))
 			addressGmap.arr = item.long_name;
@@ -373,6 +373,7 @@ function getPlaceFromGmapResult(result){
 		,"location":{"lng":parseFloat(result.geometry.location.Ya),"lat":parseFloat(result.geometry.location.Xa)}
 		,"status":2 // need validation
 		,"address": addressGmap
+		,"formatted_address":result.formatted_address
 		};
 		
 	return placeGmap;

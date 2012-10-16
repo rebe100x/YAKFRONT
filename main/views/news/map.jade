@@ -16,21 +16,27 @@ block content
 			div.span4
 				div#newsfeedContainer
 					span#newsfeedMenu
-						span.btn.active(title="Actu", type=1) 
-							img(src="/images/markers/type1.png")
-						span.btn(title="Discussion", type=4) 
-							img(src="/images/markers/type4.png")
-						span.btn(title="Agenda", type=2) 
-							img(src="/images/markers/type2.png")
-						span.btn(title="Infos Pratiques", type=3) 
-							img(src="/images/markers/type3.png")
-						span.btn(title="Mes alertes", type=5)
-							img(src="/images/markers/type5.png")
-						//span.btn.btn-link(title="testfeed", type=10)
-						//	i.icon-fire
-						div#heatModule
+						div#typeContainer.row
+							span.btn.active(title="Actu", type=1) 
+								img(src="/images/markers/type1.png")
+							span.btn(title="Discussion", type=4) 
+								img(src="/images/markers/type4.png")
+							span.btn(title="Agenda", type=2) 
+								img(src="/images/markers/type2.png")
+							span.btn(title="Infos Pratiques", type=3) 
+								img(src="/images/markers/type3.png")
+							span.btn(title="Mes alertes", type=5)
+								img(src="/images/markers/type5.png")
+							//span.btn.btn-link(title="testfeed", type=10)
+							//	i.icon-fire
+						div#heatModule.row
 							div#dayPrinter Depuis 3 jours	
 							div#heatSelector
+						div#searchBox.row
+							div.input-append
+								input.span6.search-query#searchStr(type="text",placeholder="Tapez votre recherche...")
+								button.btn#searchBtn(type="submit") Search
+						
 					span#newsNav				
 						ul.nav.nav-tabs
 							li.active(contentToLoad="newsfeedContent")
@@ -38,21 +44,12 @@ block content
 							- if(session)	
 								li(contentToLoad="newspostContent")
 									a.newsNavItem#newsPost(href="#") Poster
-							li(contentToLoad="searchContent")
-								a.newsNavItem#search(href="#") Rechercher
-							- if(session)	
-								li(contentToLoad="mypostsContent")
-									a.newsNavItem#myPosts(href="#") Mes Posts
 									
 					span#newsfeedContent.tabContent			
 						ul#newsfeed
 					span#newspostContent.tabContent
 						mixin postForm()
-					span#searchContent.tabContent
-						div under construction
-						//mixin searchForm()
-					span#mypostsContent.tabContent
-						div under construction
+					
 				
 	script
 		
@@ -80,6 +77,8 @@ block content
 		//var type = [1];
 		var type = [!{type}];
 		
+		var searchString = null;
+		
 		var infoContent = '';
 		var rule = new RegExp('#([^\\s]*)','g');
 		var rule2 = new RegExp('[#]','g');
@@ -104,6 +103,24 @@ block content
 				$('ul#favplacelist').append("<li lat='43.610787' lng='3.876715' class='zoneLoc'><i class='icon-map-marker'></i><span> Montpellier, France</span></li>");
 				$('ul#favplacelist').append("<li lat='50.583346' lng='4.900031' class='zoneLoc'><i class='icon-map-marker'></i><span> Eghézée, Belgique</span></li>");
 			}
+			
+			/*search*/
+			$('#searchStr').keyup(function(){
+				if($(this).val()==''){
+					searchString = null;
+					getAndPrintInfo();
+				}
+			});
+			$('#searchBtn').click(function(){
+				var str = $('#searchStr').val();
+				if(str != 'Tapez votre recherche...' && str != ''){
+					searchString = str;
+					getAndPrintInfo();
+				}else
+					searchString = null;
+					
+				$('#searchStr').focus();
+			});
 			
 			/*news nav*/
 			$('#newsNav li').click(function(){
@@ -497,7 +514,7 @@ block content
 		
 		function silentMarkerAdder(){
 			//console.log('silentMarkerAdder');
-			$.getJSON('/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+heat+'/'+type.toString(),function(data) {
+			$.getJSON('/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+heat+'/'+type.toString()+'/'+searchString,function(data) {
 				
 				$.each(data.info, function(key,val) {
 					
@@ -602,7 +619,7 @@ block content
 			cleanMarkers();
 			
 		
-			$.getJSON('/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+heat+'/'+type.toString(),function(data) {
+			$.getJSON('/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+heat+'/'+type.toString()+'/'+searchString,function(data) {
 				
 				// empty the news feed
 				if(data.info.length == 0)

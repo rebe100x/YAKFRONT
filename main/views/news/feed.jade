@@ -7,7 +7,7 @@ block content
 	mixin menu('feed')
 	mixin locationChooser()
 
-	div#content
+	div#feedContent
 		//p!= partial('./partials/newsfeed.jade', {infos:infos})
 		
 	script
@@ -17,7 +17,8 @@ block content
 				var items = [];
 
 				$.each(data.info, function(key,val) {
-					$('#content').append(val.title+'<br>');
+					$('#feedContent').append("<div class=\'item\'><div class=\'title\'>"+val.title+"</div><div class=\'content\'>"+val.content+"</div><div class=\'address\'>"+val.address+"</div></div>");
+					
 					
 				});
 			});

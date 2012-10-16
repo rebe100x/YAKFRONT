@@ -10,7 +10,7 @@ exports.db = function(conf){
 };
 	
 exports.index = function(req, res){
-  res.render('news/map');
+  res.redirect('news/map');
 };
 
 exports.partials = function (req, res) {
@@ -19,11 +19,11 @@ exports.partials = function (req, res) {
 };
 
 exports.news_map = function(req, res){
+	console.log(req.session.type);
 	if(typeof(req.session.type) == 'undefined' || req.session.type === null ){
 		var type = new Array();
 		type.push(1);
 		req.session.type = type;
-		
 	}	
 	
 	res.render('news/map',{type:req.session.type});  

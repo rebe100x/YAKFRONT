@@ -64,24 +64,24 @@ var db = routes.db(conf);
 	
 // Routes
 
-app.get('/', routes.index);
+app.get('/', requiresLogin, routes.index);
 
 
 app.get('/partials/:name', routes.partials);
 //app.get('/news/map', requiresPosition, routes.news_map);
-app.get('/news/map', routes.news_map);
+app.get('/news/map', requiresLogin, routes.news_map);
 app.get('/news/map_test', routes.news_map_test);
-app.get('/news/feed', routes.news_feed);
-app.get('/news/post', routes.news_post);
-//app.get('/news/post', requiresLogin, routes.news_post);
+app.get('/news/feed', requiresLogin, routes.news_feed);
+//app.get('/news/post', routes.news_post);
+app.get('/news/post', requiresLogin, routes.news_post);
 
 app.get('/user/login', routes.user_login);
 app.get('/user/logout', routes.user_logout);
 
-app.get('/settings', routes.settings_profil);
-app.get('/settings/profile', routes.settings_profile);
-app.get('/settings/alerts', routes.settings_alerts);
-app.get('/settings/password', routes.settings_password);
+app.get('/settings', requiresLogin, routes.settings_profil);
+app.get('/settings/profile', requiresLogin, routes.settings_profile);
+app.get('/settings/alerts', requiresLogin, routes.settings_alerts);
+app.get('/settings/password', requiresLogin, routes.settings_password);
 
 
 
@@ -94,7 +94,7 @@ app.post('/profile',routes.profile);
 
 
 app.get('/api/infos', api.infos);
-app.get('/api/geoinfos/:x1/:y1/:x2/:y2/:heat/:type', api.geoinfos);
+app.get('/api/geoinfos/:x1/:y1/:x2/:y2/:heat/:type/:str', api.geoinfos);
 app.get('/api/zones/:x/:y', api.zones);
 app.post('/api/users', api.users);
 app.get('/api/cats', api.cats);

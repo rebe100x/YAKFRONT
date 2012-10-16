@@ -25,7 +25,7 @@ exports.geoinfos = function (req, res) {
 		var usersubs = [];
 		var tagsubs = [];
 	}
-	Info.findAllGeo(req.params.x1,req.params.y1,req.params.x2,req.params.y2,req.params.heat,type,usersubs,tagsubs,function (err, docs){
+	Info.findAllGeo(req.params.x1,req.params.y1,req.params.x2,req.params.y2,req.params.heat,type,req.params.str,usersubs,tagsubs,function (err, docs){
 	  res.json({
 		info: docs
 	  });
