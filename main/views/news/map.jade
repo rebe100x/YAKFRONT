@@ -472,6 +472,7 @@ block content
 				curPos.x = center.lat();
 				curPos.y = center.lng();
 				$.cookie("geoloc", JSON.stringify(curPos));
+				markerCluster.clearMarkers();
 				getAndPrintInfo();
 			});
 			
@@ -479,6 +480,7 @@ block content
 				bounds = this.getBounds();	
 				curPos.z = this.getZoom();
 				$.cookie("geoloc", JSON.stringify(curPos));
+				markerCluster.clearMarkers();
 				getAndPrintInfo();
 			});
 			
