@@ -13,6 +13,9 @@ block content
 		div.row-fluid
 			div.span8
 				div#mymap
+				div#zoomnavigation
+					div#zoomplus
+					div#zoomminus
 			div.span4
 				div#newsfeedContainer
 					span#newsfeedMenu
@@ -34,8 +37,10 @@ block content
 							div#heatSelector
 						div#searchBox.row
 							div.input-append
-								input.span6.search-query#searchStr(type="text",placeholder="Tapez votre recherche...")
+								input.span6.search-query#searchStr(type="text",placeholder="Quoi ?",autocomplete="off", )
 								button.btn#searchBtn(type="submit") Search
+								input.span6.search-query#searchPlaceStr(type="text",placeholder="Où ?",autocomplete="off", data-provide="typeahead",)
+								button.btn#searchPlaceBtn(type="submit") Search
 						
 					span#newsNav				
 						ul.nav.nav-tabs
@@ -71,8 +76,9 @@ block content
 		var hashtag = [];
 		var hashtagTmp = [];
 			
-		var markerClustererOptions = {gridSize:30,maxZoom: 17};
+		var markerClustererOptions = {gridSize:30,maxZoom: 17,styles: [{height: 28,width: 28,url: "/images/markers/m1.png"},{height: 38,width: 38,url: "/images/markers/m2.png"},{height: 55,width:55,url: "/images/markers/m3.png"},{height: 85,width: 85,url: "/images/markers/m4.png"},{height: 85,width: 85,url: "/images/markers/m5.png"}]};
 		var markerCluster = null;
+		var pinkParksStyles = [{featureType: "Water",stylers: [{ hue: "#006eff" },{ saturation:1 },{ lightness: -13 }]},{featureType: "Road",stylers: [{ hue: "#ff0000" },{ saturation: -100 },{ lightness: 31 }]},{featureType: "Landscape",stylers: [{ hue: "#ff0008" },{saturation: -90 },{ lightness: 66 }]}];
 		var heat = 3;
 		//var type = [1];
 		var type = [!{type}];
@@ -104,7 +110,21 @@ block content
 				$('ul#favplacelist').append("<li lat='50.583346' lng='4.900031' class='zoneLoc'><i class='icon-map-marker'></i><span> Eghézée, Belgique</span></li>");
 			}
 			
-			/*search*/
+			
+			/*map tools*/
+			$('#zoomplus').click(function () {	  
+				mapzoom = map.getZoom();
+				mapzoom++;
+				map.setZoom(mapzoom);		
+			});
+
+			$('#zoomminus').click(function () {
+				mapzoom = map.getZoom();
+				mapzoom--;
+				map.setZoom(mapzoom);
+			});
+
+			/*search info*/
 			$('#searchStr').keyup(function(){
 				if($(this).val()==''){
 					searchString = null;
@@ -113,13 +133,72 @@ block content
 			});
 			$('#searchBtn').click(function(){
 				var str = $('#searchStr').val();
-				if(str != 'Tapez votre recherche...' && str != ''){
+				if(str != 'Quoi ?' && str != ''){
 					searchString = str;
 					getAndPrintInfo();
 				}else
 					searchString = null;
 					
 				$('#searchStr').focus();
+			});
+			
+			/*search place*/
+			$('#searchPlaceBtn').click(function(){
+				var str = $('#searchPlaceStr').val();
+				if(str != 'Où ?' && str != ''){
+					console.log('GO to '+str);
+				}else
+					console.log('GO Nowhere');
+					
+				$('#searchPlaceStr').focus();
+			});
+			
+			$('#searchPlace').typeahead({
+				minLength : 3,							
+				source: function (typeahead, query) {
+					
+					if(query.length > 3){
+						$("#searchPlace").addClass('searching');
+						var addressQuery = {"address": query ,"region":"fr","language":"fr"};
+						var geocoder = new google.maps.Geocoder();
+						geocoder.geocode( addressQuery, function(results, status) {
+						
+							if (status == google.maps.GeocoderStatus.OK) {
+								typeahead.process(results);
+							} 
+							
+							if(status == google.maps.GeocoderStatus.ZERO_RESULTS){}
+								
+							if( status == google.maps.GeocoderStatus.INVALID_REQUEST 
+								|| status == google.maps.GeocoderStatus.REQUEST_DENIED  
+								|| status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT){
+								var salt = new Date().getTime();
+								$('#searchPlace').before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide ("+status+")</div>");
+								setTimeout(function() {
+									$("#alert"+salt).fadeOut();
+								}, 3000);
+								$('#searchPlace').select();
+							}
+						});
+					}
+				},
+				property: "formatted_address",
+				onselect: function(obj) { 
+					$("#searchPlace").removeClass('searching');
+					var placeGmap = getPlaceFromGmapResult(obj);
+					var point = new Object();
+					point.name = placeGmap.title;
+					point.location = placeGmap.location;
+					$.post('api/favplace', {'place':point},function(id) {
+						//$('#favplacelist').append("<li pointId='"+id+"' lat='"+placeGmap.location.lat+"' lng='"+placeGmap.location.lng+"' class='zoneLoc'><i class='icon-map-marker'></i><span> "+obj.formatted_address+"</span><i class='icon-remove icon-pointer'  onclick='removefavPlace($(this));'></i></li>");
+						$('#searchPlace').val('').focus();
+					});
+					
+					//var placeGmap = getPlaceFromGmapResult(obj);
+					
+					//$('#location').val(JSON.stringify(placeGmap.location));
+					//$('#address').val(JSON.stringify(placeGmap.address));
+				}
 			});
 			
 			/*news nav*/
@@ -140,6 +219,7 @@ block content
 							getformattedAddress(event.latLng);
 							placeMarker(event.latLng,markerLocation);
 							google.maps.event.addListener(markerLocation, 'dragend', function() {
+								cleanMarkers();
 								var position = markerLocation.getPosition();
 								$('#latitude').val(position.lat());	
 								$('#longitude').val(position.lng());	
@@ -451,15 +531,17 @@ block content
 			map = new google.maps.Map(document.getElementById('mymap'), {
 				zoom: z,
 				center: center,
-				mapTypeId: google.maps.MapTypeId.ROADMAP
+				mapTypeId: google.maps.MapTypeId.ROADMAP,
+				disableDefaultUI: true,
 			});
-			
-			markerClustererOptions = {gridSize:30,maxZoom: 17};
+			map.setOptions({styles: pinkParksStyles});
+			//var markerClustererOptions = {gridSize:30,maxZoom: 17,styles: [{height: 28,width: 28,url: "/images/markers/m1.png"},{height: 38,width: 38,url: "/images/markers/m2.png"},{height: 55,width:55,url: "/images/markers/m3.png"},{height: 85,width: 85,url: "/images/markers/m4.png"},{height: 85,width: 85,url: "/images/markers/m5.png"}]};
 			markerCluster = new MarkerClusterer(map, markers,markerClustererOptions);
 				
 			markerHL = new google.maps.Marker({position: center,map:map,visible:false});
 			
 			google.maps.event.addListenerOnce(map, 'idle', function(){
+				cleanMarkers();
 				bounds = this.getBounds();
 				getAndPrintInfo();
 				
@@ -467,6 +549,7 @@ block content
 			
 			
 			google.maps.event.addListener(map, 'dragend', function() {
+				cleanMarkers();
 				bounds = this.getBounds();
 				center = this.getCenter();
 				curPos.x = center.lat();
@@ -477,6 +560,7 @@ block content
 			});
 			
 			google.maps.event.addListener(map, 'zoom_changed', function() {
+				cleanMarkers();
 				bounds = this.getBounds();	
 				curPos.z = this.getZoom();
 				$.cookie("geoloc", JSON.stringify(curPos));
@@ -575,7 +659,7 @@ block content
 
 						
 						google.maps.event.addListener(marker, 'click', function() {
-						
+								cleanMarkers();
 								$("#newsfeed li").removeClass('highlighted');
 								$("#newsfeed li[infoId=\""+val._id+"\"]").addClass('highlighted');
 								$('#newsfeedContainer').mCustomScrollbar("scrollTo",".mapHighlighter[infoId=\""+val._id+"\"]");
@@ -665,7 +749,7 @@ block content
 					
 					
 					google.maps.event.addListener(marker, 'click', function() {
-					
+						cleanMarkers();
 						$("#newsfeed li").removeClass('highlighted');
 						$("#newsfeed li[infoId=\""+val._id+"\"]").addClass('highlighted');
 						$('#newsfeedContainer').mCustomScrollbar("scrollTo",".mapHighlighter[infoId=\""+val._id+"\"]");
@@ -697,7 +781,8 @@ block content
 					
 				});
 				
-				markerCluster.clearMarkers();
+				
+				
 				markerCluster.addMarkers(markers);
 				
 			});
