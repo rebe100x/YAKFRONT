@@ -57,7 +57,9 @@ var Info = new Schema({
   ,	placeId	: {type: Schema.ObjectId}  
 }, { collection: 'info' });
 
-Info.index({location : '2d'});
+//Info.index({location : '2d',pubDate:-1,yakType:1,print:1,status:1});
+//Info.index({location : '2d'});
+
 
 Info.statics.findByTitle = function (title, callback) {
   return this.find({ title: title }, callback);
@@ -89,37 +91,90 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,heat,type,str,usersubs,tagsubs,c
 	var box = [[parseFloat(x1),parseFloat(y1)],[parseFloat(x2),parseFloat(y2)]];
 
 	var searchStr = "";
-	if(str != 'null' && str.length > 0){
+	if(str != 'null' && str.length > 0){  // STRING SEARCH
 		searchStr = new RegExp(str,'i');
 		
+		var Yakcat = db.model('Yakcat');
 		
 		
 		
+		/*
+		Yakcat.searchOne(str,function (err, thecat){
+			console.log("the cat");
+			console.log(thecat);
+			theyakcat.push(thecat);
+		return thecat;});
+		*/
+		Yakcat.findOne({'title': {$regex:searchStr}},[],{limit:1},function(err,theyakcat){
+		console.log(theyakcat);
 		
-		// all types
-		var cond = {
-			"print":1,
-			"status":1,
-			"location" : {$within:{"$box":box}},
-			"pubDate":{$gte:D},
-			"yakType" : {$in:type},
-			$or:[ {'title': {$regex:searchStr}}, {'content': {$regex:searchStr}} , {"tag": {$regex:searchStr}}, {"yakCat": {$regex:searchStr}}, {"freeTag": {$regex:searchStr}} , {"yakTag": {$regex:searchStr}}],	
-		};
+			if(theyakcat != 'null'){ // NO YAKCAT MATCHING
+				// all types
+				var cond = {
+					"print":1,
+					"status":1,
+					"location" : {$within:{"$box":box}},
+					"pubDate":{$gte:D},
+					"yakType" : {$in:type},
+					$or:[ {'title': {$regex:searchStr}}, {'content': {$regex:searchStr}} , {"freeTag": {$regex:searchStr}} , {"yakTag": {$regex:searchStr}}],	
+				};
 
-		//alerts				
-		if(type == 5){
-			cond = {
+				//alerts				
+				if(type == 5){
+					cond = {
+						"print":1,
+						"status":1,
+						"location" : {$within:{"$box":box}},
+						"pubDate":{$gte:D},
+						$or:[ {"user":{$in:usersubs}}, {"freeTag": {$in:tagsubs}} ],
+						$or:[ {'title': {$regex:searchStr}}, {'content': {$regex:searchStr}} , {"freeTag": {$regex:searchStr}} , {"yakTag": {$regex:searchStr}}],	
+					};
+				}
+			}else{
+				
+				// all types
+			var cond = {
 				"print":1,
 				"status":1,
 				"location" : {$within:{"$box":box}},
 				"pubDate":{$gte:D},
-				$or:[ {"user":{$in:usersubs}}, {"freeTag": {$in:tagsubs}} ],
-				$or:[ {'title': {$regex:searchStr}}, {'content': {$regex:searchStr}} , {"tag": {$regex:searchStr}}, {"yakCat": {$regex:searchStr}}, {"freeTag": {$regex:searchStr}} , {"yakTag": {$regex:searchStr}}],	
+				"yakType" : {$in:type},
+				$or:[ {'title': {$regex:searchStr}}, {'content': {$regex:searchStr}} ,{'yakCat': mongoose.Types.ObjectId(new String(theyakcat._id)) }, {"freeTag": {$regex:searchStr}} , {"yakTag": {$regex:searchStr}}],	
 			};
-		}
+
+			//alerts				
+			if(type == 5){
+				cond = {
+					"print":1,
+					"status":1,
+					"location" : {$within:{"$box":box}},
+					"pubDate":{$gte:D},
+					$or:[ {"user":{$in:usersubs}}, {"freeTag": {$in:tagsubs}} ],
+					$or:[ {'title': {$regex:searchStr}}, {'content': {$regex:searchStr}} ,{'yakCat': mongoose.Types.ObjectId(new String(theyakcat._id)) }, {"freeTag": {$regex:searchStr}} , {"yakTag": {$regex:searchStr}}],	
+				};
+			}
+			
+			}
+				
+			
+			
+			var Info = db.model('Info');
+			return Info.find(
+		cond,
+		[],
+		{
+			skip:0, // Starting Row
+			limit:100, // Ending Row
+			sort:{
+				pubDate: -1 //Sort by Date Added DESC
+			}
+		},
+	callback);
+	
+		});
 		
 		
-	}else{
+	}else{  // NO STRING SEARCH
 		var cond = {
 			"print":1,
 			"status":1,
@@ -137,7 +192,6 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,heat,type,str,usersubs,tagsubs,c
 				"pubDate":{$gte:D},
 				$or:[ {"user":{$in:usersubs}}, {"freeTag": {$in:tagsubs}} ],
 			};
-	}
 	
 	return this.find(
 		cond,
@@ -150,6 +204,12 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,heat,type,str,usersubs,tagsubs,c
 			}
 		},
 	callback);
+	
+	}
+	
+	
+	
+	
 
 }
 
@@ -294,6 +354,11 @@ var Yakcat = new Schema({
 Yakcat.statics.findAll = function (callback) {
   return this.find({},[],{sort:{title:1}}, callback);
 }
+Yakcat.statics.searchOne = function (str,callback) {
+	searchStr = new RegExp(str,'i');
+	return this.find({'title': {$regex:searchStr}},[],{limit:1}, callback);
+}
+
 mongoose.model('Yakcat', Yakcat);
 
 
@@ -328,4 +393,15 @@ var Place = new Schema({
 Place.statics.findAll = function (callback) {
   return this.find({},[],{sort:{title:1}}, callback);
 }
+
+Place.statics.searchOne = function (str,callback) {
+  searchStr = new RegExp(str,'i');
+  var cond = {
+	"status":1,
+	$or:[ {'title': {$regex:searchStr}}, {'content': {$regex:searchStr}} , {"freeTag": {$regex:searchStr}} , {"yakTag": {$regex:searchStr}}],	
+};
+  return this.find(cond,[],{limit:1}, callback);
+}
+
+
 mongoose.model('Place', Place);

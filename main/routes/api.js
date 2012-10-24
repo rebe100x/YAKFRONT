@@ -62,6 +62,16 @@ exports.places = function (req, res) {
 	});
 };
 
+exports.searchplaces = function (req, res) {
+	var Place = db.model('Place');
+	
+	Place.searchOne(req.params.str,function (err, docs){
+	  res.json({
+		places: docs
+	  });
+	});
+};
+
 exports.addfavplace = function (req, res) {
 	var User = db.model('User');
 	var Point = db.model('Point');

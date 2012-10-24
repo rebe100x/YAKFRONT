@@ -37,10 +37,10 @@ block content
 							div#heatSelector
 						div#searchBox.row
 							div.input-append
-								input.span6.search-query#searchStr(type="text",placeholder="Quoi ?",autocomplete="off", )
-								button.btn#searchBtn(type="submit") Search
-								input.span6.search-query#searchPlaceStr(type="text",placeholder="Où ?",autocomplete="off", data-provide="typeahead",)
-								button.btn#searchPlaceBtn(type="submit") Search
+								input#locationInput(type='hidden', name='locationInput', value='')
+								input.span5.search-query#searchStr(type="text",placeholder="Quoi ?",autocomplete="off", )
+								input.span5.search-query#searchPlaceStr(type="search",placeholder="Où ?",autocomplete="off", data-provide="typeahead",)
+								button.btn#searchBtn(type="submit") Go
 						
 					span#newsNav				
 						ul.nav.nav-tabs
@@ -79,6 +79,7 @@ block content
 		var markerClustererOptions = {gridSize:30,maxZoom: 17,styles: [{height: 28,width: 28,url: "/images/markers/m1.png"},{height: 38,width: 38,url: "/images/markers/m2.png"},{height: 55,width:55,url: "/images/markers/m3.png"},{height: 85,width: 85,url: "/images/markers/m4.png"},{height: 85,width: 85,url: "/images/markers/m5.png"}]};
 		var markerCluster = null;
 		var pinkParksStyles = [{featureType: "Water",stylers: [{ hue: "#006eff" },{ saturation:1 },{ lightness: -13 }]},{featureType: "Road",stylers: [{ hue: "#ff0000" },{ saturation: -100 },{ lightness: 31 }]},{featureType: "Landscape",stylers: [{ hue: "#ff0008" },{saturation: -90 },{ lightness: 66 }]}];
+		var pinkParksStyles =[{}];
 		var heat = 3;
 		//var type = [1];
 		var type = [!{type}];
@@ -124,82 +125,109 @@ block content
 				map.setZoom(mapzoom);
 			});
 
-			/*search info*/
+			/*search info and place*/
+			
+			// reset
 			$('#searchStr').keyup(function(){
 				if($(this).val()==''){
 					searchString = null;
 					getAndPrintInfo();
 				}
 			});
+			$('#searchPlaceStr').keyup(function(){
+				if($(this).val()==''){
+					$('#locationInput').val('');
+				}
+			});
+			
+			// search button
 			$('#searchBtn').click(function(){
 				var str = $('#searchStr').val();
+				var placeName = $('#searchPlaceStr').val();
+				var location = $('#locationInput').val();
+				
+				if(location != ''){
+					var locationObj = JSON.parse(location);
+					var latLng = new google.maps.LatLng(locationObj.lat,locationObj.lng);
+					map.panTo(latLng);
+					//map.setCenter(latLng);
+					
+				}else{
+					if(placeName != ''){
+						$.ajax({
+							url: "/api/searchplaces/"+placeName,				
+							success: function( data ) {
+								if(data.places[0] == "undefined"){
+									var latLng = new google.maps.LatLng(data.places[0].location.lat,data.places[0].location.lng);
+									map.panTo(latLng);
+								}else
+									var salt = new Date().getTime();
+									$('#searchStr').before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide</div>");
+									setTimeout(function() {
+										$("#alert"+salt).fadeOut();
+									}, 3000);
+								$('#searchPlaceStr').select();
+								
+							}
+						});
+					}
+				}
+				
+				
 				if(str != 'Quoi ?' && str != ''){
 					searchString = str;
-					getAndPrintInfo();
+					
 				}else
 					searchString = null;
 					
+				getAndPrintInfo();
 				$('#searchStr').focus();
 			});
 			
-			/*search place*/
-			$('#searchPlaceBtn').click(function(){
-				var str = $('#searchPlaceStr').val();
-				if(str != 'Où ?' && str != ''){
-					console.log('GO to '+str);
-				}else
-					console.log('GO Nowhere');
-					
-				$('#searchPlaceStr').focus();
-			});
 			
-			$('#searchPlace').typeahead({
+			// autocomplete Place
+			$('#searchPlaceStr').typeahead({
 				minLength : 3,							
 				source: function (typeahead, query) {
-					
 					if(query.length > 3){
-						$("#searchPlace").addClass('searching');
+						$("#searchPlaceStr").addClass('searching');
 						var addressQuery = {"address": query ,"region":"fr","language":"fr"};
 						var geocoder = new google.maps.Geocoder();
-						geocoder.geocode( addressQuery, function(results, status) {
-						
-							if (status == google.maps.GeocoderStatus.OK) {
-								typeahead.process(results);
-							} 
-							
-							if(status == google.maps.GeocoderStatus.ZERO_RESULTS){}
-								
-							if( status == google.maps.GeocoderStatus.INVALID_REQUEST 
-								|| status == google.maps.GeocoderStatus.REQUEST_DENIED  
-								|| status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT){
-								var salt = new Date().getTime();
-								$('#searchPlace').before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide ("+status+")</div>");
-								setTimeout(function() {
-									$("#alert"+salt).fadeOut();
-								}, 3000);
-								$('#searchPlace').select();
-							}
+						geocoder.geocode( addressQuery, function(results, status) {						
+						if (status == google.maps.GeocoderStatus.OK) {
+							typeahead.process(results);
+							$("#searchPlaceStr").removeClass('searching');
+						} 
 						});
 					}
 				},
 				property: "formatted_address",
 				onselect: function(obj) { 
-					$("#searchPlace").removeClass('searching');
+					$("#searchPlaceStr").removeClass('searching');
 					var placeGmap = getPlaceFromGmapResult(obj);
-					var point = new Object();
-					point.name = placeGmap.title;
-					point.location = placeGmap.location;
-					$.post('api/favplace', {'place':point},function(id) {
-						//$('#favplacelist').append("<li pointId='"+id+"' lat='"+placeGmap.location.lat+"' lng='"+placeGmap.location.lng+"' class='zoneLoc'><i class='icon-map-marker'></i><span> "+obj.formatted_address+"</span><i class='icon-remove icon-pointer'  onclick='removefavPlace($(this));'></i></li>");
-						$('#searchPlace').val('').focus();
-					});
-					
-					//var placeGmap = getPlaceFromGmapResult(obj);
-					
-					//$('#location').val(JSON.stringify(placeGmap.location));
-					//$('#address').val(JSON.stringify(placeGmap.address));
+					$('#locationInput').val(JSON.stringify(placeGmap.location));
 				}
 			});
+			
+			// autocomplete Info			
+			$('#searchStr').typeahead({
+					minLength : 3,
+					source: function (typeahead, query) {
+						if(query.length > 3){
+							$.ajax({
+									url: "/api/cats",				
+									success: function( data ) {
+										typeahead.process(data.cats);
+									}
+								})}
+					},
+					property: "title",
+					onselect: function(obj) { 
+						$("#searchPlaceStr").removeClass('searching');
+						
+					}
+				});
+			
 			
 			/*news nav*/
 			$('#newsNav li').click(function(){
@@ -249,7 +277,8 @@ block content
 				if(logged){
 					if(user.location){
 						var latLng = new google.maps.LatLng(user.location['lat'],user.location['lng']);
-						map.setCenter(latLng);
+						map.panTo(latLng);
+						//map.setCenter(latLng);
 					}else{
 						window.location = '/settings/profile';
 					}
@@ -445,7 +474,8 @@ block content
 						var geocoder = new google.maps.Geocoder();
 						geocoder.geocode( addressQuery, function(results, status) {
 							if (status == google.maps.GeocoderStatus.OK) {
-								map.setCenter(results[0].geometry.location);
+								//map.setCenter(results[0].geometry.location);
+								map.panTo(results[0].geometry.location);
 								markerLocation.setVisible(true);
 								markerLocation.setPosition(results[0].geometry.location);
 								placeMarker(results[0].geometry.location,markerLocation);
@@ -505,8 +535,8 @@ block content
 					//$("ul#newsfeed li.mapHighlighterDetails[infoid="+id+"]").fadeIn();
 				
 					// center map
-					map.setCenter(latLng);
-					
+					//map.setCenter(latLng);
+					map.panTo(latLng);
 					
 					// clear marker ( and infowindow )
 					setTimeout(function() {
@@ -536,8 +566,8 @@ block content
 			});
 			map.setOptions({styles: pinkParksStyles});
 			//var markerClustererOptions = {gridSize:30,maxZoom: 17,styles: [{height: 28,width: 28,url: "/images/markers/m1.png"},{height: 38,width: 38,url: "/images/markers/m2.png"},{height: 55,width:55,url: "/images/markers/m3.png"},{height: 85,width: 85,url: "/images/markers/m4.png"},{height: 85,width: 85,url: "/images/markers/m5.png"}]};
-			markerCluster = new MarkerClusterer(map, markers,markerClustererOptions);
-				
+			//markerCluster = new MarkerClusterer(map, markers,markerClustererOptions);
+			
 			markerHL = new google.maps.Marker({position: center,map:map,visible:false});
 			
 			google.maps.event.addListenerOnce(map, 'idle', function(){
@@ -547,6 +577,16 @@ block content
 				
 			});
 			
+			google.maps.event.addListener(map, 'center_changed', function() {
+				cleanMarkers();
+				bounds = this.getBounds();
+				center = this.getCenter();
+				curPos.x = center.lat();
+				curPos.y = center.lng();
+				$.cookie("geoloc", JSON.stringify(curPos));
+				//markerCluster.clearMarkers();
+				getAndPrintInfo();
+			});
 			
 			google.maps.event.addListener(map, 'dragend', function() {
 				cleanMarkers();
@@ -555,7 +595,7 @@ block content
 				curPos.x = center.lat();
 				curPos.y = center.lng();
 				$.cookie("geoloc", JSON.stringify(curPos));
-				markerCluster.clearMarkers();
+				//markerCluster.clearMarkers();
 				getAndPrintInfo();
 			});
 			
@@ -564,7 +604,7 @@ block content
 				bounds = this.getBounds();	
 				curPos.z = this.getZoom();
 				$.cookie("geoloc", JSON.stringify(curPos));
-				markerCluster.clearMarkers();
+				//markerCluster.clearMarkers();
 				getAndPrintInfo();
 			});
 			
@@ -579,13 +619,13 @@ block content
 			});
 			
 			markers = [];
-			markerCluster.clearMarkers();
+			//markerCluster.clearMarkers();
 		}
 		
 		function hideMarkers(ms){
 		//console.log('hide');
 		// hide existing markers for ms milisec
-			markerCluster.clearMarkers();
+			//markerCluster.clearMarkers();
 			$.each(markers,function(key,val){
 					val.setVisible(false);
 			});
@@ -593,7 +633,7 @@ block content
 				$.each(markers,function(key,val){
 					val.setVisible(true);
 				});
-				markerCluster.addMarkers(markers);
+				//markerCluster.addMarkers(markers);
 			}, ms);
 			
 		}
@@ -649,7 +689,7 @@ block content
 						
 						setTimeout(function() {
 							marker.setAnimation(null);
-							markerCluster.addMarker(marker);
+							//markerCluster.addMarker(marker);
 							
 						}, 7000);
 						
@@ -725,7 +765,7 @@ block content
 					var marker = new google.maps.Marker({position: latLng,icon:"/images/markers/type"+val.yakType+".png"});
 					markers.push(marker);
 					//console.log(markers);
-					
+					marker.setMap(map);	
 					var dateTmp = new Date(val.pubDate);
 					var dateCreation = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
 					infoContent = "<div class=\'infowindow mapHighlighter\' infoId='"+val._id+"'>";
@@ -783,7 +823,7 @@ block content
 				
 				
 				
-				markerCluster.addMarkers(markers);
+				//markerCluster.addMarkers(markers);
 				
 			});
 		

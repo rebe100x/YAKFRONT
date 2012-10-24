@@ -181,7 +181,6 @@
 
       item = item.split('');
       var re = new RegExp('<strong>(' + query + ')<\/strong>', 'ig');
-      console.log(re);
       var reg_match_count = 0;
       var mod = 0;
       var arr_count = 0;

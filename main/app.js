@@ -99,7 +99,9 @@ app.get('/api/zones/:x/:y', api.zones);
 app.post('/api/users', api.users);
 app.get('/api/cats', api.cats);
 app.get('/api/places', api.places);
+app.get('/api/searchplaces/:str', api.searchplaces);
 app.get('/api/usersearch/:string', api.usersearch);
+
 
 app.post('/api/favplace', api.addfavplace);
 app.post('/api/delfavplace', api.delfavplace);

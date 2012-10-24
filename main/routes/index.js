@@ -116,6 +116,7 @@ exports.news = function(req, res){
 				
 				// NOTE : in the query below, order is important : in DB we have lat, lng but need to insert in reverse order : lng,lat  (=> bug mongoose ???)
 				info.location = {lng:parseFloat(item.location.lng),lat:parseFloat(item.location.lat)};
+				//info.location = {lat:parseFloat(item.location.lat),lng:parseFloat(item.location.lng)};
 				info.address = item.title;
 				// if no id, it means the location comes from gmap => we store it
 				
@@ -137,7 +138,7 @@ exports.news = function(req, res){
 				//console.log(info);
 				info.print = 1;
 				info.status = 1;
-				info.yakType = theYakType;
+				info.yakType = Math.floor(theYakType);
 				info.thumb = infoThumb.name;
 				info.licence = 'Yakwala';
 				info.heat = 80;
@@ -154,6 +155,7 @@ exports.news = function(req, res){
 				
 				
 			});
+			
 			
 			formMessage.push("L'info a été postée !");
 			

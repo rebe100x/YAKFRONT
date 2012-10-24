@@ -25,8 +25,8 @@ $(document).ready(function() {
 			
 			if(query.length > 3){
 				$("#favplace").addClass('searching');
-				console.log("encode"+encodeURIComponent(query));
-				console.log("nomal"+query);
+				//console.log("encode"+encodeURIComponent(query));
+				//console.log("nomal"+query);
 				/*
 				var urlgmap = "http://maps.googleapis.com/maps/api/geocode/json?address=%C3%A9gh%C3%A9z%C3%A9e&sensor=false";
 				$.post(urlgmap,function(data){
@@ -81,7 +81,6 @@ $(document).ready(function() {
 /*END READY FUNCTIONS*/
 
 function removefavPlace(obj){
-	console.log('REMOVE');
 	obj.parent().remove();
 	
 	$.post('api/delfavplace', {'pointId':obj.parent().attr('pointId')},function(data) {
@@ -358,7 +357,7 @@ function getPlaceFromGmapResult(result){
 		if(item.types.inArray('postal_code'))
 			addressGmap.zip = item.long_name;
 	});
-	//console.log((result.geometry.location.Xa));
+	//console.log((result.geometry.location));
 	var placeGmap = {
 		"title":result.formatted_address
 		,"content":""
@@ -370,7 +369,7 @@ function getPlaceFromGmapResult(result){
 		,"yakCat":["504d89f4fa9a958808000001"]
 		,"creationDate":new Date()
 		,"lastModifDate":new Date()
-		,"location":{"lng":parseFloat(result.geometry.location.Ya),"lat":parseFloat(result.geometry.location.Xa)}
+		,"location":{"lng":parseFloat(result.geometry.location.Za),"lat":parseFloat(result.geometry.location.Ya)}
 		,"status":2 // need validation
 		,"address": addressGmap
 		,"formatted_address":result.formatted_address
