@@ -280,27 +280,32 @@ function placeMarker(location,mk) {
 	
 }
 
+/* Get reverse address and print the result at the top of the input
+* input : position x, y 
+* 
+* output : none
+*/
 function getformattedAddress(position){
 	
 	var geoQuery = {"location": position};
-		var geocoder = new google.maps.Geocoder();
-		geocoder.geocode( geoQuery, function(results, status) {
-			if (status == google.maps.GeocoderStatus.OK) {
-				$('#place').val(results[0].formatted_address).select();
-				var placeGmap = getPlaceFromGmapResult(results[0]);
-				//console.log(results);
-				placeArray.push(placeGmap);
-				$("#placeInput").val(JSON.stringify(placeArray));
-				$('#btn-place-adder').parent().before("<div><i class='icon-remove' onclick='placeArray.cleanArrayByLocation("+results[0].geometry.location.Ya+","+results[0].geometry.location.Xa+");$(\"#placeInput\").val(JSON.stringify(placeArray));$(this).parent().remove();'></i> "+results[0].formatted_address+"</div>");
-			} else {
-				var salt = new Date().getTime();
-				$('#btn-place-adder').parent().before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide ("+status+")</div>");
-				setTimeout(function() {
-					$("#alert"+salt).fadeOut();
-				}, 3000);
-				$('#place').select();
-			}
-		});
+	var geocoder = new google.maps.Geocoder();
+	geocoder.geocode( geoQuery, function(results, status) {
+		if (status == google.maps.GeocoderStatus.OK) {
+			$('#place').val(results[0].formatted_address).select();
+			var placeGmap = getPlaceFromGmapResult(results[0]);
+			//console.log(results);
+			placeArray.push(placeGmap);
+			$("#placeInput").val(JSON.stringify(placeArray));
+			$('#btn-place-adder').parent().before("<div><i class='icon-remove' onclick='placeArray.cleanArrayByLocation("+results[0].geometry.location.Ya+","+results[0].geometry.location.Xa+");$(\"#placeInput\").val(JSON.stringify(placeArray));$(this).parent().remove();'></i> "+results[0].formatted_address+"</div>");
+		} else {
+			var salt = new Date().getTime();
+			$('#btn-place-adder').parent().before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide ("+status+")</div>");
+			setTimeout(function() {
+				$("#alert"+salt).fadeOut();
+			}, 3000);
+			$('#place').select();
+		}
+	});
 }
 
 

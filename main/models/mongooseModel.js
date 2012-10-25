@@ -90,9 +90,13 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,heat,type,str,usersubs,tagsubs,c
 	D.setTime(DTS*1000); 
 	var box = [[parseFloat(x1),parseFloat(y1)],[parseFloat(x2),parseFloat(y2)]];
 
-	var searchStr = "";
+	
 	if(str != 'null' && str.length > 0){  // STRING SEARCH
-		searchStr = new RegExp(str,'i');
+		//str=str.replace(/\'/g,'\x27');
+		//str=str.replace(/\'/g,'\\\'');
+		//str='\x27';
+		
+		var searchStr = new RegExp(str,'i');
 		
 		var Yakcat = db.model('Yakcat');
 		
