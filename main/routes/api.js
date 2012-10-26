@@ -65,7 +65,7 @@ exports.places = function (req, res) {
 exports.searchplaces = function (req, res) {
 	var Place = db.model('Place');
 	
-	Place.searchOne(req.params.str,function (err, docs){
+	Place.searchOne(req.params.str,1,function (err, docs){
 	  res.json({
 		places: docs
 	  });

@@ -154,21 +154,46 @@ block content
 					
 				}else{
 					if(placeName != ''){
+						
+						/* our db is not ready for this ! => use google !
 						$.ajax({
 							url: "/api/searchplaces/"+placeName,				
 							success: function( data ) {
-								if(data.places[0] == "undefined"){
+								if(data.places.length > 0 && data.places[0] != "undefined"){
 									var latLng = new google.maps.LatLng(data.places[0].location.lat,data.places[0].location.lng);
 									map.panTo(latLng);
-								}else
+								}else{
 									var salt = new Date().getTime();
 									$('#searchStr').before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide</div>");
 									setTimeout(function() {
 										$("#alert"+salt).fadeOut();
 									}, 3000);
 								$('#searchPlaceStr').select();
-								
+								}
 							}
+						});*/
+						var addressQuery = {"address": placeName ,"region":"fr","language":"fr"};
+						var geocoder = new google.maps.Geocoder();
+						geocoder.geocode( addressQuery, function(results, status) {						
+						if (status == google.maps.GeocoderStatus.OK) {
+							var latLng = new google.maps.LatLng(results[0].geometry.location.Ya,results[0].geometry.location.Za);
+							markerHL.setPosition(latLng);
+							markerHL.setVisible(true);
+							markerHL.setMap(map);
+							//markerHL.setAnimation(google.maps.Animation.BOUNCE);
+							markerHL.setOptions({icon:"/images/markers/target3.png"});
+							setTimeout(function() {
+								markerHL.setMap(null);
+							}, 3000);
+							map.panTo(latLng);
+						}else{
+							var salt = new Date().getTime();
+							$('#searchStr').before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide</div>");
+							setTimeout(function() {
+								$("#alert"+salt).fadeOut();
+							}, 3000);
+							$('#searchPlaceStr').select();
+						} 
 						});
 					}
 				}

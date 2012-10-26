@@ -398,8 +398,12 @@ Place.statics.findAll = function (callback) {
   return this.find({},[],{sort:{title:1}}, callback);
 }
 
-Place.statics.searchOne = function (str,callback) {
-  searchStr = new RegExp(str,'i');
+Place.statics.searchOne = function (str,exact,callback) {
+  if(!exact)
+	searchStr = new RegExp(str,'i');
+  else
+	searchStr = new RegExp('^'+str+'$','i');
+  
   var cond = {
 	"status":1,
 	$or:[ {'title': {$regex:searchStr}}, {'content': {$regex:searchStr}} , {"freeTag": {$regex:searchStr}} , {"yakTag": {$regex:searchStr}}],	
