@@ -19,15 +19,24 @@ exports.partials = function (req, res) {
 };
 
 exports.news_map = function(req, res){
-	console.log(req.session.type);
 	if(typeof(req.session.type) == 'undefined' || req.session.type === null ){
 		var type = new Array();
 		type.push(1);
 		req.session.type = type;
 	}	
 	
-	res.render('news/map',{type:req.session.type});  
+	res.render('news/map',{type:req.session.type,str:null});  
 };
+exports.news_map_search = function(req, res){
+	if(typeof(req.session.type) == 'undefined' || req.session.type === null ){
+		var type = new Array();
+		type.push(1);
+		req.session.type = type;
+	}	
+	
+	res.render('news/map',{type:req.session.type,str:req.params.str});  
+};
+
 exports.news_map_test = function(req, res){
 	res.render('news/map_test');  
 };
@@ -121,6 +130,7 @@ exports.news = function(req, res){
 				// if no id, it means the location comes from gmap => we store it
 				
 				if(item._id == "" || typeof item._id === "undefined"){
+					item.status=2;
 					place = new Place(item);
 					place.save();
 					info.placeId = place._id;

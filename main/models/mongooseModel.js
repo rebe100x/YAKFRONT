@@ -4,7 +4,8 @@
  */
 
 var mongoose = require('mongoose')
-  , Schema = mongoose.Schema;
+  , Schema = mongoose.Schema
+  , S = require('string');
 
 mongoose.set('debug', true);
 
@@ -41,17 +42,17 @@ var Info = new Schema({
   , outGoingLink       : { type: String }  
   , heat	: {type: Number}		
   , print	: {type: Number}		
-  , yakCat	: {type: [Yakcat]}		
-  , yakTag	: {type: [String]}
-  , yakType	: {type: Number}  
+  , yakCat	: {type: [Yakcat],index:1}		
+  , yakTag	: {type: [String],index:1}
+  , yakType	: {type: Number,index:1}  
   , freeTag	: {type: [String]}	
-  , pubDate	: {type: Date, required: true, default: Date.now}		  
+  , pubDate	: {type: Date, required: true, default: Date.now,index:1}		  
   , creationDate	: {type: Date, required: true, default: Date.now}		
   , lastModifDate	: {type: Date, required: true, default: Date.now}		
   , dateEndPrint	: {type: Date}		
   , address	: {type : String}	
   , location	: { type : { lat: Number, lng: Number }, index : '2d'}	
-  , status	: {type: Number}		
+  , status	: {type: Number,index:1}		
   , user	: {type: Schema.ObjectId}		
   , zone	: {type: Schema.ObjectId}
   ,	placeId	: {type: Schema.ObjectId}  
@@ -95,45 +96,98 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,heat,type,str,usersubs,tagsubs,c
 		//str=str.replace(/\'/g,'\x27');
 		//str=str.replace(/\'/g,'\\\'');
 		//str='\x27';
-		
-		var searchStr = new RegExp(str,'i');
+		encodeURIComponent(str);
+		var searchStr = new RegExp(str.replace(/@/g,''),'i');
 		
 		var Yakcat = db.model('Yakcat');
 		
 		
 		
-		/*
-		Yakcat.searchOne(str,function (err, thecat){
-			console.log("the cat");
-			console.log(thecat);
-			theyakcat.push(thecat);
-		return thecat;});
-		*/
-		Yakcat.findOne({'title': {$regex:searchStr}},[],{limit:1},function(err,theyakcat){
-		console.log(theyakcat);
+		var strClean = str.replace(/@/g,'');
+		console.log(strClean);
+		Yakcat.findOne({'title': strClean},function(err,theyakcat){
 		
-			if(theyakcat != 'null'){ // NO YAKCAT MATCHING
-				// all types
-				var cond = {
-					"print":1,
-					"status":1,
-					"location" : {$within:{"$box":box}},
-					"pubDate":{$gte:D},
-					"yakType" : {$in:type},
-					$or:[ {'title': {$regex:searchStr}}, {'content': {$regex:searchStr}} , {"freeTag": {$regex:searchStr}} , {"yakTag": {$regex:searchStr}}],	
-				};
-
-				//alerts				
-				if(type == 5){
-					cond = {
+		
+		console.log(str);
+		console.log(theyakcat);
+		var firstChar = str.substr(0,1);
+		
+			if(theyakcat == null || theyakcat == 'null'){ // NO YAKCAT MATCHING
+				console.log('NULL');
+				if(firstChar=='#'){
+					// all types
+					var cond = {
 						"print":1,
 						"status":1,
 						"location" : {$within:{"$box":box}},
 						"pubDate":{$gte:D},
-						$or:[ {"user":{$in:usersubs}}, {"freeTag": {$in:tagsubs}} ],
+						"yakType" : {$in:type},
+						$or:[ {"freeTag": str.substr(1,str.length)} , {"yakTag": str.substr(1,str.length)}],	
+					};
+
+					//alerts : type = 5				
+					if(type == 5){
+						cond = {
+							"print":1,
+							"status":1,
+							"location" : {$within:{"$box":box}},
+							"pubDate":{$gte:D},
+							$or:[ {"user":{$in:usersubs}}, {"freeTag": {$in:tagsubs}}],
+							$or:[ {"freeTag": str.substr(1,str.length)} , {"yakTag": str.substr(1,str.length)} ],	
+						};
+					}
+				
+				}else if(firstChar=='@'){
+					// all types
+					var cond = {
+						"print":1,
+						"status":1,
+						"location" : {$within:{"$box":box}},
+						"pubDate":{$gte:D},
+						"yakType" : {$in:type},
+						$or:[ {"user":str.substr(1,str.length)} ],	
+					};
+
+					//alerts : type = 5				
+					if(type == 5){
+						cond = {
+							"print":1,
+							"status":1,
+							"location" : {$within:{"$box":box}},
+							"pubDate":{$gte:D},
+							$or:[ {"user":str.substr(1,str.length)} ],	
+							$or:[ {"user":{$in:usersubs}}, {"freeTag": {$in:tagsubs}}],
+						};
+					}
+				
+				}else{
+				
+					// all types
+					var cond = {
+						"print":1,
+						"status":1,
+						"location" : {$within:{"$box":box}},
+						"pubDate":{$gte:D},
+						"yakType" : {$in:type},
 						$or:[ {'title': {$regex:searchStr}}, {'content': {$regex:searchStr}} , {"freeTag": {$regex:searchStr}} , {"yakTag": {$regex:searchStr}}],	
 					};
+
+					//alerts : type = 5				
+					if(type == 5){
+						cond = {
+							"print":1,
+							"status":1,
+							"location" : {$within:{"$box":box}},
+							"pubDate":{$gte:D},
+							$or:[ {"user":{$in:usersubs}}, {"freeTag": {$in:tagsubs}}],
+							$or:[ {'title': {$regex:searchStr}}, {'content': {$regex:searchStr}} , {"freeTag": {$regex:searchStr}} , {"yakTag": {$regex:searchStr}}],	
+						};
+					}
+					
 				}
+				
+				
+				
 			}else{
 				
 				// all types
@@ -143,7 +197,7 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,heat,type,str,usersubs,tagsubs,c
 				"location" : {$within:{"$box":box}},
 				"pubDate":{$gte:D},
 				"yakType" : {$in:type},
-				$or:[ {'title': {$regex:searchStr}}, {'content': {$regex:searchStr}} ,{'yakCat': mongoose.Types.ObjectId(new String(theyakcat._id)) }, {"freeTag": {$regex:searchStr}} , {"yakTag": {$regex:searchStr}}],	
+				"yakCat": {$in:[mongoose.Types.ObjectId(new String(theyakcat._id))]},
 			};
 
 			//alerts				
@@ -154,7 +208,7 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,heat,type,str,usersubs,tagsubs,c
 					"location" : {$within:{"$box":box}},
 					"pubDate":{$gte:D},
 					$or:[ {"user":{$in:usersubs}}, {"freeTag": {$in:tagsubs}} ],
-					$or:[ {'title': {$regex:searchStr}}, {'content': {$regex:searchStr}} ,{'yakCat': mongoose.Types.ObjectId(new String(theyakcat._id)) }, {"freeTag": {$regex:searchStr}} , {"yakTag": {$regex:searchStr}}],	
+					"yakCat": {$in:mongoose.Types.ObjectId(new String(theyakcat._id))},
 				};
 			}
 			

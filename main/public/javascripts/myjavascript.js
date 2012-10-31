@@ -93,6 +93,12 @@ function csl(str){
 	console.log(str);
 }
 
+String.prototype.linkify = function() {
+   //var tweet = this.replace(/(^|\s)@(\w+)/g, "$1@<a href=\"http://www.twitter.com/$2\">$2</a>");
+   var tweet = this.replace(/(^|\s)@(\w+)/g, "$1@<a href=\"$2\">$2</a>");
+   return tweet.replace(/(^|\s)#(\w+)/g, "$1#<a href=\"/news/map/search/%23$2\">$2</a>");
+ }
+ 
 Array.prototype.cleanArrayByName=function(str){
 	for(i=0;i<this.length;i++)
 		if(str==this[i]) 

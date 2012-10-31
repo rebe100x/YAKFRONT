@@ -58,11 +58,12 @@ block content
 				
 	script
 		
+	
+
 		/*INIT*/
 		var conf = !{conf};
 		var user = [!{user}];
 		var logged = 0;
-		//var user = JSON.parse(JSON.stringify({!{user}}));
 		
 		var curPos = {'x':0,'y':0,'z':0};
 		var geolocalized = 0;
@@ -84,7 +85,9 @@ block content
 		//var type = [1];
 		var type = [!{type}];
 		
-		var searchString = null;
+		var searchString = "!{str}";
+		if(searchString=='')
+			searchString = null;
 		
 		var infoContent = '';
 		var rule = new RegExp('#([^\\s]*)','g');
@@ -142,7 +145,7 @@ block content
 			
 			// search button
 			$('#searchBtn').click(function(){
-				var str = $('#searchStr').val();
+				var str = encodeURIComponent($('#searchStr').val());
 				var placeName = $('#searchPlaceStr').val();
 				var location = $('#locationInput').val();
 				
@@ -215,6 +218,7 @@ block content
 				minLength : 3,							
 				source: function (typeahead, query) {
 					if(query.length > 3){
+						encodeURIComponent(query);
 						$("#searchPlaceStr").addClass('searching');
 						var addressQuery = {"address": query ,"region":"fr","language":"fr"};
 						var geocoder = new google.maps.Geocoder();
@@ -238,6 +242,7 @@ block content
 			$('#searchStr').typeahead({
 					minLength : 3,
 					source: function (typeahead, query) {
+					encodeURIComponent(query);
 						if(query.length > 3){
 							$.ajax({
 									url: "/api/cats",				
@@ -691,8 +696,8 @@ block content
 						var dateTmp = new Date(val.pubDate);
 						var dateCreation = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
 						infoContent = "<div class=\'infowindow mapHighlighter\' infoId='"+val._id+"'>";
-						if(!(typeof val.thumb === 'undefined') && val.thumb != ''){
-						if(val.user == 0 || val.user === undefined)
+						if(!(typeof val.thumb === 'undefined') && val.thumb != '' && val.thumb != null){
+							if(val.user == 0 || val.user === undefined)
 								infoContent += "<img src=\'"+conf.backurl+val.thumb+"\' />";
 							else
 								infoContent += "<img src=\'/uploads/pictures/120_90/"+val.thumb+"\' />";
@@ -702,7 +707,9 @@ block content
 						infoContent += "<div class=\'content\'>"+val.content.substring(0,250).replace(rule2,'')+"...</div>";
 						if(!(typeof val.outGoingLink === 'undefined') && val.outGoingLink != '')
 							infoContent += "<div class=\'readmore\'><a target=\'_blank\' href=\'"+val.outGoingLink+"\'> >> lire l\'article</a></div>";
-						
+						if(val.address != 'null')
+							infoContent += "<div>"+val.address+"</div>";
+					
 						infoContent += "</div>";
 						
 						/*PRINT ON THE MAP*/
@@ -793,19 +800,23 @@ block content
 					marker.setMap(map);	
 					var dateTmp = new Date(val.pubDate);
 					var dateCreation = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
-					infoContent = "<div class=\'infowindow mapHighlighter\' infoId='"+val._id+"'>";
-					if(!(typeof val.thumb === 'undefined') && val.thumb != ''){
-					if(val.user == 0 || val.user === undefined)
+					infoContent = "<div class=\'infowindow mapHighlighter\' infoId='"+val._id+"'>";					
+					if(!(typeof val.thumb === 'undefined') && val.thumb != '' && val.thumb != null){
+						if(val.user == 0 || val.user === undefined)
 							infoContent += "<img src=\'"+conf.backurl+val.thumb+"\' />";
 						else
 							infoContent += "<img src=\'/uploads/pictures/120_90/"+val.thumb+"\' />";
 					}
-					infoContent += "<div class=\'title\'> "+val.title.replace(rule2,'')+" ("+dateCreation+")";
+					var test = new String("this is #test");
+					
+					infoContent += "<div class=\'title\'> "+val.title.linkify()+" ("+dateCreation+")";
 					infoContent += "</div>";
 					infoContent += "<div class=\'content\'>"+val.content.substring(0,250).replace(rule2,'')+"...</div>";
 					if(!(typeof val.outGoingLink === 'undefined') && val.outGoingLink != '')
 						infoContent += "<div class=\'readmore\'><a target=\'_blank\' href=\'"+val.outGoingLink+"\'> >> lire l\'article</a></div>";
-					infoContent += "<div>"+val.address+"</div>";
+					
+					if(val.address != 'null')
+						infoContent += "<div>"+val.address+"</div>";
 					infoContent += "</div>";
 					
 					/*PRINT ON THE FEED*/
@@ -814,7 +825,7 @@ block content
 					
 					
 					google.maps.event.addListener(marker, 'click', function() {
-						cleanMarkers();
+						//cleanMarkers();
 						$("#newsfeed li").removeClass('highlighted');
 						$("#newsfeed li[infoId=\""+val._id+"\"]").addClass('highlighted');
 						$('#newsfeedContainer').mCustomScrollbar("scrollTo",".mapHighlighter[infoId=\""+val._id+"\"]");

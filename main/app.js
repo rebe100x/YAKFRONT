@@ -9,7 +9,8 @@ var express = require('express'),
   users = require('./routes/users'),
   db = require('./models/mongooseModel'),
   config = require('./confs.js'),
-  fs = require('fs');
+  fs = require('fs'),
+  S = require('string');
   
 var app = express();
 
@@ -70,6 +71,7 @@ app.get('/', requiresLogin, routes.index);
 app.get('/partials/:name', routes.partials);
 //app.get('/news/map', requiresPosition, routes.news_map);
 app.get('/news/map', requiresLogin, routes.news_map);
+app.get('/news/map/search/:str', requiresLogin, routes.news_map_search);
 app.get('/news/map_test', routes.news_map_test);
 app.get('/news/feed', requiresLogin, routes.news_feed);
 //app.get('/news/post', routes.news_post);
