@@ -90,31 +90,103 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,heat,type,str,usersubs,tagsubs,c
 	var DTS = D.getTime() / 1000 - (heat * 60 * 60 * 24);
 	D.setTime(DTS*1000); 
 	var box = [[parseFloat(x1),parseFloat(y1)],[parseFloat(x2),parseFloat(y2)]];
+	var Yakcat = db.model('Yakcat');
+	var User = db.model('User');
+	var res = null;
+	var cond = {
+				"print":1,
+				"status":1,
+				"location" : {$within:{"$box":box}},
+				"pubDate":{$gte:D},
+				"yakType" : {$in:type}
+			};
+	var qInfo = this.find(cond).sort('pubDate',-1).limit(100);
+	
+	if(str != 'null' && str.length > 0){  // STRING SEARCH
+		
+		//encodeURIComponent(str);
+		
+		
+		
+		
+		
+							
+		var firstChar = str.substr(0,1);
+		var strClean = str.replace(/@/g,'').replace(/#/g,'');
+		var searchStr = new RegExp(strClean,'i');
+		console.log('str'+str);
+		console.log('strClean'+strClean);
+		console.log('searchStr'+searchStr);
+		
+		
+		Yakcat.findOne({'title': strClean}).exec(function(err,theyakcat){
+			console.log('YAKCAT'+theyakcat);
+			if(theyakcat == null){
+				User.findOne({'login':strClean}).exec(function(err,theuser){
+					console.log('USER'+theuser);
+					if(theuser == null){
+						console.log(qInfo);	
+						qInfo.where('title',strClean);
+						console.log(qInfo);	
+						
+						//qInfo.or([ {'title': {$regex:searchStr}}, {'content': {$regex:searchStr}} , {"freeTag": {$regex:searchStr}} , {"yakTag": {$regex:searchStr}}]);	
+
+					}
+					res = qInfo.exec(callback);
+				});
+			}
+			
+			
+		});
+		
+		
+	}else{  // NO STRING SEARCH
+		res = qInfo.exec(callback);
+	
+	}
+	
+	
+	 return res;
+	
+	
+
+}
+
+
+Info.statics.findAllGeoOLD = function (x1,y1,x2,y2,heat,type,str,usersubs,tagsubs,callback) {
+	var now = new Date();
+	var D = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+	var DTS = D.getTime() / 1000 - (heat * 60 * 60 * 24);
+	D.setTime(DTS*1000); 
+	var box = [[parseFloat(x1),parseFloat(y1)],[parseFloat(x2),parseFloat(y2)]];
 
 	
 	if(str != 'null' && str.length > 0){  // STRING SEARCH
-		//str=str.replace(/\'/g,'\x27');
-		//str=str.replace(/\'/g,'\\\'');
-		//str='\x27';
-		encodeURIComponent(str);
-		var searchStr = new RegExp(str.replace(/@/g,''),'i');
+		
+		//encodeURIComponent(str);
+		
 		
 		var Yakcat = db.model('Yakcat');
+		var User = db.model('User');
 		
+		var firstChar = str.substr(0,1);
+		var strClean = str.replace(/@/g,'').replace(/#/g,'');
+		var searchStr = new RegExp(strClean,'i');
+		console.log('str'+str);
+		console.log('strClean'+strClean);
+		console.log('searchStr'+searchStr);
 		
-		
-		var strClean = str.replace(/@/g,'');
-		console.log(strClean);
 		Yakcat.findOne({'title': strClean},function(err,theyakcat){
 		
 		
-		console.log(str);
+		console.log('YAKCAT');
 		console.log(theyakcat);
-		var firstChar = str.substr(0,1);
+		
 		
 			if(theyakcat == null || theyakcat == 'null'){ // NO YAKCAT MATCHING
-				console.log('NULL');
+				console.log('NO YAKCAT');
 				if(firstChar=='#'){
+					console.log('TAG');
 					// all types
 					var cond = {
 						"print":1,
@@ -122,7 +194,7 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,heat,type,str,usersubs,tagsubs,c
 						"location" : {$within:{"$box":box}},
 						"pubDate":{$gte:D},
 						"yakType" : {$in:type},
-						$or:[ {"freeTag": str.substr(1,str.length)} , {"yakTag": str.substr(1,str.length)}],	
+						$or:[ {"freeTag": strClean} , {"yakTag": strClean}],	
 					};
 
 					//alerts : type = 5				
@@ -133,35 +205,63 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,heat,type,str,usersubs,tagsubs,c
 							"location" : {$within:{"$box":box}},
 							"pubDate":{$gte:D},
 							$or:[ {"user":{$in:usersubs}}, {"freeTag": {$in:tagsubs}}],
-							$or:[ {"freeTag": str.substr(1,str.length)} , {"yakTag": str.substr(1,str.length)} ],	
+							$or:[ {"freeTag": strClean} , {"yakTag": strClean} ],	
 						};
 					}
 				
 				}else if(firstChar=='@'){
 					// all types
-					var cond = {
-						"print":1,
-						"status":1,
-						"location" : {$within:{"$box":box}},
-						"pubDate":{$gte:D},
-						"yakType" : {$in:type},
-						$or:[ {"user":str.substr(1,str.length)} ],	
-					};
+					console.log('USER');
+					//User.findByNameorLogin(strClean,function(err,userMatched){
+					User.findOne({'login':strClean},function(err,userMatched){
+						console.log(userMatched);
+						if(userMatched != null){
+							console.log(userMatched._id);
+							var cond = {
+								"print":1,
+								"status":1,
+								"location" : {$within:{"$box":box}},
+								"pubDate":{$gte:D},
+								"yakType" : {$in:type},
+								"user":mongoose.Types.ObjectId(new String(userMatched._id)),	
+							};
 
-					//alerts : type = 5				
-					if(type == 5){
-						cond = {
-							"print":1,
-							"status":1,
-							"location" : {$within:{"$box":box}},
-							"pubDate":{$gte:D},
-							$or:[ {"user":str.substr(1,str.length)} ],	
-							$or:[ {"user":{$in:usersubs}}, {"freeTag": {$in:tagsubs}}],
-						};
-					}
+							//alerts : type = 5				
+							if(type == 5){
+								cond = {
+									"print":1,
+									"status":1,
+									"location" : {$within:{"$box":box}},
+									"pubDate":{$gte:D},
+									"user":mongoose.Types.ObjectId(userMatched._id),
+									$or:[ {"user":{$in:usersubs}}, {"freeTag": {$in:tagsubs}}],
+								};
+							}
+							
+							
+							
+							
+						}
+						console.log('USER FOUND');
+						console.log(cond);
+						var Info = db.model('Info');
+						return Info.find(
+							cond,
+							[],
+							{
+								skip:0, // Starting Row
+								limit:100, // Ending Row
+								sort:{
+									pubDate: -1 //Sort by Date Added DESC
+								}
+							},
+						callback);
+					});
+					
+					
 				
 				}else{
-				
+					console.log('STRING');
 					// all types
 					var cond = {
 						"print":1,
@@ -189,16 +289,16 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,heat,type,str,usersubs,tagsubs,c
 				
 				
 			}else{
-				
+				console.log('YAKCAT FOUND !!');
 				// all types
-			var cond = {
-				"print":1,
-				"status":1,
-				"location" : {$within:{"$box":box}},
-				"pubDate":{$gte:D},
-				"yakType" : {$in:type},
-				"yakCat": {$in:[mongoose.Types.ObjectId(new String(theyakcat._id))]},
-			};
+				var cond = {
+					"print":1,
+					"status":1,
+					"location" : {$within:{"$box":box}},
+					"pubDate":{$gte:D},
+					"yakType" : {$in:type},
+					"yakCat": {$in:[mongoose.Types.ObjectId(new String(theyakcat._id))]},
+				};
 
 			//alerts				
 			if(type == 5){
@@ -215,20 +315,19 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,heat,type,str,usersubs,tagsubs,c
 			}
 				
 			
-			
+			console.log('CALL HERE');
 			var Info = db.model('Info');
 			return Info.find(
-		cond,
-		[],
-		{
-			skip:0, // Starting Row
-			limit:100, // Ending Row
-			sort:{
-				pubDate: -1 //Sort by Date Added DESC
-			}
-		},
-	callback);
-	
+				cond,
+				[],
+				{
+					skip:0, // Starting Row
+					limit:100, // Ending Row
+					sort:{
+						pubDate: -1 //Sort by Date Added DESC
+					}
+				},
+			callback);
 		});
 		
 		
@@ -270,7 +369,6 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,heat,type,str,usersubs,tagsubs,c
 	
 
 }
-
 mongoose.model('Info', Info);
 
 
@@ -362,7 +460,15 @@ User.statics.search = function(string,callback){
 	},
 	callback);
 }
-//.or([{ 'firstName': { $regex: re }}, { 'lastName': { $regex: re }}])
+
+User.statics.findByNameorLogin = function(string,callback){
+	
+	return this.findOne(
+	{	$or:[ {'login': string}, {'name': string}], "status":1 },
+	['_id','name'],
+	{},
+	callback);
+}
 mongoose.model('User', User);
 
 

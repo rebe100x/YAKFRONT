@@ -217,7 +217,7 @@ block content
 			$('#searchPlaceStr').typeahead({
 				minLength : 3,							
 				source: function (typeahead, query) {
-					if(query.length > 3){
+					if(query.length >= 3){
 						encodeURIComponent(query);
 						$("#searchPlaceStr").addClass('searching');
 						var addressQuery = {"address": query ,"region":"fr","language":"fr"};
@@ -243,7 +243,7 @@ block content
 					minLength : 3,
 					source: function (typeahead, query) {
 					encodeURIComponent(query);
-						if(query.length > 3){
+						if(query.length >= 3){
 							$.ajax({
 									url: "/api/cats",				
 									success: function( data ) {

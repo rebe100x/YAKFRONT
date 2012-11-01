@@ -112,7 +112,16 @@ exports.news = function(req, res){
 			
 					
 			locTmp.forEach(function(item) {
+			
 				var info = new Info();
+				
+				if(theYakType == 4) // if type =4 ( discussion : by default push it in YAKCAT discussion )
+					info.yakCat.push(mongoose.Types.ObjectId("5092390bfa9a95f40c000000")); 
+				if(theYakType == 2) // if type =2 ( agenda : by default push it in YAKCAT agenda )
+					info.yakCat.push(mongoose.Types.ObjectId("50923b9afa9a95d409000000")); 
+				if(theYakType == 3) // if type =3 ( infos pratiques : by default push it in YAKCAT infos pratiques )
+					info.yakCat.push(mongoose.Types.ObjectId("50923b9afa9a95d409000001")); 
+				
 				
 				if(req.body.yakcatInput.length > 0){
 					var yakcat = eval('('+req.body.yakcatInput+')');
