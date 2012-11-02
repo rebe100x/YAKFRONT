@@ -94,8 +94,7 @@ block content
 									typeahead.process(data.users);
 								}
 							})},
-					mode: 'multiple',		
-					property: "name",
+					property: "userdetails",
 					onselect: function(obj) {
 						if(!usersubsArray.inArrayId(obj._id)){
 							$("label[for='usersubs']").after("<div><i class='icon-remove icon-pointer'  onclick='usersubsArray.cleanArray(\""+obj._id+"\");$(\"#usersubsInput\").val(JSON.stringify(usersubsArray));$(this).parent().remove();'></i> "+obj.name+"</div>");

@@ -88,8 +88,11 @@ exports.news = function(req, res){
 	delete req.session.message;
 	var Info = db.model('Info');
 	var Place = db.model('Place');
+	var Tag = db.model('Tag');
 	var theYakType = 4; // UGC
 	var place = new Place();
+	var tag = new Tag();
+	
 	//mongoose.set('debug', true);
 
 	//console.log(req.files);
@@ -115,6 +118,7 @@ exports.news = function(req, res){
 			
 				var info = new Info();
 				
+				// we introduce a redondancy between types and yakcat to be able to forget the type in the future
 				if(theYakType == 4) // if type =4 ( discussion : by default push it in YAKCAT discussion )
 					info.yakCat.push(mongoose.Types.ObjectId("5092390bfa9a95f40c000000")); 
 				if(theYakType == 2) // if type =2 ( agenda : by default push it in YAKCAT agenda )
@@ -146,10 +150,11 @@ exports.news = function(req, res){
 				}else
 					info.placeId = item._id;
 				
-				info.creationDate = new Date();
-				info.lastModifDate = new Date();
-				info.pubDate = new Date();
 				var now = new Date();
+				info.creationDate = now;
+				info.lastModifDate = now;
+				info.pubDate = now;
+				
 				var D = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
 				var DTS = D.getTime() / 1000 + (3 * 60 * 60 * 24);
 				D.setTime(DTS*1000); 
@@ -161,8 +166,25 @@ exports.news = function(req, res){
 				info.thumb = infoThumb.name;
 				info.licence = 'Yakwala';
 				info.heat = 80;
-				info.freeTag = req.body.freetag.split(',');
+				var freeTags = req.body.freetag.split(',');
+				info.freeTag = freeTags;
 				
+				console.log(req.body.freetag);
+				if(req.body.freetag.length > 0){
+					console.log('TAGATGTAGt');
+					freeTags.forEach(function(freeTag){
+						Tag.findOne({'title':freeTag},function(err,thetag){
+							if(thetag == null){
+								tag.title=freeTag;
+								tag.save();
+							}
+							else{
+								Tag.update({_id: thetag._id}, {lastUsageDate:now}, {upsert: false}, function(err){if (err) console.log(err);});						
+							}
+						});
+					
+					});
+				}
 				// security against unidentified users	
 				if(req.session.user){
 					info.user = req.session.user._id;
@@ -288,33 +310,35 @@ exports.profile = function(req, res){
 	if(req.session.user){
 		var avatar = req.body.avatar;
 		var drawTool = require('../mylib/drawlib.js');
-		var size = [{"width":128,"height":128},{"width":48,"height":48}];
+		var size = [{"width":128,"height":128},{"width":48,"height":48},{"width":24,"height":24}];
 		var infoThumb = drawTool.StoreImg(req.files.avatar,size,conf);
 		
 		if(infoThumb.msg)
 			formMessage.push(infoThumb.msg);
 		
-		var location = JSON.parse(req.body.location);
-		if(infoThumb.name){
+		
+		
 			var cond = {
 				name : req.body.username,
 				web:req.body.web,
-				thumb:infoThumb.name,
+//				thumb:infoThumb.name,
 				bio:req.body.bio,
 				tag:req.body.tag.split(','),
-				location :{lng:parseFloat(location.lng),lat:parseFloat(location.lat)},
-				address :req.body.address,				
-				};
-		}else
-			var cond = {
-				name : req.body.username,
-				web:req.body.web,
-				bio:req.body.bio,
-				tag:req.body.tag.split(',')	,
-				location :{lng:parseFloat(location.lng),lat:parseFloat(location.lat)},
-				address :req.body.address,				
+//				location :{lng:parseFloat(location.lng),lat:parseFloat(location.lat)},
+//				address :JSON.parse(req.body.address),								
 				};
 		
+		if(infoThumb.name){
+			cond.thumb = infoThumb.name;
+		}
+		if(req.body.location){
+			var location = JSON.parse(req.body.location);
+			cond.location = location;
+		}
+		if(req.body.address){
+			cond.address = JSON.parse(req.body.address);
+		}
+			
 		req.session.user.location = location;
 		
 		User.update({_id: req.session.user._id}, 

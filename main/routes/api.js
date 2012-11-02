@@ -50,7 +50,19 @@ exports.cats = function (req, res) {
 	  });
 	});
 };
-
+exports.catsandtags = function (req, res) {
+	var Yakcat = db.model('Yakcat');
+	var Tag = db.model('Tag');
+	var results =  new Array();
+	Yakcat.find({},'title',function (err, cats){
+		Tag.find({},'title',function (err, tags){
+		results = tags.concat(cats);		
+			res.json({
+				catsandtags: results
+			  });	
+		});
+	});
+};
 
 exports.places = function (req, res) {
 	var Place = db.model('Place');
@@ -120,12 +132,29 @@ exports.delfavplace = function (req, res) {
 exports.usersearch = function (req, res) {
 	var User = db.model('User');
 	User.search(req.params.string,function (err, docs){
+	var docsConcat = new Array();
+	docs.forEach(function(o){
+		var tmp = new Object();
+		//tmp.userdetails="<img width=\"24\" height=\"24\" class=\"size100 img-rounded\" src=\"/uploads/pictures/24_24/"+o['thumb']+"\"  />"+o['name']+" <span class=\"autocompleteScreenName\"> @"+o['login']+"</span>";
+		tmp.userdetails=o['name']+" (@"+o['login']+")";
+		tmp.name =o['name'];
+		tmp.login =o['login'];
+		tmp._id =o['_id'];
+		docsConcat.push(tmp);
+	});
+	res.json({
+		users: docsConcat
+	  });
+	});
+};
+exports.usersearchOLD = function (req, res) {
+	var User = db.model('User');
+	User.search(req.params.string,function (err, docs){
 	  res.json({
 		users: docs
 	  });
 	});
 };
-
 
 
 

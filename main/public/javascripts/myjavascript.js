@@ -5,7 +5,8 @@
 /*READY FUNCTIONS*/	
 $(document).ready(function() {
 
-		
+	
+	
 	/*bootstrap alert plugin*/
 	$(".alert").alert();
 	
@@ -94,9 +95,8 @@ function csl(str){
 }
 
 String.prototype.linkify = function() {
-   //var tweet = this.replace(/(^|\s)@(\w+)/g, "$1@<a href=\"http://www.twitter.com/$2\">$2</a>");
-   var tweet = this.replace(/(^|\s)@(\w+)/g, "$1@<a href=\"$2\">$2</a>");
-   return tweet.replace(/(^|\s)#(\w+)/g, "$1#<a href=\"/news/map/search/%23$2\">$2</a>");
+   var tweet = this.replace(/(^|\s)@(\w+)/g, "$1@<a class=\"userHashLink\" href=\"$2\">$2</a>");
+   return tweet.replace(/(^|\s)#(\w+)/g, "$1#<a class=\"tagHashLink\" href=\"/news/map/search/%23$2\">$2</a>");
  }
  
 Array.prototype.cleanArrayByName=function(str){

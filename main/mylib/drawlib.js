@@ -1,13 +1,12 @@
-
-
 exports.StoreImg = function(file,size,conf){
-
+	
 	var message = [];
 	var flagError = 0;
 	var srcPath = '';
 	var srcName = '';
 	var im = require('imagemagick');
 	var fs = require('fs');
+	var md5 = require('md5');
 	
 	if(file.size){
 		
@@ -19,8 +18,8 @@ exports.StoreImg = function(file,size,conf){
 		srcName = srcNameTmp.replace('.gif', '.jpeg');
 		srcName = srcNameTmp.replace('.png', '.jpeg');
 		srcName = srcNameTmp.replace('.jpg', '.jpeg');
-		
-		console.log(srcPathTmp,srcPath);
+		destName =  md5.digest_s(srcName)+'.jpeg'; 
+		console.log(destName);
 		//var destName =  srcPath.split('\');
 		// convert to jpeg
 		im.convert([srcPathTmp,srcPath],function(err,stdout){
@@ -35,7 +34,7 @@ exports.StoreImg = function(file,size,conf){
 					if(w > 0 && h > 0){
 						im.resize({
 							srcPath: srcPath,
-							dstPath: conf.uploadsDir+'pictures/'+w+'_'+h+'/'+srcName,
+							dstPath: conf.uploadsDir+'pictures/'+w+'_'+h+'/'+destName,
 							strip : false,
 							width : w,
 							height : h+"^",
@@ -61,7 +60,7 @@ exports.StoreImg = function(file,size,conf){
 								if(output > w){
 									im.resize({
 										srcPath: srcPath,
-										dstPath: conf.uploadsDir+'pictures/512_0/'+srcName,
+										dstPath: conf.uploadsDir+'pictures/512_0/'+destName,
 										strip : false,
 										width : 512,
 									}, function(err, stdout, stderr){
@@ -76,7 +75,7 @@ exports.StoreImg = function(file,size,conf){
 								}else{
 									im.resize({
 										srcPath: srcPath,
-										dstPath: conf.uploadsDir+'pictures/512_0/'+srcName,
+										dstPath: conf.uploadsDir+'pictures/512_0/'+destName,
 										strip : false,
 										height : '100%',
 										width : '100%',
@@ -111,11 +110,11 @@ exports.StoreImg = function(file,size,conf){
 	else{
 			console.log('file empty');
 			flagError = 0;
-			srcName = '';
+			destName = '';
 			
 		}
 		
 		
-		var fileThumb = {"name":srcName,"err":flagError,"msg":message};
+		var fileThumb = {"name":destName,"err":flagError,"msg":message};
 		return fileThumb;
 }

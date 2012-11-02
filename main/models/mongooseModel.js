@@ -33,7 +33,7 @@ mongoose.model('Point', Point);
  * Schema definition
  */
 var Info = new Schema({
-    title     : { type: String}
+    title     : { type: String,required: true,}
   , content	: {type: String}		
   , thumb	: {type: String}		
   , origin	: {type: String}		
@@ -92,6 +92,7 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,heat,type,str,usersubs,tagsubs,c
 	var box = [[parseFloat(x1),parseFloat(y1)],[parseFloat(x2),parseFloat(y2)]];
 	var Yakcat = db.model('Yakcat');
 	var User = db.model('User');
+	var Tag = db.model('Tag');
 	var res = null;
 	var cond = {
 				"print":1,
@@ -103,42 +104,53 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,heat,type,str,usersubs,tagsubs,c
 	var qInfo = this.find(cond).sort('pubDate',-1).limit(100);
 	
 	if(str != 'null' && str.length > 0){  // STRING SEARCH
-		
-		//encodeURIComponent(str);
-		
-		
-		
-		
-		
-							
 		var firstChar = str.substr(0,1);
 		var strClean = str.replace(/@/g,'').replace(/#/g,'');
-		var searchStr = new RegExp(strClean,'i');
-		console.log('str'+str);
-		console.log('strClean'+strClean);
-		console.log('searchStr'+searchStr);
+		var searchStr = new RegExp(strClean,'gi');
+		var searchExactStr = new RegExp("^"+strClean+"$",'gi');
+		if(firstChar=='#'){
+		
+			Yakcat.findOne({'title': {$regex:searchStr}}).exec(function(err,theyakcat){
+				if(theyakcat == null){
+					qInfo.or([{"freeTag": {$regex:searchExactStr}} , {"yakTag": {$regex:searchExactStr}}]);
+				}else{
+					qInfo.or([{"freeTag": {$regex:searchExactStr}} , {"yakTag": {$regex:searchExactStr}},{"yakCat": {$in:[theyakcat._id]}}]);
+				}
+				res = qInfo.exec(callback);
+			});
 		
 		
-		Yakcat.findOne({'title': strClean}).exec(function(err,theyakcat){
-			console.log('YAKCAT'+theyakcat);
-			if(theyakcat == null){
-				User.findOne({'login':strClean}).exec(function(err,theuser){
-					console.log('USER'+theuser);
-					if(theuser == null){
-						console.log(qInfo);	
-						qInfo.where('title',strClean);
-						console.log(qInfo);	
-						
-						//qInfo.or([ {'title': {$regex:searchStr}}, {'content': {$regex:searchStr}} , {"freeTag": {$regex:searchStr}} , {"yakTag": {$regex:searchStr}}]);	
-
-					}
+	
+		}else if(firstChar=='@'){
+			User.findOne({'login':{$regex:searchExactStr}}).exec(function(err,theuser){
+				if(theuser != null){
+					qInfo.or([  {'user':theuser._id} ]);
+				}
+				res = qInfo.exec(callback);
+			});
+		}else{
+			Yakcat.findOne({'title': {$regex:searchExactStr}}).exec(function(err,theyakcat){
+				if(theyakcat == null){
+					User.findOne({'login':{$regex:searchExactStr}}).exec(function(err,theuser){
+						if(theuser == null){ // NO TAG, NO YAKCAT, NO USER
+							qInfo.or([ {'title': {$regex:searchStr}}, {'content': {$regex:searchStr}} , {"freeTag": {$regex:searchExactStr}} , {"yakTag": {$regex:searchExactStr}}]);
+						}else{
+							qInfo.or([ {'title': {$regex:searchStr}}, {'content': {$regex:searchStr}} , {"freeTag": {$regex:searchExactStr}} , {"yakTag": {$regex:searchExactStr}}, {'user':theuser._id}]);
+						}
+						res = qInfo.exec(callback);
+					});
+				}else{
+					qInfo.or([ {'title': {$regex:searchStr}}, {'content': {$regex:searchStr}} , {"freeTag": {$regex:searchExactStr}} , {"yakTag": {$regex:searchExactStr}},{"yakCat": {$in:[searchExactStr._id]}}]);
 					res = qInfo.exec(callback);
-				});
-			}
-			
-			
-		});
+				}
+			});
 		
+		}
+			
+				
+		
+	
+	
 		
 	}else{  // NO STRING SEARCH
 		res = qInfo.exec(callback);
@@ -443,13 +455,13 @@ User.statics.findAll = function (callback) {
 }
 	
 User.statics.search = function(string,callback){
-	var input = new RegExp(string,'i');
+	var input = new RegExp(string,'gi');
 	return this.find(
 	{	$or:[ {'login': {$regex:input}}, {'name': {$regex:input}} , {"tag": {$regex:input}} ],
 		
 	"status":1,
 	},
-	['_id','tag','name'],
+	['_id','tag','name','login',{'userdetails':'login'+'name'},'thumb'],
 	{
 		
 		skip:0, // Starting Row
@@ -457,8 +469,7 @@ User.statics.search = function(string,callback){
 		sort:{
 			lastLoginDate: -1 //Sort by Date Added DESC
 		}
-	},
-	callback);
+	}).exec(callback);
 }
 
 User.statics.findByNameorLogin = function(string,callback){
@@ -526,9 +537,28 @@ Yakcat.statics.searchOne = function (str,callback) {
 mongoose.model('Yakcat', Yakcat);
 
 
+/*YAKTAG*/
+var Tag = new Schema({
+    title     : { type: String, required: true, index:true}
+  , lastUsageDate       : { type:Date , default: Date.now, index:-1}
+  
+}, { collection: 'tag' });
+
+Tag.statics.findAll = function (callback) {
+  return this.find({},[],{sort:{lastUsageDate:1}}, callback);
+}
+Tag.statics.searchOne = function (str,callback) {
+	searchStr = new RegExp(str,'i');
+	return this.find({'title': {$regex:searchStr}},[],{limit:1}, callback);
+}
+
+mongoose.model('Tag', Tag);
+
+
+
 /***************PLACE*/
 var Place = new Schema({
-	title	: { type: String, index:true}
+	title	: { type: String, required: true, index:true}
 ,	content	: { type: String }
 ,	thumb	: { type: String }
 ,	origin	: { type: String }

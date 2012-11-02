@@ -131,17 +131,25 @@ block content
 			/*search info and place*/
 			
 			// reset
-			$('#searchStr').keyup(function(){
+			$('#searchStr').keyup(function(event){
 				if($(this).val()==''){
 					searchString = null;
 					getAndPrintInfo();
 				}
+				if (event.which == 13) {
+					$('#searchBtn').trigger('click');
+				}
 			});
-			$('#searchPlaceStr').keyup(function(){
+			$('#searchPlaceStr').keyup(function(event){
 				if($(this).val()==''){
 					$('#locationInput').val('');
 				}
+				if (event.which == 13) {
+					$('#searchBtn').trigger('click');
+				}
 			});
+			
+			
 			
 			// search button
 			$('#searchBtn').click(function(){
@@ -245,9 +253,9 @@ block content
 					encodeURIComponent(query);
 						if(query.length >= 3){
 							$.ajax({
-									url: "/api/cats",				
+									url: "/api/catsandtags",				
 									success: function( data ) {
-										typeahead.process(data.cats);
+										typeahead.process(data.catsandtags);
 									}
 								})}
 					},
@@ -528,6 +536,26 @@ block content
 					
 				});
 			
+			
+			/*linkify*/
+			$("body").delegate('.tagHashLink','click',function(event){
+				event.preventDefault();
+				searchString = "#"+$(this).html();
+				
+				$('#searchStr').val(searchString);
+				searchString = encodeURIComponent(searchString);
+				getAndPrintInfo();
+			});
+			$("body").delegate('.userHashLink','click',function(event){
+				event.preventDefault();
+				searchString = "@"+$(this).html();
+				
+				$('#searchStr').val(searchString);
+				searchString = encodeURIComponent(searchString);
+				getAndPrintInfo();
+			});
+			
+			
 		});/*END READY*/
 		function drawNewsFeed(){	
 			var newsfeedContainerHeight = window.innerHeight-$('#newsfeedContainer').offset().top-50+'px';
@@ -669,6 +697,8 @@ block content
 		}
 		
 		function silentMarkerAdder(){
+		
+			//searchString = encodeURIComponent(searchString);
 			//console.log('silentMarkerAdder');
 			$.getJSON('/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+heat+'/'+type.toString()+'/'+searchString,function(data) {
 				
@@ -775,8 +805,8 @@ block content
 			drawNewsFeed();
 			
 			cleanMarkers();
+			//searchString = encodeURIComponent(searchString);
 			
-		
 			$.getJSON('/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+heat+'/'+type.toString()+'/'+searchString,function(data) {
 				
 				// empty the news feed
