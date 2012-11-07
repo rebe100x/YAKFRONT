@@ -1,0 +1,15 @@
+extends ../layout
+block content
+
+	include ../mixins/menu.jade
+	include ../mixins/forms/newUserForm.jade
+
+	mixin menu('newuser')
+	
+	div.container-fluid
+		div.row-fluid
+			div.span4
+			div.span4
+				mixin newUserForm() 
+			div.span4
+

@@ -1,0 +1,105 @@
+extends ../layout
+block content
+
+	include ../mixins/menu.jade
+	include ../mixins/locationChooser.jade
+	include ../mixins/forms/profileForm.jade
+	mixin menu('profile')
+	mixin locationChooser()
+
+	div.container-fluid
+		div.row-fluid
+			div.span12
+				- if (message)
+					div.alert.fade.in
+						button.close(type="button",data-dismiss="alert") x
+						strong=message
+				div.content-header
+					div.header-inner
+						h2 Initialisation de votre compte:
+						p.subheader Pour une meilleur expérience de Yakwala, nous vous invitons à paramétrer votre compte dès maintenant:
+				hr
+				form#firstvisitForm(action='/firstvisit', method='POST')	
+					input#location(type='hidden', name='location', value='')
+					input#address(type='hidden', name='address', value='')
+										
+					div.control-group
+						div.controls
+							label.control-label.label-xlarge(for="oldpass") Choisissez un mot de passe ( au moins 8 caractères ):  
+							input.input-xlarge#password(type="text", name="password", autocomplete="off", placeholder="Votre mot de passe") 
+					div.control-group
+						div.controls
+							label.control-label(for="city") Votre géolocalisation par défault: ( entrer une adresse, une ville, un pays ... )
+								span#cityTarget
+							input#city.searchInput(type='text', name='city', placeholder='Chercher...', autocomplete="off",)
+					div.control-group
+						div.controls
+							label.checkbox
+								<input id="cgu" type="checkbox" name="cgu" value="1"> J'ai lu et j'accepte les conditions générales d'utilisation
+					div.control-group
+						div.controls
+							button.btn.btn-large.btn-block.btn-inverse(type='submit', name='submit', id='submit', value='submit') Enregistrer
+		script
+			var conf = !{conf};
+			var user =!{JSON.stringify(user)};
+			
+			$(document).ready(function() {
+			
+				$('#firstvisitForm').isHappy({
+					fields: {
+						'#password': {
+							required: true,
+							message: "Entrez un mot de passe d'au moins 8 caractères",
+							test: function(val){return (val.length < 8)?false:true;}
+						},
+						'#cgu': {
+							required: true,
+							message: 'Lisez et validez les CGU',
+							test: function(val){return (val == 1)?true:false;}
+						}
+					}
+				});
+				
+				$('#city').typeahead({
+					minLength : 2,							
+					source: function (typeahead, query) {
+						
+						if(query.length > 2){
+							$("#city").css({'background-image':'url(\'images/loader.gif\')','padding-left':'20px'});
+							var addressQuery = {"address": query,"region":"fr" };
+							var geocoder = new google.maps.Geocoder();
+							geocoder.geocode( addressQuery, function(results, status) {
+								if (status == google.maps.GeocoderStatus.OK) {
+									//results[0].geometry.location
+									typeahead.process(results);
+								} 
+								
+								if(status == google.maps.GeocoderStatus.ZERO_RESULTS){}
+									
+								if( status == google.maps.GeocoderStatus.INVALID_REQUEST 
+									|| status == google.maps.GeocoderStatus.REQUEST_DENIED  
+									|| status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT){
+									var salt = new Date().getTime();
+									$('#cityTarget').html("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide ("+status+")</div>");
+									setTimeout(function() {
+										$("#alert"+salt).fadeOut();
+									}, 3000);
+									$('#city').select();
+								}
+							});
+						}
+					},
+					property: "formatted_address",
+					onselect: function(obj) { 
+						$("#city").css({'background-image': 'none','padding-left':'0px'});
+						$('#cityTarget').html("<div>"+obj.formatted_address+"</div>");
+						$('#city').val('').focus();
+						var placeGmap = getPlaceFromGmapResult(obj);
+						
+						$('#location').val(JSON.stringify(placeGmap.location));
+						$('#address').val(JSON.stringify(placeGmap.address));
+					}
+				});
+				
+				
+			}); // END READY	

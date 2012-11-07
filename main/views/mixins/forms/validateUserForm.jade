@@ -1,0 +1,23 @@
+mixin validateUserForm()
+	- if (message)
+		div.alert.fade.in
+			button.close(type="button",data-dismiss="alert") x
+			strong=message
+	form(action='/validate', method='POST')
+		input#token(type='hidden', name='token')
+		div.control-group
+			div.controls
+				input#mail(type="text",name="mail", autocomplete="on", placeholder='Votre email')
+		div.control-group
+			div.controls
+				input#password(type="text",name="password", autocomplete="on", placeholder='Your activation code')
+		div.control-group
+			div.controls
+				button.btn.btn-large.btn-block.btn-inverse(,type='submit', name='submit', id='submit', value='envoyer') Activer
+	script
+		var user =!{JSON.stringify(user)};
+		console.log(user);
+		$('#mail').val(user.mail);
+		$('#token').val(user.token);
+		$('#password').focus();
+	

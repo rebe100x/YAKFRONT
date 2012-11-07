@@ -32,11 +32,12 @@ block content
 						h2 Mon profil
 						p.subheader Ces informations sont publiques et permettent aux autres utilisateurs de vous trouver et de suivre vos infos.
 				hr
-				mixin profileForm(session.type)
+				mixin profileForm(locals.user.type)
 				
 		script
 			var conf = !{conf};
-			var user = !{user}; 
+			var user =!{JSON.stringify(user)};
+			
 			var hashtag = [];
 			var hashtagTmp = [];
 			var rule = new RegExp('#([^\\s]*)','g');
@@ -51,13 +52,14 @@ block content
 				$('#tag').val(user.tag);
 				$('#web').val(user.web);
 				$('#taginit').val(user.tag);
-				if(user.address.city)
-					$('#cityTarget').html(user.address.city);
-				if(user.address.zip)
-					$('#cityTarget').append(', '+user.address.zip);
-				if(user.address.country)
-					$('#cityTarget').append(', '+user.address.country);
-				
+				if(user.address){
+					if(user.address.city)
+						$('#cityTarget').html(user.address.city);
+					if(user.address.zip)
+						$('#cityTarget').append(', '+user.address.zip);
+					if(user.address.country)
+						$('#cityTarget').append(', '+user.address.country);
+				}
 				if(user.thumb)
 					$('#avatarPreview img').attr('src','/uploads/pictures/128_128/'+user.thumb);
 				else
@@ -100,10 +102,10 @@ block content
 				});
 				
 				$('#city').typeahead({
-					minLength : 3,							
+					minLength : 2,							
 					source: function (typeahead, query) {
 						
-						if(query.length > 3){
+						if(query.length > 2){
 							$("#city").css({'background-image':'url(\'images/loader.gif\')','padding-left':'20px'});
 							var addressQuery = {"address": query,"region":"fr" };
 							var geocoder = new google.maps.Geocoder();

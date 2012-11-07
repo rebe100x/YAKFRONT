@@ -13,18 +13,42 @@ exports.index = function(req, res){
   res.redirect('news/map');
 };
 
-exports.partials = function (req, res) {
-  var name = req.params.name;
-  res.render('partials/' + name);
+
+
+exports.requiresLogin = function(req,res,next){
+
+	if(req.session.user){
+		var User = db.model('User');
+		
+		User.findById(req.session.user,function (err, theuser){
+			if(theuser != undefined && theuser != null ){
+				res.locals.user = theuser;
+				console.log('LOGGED IN');
+				next();
+			}else{
+				console.log('NOT LOGGED IN');
+				req.session.message = 'Please login to access this section:';
+				res.redirect('/user/login?redir='+req.url);
+			}
+		});
+	}else{
+		console.log('NOT LOGGED IN');
+		req.session.message = 'Please login to access this section:';
+		res.redirect('/user/login?redir='+req.url);
+	}	
 };
 
+
+
+
+/**NEWS */
 exports.news_map = function(req, res){
 	if(typeof(req.session.type) == 'undefined' || req.session.type === null ){
 		var type = new Array();
 		type.push(1);
 		req.session.type = type;
 	}	
-	
+	console.log(res.locals.user);
 	res.render('news/map',{type:req.session.type,str:null});  
 };
 exports.news_map_search = function(req, res){
@@ -37,9 +61,11 @@ exports.news_map_search = function(req, res){
 	res.render('news/map',{type:req.session.type,str:req.params.str});  
 };
 
+/*
 exports.news_map_test = function(req, res){
 	res.render('news/map_test');  
 };
+*/
 exports.news_post = function(req, res){
 	delete req.session.message;
 	if(req.session.user){
@@ -57,31 +83,156 @@ exports.news_feed = function(req, res){
 };
 
 /******* USER ******/
+
+
 exports.user_login = function(req, res){
 	delete req.session.message;
+	//res.render('user/login',{locals:{redir:req.query.redir,session:req.session.user}});
 	res.render('user/login',{locals:{redir:req.query.redir}});
 };
+
+
+	
+
+exports.user_validate = function(req, res){
+	var User = db.model('User');	
+	
+	User.findByToken(req.params.token,function (err, model){
+		if (err) return next(err)
+		if (model){
+			console.log(model);
+			//var user = JSON.stringify(model);
+			res.locals.user = model;
+			//res.render('user/validate',{user:user});
+			res.render('user/validate');
+		}else{
+			req.session.message = 'Validation code is not correct';
+			res.render('user/new');
+		}
+	});
+	
+};
+
 exports.user_logout = function(req, res){
 	delete req.session.user;
 	res.redirect('/news/map');
 };
-exports.user = function(req, res){
+
+
+
+exports.validate = function(req,res){
+	var User = db.model('User');
+	
+	User.authenticate(req.body.mail,req.body.password, function(err, model) {
+	if(!(typeof(model) == 'undefined' || model === null || model === '')){
+			req.session.user = model._id;
+			User.update({_id: model._id}, {status:1}, {upsert: false}, function(err){if (err) console.log(err);});						
+			res.render('settings/firstvisit',{user:model});
+		}else{
+			req.session.message = "Votre clé d'activation est incorrecte.";
+			res.redirect('/user/validate');
+		}
+	
+	});
+}
+
+exports.session = function(req, res){
 
 	var User = db.model('User');
 	
-	
-	User.Authenticate(req.body.login,req.body.password,function(err,user){
-		if(!(typeof(user) == 'undefined' || user === null || user === '')){
-			req.session.user = user;
+	User.authenticate(req.body.login,req.body.password, function(err, user) {
+	if(!(typeof(user) == 'undefined' || user === null || user === '')){
+			req.session.user = user._id;
 			res.redirect(req.body.redir || '/news/map');
 		}else{
-			req.session.message = 'Wrong login or password:';
+			req.session.message = 'Identifiants incorrects.';
 			res.redirect('user/login?redir='+req.body.redir);
 		}
+	
 	});
+	
+};
+
+exports.user = function(req, res){
+
+	var nodemailer = require("nodemailer");
+	var crypto = require('crypto')
+	var themail = req.body.mail;
+	var User = db.model('User');
+	var user = new User();
+	
+	/*check if the mail is valid*/
+	
+	
+	/*check if user exists*/
+	User.findOne({'mail': themail},'_id', function(err,theuserid){
+		if(!(typeof(theuserid) == 'undefined' || theuserid === null || theuserid === '')){
+			req.session.message = 'Cet utilisateur est déjà enregistré.';
+			res.redirect('user/new');
+		}else{
+				/*create user*/
+				var tmp = req.body.mail.split('@');
+				var login = tmp[0];
+				var salt = Math.round(new Date().valueOf() * Math.random());
+				var token = crypto.createHash('sha1').update("yakwala@secure"+salt).digest("hex");
+				var password = user.generatePassword(5);
+				
+				user.name=login;
+				user.login=login;
+				user.mail=themail;
+				user.token=token;
+				user.status=2;
+				user.hash= password;
+				user.password= password;
+				user.salt="1";
+				user.type=1;
+				
+				
+				user.save(function (err) {
+									if (!err) console.log('Success!');
+									else console.log(err);
+								});
+				/*send mail*/
+				
+				var link = conf.validationUrl+token;
+				var smtpTransport = nodemailer.createTransport("SMTP",{
+					service: "Gmail",
+					auth: {
+						user: "bessieres.biz@gmail.com",
+						pass: "/m.gmail"
+					}
+				});
+				var mailOptions = {
+					from: "Yakwala <noreply@yakwala.fr>", // sender address
+					to: themail, // list of receivers
+					subject: "Votre inscription à Yakwala", // Subject line
+					text: "Bonjour, \r\n Pour valider votre compte Yakwala, entrez ce lien dans votre navigateur : "+link+" et validez votre compte avec cette clé de validation : "+password, // plaintext bod
+					html: "Bonjour,<br><br>Pour valider votre compte Yakwala, clickez sur ce <a href=\""+link+"\">lien</a> et entrer la clé de validation suivante : <b>"+password+"</b>" // html body
+				}
+
+				smtpTransport.sendMail(mailOptions, function(error, response){
+					smtpTransport.close(); // shut down the connection pool, no more messages
+				});
+
+				req.session.message = 'Un email vous a été envoyé contenant un lien et une clé de validation de votre compte.';
+				res.redirect('user/new');
+		}
+	});
+	
+	
+};
+
+exports.user_new = function(req, res){
+	delete req.session.message;
+	res.render('user/new');
+	
 };
 
 
+
+
+
+/************NEWS****************/
 exports.news = function(req, res){
 
 	var formMessage = new Array();
@@ -223,16 +374,29 @@ exports.news = function(req, res){
 
 
 /******SETTINGS********/
+
+
+
+
+
+exports.settings_password = function(req,res){
+	delete req.session.message;
+	res.render('settings/password');
+
+}	
+
+exports.settings_firstvisit = function(req,res){
+	delete req.session.message;
+	res.render('settings/firstvisit');
+
+}	
+
 exports.settings_profile = function(req, res){
 	delete req.session.message;
-	var User = db.model('User');
+	//var User = db.model('User');
 	
 	if(req.session.user){
-	
-		User.findById(req.session.user._id,function (err, docs){
-			var user = JSON.stringify(docs);
-			res.render('settings/profile',{user:user});
-		});	
+		res.render('settings/profile');
 	}else{
 		req.session.message = "Erreur : vous devez être connecté pour voir votre profil";
 		res.redirect('/user/login?redir=settings/profile');
@@ -245,10 +409,10 @@ exports.settings_alerts = function(req, res){
 	var User = db.model('User');
 	if(req.session.user){
 		User.findByIds(req.session.user.usersubs,function (err, docs){
-			var users = JSON.stringify(docs);
 			
-			var tags = JSON.stringify(req.session.user.tagsubs);
-			res.render('settings/alerts',{users:users,tags:tags});
+
+			var tags = JSON.stringify(docs.tagsubs);
+			res.render('settings/alerts',{tags:tags});
 		});	
 		
 	}else{
@@ -258,6 +422,129 @@ exports.settings_alerts = function(req, res){
 	
 	
 };
+
+
+exports.firstvisit = function(req,res){
+	
+	formMessage = "";
+	var User = db.model('User');
+	if(req.session.user){	
+		User.findById(req.session.user,function (err, docs){
+			var crypto = require('crypto');
+			var newcryptedPass = crypto.createHash('sha1').update(req.body.password+"yakwala@secure"+docs.salt).digest("hex");	
+			var login = docs.login;
+			if(req.body.password.length >= 8){
+				if(req.body.location){
+					var location = JSON.parse(req.body.location);
+					var address = JSON.parse(req.body.address);
+				}
+				else{
+					var location = {'lat':48.856614,'lng':2.3522219000000177}; // PARIS BY DEFAULT*
+					var address = {
+						'street_number' : '', 
+						'street' : '',
+						'arr' : '',
+						'city' : 'Paris',
+						'state' : 'Paris',
+						'area' : 'Île-de-France',
+						'country' : 'France',
+						'zip' : '75000'
+					};
+				}
+				
+				User.update({_id: req.session.user}, {hash : newcryptedPass,location:location, address: address}, {upsert: false}, function(err){
+				
+					if (err) console.log(err);
+					else{
+						formMessage = "Votre nouveau mot de passe est enregistré";
+						//delete req.session.user;
+						User.authenticate(login,req.body.password, function(err, user) {
+							if(!(typeof(user) == 'undefined' || user === null || user === '')){
+									req.session.user = user._id;
+									res.locals.user = user;
+									req.session.message = formMessage;
+									res.render('settings/firstvisit');
+								}else{
+									req.session.message = 'Identifiants incorrects.';
+									res.redirect('user/login?redir='+req.body.redir);
+								}
+						});
+					}
+				});
+			}
+			else
+				formMessage = "Votre mot de passe doit au moins 8 caractères";
+				
+			
+		});
+		
+		
+	}else{
+		formMessage= "Erreur : vous n'êtes pas connecté !";
+		req.session.message = formMessage;
+		res.redirect('/user/login?redir=settings/firstvisit');
+	}
+	
+	
+
+}	
+
+
+exports.password = function(req,res){
+	formMessage = "";
+	var User = db.model('User');
+	if(req.session.user){	
+		User.findById(req.session.user,function (err, docs){
+			var crypto = require('crypto');
+			var cryptedPass = crypto.createHash('sha1').update(req.body.oldpass+"yakwala@secure"+docs.salt).digest("hex");
+			var newcryptedPass = crypto.createHash('sha1').update(req.body.newpass1+"yakwala@secure"+docs.salt).digest("hex");	
+			var login = docs.login;
+			if( cryptedPass == docs.hash){
+					if(req.body.newpass1 != '' && req.body.newpass1 == req.body.newpass2 ){
+						if(req.body.newpass1.length >= 8){
+							User.update({_id: req.session.user}, {hash : newcryptedPass}, {upsert: false}, function(err){
+								if (err) console.log(err);
+								else{
+									formMessage = "Votre nouveau mot de passe est enregistré";
+									//delete req.session.user;
+									User.authenticate(login,req.body.newpass1, function(err, user) {
+										if(!(typeof(user) == 'undefined' || user === null || user === '')){
+												req.session.user = user._id;
+												res.locals.user = user;
+												req.session.message = formMessage;
+												res.redirect('settings/password');
+										}else{
+												req.session.message = 'Identifiants incorrects.';
+												res.redirect('user/login?redir=settings/password');
+										}
+									});
+								}
+							});
+						}
+						else{
+							formMessage = "Votre mot de passe doit au moins 8 caractères";
+							req.session.message = formMessage;
+							res.render('settings/password');
+						}
+				}else{
+					formMessage = "Attention, vos 2 nouveaux mots de passe ne sont pas identiques.";
+					req.session.message = formMessage;
+					res.render('settings/password');
+				}
+			}else{
+				formMessage = "Votre ancien mot de passe est incorrect";
+				req.session.message = formMessage;
+				res.render('settings/password');
+			}	
+		});
+	}else{
+		formMessage= "Erreur : vous n'êtes pas connecté !";
+		req.session.message = formMessage;
+		res.redirect('/user/login?redir=settings/password');
+	}
+	
+	
+}
 exports.alerts = function(req, res){
 
 	var formMessage = new Array();
@@ -339,9 +626,9 @@ exports.profile = function(req, res){
 			cond.address = JSON.parse(req.body.address);
 		}
 			
-		req.session.user.location = location;
+		//req.session.user.location = location;
 		
-		User.update({_id: req.session.user._id}, 
+		User.update({_id: req.session.user}, 
 		cond
 		, {upsert: true}, function(err){
 			if (!err){

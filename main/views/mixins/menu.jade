@@ -9,16 +9,18 @@ mixin menu(active)
 					a.brand(href="/news/map") YAKWALA
 					
 					div.btn-group.pull-right
-						- if (session)
+						- if (locals.user)
 							a.btn.dropdown-toggle(href="#",data-toggle="dropdown")
 								i.icon-user
-								span= ' '+session.login+' ';
+								span= ' '+locals.user.login+' ';
 								span.caret
 							ul.dropdown-menu
 								li
 									a(href="/settings/profile") Mon profil
 								li
 									a(href="/settings/alerts") Mes alertes
+								li
+									a(href="/settings/password") Mot de Passe
 								li.divider
 								li
 									a(href="/user/logout") Quitter
@@ -52,6 +54,12 @@ mixin menu(active)
 							- else
 								li
 									a(href="/news/feed") Le fil d'actu
+							- if(active == 'newuser')
+								li.active
+									a(href="/user/new") Créer un compte
+							- else
+								li
+									a(href="/user/new") Céer un compte
 							- if (active == 'post')
 								li.active
 									a(href="/news/post") Poster une info

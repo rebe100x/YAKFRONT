@@ -5,8 +5,8 @@ exports.StoreImg = function(file,size,conf){
 	var srcPath = '';
 	var srcName = '';
 	var im = require('imagemagick');
-	var fs = require('fs');
-	var md5 = require('md5');
+	var fs = require('fs');	
+	var crypto = require('crypto');
 	
 	if(file.size){
 		
@@ -18,8 +18,9 @@ exports.StoreImg = function(file,size,conf){
 		srcName = srcNameTmp.replace('.gif', '.jpeg');
 		srcName = srcNameTmp.replace('.png', '.jpeg');
 		srcName = srcNameTmp.replace('.jpg', '.jpeg');
-		destName =  md5.digest_s(srcName)+'.jpeg'; 
-		console.log(destName);
+		destName =  crypto.createHash('md5').update(srcName).digest("hex")+'.jpeg'; 
+		//destName =  md5.digest_s(srcName)+'.jpeg'; 
+		//console.log(destName);
 		//var destName =  srcPath.split('\');
 		// convert to jpeg
 		im.convert([srcPathTmp,srcPath],function(err,stdout){

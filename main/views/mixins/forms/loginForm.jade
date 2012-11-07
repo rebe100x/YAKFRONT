@@ -3,7 +3,7 @@ mixin loginForm()
 		div.alert.fade.in
 			button.close(type="button",data-dismiss="alert") x
 			strong=message
-	form(action='/user', method='POST')
+	form(action='/session', method='POST')
 		input#redir(type='hidden', name='redir', value=redir)
 		div.control-group
 			div.controls

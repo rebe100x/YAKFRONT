@@ -1,0 +1,21 @@
+extends ../layout
+block content
+
+	include ../mixins/menu.jade
+	include ../mixins/forms/validateUserForm.jade
+
+	mixin menu('validate')
+	
+	div.container-fluid
+		div.row-fluid
+			div.span4
+			div.span4
+				mixin validateUserForm() 
+			div.span4
+				
+	script
+		$(document).ready(function() {
+			$('#password').focus();
+		
+		});
+

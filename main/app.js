@@ -7,11 +7,14 @@ var express = require('express'),
   routes = require('./routes'),
   api = require('./routes/api'),
   users = require('./routes/users'),
+  auth = require('./mylib/basicAuth'),
   db = require('./models/mongooseModel'),
   config = require('./confs.js'),
   fs = require('fs'),
   S = require('string'),
-  md5 = require('md5');
+  crypto = require('crypto'),
+  nodemailer = require("nodemailer")
+  ;
   
   
 var app = express();
@@ -29,12 +32,12 @@ app.configure(function(){
   app.use(express.cookieParser('SAfuBUZ2'));
   // Session management
   app.use(express.session({
-    "secret": "yakwala2012 info hyper locale",
+    "secret": "bb352fece6f80a5cff2d6088a376eddf",
     "store":  new express.session.MemoryStore({ reapInterval: 60000 * 10 })
   }));
   app.use(function(req, res, next){
     res.locals.session = req.session.user;
-	res.locals.user = JSON.stringify(req.session.user);
+	//res.locals.user = JSON.stringify(req.session.user);	
 	res.locals.redir = req.query.redir;
 	res.locals.message = req.session.message;
 	res.locals.type = req.session.type;
@@ -67,32 +70,38 @@ var db = routes.db(conf);
 	
 // Routes
 
-app.get('/', requiresLogin, routes.index);
+app.get('/', routes.requiresLogin, routes.index);
 
 
 app.get('/partials/:name', routes.partials);
 //app.get('/news/map', requiresPosition, routes.news_map);
-app.get('/news/map', requiresLogin, routes.news_map);
-app.get('/news/map/search/:str', requiresLogin, routes.news_map_search);
+app.get('/news/map', routes.requiresLogin, routes.news_map);
+app.get('/news/map/search/:str', routes.requiresLogin, routes.news_map_search);
 app.get('/news/map_test', routes.news_map_test);
-app.get('/news/feed', requiresLogin, routes.news_feed);
+app.get('/news/feed', routes.requiresLogin, routes.news_feed);
 //app.get('/news/post', routes.news_post);
-app.get('/news/post', requiresLogin, routes.news_post);
+app.get('/news/post', routes.requiresLogin, routes.news_post);
 
 app.get('/user/login', routes.user_login);
 app.get('/user/logout', routes.user_logout);
-
-app.get('/settings', requiresLogin, routes.settings_profil);
-app.get('/settings/profile', requiresLogin, routes.settings_profile);
-app.get('/settings/alerts', requiresLogin, routes.settings_alerts);
-app.get('/settings/password', requiresLogin, routes.settings_password);
+app.get('/user/new', routes.user_new);
+app.get('/user/validate/:token', routes.user_validate);
 
 
+app.get('/settings', routes.requiresLogin, routes.settings_profil);
+app.get('/settings/profile', routes.requiresLogin, routes.settings_profile);
+app.get('/settings/alerts', routes.requiresLogin, routes.settings_alerts);
+app.get('/settings/password', routes.requiresLogin, routes.settings_password);
+app.get('/settings/firstvisit', routes.requiresLogin, routes.settings_firstvisit);
 
 app.post('/user',routes.user);
+app.post('/validate',routes.validate);
+app.post('/session',routes.session);
 app.post('/news',routes.news);
 app.post('/alerts',routes.alerts);
 app.post('/profile',routes.profile);
+app.post('/password',routes.password);
+app.post('/firstvisit',routes.firstvisit);
 // JSON API
 
 
@@ -125,7 +134,7 @@ app.get('*', routes.index);
 
 //io = require('socket.io');
 //sio = io.listen(app);
-		
+/*		
 function requiresLogin(req,res,next){
 	if(req.session.user){
 		next();
@@ -133,7 +142,8 @@ function requiresLogin(req,res,next){
 		req.session.message = 'Please login to access this section:';
 		res.redirect('/user/login?redir='+req.url);
 	}
-}
+}*/
+
 function requiresPosition(req,res,next){
 	delete req.session.position;
 	

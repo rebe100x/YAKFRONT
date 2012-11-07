@@ -1,0 +1,29 @@
+mixin newUserForm()
+	- if (message)
+		div.alert.fade.in
+			button.close(type="button",data-dismiss="alert") x
+			strong=message
+	form#newuserForm(action='/user', method='POST')
+		div.control-group
+			div.controls
+				input#mail(type="text",name="mail", autocomplete="on", placeholder='Votre email')
+		div.control-group
+			div.controls
+				button.btn.btn-large.btn-block.btn-inverse(,type='submit', name='submit', id='submit', value='envoyer') Envoyer
+		
+	script
+		$(document).ready(function() {
+			$('#mail').focus();
+			$('#newuserForm').isHappy({
+				fields: {
+					'#mail': {
+						required: true,
+						message: 'Please enter a valid email',
+						test: function(val){
+							var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+							return re.test(val);
+						} 
+					}
+				}
+			});
+		});

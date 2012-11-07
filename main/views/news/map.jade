@@ -62,7 +62,7 @@ block content
 
 		/*INIT*/
 		var conf = !{conf};
-		var user = [!{user}];
+		var user =!{JSON.stringify(user)};
 		var logged = 0;
 		
 		var curPos = {'x':0,'y':0,'z':0};
@@ -100,7 +100,6 @@ block content
 		
 			/*init*/
 			if(user.length){
-				user = JSON.parse(JSON.stringify(!{user}));
 				logged = 1;
 			}
 			
@@ -700,6 +699,7 @@ block content
 		
 			//searchString = encodeURIComponent(searchString);
 			//console.log('silentMarkerAdder');
+			bounds = map.getBounds();
 			$.getJSON('/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+heat+'/'+type.toString()+'/'+searchString,function(data) {
 				
 				$.each(data.info, function(key,val) {
@@ -732,9 +732,9 @@ block content
 							else
 								infoContent += "<img src=\'/uploads/pictures/120_90/"+val.thumb+"\' />";
 						}
-						infoContent += "<div class=\'title\'> "+val.title.replace(rule2,'')+" ("+dateCreation+")";
+						infoContent += "<div class=\'title\'> "+val.title.linkify()+" ("+dateCreation+")";
 						infoContent += "</div>";
-						infoContent += "<div class=\'content\'>"+val.content.substring(0,250).replace(rule2,'')+"...</div>";
+						infoContent += "<div class=\'content\'>"+val.content.substring(0,250).linkify()+"...</div>";
 						if(!(typeof val.outGoingLink === 'undefined') && val.outGoingLink != '')
 							infoContent += "<div class=\'readmore\'><a target=\'_blank\' href=\'"+val.outGoingLink+"\'> >> lire l\'article</a></div>";
 						if(val.address != 'null')
@@ -841,7 +841,7 @@ block content
 					
 					infoContent += "<div class=\'title\'> "+val.title.linkify()+" ("+dateCreation+")";
 					infoContent += "</div>";
-					infoContent += "<div class=\'content\'>"+val.content.substring(0,250).replace(rule2,'')+"...</div>";
+					infoContent += "<div class=\'content\'>"+val.content.substring(0,250).linkify()+"...</div>";
 					if(!(typeof val.outGoingLink === 'undefined') && val.outGoingLink != '')
 						infoContent += "<div class=\'readmore\'><a target=\'_blank\' href=\'"+val.outGoingLink+"\'> >> lire l\'article</a></div>";
 					
