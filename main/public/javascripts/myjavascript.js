@@ -95,8 +95,11 @@ function csl(str){
 }
 
 String.prototype.linkify = function() {
-   var tweet = this.replace(/(^|\s)@(\w+)/g, "$1@<a class=\"userHashLink\" href=\"$2\">$2</a>");
-   return tweet.replace(/(^|\s)#(\w+)/g, "$1#<a class=\"tagHashLink\" href=\"/news/map/search/%23$2\">$2</a>");
+	var res = this;
+	var hash = res.replace(/(^|\s)@(\w+)/g, "$1<a class=\"userHashLink\" href=\"$2\">@$2</a>");
+    res = hash.replace(/(^|\s)#(\w+)/g, "$1<a class=\"tagHashLink\" href=\"/news/map/search/%23$2\">#$2</a>");
+	res = res.replace(/(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/, "<a target=\"_blank\" class=\"externalLink\" href=\"http://$3\">$3</a>");
+	return res;
  }
  
 Array.prototype.cleanArrayByName=function(str){

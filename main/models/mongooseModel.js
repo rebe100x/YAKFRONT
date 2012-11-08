@@ -71,7 +71,7 @@ Info.statics.findByLink = function (link, callback) {
 Info.statics.findAll = function (callback) {
   return this.find(
 	{"status":1},
-	[],
+	{},
 	{
 		skip:0, // Starting Row
 		limit:50, // Ending Row

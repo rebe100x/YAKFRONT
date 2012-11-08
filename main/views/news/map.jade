@@ -539,7 +539,7 @@ block content
 			/*linkify*/
 			$("body").delegate('.tagHashLink','click',function(event){
 				event.preventDefault();
-				searchString = "#"+$(this).html();
+				searchString = $(this).html();
 				
 				$('#searchStr').val(searchString);
 				searchString = encodeURIComponent(searchString);
@@ -547,7 +547,7 @@ block content
 			});
 			$("body").delegate('.userHashLink','click',function(event){
 				event.preventDefault();
-				searchString = "@"+$(this).html();
+				searchString = $(this).html();
 				
 				$('#searchStr').val(searchString);
 				searchString = encodeURIComponent(searchString);
