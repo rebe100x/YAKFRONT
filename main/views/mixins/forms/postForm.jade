@@ -1,18 +1,19 @@
 mixin postForm()
-	- if(session)
-		- if(session.type > 1)
+	- if(locals.user)
+		- if(locals.user.type > 1)
 			form#postForm(action='/news', method='POST', enctype='multipart/form-data')
 				input#yakcatInput(type='hidden', name='yakcatInput', value='')
 				input#placeInput(type='hidden', name='placeInput', value='')
-				input#latitude(type="hidden",data-provide="typeahead", name="latitude")
-				input#longitude(type="hidden",data-provide="typeahead", name="longitude")
+				input#latitude(type="hidden",name="latitude")
+				input#longitude(type="hidden",name="longitude")
+				input#username(type="hidden", name="username",value=locals.user.login)
 				legend Poster une info:
 				div.control-group
 					div.controls
 						input.span12.hashtagMaker(type='text', name='title', id='title', placeholder='Titre: vous pouvez utiliser des hashtags dans votre texte ( #maisonavendre )')
 						textarea#content.span12.hashtagMaker(name='content', placeholder='Texte: vous pouvez utiliser des hashtags dans votre texte ( #maisonavendre )',rows='3')
 				div.control-group
-					label(for='category') Choisissez la rubrique danslaquelle votre info apparaitra:
+					label(for='type') Choisissez la rubrique danslaquelle votre info apparaitra:
 					div.controls
 						label.radio.inline Actu
 							input#option1(type="radio", name="yakType", value="1" , checked) 
@@ -43,7 +44,7 @@ mixin postForm()
 				br
 				button.btn.btn-large.btn-block.btn-inverse(style='width:100%',type='submit', name='submit', id='submit', value='Envoyer') Envoyer
 			
-		- if(session.type == 1)
+		- if(locals.user.type == 1)
 			form#postForm(action='/news', method='POST', enctype='multipart/form-data')
 				input#yakcatInput(type='hidden', name='yakcatInput', value='')
 				input#placeInput(type='hidden', name='placeInput', value='')

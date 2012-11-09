@@ -42,7 +42,8 @@ var Info = new Schema({
   , outGoingLink       : { type: String }  
   , heat	: {type: Number}		
   , print	: {type: Number}		
-  , yakCat	: {type: [Yakcat],index:1}		
+  , yakCat	: {type: [Yakcat],index:1}
+  , yakCatName	: {type: [String],index:1}	
   , yakTag	: {type: [String],index:1}
   , yakType	: {type: Number,index:1}  
   , freeTag	: {type: [String]}	
@@ -54,6 +55,7 @@ var Info = new Schema({
   , location	: { type : { lat: Number, lng: Number }, index : '2d'}	
   , status	: {type: Number,index:1}		
   , user	: {type: Schema.ObjectId}		
+  , userName	: {type: String}		
   , zone	: {type: Schema.ObjectId}
   ,	placeId	: {type: Schema.ObjectId}  
 }, { collection: 'info' });
@@ -259,7 +261,7 @@ Info.statics.findAllGeoOLD = function (x1,y1,x2,y2,heat,type,str,usersubs,tagsub
 						var Info = db.model('Info');
 						return Info.find(
 							cond,
-							[],
+							{},
 							{
 								skip:0, // Starting Row
 								limit:100, // Ending Row
@@ -331,7 +333,7 @@ Info.statics.findAllGeoOLD = function (x1,y1,x2,y2,heat,type,str,usersubs,tagsub
 			var Info = db.model('Info');
 			return Info.find(
 				cond,
-				[],
+				{},
 				{
 					skip:0, // Starting Row
 					limit:100, // Ending Row
@@ -364,7 +366,7 @@ Info.statics.findAllGeoOLD = function (x1,y1,x2,y2,heat,type,str,usersubs,tagsub
 	
 	return this.find(
 		cond,
-		[],
+		{},
 		{
 			skip:0, // Starting Row
 			limit:100, // Ending Row
@@ -400,9 +402,9 @@ var User = new Schema({
 	, hash       : { type: String ,required: true, index: true}
 	, salt       : { type: String ,required: true, index: true}
 	, token       : { type: String ,required: true, index: true}
-	, usersubs	: { type: [Schema.ObjectId], index: true}
+	, usersubs	: { type: [Schema.Types.ObjectId],ref: 'User',  index: true}
 	, tagsubs	: { type: [String], index: true}
-	, placesubs	: { type: [Schema.ObjectId], index: true}
+	, placesubs	: { type: [Schema.Types.ObjectId], index: true}
 	, location	: { type : { lat: Number, lng: Number }, index : '2d'}	
 	, address	: { type : { 
 								street_number: String,
@@ -473,7 +475,7 @@ User.virtual('passwordclear')
 */
 	
 User.statics.findAll = function (callback) {
-  return this.find({},[],{sort:{name:1}}, callback);
+  return this.find({},{},{sort:{name:1}}, callback);
 }
 	
 User.statics.search = function(string,callback){
@@ -563,11 +565,11 @@ var Yakcat = new Schema({
 }, { collection: 'yakcat' });
 
 Yakcat.statics.findAll = function (callback) {
-  return this.find({},[],{sort:{title:1}}, callback);
+  return this.find({},{},{sort:{title:1}}, callback);
 }
 Yakcat.statics.searchOne = function (str,callback) {
 	searchStr = new RegExp(str,'i');
-	return this.find({'title': {$regex:searchStr}},[],{limit:1}, callback);
+	return this.find({'title': {$regex:searchStr}},{},{limit:1}, callback);
 }
 
 mongoose.model('Yakcat', Yakcat);
@@ -581,11 +583,11 @@ var Tag = new Schema({
 }, { collection: 'tag' });
 
 Tag.statics.findAll = function (callback) {
-  return this.find({},[],{sort:{lastUsageDate:1}}, callback);
+  return this.find({},{},{sort:{lastUsageDate:1}}, callback);
 }
 Tag.statics.searchOne = function (str,callback) {
 	searchStr = new RegExp(str,'i');
-	return this.find({'title': {$regex:searchStr}},[],{limit:1}, callback);
+	return this.find({'title': {$regex:searchStr}},{},{limit:1}, callback);
 }
 
 mongoose.model('Tag', Tag);
@@ -621,7 +623,7 @@ var Place = new Schema({
 },{ collection: 'place' });
 
 Place.statics.findAll = function (callback) {
-  return this.find({},[],{sort:{title:1}}, callback);
+  return this.find({},{},{sort:{title:1}}, callback);
 }
 
 Place.statics.searchOne = function (str,exact,callback) {
@@ -634,7 +636,7 @@ Place.statics.searchOne = function (str,exact,callback) {
 	"status":1,
 	$or:[ {'title': {$regex:searchStr}}, {'content': {$regex:searchStr}} , {"freeTag": {$regex:searchStr}} , {"yakTag": {$regex:searchStr}}],	
 };
-  return this.find(cond,[],{limit:1}, callback);
+  return this.find(cond,{},{limit:1}, callback);
 }
 
 

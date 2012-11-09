@@ -139,8 +139,9 @@ ul#newsfeed li.highlighted .mapHighlighter{background-color:#F0F0F0;}
 	background: white;
 }
 .infowindow{border-color: #BBB;}
-.infowindow .readmore{float:right;margin:5px 0px 5px 0px;font-style:italic;font-size:0.8em;}
-.infowindow .readmore a{color:#0C0C0C;}
+.infowindow .infofooter{float:left:width:100%;margin:5px 0px 5px 0px;}
+.infowindow .infodetail{float:left;width:100%;font-style:italic;font-size:0.8em;line-height: 1.5em;}
+.infowindow .infodetail a{color:#0C0C0C;}
 .infowindow img {float: left;margin: 0 5px 0px 0;width:120px;height:90px;}
 		/*POST*/
 

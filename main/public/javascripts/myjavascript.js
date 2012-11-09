@@ -96,8 +96,8 @@ function csl(str){
 
 String.prototype.linkify = function() {
 	var res = this;
-	var hash = res.replace(/(^|\s)@(\w+)/g, "$1<a class=\"userHashLink\" href=\"$2\">@$2</a>");
-    res = hash.replace(/(^|\s)#(\w+)/g, "$1<a class=\"tagHashLink\" href=\"/news/map/search/%23$2\">#$2</a>");
+	var hash = res.replace(/(^|\s)@(\w+)/gi, "$1<a class=\"userHashLink\" href=\"$2\">@$2</a>");
+    res = hash.replace(/(^|\s)#([A-Za-z0-9àáâãäåçèéêëìíîïðòóôõöùúûüýÿ]+)/gi, "$1<a class=\"tagHashLink\" href=\"/news/map/search/%23$2\">#$2</a>");
 	res = res.replace(/(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/, "<a target=\"_blank\" class=\"externalLink\" href=\"http://$3\">$3</a>");
 	return res;
  }
@@ -108,11 +108,12 @@ Array.prototype.cleanArrayByName=function(str){
 			this.splice(i, 1);
 }
 Array.prototype.cleanArray=function(id){
-	//console.log(id);
-	for(i=0;i<this.length;i++)
+	for(i=0;i<this.length;i++){
 		if(id==this[i]._id) 
 			this.splice(i, 1);
+			}
 }
+
 
 Array.prototype.cleanArrayByLocation=function(lng,lat){
 	for(i=0;i<this.length;i++){

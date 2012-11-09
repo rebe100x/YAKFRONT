@@ -1,5 +1,5 @@
 mixin profileForm(type)
-	- if(session.type > 1)
+	- if(type > 1)
 		form(action='/profile', method='POST', enctype='multipart/form-data')
 			input#taginit(type='hidden', name='taginit', value='')
 			input#location(type='hidden', name='location', value='')

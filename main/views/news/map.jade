@@ -822,6 +822,15 @@ block content
 					/*PRINT ON THE MAP*/	
 					
 					//console.log(val.location);
+					var yakCatNameArray = new Array();
+					if(val.yakCatName){
+						$.each(val.yakCatName,function(x,y){
+							if(y.substr(0,1)!="#")
+								yakCatNameArray.push("#"+y);
+							else
+								yakCatNameArray.push(y);
+						});
+					}
 					infoArray.push(val);
 					var latLng = new google.maps.LatLng(val.location['lat'],val.location['lng']);
 					var marker = new google.maps.Marker({position: latLng,icon:"/images/markers/type"+val.yakType+".png"});
@@ -839,16 +848,25 @@ block content
 					}
 					var test = new String("this is #test");
 					
-					infoContent += "<div class=\'title\'> "+val.title.linkify()+" ("+dateCreation+")";
-					infoContent += "</div>";
+					infoContent += "<div class=\'title\'> "+val.title.linkify()+" ("+dateCreation+")</div>";
 					infoContent += "<div class=\'content\'>"+val.content.substring(0,250).linkify()+"...</div>";
-					if(!(typeof val.outGoingLink === 'undefined') && val.outGoingLink != '')
-						infoContent += "<div class=\'readmore\'><a target=\'_blank\' href=\'"+val.outGoingLink+"\'> >> lire l\'article</a></div>";
-					
-					if(val.address != 'null')
-						infoContent += "<div>"+val.address+"</div>";
+					infoContent += "<div class=\'infofooter\'>";
+						if(val.address != 'null')
+							infoContent += "<div class=\'infodetail\'>"+val.address+"</div>";
+						
+							if(val.yakCatName)
+								infoContent +="<div class=\'infodetail\'>"+yakCatNameArray.join(',').linkify()+"</div>";	
+						
+						
+							if(val.origin != "")
+								infoContent += "<div class=\'infodetail\'>Posté par <a target='_blank' href='"+val.originLink+"'>"+val.origin+"</a></div>";
+							
+							if(!(typeof val.outGoingLink === 'undefined') && val.outGoingLink != '')
+								infoContent += "<div class=\'infodetail\'><a target=\'_blank\' href=\'"+val.outGoingLink+"\'> >> lire l\'article</a></div>";
+							
+						
+						infoContent += "</div>";	
 					infoContent += "</div>";
-					
 					/*PRINT ON THE FEED*/
 					//$('#newsfeed').append('<li class=\'mapHighlighter\' infoId=\''+val._id+'\'><i class=\'icon-eye-open\' ></i> '+val.title+'</li>')
 					$('#newsfeed').append('<li class=\'mapHighlighterDetails\' infoId=\''+val._id+'\' >'+infoContent+'</li>');
