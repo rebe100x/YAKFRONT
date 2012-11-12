@@ -29,9 +29,24 @@ block content
 							input.input-xlarge#password(type="text", name="password", autocomplete="off", placeholder="Votre mot de passe") 
 					div.control-group
 						div.controls
-							label.control-label(for="city") Votre géolocalisation par défault: ( entrer une adresse, une ville, un pays ... )
+							label.control-label(for="city") Votre géolocalisation par défault servira à recentrer la carte autour de vous: 
 								span#cityTarget
-							input#city.searchInput(type='text', name='city', placeholder='Chercher...', autocomplete="off",)
+							input#city.searchInput(type='text', name='city', placeholder='Chercher une adresse, une ville...', autocomplete="off",)
+					div.control-group
+						div.controls
+							label.control-label(for="favplace") Choisissez vos endroits favoris à ajouter dans vos raccourcis: 
+								ul.favplacelist.unstyled
+									- each favplace in locals.user.favplace
+										li(lat=favplace.location.lat, lng=favplace.location.lng)
+											i.icon-map-marker
+											span= favplace.name
+											i.icon-remove.icon-pointer(onclick='removefavPlace($(this));')
+					div.control-group
+						div.controls
+							label(for='favplace') Ajouter des endroits favoris : 
+							div.input-append
+								input#favplace2.searchInput(type="text",data-provide="typeahead", name="favplace", autocomplete="off", placeholder='Chercher une adresse, une ville...') 
+								button.btn#btn-favplace-adder(type="button") Add
 					div.control-group
 						div.controls
 							label.checkbox

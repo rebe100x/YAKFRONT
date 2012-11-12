@@ -2,6 +2,7 @@ extends ../layout
 block content
 
 	include ../mixins/menu.jade
+	include ../mixins/settingsMenu.jade
 	include ../mixins/locationChooser.jade
 
 	mixin menu('alerts')
@@ -10,16 +11,7 @@ block content
 	div.container-fluid
 		div.row-fluid
 			div.span4.yak-sidebar
-				ul.nav.nav-list.yak-sidenav.affix
-					li
-						a(href="/settings/profile",data-nav="profile") Mon profil
-							i.icon-chevron-right
-					li.active
-						a(href="/settings/alerts",data-nav="alerts") Abonnements et Alertes
-							i.icon-chevron-right 		
-					li
-						a(href="/settings/password",data-nav="password") Mot de passe
-							i.icon-chevron-right 
+				mixin settingsMenu('alerts')
 
 						
 			div.span8

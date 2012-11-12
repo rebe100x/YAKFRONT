@@ -5,12 +5,17 @@ mixin locationChooser()
 			h3 Y a quoi là ?
 		div.modal-body
 			p.alertText 
-				ul#favplacelist.unstyled
+				ul.favplacelist.unstyled
+					- each favplace in locals.user.favplace
+						li.zoneLoc(lat=favplace.location.lat, lng=favplace.location.lng)
+							i.icon-map-marker
+							span= favplace.name
+							i.icon-remove.icon-pointer(onclick='removefavPlace($(this));')
 				br	
 				- if(session)
 					div.control-group
 						div.controls
-							label(for='favplace') Ajouter des lieux favoris : 
+							label(for='favplace') Ajouter des endroits favoris : 
 							div.input-append
 								input#favplace.searchInput(type="text",data-provide="typeahead", name="favplace", autocomplete="off", placeholder='Rechercher...') 
 								button.btn#btn-favplace-adder(type="button") Add

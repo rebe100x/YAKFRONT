@@ -78,7 +78,7 @@ exports.news_post = function(req, res){
 exports.news_feed = function(req, res){
 	var Info = db.model('Info');
 	Info.findAll(function (err, docs){
-		res.render('news/feed',{locals:{infos:docs}});
+		res.render('news/feed',{infos:docs});
 	}); 
 };
 
@@ -317,6 +317,7 @@ exports.user = function(req, res){
 	var crypto = require('crypto')
 	var themail = req.body.mail;
 	var User = db.model('User');
+	var Point = db.model('Point');
 	var user = new User();
 	
 	/*check if the mail is valid*/
@@ -344,6 +345,10 @@ exports.user = function(req, res){
 				user.password= password;
 				user.salt="1";
 				user.type=1;
+				
+				
+			
+				user.favplace = [{'name':'Paris, France','location':{'lat':48.851875,'lng':2.356374}},{'name':'Eghézée, Belgique','location':{'lat':50.583346,'lng':4.900031}},{'name':'Montpellier, France','location':{'lat':43.610787,'lng':3.876715}}];
 				
 				
 				user.save(function (err) {
@@ -422,6 +427,15 @@ exports.settings_profile = function(req, res){
 	}
 };
 
+exports.settings_privateprofile = function(req, res){
+	delete req.session.message;
+	if(req.session.user){
+		res.render('settings/privateprofile');
+	}else{
+		req.session.message = "Erreur : vous devez être connecté pour voir votre profil";
+		res.redirect('/user/login?redir=settings/privateprofile');
+	}
+};
 
 exports.settings_alerts = function(req, res){
 	delete req.session.message;
@@ -442,6 +456,7 @@ exports.settings_alerts = function(req, res){
 	
 	
 };
+
 
 
 exports.firstvisit = function(req,res){
@@ -472,6 +487,7 @@ exports.firstvisit = function(req,res){
 					};
 				}
 				
+				
 				User.update({_id: req.session.user}, {hash : newcryptedPass,location:location, address: address}, {upsert: false}, function(err){
 				
 					if (err) console.log(err);
@@ -483,7 +499,7 @@ exports.firstvisit = function(req,res){
 									req.session.user = user._id;
 									res.locals.user = user;
 									req.session.message = formMessage;
-									res.render('settings/firstvisit');
+									res.redirect('news/map');
 								}else{
 									req.session.message = 'Identifiants incorrects.';
 									res.redirect('user/login?redir='+req.body.redir);
@@ -667,3 +683,28 @@ exports.profile = function(req, res){
 	res.redirect('settings/profile');
 }
 
+exports.privateprofile = function(req, res){
+		
+	var formMessage = new Array();
+	delete req.session.message;
+	var User = db.model('User');
+	var user = new User();
+				
+	if(req.session.user){
+		
+		User.update({_id: req.session.user}, 
+		{mail:req.body.mail}
+		, {upsert: true}, function(err){
+			if (!err){
+				console.log('Success!');
+			}
+			else console.log(err);
+		});
+		formMessage.push("Votre profil privé est enregistré");
+	}else
+		formMessage.push("Erreur : vous n'êtes pas connecté !");
+	
+	req.session.message = formMessage;
+	
+	res.redirect('settings/privateprofile');
+}

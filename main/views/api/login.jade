@@ -1,0 +1,39 @@
+!!!
+html
+	head
+		meta(charset='utf8')
+		base(href='/')
+		title Yakwala API - #{JSON.parse(conf).env}
+		link(rel='stylesheet', href='/javascripts/lib/bootstrap/css/bootstrap.css')
+		link(rel='stylesheet', href='/javascripts/lib/bootstrap/css/bootstrap-responsive.css')
+		link(rel='stylesheet', href='/stylesheets/apistyle.css')
+		
+		block head
+	body
+		div.container-fluid
+			div.row-fluid
+				div.span4
+				div.span4
+					form(action='/session', method='POST')
+						input#redir(type='hidden', name='redir', value=redir)
+						div.control-group
+							div.controls
+								input#login(type="text",name="login", autocomplete="on", placeholder='Login')
+						div.control-group
+							div.controls
+								input#password(type="text",name="password", autocomplete="on", placeholder='Password')
+						div.control-group
+							div.controls
+								label.checkbox
+									<input id="cgu" type="checkbox" name="cgu" value="1"> J'autorise l'application !{locals.client.name} à accéder à mes données publiques et privées.
+						div.control-group
+							div.controls
+								button.btn.btn-large.btn-block.btn-inverse(,type='submit', name='submit', id='submit', value='login') Login
+								div.span4
+					
+		script
+			$(document).ready(function() {
+				$('#login').focus();
+			
+			});
+

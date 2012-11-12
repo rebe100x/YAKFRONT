@@ -90,6 +90,7 @@ app.get('/user/validate/:token', routes.user_validate);
 
 app.get('/settings', routes.requiresLogin, routes.settings_profil);
 app.get('/settings/profile', routes.requiresLogin, routes.settings_profile);
+app.get('/settings/privateprofile', routes.requiresLogin, routes.settings_privateprofile);
 app.get('/settings/alerts', routes.requiresLogin, routes.settings_alerts);
 app.get('/settings/password', routes.requiresLogin, routes.settings_password);
 app.get('/settings/firstvisit', routes.requiresLogin, routes.settings_firstvisit);
@@ -100,6 +101,7 @@ app.post('/session',routes.session);
 app.post('/news',routes.news);
 app.post('/alerts',routes.alerts);
 app.post('/profile',routes.profile);
+app.post('/privateprofile',routes.privateprofile);
 app.post('/password',routes.password);
 app.post('/firstvisit',routes.firstvisit);
 // JSON API
@@ -116,6 +118,11 @@ app.get('/api/places', api.places);
 app.get('/api/searchplaces/:str', api.searchplaces);
 app.get('/api/usersearch/:string', api.usersearch);
 
+
+app.get('/api/oauth/login', api.oauth_login);
+app.get('/api/oauth/authorize/:client_id/:redirect_uri', api.oauth_authorize); 
+app.get('/api/oauth/authorize/:client_id/:redirect_uri/:response_type', api.oauth_authorize); 
+app.get('/api/oauth/authorize/:client_id/:redirect_uri/:response_type/:scope', api.oauth_authorize); //https://api.instagram.com/oauth/authorize/?client_id=CLIENT-ID&redirect_uri=REDIRECT-URI&response_type=code
 
 app.post('/api/favplace', api.addfavplace);
 app.post('/api/delfavplace', api.delfavplace);

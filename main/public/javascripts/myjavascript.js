@@ -20,12 +20,12 @@ $(document).ready(function() {
 
 	
 	
-	$('#favplace').typeahead({
+	$('#favplace,#favplace2').typeahead({
 		minLength : 3,							
 		source: function (typeahead, query) {
 			
 			if(query.length > 3){
-				$("#favplace").addClass('searching');
+				$(this).addClass('searching');
 				//console.log("encode"+encodeURIComponent(query));
 				//console.log("nomal"+query);
 				/*
@@ -51,25 +51,25 @@ $(document).ready(function() {
 						|| status == google.maps.GeocoderStatus.REQUEST_DENIED  
 						|| status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT){
 						var salt = new Date().getTime();
-						$('#favplace').before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide ("+status+")</div>");
+						$(this).before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide ("+status+")</div>");
 						setTimeout(function() {
 							$("#alert"+salt).fadeOut();
 						}, 3000);
-						$('#favplace').select();
+						$(this).select();
 					}
 				});
 			}
 		},
 		property: "formatted_address",
 		onselect: function(obj) { 
-			$("#favplace").removeClass('searching');
+			$(this).removeClass('searching');
 			var placeGmap = getPlaceFromGmapResult(obj);
 			var point = new Object();
 			point.name = placeGmap.title;
 			point.location = placeGmap.location;
 			$.post('api/favplace', {'place':point},function(id) {
-				$('#favplacelist').append("<li pointId='"+id+"' lat='"+placeGmap.location.lat+"' lng='"+placeGmap.location.lng+"' class='zoneLoc'><i class='icon-map-marker'></i><span> "+obj.formatted_address+"</span><i class='icon-remove icon-pointer'  onclick='removefavPlace($(this));'></i></li>");
-				$('#favplace').val('').focus();
+				$('.favplacelist').append("<li pointId='"+id+"' lat='"+placeGmap.location.lat+"' lng='"+placeGmap.location.lng+"' class='zoneLoc'><i class='icon-map-marker'></i><span> "+obj.formatted_address+"</span><i class='icon-remove icon-pointer'  onclick='removefavPlace($(this));'></i></li>");
+				$(this).val('').focus();
 			});
 			
 			//var placeGmap = getPlaceFromGmapResult(obj);
@@ -77,6 +77,28 @@ $(document).ready(function() {
 			//$('#location').val(JSON.stringify(placeGmap.location));
 			//$('#address').val(JSON.stringify(placeGmap.address));
 		}
+	});
+	
+	
+	/*endroits favoris*/
+	$('ul.favplacelist').delegate("li.zoneLoc span",'click', function () {
+				var lat = parseFloat($(this).parent().attr('lat'));
+				var lng = parseFloat($(this).parent().attr('lng'));	
+				moveMap(lat,lng);
+			});
+	
+	/*autour de moi*/
+	$('#arroundme').click(function(){
+		if(logged){
+			if(user.location){
+				var latLng = new google.maps.LatLng(user.location['lat'],user.location['lng']);
+				map.panTo(latLng);
+				//map.setCenter(latLng);
+			}else{
+				window.location = '/settings/profile';
+			}
+		}else
+			window.location = '/user/login';
 	});
 });
 /*END READY FUNCTIONS*/

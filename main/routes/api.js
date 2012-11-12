@@ -90,10 +90,7 @@ exports.addfavplace = function (req, res) {
 	
 	if(req.session.user){
 		var point = new Point(req.body.place);	
-		console.log(point);
-		req.session.user.favplace.push(point);
-		
-		User.update({_id:req.session.user._id},{$push:{"favplace":point}}, function(err,docs){			
+		User.update({_id:req.session.user},{$push:{"favplace":point}}, function(err,docs){			
 			res.json(point._id);
 		});
 	}else{
@@ -109,11 +106,7 @@ exports.delfavplace = function (req, res) {
 	
 	if(req.session.user){
 			var pointId = req.body.pointId;
-			for(i=0;i<req.session.user.favplace.length;i++)
-				if(pointId==req.session.user.favplace[i]._id) 
-					req.session.user.favplace.splice(i, 1);
-					 //{$pull: {attendees: {_id: ObjectId( "4f8dfb06ee21783d7134503a" )}}})
-			User.update({_id:req.session.user._id},{$pull:{favplace:{_id:pointId}}}, function(err){
+			User.update({_id:req.session.user},{$pull:{favplace:{_id:pointId}}}, function(err){
 				console.log(err);
 				res.json('del');
 				
@@ -156,63 +149,20 @@ exports.usersearchOLD = function (req, res) {
 	});
 };
 
+/*****************************
+API
+******************************/
+exports.oauth_authorize = function(res,req){
+	var Client = db.model('CLient');
+	Client.findOne({_id:req.params.client_id,status:1},{},function (err, docs){
+	  if(docs){
+		res.render('api/login',{redirect_uri:req.params.redirect_uri,client_name:docs.name});
+	  
+	  }
+	});
 
-
-
-exports.posts = function (req, res) {
-  var posts = [];
-  data.posts.forEach(function (post, i) {
-    posts.push({
-      id: i,
-      title: post.title,
-      text: post.text.substr(0, 50) + '...'
-    });
-  });
-  res.json({
-    posts: posts
-  });
+}
+exports.oauth_login = function(req, res){
+	res.render('api/login',{locals:{redir:req.query.redir}});
 };
 
-exports.post = function (req, res) {
-  var id = req.params.id;
-  if (id >= 0 && id < data.posts.length) {
-    res.json({
-      post: data.posts[id]
-    });
-  } else {
-    res.json(false);
-  }
-};
-
-// POST
-
-exports.addPost = function (req, res) {
-  data.posts.push(req.body);
-  res.json(req.body);
-};
-
-// PUT
-
-exports.editPost = function (req, res) {
-  var id = req.params.id;
-
-  if (id >= 0 && id < data.posts.length) {
-    data.posts[id] = req.body;
-    res.json(true);
-  } else {
-    res.json(false);
-  }
-};
-
-// DELETE
-
-exports.deletePost = function (req, res) {
-  var id = req.params.id;
-
-  if (id >= 0 && id < data.posts.length) {
-    data.posts.splice(id, 1);
-    res.json(true);
-  } else {
-    res.json(false);
-  }
-};

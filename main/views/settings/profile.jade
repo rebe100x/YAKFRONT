@@ -4,22 +4,15 @@ block content
 	include ../mixins/menu.jade
 	include ../mixins/locationChooser.jade
 	include ../mixins/forms/profileForm.jade
+	include ../mixins/settingsMenu.jade
+	
 	mixin menu('profile')
 	mixin locationChooser()
 
 	div.container-fluid
 		div.row-fluid
 			div.span4.yak-sidebar
-				ul.nav.nav-list.yak-sidenav.affix
-					li.active
-						a(href="/settings/profile",data-nav="profile") Mon profil
-							i.icon-chevron-right
-					li
-						a(href="/settings/alerts",data-nav="alerts") Abonnements et Alertes
-							i.icon-chevron-right 		
-					li
-						a(href="/settings/password",data-nav="password") Mot de passe
-							i.icon-chevron-right 
+				mixin settingsMenu('profile') 
 
 						
 			div.span8

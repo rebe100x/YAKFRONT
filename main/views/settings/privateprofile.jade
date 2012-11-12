@@ -1,0 +1,39 @@
+extends ../layout
+block content
+
+	include ../mixins/menu.jade
+	include ../mixins/locationChooser.jade
+	include ../mixins/forms/privateprofileForm.jade
+	include ../mixins/settingsMenu.jade
+	
+	mixin menu('privateprofile')
+	mixin locationChooser()
+
+	div.container-fluid
+		div.row-fluid
+			div.span4.yak-sidebar
+				mixin settingsMenu('privateprofile') 
+
+						
+			div.span8
+				- if (message)
+					div.alert.fade.in
+						button.close(type="button",data-dismiss="alert") x
+						strong=message
+				div.content-header
+					div.header-inner
+						h2 Mon profil privé
+						p.subheader Ces informations sont privées et nous permettent de vous contacter:
+				hr
+				mixin privateprofileForm()
+				
+		script
+			var conf = !{conf};
+			var user =!{JSON.stringify(user)};
+			
+			$(document).ready(function() {
+			
+				// init form
+				$('#mail').val(user.mail);
+				
+			}); // END READY	

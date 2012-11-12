@@ -439,41 +439,6 @@ User.statics.findById = function (id,callback) {
 User.statics.findByToken = function (token,callback) {
   return this.findOne({'token': token,'status':2}, callback);
 }
-/*
-User.setters = function(password) {
-		  this._password = password;
-		  this.salt = this.makeSalt();
-		  this.hashed_password = this.encryptPassword(password);
-		}
-		
-User.methods.encryptPassword = function(password) {
-		  return crypto.createHmac('sha1', this.salt).update(password).digest('hex');
-	}
-	
-/
-User.statics.Authenticate = function(lg,pwd,callback) {
-	if(!lg || !pwd)
-		return null;
-	else{
-		var pwd = crypto.createHash('md5').update(pwd).digest("hex");
-		return this.findOne({login:lg,password:pwd},callback);
-	}
-}
-
-
-User.makeSalt =  function() {
-      return Math.round((new Date().valueOf() * Math.random())) + '';
-    }
-User.virtual('passwordclear')
-    .set(function(password) {
-      this._password = password;
-      this.salt = this.makeSalt();
-      this.hashed_password = this.encryptPassword(password);
-    })
-	.get(function() { return this._password; });
-
-*/
-	
 User.statics.findAll = function (callback) {
   return this.find({},{},{sort:{name:1}}, callback);
 }
@@ -506,13 +471,7 @@ User.statics.findByNameorLogin = function(string,callback){
 }
 
 
-/*
 
-User.pre('save', function (next) {
-  console.log('PREPRPERPRE');
-  next();
-}); 
-*/
     
 var auth = require('../mylib/basicAuth');
 
@@ -641,3 +600,16 @@ Place.statics.searchOne = function (str,exact,callback) {
 
 
 mongoose.model('Place', Place);
+
+
+
+/***************CLIENT*/
+var Client = new Schema({
+	name	: { type: String, required: true, index:'unique'}
+,	link	: { type: String, required: true}
+,	secret	: { type: String, required: true, index:'unique'}
+,	status	: {type: Number, required: true, index:true}		
+},{ collection: 'client' });
+
+
+mongoose.model('Client', Client);

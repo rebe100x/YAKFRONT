@@ -1,0 +1,10 @@
+mixin privateprofileForm()
+	form(action='/privateprofile', method='POST', enctype='multipart/form-data')
+		div.span4
+			div.control-group
+				div.controls
+					label.control-label(for="mail") Votre email :  
+					input#mail(type='text', name='mail')
+					
+			button.btn.btn-large.btn-block.btn-inverse(type='submit', name='submit', id='submit', value='Envoyer') Envoyer
+		
