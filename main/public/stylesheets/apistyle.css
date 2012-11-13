@@ -1,0 +1,21 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  
+}
+
+a {
+  color: #00B7FF;
+}
+
+.well
+{       
+    position:absolute;      
+    width:400px;    
+    height:150px;
+    top: 50%;
+    left: 50%;
+    margin-top:-150px; /* negative number 1/2 height */
+    margin-left:-200px; /* negative number 1/2 width */
+    outline:1px solid #CCC;
+}

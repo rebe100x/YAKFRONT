@@ -13,7 +13,12 @@ exports.index = function(req, res){
   res.redirect('news/map');
 };
 
-
+exports.picture = function(req,res){
+	var fs = require('fs');
+	var img = fs.readFileSync('./main/public/uploads/pictures/'+req.params.size+'/'+req.params.picture);
+	res.writeHead(200, {'Content-Type': 'image/jpeg' });
+	res.end(img, 'binary');
+}
 
 exports.requiresLogin = function(req,res,next){
 
@@ -245,7 +250,6 @@ exports.news = function(req, res){
 
 exports.user_login = function(req, res){
 	delete req.session.message;
-	//res.render('user/login',{locals:{redir:req.query.redir,session:req.session.user}});
 	res.render('user/login',{locals:{redir:req.query.redir}});
 };
 
@@ -258,10 +262,7 @@ exports.user_validate = function(req, res){
 	User.findByToken(req.params.token,function (err, model){
 		if (err) return next(err)
 		if (model){
-			console.log(model);
-			//var user = JSON.stringify(model);
 			res.locals.user = model;
-			//res.render('user/validate',{user:user});
 			res.render('user/validate');
 		}else{
 			req.session.message = 'Validation code is not correct';

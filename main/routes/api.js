@@ -152,17 +152,134 @@ exports.usersearchOLD = function (req, res) {
 /*****************************
 API
 ******************************/
-exports.oauth_authorize = function(res,req){
-	var Client = db.model('CLient');
+exports.oauth_authorize = function(req,res){
+	var JSON = {parms : function(a1){t=[];for(x in a1)t.push(x+"="+encodeURI(a1[x]));return t.join("&");}};
+	var Client = db.model('Client');
 	Client.findOne({_id:req.params.client_id,status:1},{},function (err, docs){
 	  if(docs){
-		res.render('api/login',{redirect_uri:req.params.redirect_uri,client_name:docs.name});
-	  
+		res.render('api/login',{redirect_uri:req.params.redirect_uri,client_name:docs.name,client_id:docs._id});
+	  }else{
+		var error = {"error":"access_denied","error_reason": "Client Id does not match anything in database","error_description":"Client id is not active"};
+		if(req.params.redirect_uri == '' || req.params.redirect_uri == "undefined"){
+			res.json({error:error});
+		}else
+			res.redirect('http://'+req.body.redirect_uri+"?error="+JSON.parms(error));
+	  }
+		
+	});
+	
+}
+/*
+exports.oauth_login = function(req, res){
+	res.render('api/login',{redirect_uri:redirect_uri});
+};*/
+
+exports.oauth_session = function(req, res){
+
+	var JSON = {parms : function(a1){t=[];for(x in a1)t.push(x+"="+encodeURI(a1[x]));return t.join("&");}};
+	var Client = db.model('Client');
+	Client.findOne({_id:req.body.client_id,status:1},{},function (err, docs){
+	if(docs){
+		var url_tmp = req.body.redirect_uri.split('/');
+		if(req.body.redirect_uri == '' || req.body.redirect_uri == "undefined" || "http://"+url_tmp[2]+"/" != docs.link){
+			var error = {"error":"access_denied","error_reason": "Redirect uri does not match","error_description":"Redirection uri was not provided or is not matching the client redirect url"};			
+			res.json({error:error});
+		}else{
+			if(req.body.appauth == 1){
+			
+				var User = db.model('User');
+				User.authenticate(req.body.login,req.body.password, function(err, user) {
+				if(!(typeof(user) == 'undefined' || user === null || user === '')){
+						req.session.user = user._id;
+						var crypto = require('crypto');
+						var now = new Date();
+						var salt = Math.round(now.valueOf() * Math.random());
+						var code = crypto.createHash('sha1').update("yakwala@secure"+salt).digest("hex");
+						User.update({_id:user._id},{$set:{apicode:code,apiCodeCreationDate:now}}, function(err,docs){
+							if(err)
+								throw err;
+							else
+								res.redirect('http://'+req.body.redirect_uri+"?code="+code);
+						});
+						
+					}else{
+						var error = {"error":"access_denied","error_reason": "Login failed","error_description":"Wrong login or password"};
+						res.redirect('http://'+req.body.redirect_uri+"?error="+JSON.parms(error));
+					}
+				
+				});
+			}else{
+				var error = {"error":"access_denied","error_reason": "Acces not granted","error_description":"User did not grant acces to the application"};
+				res.redirect('http://'+req.body.redirect_uri+"?error="+JSON.parms(error));
+			}
+		}
+	}else{
+		var error = {"error":"access_denied","error_reason": "Client id is not active","error_description":"Check your client ID"};
+		res.redirect('http://'+req.body.redirect_uri+"?error="+JSON.parms(error));
 	  }
 	});
-
-}
-exports.oauth_login = function(req, res){
-	res.render('api/login',{locals:{redir:req.query.redir}});
+		
 };
 
+exports.oauth_access_token = function(req, res){
+	var JSON = {parms : function(a1){t=[];for(x in a1)t.push(x+"="+encodeURI(a1[x]));return t.join("&");}};
+	var Client = db.model('Client');
+	var User = db.model('User');
+	if(req.params.client_id && req.params.client_secret && req.params.grant_type && req.params.redirect_uri && req.params.code ){
+		var Client = db.model('Client');
+		Client.findOne({_id:req.params.client_id,secret:req.params.client_secret,status:1},{},function (err, docs){
+		console.log(docs);
+			if(docs){
+				var url_tmp = req.params.redirect_uri.split('/');
+				if(req.params.redirect_uri == '' || req.params.redirect_uri == "undefined" || "http://"+url_tmp[2]+"/" != docs.link){
+					var error = {"error":"access_denied","error_reason": "Redirect uri does not match","error_description":"Redirection uri was not provided or is not matching the client redirect url"};			
+					res.json({error:error});
+				}else{
+					var now = new Date();
+					var tmp = now.getTime() + 1000*60*60*2;
+					
+					var maxApiCodeCreationDate = new Date();
+					maxApiCodeCreationDate.setTime(tmp);
+					//User.findOne({apicode:req.params.code,apiCodeCreationDate:{$le:maxApiCodeCreationDate}},{}, function(err, user) {
+					User.findOne({apicode:req.params.code},{}, function(err, user) {
+					console.log(user);
+						if(!(typeof(user) == 'undefined' || user === null || user === '')){
+							var crypto = require('crypto');
+							//var now = new Date();
+							var salt = Math.round(now.valueOf() * Math.random());
+							var token = crypto.createHash('sha1').update("yakwala@secure"+salt).digest("hex");
+							User.update({_id:user._id},{$set:{apitoken:token,apiTokenCreationDate:now}}, function(err,docs){
+								if(err)
+									throw err;
+								else{
+									var tokenObject = {
+										"access_token": token,
+										"user": {
+											"id": user._id,
+											"username": user.login,
+											"full_name": user.name,
+											"profile_picture": conf.fronturl+"/pictures/128_128/"+user.thumb
+										}
+									};
+									res.json(tokenObject);
+								}
+							});
+						
+						}else{
+							var error = {"error":"access_denied","error_reason": "Login failed","error_description":"Wrong login or password"};
+							res.redirect('http://'+req.params.redirect_uri+"?error="+JSON.parms(error));
+						}
+					});
+				}
+			}
+			else{
+				var error = {"error":"access_denied","error_reason": "Client id is not active","error_description":"Check your client ID"};
+				res.redirect('http://'+req.params.redirect_uri+"?error="+JSON.parms(error));
+			}
+		});	
+		
+	}else{
+		var error = {"error":"access_denied","error_reason": "One or more parameter is empty","error_description":"Please use the following parameters : client_id=CLIENT-ID, client_secret=CLIENT-SECRET, grant_type=authorization_code, redirect_uri=YOUR-REDIRECT-URI, code=CODE"};
+		res.redirect('http://'+req.params.redirect_uri+"?error="+JSON.parms(error));
+	}
+}

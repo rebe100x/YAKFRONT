@@ -420,7 +420,12 @@ var User = new Schema({
 	, creationDate	: {type: Date, required: true, default: Date.now}		
 	, lastModifDate	: {type: Date, required: true, default: Date.now}		
 	, lastLoginDate	: {type: Date, required: true, default: Date.now}		
-	, status	: {type: Number,required: true, default: 2,index: true}		
+	, status	: {type: Number,required: true, default: 2,index: true}	
+	, apistatus	: {type: Number, required: true, default: 2,index: true}
+	, apicode       : { type: String ,index: true}
+	, apiCodeCreationDate     :  {type: Date,index: true}		
+	, apiToken     :  {type: String , index: true}		
+	, apiTokenCreationDate     :  {type: Date,index: true}		
   
   
 }, { collection: 'user' });

@@ -3,6 +3,7 @@ html
 	head
 		meta(charset='utf8')
 		base(href='/')
+		link(rel="shortcut icon",href="/images/yakfav.png", type="image/x-icon")
 		title Yakwala API - #{JSON.parse(conf).env}
 		link(rel='stylesheet', href='/javascripts/lib/bootstrap/css/bootstrap.css')
 		link(rel='stylesheet', href='/javascripts/lib/bootstrap/css/bootstrap-responsive.css')
@@ -10,30 +11,35 @@ html
 		
 		block head
 	body
+		div.navbar.navbar-fixed-top
+			div.navbar-inner
+				.container-fluid
+					a.btn.btn-navbar(data-toggle="collapse",data-target=".nav-collapse") 
+						span.icon-bar
+						span.icon-bar
+						span.icon-bar
+						a.brand(href="/news/map") YAKWALA
 		div.container-fluid
-			div.row-fluid
-				div.span4
-				div.span4
-					form(action='/session', method='POST')
-						input#redir(type='hidden', name='redir', value=redir)
+			div.row-fluid.well
+				div.span12
+					form(action='/api/oauth/session', method='POST')
+						input#redirect_uri(type='hidden', name='redirect_uri', value=redirect_uri)
+						input#client_id(type='hidden', name='client_id', value=client_id)
 						div.control-group
 							div.controls
-								input#login(type="text",name="login", autocomplete="on", placeholder='Login')
+								input.span12#login(type="text",name="login", autocomplete="on", placeholder='Login')
 						div.control-group
 							div.controls
-								input#password(type="text",name="password", autocomplete="on", placeholder='Password')
+								input.span12#password(type="text",name="password", autocomplete="on", placeholder='Password')
 						div.control-group
 							div.controls
 								label.checkbox
-									<input id="cgu" type="checkbox" name="cgu" value="1"> J'autorise l'application !{locals.client.name} à accéder à mes données publiques et privées.
+									<input id="appauth" type="checkbox" name="appauth" value="1"> J'autorise l'application <b>!{client_name}</b> à accéder à mes données publiques et privées.
 						div.control-group
 							div.controls
-								button.btn.btn-large.btn-block.btn-inverse(,type='submit', name='submit', id='submit', value='login') Login
-								div.span4
+								button.btn.btn-large.btn-block.btn-inverse(,type='submit', name='submit', id='submit', value='login',style="float:right;") Accepter
+								
 					
 		script
-			$(document).ready(function() {
-				$('#login').focus();
 			
-			});
 
