@@ -60,23 +60,10 @@ mixin menu(active)
 							- else
 								li
 									a(href="/user/new") Céer un compte
-							- if (active == 'post')
+							- if (active == 'api')										
 								li.active
-									a(href="/news/post") Poster une info
+									a(href="/docs/api") Api
 							- else
 								li
-									a(href="/news/post") Poster une info
-							- if (active == 'login')										
-								li.active
-									a(href="/user/login") Login
-							- else
-								li
-									a(href="/user/login") Login
-							- if (active == 'logout')												
-								li.active
-									a(href="/user/logout") Logout
-							- else
-								li
-									a(href="/user/logout") Logout
-							li
-								a(href="/api/infos") L'info brute	
+									a(href="/docs/api") Api
+							

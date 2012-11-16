@@ -15,7 +15,7 @@ exports.index = function(req, res){
 
 exports.picture = function(req,res){
 	var fs = require('fs');
-	var img = fs.readFileSync('./main/public/uploads/pictures/'+req.params.size+'/'+req.params.picture);
+	var img = fs.readFileSync(__dirname+'/../public/uploads/pictures/'+req.params.size+'/'+req.params.picture);
 	res.writeHead(200, {'Content-Type': 'image/jpeg' });
 	res.end(img, 'binary');
 }
@@ -362,8 +362,8 @@ exports.user = function(req, res){
 				var smtpTransport = nodemailer.createTransport("SMTP",{
 					service: "Gmail",
 					auth: {
-						user: "bessieres.biz@gmail.com",
-						pass: "/m.gmail"
+						user: "labs.yakwala@gmail.com",
+						pass: "/m.yakwala"
 					}
 				});
 				var mailOptions = {
@@ -708,4 +708,12 @@ exports.privateprofile = function(req, res){
 	req.session.message = formMessage;
 	
 	res.redirect('settings/privateprofile');
+}
+
+
+/**
+DOCS
+*/
+exports.docs_api = function(req, res){
+	res.render('docs/api');
 }

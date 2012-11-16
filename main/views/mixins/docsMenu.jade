@@ -1,0 +1,34 @@
+mixin docsMenu(active)
+	ul.nav.nav-list.yak-sidenav.affix
+		- if (active == 'authentification')		
+			li.active
+				a(href="/docs/api#authentification",data-nav="authentification") Authentification
+					i.icon-chevron-right
+		- else
+			li
+				a(href="/docs/api#authentification",data-nav="authentification") Authentification
+					i.icon-chevron-right
+		- if (active == 'endpoints')		
+			li.active
+				a(href="/docs/api#endpoints",data-nav="endpoints") Endpoints
+					i.icon-chevron-right
+		- else
+			li
+				a(href="/docs/api#endpoints",data-nav="endpoints") Endpoints
+					i.icon-chevron-right
+		- if (active == 'librairies')		
+			li.active
+				a(href="/docs/api#librairies",data-nav="librairies") Librairies
+					i.icon-chevron-right
+		- else
+			li
+				a(href="/docs/api#librairies",data-nav="librairies") Librairies
+					i.icon-chevron-right
+		- if (active == 'tou')		
+			li.active
+				a(href="/docs/api#tou",data-nav="tou") Conditions d'utilisations	
+					i.icon-chevron-right
+		- else
+			li
+				a(href="/docs/api#tou",data-nav="tou") Conditions d'utilisations	
+					i.icon-chevron-right

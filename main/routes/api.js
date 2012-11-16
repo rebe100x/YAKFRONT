@@ -2,7 +2,26 @@
  * Serve JSON to our AngularJS client
  */
 
-
+exports.requiresToken = function(req,res,next){
+	if(req.query.access_token && req.params.userid){
+		var User = db.model('User');
+		
+		User.identifyByToken(req.query.access_token,req.params.userid,function (err, theuser){
+			if(theuser != undefined && theuser != null){
+				console.log('IDENTIFIED BY TOKEN');
+				res.locals.user = theuser;
+				next();
+			}else{
+				console.log('NOT IDENTIFIED BY TOKEN');
+				req.session.message = 'Please login to access this section:';
+				res.redirect('/user/login?redir='+req.url);
+			}
+		});
+	}else{
+		req.session.message = 'Please provide a valid token.';
+		res.redirect('/user/login?redir='+req.url);
+	}	
+};
 
 exports.infos = function (req, res) {
 	var Info = db.model('Info');
@@ -122,6 +141,46 @@ exports.delfavplace = function (req, res) {
 	
 };
 
+
+/*******
+* USER *
+********/
+exports.users_details = function (req, res) {
+	var User = db.model('User');
+	User.apiFindById(res.locals.user._id,function(err, docs){
+		if(err)
+			throw err;
+		else{
+			res.json(docs);
+		}
+	
+	});
+}
+exports.users_feed = function (req, res) {
+	var Info = db.model('Info');
+	
+	Info.findByUser(req.params.userid,req.params.count,function(err, docs){
+		if(err)
+			throw err;
+		else{
+			res.json(docs);
+		}
+	
+	});
+}
+
+exports.users_search = function (req, res) {
+	var User = db.model('User');
+	
+	User.search(req.params.string,function(err, docs){
+		if(err)
+			throw err;
+		else{
+			res.json(docs);
+		}
+	
+	});
+}
 exports.usersearch = function (req, res) {
 	var User = db.model('User');
 	User.search(req.params.string,function (err, docs){
@@ -150,20 +209,24 @@ exports.usersearchOLD = function (req, res) {
 };
 
 /*****************************
-API
+API OAUTH
 ******************************/
 exports.oauth_authorize = function(req,res){
+
+	var params = (req.query.client_id)?req.query:req.params;	
 	var JSON = {parms : function(a1){t=[];for(x in a1)t.push(x+"="+encodeURI(a1[x]));return t.join("&");}};
 	var Client = db.model('Client');
-	Client.findOne({_id:req.params.client_id,status:1},{},function (err, docs){
+	Client.findOne({_id:params.client_id,status:1},{},function (err, docs){
 	  if(docs){
-		res.render('api/login',{redirect_uri:req.params.redirect_uri,client_name:docs.name,client_id:docs._id});
+		console.log('ELO'+params.redirect_uri);
+		res.render('api/login',{redirect_uri:params.redirect_uri,client_name:docs.name,client_id:docs._id});
 	  }else{
 		var error = {"error":"access_denied","error_reason": "Client Id does not match anything in database","error_description":"Client id is not active"};
-		if(req.params.redirect_uri == '' || req.params.redirect_uri == "undefined"){
+		if(params.redirect_uri == '' || params.redirect_uri == "undefined"){
 			res.json({error:error});
-		}else
-			res.redirect('http://'+req.body.redirect_uri+"?error="+JSON.parms(error));
+		}else{
+			res.redirect(req.body.redirect_uri+"?error="+JSON.parms(error));
+		}
 	  }
 		
 	});
@@ -180,8 +243,20 @@ exports.oauth_session = function(req, res){
 	var Client = db.model('Client');
 	Client.findOne({_id:req.body.client_id,status:1},{},function (err, docs){
 	if(docs){
-		var url_tmp = req.body.redirect_uri.split('/');
-		if(req.body.redirect_uri == '' || req.body.redirect_uri == "undefined" || "http://"+url_tmp[2]+"/" != docs.link){
+		if(req.body.redirect_uri.substring(0,6) == 'http://')
+			var uri = req.body.redirect_uri.substring(7,req.body.redirect_uri.length);
+		else
+			var uri = req.body.redirect_uri;
+		var url_tmp = req.body.redirect_uri.split('/');	
+		console.log(url_tmp[0]+"/" +"!="+ docs.link);
+		if(docs.link.substring(0,6) == 'http://')
+			var link = docs.link.substring(7,docs.link.length);
+		else
+			var link = docs.link;
+		if(docs.link.substring(docs.link.length-1,docs.link.length) != '/')
+			link = link + '/';
+		
+		if(req.body.redirect_uri == '' || req.body.redirect_uri == "undefined" || url_tmp[0]+"/" != link){
 			var error = {"error":"access_denied","error_reason": "Redirect uri does not match","error_description":"Redirection uri was not provided or is not matching the client redirect url"};			
 			res.json({error:error});
 		}else{
@@ -198,8 +273,14 @@ exports.oauth_session = function(req, res){
 						User.update({_id:user._id},{$set:{apicode:code,apiCodeCreationDate:now}}, function(err,docs){
 							if(err)
 								throw err;
-							else
-								res.redirect('http://'+req.body.redirect_uri+"?code="+code);
+							else{
+								if(req.body.redirect_uri.substring(0,6)=='http://')
+									var redir = req.body.redirect_uri.substring(7,req.body.redirect_uri.length);
+								else
+									var redir = req.body.redirect_uri;
+								console.log("redir"+redir);
+								res.redirect('http://'+redir+"?code="+code);
+								}
 						});
 						
 					}else{
@@ -223,15 +304,31 @@ exports.oauth_session = function(req, res){
 
 exports.oauth_access_token = function(req, res){
 	var JSON = {parms : function(a1){t=[];for(x in a1)t.push(x+"="+encodeURI(a1[x]));return t.join("&");}};
+	var params = (req.query.client_id)?req.query:req.params;	
 	var Client = db.model('Client');
 	var User = db.model('User');
-	if(req.params.client_id && req.params.client_secret && req.params.grant_type && req.params.redirect_uri && req.params.code ){
+	
+	console.log(params);
+	if(params.client_id && params.client_secret && params.grant_type && params.redirect_uri && params.code ){
 		var Client = db.model('Client');
-		Client.findOne({_id:req.params.client_id,secret:req.params.client_secret,status:1},{},function (err, docs){
+		Client.findOne({_id:params.client_id,secret:params.client_secret,status:1},{},function (err, docs){
 		console.log(docs);
 			if(docs){
-				var url_tmp = req.params.redirect_uri.split('/');
-				if(req.params.redirect_uri == '' || req.params.redirect_uri == "undefined" || "http://"+url_tmp[2]+"/" != docs.link){
+				
+				if(params.redirect_uri.substring(0,6) == 'http://')
+					var uri = params.redirect_uri.substring(7,params.redirect_uri.length);
+				else
+					var uri = params.redirect_uri;
+				var url_tmp = params.redirect_uri.split('/');	
+				console.log(url_tmp[0]+"/" +"!="+ docs.link);
+				if(docs.link.substring(0,6) == 'http://')
+					var link = docs.link.substring(7,docs.link.length);
+				else
+					var link = docs.link;
+				if(docs.link.substring(docs.link.length-1,docs.link.length) != '/')
+					link = link + '/';
+				
+				if(params.redirect_uri == '' || params.redirect_uri == "undefined" || url_tmp[0]+"/" != link){
 					var error = {"error":"access_denied","error_reason": "Redirect uri does not match","error_description":"Redirection uri was not provided or is not matching the client redirect url"};			
 					res.json({error:error});
 				}else{
@@ -240,15 +337,15 @@ exports.oauth_access_token = function(req, res){
 					
 					var maxApiCodeCreationDate = new Date();
 					maxApiCodeCreationDate.setTime(tmp);
-					//User.findOne({apicode:req.params.code,apiCodeCreationDate:{$le:maxApiCodeCreationDate}},{}, function(err, user) {
-					User.findOne({apicode:req.params.code},{}, function(err, user) {
+					//User.findOne({apicode:params.code,apiCodeCreationDate:{$le:maxApiCodeCreationDate}},{}, function(err, user) {
+					User.findOne({apicode:params.code},{}, function(err, user) {
 					console.log(user);
 						if(!(typeof(user) == 'undefined' || user === null || user === '')){
 							var crypto = require('crypto');
 							//var now = new Date();
 							var salt = Math.round(now.valueOf() * Math.random());
 							var token = crypto.createHash('sha1').update("yakwala@secure"+salt).digest("hex");
-							User.update({_id:user._id},{$set:{apitoken:token,apiTokenCreationDate:now}}, function(err,docs){
+							User.update({_id:user._id},{$set:{apiToken:token,apiTokenCreationDate:now}}, function(err,docs){
 								if(err)
 									throw err;
 								else{
@@ -267,19 +364,20 @@ exports.oauth_access_token = function(req, res){
 						
 						}else{
 							var error = {"error":"access_denied","error_reason": "Login failed","error_description":"Wrong login or password"};
-							res.redirect('http://'+req.params.redirect_uri+"?error="+JSON.parms(error));
+							res.redirect('http://'+params.redirect_uri+"?error="+JSON.parms(error));
 						}
 					});
 				}
 			}
 			else{
 				var error = {"error":"access_denied","error_reason": "Client id is not active","error_description":"Check your client ID"};
-				res.redirect('http://'+req.params.redirect_uri+"?error="+JSON.parms(error));
+				res.redirect('http://'+params.redirect_uri+"?error="+JSON.parms(error));
 			}
 		});	
 		
 	}else{
 		var error = {"error":"access_denied","error_reason": "One or more parameter is empty","error_description":"Please use the following parameters : client_id=CLIENT-ID, client_secret=CLIENT-SECRET, grant_type=authorization_code, redirect_uri=YOUR-REDIRECT-URI, code=CODE"};
-		res.redirect('http://'+req.params.redirect_uri+"?error="+JSON.parms(error));
+		res.redirect('http://'+params.redirect_uri+"?error="+JSON.parms(error)+JSON.parms(params));
 	}
 }
+/*****END OAUTH******/

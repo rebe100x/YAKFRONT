@@ -84,7 +84,7 @@ block content
 		//var type = [1];
 		var type = [!{type}];
 		
-		var searchString = "!{str}";
+		var searchString = "!{str}".toString();
 		if(searchString=='')
 			searchString = null;
 		
@@ -129,6 +129,8 @@ block content
 
 			/*search info and place*/
 			
+			$('#searchStr').val(searchString);
+			console.log(searchString);
 			// reset
 			$('#searchStr').keyup(function(event){
 				if($(this).val()==''){
@@ -522,8 +524,9 @@ block content
 			
 			/*linkify*/
 			$("body").delegate('.tagHashLink','click',function(event){
-				event.preventDefault();
+				//event.preventDefault();
 				searchString = $(this).html();
+				
 				
 				$('#searchStr').val(searchString);
 				searchString = encodeURIComponent(searchString);
@@ -577,7 +580,7 @@ block content
 				
 					// center map
 					//map.setCenter(latLng);
-					map.panTo(latLng);
+					//map.panTo(latLng);
 					
 					// clear marker ( and infowindow )
 					setTimeout(function() {
@@ -617,7 +620,7 @@ block content
 				getAndPrintInfo();
 				
 			});
-			
+			/*
 			google.maps.event.addListener(map, 'center_changed', function() {
 				cleanMarkers();
 				bounds = this.getBounds();
@@ -647,8 +650,18 @@ block content
 				$.cookie("geoloc", JSON.stringify(curPos));
 				//markerCluster.clearMarkers();
 				getAndPrintInfo();
+			});*/
+			google.maps.event.addListener(map, 'idle', function() {
+				cleanMarkers();
+				bounds = this.getBounds();	
+				center = this.getCenter();
+				curPos.x = center.lat();
+				curPos.y = center.lng();
+				curPos.z = this.getZoom();
+				$.cookie("geoloc", JSON.stringify(curPos));
+				//markerCluster.clearMarkers();
+				getAndPrintInfo();
 			});
-			
 			
 			
 		}
@@ -709,21 +722,31 @@ block content
 						
 						var dateTmp = new Date(val.pubDate);
 						var dateCreation = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
-						infoContent = "<div class=\'infowindow mapHighlighter\' infoId='"+val._id+"'>";
+						infoContent = "<div class=\'infowindow mapHighlighter\' infoId='"+val._id+"'>";					
 						if(!(typeof val.thumb === 'undefined') && val.thumb != '' && val.thumb != null){
 							if(val.user == 0 || val.user === undefined)
 								infoContent += "<img src=\'"+conf.backurl+val.thumb+"\' />";
 							else
 								infoContent += "<img src=\'/uploads/pictures/120_90/"+val.thumb+"\' />";
 						}
-						infoContent += "<div class=\'title\'> "+val.title.linkify()+" ("+dateCreation+")";
-						infoContent += "</div>";
-						infoContent += "<div class=\'content\'>"+val.content.substring(0,250).linkify()+"...</div>";
-						if(!(typeof val.outGoingLink === 'undefined') && val.outGoingLink != '')
-							infoContent += "<div class=\'readmore\'><a target=\'_blank\' href=\'"+val.outGoingLink+"\'> >> lire l\'article</a></div>";
-						if(val.address != 'null')
-							infoContent += "<div>"+val.address+"</div>";
-					
+						infoContent += "<div class=\'title\'> "+val.title.linkify()+" ("+dateCreation+")</div>";
+						//infoContent += "<div class=\'content\'>"+val.content.substring(0,250).linkify()+"...</div>";
+						infoContent += "<div class=\'infofooter\'>";
+							if(val.address != 'null')
+								infoContent += "<div class=\'infodetail\'>"+val.address+"</div>";
+							
+								if(val.yakCatName)
+									infoContent +="<div class=\'infodetail\'>"+yakCatNameArray.join(',').linkify()+"</div>";	
+							
+							
+								if(val.origin != "")
+									infoContent += "<div class=\'infodetail\'>Posté par <a target='_blank' href='"+val.originLink+"'>"+val.origin+"</a></div>";
+								
+								if(!(typeof val.outGoingLink === 'undefined') && val.outGoingLink != '')
+									infoContent += "<div class=\'infodetail\'><a target=\'_blank\' href=\'"+val.outGoingLink+"\'> >> lire l\'article</a></div>";
+								
+							
+							infoContent += "</div>";	
 						infoContent += "</div>";
 						
 						/*PRINT ON THE MAP*/
@@ -789,10 +812,11 @@ block content
 			drawNewsFeed();
 			
 			cleanMarkers();
-			//searchString = encodeURIComponent(searchString);
+			searchString = encodeURIComponent(searchString);
 			
-			
-			$.getJSON('/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+heat+'/'+type.toString()+'/'+searchString,function(data) {
+			console.log('searchString'+searchString);
+			console.log('/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+heat+'/'+type.toString()+'/'+searchString.toString());
+			$.getJSON('/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+heat+'/'+type.toString()+'/'+searchString.toString(),function(data) {
 				
 				// empty the news feed
 				if(data.info.length == 0)
@@ -831,26 +855,19 @@ block content
 						else
 							infoContent += "<img src=\'/uploads/pictures/120_90/"+val.thumb+"\' />";
 					}
-					var test = new String("this is #test");
-					
-					infoContent += "<div class=\'title\'> "+val.title.linkify()+" ("+dateCreation+")</div>";
-					infoContent += "<div class=\'content\'>"+val.content.substring(0,250).linkify()+"...</div>";
-					infoContent += "<div class=\'infofooter\'>";
-						if(val.address != 'null')
+					infoContent += "<div class=\'title\'> <img class='yakTypeImg' src=\'/images/markers/type"+val.yakType+".png\' />"+val.title.linkify()+" ("+dateCreation+")</div>";
+					infoContent += "<div class=\'tags\'>";					
+						if(val.yakCatName)
+								infoContent +="<div class=\'\'>"+yakCatNameArray.join(',').linkify()+"</div>";	
+					infoContent += "</div>";		
+					infoContent += "<div class=\'links\'>";					
+						if(val.origin != "")
+							infoContent += "<div class=\'\'>Posté par <a target='_blank' href='"+val.outGoingLink+"'>"+val.origin+"</a></div>";
+					if(val.address != 'null')
 							infoContent += "<div class=\'infodetail\'>"+val.address+"</div>";
-						
-							if(val.yakCatName)
-								infoContent +="<div class=\'infodetail\'>"+yakCatNameArray.join(',').linkify()+"</div>";	
-						
-						
-							if(val.origin != "")
-								infoContent += "<div class=\'infodetail\'>Posté par <a target='_blank' href='"+val.originLink+"'>"+val.origin+"</a></div>";
-							
-							if(!(typeof val.outGoingLink === 'undefined') && val.outGoingLink != '')
-								infoContent += "<div class=\'infodetail\'><a target=\'_blank\' href=\'"+val.outGoingLink+"\'> >> lire l\'article</a></div>";
-							
-						
-						infoContent += "</div>";	
+					infoContent += "</div>";	
+					//infoContent += "<div class=\'content\'>"+val.content.substring(0,250).linkify()+"...</div>";
+					
 					infoContent += "</div>";
 					/*PRINT ON THE FEED*/
 					//$('#newsfeed').append('<li class=\'mapHighlighter\' infoId=\''+val._id+'\'><i class=\'icon-eye-open\' ></i> '+val.title+'</li>')

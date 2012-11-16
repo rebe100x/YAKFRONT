@@ -5,7 +5,8 @@
 
 var mongoose = require('mongoose')
   , Schema = mongoose.Schema
-  , S = require('string');
+  , S = require('string'),
+  crypto = require('crypto');
 
 mongoose.set('debug', true);
 
@@ -86,6 +87,11 @@ Info.statics.findAll = function (callback) {
 
 }
 
+Info.statics.findByUser = function (userid,count, callback) {
+  return this.find({ user: userid },{},{limit:count,sort:{pudDate:-1}}, callback);
+}
+
+
 Info.statics.findAllGeo = function (x1,y1,x2,y2,heat,type,str,usersubs,tagsubs,callback) {
 	var now = new Date();
 	var D = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
@@ -107,7 +113,7 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,heat,type,str,usersubs,tagsubs,c
 	
 	if(str != 'null' && str.length > 0){  // STRING SEARCH
 		var firstChar = str.substr(0,1);
-		var strClean = str.replace(/@/g,'').replace(/#/g,'');
+		var strClean = str.replace(/@/g,'').replace(/#/g,'').replace(/%23/g,'').replace(/%40/g,'');
 		var searchStr = new RegExp(strClean,'gi');
 		var searchExactStr = new RegExp("^"+strClean+"$",'gi');
 		if(firstChar=='#'){
@@ -386,9 +392,13 @@ Info.statics.findAllGeoOLD = function (x1,y1,x2,y2,heat,type,str,usersubs,tagsub
 mongoose.model('Info', Info);
 
 
-/*USERS*/
-var crypto = require('crypto');
 
+
+
+
+
+
+/******************************USERS*/
 
 var User = new Schema({
 	name	: { type: String, index: true}
@@ -438,8 +448,14 @@ User.statics.findByLogin = function (login,callback) {
 User.statics.findByIds = function (ids,callback) {
   return this.find({'_id': { $in: ids}}, callback);
 }
+User.statics.identifyByToken = function (token,userid,callback) {
+  return this.findOne({'_id':userid,'apiToken': token,'status':1}, callback);
+}
 User.statics.findById = function (id,callback) {
   return this.findOne({'_id': id}, callback);
+}
+User.statics.apiFindById = function (id,callback) {
+  return this.findOne({'_id': id},{_id:1,address:1,bio:1,location:1,login:1,mail:1,name:1,thumb:1,type:1,web:1,lastLoginDate:1,favplace:1,placesubs:1,tagsubs:1,usersubs:1,tags:1}, callback);
 }
 User.statics.findByToken = function (token,callback) {
   return this.findOne({'token': token,'status':2}, callback);
@@ -455,7 +471,7 @@ User.statics.search = function(string,callback){
 		
 	"status":1,
 	},
-	{},
+	{_id:1,address:1,bio:1,location:1,login:1,mail:1,name:1,thumb:1,type:1,web:1,lastLoginDate:1,favplace:1,placesubs:1,tagsubs:1,usersubs:1,tags:1},
 	{
 		
 		skip:0, // Starting Row
@@ -475,19 +491,15 @@ User.statics.findByNameorLogin = function(string,callback){
 	callback);
 }
 
-
-
-    
 var auth = require('../mylib/basicAuth');
-
-
 User.plugin(auth);
-
 
 mongoose.model('User', User);
 
 
-/*ZONE*/
+
+
+/******************************ZONE*/
 var Zone = new Schema({
     name     : { type: String}
   , location       : { lat: {type: Number},lng:{type:Number} }
@@ -514,7 +526,7 @@ mongoose.model('Zone', Zone);
 
 
 
-/*YAKCAT*/
+/******************************YAKCAT*/
 var Yakcat = new Schema({
     title     : { type: String, index:true}
   , path       : { type:String }
@@ -539,7 +551,7 @@ Yakcat.statics.searchOne = function (str,callback) {
 mongoose.model('Yakcat', Yakcat);
 
 
-/*YAKTAG*/
+/******************************YAKTAG*/
 var Tag = new Schema({
     title     : { type: String, required: true, index:true}
   , lastUsageDate       : { type:Date , default: Date.now, index:-1}
@@ -558,7 +570,7 @@ mongoose.model('Tag', Tag);
 
 
 
-/***************PLACE*/
+/******************************PLACE*/
 var Place = new Schema({
 	title	: { type: String, required: true, index:true}
 ,	content	: { type: String }

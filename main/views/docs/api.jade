@@ -1,0 +1,80 @@
+extends ../layout
+block content
+
+	include ../mixins/menu.jade
+	include ../mixins/docsMenu.jade
+	
+	mixin menu('api')
+	
+
+	div.container-fluid
+		div.row-fluid
+			div.span2
+			div.span2.yak-sidebar
+				mixin docsMenu('presentation')
+
+						
+			div.span6
+				div.row-fluid
+					div.content-header
+						div.header-inner
+							h2 Documentation de l'api
+							p.subheader 
+				hr
+				div.row-fluid
+					h3#authentification Authentification
+					p.subheader Yakwala's API uses the OAuth 2.0 protocol for simple, but effective authentication and authorization.
+					h4 Do you need to authenticate?
+					p For the most part, Yakwala's API only requires the use of a client_id. A client_id simply associates your server, script, or program with a specific application. However, some requests require authentication - specifically requests made on behalf of a user. Authenticated requests require an access_token.  These tokens are unique to a user and should be stored securely. Access tokens may expire at any time in the future.
+					br
+					h4 How to get a client id and secret ?
+					p For the moment, ask our team develpement by sending a request at this email : info at yakwala  dot fr
+					hr
+					h3#endpoints Endpoints
+					p.subheader User endpoints
+						
+					table.table.table-bordered
+						tr
+							th METHODS
+							th URL
+							th DESCRIPTION
+						tr
+							td GET/POST
+							td /users/<code>user-id</code>
+							td Get the user's data details.
+						tr
+							td GET/POST
+							td /users/feed/<code>user-id</code>/<code>count</code>
+							td See the authenticated user's feed.
+						tr	
+							td GET/POST
+							td /users/search/<code>string</code>
+							td Search for a user by name.
+					
+
+					
+					p.subheader Info endpoints
+					table.table.table-bordered
+						tr
+							td GET
+							td /api/geoinfos/
+							td Get infos in the box
+							
+					h3#libraires Librairies
+					p.subheader
+					
+					h4 PHP
+					pre https://github.com:rebe100x/API
+					pre git clone git@github.com:rebe100x/API.git
+					br
+					br
+					hr
+					h3#tou Conditions d'utilisation
+						p.subheader
+					@todo
+			div.span2				
+	script
+		$(document).ready(function() {
+		
+		}); // END READY
+

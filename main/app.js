@@ -70,65 +70,92 @@ var db = routes.db(conf);
 	
 // Routes
 
-app.get('/', routes.requiresLogin, routes.index);
 
-
-app.get('/partials/:name', routes.partials);
-//app.get('/news/map', requiresPosition, routes.news_map);
-app.get('/news/map', routes.requiresLogin, routes.news_map);
-app.get('/news/map/search/:str', routes.requiresLogin, routes.news_map_search);
-app.get('/news/map_test', routes.news_map_test);
-app.get('/news/feed', routes.requiresLogin, routes.news_feed);
-//app.get('/news/post', routes.news_post);
-app.get('/news/post', routes.requiresLogin, routes.news_post);
-
+// OPEN ACCES ROUTES :
 app.get('/user/login', routes.user_login);
 app.get('/user/logout', routes.user_logout);
 app.get('/user/new', routes.user_new);
 app.get('/user/validate/:token', routes.user_validate);
-
 app.get('/pictures/:size/:picture', routes.picture);
-
-app.get('/settings', routes.requiresLogin, routes.settings_profil);
-app.get('/settings/profile', routes.requiresLogin, routes.settings_profile);
-app.get('/settings/privateprofile', routes.requiresLogin, routes.settings_privateprofile);
-app.get('/settings/alerts', routes.requiresLogin, routes.settings_alerts);
-app.get('/settings/password', routes.requiresLogin, routes.settings_password);
-app.get('/settings/firstvisit', routes.requiresLogin, routes.settings_firstvisit);
 
 app.post('/user',routes.user);
 app.post('/validate',routes.validate);
 app.post('/session',routes.session);
-app.post('/news',routes.news);
-app.post('/alerts',routes.alerts);
-app.post('/profile',routes.profile);
-app.post('/privateprofile',routes.privateprofile);
-app.post('/password',routes.password);
-app.post('/firstvisit',routes.firstvisit);
+
+// SECURED BY LOGIN ROUTES:
+
+//map
+app.get('/', routes.requiresLogin, routes.index);
+app.get('/news/map', routes.requiresLogin, routes.news_map);
+app.get('/news/map/search/:str', routes.requiresLogin, routes.news_map_search);
+app.get('/news/feed', routes.requiresLogin, routes.news_feed);
+app.post('/news',routes.requiresLogin, routes.news);
+
+// settings
+app.get('/settings', routes.requiresLogin, routes.settings_profil);
+
+app.get('/settings/profile', routes.requiresLogin, routes.settings_profile);
+app.post('/profile',routes.requiresLogin, routes.profile);
+
+app.get('/settings/privateprofile', routes.requiresLogin, routes.settings_privateprofile);
+app.post('/privateprofile',routes.requiresLogin, routes.privateprofile);
+
+app.get('/settings/alerts', routes.requiresLogin, routes.settings_alerts);
+app.post('/alerts',routes.requiresLogin,routes.alerts);
+
+app.get('/settings/password', routes.requiresLogin, routes.settings_password);
+app.post('/password',routes.requiresLogin, routes.password);
+
+app.get('/settings/firstvisit', routes.requiresLogin, routes.settings_firstvisit);
+app.post('/firstvisit',routes.requiresLogin, routes.firstvisit);
 
 
-// JSON API
+// OPEN ACCESS API
 app.get('/api/infos', api.infos);
 app.get('/api/geoinfos/:x1/:y1/:x2/:y2/:heat/:type/:str', api.geoinfos);
 app.get('/api/zones/:x/:y', api.zones);
-app.post('/api/users', api.users);
 app.get('/api/cats', api.cats);
 app.get('/api/catsandtags', api.catsandtags);
 app.get('/api/places', api.places);
 app.get('/api/searchplaces/:str', api.searchplaces);
 app.get('/api/usersearch/:string', api.usersearch);
 
-// API 
-//app.get('/api/error', api.oauth_error);
 app.get('/api/oauth/login', api.oauth_login);
+app.get('/api/oauth/authorize', api.oauth_authorize); 
 app.get('/api/oauth/authorize/:client_id/:redirect_uri', api.oauth_authorize); 
-//app.get('/api/oauth/authorize/:client_id/:redirect_uri/:response_type', api.oauth_authorize); 
-//app.get('/api/oauth/authorize/:client_id/:redirect_uri/:response_type/:scope', api.oauth_authorize); //https://api.instagram.com/oauth/authorize/?client_id=CLIENT-ID&redirect_uri=REDIRECT-URI&response_type=code
+app.get('/api/oauth/authorize/:client_id/:redirect_uri/:response_type', api.oauth_authorize); 
+app.get('/api/oauth/authorize/:client_id/:redirect_uri/:response_type/:scope', api.oauth_authorize); //https://api.instagram.com/oauth/authorize/?client_id=CLIENT-ID&redirect_uri=REDIRECT-URI&response_type=code
 app.get('/api/oauth/access_token/:client_id/:client_secret/:grant_type/:redirect_uri/:code', api.oauth_access_token); 
+app.post('/api/oauth/access_token', api.oauth_access_token);
+app.get('/api/oauth/access_token', api.oauth_access_token);
 app.post('/api/oauth/session',api.oauth_session);
 
-app.post('/api/favplace', api.addfavplace);
-app.post('/api/delfavplace', api.delfavplace);
+app.get('/api/users/:userid/feed',api.users_feed);
+
+//app.get('/api/error', api.oauth_error);
+
+// SECURED API :
+app.post('/api/favplace', api.addfavplace); // NEED TO SECURE BY TOKEN
+app.post('/api/delfavplace', api.delfavplace); // NEED TO SECURE BY TOKEN
+ 
+//app.get('/api/users/:userid/:access_token',api.requiresToken, api.users_details);
+app.get('/api/users/:userid',api.requiresToken, api.users_details);
+app.post('/api/users/:userid',api.requiresToken, api.users_details);
+
+app.get('/api/users/feed/:userid/:count', api.users_feed);
+app.post('/api/users/feed/:userid/:count', api.users_feed);
+
+
+app.get('/api/users/search/:string', api.users_search);
+app.post('/api/users/search/:string', api.users_search);
+
+
+
+
+
+
+// DOCS
+app.get('/docs/api', routes.docs_api);
 
 
 /*
