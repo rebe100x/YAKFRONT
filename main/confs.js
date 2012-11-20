@@ -10,7 +10,7 @@ exports.confs = {
 	
 	},
 	"preprod" : {
-		"validationUrl":"http://http://ec2-54-247-18-97.eu-west-1.compute.amazonaws.com:62501/user/validate/",
+		"validationUrl":"http://ec2-54-247-18-97.eu-west-1.compute.amazonaws.com:62501/user/validate/",
 		"backurl":"http://ec2-54-247-18-97.eu-west-1.compute.amazonaws.com/PREPROD/YAKREP/BACKEND/",
 		"fronturl":"http://c2-54-247-18-97.eu-west-1.compute.amazonaws.com:65001",
 		"port":62501,
@@ -19,7 +19,7 @@ exports.confs = {
 		"uploadsDir":__dirname+'/public/uploads/',
 	},
 	"prod" : {
-		"validationUrl":"http://http://ec2-54-247-18-97.eu-west-1.compute.amazonaws.com:62500/user/validate/",
+		"validationUrl":"http://ec2-54-247-18-97.eu-west-1.compute.amazonaws.com:62500/user/validate/",
 		"backurl":"http://ec2-54-247-18-97.eu-west-1.compute.amazonaws.com/YAKREP/BACKEND/",
 		"fronturl":"http://c2-54-247-18-97.eu-west-1.compute.amazonaws.com:65000",
 		"port":62500,

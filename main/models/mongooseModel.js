@@ -431,8 +431,8 @@ var User = new Schema({
 	, lastModifDate	: {type: Date, required: true, default: Date.now}		
 	, lastLoginDate	: {type: Date, required: true, default: Date.now}		
 	, status	: {type: Number,required: true, default: 2,index: true}	
-	, apistatus	: {type: Number, required: true, default: 2,index: true}
-	, apicode       : { type: String ,index: true}
+	, apiStatus	: {type: Number, required: true, default: 2,index: true}
+	, apiCode       : { type: String ,index: true}
 	, apiCodeCreationDate     :  {type: Date,index: true}		
 	, apiToken     :  {type: String , index: true}		
 	, apiTokenCreationDate     :  {type: Date,index: true}		
@@ -490,6 +490,8 @@ User.statics.findByNameorLogin = function(string,callback){
 	{},
 	callback);
 }
+
+
 
 var auth = require('../mylib/basicAuth');
 User.plugin(auth);

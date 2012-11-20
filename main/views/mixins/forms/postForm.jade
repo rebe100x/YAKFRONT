@@ -50,6 +50,7 @@ mixin postForm()
 				input#placeInput(type='hidden', name='placeInput', value='')
 				input#latitude(type="hidden",data-provide="typeahead", name="latitude")
 				input#longitude(type="hidden",data-provide="typeahead", name="longitude")
+				input#username(type="hidden", name="username",value=locals.user.login)
 				legend Poster une info:
 				div.control-group
 					div.controls

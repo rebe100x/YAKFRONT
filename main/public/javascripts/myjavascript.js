@@ -67,7 +67,7 @@ $(document).ready(function() {
 			var point = new Object();
 			point.name = placeGmap.title;
 			point.location = placeGmap.location;
-			$.post('api/favplace', {'place':point},function(id) {
+			$.post('/favplace', {'place':point},function(id) {
 				$('.favplacelist').append("<li pointId='"+id+"' lat='"+placeGmap.location.lat+"' lng='"+placeGmap.location.lng+"' class='zoneLoc'><i class='icon-map-marker'></i><span> "+obj.formatted_address+"</span><i class='icon-remove icon-pointer'  onclick='removefavPlace($(this));'></i></li>");
 				$(this).val('').focus();
 			});
@@ -106,7 +106,7 @@ $(document).ready(function() {
 function removefavPlace(obj){
 	obj.parent().remove();
 	
-	$.post('api/delfavplace', {'pointId':obj.parent().attr('pointId')},function(data) {
+	$.post('/delfavplace', {'pointId':obj.parent().attr('pointId')},function(data) {
 				
 				
 			});

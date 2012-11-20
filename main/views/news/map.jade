@@ -64,7 +64,8 @@ block content
 		var conf = !{conf};
 		var user =!{JSON.stringify(user)};
 		var logged = 0;
-		var curPos = ($.isEmptyObject($.cookie("geoloc")))?{'x':user.location.lat,'y':user.location.lng,'z':14}:JSON.parse($.cookie("geoloc"));;
+		var curPos = new Object();
+		
 		var geolocalized = 0;
 		var infowindow = null;
 		var bounds = new Array();
@@ -97,6 +98,7 @@ block content
 		/*READY FUNCTIONS*/
 		$(document).ready(function() {
 		
+			curPos = ($.isEmptyObject($.cookie("geoloc")))?{'x':user.location.lat,'y':user.location.lng,'z':14}:JSON.parse($.cookie("geoloc"));
 			/*init*/
 			if(!$.isEmptyObject(user)){
 				logged = 1;
@@ -130,7 +132,6 @@ block content
 			/*search info and place*/
 			
 			$('#searchStr').val(searchString);
-			console.log(searchString);
 			// reset
 			$('#searchStr').keyup(function(event){
 				if($(this).val()==''){
@@ -216,7 +217,7 @@ block content
 					
 				}else
 					searchString = null;
-					
+		
 				getAndPrintInfo();
 				$('#searchStr').focus();
 			});
@@ -358,7 +359,6 @@ block content
 						type.push(curtype);
 					}
 				}
-				
 				getAndPrintInfo();
 			});
 			
@@ -378,7 +378,6 @@ block content
 			}, 10000);
 			
 			/*cookies for navigation*/
-			console.log(curPos);
 			google.maps.event.addDomListener(window, 'load', initialize(curPos.x,curPos.y,curPos.z));
 			/*
 			if(!$.isEmptyObject($.cookie("geoloc"))){
@@ -404,9 +403,7 @@ block content
 					var inputStrArray = ($('#content').val()+' '+$('#title').val()).split(' ');
 					for(i = 0; i< inputStrArray.length;i++){
 						if(inputStrArray[i].match(rule)){
-							//console.log('PUSH');
 							hashtagTmp.push(inputStrArray[i]);
-							//console.log(hashtagTmp);
 							$('#freetag').val(hashtagTmp.toString().replace(rule2,''));
 						}
 					}
@@ -419,13 +416,9 @@ block content
 					if ( window.FileReader ) {
 						var fileList = this.files;
 						var file = fileList[0];
-						//console.log(file.type);
-						//if ( window.FileReader ) {
 						var r = new FileReader();
 						r.onload = function () {
 							var binimage = r.result;
-							//console.log(binimage);
-							
 							binimage1 = binimage.replace('data:'+file.type+';base64,', '');
 							var imag = "<img class='img-rounded' " + "src='" + 
 							"data:"+file.type+";base64," + binimage1 + "' style='width:100px'/>";
@@ -530,6 +523,7 @@ block content
 				
 				$('#searchStr').val(searchString);
 				searchString = encodeURIComponent(searchString);
+				
 				getAndPrintInfo();
 			});
 			$("body").delegate('.userHashLink','click',function(event){
@@ -538,6 +532,7 @@ block content
 				
 				$('#searchStr').val(searchString);
 				searchString = encodeURIComponent(searchString);
+				
 				getAndPrintInfo();
 			});
 			
@@ -561,7 +556,7 @@ block content
 			var id = obj.attr('infoId');
 			
 			$.each(infoArray,function(key,val){
-				//console.log(val2._id+' == '+val._id);
+				
 				if(val._id == id){
 					// hide all markers
 					//hideMarkers(7000);
@@ -597,9 +592,7 @@ block content
 		function initialize(x,y,z){
 
 			// set user cookies
-			$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000 });
-			//console.log(JSON.parse($.cookie("geoloc")));
-			
+			$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
 			var center = new google.maps.LatLng(x,y);
 			infowindow = new google.maps.InfoWindow({content: ".",maxWidth : 300});
 			map = new google.maps.Map(document.getElementById('mymap'), {
@@ -608,18 +601,33 @@ block content
 				mapTypeId: google.maps.MapTypeId.ROADMAP,
 				disableDefaultUI: true,
 			});
+			bounds = map.getBounds();	
 			map.setOptions({styles: pinkParksStyles});
 			//var markerClustererOptions = {gridSize:30,maxZoom: 17,styles: [{height: 28,width: 28,url: "/images/markers/m1.png"},{height: 38,width: 38,url: "/images/markers/m2.png"},{height: 55,width:55,url: "/images/markers/m3.png"},{height: 85,width: 85,url: "/images/markers/m4.png"},{height: 85,width: 85,url: "/images/markers/m5.png"}]};
 			//markerCluster = new MarkerClusterer(map, markers,markerClustererOptions);
 			
 			markerHL = new google.maps.Marker({position: center,map:map,visible:false});
 			
+			/*
 			google.maps.event.addListenerOnce(map, 'idle', function(){
 				cleanMarkers();
 				bounds = this.getBounds();
 				getAndPrintInfo();
 				
-			});
+			});*/
+			/*
+			google.maps.event.addListener(map, 'center_changed', function() {
+				cleanMarkers();
+				bounds = this.getBounds();
+				center = this.getCenter();
+				curPos.x = center.lat();
+				curPos.y = center.lng();
+				$.cookie("geoloc", JSON.stringify(curPos));
+				//markerCluster.clearMarkers();
+				
+				getAndPrintInfo();
+			});*/
+			
 			/*
 			google.maps.event.addListener(map, 'center_changed', function() {
 				cleanMarkers();
@@ -651,14 +659,15 @@ block content
 				//markerCluster.clearMarkers();
 				getAndPrintInfo();
 			});*/
+			
 			google.maps.event.addListener(map, 'idle', function() {
 				cleanMarkers();
-				bounds = this.getBounds();	
+				bounds = this.getBounds();
 				center = this.getCenter();
 				curPos.x = center.lat();
 				curPos.y = center.lng();
 				curPos.z = this.getZoom();
-				$.cookie("geoloc", JSON.stringify(curPos));
+				$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
 				//markerCluster.clearMarkers();
 				getAndPrintInfo();
 			});
@@ -677,7 +686,6 @@ block content
 		}
 		
 		function hideMarkers(ms){
-		//console.log('hide');
 		// hide existing markers for ms milisec
 			//markerCluster.clearMarkers();
 			$.each(markers,function(key,val){
@@ -694,8 +702,7 @@ block content
 		
 		function silentMarkerAdder(){
 		
-			//searchString = encodeURIComponent(searchString);
-			//console.log('silentMarkerAdder');
+			//searchString = encodeURIComponent(searchString);		
 			bounds = map.getBounds();
 			$.getJSON('/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+heat+'/'+type.toString()+'/'+searchString,function(data) {
 				
@@ -706,48 +713,41 @@ block content
 					var flagExists = 0;
 					
 					$.each(infoArray,function(key2,val2){
-						//console.log(val2._id+' == '+val._id);
 						if(val2._id == val._id){
 							flagExists = 1;
-							//console.log('EQ');
 						}
 					});
 					
-					//console.log(infoArray.length+' '+data.info.length);
-					//console.log('exisits'+flagExists);
 					if(flagExists == 0){
-						//console.log('PRINT NEW MARKER');
-						
 						var uniqueHL = new Date().getTime();
 						
 						var dateTmp = new Date(val.pubDate);
-						var dateCreation = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
-						infoContent = "<div class=\'infowindow mapHighlighter\' infoId='"+val._id+"'>";					
-						if(!(typeof val.thumb === 'undefined') && val.thumb != '' && val.thumb != null){
-							if(val.user == 0 || val.user === undefined)
-								infoContent += "<img src=\'"+conf.backurl+val.thumb+"\' />";
+					var dateCreation = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
+					infoContent = "<div class=\'infowindow mapHighlighter\' infoId='"+val._id+"'>";					
+					if(!(typeof val.thumb === 'undefined') && val.thumb != '' && val.thumb != null){
+						if(val.user == 0 || val.user === undefined)
+							infoContent += "<img src=\'"+conf.backurl+val.thumb+"\' />";
+						else
+							infoContent += "<img src=\'/uploads/pictures/120_90/"+val.thumb+"\' />";
+					}
+					infoContent += "<div class=\'title\'> <img class='yakTypeImg' src=\'/images/markers/type"+val.yakType+".png\' />"+val.title.linkify()+" ("+dateCreation+")</div>";
+					infoContent += "<div class=\'tags\'>";					
+						if(val.yakCatName)
+								infoContent +="<div class=\'\'>"+yakCatNameArray.join(',').linkify()+"</div>";	
+					infoContent += "</div>";		
+					infoContent += "<div class=\'links\'>";					
+						if(val.origin && val.origin !=  'undefined'){
+							if(val.origin.substring(0,1) == '@')
+								infoContent += "<div class=\'\'>Posté par <a href='/news/map/search/"+encodeURIComponent(val.origin)+"'>"+val.origin+"</a></div>";
 							else
-								infoContent += "<img src=\'/uploads/pictures/120_90/"+val.thumb+"\' />";
+								infoContent += "<div class=\'\'>Posté par <a target='_blank' href='"+val.outGoingLink+"'>"+val.origin+"</a></div>";
 						}
-						infoContent += "<div class=\'title\'> "+val.title.linkify()+" ("+dateCreation+")</div>";
-						//infoContent += "<div class=\'content\'>"+val.content.substring(0,250).linkify()+"...</div>";
-						infoContent += "<div class=\'infofooter\'>";
-							if(val.address != 'null')
-								infoContent += "<div class=\'infodetail\'>"+val.address+"</div>";
-							
-								if(val.yakCatName)
-									infoContent +="<div class=\'infodetail\'>"+yakCatNameArray.join(',').linkify()+"</div>";	
-							
-							
-								if(val.origin != "")
-									infoContent += "<div class=\'infodetail\'>Posté par <a target='_blank' href='"+val.originLink+"'>"+val.origin+"</a></div>";
-								
-								if(!(typeof val.outGoingLink === 'undefined') && val.outGoingLink != '')
-									infoContent += "<div class=\'infodetail\'><a target=\'_blank\' href=\'"+val.outGoingLink+"\'> >> lire l\'article</a></div>";
-								
-							
-							infoContent += "</div>";	
-						infoContent += "</div>";
+					if(val.address != 'null')
+							infoContent += "<div class=\'infodetail\'>"+val.address+"</div>";
+					infoContent += "</div>";	
+					//infoContent += "<div class=\'content\'>"+val.content.substring(0,250).linkify()+"...</div>";
+					
+					infoContent += "</div>";
 						
 						/*PRINT ON THE MAP*/
 						var latLng = new google.maps.LatLng(val.location['lat'],val.location['lng']);
@@ -808,14 +808,12 @@ block content
 		
 		function getAndPrintInfo(){
 			
-			
+			bounds = map.getBounds();
 			drawNewsFeed();
 			
 			cleanMarkers();
 			searchString = encodeURIComponent(searchString);
 			
-			console.log('searchString'+searchString);
-			console.log('/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+heat+'/'+type.toString()+'/'+searchString.toString());
 			$.getJSON('/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+heat+'/'+type.toString()+'/'+searchString.toString(),function(data) {
 				
 				// empty the news feed
@@ -829,8 +827,6 @@ block content
 				
 					
 					/*PRINT ON THE MAP*/	
-					
-					//console.log(val.location);
 					var yakCatNameArray = new Array();
 					if(val.yakCatName){
 						$.each(val.yakCatName,function(x,y){
@@ -844,7 +840,6 @@ block content
 					var latLng = new google.maps.LatLng(val.location['lat'],val.location['lng']);
 					var marker = new google.maps.Marker({position: latLng,icon:"/images/markers/type"+val.yakType+".png"});
 					markers.push(marker);
-					//console.log(markers);
 					marker.setMap(map);	
 					var dateTmp = new Date(val.pubDate);
 					var dateCreation = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
@@ -861,8 +856,12 @@ block content
 								infoContent +="<div class=\'\'>"+yakCatNameArray.join(',').linkify()+"</div>";	
 					infoContent += "</div>";		
 					infoContent += "<div class=\'links\'>";					
-						if(val.origin != "")
-							infoContent += "<div class=\'\'>Posté par <a target='_blank' href='"+val.outGoingLink+"'>"+val.origin+"</a></div>";
+						if(val.origin && val.origin !=  'undefined'){
+							if(val.origin.substring(0,1) == '@')
+								infoContent += "<div class=\'\'>Posté par <a href='/news/map/search/"+encodeURIComponent(val.origin)+"'>"+val.origin+"</a></div>";
+							else
+								infoContent += "<div class=\'\'>Posté par <a target='_blank' href='"+val.outGoingLink+"'>"+val.origin+"</a></div>";
+						}
 					if(val.address != 'null')
 							infoContent += "<div class=\'infodetail\'>"+val.address+"</div>";
 					infoContent += "</div>";	

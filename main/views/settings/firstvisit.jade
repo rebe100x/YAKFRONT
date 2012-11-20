@@ -9,7 +9,8 @@ block content
 
 	div.container-fluid
 		div.row-fluid
-			div.span12
+			div.span3
+			div.span6
 				- if (message)
 					div.alert.fade.in
 						button.close(type="button",data-dismiss="alert") x
@@ -20,7 +21,7 @@ block content
 						p.subheader Pour une meilleur expérience de Yakwala, nous vous invitons à paramétrer votre compte dès maintenant:
 				hr
 				form#firstvisitForm(action='/firstvisit', method='POST')	
-					input#location(type='hidden', name='location', value='')
+					input#location(type='text', name='location', value='')
 					input#address(type='hidden', name='address', value='')
 										
 					div.control-group
@@ -112,6 +113,8 @@ block content
 						var placeGmap = getPlaceFromGmapResult(obj);
 						
 						$('#location').val(JSON.stringify(placeGmap.location));
+						var curPos = {x:placeGmap.location.lat,y:placeGmap.location.lng,z:14};
+						$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
 						$('#address').val(JSON.stringify(placeGmap.address));
 					}
 				});

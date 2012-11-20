@@ -100,6 +100,22 @@ function auth (schema, options) {
     return this
   })
 
+  // Authenticate by token, passing the authenticated instance into the callback
+  schema.static('authenticateByToken', function (token, password, next) {
+    query = {'token':token};
+    this.findOne(query, function (err, model) {
+      if (err) return next(err)
+      if (!model) return next('model does not exist')
+
+      model.authenticate(password, function (err, valid) {
+        if (err) return next(err)
+        if (valid) return next(null, model)
+        return next('invalid password', null)
+      })
+    })
+    return this
+  })
+  
   // Register a new user instance with the supplied attributes, passing
   // the new instance into the callback if no errors were found
   schema.static('register', function (attr, next) {
@@ -153,6 +169,54 @@ function auth (schema, options) {
 		}
 		return password;
 	})
+	
+	
+	
+	schema.static('createApiToken',function (code,redirect_uri,conf,next){
+		var User = this;
+		var results = new Object();
+		var now = new Date();
+		var tmp = now.getTime() + 1000*60*60*2;
+		var maxApiCodeCreationDate = new Date();
+		maxApiCodeCreationDate.setTime(tmp);
+		//User.findOne({apiCode:code,apiCodeCreationDate:{$le:maxApiCodeCreationDate}},{}, function(err, user) {
+		User.findOne({apiCode:code},{}, function(err, user) {
+			if(!(typeof(user) == 'undefined' || user === null || user === '')){
+				var crypto = require('crypto');
+				//var now = new Date();
+				var salt = Math.round(now.valueOf() * Math.random());
+				var token = crypto.createHash('sha1').update("yakwala@secure"+salt).digest("hex");
+				User.update({_id:user._id},{$set:{apiToken:token,apiTokenCreationDate:now}}, function(err,docs){
+					if(err)
+						throw err;
+					else{
+						if(typeof(user.thumb)== 'undefined')
+							var thumb = conf.fronturl+"/static/images/no-user.png";
+						else
+							var tumb = conf.fronturl+"/pictures/128_128/"+user.thumb;
+						var tokenObject = {
+							"access_token": token,
+							"user": {
+								"id": user._id,
+								"username": user.login,
+								"full_name": user.name,
+								"profile_picture": thumb
+							}
+						};
+						next(tokenObject);
+						
+					}
+				});
+			
+			}else{
+				var error = {"error":"access_denied","error_reason": "Login failed","error_description":"Wrong login or password"};
+				next(error);
+				//res.redirect('http://'+redirect_uri+"?error="+JSON.parms(error));
+			}
+		});
+	})
+	
 }
+
 
 module.exports = auth

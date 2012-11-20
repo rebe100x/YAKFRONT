@@ -15,19 +15,41 @@ exports.index = function(req, res){
 
 exports.picture = function(req,res){
 	var fs = require('fs');
-	var img = fs.readFileSync(__dirname+'/../public/uploads/pictures/'+req.params.size+'/'+req.params.picture);
-	res.writeHead(200, {'Content-Type': 'image/jpeg' });
-	res.end(img, 'binary');
+	var thepath = __dirname+'/../public/uploads/pictures/'+req.params.size+'/'+req.params.picture;
+	var path = require('path');
+	if (path.existsSync(thepath)) {
+		var img = fs.readFileSync(thepath);
+		res.writeHead(200, {'Content-Type': 'image/jpeg' });
+		res.end(img, 'binary');
+	}else
+		res.json({error:'file does not exist'});
+}
+
+exports.static_image = function(req,res){
+	var fs = require('fs');
+	var thepath = __dirname+'/../public/images/'+req.params.name;
+	var path = require('path');
+	if (path.existsSync(thepath)) {
+		var img = fs.readFileSync(__dirname+'/../public/images/'+req.params.name);
+		res.writeHead(200, {'Content-Type': 'image/jpeg' });
+		res.end(img, 'binary');
+	}else
+		res.json({error:'file does not exist'});
 }
 
 exports.requiresLogin = function(req,res,next){
 
 	if(req.session.user){
 		var User = db.model('User');
-		
 		User.findById(req.session.user,function (err, theuser){
 			if(theuser != undefined && theuser != null ){
+				
 				res.locals.user = theuser;
+				res.locals.user.token ='xxx';
+				res.locals.user.salt = 'xxx';
+				res.locals.user.hash='xxx';
+				res.locals.user.apiToken='xxx';
+				res.locals.user.apiCode='xxx';
 				console.log('LOGGED IN');
 				next();
 			}else{
@@ -212,7 +234,7 @@ exports.news = function(req, res){
 				if(req.session.user){
 					console.log(req.session.user);
 					info.user = mongoose.Types.ObjectId(req.session.user);
-					info.origin = req.body.username;
+					info.origin = "@"+req.body.username;
 					info.save(function (err) {
 						if (!err) console.log('Success!');
 						else console.log(err);
@@ -250,6 +272,8 @@ exports.news = function(req, res){
 
 exports.user_login = function(req, res){
 	delete req.session.message;
+	
+	
 	res.render('user/login',{locals:{redir:req.query.redir}});
 };
 
@@ -259,15 +283,16 @@ exports.user_login = function(req, res){
 exports.user_validate = function(req, res){
 	var User = db.model('User');	
 	
-	User.findByToken(req.params.token,function (err, model){
-		if (err) return next(err)
-		if (model){
-			res.locals.user = model;
-			res.render('user/validate');
+	User.authenticateByToken(req.params.token,req.params.password, function(err, model) {
+	if(!(typeof(model) == 'undefined' || model === null || model === '')){
+			req.session.user = model._id;
+			User.update({_id: model._id}, {status:1}, {upsert: false}, function(err){if (err) console.log(err);});						
+			res.render('settings/firstvisit',{user:model});
 		}else{
-			req.session.message = 'Validation code is not correct';
-			res.render('user/new');
+			req.session.message = "Votre clé d'activation est incorrecte.";
+			res.redirect('/user/validate');
 		}
+	
 	});
 	
 };
@@ -279,21 +304,7 @@ exports.user_logout = function(req, res){
 
 
 
-exports.validate = function(req,res){
-	var User = db.model('User');
-	
-	User.authenticate(req.body.mail,req.body.password, function(err, model) {
-	if(!(typeof(model) == 'undefined' || model === null || model === '')){
-			req.session.user = model._id;
-			User.update({_id: model._id}, {status:1}, {upsert: false}, function(err){if (err) console.log(err);});						
-			res.render('settings/firstvisit',{user:model});
-		}else{
-			req.session.message = "Votre clé d'activation est incorrecte.";
-			res.redirect('/user/validate');
-		}
-	
-	});
-}
+
 
 exports.session = function(req, res){
 
@@ -325,11 +336,83 @@ exports.user = function(req, res){
 	
 	
 	/*check if user exists*/
-	User.findOne({'mail': themail},'_id', function(err,theuserid){
-		if(!(typeof(theuserid) == 'undefined' || theuserid === null || theuserid === '')){
-			req.session.message = 'Cet utilisateur est déjà enregistré.';
-			res.redirect('user/new');
+	User.findOne({'mail': themail},{_ids:1,status:1,mail:1}, function(err,theuser){
+		if(theuser){
+			console.log(theuser);
+			if(theuser.status == 1){
+				console.log('STATUS1');
+				req.session.message = 'Cet utilisateur est déjà enregistré.';
+				res.redirect('user/new');
+			
+			}
+			if(theuser.status == 2){
+				console.log('STATUS2');
+				
+				/*
+				var smtpTransport = nodemailer.createTransport("SMTP",{
+					service: "Gmail",
+					auth: {
+						//user: "bessieres.biz@gmail.com",
+						//pass: "/m.gmail"
+						user: "labs.yakwala@gmail.com",
+						pass: "/m.yakwala"
+					}
+				});*/
+				
+				
+				var salt = Math.round(new Date().valueOf() * Math.random());
+				var token = crypto.createHash('sha1').update("yakwala@secure"+salt).digest("hex");
+				var password = user.generatePassword(5);
+				var link = conf.validationUrl+token+"/"+password;
+				var hash = crypto.createHash('sha1').update(password+"yakwala@secure"+salt).digest("hex");
+				User.update({_id: theuser._id}, {hash : hash,token:token,salt:salt}, {upsert: false}, function(err){
+					
+				
+					var fs    = require('fs');
+					fs.readFile(__dirname+'/../views/mails/account_validation.html', 'utf8', function(err, data) {
+						
+						console.log('lonk'+link);
+						data = data.replace("*|MC:SUBJECT|*","Votre inscription");
+						data = data.replace("*|MC:HEADERIMG|*",conf.fronturl+"/static/images/yakwala-logo_petit.png");
+						data = data.replace("*|MC:VALIDATIONLINK|*",link);
+						data = data.replace("*|CURRENT_YEAR|*",new Date().getFullYear());
+						
+						
+						var smtpTransport = nodemailer.createTransport("SES", {
+							AWSAccessKeyID: "AKIAJ6EBI6LCECLYVM5Q",
+							AWSSecretKey: "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",
+							//ServiceUrl: "https://email.us-east-1.amazonaws.com" // optional
+						});
+					
+						var mailOptions = {
+							from: "Labs Yakwala <labs.yakwala@gmail.com>", // sender address
+							to: theuser.mail, // list of receivers
+							subject: "Votre inscription à Yakwala", // Subject line
+							text: "Bonjour, \r\n Pour valider votre compte Yakwala, entrez ce lien dans votre navigateur : "+link+" et validez votre compte avec cette clé de validation : "+password, // plaintext bod
+							html: data
+						}	
+							
+						
+						smtpTransport.sendMail(mailOptions, function(error, response){
+							if(error)
+								console.log(error);
+							else
+								console.log(response);
+							smtpTransport.close(); // shut down the connection pool, no more messages
+						});
+					});
+					
+					
+
+				
+					
+				});
+				req.session.message = "Cet utilisateur est en attente de validation. Un nouveau mail vient de lui être renvoyé avec une nouvelle clé d'activation. Veuillez vérifier qu'il n'est pas dans les spams.";
+				res.redirect('user/new');
+			}
+			
 		}else{
+			console.log('NEW');
 				/*create user*/
 				var tmp = req.body.mail.split('@');
 				var login = tmp[0];
@@ -353,15 +436,53 @@ exports.user = function(req, res){
 				
 				
 				user.save(function (err) {
-									if (!err) console.log('Success!');
-									else console.log(err);
-								});
+					if (!err){
+						console.log('user created in db!');
+						var fs    = require('fs');
+						fs.readFile(__dirname+'/../views/mails/account_validation.html', 'utf8', function(err, data) {
+							var link = conf.validationUrl+user.token+'/'+password;
+							console.log('LINK'+link);
+							data = data.replace("*|MC:SUBJECT|*","Votre inscription");
+							data = data.replace("*|MC:HEADERIMG|*",conf.fronturl+"/static/images/yakwala-logo_petit.png");
+							data = data.replace("*|MC:VALIDATIONLINK|*",link);
+							data = data.replace("*|CURRENT_YEAR|*",new Date().getFullYear());
+							
+							
+							var smtpTransport = nodemailer.createTransport("SES", {
+								AWSAccessKeyID: "AKIAJ6EBI6LCECLYVM5Q",
+								AWSSecretKey: "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",
+								//ServiceUrl: "https://email.us-east-1.amazonaws.com" // optional
+							});
+						
+							var mailOptions = {
+								from: "Labs Yakwala <labs.yakwala@gmail.com>", // sender address
+								to: user.mail, // list of receivers
+								subject: "Votre inscription à Yakwala", // Subject line
+								text: "Bonjour, \r\n Pour valider votre compte Yakwala, entrez ce lien dans votre navigateur : "+link+" et validez votre compte avec cette clé de validation : "+password, // plaintext bod
+								html: data
+							}	
+								
+							
+							smtpTransport.sendMail(mailOptions, function(error, response){
+								if(error)
+									console.log(error);
+								else
+									console.log(response);
+								smtpTransport.close(); // shut down the connection pool, no more messages
+							});
+						});
+					
+					} 
+					else console.log(err);
+				});
 				/*send mail*/
 				
-				var link = conf.validationUrl+token;
+				/*
 				var smtpTransport = nodemailer.createTransport("SMTP",{
 					service: "Gmail",
 					auth: {
+						//user: "bessieres.biz@gmail.com",
+						//pass: "/m.gmail"
 						user: "labs.yakwala@gmail.com",
 						pass: "/m.yakwala"
 					}
@@ -376,7 +497,7 @@ exports.user = function(req, res){
 
 				smtpTransport.sendMail(mailOptions, function(error, response){
 					smtpTransport.close(); // shut down the connection pool, no more messages
-				});
+				});*/
 
 				req.session.message = 'Un email vous a été envoyé contenant un lien et une clé de validation de votre compte.';
 				res.redirect('user/new');
@@ -472,7 +593,10 @@ exports.firstvisit = function(req,res){
 			if(req.body.password.length >= 8){
 				if(req.body.location){
 					var location = JSON.parse(req.body.location);
+					console.log('LOCATION');
+					console.log(location);
 					var address = JSON.parse(req.body.address);
+					
 				}
 				else{
 					var location = {'lat':48.856614,'lng':2.3522219000000177}; // PARIS BY DEFAULT*
@@ -710,6 +834,44 @@ exports.privateprofile = function(req, res){
 	res.redirect('settings/privateprofile');
 }
 
+
+exports.addfavplace = function (req, res) {
+	var User = db.model('User');
+	var Point = db.model('Point');
+	
+	if(req.session.user){
+		var point = new Point(req.body.place);	
+		User.update({_id:req.session.user},{$push:{"favplace":point}}, function(err,docs){			
+			res.json(point._id);
+		});
+	}else{
+		req.session.message = "Erreur : vous devez être connecté pour sauver vos favoris";
+		res.redirect('/user/login');
+	}
+	
+	
+};
+
+exports.delfavplace = function (req, res) {
+	var User = db.model('User');
+	
+	if(req.session.user){
+			var pointId = req.body.pointId;
+			User.update({_id:req.session.user},{$pull:{favplace:{_id:pointId}}}, function(err){
+				console.log(err);
+				res.json('del');
+				
+			});
+			
+			
+		
+	}else{
+		req.session.message = "Erreur : vous devez être connecté pour sauver vos favoris";
+		res.redirect('/user/login');
+	}
+	
+	
+};
 
 /**
 DOCS

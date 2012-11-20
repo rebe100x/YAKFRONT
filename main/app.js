@@ -75,11 +75,12 @@ var db = routes.db(conf);
 app.get('/user/login', routes.user_login);
 app.get('/user/logout', routes.user_logout);
 app.get('/user/new', routes.user_new);
-app.get('/user/validate/:token', routes.user_validate);
+app.get('/user/validate/:token/:password', routes.user_validate);
 app.get('/pictures/:size/:picture', routes.picture);
+app.get('/static/images/:name', routes.static_image);
 
 app.post('/user',routes.user);
-app.post('/validate',routes.validate);
+//app.post('/validate',routes.validate);
 app.post('/session',routes.session);
 
 // SECURED BY LOGIN ROUTES:
@@ -109,6 +110,9 @@ app.post('/password',routes.requiresLogin, routes.password);
 app.get('/settings/firstvisit', routes.requiresLogin, routes.settings_firstvisit);
 app.post('/firstvisit',routes.requiresLogin, routes.firstvisit);
 
+app.post('/favplace', routes.requiresLogin, routes.addfavplace); 
+app.post('/delfavplace', routes.requiresLogin, routes.delfavplace); 
+
 
 // OPEN ACCESS API
 app.get('/api/infos', api.infos);
@@ -135,19 +139,19 @@ app.get('/api/users/:userid/feed',api.users_feed);
 //app.get('/api/error', api.oauth_error);
 
 // SECURED API :
-app.post('/api/favplace', api.addfavplace); // NEED TO SECURE BY TOKEN
-app.post('/api/delfavplace', api.delfavplace); // NEED TO SECURE BY TOKEN
+app.post('/api/favplace/:userid', api.requiresToken, api.addfavplace); 
+app.post('/api/delfavplace/:userid', api.requiresToken, api.delfavplace); 
+ 
  
 //app.get('/api/users/:userid/:access_token',api.requiresToken, api.users_details);
-app.get('/api/users/:userid',api.requiresToken, api.users_details);
-app.post('/api/users/:userid',api.requiresToken, api.users_details);
+app.get('/api/users/:userid',api.requiresToken, api.get_users_details);
+app.post('/api/users/:userid',api.requiresToken, api.post_users_details);
 
-app.get('/api/users/feed/:userid/:count', api.users_feed);
-app.post('/api/users/feed/:userid/:count', api.users_feed);
-
+app.get('/api/users/feed/:userid/:count', api.get_users_feed);
+//app.post('/api/users/feed/:userid/:count', api.post_users_feed);
 
 app.get('/api/users/search/:string', api.users_search);
-app.post('/api/users/search/:string', api.users_search);
+
 
 
 

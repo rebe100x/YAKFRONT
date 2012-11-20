@@ -1,4 +1,5 @@
 extends ../layout
+script(src='/javascripts/lib/bootstrap/js/bootstrap-collapse.js')
 block content
 
 	include ../mixins/menu.jade
@@ -32,27 +33,60 @@ block content
 					hr
 					h3#endpoints Endpoints
 					p.subheader User endpoints
-						
+					
+					
 					table.table.table-bordered
 						tr
 							th METHODS
 							th URL
 							th DESCRIPTION
 						tr
-							td GET/POST
+							td GET
 							td /users/<code>user-id</code>
 							td Get the user's data details.
+						
+					
+					table.table.table-bordered
 						tr
-							td GET/POST
+							th METHODS
+							th URL
+							th DESCRIPTION
+						tr
+							td GET
 							td /users/feed/<code>user-id</code>/<code>count</code>
 							td See the authenticated user's feed.
+						tr
+							td(colspan=3) 
+								pre test
+						
+					table.table.table-bordered
+						tr
+							th METHODS
+							th URL
+							th DESCRIPTION
+			
 						tr	
-							td GET/POST
+							td GET
 							td /users/search/<code>string</code>
 							td Search for a user by name.
 					
-
-					
+					table.table.table-bordered
+						tr
+							th METHODS
+							th URL
+							th DESCRIPTION
+			
+						tr	
+							td POST
+							td /settings/<code>user-id</code>
+							td save user's settings
+						tr
+							td(colspan=3)
+								b parameters:
+								ul
+									li access_token
+									li user : object
+									
 					p.subheader Info endpoints
 					table.table.table-bordered
 						tr
@@ -64,7 +98,7 @@ block content
 					p.subheader
 					
 					h4 PHP
-					pre https://github.com:rebe100x/API
+					pre https://github.com/rebe100x/API
 					pre git clone git@github.com:rebe100x/API.git
 					br
 					br

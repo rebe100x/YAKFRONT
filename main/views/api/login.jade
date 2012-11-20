@@ -24,6 +24,7 @@ html
 				div.span12
 					form(action='/api/oauth/session', method='POST')
 						input#redirect_uri(type='hidden', name='redirect_uri', value=redirect_uri)
+						input#response_type(type='hidden', name='response_type', value=response_type)
 						input#client_id(type='hidden', name='client_id', value=client_id)
 						div.control-group
 							div.controls
