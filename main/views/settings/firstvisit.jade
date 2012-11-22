@@ -21,8 +21,9 @@ block content
 						p.subheader Pour une meilleur expérience de Yakwala, nous vous invitons à paramétrer votre compte dès maintenant:
 				hr
 				form#firstvisitForm(action='/firstvisit', method='POST')	
-					input#location(type='text', name='location', value='')
+					input#location(type='hidden', name='location', value='')
 					input#address(type='hidden', name='address', value='')
+					input#formatted_address(type='hidden', name='formatted_address', value='')
 										
 					div.control-group
 						div.controls
@@ -37,11 +38,12 @@ block content
 						div.controls
 							label.control-label(for="favplace") Choisissez vos endroits favoris à ajouter dans vos raccourcis: 
 								ul.favplacelist.unstyled
-									- each favplace in locals.user.favplace
-										li(lat=favplace.location.lat, lng=favplace.location.lng)
-											i.icon-map-marker
-											span= favplace.name
-											i.icon-remove.icon-pointer(onclick='removefavPlace($(this));')
+									-if(locals.user.favplace)
+										- each favplace in locals.user.favplace
+											li(pointid=favplace._id,lat=favplace.location.lat, lng=favplace.location.lng)
+												i.icon-map-marker
+												span= favplace.name
+												i.icon-remove.icon-pointer(onclick='removefavPlace($(this));')
 					div.control-group
 						div.controls
 							label(for='favplace') Ajouter des endroits favoris : 
@@ -116,8 +118,10 @@ block content
 						var curPos = {x:placeGmap.location.lat,y:placeGmap.location.lng,z:14};
 						$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
 						$('#address').val(JSON.stringify(placeGmap.address));
+						$('#formatted_address').val(JSON.stringify(placeGmap.formatted_address));
 					}
 				});
 				
 				
 			}); // END READY	
+

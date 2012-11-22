@@ -16,9 +16,15 @@ exports.index = function(req, res){
 exports.picture = function(req,res){
 	var fs = require('fs');
 	var thepath = __dirname+'/../public/uploads/pictures/'+req.params.size+'/'+req.params.picture;
+	var defaultpath = __dirname+'/../public/images/default/'+req.params.size+'/'+req.params.picture;
 	var path = require('path');
 	if (path.existsSync(thepath)) {
 		var img = fs.readFileSync(thepath);
+		res.writeHead(200, {'Content-Type': 'image/jpeg' });
+		res.end(img, 'binary');
+	}else if(path.existsSync(defaultpath)){
+	console.log();
+		var img = fs.readFileSync(defaultpath);
 		res.writeHead(200, {'Content-Type': 'image/jpeg' });
 		res.end(img, 'binary');
 	}else
@@ -70,6 +76,7 @@ exports.requiresLogin = function(req,res,next){
 
 /**NEWS */
 exports.news_map = function(req, res){
+	delete req.session.message;
 	if(typeof(req.session.type) == 'undefined' || req.session.type === null ){
 		var type = new Array();
 		type.push(1);
@@ -431,13 +438,13 @@ exports.user = function(req, res){
 				user.type=1;
 				
 				
+				
 			
 				user.favplace = [{'name':'Paris, France','location':{'lat':48.851875,'lng':2.356374}},{'name':'Eghézée, Belgique','location':{'lat':50.583346,'lng':4.900031}},{'name':'Montpellier, France','location':{'lat':43.610787,'lng':3.876715}}];
 				
 				
 				user.save(function (err) {
 					if (!err){
-						console.log('user created in db!');
 						var fs    = require('fs');
 						fs.readFile(__dirname+'/../views/mails/account_validation.html', 'utf8', function(err, data) {
 							var link = conf.validationUrl+user.token+'/'+password;
@@ -564,12 +571,12 @@ exports.settings_alerts = function(req, res){
 	var User = db.model('User');
 	
 	if(req.session.user){
-	console.log(res.locals.user);
-		User.findByIds(res.locals.user.usersubs,function (err, docs){
+		
+		/*User.findByIds(res.locals.user.usersubs,function (err, docs){
 			var usersubs = docs;
-			console.log(docs);
 			res.render('settings/alerts',{usersubs:usersubs,tagsubs:res.locals.user.tagsubs});
-		});	
+		});	*/
+		res.render('settings/alerts',{usersubs:res.locals.user.usersubs,tagsubs:res.locals.user.tagsubs});
 		
 	}else{
 		req.session.message = "Erreur : vous devez être connecté pour gérer vos alertes";
@@ -596,9 +603,11 @@ exports.firstvisit = function(req,res){
 					console.log('LOCATION');
 					console.log(location);
 					var address = JSON.parse(req.body.address);
+					var formatted_address = JSON.parse(req.body.formatted_address);
 					
 				}
 				else{
+					var formatted_address = "Paris, France";
 					var location = {'lat':48.856614,'lng':2.3522219000000177}; // PARIS BY DEFAULT*
 					var address = {
 						'street_number' : '', 
@@ -613,7 +622,7 @@ exports.firstvisit = function(req,res){
 				}
 				
 				
-				User.update({_id: req.session.user}, {hash : newcryptedPass,location:location, address: address}, {upsert: false}, function(err){
+				User.update({_id: req.session.user}, {hash : newcryptedPass,location:location, address: address, formatted_address: formatted_address}, {upsert: false}, function(err){
 				
 					if (err) console.log(err);
 					else{
@@ -712,19 +721,19 @@ exports.alerts = function(req, res){
 	//delete req.session.message;
 	var User = db.model('User');
 	var user = new User();
-	var usersubsArray = [];
+	var usersubsArray = Array();
 	var tagsubsArray = [];
 	// user subscribtions
+	
+	
+	//console.log(req.body.usersubsInput.length);
 	if(req.body.usersubsInput.length > 0){
-		var usersubs = eval('('+req.body.usersubsInput+')');
+		var usersubs = JSON.parse(req.body.usersubsInput);
 		for(i=0;i<usersubs.length;i++){
-			usersubsArray.push(mongoose.Types.ObjectId(usersubs[i]));
+			usersubsArray.push(usersubs[i]);
 		
 		}
-		
-		
 	}
-	
 	// tag subscribtions
 	if(req.body.tagsubsInput.length > 0){
 		var tagsubs = eval('('+req.body.tagsubsInput+')');
@@ -736,12 +745,13 @@ exports.alerts = function(req, res){
 	}
 				
 	if(req.session.user){
-		console.log('Vos alertes sont enregistrées ');
-		formMessage.push("Vos alertes sont enregistrées");
-		
-				
-		User.update({_id: req.session.user}, {usersubs : usersubsArray, tagsubs : tagsubsArray}, {upsert: true}, function(err){
+		User.update({_id: req.session.user}, {$set:{usersubs : usersubsArray}, tagsubs : tagsubsArray}, {upsert: true}, function(err){
 			if (err) console.log(err);
+			else{
+				console.log('Vos alertes sont enregistrées ');
+				formMessage.push("Vos alertes sont enregistrées");
+			}
+				
 		});
 	}else
 		formMessage.push("Erreur : vous n'êtes pas connecté !");
@@ -787,6 +797,9 @@ exports.profile = function(req, res){
 		}
 		if(req.body.address){
 			cond.address = JSON.parse(req.body.address);
+		}
+		if(req.body.formatted_address){
+			cond.formatted_address = req.body.formatted_address;
 		}
 			
 		//req.session.user.location = location;

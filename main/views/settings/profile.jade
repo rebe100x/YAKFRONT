@@ -45,18 +45,11 @@ block content
 				$('#tag').val(user.tag);
 				$('#web').val(user.web);
 				$('#taginit').val(user.tag);
-				if(user.address){
-					if(user.address.city)
-						$('#cityTarget').html(user.address.city);
-					if(user.address.zip)
-						$('#cityTarget').append(', '+user.address.zip);
-					if(user.address.country)
-						$('#cityTarget').append(', '+user.address.country);
-				}
-				if(user.thumb)
-					$('#avatarPreview img').attr('src','/uploads/pictures/128_128/'+user.thumb);
-				else
-					$('#avatarPreview img').attr('src','/images/no-user.png');
+				console.log(user.formatted_address);
+				if(user.formatted_address)
+					$('#cityTarget').html(user.formatted_address);
+				
+				$('#avatarPreview img').attr('src','/pictures/128_128/'+user.thumb);
 				
 				
 				// hashtag creation from title field
@@ -132,6 +125,7 @@ block content
 						
 						$('#location').val(JSON.stringify(placeGmap.location));
 						$('#address').val(JSON.stringify(placeGmap.address));
+						$('#formatted_address').val(JSON.stringify(placeGmap.formatted_address));
 					}
 				});
 				

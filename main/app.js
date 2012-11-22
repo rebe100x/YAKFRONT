@@ -114,6 +114,7 @@ app.post('/favplace', routes.requiresLogin, routes.addfavplace);
 app.post('/delfavplace', routes.requiresLogin, routes.delfavplace); 
 
 
+
 // OPEN ACCESS API
 app.get('/api/infos', api.infos);
 app.get('/api/geoinfos/:x1/:y1/:x2/:y2/:heat/:type/:str', api.geoinfos);
@@ -128,7 +129,7 @@ app.get('/api/oauth/login', api.oauth_login);
 app.get('/api/oauth/authorize', api.oauth_authorize); 
 app.get('/api/oauth/authorize/:client_id/:redirect_uri', api.oauth_authorize); 
 app.get('/api/oauth/authorize/:client_id/:redirect_uri/:response_type', api.oauth_authorize); 
-app.get('/api/oauth/authorize/:client_id/:redirect_uri/:response_type/:scope', api.oauth_authorize); //https://api.instagram.com/oauth/authorize/?client_id=CLIENT-ID&redirect_uri=REDIRECT-URI&response_type=code
+app.get('/api/oauth/authorize/:client_id/:redirect_uri/:response_type/:scope', api.oauth_authorize); 
 app.get('/api/oauth/access_token/:client_id/:client_secret/:grant_type/:redirect_uri/:code', api.oauth_access_token); 
 app.post('/api/oauth/access_token', api.oauth_access_token);
 app.get('/api/oauth/access_token', api.oauth_access_token);
@@ -138,10 +139,22 @@ app.get('/api/users/:userid/feed',api.users_feed);
 
 //app.get('/api/error', api.oauth_error);
 
-// SECURED API :
-app.post('/api/favplace/:userid', api.requiresToken, api.addfavplace); 
-app.post('/api/delfavplace/:userid', api.requiresToken, api.delfavplace); 
- 
+//******** SECURED API :
+
+//favplace
+app.post('/api/favplace/:userid', api.requiresToken, api.add_favplace); 
+app.delete('/api/favplace/:userid', api.requiresToken, api.del_favplace); 
+app.get('/api/favplace/:userid', api.requiresToken, api.list_favplace); 
+app.post('/api/delfavplace/:userid', api.requiresToken, api.del_favplace); 
+
+app.post('/api/subscribe/user/:userid', api.requiresToken, api.add_subs_user); 
+app.delete('/api/subscribe/user/:userid', api.requiresToken, api.del_subs_user); 
+app.get('/api/subscribe/user/:userid', api.requiresToken, api.list_subs_user);
+app.post('/api/unsubscribe/user/:userid', api.requiresToken, api.del_subs_user); 
+
+
+
+
  
 //app.get('/api/users/:userid/:access_token',api.requiresToken, api.users_details);
 app.get('/api/users/:userid',api.requiresToken, api.get_users_details);

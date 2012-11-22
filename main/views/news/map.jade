@@ -590,7 +590,6 @@ block content
 		}
 
 		function initialize(x,y,z){
-
 			// set user cookies
 			$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
 			var center = new google.maps.LatLng(x,y);
@@ -601,7 +600,7 @@ block content
 				mapTypeId: google.maps.MapTypeId.ROADMAP,
 				disableDefaultUI: true,
 			});
-			bounds = map.getBounds();	
+			bounds = map.getBounds();
 			map.setOptions({styles: pinkParksStyles});
 			//var markerClustererOptions = {gridSize:30,maxZoom: 17,styles: [{height: 28,width: 28,url: "/images/markers/m1.png"},{height: 38,width: 38,url: "/images/markers/m2.png"},{height: 55,width:55,url: "/images/markers/m3.png"},{height: 85,width: 85,url: "/images/markers/m4.png"},{height: 85,width: 85,url: "/images/markers/m5.png"}]};
 			//markerCluster = new MarkerClusterer(map, markers,markerClustererOptions);
@@ -614,8 +613,8 @@ block content
 				bounds = this.getBounds();
 				getAndPrintInfo();
 				
-			});*/
-			/*
+			});
+			
 			google.maps.event.addListener(map, 'center_changed', function() {
 				cleanMarkers();
 				bounds = this.getBounds();

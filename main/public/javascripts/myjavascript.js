@@ -61,15 +61,15 @@ $(document).ready(function() {
 			}
 		},
 		property: "formatted_address",
-		onselect: function(obj) { 
-			$(this).removeClass('searching');
+		onselect: function(obj) {
+			$('#favplace,#favplace2').removeClass('searching');
 			var placeGmap = getPlaceFromGmapResult(obj);
 			var point = new Object();
 			point.name = placeGmap.title;
 			point.location = placeGmap.location;
 			$.post('/favplace', {'place':point},function(id) {
 				$('.favplacelist').append("<li pointId='"+id+"' lat='"+placeGmap.location.lat+"' lng='"+placeGmap.location.lng+"' class='zoneLoc'><i class='icon-map-marker'></i><span> "+obj.formatted_address+"</span><i class='icon-remove icon-pointer'  onclick='removefavPlace($(this));'></i></li>");
-				$(this).val('').focus();
+				$('#favplace,#favplace2').val('').focus();
 			});
 			
 			//var placeGmap = getPlaceFromGmapResult(obj);

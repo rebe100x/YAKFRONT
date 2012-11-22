@@ -29,7 +29,16 @@ var Point = new Schema({
 	, location	: { type : { lat: Number, lng: Number }}	
 });
 mongoose.model('Point', Point);
-	
+
+
+var UserLight = new Schema({
+	  name : String
+	, location	: { type : { lat: Number, lng: Number }}
+	, formatted_address : String
+});
+mongoose.model('UserLight', UserLight);
+
+
 /**
  * Schema definition
  */
@@ -406,16 +415,17 @@ var User = new Schema({
     , mail	: { type: String, required: true, index: true}
 	, web	: { type: String}
 	, tag	: { type: [String], index: true}
-	, thumb	: { type: String}
+	, thumb	: { type: String, default:'no-user.png'}
 	, type	: { type: Number, required: true, index: true}
 	, login     : { type: String, lowercase: true, required: true, index: { unique: true }}
 	, hash       : { type: String ,required: true, index: true}
 	, salt       : { type: String ,required: true, index: true}
 	, token       : { type: String ,required: true, index: true}
-	, usersubs	: { type: [Schema.Types.ObjectId],ref: 'User',  index: true}
+	, usersubs	: { type: [User],ref: 'User',  index: true}
 	, tagsubs	: { type: [String], index: true}
 	, placesubs	: { type: [Schema.Types.ObjectId], index: true}
 	, location	: { type : { lat: Number, lng: Number }, index : '2d'}	
+	, formatted_address : { type: String }
 	, address	: { type : { 
 								street_number: String,
 								street: String,
@@ -464,7 +474,7 @@ User.statics.findAll = function (callback) {
   return this.find({},{},{sort:{name:1}}, callback);
 }
 	
-User.statics.search = function(string,callback){
+User.statics.search = function(string,limit,callback){
 	var input = new RegExp(string,'gi');
 	return this.find(
 	{	$or:[ {'login': {$regex:input}}, {'name': {$regex:input}} , {"tag": {$regex:input}} ],
@@ -475,12 +485,14 @@ User.statics.search = function(string,callback){
 	{
 		
 		skip:0, // Starting Row
-		limit:100, // Ending Row
+		limit:limit, // Ending Row
 		sort:{
 			lastLoginDate: -1 //Sort by Date Added DESC
 		}
 	}).exec(callback);
 }
+
+
 
 User.statics.findByNameorLogin = function(string,callback){
 	

@@ -105,43 +105,151 @@ exports.searchplaces = function (req, res) {
 	});
 };
 
-exports.addfavplace = function (req, res) {
+
+/*********************************************
+*FAVPLACE
+*ADD, DELETE and LIST user's favorite places
+**********************************************/
+exports.list_favplace = function (req, res) {
+	var User = db.model('User');
+	User.findOne({'_id': res.locals.user._id},{favplace:1}, function(err,docs){
+		if(!err)
+				res.json({meta:{code:200},data:docs});
+			else
+				res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+	});
+	
+}
+
+exports.add_favplace = function (req, res) {
 	var User = db.model('User');
 	var Point = db.model('Point');
-	console.log()
-	if(req.body.name && req.body.lat && req.body.lng){
-		var point = new Point({name:req.body.name,location:{lat:req.body.lat,lng:req.body.lng}});	
-		console.log(point);
+	if(req.body.place){
+		var point = new Point(JSON.parse(req.body.place));	
 		User.update({_id:res.locals.user._id},{$push:{"favplace":point}}, function(err,docs){			
-			res.json(docs);
+			if(!err)
+				res.json({meta:{code:200},data:point});
+			else
+				res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 		});
 	}else
-		res.json({error:'place not set'});
+		res.json({meta:{code:404,error_type:'missing parameter',error_description:'place not set'}});
 	
 	
 };
 
-exports.delfavplace = function (req, res) {
+exports.del_favplace = function (req, res) {
 	var User = db.model('User');
-	
-	if(req.session.user){
-			var pointId = req.body.pointId;
-			User.update({_id:req.session.user},{$pull:{favplace:{_id:pointId}}}, function(err){
-				console.log(err);
-				res.json('del');
-				
-			});
-			
-			
-		
+	if(req.body.place){
+		var placeId = JSON.parse(req.body.place)._id;
+		User.update({_id:res.locals.user._id},{$pull:{favplace:{_id:placeId}}}, function(err,docs){
+			if(!err)
+				res.json({meta:{code:200},data:{_id:placeId}});
+			else
+				res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+		});
 	}else{
-		req.session.message = "Erreur : vous devez être connecté pour sauver vos favoris";
-		res.redirect('/user/login');
-	}
-	
-	
+		res.json({meta:{code:404,error_type:'missing parameter',error_description:'place not set'}});
+	}		
 };
 
+
+/*********************************************
+*SUBSCRIBE TO USER'S FEED
+*ADD, DELETE and LIST user's subscribtions to user's feed
+**********************************************/
+exports.list_subs_user = function (req, res) {
+	var User = db.model('User');
+	User.findOne({'_id': res.locals.user._id},{usersubs:1}, function(err,docs){
+		if(!err)
+				res.json({meta:{code:200},data:docs});
+			else
+				res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+	});
+	
+}
+
+exports.add_subs_user = function (req, res) {
+	var User = db.model('User');
+	var usersubs = JSON.parse(req.body.usersubs)._id;
+	if(usersubs){
+		User.findById(usersubs,function(err,theuser){
+			if(theuser){
+				User.update({_id:res.locals.user._id},{$push:{"usersubs":{_id:theuser._id,name:theuser.name,login:theuser.login,userdetails:theuser.name+' ( @'+theuser.login+' )'}}}, function(err,docs){			
+					if(!err)
+						res.json({meta:{code:200},data:docs});
+					else
+						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+				});
+			}else
+				res.json({meta:{code:404,error_type:'missing parameter',error_description:' not user with this id !'}});
+		});	
+	}else
+		res.json({meta:{code:404,error_type:'missing parameter',error_description:'usersubsid not set: {usersubs:{_id:XXXX}}'}});
+};
+
+exports.del_subs_user = function (req, res) {
+	var User = db.model('User');
+	var usersubs = JSON.parse(req.body.usersubs)._id;
+	console.log(usersubs);
+	if(usersubs){
+		User.update({_id:res.locals.user._id},{$pull:{usersubs:{_id:usersubs}}}, function(err,docs){
+			if(!err)
+				res.json({meta:{code:200},data:{_id:usersubs}});
+			else
+				res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+		});
+	}else{
+		res.json({meta:{code:404,error_type:'missing parameter',error_description:'usersubsid not set : {usersubs:{_id:XXXX}}'}});
+	}		
+};
+
+
+/*********************************************
+*SUBSCRIBE TO A TAG (or YAKCAT)
+*ADD, DELETE and LIST user's subscribtions to user's feed
+**********************************************/
+exports.list_subs_tag = function (req, res) {
+	var User = db.model('User');
+	User.findOne({'_id': res.locals.user._id},{tagsubs:1}, function(err,docs){
+		if(!err)
+				res.json({meta:{code:200},data:docs});
+			else
+				res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+	});
+	
+}
+
+// need to support multi tag 
+exports.add_subs_tag = function (req, res) {
+	var User = db.model('User');
+	var tagsubs = req.body.tagsubs;
+	if(tagsubs){		
+		User.update({_id:res.locals.user._id},{$push:{"tagsubs":tagsubs}}, function(err,docs){			
+			if(!err)
+				res.json({meta:{code:200},data:docs});
+			else
+				res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+		});
+	}else
+		res.json({meta:{code:404,error_type:'missing parameter',error_description:'tagsubs not set: tagsubs=string'}});
+};
+
+exports.del_subs_tag = function (req, res) {
+	var User = db.model('User');
+	var usersubs = JSON.parse(req.body.usersubs)._id;
+	console.log(usersubs);
+	if(usersubs){
+		User.update({_id:res.locals.user._id},{$pull:{usersubs:{_id:usersubs}}}, function(err,docs){
+			if(!err)
+				res.json({meta:{code:200},data:{_id:usersubs}});
+			else
+				res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+		});
+	}else{
+		res.json({meta:{code:404,error_type:'missing parameter',error_description:'usersubsid not set : {usersubs:{_id:XXXX}}'}});
+	}		
+};
 
 /*******
 * USER *
@@ -149,14 +257,13 @@ exports.delfavplace = function (req, res) {
 exports.get_users_details = function (req, res) {
 	var User = db.model('User');
 	User.apiFindById(res.locals.user._id,function(err, docs){
-		if(err)
-			throw err;
-		else{
+		if(!err){
 			if(typeof(docs.thumb)== 'undefined')
 				docs.thumb = "/static/images/no-user.png";
-			res.json(docs);
+			res.json({meta:{code:200},data:docs});
 		}
-	
+		else
+			res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 	});
 }
 exports.get_users_feed = function (req, res) {
@@ -172,18 +279,25 @@ exports.get_users_feed = function (req, res) {
 	});
 }
 
-exports.users_search = function (req, res) {
+exports.usersearch = function (req, res) {
 	var User = db.model('User');
-	
-	User.search(req.params.string,function(err, docs){
-		if(err)
-			throw err;
-		else{
-			res.json(docs);
-		}
-	
+	User.search(req.params.string,100,function (err, docs){
+	var docsConcat = new Array();
+	docs.forEach(function(o){
+		var tmp = new Object();
+		//tmp.userdetails="<img width=\"24\" height=\"24\" class=\"size100 img-rounded\" src=\"/uploads/pictures/24_24/"+o['thumb']+"\"  />"+o['name']+" <span class=\"autocompleteScreenName\"> @"+o['login']+"</span>";
+		tmp.userdetails=o['name']+" (@"+o['login']+")";
+		tmp.name =o['name'];
+		tmp.login =o['login'];
+		tmp._id =o['_id'];
+		tmp.thumb =o['thumb'];
+		docsConcat.push(tmp);
 	});
-}
+	res.json({
+		users: docsConcat
+	  });
+	});
+};
 
 
 
