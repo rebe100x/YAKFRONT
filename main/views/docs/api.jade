@@ -35,7 +35,8 @@ block content
 					p.subheader User endpoints
 					
 					
-					table.table.table-bordered
+					// USERS PROFILE
+					table.table.table-bordered  
 						tr
 							th METHODS
 							th URL
@@ -49,16 +50,21 @@ block content
 								b parameters:
 								ul
 									li access_token:string - the token access
-									li v:1 - the version of the api
-									li local:'fr' - response language
 									li {user:{_id:string}} ( for GET )
 									li {user:} ( for POST and PUT )
+						tr
+							td(colspan=3)
+								b optional parameters:
+								ul			
+									li v=1 - the version of the api
+									li local='fr' - response language
 						tr
 							td(colspan=3)
 								b response:
 								ul
 									li {user : {_id:string, name:string, login:string}}
 					
+					// USERS FEED
 					table.table.table-bordered
 						tr
 							th METHODS
@@ -73,16 +79,22 @@ block content
 								b parameters:
 								ul
 									li access_token:string - the token access
-									li v:1 - the version of the api
-									li local:'fr' - response language
 									li count:int - number of news to get ( for GET )
 									li {info:{_id:string}} ( for GET and DELETE )
 									li {info:} ( for POST and PUT )
 						tr
 							td(colspan=3)
+								b optional parameters:
+								ul			
+									li v=1 - the version of the api
+									li local='fr' - response language
+						tr
+							td(colspan=3)
 								b response:
 								ul
 									li {user : {_id:string, name:string, login:string}}
+									
+					// USER SEARCH	
 					table.table.table-bordered
 						tr
 							th METHODS
@@ -98,17 +110,21 @@ block content
 								b parameters:
 								ul
 									li access_token:string - the token access
-									li v:1 - the version of the api
-									li local:'fr' - response language
 									li {user:{_id:string}} for GET
 									li {user:} for POST and PUT
+						tr
+							td(colspan=3)
+								b optional parameters:
+								ul			
+									li v=1 - the version of the api
+									li local='fr' - response language
 						tr
 							td(colspan=3)
 								b response:
 								ul
 									li {user : {_id:string, name:string, login:string}}
 								
-									
+					// USER SUBSCRIBTIONS TO USERS				
 					table.table.table-bordered
 						tr
 							th METHODS
@@ -116,23 +132,30 @@ block content
 							th DESCRIPTION
 			
 						tr	
-							td POST/GET/DELETE
+							td POST/GET/DELETE/PUT
 							td /subscribe/user/<code>user-id</code>
 							td subscribe to a user's feed
 						tr
 							td(colspan=3)
 								b parameters:
 								ul
-									li access_token:string - the token access
-									li v:1 - the version of the api
-									li local:'fr' - response language
-									li {user:{_id:XXX}}
+									li GET/POST/DELETE/PUT : access_token=string - the token access
+									li DELETE:  usersubs:[{_id:string},{_id:string},{_id:string}] - array of object of ids
+									li POST/PUT : usersubs:[{_id:'string',name:'string',login:'string'},{_id:'string',name:'string',login:'string'}] - array of object users
+						tr
+							td(colspan=3)
+								b optional parameters:
+								ul			
+									li v=1 - the version of the api
+									li local='fr' - response language
+						
 						tr
 							td(colspan=3)
 								b response:
 								ul
-									li {user : {_id:'string',name:'string',login:'string'}}
+									li usersubs:[{_id:'string',name:'string',login:'string'},{_id:'string',name:'string',login:'string'}] 
 					
+					// USER SUBSCRIBTIONS TO TAGS
 					table.table.table-bordered
 						tr
 							th METHODS
@@ -140,23 +163,29 @@ block content
 							th DESCRIPTION
 			
 						tr	
-							td POST/GET/DELETE
+							td POST/GET/DELETE/PUT
 							td /subscribe/tag/<code>user-id</code>
 							td subscribe to a tag
 						tr
 							td(colspan=3)
 								b parameters:
 								ul
-									li access_token:string - the token access
-									li v:1 - the version of the api
-									li local:'fr' - response language
-									li tag:string
+									li GET/POST/DELETE/PUT : access_token=string - the token access
+									li DELETE :  tagsubs:[string]
+									li POST/PUT : tagsubs:[string]
+						tr
+							td(colspan=3)
+								b optional parameters:
+								ul			
+									li v=1 - the version of the api
+									li local='fr' - response language
 						tr
 							td(colspan=3)
 								b response:
 								ul
-									li {tag : {name:'string'}}
-									
+									li tagsubs:[string]
+
+					// USER FAVPLACE					
 					table.table.table-bordered
 						tr
 							th METHODS
@@ -164,23 +193,27 @@ block content
 							th DESCRIPTION
 			
 						tr	
-							td POST/GET/DELETE
+							td POST/GET/DELETE/PUT
 							td /favplace/<code>user-id</code>
 							td mange user's favorite places
 						tr
 							td(colspan=3)
 								b parameters:
 								ul
-									li access_token:string - the token access
-									li v:1 - the version of the api
-									li local:'fr' - response language
-									li {favplace:{_id:XXX}} for GET and DELETE
-									li {favplace:{name:string,location:{lat:float,lng:float}}} for POST
+									li GET/POST/DELETE/PUT : access_token=string - the token access
+									li DELETE:  favplace:[{_id:string},{_id:string},{_id:string}] - array of object of ids
+									li POST/PUT : favplace:[{name:string,location:{lat:float,lng:float}},{name:string,location:{lat:float,lng:float}}] - array of object of places
+						tr
+							td(colspan=3)
+								b optional parameters:
+								ul			
+									li v=1 - the version of the api
+									li local='fr' - response language
 						tr
 							td(colspan=3)
 								b response:
 								ul
-									li {favplace : {name:string,location:{lat:float,lng:float}}}
+									li favplace:[{name:string,location:{lat:float,lng:float}},{name:string,location:{lat:float,lng:float}}]
 									
 					p.subheader Info endpoints
 					table.table.table-bordered

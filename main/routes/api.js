@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Serve JSON to our AngularJS client
  */
 
@@ -124,19 +124,35 @@ exports.list_favplace = function (req, res) {
 exports.add_favplace = function (req, res) {
 	var User = db.model('User');
 	var Point = db.model('Point');
-	if(req.body.place){
-		var point = new Point(JSON.parse(req.body.place));	
-		User.update({_id:res.locals.user._id},{$push:{"favplace":point}}, function(err,docs){			
+	var favplaceArray = eval(req.body.place);
+	if(favplaceArray.length > 0){
+		var pointArray = favplaceArray.map(function(item){ return new Point(item);});		
+		User.update({_id:res.locals.user._id},{$pushAll:{"favplace":pointArray}}, function(err,docs){			
 			if(!err)
-				res.json({meta:{code:200},data:point});
+				res.json({meta:{code:200},data:pointArray});
 			else
 				res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 		});
 	}else
 		res.json({meta:{code:404,error_type:'missing parameter',error_description:'place not set'}});
-	
-	
 };
+
+exports.put_favplace = function (req, res) {
+	var User = db.model('User');
+	var Point = db.model('Point');
+	var favplaceArray = eval(req.body.place);
+	if(favplaceArray.length > 0){
+		var pointArray = favplaceArray.map(function(item){ return new Point(item);});		
+		User.update({_id:res.locals.user._id},{$set:{"favplace":pointArray}}, function(err,docs){			
+			if(!err)
+				res.json({meta:{code:200},data:pointArray});
+			else
+				res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+		});
+	}else
+		res.json({meta:{code:404,error_type:'missing parameter',error_description:'place not set'}});
+};
+
 
 exports.del_favplace = function (req, res) {
 	var User = db.model('User');
@@ -170,12 +186,15 @@ exports.list_subs_user = function (req, res) {
 }
 
 exports.add_subs_user = function (req, res) {
-	var User = db.model('User');
-	var usersubs = JSON.parse(req.body.usersubs)._id;
-	if(usersubs){
-		User.findById(usersubs,function(err,theuser){
-			if(theuser){
-				User.update({_id:res.locals.user._id},{$push:{"usersubs":{_id:theuser._id,name:theuser.name,login:theuser.login,userdetails:theuser.name+' ( @'+theuser.login+' )'}}}, function(err,docs){			
+var User = db.model('User');
+	var usersubsIdArrayStr = eval(req.body.usersubs);
+	var usersubsIdArray = usersubsIdArrayStr.map(function(item) { return item['_id'] });
+	if(usersubsIdArrayStr){
+		var usersubsArray = new Array();
+		User.findByIds(usersubsIdArray,function(err,users){
+			if(users.length>0){
+				users.map(function(item){return {_id:item._id,name:item.name,login:item.login,userdetails:item.name+' ( @'+item.login+' )'}});
+				User.update({_id:res.locals.user._id},{$pushAll:{"usersubs":users}}, function(err,docs){			
 					if(!err)
 						res.json({meta:{code:200},data:docs});
 					else
@@ -185,13 +204,34 @@ exports.add_subs_user = function (req, res) {
 				res.json({meta:{code:404,error_type:'missing parameter',error_description:' not user with this id !'}});
 		});	
 	}else
-		res.json({meta:{code:404,error_type:'missing parameter',error_description:'usersubsid not set: {usersubs:{_id:XXXX}}'}});
+		res.json({meta:{code:404,error_type:'missing parameter',error_description:'usersubsid not set: {usersubs:[{_id:string}{_id:string}{_id:string}]}'}});
 };
 
+
+exports.put_subs_user = function (req, res) {
+	var User = db.model('User');
+	var usersubsIdArrayStr = eval(req.body.usersubs);
+	var usersubsIdArray = usersubsIdArrayStr.map(function(item) { return item['_id'] });
+	if(usersubsIdArrayStr){
+		User.findByIds(usersubsIdArray,function(err,users){
+			if(users.length>0){
+				users.map(function(item){return {_id:item._id,name:item.name,login:item.login,userdetails:item.name+' ( @'+item.login+' )'}});
+				User.update({_id:res.locals.user._id},{$set:{"usersubs":users}}, function(err,docs){			
+					if(!err)
+						res.json({meta:{code:200},data:docs});
+					else
+						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+				});
+			}else
+				res.json({meta:{code:404,error_type:'missing parameter',error_description:' not user with this id !'}});
+		});	
+	}else
+		res.json({meta:{code:404,error_type:'missing parameter',error_description:'usersubsid not set: {usersubs:[{_id:string}{_id:string}{_id:string}]}'}});
+};
 exports.del_subs_user = function (req, res) {
 	var User = db.model('User');
 	var usersubs = JSON.parse(req.body.usersubs)._id;
-	console.log(usersubs);
+	//console.log(usersubs);
 	if(usersubs){
 		User.update({_id:res.locals.user._id},{$pull:{usersubs:{_id:usersubs}}}, function(err,docs){
 			if(!err)
@@ -223,9 +263,26 @@ exports.list_subs_tag = function (req, res) {
 // need to support multi tag 
 exports.add_subs_tag = function (req, res) {
 	var User = db.model('User');
-	var tagsubs = req.body.tagsubs;
-	if(tagsubs){		
-		User.update({_id:res.locals.user._id},{$push:{"tagsubs":tagsubs}}, function(err,docs){			
+	
+	if(req.body.tagsubs){
+		var tagsubs = eval(req.body.tagsubs).map(function(item){return item.replace(/[^\wàáâãäåçèéêëìíîïðòóôõöùúûüýÿ]/gi, '');});
+		User.update({_id:res.locals.user._id},{$pushAll:{"tagsubs":tagsubs}}, function(err,docs){			
+			if(!err)
+				res.json({meta:{code:200},data:docs});
+			else
+				res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+		});
+	}else
+		res.json({meta:{code:404,error_type:'missing parameter',error_description:'tagsubs not set: tagsubs=string'}});
+};
+
+
+exports.put_subs_tag = function (req, res) {
+	var User = db.model('User');
+	
+	if(req.body.tagsubs){
+		var tagsubs = eval(req.body.tagsubs).map(function(item){return item.replace(/[^\wàáâãäåçèéêëìíîïðòóôõöùúûüýÿ]/gi, '');});
+		User.update({_id:res.locals.user._id},{$set:{"tagsubs":tagsubs}}, function(err,docs){			
 			if(!err)
 				res.json({meta:{code:200},data:docs});
 			else
@@ -237,23 +294,33 @@ exports.add_subs_tag = function (req, res) {
 
 exports.del_subs_tag = function (req, res) {
 	var User = db.model('User');
-	var usersubs = JSON.parse(req.body.usersubs)._id;
-	console.log(usersubs);
-	if(usersubs){
-		User.update({_id:res.locals.user._id},{$pull:{usersubs:{_id:usersubs}}}, function(err,docs){
+	var tagsubs = req.body.tagsubs;
+	//console.log(tagsubs);
+	if(tagsubs){
+		User.update({_id:res.locals.user._id},{$pull:{tagsubs:tagsubs}}, function(err,docs){
 			if(!err)
-				res.json({meta:{code:200},data:{_id:usersubs}});
+				res.json({meta:{code:200},data:tagsubs});
 			else
 				res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 		});
 	}else{
-		res.json({meta:{code:404,error_type:'missing parameter',error_description:'usersubsid not set : {usersubs:{_id:XXXX}}'}});
+		res.json({meta:{code:404,error_type:'missing parameter',error_description:'tagsubs not set. tagsubs=string }'}});
 	}		
 };
 
 /*******
 * USER *
 ********/
+
+// TODO
+exports.list_users_feed = function (req, res) {
+	console.log('TODO');
+}
+exports.list_users_profile = function (req, res) {
+	console.log('TODO');
+}
+
+
 exports.get_users_details = function (req, res) {
 	var User = db.model('User');
 	User.apiFindById(res.locals.user._id,function(err, docs){
@@ -266,15 +333,15 @@ exports.get_users_details = function (req, res) {
 			res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 	});
 }
-exports.get_users_feed = function (req, res) {
+
+exports.get_user_feed = function (req, res) {
 	var Info = db.model('Info');
-	
-	Info.findByUser(req.params.userid,req.params.count,function(err, docs){
-		if(err)
-			throw err;
-		else{
-			res.json(docs);
-		}
+	var count =(typeof(req.query.count) != 'undefined') ? req.query.count : 10;
+	Info.findByUser(req.params.userid,count,function(err, docs){
+		if(!err)
+			res.json({meta:{code:200},data:docs});
+		else
+			res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 	
 	});
 }
@@ -427,7 +494,7 @@ exports.oauth_access_token = function(req, res){
 				else
 					var uri = params.redirect_uri;
 				var url_tmp = params.redirect_uri.split('/');	
-				console.log(url_tmp[0]+"/" +"!="+ docs.link);
+				//console.log(url_tmp[0]+"/" +"!="+ docs.link);
 				if(docs.link.substring(0,6) == 'http://')
 					var link = docs.link.substring(7,docs.link.length);
 				else

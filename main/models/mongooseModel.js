@@ -100,6 +100,9 @@ Info.statics.findByUser = function (userid,count, callback) {
   return this.find({ user: userid },{},{limit:count,sort:{pudDate:-1}}, callback);
 }
 
+Info.statics.findByUserIds = function (useridArray, count, callback) {
+  return this.aggregate({ $group: {user: {$in:useridArray}}}, callback);
+}
 
 Info.statics.findAllGeo = function (x1,y1,x2,y2,heat,type,str,usersubs,tagsubs,callback) {
 	var now = new Date();

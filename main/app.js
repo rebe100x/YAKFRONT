@@ -135,7 +135,8 @@ app.post('/api/oauth/access_token', api.oauth_access_token);
 app.get('/api/oauth/access_token', api.oauth_access_token);
 app.post('/api/oauth/session',api.oauth_session);
 
-app.get('/api/users/:userid/feed',api.users_feed);
+app.get('/api/users/feed',api.list_users_feed); // TODO
+app.get('/api/users/profile', api.list_users_profile); // TODO
 
 //app.get('/api/error', api.oauth_error);
 
@@ -145,22 +146,44 @@ app.get('/api/users/:userid/feed',api.users_feed);
 app.post('/api/favplace/:userid', api.requiresToken, api.add_favplace); 
 app.delete('/api/favplace/:userid', api.requiresToken, api.del_favplace); 
 app.get('/api/favplace/:userid', api.requiresToken, api.list_favplace); 
+app.put('/api/favplace/:userid', api.requiresToken, api.put_favplace); 
+// for non restfull guys
 app.post('/api/delfavplace/:userid', api.requiresToken, api.del_favplace); 
+app.post('/api/updatefavplace/:userid', api.requiresToken, api.put_favplace); 
 
+// user subscribtion to other user's news feeds
 app.post('/api/subscribe/user/:userid', api.requiresToken, api.add_subs_user); 
+app.put('/api/subscribe/user/:userid', api.requiresToken, api.put_subs_user); 
 app.delete('/api/subscribe/user/:userid', api.requiresToken, api.del_subs_user); 
 app.get('/api/subscribe/user/:userid', api.requiresToken, api.list_subs_user);
+// for non restfull guys
 app.post('/api/unsubscribe/user/:userid', api.requiresToken, api.del_subs_user); 
+app.post('/api/updatesubscribe/user/:userid', api.requiresToken, api.put_subs_user); 
 
+// user subscribtion to tags
+app.post('/api/subscribe/tag/:userid', api.requiresToken, api.add_subs_tag); 
+app.put('/api/subscribe/tag/:userid', api.requiresToken, api.put_subs_tag); 
+app.delete('/api/subscribe/tag/:userid', api.requiresToken, api.del_subs_tag); 
+app.get('/api/subscribe/tag/:userid', api.requiresToken, api.list_subs_tag);
+// for non restfull guys
+app.post('/api/unsubscribe/tag/:userid', api.requiresToken, api.del_subs_tag); 
+app.post('/api/updatesubscribe/tag/:userid', api.requiresToken, api.put_subs_tag); 
 
 
 
  
 //app.get('/api/users/:userid/:access_token',api.requiresToken, api.users_details);
-app.get('/api/users/:userid',api.requiresToken, api.get_users_details);
-app.post('/api/users/:userid',api.requiresToken, api.post_users_details);
+app.get('/api/user/:userid',api.requiresToken, api.get_users_details);
+app.post('/api/user/:userid',api.requiresToken, api.post_users_details);
+app.put('/api/user/:userid',api.requiresToken, api.put_users_details);
 
-app.get('/api/users/feed/:userid/:count', api.get_users_feed);
+app.get('/api/user/feed/:userid', api.get_user_feed);
+app.post('/api/user/feed/:userid',api.requiresToken, api.add_users_feed);
+app.delete('/api/user/feed/:userid',api.requiresToken, api.del_users_feed);
+app.put('/api/user/feed/:userid',api.requiresToken, api.put_users_feed);
+
+
+
 //app.post('/api/users/feed/:userid/:count', api.post_users_feed);
 
 app.get('/api/users/search/:string', api.users_search);
@@ -174,14 +197,6 @@ app.get('/api/users/search/:string', api.users_search);
 // DOCS
 app.get('/docs/api', routes.docs_api);
 
-
-/*
-app.get('/api/posts', api.posts);
-app.get('/api/post/:id', api.post);
-app.post('/api/post', api.addPost);
-app.put('/api/post/:id', api.editPost);
-app.delete('/api/post/:id', api.deletePost);
-*/
 
 // redirect all others to the index (HTML5 history)
 app.get('*', routes.index);
