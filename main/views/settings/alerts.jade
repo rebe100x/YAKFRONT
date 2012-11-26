@@ -29,7 +29,7 @@ block content
 				hr
 				div.row-fluid
 					form(action='/alerts', method='POST')
-						input#usersubsInput(type='text', name='usersubsInput', value=JSON.stringify(locals.user.usersubs))
+						input#usersubsInput(type='hidden', name='usersubsInput', value=JSON.stringify(locals.user.usersubs))
 						input#placesubscInput(type='hidden', name='placesubscInput', value='')
 						input#tagsubsInput(type='hidden', name='tagsubsInput', value='')
 						div.row-fluid

@@ -12,7 +12,7 @@ exports.confs = {
 	"preprod" : {
 		"validationUrl":"http://ec2-54-247-18-97.eu-west-1.compute.amazonaws.com:62501/user/validate/",
 		"backurl":"http://ec2-54-247-18-97.eu-west-1.compute.amazonaws.com/PREPROD/YAKREP/BACKEND/",
-		"fronturl":"http://c2-54-247-18-97.eu-west-1.compute.amazonaws.com:65001",
+		"fronturl":"http://ec2-54-247-18-97.eu-west-1.compute.amazonaws.com:62501",
 		"port":62501,
 		"dbname":"yakwala_preprod",
 		"env":"PREPROD",
@@ -21,7 +21,7 @@ exports.confs = {
 	"prod" : {
 		"validationUrl":"http://ec2-54-247-18-97.eu-west-1.compute.amazonaws.com:62500/user/validate/",
 		"backurl":"http://ec2-54-247-18-97.eu-west-1.compute.amazonaws.com/YAKREP/BACKEND/",
-		"fronturl":"http://c2-54-247-18-97.eu-west-1.compute.amazonaws.com:65000",
+		"fronturl":"http://ec2-54-247-18-97.eu-west-1.compute.amazonaws.com:65000",
 		"port":62500,
 		"dbname":"yakwala",
 		"env":"PROD",

@@ -376,7 +376,7 @@ exports.user = function(req, res){
 					
 				
 					var fs    = require('fs');
-					fs.readFile(__dirname+'/../views/mails/account_validation.html', 'utf8', function(err, data) {
+					fs.readFile(__dirname+'/../views/mails/account_validation3.html', 'utf8', function(err, data) {
 						
 						console.log('lonk'+link);
 						data = data.replace("*|MC:SUBJECT|*","Votre inscription");
