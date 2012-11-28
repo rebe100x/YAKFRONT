@@ -97,7 +97,7 @@ Info.statics.findAll = function (callback) {
 }
 
 Info.statics.findByUser = function (userid,count, callback) {
-  return this.find({ user: userid },{},{limit:count,sort:{pudDate:-1}}, callback);
+  return this.find({ user: userid,status :1 },{},{limit:count,sort:{pudDate:-1}}, callback);
 }
 
 Info.statics.findByUserIds = function (useridArray, count, callback) {
@@ -564,6 +564,9 @@ Yakcat.statics.searchOne = function (str,callback) {
 	searchStr = new RegExp(str,'i');
 	return this.find({'title': {$regex:searchStr}},{},{limit:1}, callback);
 }
+Yakcat.statics.findByIds = function (ids,callback) {
+  return this.find({'_id': { $in: ids}}, callback);
+}
 
 mongoose.model('Yakcat', Yakcat);
 
@@ -631,7 +634,9 @@ Place.statics.searchOne = function (str,exact,callback) {
 };
   return this.find(cond,{},{limit:1}, callback);
 }
-
+Place.statics.findById = function (id,callback) {
+  return this.findOne({'_id': id}, callback);
+}
 
 mongoose.model('Place', Place);
 

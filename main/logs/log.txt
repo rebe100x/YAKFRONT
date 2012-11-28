@@ -1,0 +1,4 @@
+{ info: [32m'{"title":"info title 4","content":"info content 2","yakcat":["50923b9afa9a95d409000","50923b9afa9a95d409000001"],"yaktype":3,"freetag":["tag11","tag22"],"pubdate":1354363261,"placeid":{"_id":"50b37abefa9a95340e00002d"}}'[39m,
+  access_token: [32m'446d3a6b8ba67d4b431642209850ff01cb3a901e'[39m,
+  v: [32m'20120228'[39m,
+  locale: [32m'fr'[39m }

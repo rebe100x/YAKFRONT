@@ -23,7 +23,6 @@ exports.picture = function(req,res){
 		res.writeHead(200, {'Content-Type': 'image/jpeg' });
 		res.end(img, 'binary');
 	}else if(path.existsSync(defaultpath)){
-	console.log();
 		var img = fs.readFileSync(defaultpath);
 		res.writeHead(200, {'Content-Type': 'image/jpeg' });
 		res.end(img, 'binary');
@@ -82,7 +81,6 @@ exports.news_map = function(req, res){
 		type.push(1);
 		req.session.type = type;
 	}	
-	console.log(res.locals.user);
 	res.render('news/map',{type:req.session.type,str:null});  
 };
 exports.news_map_search = function(req, res){
@@ -137,10 +135,9 @@ exports.news = function(req, res){
 		if(req.body.yakType > 0 )
 			theYakType = req.body.yakType; 
 		
-		console.log(req.files);
+		//console.log(req.files);
 		var infoThumb = new Object();
 		if(req.files.picture.size){
-		console.log('FILEs');
 		var drawTool = require('../mylib/drawlib.js');
 		var size = [{"width":120,"height":90},{"width":512,"height":0}];
 		infoThumb = drawTool.StoreImg(req.files.picture,size,conf);
@@ -170,7 +167,7 @@ exports.news = function(req, res){
 				}
 				if(theYakType == 3){ // if type =3 ( infos pratiques : by default push it in YAKCAT infos pratiques )
 					yakCat.push(mongoose.Types.ObjectId("50923b9afa9a95d409000001")); 
-					yakCatName.push('Infos pratiques');
+					yakCatName.push('InfosPratiques');
 				}
 				
 				if(req.body.yakcatInput.length > 0){
@@ -239,7 +236,7 @@ exports.news = function(req, res){
 				}
 				// security against unidentified users	
 				if(req.session.user){
-					console.log(req.session.user);
+					//console.log(req.session.user);
 					info.user = mongoose.Types.ObjectId(req.session.user);
 					info.origin = "@"+req.body.username;
 					info.save(function (err) {
@@ -345,15 +342,15 @@ exports.user = function(req, res){
 	/*check if user exists*/
 	User.findOne({'mail': themail},{_ids:1,status:1,mail:1}, function(err,theuser){
 		if(theuser){
-			console.log(theuser);
+			//console.log(theuser);
 			if(theuser.status == 1){
-				console.log('STATUS1');
+				//console.log('STATUS1');
 				req.session.message = 'Cet utilisateur est déjà enregistré.';
 				res.redirect('user/new');
 			
 			}
 			if(theuser.status == 2){
-				console.log('STATUS2');
+				//console.log('STATUS2');
 				
 				/*
 				var smtpTransport = nodemailer.createTransport("SMTP",{
@@ -377,8 +374,6 @@ exports.user = function(req, res){
 				
 					var fs    = require('fs');
 					fs.readFile(__dirname+'/../views/mails/account_validation3.html', 'utf8', function(err, data) {
-						
-						console.log('lonk'+link);
 						data = data.replace("*|MC:SUBJECT|*","Votre inscription");
 						data = data.replace("*|MC:HEADERIMG|*",conf.fronturl+"/static/images/yakwala-logo_petit.png");
 						data = data.replace("*|MC:VALIDATIONLINK|*",link);
@@ -419,7 +414,7 @@ exports.user = function(req, res){
 			}
 			
 		}else{
-			console.log('NEW');
+				//console.log('NEW');
 				/*create user*/
 				var tmp = req.body.mail.split('@');
 				var login = tmp[0];
@@ -600,8 +595,6 @@ exports.firstvisit = function(req,res){
 			if(req.body.password.length >= 8){
 				if(req.body.location){
 					var location = JSON.parse(req.body.location);
-					console.log('LOCATION');
-					console.log(location);
 					var address = JSON.parse(req.body.address);
 					var formatted_address = JSON.parse(req.body.formatted_address);
 					

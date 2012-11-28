@@ -72,16 +72,41 @@ block content
 							th DESCRIPTION
 						tr
 							td GET/POST/DELETE/PUT
-							td /users/feed/<code>user-id</code>/<code>count</code>
+							td /users/feed/<code>user-id</code>
 							td Manage the authenticated user's news feed.
 						tr
 							td(colspan=3)
 								b parameters:
 								ul
 									li access_token:string - the token access
-									li count:int - number of news to get ( for GET )
-									li {info:{_id:string}} ( for GET and DELETE )
-									li {info:} ( for POST and PUT )
+									li GET : count:int - number of news to get
+									li POST : 
+										ul
+											li info : JSON object 
+											{
+											<br>&nbsp;&nbsp;title:string, 
+											i.muted news title
+											<br>&nbsp;&nbsp;content:string, 
+											i.muted news main content
+											<br>&nbsp;&nbsp;yakcat:['id1xxxx','id2xxxx'], 
+											i.muted array of Yakwala categories
+											<br>&nbsp;&nbsp;yaktype:int,
+											i.muted 
+												ul
+													li Yakwala type : , optional, default : 4 
+													li Values : actu = 1 , agenda = 2 , Infos Pratiques = 3 , Discussion = 4  
+											&nbsp;&nbsp;freetag:[string,string], 
+											i.muted array of string tags
+											<br>&nbsp;&nbsp;pubdate:int, 
+											i.muted date to be published, Unix timestamp
+											<br>&nbsp;&nbsp;placeid:{_id:string}, 
+											i.muted JSON object the place id ( see the /api/place to create a place)
+											br
+											}
+											li picture : posted image 
+												i.muted The photo should be uploaded as a jpeg and the Content-Type should be set to "image/jpeg". Images may not exceed 5MB in size. 
+										ul
+											li returns the info object created
 						tr
 							td(colspan=3)
 								b optional parameters:
@@ -140,8 +165,8 @@ block content
 								b parameters:
 								ul
 									li GET/POST/DELETE/PUT : access_token=string - the token access
-									li DELETE:  usersubs:[{_id:string},{_id:string},{_id:string}] - array of object of ids
-									li POST/PUT : usersubs:[{_id:'string',name:'string',login:'string'},{_id:'string',name:'string',login:'string'}] - array of object users
+									li DELETE:  usersubs: array of JSON object : [{_id:string},{_id:string},{_id:string}]
+									li POST/PUT : usersubs:  array of JSON object : [{_id:'string',name:'string',login:'string'},{_id:'string',name:'string',login:'string'}] 
 						tr
 							td(colspan=3)
 								b optional parameters:

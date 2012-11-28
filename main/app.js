@@ -26,7 +26,6 @@ var app = express();
 app.configure(function(){
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
-  //app.set('view options', {layout: true});
   app.use(express.bodyParser({keepExtensions: true,uploadDir:__dirname + '/public/uploads/originals'}));
   app.use(express.static(__dirname + '/public'));
   app.use(express.cookieParser('SAfuBUZ2'));
@@ -37,11 +36,9 @@ app.configure(function(){
   }));
   app.use(function(req, res, next){
     res.locals.session = req.session.user;
-	//res.locals.user = JSON.stringify(req.session.user);	
 	res.locals.redir = req.query.redir;
 	res.locals.message = req.session.message;
 	res.locals.type = req.session.type;
-	//res.locals.conf = JSON.stringify(config.confs.dev);
     next();
   });
   
@@ -125,6 +122,7 @@ app.get('/api/places', api.places);
 app.get('/api/searchplaces/:str', api.searchplaces);
 app.get('/api/usersearch/:string', api.usersearch);
 
+// API OAUTH 2
 app.get('/api/oauth/login', api.oauth_login);
 app.get('/api/oauth/authorize', api.oauth_authorize); 
 app.get('/api/oauth/authorize/:client_id/:redirect_uri', api.oauth_authorize); 
@@ -169,24 +167,28 @@ app.get('/api/subscribe/tag/:userid', api.requiresToken, api.list_subs_tag);
 app.post('/api/unsubscribe/tag/:userid', api.requiresToken, api.del_subs_tag); 
 app.post('/api/updatesubscribe/tag/:userid', api.requiresToken, api.put_subs_tag); 
 
+// user feed
+app.get('/api/user/feed/:userid', api.get_user_feed);
+app.post('/api/user/feed/:userid',api.requiresToken, api.add_user_feed);
+app.delete('/api/user/feed/:userid',api.requiresToken, api.del_user_feed);
+app.put('/api/user/feed/:userid',api.requiresToken, api.put_user_feed);
+// for non restfull guys
+app.post('/api/user/updatefeed/:userid', api.requiresToken, api.put_user_feed); 
+app.post('/api/user/delfeed/:userid', api.requiresToken, api.del_user_feed); 
 
 
  
 //app.get('/api/users/:userid/:access_token',api.requiresToken, api.users_details);
-app.get('/api/user/:userid',api.requiresToken, api.get_users_details);
-app.post('/api/user/:userid',api.requiresToken, api.post_users_details);
-app.put('/api/user/:userid',api.requiresToken, api.put_users_details);
+app.get('/api/user/:userid',api.requiresToken, api.get_user_details);
+app.post('/api/user/:userid',api.requiresToken, api.post_user_details);
+app.put('/api/user/:userid',api.requiresToken, api.put_user_details);
 
-app.get('/api/user/feed/:userid', api.get_user_feed);
-app.post('/api/user/feed/:userid',api.requiresToken, api.add_users_feed);
-app.delete('/api/user/feed/:userid',api.requiresToken, api.del_users_feed);
-app.put('/api/user/feed/:userid',api.requiresToken, api.put_users_feed);
 
 
 
 //app.post('/api/users/feed/:userid/:count', api.post_users_feed);
 
-app.get('/api/users/search/:string', api.users_search);
+app.get('/api/users/search/:string', api.user_search);
 
 
  
