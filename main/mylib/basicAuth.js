@@ -190,10 +190,10 @@ function auth (schema, options) {
 					if(err)
 						throw err;
 					else{
-						if(typeof(user.thumb)== 'undefined')
+						if(typeof(user.thumb)== 'undefined' || user.thumb == '')
 							var thumb = conf.fronturl+"/static/images/no-user.png";
 						else
-							var tumb = conf.fronturl+"/pictures/128_128/"+user.thumb;
+							var thumb = conf.fronturl+"/pictures/128_128/"+user.thumb;
 						var tokenObject = {
 							"access_token": token,
 							"user": {
