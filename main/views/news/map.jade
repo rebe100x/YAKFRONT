@@ -732,7 +732,7 @@ block content
 					infoContent += "<div class=\'title\'> <img class='yakTypeImg' src=\'/images/markers/type"+val.yakType+".png\' />"+val.title.linkify()+" ("+dateCreation+")</div>";
 					infoContent += "<div class=\'tags\'>";					
 						if(val.yakCatName)
-								infoContent +="<div class=\'\'>"+yakCatNameArray.join(',').linkify()+"</div>";	
+								infoContent +="<div class=\'\'>"+yakCatNameArray.map(function(item){return item.linkify();}).join(',')+"</div>";	
 					infoContent += "</div>";		
 					infoContent += "<div class=\'links\'>";					
 						if(val.origin && val.origin !=  'undefined'){
@@ -852,7 +852,7 @@ block content
 					infoContent += "<div class=\'title\'> <img class='yakTypeImg' src=\'/images/markers/type"+val.yakType+".png\' />"+val.title.linkify()+" ("+dateCreation+")</div>";
 					infoContent += "<div class=\'tags\'>";					
 						if(val.yakCatName)
-								infoContent +="<div class=\'\'>"+yakCatNameArray.join(',').linkify()+"</div>";	
+								infoContent +="<div class=\'\'>"+yakCatNameArray.map(function(item){return item.linkify();}).join(',')+"</div>";	
 					infoContent += "</div>";		
 					infoContent += "<div class=\'links\'>";					
 						if(val.origin && val.origin !=  'undefined'){
