@@ -354,7 +354,7 @@ exports.del_user_feed = function (req, res) {
 		if(typeof(req.body.info) != 'undefined'){
 			var info = JSON.parse(req.body.info);
 			
-			Info.update({user:res.locals.user._id,_id:info._id},{$set:{status:3}}, function(err,docs){
+			Info.update({_id:theinfoid,user:res.locals.user._id},{$set:{status:3}}, function(err,docs){
 				if(!err)
 					res.json({meta:{code:200},data:info});
 				else
@@ -374,158 +374,329 @@ exports.add_user_feed = function (req, res) {
 	var place = new Place();
 	var tag = new Tag();
 	var error = {};
-	var logger = require("../mylib/logger");
-	logger.logthis(req.body,'log.txt',4);
-
+	
+	// var logger = require("../mylib/logger");
+	// logger.logthis(req.body,'log.txt',4);
 	
 	// we need a title, a placeid
-	var theinfo = JSON.parse(req.body.info);
-	
-	var theplaceid = '';
-	
-	if( typeof(theinfo.placeid) != 'undefined' )
-		if(typeof(theinfo.placeid._id) != 'undefined')
-			theplaceid = theinfo.placeid._id;
-	
-	if(theplaceid && theinfo.title){
-		var yaktypeAccepted = [1,2,3,4];
-		if(yaktypeAccepted.indexOf(theinfo.yaktype)>0)
-			theYakType = theinfo.yaktype; 
-		else
-			theYakType = 4; // by default : DISCUSSION
+	if(typeof(req.body.info) != 'undefined'){
+		var theinfo = JSON.parse(req.body.info);	
+		var theplaceid = '';
 		
-		var infoThumb = new Object();
-		if(req.files.picture.size){
-			var drawTool = require('../mylib/drawlib.js');
-			var size = [{"width":120,"height":90},{"width":512,"height":0}];
-			infoThumb = drawTool.StoreImg(req.files.picture,size,conf);
-		}else
-			infoThumb.err = 0;
-
-		if(infoThumb.err == 0 ){
+		if( typeof(theinfo.placeid) != 'undefined' )
+			if(typeof(theinfo.placeid._id) != 'undefined')
+				theplaceid = theinfo.placeid._id;
+		
+		if(theplaceid && typeof(theinfo.title) != 'undefined' && theinfo.title != ''){
+			var yaktypeAccepted = [1,2,3,4];
+			if(yaktypeAccepted.indexOf(theinfo.yaktype)>0)
+				theYakType = theinfo.yaktype; 
+			else
+				theYakType = 4; // by default : DISCUSSION
 			
-			Place.findById(theplaceid,function(err,theplace){
-				if(theplace){
-					console.log(theplace.title);
-						
-					var yakCatIds = new Array();
-					var yakCatNames = new Array(); 
-				
-					// we introduce a redondancy between types and yakcat to be able to forget the type in the future
-					if(theYakType == 4){ // if type =4 ( discussion : by default push it in YAKCAT discussion )
-						yakCatIds.push(mongoose.Types.ObjectId("5092390bfa9a95f40c000000")); 
-						yakCatNames.push('Discussion');
-					}
-					if(theYakType == 2){ // if type =2 ( agenda : by default push it in yakCat agenda )
-						yakCatIds.push(mongoose.Types.ObjectId("50923b9afa9a95d409000000")); 
-						yakCatNames.push('Agenda');
-					}
-					if(theYakType == 3){ // if type =3 ( infos pratiques : by default push it in yakCat infos pratiques )
-						yakCatIds.push(mongoose.Types.ObjectId("50923b9afa9a95d409000001")); 
-						yakCatNames.push('InfosPratiques');
-					}
-					
-					console.log(theinfo.yakcat);
-					Yakcat.findByIds(theinfo.yakcat,function(err,theyakcats){
-						if(theyakcats){
-							theyakcats.forEach(function(theyakcat){
-								console.log(theyakcat);
-								console.log(yakCatNames.indexOf(theyakcat.title));
-								if(yakCatNames.indexOf(theyakcat.title)){
-									yakCatIds.push(mongoose.Types.ObjectId(theyakcat._id.toString()));
-									yakCatNames.push(theyakcat.title);
-								}
+			var infoThumb = new Object();
+			if(typeof(req.files.picture) != 'undefined' && req.files.picture.size && req.files.picture.size < 1048576*5){
+				var drawTool = require('../mylib/drawlib.js');
+				var size = [{"width":120,"height":90},{"width":512,"height":0}];
+				infoThumb = drawTool.StoreImg(req.files.picture,size,conf);
+			}else
+				infoThumb.err = 0;
+
+			if(infoThumb.err == 0 ){
+				Place.findById(theplaceid,function(err,theplace){
+					if(theplace){
+						var yakCatIds = new Array();
+						var yakCatNames = new Array(); 
+						// we introduce a redondancy between types and yakcat to be able to forget the type in the future
+						if(theYakType == 4){ // if type =4 ( discussion : by default push it in YAKCAT discussion )
+							yakCatIds.push(mongoose.Types.ObjectId("5092390bfa9a95f40c000000")); 
+							yakCatNames.push('Discussion');
+						}
+						if(theYakType == 2){ // if type =2 ( agenda : by default push it in yakCat agenda )
+							yakCatIds.push(mongoose.Types.ObjectId("50923b9afa9a95d409000000")); 
+							yakCatNames.push('Agenda');
+						}
+						if(theYakType == 3){ // if type =3 ( infos pratiques : by default push it in yakCat infos pratiques )
+							yakCatIds.push(mongoose.Types.ObjectId("50923b9afa9a95d409000001")); 
+							yakCatNames.push('InfosPratiques');
+						}
+						Yakcat.findByIds(theinfo.yakcat,function(err,theyakcats){
+							if(theyakcats){
+								theyakcats.forEach(function(theyakcat){
+									if(yakCatNames.indexOf(theyakcat.title)){
+										yakCatIds.push(mongoose.Types.ObjectId(theyakcat._id.toString()));
+										yakCatNames.push(theyakcat.title);
+									}
+									info.yakCat = yakCatIds;
+									info.yakCatName = yakCatNames;
+								});
+							}else{
 								info.yakCat = yakCatIds;
 								info.yakCatName = yakCatNames;
-							});
-						}else{
-							info.yakCat = yakCatIds;
-							info.yakCatName = yakCatNames;
-						}
-					});	
-						
-						info.title = theinfo.title;
-						info.content = theinfo.content;
-						
-						// NOTE : in the query below, order is important : in DB we have lat, lng but need to insert in reverse order : lng,lat  (=> bug mongoose ???)
-						info.location = {lng:parseFloat(theplace.location.lng),lat:parseFloat(theplace.location.lat)};
-						info.address = theplace.formatted_address;
-						
-						info.user = mongoose.Types.ObjectId(res.locals.user._id.toString());
-						
-						info.origin = "@"+res.locals.user.name;
-						
-						var now = new Date();
-						info.creationDate = now;
-						info.lastModifDate = now;
-						if(typeof(theinfo.pubdate) != 'undefined'){
-							info.pubDate = new Date(theinfo.pubdate*1000);
-						}else
-							info.pubDate = now;
-						
-						var D = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
-						var DTS = D.getTime() / 1000 + (3 * 60 * 60 * 24);
-						D.setTime(DTS*1000); 
-						info.dateEndPrint = D;
-						//console.log(info);
-						info.print = 1;
-						info.status = 1;
-						info.yakType = Math.floor(theYakType);
-						info.thumb = infoThumb.name;
-						info.licence = 'Yakwala';
-						info.heat = 80;
-						info.freeTag = theinfo.freetag;
-						
-						info.save(function (err,thenewwinfo) {
-						
-							if (!err){ 
-								console.log('Success!');
-								res.json({info:thenewwinfo});
-							}else{
-								console.log(err);
-								error = {"error":"Post failed","error_reason": "Save in db failled","error_description":err.toString()};
-								res.json({error:error});
-							} 
-						});
-						
-						// update the tag collection
-						if(theinfo.freetag.length > 0){
-							theinfo.freetag.forEach(function(freeTag){
-								Tag.findOne({'title':freeTag},function(err,thetag){
-									if(thetag == null){
-										tag.title=freeTag;
-										tag.save();
-									}
-									else{
-										Tag.update({_id: thetag._id}, {lastUsageDate:now}, {upsert: false}, function(err){if (err) console.log(err);});						
-									}
-								});
+							}
+						});	
 							
+							info.title = theinfo.title;
+							info.content = theinfo.content;
+							
+							// NOTE : in the query below, order is important : in DB we have lat, lng but need to insert in reverse order : lng,lat  (=> bug mongoose ???)
+							info.location = {lng:parseFloat(theplace.location.lng),lat:parseFloat(theplace.location.lat)};
+							info.address = theplace.formatted_address;
+							
+							info.user = mongoose.Types.ObjectId(res.locals.user._id.toString());
+							
+							info.origin = "@"+res.locals.user.name;
+							
+							var now = new Date();
+							info.creationDate = now;
+							info.lastModifDate = now;
+							if(typeof(theinfo.pubdate) != 'undefined'){
+								info.pubDate = new Date(theinfo.pubdate*1000);
+							}else
+								info.pubDate = now;
+							
+							var D = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+							var DTS = D.getTime() / 1000 + (3 * 60 * 60 * 24);
+							D.setTime(DTS*1000); 
+							info.dateEndPrint = D;
+							//console.log(info);
+							info.print = 1;
+							info.status = 1;
+							info.yakType = Math.floor(theYakType);
+							info.thumb = infoThumb.name;
+							info.licence = 'Yakwala';
+							info.heat = 80;
+							info.freeTag = theinfo.freetag;
+							
+							info.save(function (err,thenewwinfo) {
+							
+								if (!err){ 
+									console.log('Success!');
+									res.json({info:thenewwinfo});
+								}else{
+									console.log(err);
+									error = {"error":"Post failed","error_reason": "Save in db failled","error_description":err.toString()};
+									res.json({error:error});
+								} 
 							});
-						}
-						
-					
-				}else{
-					error = {"error":"Post failed","error_reason": "Place not found","error_description":"placeid does not correspond to anything"};
-					res.json({error:error});
-				}				
-			});
+							
+							// update the tag collection
+							if(theinfo.freetag.length > 0){
+								theinfo.freetag.forEach(function(freeTag){
+									Tag.findOne({'title':freeTag},function(err,thetag){
+										if(thetag == null){
+											tag.title=freeTag;
+											tag.save();
+										}
+										else{
+											Tag.update({_id: thetag._id}, {lastUsageDate:now}, {upsert: false}, function(err){if (err) console.log(err);});						
+										}
+									});
+								
+								});
+							}
+					}else{
+						error = {"error":"Post failed","error_reason": "Place not found","error_description":"placeid does not correspond to anything"};
+						res.json({error:error});
+					}				
+				});
+			}else{
+				error = {"error":"Post failed","error_reason": "Image upload failed","error_description":"image should be jpeg and less than 5M"};
+				res.json({error:error});
+			}	
+			
 		}else{
-			error = {"error":"Post failed","error_reason": "Image upload failed","error_description":"image should be jpeg and less than 5M"};
+			if(!theinfo.title)
+				error = {"error":"Post failed","error_reason": "Missing paramater","error_description":"title is empty"};
+			if(!theplaceid)
+				error = {"error":"Post failed","error_reason": "Missing paramater","error_description":"placeid is empty should be {_id:'XXXX'}"};
 			res.json({error:error});
-		}	
-		
+		}
 	}else{
-		if(!theinfo.title)
-			error = {"error":"Post failed","error_reason": "Missing paramater","error_description":"title is empty"};
-		if(!theplaceid)
-			error = {"error":"Post failed","error_reason": "Missing paramater","error_description":"placeid is empty should be {_id:'XXXX'}"};
+		error = {"error":"Post failed","error_reason": "Missing paramater","error_description":"info is not set, should be info = {title:string, content:string, yakcat:['id1xxxx','id2xxxx'], yaktype:int, freetag:[string,string], pubdate:int, placeid:{_id:string}} "};
 		res.json({error:error});
 	}
+
 	
 	
 }
 
+exports.put_user_feed = function (req, res) {
+	var Info = db.model('Info');
+	var Place = db.model('Place');
+	var Tag = db.model('Tag');
+	var Yakcat = db.model('Yakcat');
+	var info = new Info();
+	var place = new Place();
+	var tag = new Tag();
+	var error = {};
+	var theYakType = 4;
+	
+	if(typeof(req.body.info) != 'undefined'){
+		var theinfo = JSON.parse(req.body.info);	
+	
+		if( typeof(theinfo._id) != 'undefined' )
+			theinfoid = theinfo._id;
+		
+		if(theinfoid){
+		
+			var now = new Date();
+			
+			// TITLE
+			if(typeof(theinfo.title) != 'undefined' && theinfo.title != ''){
+				Info.update({_id:theinfoid,user:res.locals.user._id},{$set:{title:theinfo.title,lastModifDate:now}}, function(err,docs){
+					if(err)
+						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+				});
+			}
+			// CONTENT	
+			if(typeof(theinfo.content) != 'undefined' && theinfo.content != ''){
+				Info.update({_id:theinfoid,user:res.locals.user._id},{$set:{content:theinfo.content,lastModifDate:now}}, function(err,docs){
+					if(err)
+						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+				});
+			}
+			// YAKTYPE
+			var yaktypeAccepted = [1,2,3,4];
+			if(yaktypeAccepted.indexOf(theinfo.yaktype)>0){
+				Info.update({_id:theinfoid,user:res.locals.user._id},{$set:{yaktype:Math.floor(theinfo.yaktype),lastModifDate:now}}, function(err,docs){
+					if(err)
+						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+				});
+			}else
+				theYakType = 4; // by default : DISCUSSION
+				
+			// THUMB
+			var infoThumb = new Object();
+			console.log('filesize'+req.files.picture.size);
+			if(typeof(req.files.picture) != 'undefined' && req.files.picture.size > 0 && req.files.picture.size < 1048576*5){
+				var drawTool = require('../mylib/drawlib.js');
+				var size = [{"width":120,"height":90},{"width":512,"height":0}];
+				infoThumb = drawTool.StoreImg(req.files.picture,size,conf);
+				
+				if(infoThumb.err == 0 ){
+					Info.update({_id:theinfoid,user:res.locals.user._id},{$set:{thumb:infoThumb.name,lastModifDate:now}}, function(err,docs){
+						if(err)
+							res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+					});
+				}else{
+					error = {"error":"Post failed","error_reason": "Image upload failed","error_description":"image should be jpeg and less than 5M"};
+					res.json({error:error});
+				}
+			}
+			// DATES 
+			
+			if(typeof(theinfo.pubdate) != 'undefined' && theinfo.pubdate > 0){
+				Info.update({_id:theinfoid,user:res.locals.user._id},{$set:{dateEndPrint:new Date(theinfo.pubdate*1000),lastModifDate:now}}, function(err,docs){
+					if(err)
+						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+				});
+			}
+			// TAGS
+			if(typeof(theinfo.freetag) != 'undefined' && theinfo.freetag.length > 0){
+				Info.update({_id:theinfoid,user:res.locals.user._id},{$set:{freeTag:theinfo.freetag,lastModifDate:now}}, function(err,docs){
+					if(err)
+						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+				});
+				
+				theinfo.freetag.forEach(function(freeTag){
+					Tag.findOne({'title':freeTag},function(err,thetag){
+						if(thetag == null){
+							tag.title=freeTag;
+							tag.save();
+						}
+						else{
+							Tag.update({_id: thetag._id}, {lastUsageDate:now}, {upsert: false}, function(err){if (err) console.log(err);});						
+						}
+					});				
+				});
+			}
+			
+			
+			
+			
+			
+			if(typeof(theinfo.yakcat) != 'undefined' && theinfo.yakcat.length > 0){
+				var yakCatIds = new Array();
+				var yakCatNames = new Array(); 
+			
+				// we introduce a redondancy between types and yakcat to be able to forget the type in the future
+				if(theYakType == 4){ // if type =4 ( discussion : by default push it in YAKCAT discussion )
+					yakCatIds.push(mongoose.Types.ObjectId("5092390bfa9a95f40c000000")); 
+					yakCatNames.push('Discussion');
+				}
+				if(theYakType == 2){ // if type =2 ( agenda : by default push it in yakCat agenda )
+					yakCatIds.push(mongoose.Types.ObjectId("50923b9afa9a95d409000000")); 
+					yakCatNames.push('Agenda');
+				}
+				if(theYakType == 3){ // if type =3 ( infos pratiques : by default push it in yakCat infos pratiques )
+					yakCatIds.push(mongoose.Types.ObjectId("50923b9afa9a95d409000001")); 
+					yakCatNames.push('InfosPratiques');
+				}
+				
+			
+				Yakcat.findByIds(theinfo.yakcat,function(err,theyakcats){
+					if(theyakcats){
+						theyakcats.forEach(function(theyakcat){
+							console.log(theyakcat);
+							console.log(yakCatNames.indexOf(theyakcat.title));
+							if(yakCatNames.indexOf(theyakcat.title)){
+								yakCatIds.push(mongoose.Types.ObjectId(theyakcat._id.toString()));
+								yakCatNames.push(theyakcat.title);
+							}
+						});
+					}else{
+						info.yakCat = yakCatIds;
+						info.yakCatName = yakCatNames;
+					}
+					
+					Info.update({_id:theinfoid,user:res.locals.user._id},{$set:{yakCat:yakCatIds,yakCatName:yakCatNames,lastModifDate:now}}, function(err,docs){
+						if(err)
+							res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+					});
+				});	
+			}
+			
+				
+
+			
+			// PLACE
+			var theplaceid = '';	
+			if( typeof(theinfo.placeid) != 'undefined' )
+				if(typeof(theinfo.placeid._id) != 'undefined')
+					theplaceid = theinfo.placeid._id;
+					
+			if(theplaceid){
+				Place.findById(theplaceid,function(err,theplace){
+					if(theplace){
+						// NOTE : in the query below, order is important : in DB we have lat, lng but need to insert in reverse order : lng,lat  (=> bug mongoose ???)
+						Info.update({_id:theinfoid,user:res.locals.user._id},{$set:{placeId:theplaceid,address:theplace.formatted_address,location:{lat:parseFloat(theplace.location.lat),lng:parseFloat(theplace.location.lng)},lastModifDate:now}}, function(err,docs){
+						if(err)
+							res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+					});	
+						
+						
+					}else{
+						error = {"error":"Update failed","error_reason": "Place not found","error_description":"placeid does not correspond to anything"};
+						res.json({error:error});
+					}				
+				});
+			}
+		}else{
+			error = {"error":"Update failed","error_reason": "Missing paramater","error_description":"info._id is empty"};
+			res.json({error:error});
+		}
+		
+	res.json({info:{_id:theinfoid}});
+	
+	}else{
+		error = {"error":"Update failed","error_reason": "Missing paramater","error_description":"info is not set, should be info = {title:string, content:string, yakcat:['id1xxxx','id2xxxx'], yaktype:int, freetag:[string,string], pubdate:int, placeid:{_id:string}} "};
+		res.json({error:error});
+	}
+
+	
+	
+}
 
 exports.user_search = function (req, res) {
 	var User = db.model('User');

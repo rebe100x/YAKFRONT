@@ -137,11 +137,11 @@ exports.news = function(req, res){
 		
 		//console.log(req.files);
 		var infoThumb = new Object();
-		if(req.files.picture.size){
-		var drawTool = require('../mylib/drawlib.js');
-		var size = [{"width":120,"height":90},{"width":512,"height":0}];
-		infoThumb = drawTool.StoreImg(req.files.picture,size,conf);
-		formMessage.push(infoThumb.msg);	
+		if(req.files.picture.size && req.files.picture.size > 0 && req.files.picture.size < 1048576*5){
+			var drawTool = require('../mylib/drawlib.js');
+			var size = [{"width":120,"height":90},{"width":512,"height":0}];
+			infoThumb = drawTool.StoreImg(req.files.picture,size,conf);
+			formMessage.push(infoThumb.msg);	
 		}
 		else
 			infoThumb.err = 0;
