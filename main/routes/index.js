@@ -114,6 +114,13 @@ exports.news_feed = function(req, res){
 	}); 
 };
 
+exports.news_afeed = function(req, res){
+	var Info = db.model('Info');
+	Info.findAllByID(function (err, docs){
+		res.render('news/afeed',{infos:docs});
+	}); 
+};
+
 exports.news = function(req, res){
 
 	var formMessage = new Array();

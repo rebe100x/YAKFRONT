@@ -1,0 +1,67 @@
+mixin searchPanel()
+	div#search
+			div#seacrhBox
+				input#SearchWhat(type="text", data-provide="typeahead", class="searchInput", placeholder="Quoi ?")
+				input#SearchWhere(type="text", data-provide="typeahead", class="searchInput2", placeholder="Où ?")
+				div#heatModule.row
+					div#dayPrinter(class="dayPrinter") Depuis 3 jours	
+					div#heatSelector(class="upperHeight")
+			div.searchFilters
+				div(data-toggle="buttons-checkbox", class="searchTypes")
+					div(class="btn-group1")
+						span.btn(title="Actu", type=1) 
+							img(src="/images/markers/type1.png", class="smallImg")
+						span.btn(title="Discussion", type=4) 
+							img(src="/images/markers/type4.png", class="smallImg")
+						span.btn(title="Agenda", type=2) 
+							img(src="/images/markers/type2.png", class="smallImg")
+						span.btn(title="Infos Pratiques", type=3) 
+							img(src="/images/markers/type3.png", class="smallImg")
+						span.btn(title="Mes alertes", type=5)
+							img(src="/images/markers/type5.png", class="smallImg")
+				div(data-toggle="buttons-checkbox", class="searchGenres")
+					div(class="dropdown")
+					img(src="/images/categoriesicon.png", class="dropdown-toggle", data-toggle="dropdown", data-title="dfsdfds")
+					ul(class="dropdown-menu input-list", role="menu", aria-labelledby="dLabel")
+						li
+							label
+								|&nbsp;
+								input(type="checkbox")
+								|&nbsp;Sports
+						li
+							label
+								|&nbsp;
+								input(type="checkbox")
+								|&nbsp;Theatres
+						li
+							label
+								|&nbsp;
+								input(type="checkbox")
+								|&nbsp;Cinema
+
+			button(type="button", class="btn searchButton") Search
+
+			script
+				/*slider time selector*/
+				$( "#heatSelector" ).slider({
+					range: "min",
+					min: 1,
+					max: 100,
+					value: 90,
+					slide: function( event, ui ) {
+						var x = ui.value;
+						var y = Math.ceil(-7.222723628*Math.pow(10,-7)*Math.pow(x,5) + 2.123355095*Math.pow(10,-4)*Math.pow(x,4) - 2.178300623*Math.pow(10,-2)*Math.pow(x,3) + 0.906040198*Math.pow(x,2) - 16.47223075*x + 360.0000001);
+						var yText = "";
+						if(y <= 1)
+							yText = "Depuis "+y+" jour";
+						else
+							yText = "Depuis "+y+" jours";
+						$( "#dayPrinter" ).html(yText);
+						heat = y;
+						
+					},
+					change:function(event, ui){
+						getAndPrintInfo();
+						
+					}
+				});

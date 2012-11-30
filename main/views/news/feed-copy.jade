@@ -1,0 +1,25 @@
+extends ../layout
+block content
+
+	include ../mixins/menu.jade
+	include ../mixins/locationChooser.jade
+
+	mixin menu('feed')
+	mixin locationChooser()
+
+	div#feedContent
+		//p!= partial('./partials/newsfeed.jade', {infos:infos})
+		
+	script
+
+		$(document).ready(function() {
+			$.getJSON('/api/infos',function(data) {
+				var items = [];
+
+				$.each(data.info, function(key,val) {
+					$('#feedContent').append("<div class=\'item\'><div class=\'title\'>"+val.title+"</div><div class=\'content\'>"+val.content+"</div><div class=\'address\'>"+val.address+"</div></div>");
+					
+					
+				});
+			});
+		});

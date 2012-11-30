@@ -96,6 +96,15 @@ Info.statics.findAll = function (callback) {
 
 }
 
+Info.statics.findAllByID = function (callback, id) {
+  return this.find(
+	{
+		"_id":id
+	},	
+	callback);
+
+}
+
 Info.statics.findByUser = function (userid,count, callback) {
   return this.find({ user: userid,status :1 },{},{limit:count,sort:{pudDate:-1}}, callback);
 }

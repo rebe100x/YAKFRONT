@@ -3,23 +3,200 @@ block content
 
 	include ../mixins/menu.jade
 	include ../mixins/locationChooser.jade
+	include ../mixins/searchPanel.jade
 
 	mixin menu('feed')
 	mixin locationChooser()
+	div#mainFeedWrapper
+		mixin searchPanel()
+		div#feedContent
+		div.paging
+			a.next.btn load more 
+			span#loading 
+		div.sets
+			span#resultSet 1
+			|&nbsp;set of results loaded&nbsp;
+		div#PopupContainer
+			div(id="myModal", class="modal hide fade", tabindex="-1", role="dialog", aria-labelledby="myModalLabel", aria-hidden="true", style="width: 80%")
 
-	div#feedContent
-		//p!= partial('./partials/newsfeed.jade', {infos:infos})
-		
 	script
-
+		var limit = 10;
+		var subSize = 200;
 		$(document).ready(function() {
-			$.getJSON('/api/infos',function(data) {
-				var items = [];
 
+			$('.typeahead').typeahead();
+
+			$('.btn-group1').button();
+			$('.btn-group2').button();
+
+			$.getJSON('/api/infos', { page : 1, skip: 0, limit: limit,  yaktype: gup("yaktype")} ,function(data) {
+				var item, title, content, address, more, postedby, date, type, cat;
 				$.each(data.info, function(key,val) {
-					$('#feedContent').append("<div class=\'item\'><div class=\'title\'>"+val.title+"</div><div class=\'content\'>"+val.content+"</div><div class=\'address\'>"+val.address+"</div></div>");
+					//$('#feedContent').append("<div class=\'item\'><div class=\'title\'>"+val.title+"</div><div class=\'content\'>"+val.content+"</div><div class=\'address\'>"+val.address+"</div></div>");
+
+					item = $("<div />");
+					item.attr("class", "myitem");
 					
+					more = $("<a />");
+					more.attr("class", "more");
+					more.attr("href", "news/afeed?id=" + val._id);
+					more.attr("rel", val._id);
+					more.attr("data-toggle", "data-toggle");
+					more.html(val.title);
+
+					title = $("<div />");
+					title.attr("class", "title");
+					title.html("<img class='yakImg' src='/images/yakfav.png' />");
+					title.append(more);
+					
+					postedby = $("<div />");
+					postedby.attr("class", "postedby");
+					
+					date= new Date(val.pubDate);
+					postedby.html("Posted by " + val.origin + " at " + date);
+					
+					title.append(postedby);
+					
+					
+					
+					content = $("<div />");
+					content.attr("class", "content");
+					content.html(val.content.substring(0, subSize));
+					//content.append(more);
+					content.append("<br /><br />");
+					
+					type = $("<div />");
+					type.attr("class", "type");
+					type.html("Type: " + val.yakType);
+					
+					cat = $("<div />");
+					cat.attr("class", "cat");
+					cat.html("Category: " + val.yakCat);
+					
+					//content.append(type);
+					//content.append(cat);
+										
+					address = $("<div />");
+					address.attr("class", "address");
+					address.html(val.address);
+					
+					item.append(title);
+					item.append(content);
+					item.append(address);
+					
+					$("#feedContent").append(item);
 					
 				});
+				setClickableArea();
+			});
+			
+			
+			
+			$(".next").click(function(){
+				var currentPage = parseInt($("#resultSet").html().trim());
+				currentPage = currentPage + 1;
+				var skip = (currentPage - 1)*limit;
+				$(".next").hide();
+				$("#loading").html("loading...");
+				$.getJSON('/api/infos', { page : currentPage, skip: skip, limit: limit, yaktype: gup("yaktype")} ,function(data) {
+				var item, title, content, address, more, postedby, date, type, cat;
+				if(data.info.length == 0)
+				{
+				$(".paging").html("no more results to show");
+				return;
+				}
+				$.each(data.info, function(key,val) {
+				//$('#feedContent').append("<div class=\'item\'><div class=\'title\'>"+val.title+"</div><div class=\'content\'>"+val.content+"</div><div class=\'address\'>"+val.address+"</div></div>");
+				item = $("<div />");
+				item.attr("class", "myitem");
+				
+				more = $("<a />");
+				more.attr("class", "more");
+				more.attr("href", "news/afeed?id=" + val._id);
+				more.attr("rel", val._id);
+				more.attr("data-toggle", "data-toggle");
+				more.html(val.title);
+
+				title = $("<div />");
+				title.attr("class", "title");
+				title.html("<img class='yakImg' src='/images/yakfav.png' />");
+				title.append(more);
+				
+				postedby = $("<div />");
+				postedby.attr("class", "postedby");
+				
+				date= new Date(val.pubDate);
+				postedby.html("Posted by " + val.origin + " at " + date);
+				
+				title.append(postedby);
+				
+				
+				
+				content = $("<div />");
+				content.attr("class", "content");
+				content.html(val.content.substring(0, subSize));
+				//content.append(more);
+				content.append("<br /><br />");
+				
+				type = $("<div />");
+				type.attr("class", "type");
+				type.html("Type: " + val.yakType);
+				
+				cat = $("<div />");
+				cat.attr("class", "cat");
+				cat.html("Category: " + val.yakCat);
+				
+				//content.append(type);
+				//content.append(cat);
+									
+				address = $("<div />");
+				address.attr("class", "address");
+				address.html(val.address);
+				
+				item.append(title);
+				item.append(content);
+				item.append(address);
+				
+				$("#feedContent").append(item);
+				$("#resultSet").html(currentPage);
+				$(".next").show();
+				$("#loading").html("");
+				});
+				setClickableArea();
+				});
+				var height = $('#feedContent')[0].scrollHeight;
+				$("html, body").animate({ scrollTop: $(document).height() }, 1000);
+				
 			});
 		});
+		
+		function setClickableArea()
+		{
+			$(".more").click(function(e){
+				e.preventDefault();
+				var relid = $(this).attr("rel");
+				$("#myModal").html("");
+				$("#myModal").load("/txt/loadingModal.txt", function(){
+					$("#myModal").modal();
+					$('#myModal').on('shown', function () {
+						$.getJSON('/api/afeed', { id: relid} ,function(data) {
+							$("#myModalLabel").html(data.info[0].title);
+							$(".modal-body").html("<div>" + data.info[0].content + "</div>");
+						});	
+					})
+				});
+				
+			});
+		}
+		function gup( name )
+		{
+		name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+		var regexS = "[\\?&]"+name+"=([^&#]*)";
+		var regex = new RegExp( regexS );
+		var results = regex.exec( window.location.href );
+		if( results == null )
+		return "";
+		else
+		return results[1];
+		}
+		

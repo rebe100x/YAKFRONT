@@ -34,6 +34,15 @@ exports.infos = function (req, res) {
 	}); 
 };
 
+exports.afeed = function (req, res) {
+	var Info = db.model('Info');
+	Info.findAllByID(function (err, docs){
+	  res.json({
+		info: docs
+	  });
+	}, req.query["id"]); 
+};
+
 exports.geoinfos = function (req, res) {
 	var Info = db.model('Info');
 	var type = [];

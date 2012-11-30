@@ -2653,8 +2653,9 @@ button.close {
 
 .btn.active,
 .btn:active {
-  background-color: #e6e6e6;
-  background-color: #d9d9d9 \9;
+  background-color: #D71920;
+  background-color: #D71920 \9;
+  color: white;
   background-image: none;
   outline: 0;
   -webkit-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
@@ -4169,9 +4170,10 @@ input[type="submit"].btn.btn-mini {
 .modal {
   position: fixed;
   top: 50%;
-  left: 50%;
+  left: 30%;
   z-index: 1050;
-  width: 560px;
+  width: 80%;
+  min-height:  70%;
   margin: -250px 0 0 -280px;
   overflow: auto;
   background-color: #ffffff;
