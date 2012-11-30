@@ -741,7 +741,7 @@ block content
 							else
 								infoContent += "<div class=\'\'>Posté par <a target='_blank' href='"+val.outGoingLink+"'>"+val.origin+"</a></div>";
 						}
-					if(val.address != 'null')
+					if(typeof(val.address) != 'undefined' && val.address != 'null' && val.address != '')
 							infoContent += "<div class=\'infodetail\'>"+val.address+"</div>";
 					infoContent += "</div>";	
 					//infoContent += "<div class=\'content\'>"+val.content.substring(0,250).linkify()+"...</div>";
@@ -861,7 +861,7 @@ block content
 							else
 								infoContent += "<div class=\'\'>Posté par <a target='_blank' href='"+val.outGoingLink+"'>"+val.origin+"</a></div>";
 						}
-					if(val.address != 'null')
+					if(typeof(val.address) != 'undefined' && val.address != 'null' && val.address != '')
 							infoContent += "<div class=\'infodetail\'>"+val.address+"</div>";
 					infoContent += "</div>";	
 					//infoContent += "<div class=\'content\'>"+val.content.substring(0,250).linkify()+"...</div>";
