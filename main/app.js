@@ -133,12 +133,11 @@ app.post('/api/oauth/access_token', api.oauth_access_token);
 app.get('/api/oauth/access_token', api.oauth_access_token);
 app.post('/api/oauth/session',api.oauth_session);
 
-app.get('/api/users/feed',api.list_users_feed); // TODO
-app.get('/api/users/profile', api.list_users_profile); // TODO
+app.get('/api/user/feed',api.list_users_feed); // TODO
+app.get('/api/user/profile', api.list_users_profile); // TODO
 
 //app.get('/api/error', api.oauth_error);
 
-//******** SECURED API :
 
 //favplace
 app.post('/api/favplace/:userid', api.requiresToken, api.add_favplace); 
@@ -167,7 +166,7 @@ app.get('/api/subscribe/tag/:userid', api.requiresToken, api.list_subs_tag);
 app.post('/api/unsubscribe/tag/:userid', api.requiresToken, api.del_subs_tag); 
 app.post('/api/updatesubscribe/tag/:userid', api.requiresToken, api.put_subs_tag); 
 
-// user feed
+// user feed ( infos )
 app.get('/api/user/feed/:userid', api.get_user_feed);
 app.post('/api/user/feed/:userid',api.requiresToken, api.add_user_feed);
 app.delete('/api/user/feed/:userid',api.requiresToken, api.del_user_feed);
@@ -176,9 +175,17 @@ app.put('/api/user/feed/:userid',api.requiresToken, api.put_user_feed);
 app.post('/api/user/updatefeed/:userid', api.requiresToken, api.put_user_feed); 
 app.post('/api/user/delfeed/:userid', api.requiresToken, api.del_user_feed); 
 
+// places
+app.get('/api/place', api.get_place);
+app.post('/api/place/:userid',api.requiresToken, api.add_place);
+app.delete('/api/place/:userid',api.requiresToken, api.del_place);
+app.put('/api/place/:userid',api.requiresToken, api.put_place);
+// for non restfull guys
+app.post('/api/updateplace/:userid', api.requiresToken, api.put_place); 
+app.post('/api/delplace/:userid', api.requiresToken, api.del_place); 
 
  
-//app.get('/api/users/:userid/:access_token',api.requiresToken, api.users_details);
+//app.get('/api/user/:userid/:access_token',api.requiresToken, api.user_details);
 app.get('/api/user/:userid',api.requiresToken, api.get_user_details);
 app.post('/api/user/:userid',api.requiresToken, api.post_user_details);
 app.put('/api/user/:userid',api.requiresToken, api.put_user_details);
@@ -186,9 +193,10 @@ app.put('/api/user/:userid',api.requiresToken, api.put_user_details);
 
 
 
-//app.post('/api/users/feed/:userid/:count', api.post_users_feed);
+//app.post('/api/user/feed/:userid/:count', api.post_user_feed);
 
-app.get('/api/users/search/:string', api.user_search);
+app.get('/api/user/search/:string', api.user_search);
+app.get('/api/place/search/:string', api.place_search);
 
 
  

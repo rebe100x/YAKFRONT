@@ -611,13 +611,32 @@ var Place = new Schema({
 								state: String,
 								area: String,
 								country: String,
-								zip: String}
+								zip: String
 							}
-,	status	: {type: Number}		
+					}
+,	heat : {type:Number}
+,	yakCat	: {type: [Schema.Types.ObjectId],index:1}
+,	yakTag	: {type: [String],index:1}
+,	freeTag	: {type: [String],index:1}		
+,	contact : {type : {
+						tel: String,
+						mobile:String,
+						mail:String,
+						transportation:String,
+						web:String,
+						opening:String,
+						closing :String,
+						specialopening: String
+				}
+			}
+,	status	: {type: Number}	
 ,	user	: {type: Schema.ObjectId}		
 ,	zone	: {type: Schema.ObjectId}
 },{ collection: 'place' });
 
+
+  
+  
 Place.statics.findAll = function (callback) {
   return this.find({},{},{sort:{title:1}}, callback);
 }
@@ -634,10 +653,42 @@ Place.statics.searchOne = function (str,exact,callback) {
 };
   return this.find(cond,{},{limit:1}, callback);
 }
+
+Place.statics.search = function(string,limit,location,maxd,callback){
+	var input = new RegExp(string,'gi');
+	if(typeof(location) != 'undefined' && typeof(maxd) != 'undefined' && maxd > 0)
+		var cond = {
+			"title": {$regex:input},	
+			"location" : {  "$near" : location, $maxDistance : maxd },
+			"status":1,
+		};
+	else
+		var cond = {
+			"title": {$regex:input},	
+			"status":1,
+		};
+	return this.find(
+	cond,
+	{},
+	{	
+		skip:0, // Starting Row
+		limit:limit, // Ending Row
+		
+	},callback);
+}
+
 Place.statics.findById = function (id,callback) {
   return this.findOne({'_id': id}, callback);
 }
-
+Place.statics.findByIds = function (ids,callback) {
+  return this.find({'_id': { $in: ids}}, callback);
+}
+Place.statics.findByName = function (title,callback) {
+  return this.findOne({'title': title}, callback);
+}
+Place.statics.findByNameNear = function (title,location,maxd,callback) {
+  return this.findOne({'title': title,'location' : {  "$near" : location, $maxDistance : maxd }}, callback);
+}
 mongoose.model('Place', Place);
 
 

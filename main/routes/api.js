@@ -85,25 +85,7 @@ exports.catsandtags = function (req, res) {
 	});
 };
 
-exports.places = function (req, res) {
-	var Place = db.model('Place');
-	
-	Place.findAll(function (err, docs){
-	  res.json({
-		places: docs
-	  });
-	});
-};
 
-exports.searchplaces = function (req, res) {
-	var Place = db.model('Place');
-	
-	Place.searchOne(req.params.str,1,function (err, docs){
-	  res.json({
-		places: docs
-	  });
-	});
-};
 
 
 /*********************************************
@@ -334,6 +316,10 @@ exports.get_user_details = function (req, res) {
 	});
 }
 
+/*****************************
+USER FEED : POST , PUT DELETE, GET infos
+******************************/
+
 exports.get_user_feed = function (req, res) {
 	var Info = db.model('Info');
 	var count =(typeof(req.query.count) != 'undefined') ? req.query.count : 10;
@@ -353,10 +339,13 @@ exports.del_user_feed = function (req, res) {
 		
 		if(typeof(req.body.info) != 'undefined'){
 			var info = JSON.parse(req.body.info);
-			
+			var theinfoid = info._id;
 			Info.update({_id:theinfoid,user:res.locals.user._id},{$set:{status:3}}, function(err,docs){
 				if(!err)
-					res.json({meta:{code:200},data:info});
+					if(docs)
+						res.json({meta:{code:200},data:docs});
+					else
+						res.json({meta:{code:404,error_type:'operation failed',error_description:"you don't own any info with this id"}});
 				else
 					res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 			});
@@ -462,12 +451,13 @@ exports.add_user_feed = function (req, res) {
 							//console.log(info);
 							info.print = 1;
 							info.status = 1;
+							info.access = 1;
 							info.yakType = Math.floor(theYakType);
 							info.thumb = infoThumb.name;
 							info.licence = 'Yakwala';
 							info.heat = 80;
 							info.freeTag = theinfo.freetag;
-							
+							info.placeId = theplaceid;
 							info.save(function (err,thenewwinfo) {
 							
 								if (!err){ 
@@ -698,22 +688,338 @@ exports.put_user_feed = function (req, res) {
 	
 }
 
+
+
+/*****************************
+PLACES : GET, POST , DELETE and UPDATE PLACE
+******************************/
+
+exports.get_place = function (req, res) {
+	var Place = db.model('Place');
+	if(typeof(req.query.place) != 'undefined'){
+		var placeids = JSON.parse(req.query.place).map(function(item){return item._id;});
+		//var placeids = JSON.parse(req.query.place);
+		Place.findByIds(placeids,function(err, docs){
+			if(!err)
+				res.json({meta:{code:200},data:docs});
+			else
+				res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});		
+		});
+	}else{
+			res.json({meta:{code:404,error_type:'missing parameter',error_description:'place not set. place should be an array of objects = [{_id:string}] }'}});
+		}
+}
+
+
+exports.del_place = function (req, res) {
+	var Place = db.model('Place');
+	if(typeof(req.body.place) != 'undefined'){
+		var placeid = JSON.parse(req.body.place)._id;
+		
+		Place.update({_id:placeid,user:res.locals.user._id},{$set:{status:3}}, function(err,docs){
+			if(!err)
+				if(docs)
+					res.json({meta:{code:200},data:docs});
+				else
+					res.json({meta:{code:404,error_type:'operation failed',error_description:"you don't own any place with this id"}});
+			else
+				res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+		});
+	}else{
+		res.json({meta:{code:404,error_type:'missing parameter',error_description:'Place not set. info = {_id:string} }'}});
+	}
+}
+
+exports.add_place = function (req, res) {
+	var Place = db.model('Place');
+	var Yakcat = db.model('Yakcat');
+	var place = new Place();
+	var error = {};
+	
+	// we need a title, a location, a formatted_address
+	if(typeof(req.body.place) != 'undefined'){
+		var theplace = JSON.parse(req.body.place);	
+		
+		if(typeof(theplace.title) != 'undefined' && theplace.title != '' 
+		&& typeof(theplace.location) != 'undefined' && theplace.location != '' 
+		&& typeof(theplace.formatted_address) != 'undefined' && theplace.formatted_address != '' ){
+			Place.findByNameNear(theplace.title,theplace.location,0.01,function(err,theplaceexisits){
+				if(!theplaceexisits){
+					var placeThumb = new Object();
+					if(typeof(req.files.picture) != 'undefined' && req.files.picture.size && req.files.picture.size < 1048576*5){
+						var drawTool = require('../mylib/drawlib.js');
+						var size = [{"width":120,"height":90},{"width":512,"height":0}];
+						placeThumb = drawTool.StoreImg(req.files.picture,size,conf);
+					}else
+						placeThumb.err = 0;
+
+					if(placeThumb.err == 0 ){
+						var yakCatIds = new Array();
+						var yakCatNames = new Array(); 
+						if(typeof(theplace.yakcat) != 'undefined'){
+							Yakcat.findByIds(theplace.yakcat,function(err,theyakcats){
+								if(theyakcats){
+									theyakcats.forEach(function(theyakcat){
+										if(yakCatNames.indexOf(theyakcat.title)){
+											yakCatIds.push(mongoose.Types.ObjectId(theyakcat._id.toString()));
+											yakCatNames.push(theyakcat.title);
+										}
+										place.yakCat = yakCatIds;
+										place.yakCatName = yakCatNames;
+									});
+								}else{
+									place.yakCat = yakCatIds;
+									place.yakCatName = yakCatNames;
+								}
+							});	
+						}	
+						place.title = theplace.title;
+						place.content = theplace.content;
+						
+						// NOTE : in the query below, order is important : in DB we have lat, lng but need to insert in reverse order : lng,lat  (=> bug mongoose ???)
+						place.location = {lng:parseFloat(theplace.location.lng),lat:parseFloat(theplace.location.lat)};
+						place.formatted_address = theplace.formatted_address;
+						
+						place.user = mongoose.Types.ObjectId(res.locals.user._id.toString());
+						
+						place.origin = res.locals.user.name;
+						
+						var now = new Date();
+						place.creationDate = now;
+						place.lastModifDate = now;
+						
+						place.print = 1;
+						place.status = 1;
+						place.access = 1;
+						place.thumb = placeThumb.name;
+						place.licence = 'Yakwala';
+						place.heat = 80;
+						place.freeTag = theplace.freetag;
+						
+						if(typeof(theplace.contact) != 'undefined')
+							place.contact = theplace.contact;
+						
+						place.save(function (err,thenewplace) {
+						
+							if (!err){ 
+								console.log('Success!');
+								res.json({place:thenewplace});
+							}else{
+								console.log(err);
+								error = {"error":"Post failed","error_reason": "Save in db failled","error_description":err.toString()};
+								res.json({error:error});
+							} 
+						});
+						
+							
+									
+						
+					}else{
+						error = {"error":"Post failed","error_reason": "Image upload failed","error_description":"image should be jpeg and less than 5M"};
+						res.json({error:error});
+					}	
+				}else{
+					res.json({place:theplaceexisits});
+				}
+			});
+		}else{
+			if(!theplace.title)
+				error = {"error":"Post failed","error_reason": "Missing paramater","error_description":"title is empty"};
+			if(!theplace.location)
+				error = {"error":"Post failed","error_reason": "Missing paramater","error_description":"location is empty should be {'lat':float,'lng':float}"};
+			if(!theplace.formatted_address)
+				error = {"error":"Post failed","error_reason": "Missing paramater","error_description":"formatted_address is empty should be a string"};
+			
+			res.json({error:error});
+		}
+	}else{
+		error = {"error":"Post failed","error_reason": "Missing paramater","error_description":"place is not set, should be place = {title:string, location:{lat:float,lng:float}, formatted_address:string} "};
+		res.json({error:error});
+	}
+
+	
+	
+}
+
+exports.put_place = function (req, res) {
+	var Place = db.model('Place');
+	var Yakcat = db.model('Yakcat');
+	var place = new Place();
+	var error = {};
+	
+	if(typeof(req.body.place) != 'undefined'){
+		var theplace = JSON.parse(req.body.place);	
+	
+		if( typeof(theplace._id) != 'undefined' )
+			theplaceid = theplace._id;
+		
+		if(theplaceid){
+		
+			var now = new Date();
+			
+			// TITLE
+			if(typeof(theplace.title) != 'undefined' && theplace.title != ''){
+				Place.update({_id:theplaceid,user:res.locals.user._id},{$set:{title:theplace.title,lastModifDate:now}}, function(err,docs){
+					if(err)
+						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+				});
+			}
+			// CONTENT	
+			if(typeof(theplace.content) != 'undefined' && theplace.content != ''){
+				Place.update({_id:theplaceid,user:res.locals.user._id},{$set:{content:theplace.content,lastModifDate:now}}, function(err,docs){
+					if(err)
+						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+				});
+			}
+			
+			// THUMB
+			var placeThumb = new Object();
+			console.log('filesize'+req.files.picture.size);
+			if(typeof(req.files.picture) != 'undefined' && req.files.picture.size > 0 && req.files.picture.size < 1048576*5){
+				var drawTool = require('../mylib/drawlib.js');
+				var size = [{"width":120,"height":90},{"width":512,"height":0}];
+				placeThumb = drawTool.StoreImg(req.files.picture,size,conf);
+				
+				if(placeThumb.err == 0 ){
+					Place.update({_id:theplaceid,user:res.locals.user._id},{$set:{thumb:placeThumb.name,lastModifDate:now}}, function(err,docs){
+						if(err)
+							res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+					});
+				}else{
+					error = {"error":"Post failed","error_reason": "Image upload failed","error_description":"image should be jpeg and less than 5M"};
+					res.json({error:error});
+				}
+			}
+			
+			// TAGS
+			if(typeof(theplace.freetag) != 'undefined' && theplace.freetag.length > 0){
+				Place.update({_id:theplaceid,user:res.locals.user._id},{$set:{freeTag:theplace.freetag,lastModifDate:now}}, function(err,docs){
+					if(err)
+						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+				});
+			}
+			
+			// YAKCAT
+			if(typeof(theplace.yakcat) != 'undefined' && theplace.yakcat.length > 0){
+				var yakcatidArray = theplace.yakcat.map(function(item){ return mongoose.Types.ObjectId(item);});
+				Place.update({_id:theplaceid,user:res.locals.user._id},{$set:{yakCat:yakcatidArray,lastModifDate:now}}, function(err,docs){
+					if(err)
+						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+				});
+			}
+			
+			// OUTGOING LINK
+			if(typeof(theplace.outgoinglink) != 'undefined' && theplace.outgoinglink != ''){
+				Place.update({_id:theplaceid,user:res.locals.user._id},{$set:{outGoingLink:theplace.outgoinglink,lastModifDate:now}}, function(err,docs){
+					if(err)
+						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+				});
+			}
+			// LOCATION @todo : do it for each prop of the object
+			if(typeof(theplace.location) != 'undefined' && typeof(theplace.location.lat) != 'undefined' && typeof(theplace.location.lng) != 'undefined'){
+				Place.update({_id:theplaceid,user:res.locals.user._id},{$set:{location:theplace.location,lastModifDate:now}}, function(err,docs){
+					if(err)
+						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+				});
+			}
+			
+			// FORMATTED_ADDRESS
+			if(typeof(theplace.formatted_address) != 'undefined' && theplace.formatted_address != ''){
+				Place.update({_id:theplaceid,user:res.locals.user._id},{$set:{formatted_address:theplace.formatted_address,lastModifDate:now}}, function(err,docs){
+					if(err)
+						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+				});
+			}
+			
+			// ADDRESS
+			if(typeof(theplace.address) != 'undefined' ){
+				Place.update({_id:theplaceid,user:res.locals.user._id},{$set:{address:theplace.address,lastModifDate:now}}, function(err,docs){
+					if(err)
+						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+				});
+			}
+			// CONTACT @todo : do it for each prop of the object
+			if(typeof(theplace.contact) != 'undefined' ){
+				Place.update({_id:theplaceid,user:res.locals.user._id},{$set:{contact:theplace.contact,lastModifDate:now}}, function(err,docs){
+					if(err)
+						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+				});
+			}
+			
+		}else{
+			error = {"error":"Update failed","error_reason": "Missing paramater","error_description":"place._id is empty"};
+			res.json({error:error});
+		}
+		
+	res.json({place:{_id:theplaceid}});
+	
+	}else{
+		error = {"error":"Update failed","error_reason": "Missing paramater","error_description":"place is not set, should be place = {title:string, content:string, yakcat:['id1xxxx','id2xxxx'], yaktype:int, freetag:[string,string], pubdate:int, placeid:{_id:string}} "};
+		res.json({error:error});
+	}
+
+	
+	
+}
+
+
+/*****************************
+SEARCH : users, infos, cats, places
+******************************/
 exports.user_search = function (req, res) {
 	var User = db.model('User');
-	User.search(req.params.string,100,function (err, docs){
-	var docsConcat = new Array();
-	docs.forEach(function(o){
-		var tmp = new Object();
-		//tmp.userdetails="<img width=\"24\" height=\"24\" class=\"size100 img-rounded\" src=\"/uploads/pictures/24_24/"+o['thumb']+"\"  />"+o['name']+" <span class=\"autocompleteScreenName\"> @"+o['login']+"</span>";
-		tmp.userdetails=o['name']+" (@"+o['login']+")";
-		tmp.name =o['name'];
-		tmp.login =o['login'];
-		tmp._id =o['_id'];
-		tmp.thumb =o['thumb'];
-		docsConcat.push(tmp);
+	var count = (typeof(req.query.count) != 'undefined' && req.query.count > 0) ? req.query.count : 100;		
+	User.search(req.params.string,count,function (err, docs){
+		var docsConcat = new Array();
+		docs.forEach(function(o){
+			var tmp = new Object();
+			//tmp.userdetails="<img width=\"24\" height=\"24\" class=\"size100 img-rounded\" src=\"/uploads/pictures/24_24/"+o['thumb']+"\"  />"+o['name']+" <span class=\"autocompleteScreenName\"> @"+o['login']+"</span>";
+			tmp.userdetails=o['name']+" (@"+o['login']+")";
+			tmp.name =o['name'];
+			tmp.login =o['login'];
+			tmp._id =o['_id'];
+			tmp.thumb =o['thumb'];
+			docsConcat.push(tmp);
+		});
+		res.json({
+			users: docsConcat
+		  });
 	});
-	res.json({
-		users: docsConcat
+};
+
+exports.place_search = function (req, res) {
+	var Place = db.model('Place');
+	var count = (typeof(req.query.count) != 'undefined' && req.query.count > 0) ? req.query.count : 100;		
+	Place.search(req.params.string,count,null,null,function (err, docs){
+		if(docs)
+			docs.map(function(item){return {_id:item._id,title:item.title,formatted_address:item.formatted_address};});
+		res.json({
+			places: docs
+		  });
+	});
+};
+
+
+exports.searchplaces = function (req, res) {
+	var Place = db.model('Place');
+	
+	Place.searchOne(req.params.str,1,function (err, docs){
+	  res.json({
+		places: docs
+	  });
+	});
+};
+
+/*****************************
+LIST : users, infos, cats, places
+******************************/
+
+exports.places = function (req, res) {
+	var Place = db.model('Place');
+	
+	Place.findAll(function (err, docs){
+	  res.json({
+		places: docs
 	  });
 	});
 };

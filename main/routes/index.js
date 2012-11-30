@@ -150,9 +150,7 @@ exports.news = function(req, res){
 			
 			var locTmp = JSON.parse(req.body.placeInput);
 			
-					
 			locTmp.forEach(function(item) {
-			
 				var info = new Info();
 				var yakCat = new Array();
 				var yakCatName = new Array();
@@ -170,16 +168,6 @@ exports.news = function(req, res){
 					yakCatName.push('InfosPratiques');
 				}
 				
-				if(req.body.yakcatInput.length > 0){
-					var yakcat = eval('('+req.body.yakcatInput+')');
-					for(i=0;i<yakcat.length;i++){
-						yakCat.push(mongoose.Types.ObjectId(yakcat[i]._id));
-						yakCatName.push(yakcat[i].title);
-					}
-				}
-				
-				info.yakCat = yakCat;
-				info.yakCatName = yakCatName;
 				
 				
 				
@@ -192,9 +180,14 @@ exports.news = function(req, res){
 				info.address = item.title;
 				// if no id, it means the location comes from gmap => we store it
 				
+				
+				
 				if(item._id == "" || typeof item._id === "undefined"){
 					item.status=2;
 					place = new Place(item);
+					place.heat = 80;
+					place.user = mongoose.Types.ObjectId(req.session.user);
+					
 					place.save();
 					info.placeId = place._id;
 				}else
@@ -209,7 +202,6 @@ exports.news = function(req, res){
 				var DTS = D.getTime() / 1000 + (3 * 60 * 60 * 24);
 				D.setTime(DTS*1000); 
 				info.dateEndPrint = D;
-				//console.log(info);
 				info.print = 1;
 				info.status = 1;
 				info.yakType = Math.floor(theYakType);
@@ -218,7 +210,6 @@ exports.news = function(req, res){
 				info.heat = 80;
 				var freeTags = req.body.freetag.split(',');
 				info.freeTag = freeTags;
-				
 				
 				if(req.body.freetag.length > 0){
 					freeTags.forEach(function(freeTag){
@@ -231,21 +222,20 @@ exports.news = function(req, res){
 								Tag.update({_id: thetag._id}, {lastUsageDate:now}, {upsert: false}, function(err){if (err) console.log(err);});						
 							}
 						});
-					
 					});
 				}
+				
 				// security against unidentified users	
 				if(req.session.user){
 					//console.log(req.session.user);
 					info.user = mongoose.Types.ObjectId(req.session.user);
 					info.origin = "@"+req.body.username;
+					
 					info.save(function (err) {
 						if (!err) console.log('Success!');
 						else console.log(err);
 					});
 				}
-				
-				
 			});
 			
 			
