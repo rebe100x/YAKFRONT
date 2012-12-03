@@ -6,7 +6,9 @@
 var mongoose = require('mongoose')
   , Schema = mongoose.Schema
   , S = require('string'),
-  crypto = require('crypto');
+  crypto = require('crypto'),
+  ObjectId = Schema.ObjectId;
+  ;
 
 mongoose.set('debug', true);
 
@@ -93,6 +95,30 @@ Info.statics.findAll = function (callback) {
 		}
 	},
 	callback);
+
+}
+
+
+Info.statics.findAllByPage = function (callback, skip, limit, yakType, _id, loadmore) {
+	var now = new Date();
+
+	var D = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+
+	var cond = new Object();
+
+	cond["status"] = 1;
+	
+	if(loadmore == 1)
+	{
+		 cond["pubDate"] = {$gte:D};
+	}
+	if (yakType != ""){
+		//cond["yakType"] =  {$in:yakType};
+		cond["yakType"] =  yakType;
+	};
+	
+	var infos = this.find(cond).sort({'pubDate':-1}).skip(skip).limit(limit);
+	res = infos.exec(callback)
 
 }
 

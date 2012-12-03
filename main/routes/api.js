@@ -34,6 +34,15 @@ exports.infos = function (req, res) {
 	}); 
 };
 
+exports.feeds = function (req, res) {
+	var Info = db.model('Info');
+	Info.findAllByPage(function (err, docs){
+	  res.json({
+		info: docs
+	  });
+	}, req.query["skip"], req.query["limit"], req.query["yaktype"], req.query["_id"], req.query["loadmore"]); 
+};
+
 exports.afeed = function (req, res) {
 	var Info = db.model('Info');
 	Info.findAllByID(function (err, docs){
