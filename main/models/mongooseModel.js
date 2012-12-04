@@ -5,9 +5,10 @@
 
 var mongoose = require('mongoose')
   , Schema = mongoose.Schema
-  , S = require('string')
-  , crypto = require('crypto');
- 
+  , S = require('string'),
+  , crypto = require('crypto')
+  ObjectId = Schema.ObjectId;
+  
 
 mongoose.set('debug', true);
 
