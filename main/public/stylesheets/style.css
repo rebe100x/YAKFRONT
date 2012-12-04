@@ -61,10 +61,13 @@ a {
 #search #heatModule .upperHeight { height: 5px; }
 #search #heatModule .dayPrinter { color: #D71921; top: 11px; left: 449px; position: relative; font-weight: bold; font-size: 12px;}
 .paging { width: 100%; text-align: center; background: #F4F4F4; padding-bottom: 10px; padding-top: 10px;}
-.sets {width: 100%; text-align: center; background: #292929; padding-bottom: 10px; padding-top: 10px; color: white;}
+.sets {width: 100%; text-align: center; background: #292929; padding-bottom: 10px; padding-top: 10px; color: white; visibility: hidden;}
 
 #seacrhBox { float: left; }
 #searchBox .loupe { float: left;}
+
+#newsLoader { text-align: right; float: right; background: #D71921; color: white; font-weight: bold; cursor: pointer; visibility: hidden;}
+.graybg { background: #E8E8E8;}
 /* THE MAP
 -------------------------------------------------- */
 	/*MAP TOOLS CONTROLLERS*/

@@ -116,6 +116,7 @@ app.post('/delfavplace', routes.requiresLogin, routes.delfavplace);
 
 // OPEN ACCESS API
 app.get('/api/infos', api.infos);
+app.get('/api/feeds', api.feeds);
 app.get('/api/afeed', api.afeed);
 app.get('/api/geoinfos/:x1/:y1/:x2/:y2/:heat/:type/:str', api.geoinfos);
 app.get('/api/zones/:x/:y', api.zones);
