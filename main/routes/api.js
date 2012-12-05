@@ -55,6 +55,7 @@ exports.afeed = function (req, res) {
 exports.geoinfos = function (req, res) {
 	var Info = db.model('Info');
 	var type = [];
+	console.log(req.params);
 	type = req.params.type.split(',');
 	if(req.session.user){
 		var usersubs= req.session.user.usersubs;
@@ -64,8 +65,11 @@ exports.geoinfos = function (req, res) {
 		var usersubs = [];
 		var tagsubs = [];
 	}
+	console.log('ELOELOE');
 	Info.findAllGeo(req.params.x1,req.params.y1,req.params.x2,req.params.y2,req.params.heat,type,req.params.str,usersubs,tagsubs,function (err, docs){
+	  console.log(docs);
 	  res.json({
+	  
 		info: docs
 	  });
 	}); 

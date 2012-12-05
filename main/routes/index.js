@@ -9,8 +9,11 @@ exports.db = function(conf){
 	
 };
 	
-exports.index = function(req, res){
+exports.front_default = function(req, res){
   res.redirect('news/map');
+};
+exports.api_default = function(req, res){
+  res.redirect('doc/api');
 };
 
 exports.picture = function(req,res){

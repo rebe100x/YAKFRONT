@@ -140,6 +140,7 @@ Info.statics.findByUserIds = function (useridArray, count, callback) {
 }
 
 Info.statics.findAllGeo = function (x1,y1,x2,y2,heat,type,str,usersubs,tagsubs,callback) {
+console.log('ELOELOE');
 	var now = new Date();
 	var D = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
 	var DTS = D.getTime() / 1000 - (heat * 60 * 60 * 24);
@@ -157,6 +158,10 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,heat,type,str,usersubs,tagsubs,c
 				"yakType" : {$in:type}
 			};
 	var qInfo = this.find(cond).sort({'pubDate':-1}).limit(100);
+	
+	
+	
+	
 	
 	if(str != 'null' && str.length > 0){  // STRING SEARCH
 		var firstChar = str.substr(0,1);
@@ -208,6 +213,7 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,heat,type,str,usersubs,tagsubs,c
 	
 		
 	}else{  // NO STRING SEARCH
+		
 		res = qInfo.exec(callback);
 	
 	}

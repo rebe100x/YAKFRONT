@@ -84,7 +84,7 @@ app.post('/session',routes.session);
 // SECURED BY LOGIN ROUTES:
 
 //map
-app.get('/', routes.requiresLogin, routes.index);
+app.get('/', routes.requiresLogin, routes.front_default);
 app.get('/news/map', routes.requiresLogin, routes.news_map);
 app.get('/news/map/search/:str', routes.requiresLogin, routes.news_map_search);
 app.get('/news/feed', routes.requiresLogin, routes.news_feed);
@@ -126,94 +126,13 @@ app.get('/api/places', api.places);
 app.get('/api/searchplaces/:str', api.searchplaces);
 app.get('/api/usersearch/:string', api.usersearch);
 
-// API OAUTH 2
-app.get('/api/oauth/login', api.oauth_login);
-app.get('/api/oauth/authorize', api.oauth_authorize); 
-app.get('/api/oauth/authorize/:client_id/:redirect_uri', api.oauth_authorize); 
-app.get('/api/oauth/authorize/:client_id/:redirect_uri/:response_type', api.oauth_authorize); 
-app.get('/api/oauth/authorize/:client_id/:redirect_uri/:response_type/:scope', api.oauth_authorize); 
-app.get('/api/oauth/access_token/:client_id/:client_secret/:grant_type/:redirect_uri/:code', api.oauth_access_token); 
-app.post('/api/oauth/access_token', api.oauth_access_token);
-app.get('/api/oauth/access_token', api.oauth_access_token);
-app.post('/api/oauth/session',api.oauth_session);
-
-app.get('/api/user/feed',api.list_users_feed); // TODO
-app.get('/api/user/profile', api.list_users_profile); // TODO
-
-//app.get('/api/error', api.oauth_error);
-
-
-//favplace
-app.post('/api/favplace/:userid', api.requiresToken, api.add_favplace); 
-app.delete('/api/favplace/:userid', api.requiresToken, api.del_favplace); 
-app.get('/api/favplace/:userid', api.requiresToken, api.list_favplace); 
-app.put('/api/favplace/:userid', api.requiresToken, api.put_favplace); 
-// for non restfull guys
-app.post('/api/delfavplace/:userid', api.requiresToken, api.del_favplace); 
-app.post('/api/updatefavplace/:userid', api.requiresToken, api.put_favplace); 
-
-// user subscribtion to other user's news feeds
-app.post('/api/subscribe/user/:userid', api.requiresToken, api.add_subs_user); 
-app.put('/api/subscribe/user/:userid', api.requiresToken, api.put_subs_user); 
-app.delete('/api/subscribe/user/:userid', api.requiresToken, api.del_subs_user); 
-app.get('/api/subscribe/user/:userid', api.requiresToken, api.list_subs_user);
-// for non restfull guys
-app.post('/api/unsubscribe/user/:userid', api.requiresToken, api.del_subs_user); 
-app.post('/api/updatesubscribe/user/:userid', api.requiresToken, api.put_subs_user); 
-
-// user subscribtion to tags
-app.post('/api/subscribe/tag/:userid', api.requiresToken, api.add_subs_tag); 
-app.put('/api/subscribe/tag/:userid', api.requiresToken, api.put_subs_tag); 
-app.delete('/api/subscribe/tag/:userid', api.requiresToken, api.del_subs_tag); 
-app.get('/api/subscribe/tag/:userid', api.requiresToken, api.list_subs_tag);
-// for non restfull guys
-app.post('/api/unsubscribe/tag/:userid', api.requiresToken, api.del_subs_tag); 
-app.post('/api/updatesubscribe/tag/:userid', api.requiresToken, api.put_subs_tag); 
-
-// user feed ( infos )
-app.get('/api/user/feed/:userid', api.get_user_feed);
-app.post('/api/user/feed/:userid',api.requiresToken, api.add_user_feed);
-app.delete('/api/user/feed/:userid',api.requiresToken, api.del_user_feed);
-app.put('/api/user/feed/:userid',api.requiresToken, api.put_user_feed);
-// for non restfull guys
-app.post('/api/user/updatefeed/:userid', api.requiresToken, api.put_user_feed); 
-app.post('/api/user/delfeed/:userid', api.requiresToken, api.del_user_feed); 
-
-// places
-app.get('/api/place', api.get_place);
-app.post('/api/place/:userid',api.requiresToken, api.add_place);
-app.delete('/api/place/:userid',api.requiresToken, api.del_place);
-app.put('/api/place/:userid',api.requiresToken, api.put_place);
-// for non restfull guys
-app.post('/api/updateplace/:userid', api.requiresToken, api.put_place); 
-app.post('/api/delplace/:userid', api.requiresToken, api.del_place); 
-
- 
-//app.get('/api/user/:userid/:access_token',api.requiresToken, api.user_details);
-app.get('/api/user/:userid',api.requiresToken, api.get_user_details);
-app.post('/api/user/:userid',api.requiresToken, api.post_user_details);
-app.put('/api/user/:userid',api.requiresToken, api.put_user_details);
-
-
-
-
-//app.post('/api/user/feed/:userid/:count', api.post_user_feed);
-
-app.get('/api/user/search/:string', api.user_search);
-app.get('/api/place/search/:string', api.place_search);
-
-
- 
-
-
-
 
 // DOCS
 app.get('/docs/api', routes.docs_api);
 
 
 // redirect all others to the index (HTML5 history)
-app.get('*', routes.index);
+app.get('*', routes.front_default);
 
 
 
@@ -249,9 +168,10 @@ function requiresPosition(req,res,next){
 	
 }
 
-exports.app = app;
+//exports.app = app;
 
 // Start server
-//app.listen(conf.port, function(){
-//  console.log("Express server listening on port %d in %s mode", conf.port, app.settings.env);
-//});
+app.listen(conf.frontport,conf.frontdns, function(){
+ console.log("Express server %s listening on port %d in %s mode", conf.frontdns, conf.frontport, app.settings.env);
+});
+
