@@ -99,25 +99,47 @@ Info.statics.findAll = function (callback) {
 }
 
 
-Info.statics.findAllByPage = function (callback, skip, limit, yakType, _id, loadmore) {
+Info.statics.findAllByPage = function (callback, skip, limit, yakType, _id, loadmore, what, where, depuis, cattype) {
+	
+
 	var now = new Date();
 
-	var D = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+	var daterange = depuis.split(',');
+
+	var depuis = now.setDate(now.getDate() - daterange[0]); 
+	var till = now.setDate(now.getDate() - daterange[1]); 
 
 	var cond = new Object();
 
+	 var types = new Array();
+	 types = yakType.split(',');
+
+     var cats = new Array();
+     cats = cattype.split(',');
+
+
+     var location = new Array();
+     location = where.split(',');
+
 	cond["status"] = 1;
-	
-	if(loadmore == 1)
-	{
-		 cond["pubDate"] = {$gte:D};
-	}
+
+	cond["pubDate"] = {$gte:depuis, $lte: till};
+
+
 	if (yakType != ""){
-		//cond["yakType"] =  {$in:yakType};
-		cond["yakType"] =  yakType;
+		cond["yakType"] =  {$in:types};
+	};
+
+	if (what != "") {
+		cond["content"] =  {$regex:what};
+	};
+
+	if (where != "") {
+		 cond["location"] = {$near : [parseFloat(location[0]),parseFloat(location[1])]};
 	};
 	
 	var infos = this.find(cond).sort({'pubDate':-1}).skip(skip).limit(limit);
+
 	res = infos.exec(callback)
 
 }

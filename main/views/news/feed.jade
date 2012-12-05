@@ -38,7 +38,7 @@ block content
 
 			$('.btn-group2').button();
 
-			loadData(0, 0, limit, 0);
+			$('.searchButton').trigger('click');
 
 		});
 			
@@ -49,14 +49,58 @@ block content
 			var currentPage = parseInt($("#resultSet").html().trim());
 
 			var skip = (currentPage - 1)*limit;
-				
-			loadData(currentPage, skip, limit, 1);
+			
+			var yaktype = "";
+
+			var depuis = $("#daynumber").val();
+			
+			$(".searchTypes .active").each(function(){
+				yaktype += $(this).attr("type") + ",";
+			});
+			//apage, askip, alimit, next, _id='', loadmore=0, what='', where='', yaktype=''
+			loadData(currentPage, skip, limit, 1 , "", 1, $("#locationInput").attr("value"), $("#SearchWhere").attr("value"), yaktype, depuis, "");
 			
 			var height = $('#feedContent')[0].scrollHeight;
 
 			$("html, body").animate({ scrollTop: $(document).height() }, 1000);
 		});
 		
+		$(".searchButton").click(function(){
+
+			$("#feedContent").html("");
+
+			var skip = 0;
+			
+			var yaktype = "";
+
+			var depuis = "";
+
+			if($("#daynumber").val() =="" || $("#daynumber2").val())
+			{
+				depuis = "3,3";
+			}
+			else
+			{
+				depuis = $("#daynumber").val() + "," + $("#daynumber2").val();
+			}
+			
+			$(".searchTypes .active").each(function(){
+				yaktype += $(this).attr("type") + ",";
+			});
+
+			var lnglat = $.parseJSON($("#locationInput").attr("value"));
+			
+			var lngslatstr = "";
+
+			if(lnglat != null)
+				lngslatstr = lnglat.lat + "," + lnglat.lng;
+
+
+
+			//apage, askip, alimit, next, _id='', loadmore=0, what='', where='', yaktype=''
+			loadData(1, skip, limit, 0 , "", 0, $("#SearchWhat").attr("value"), lngslatstr, yaktype, depuis, "");
+
+		});
 		function setClickableArea()
 		{
 			$(".more").click(function(e){
@@ -115,7 +159,16 @@ block content
 
 						$("#newsLoader").html('Downloading please wait <i class="icon-download"></i>');
 
-						loadData(0, 0, limit, 2, _id, 1);
+						var what = $("#locationInput").val();
+						var where = $("#SearchWhere").val();
+						var yaktype = "";
+						$(".searchTypes active").each(function(){
+							yaktype += $(this).attr("type") + ",";
+						});
+			
+						loadData(0, 0, limit, 2, what , where, yaktype);
+
+						//loadData(0, 0, limit, 2, _id, 1);
 
 						$("#newsLoader").html('More recent news to load click here to refresh <i class="icon-refresh"></i>');
 
@@ -125,7 +178,7 @@ block content
 				}
 		}
 
-		function loadData(apage, askip, alimit, next, _id='50b61c651d22b37653000396', loadmore=0)
+		function loadData(apage, askip, alimit, next, _id='', loadmore=0, what='', where='', yaktype='', depuis=3, cattype='')
 		{
 			var currentPage = parseInt($("#resultSet").html().trim());
 
@@ -143,7 +196,7 @@ block content
 
 		
 			
-			$.getJSON('/api/feeds', { page : currentPage, skip: askip, limit: alimit,  yaktype:  gup("yaktype"), _id: _id, loadmore: loadmore} ,function(data) {
+			$.getJSON('/api/feeds', { page : currentPage, skip: askip, limit: alimit,  yaktype: yaktype, _id: _id, loadmore: loadmore, what: $("#locationInput").val(), what: what, where: where, depuis: depuis, cattype: cattype} ,function(data) {
 				var len = data.info.length;
 				
 				if(len == 0)
