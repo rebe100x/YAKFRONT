@@ -508,7 +508,7 @@ User.statics.identifyByToken = function (token,userid,callback) {
 User.statics.findById = function (id,callback) {
   return this.findOne({'_id': id}, callback);
 }
-User.statics.apiFindById = function (id,callback) {
+User.statics.PublicProfileFindById = function (id,callback) {
   return this.findOne({'_id': id},{_id:1,address:1,bio:1,location:1,login:1,mail:1,name:1,thumb:1,type:1,web:1,lastLoginDate:1,favplace:1,placesubs:1,tagsubs:1,usersubs:1,tags:1}, callback);
 }
 User.statics.findByToken = function (token,callback) {

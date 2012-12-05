@@ -124,7 +124,7 @@ app.get('/api/cats', api.cats);
 app.get('/api/catsandtags', api.catsandtags);
 app.get('/api/places', api.places);
 app.get('/api/searchplaces/:str', api.searchplaces);
-app.get('/api/usersearch/:string', api.usersearch);
+app.get('/api/usersearch/:string', api.user_search);
 
 
 // DOCS

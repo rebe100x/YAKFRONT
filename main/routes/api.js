@@ -316,18 +316,9 @@ exports.del_subs_tag = function (req, res) {
 * USER *
 ********/
 
-// TODO
-exports.list_user_feed = function (req, res) {
-	console.log('TODO');
-}
-exports.list_user_profile = function (req, res) {
-	console.log('TODO');
-}
-
-
 exports.get_user_details = function (req, res) {
 	var User = db.model('User');
-	User.apiFindById(res.locals.user._id,function(err, docs){
+	User.PublicProfileFindById(req.params.userid,function(err, docs){
 		if(!err){
 			if(typeof(docs.thumb)== 'undefined')
 				docs.thumb = "/static/images/no-user.png";
@@ -353,7 +344,6 @@ exports.get_user_feed = function (req, res) {
 	
 	});
 }
-
 
 exports.del_user_feed = function (req, res) {
 	var Info = db.model('Info');

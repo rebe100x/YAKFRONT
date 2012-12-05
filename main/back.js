@@ -251,8 +251,9 @@ function requiresPosition(req,res,next){
 
 //exports.app = app;
 
+
 // Start server
-app.listen(conf.portfront, function(){
- console.log("Express server listening on port %d in %s mode", conf.portfront, app.settings.env);
+app.listen(conf.backport,conf.backdns, function(){
+ console.log("Express server %s listening on port %d in %s mode", conf.backdns, conf.backport, app.settings.env);
 });
 

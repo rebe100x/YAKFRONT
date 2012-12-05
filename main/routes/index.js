@@ -13,7 +13,7 @@ exports.front_default = function(req, res){
   res.redirect('news/map');
 };
 exports.api_default = function(req, res){
-  res.redirect('doc/api');
+  res.redirect('docs/api');
 };
 
 exports.picture = function(req,res){
@@ -58,6 +58,7 @@ exports.requiresLogin = function(req,res,next){
 				res.locals.user.hash='xxx';
 				res.locals.user.apiToken='xxx';
 				res.locals.user.apiCode='xxx';
+				
 				console.log('LOGGED IN');
 				next();
 			}else{
@@ -567,11 +568,14 @@ exports.settings_alerts = function(req, res){
 	
 	if(req.session.user){
 		
-		/*User.findByIds(res.locals.user.usersubs,function (err, docs){
-			var usersubs = docs;
-			res.render('settings/alerts',{usersubs:usersubs,tagsubs:res.locals.user.tagsubs});
-		});	*/
-		res.render('settings/alerts',{usersubs:res.locals.user.usersubs,tagsubs:res.locals.user.tagsubs});
+		var usersubs = res.locals.user.usersubs;
+		usersubs.token="xxx";
+		usersubs.hash="xxx";
+		usersubs.salt="xxx";
+		usersubs.token="xxx";
+		usersubs.apiToken="xxx";
+		usersubs.apiCode="xxx";
+		res.render('settings/alerts',{usersubs:usersubs,tagsubs:res.locals.user.tagsubs});
 		
 	}else{
 		req.session.message = "Erreur : vous devez être connecté pour gérer vos alertes";

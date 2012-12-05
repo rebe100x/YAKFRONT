@@ -2,17 +2,17 @@ extends ../layout
 script(src='/javascripts/lib/bootstrap/js/bootstrap-collapse.js')
 block content
 
-	include ../mixins/menu.jade
 	include ../mixins/docsMenu.jade
+	include ../mixins/docsSubMenu.jade
 	
-	mixin menu('api')
+	mixin docsMenu('api')
 	
 
 	div.container-fluid
 		div.row-fluid
 			div.span2
 			div.span2.yak-sidebar
-				mixin docsMenu('presentation')
+				mixin docsSubMenu('presentation')
 
 						
 			div.span6
@@ -44,14 +44,16 @@ block content
 						tr
 							td GET/POST/PUT
 							td /users/<code>user-id</code>
-							td Get the user's data details.
+							td Get the user's data details.<br> Note : you cannot delete user accounts through the api. 
 						tr
 							td(colspan=3)
 								b parameters:
 								ul
-									li access_token:string - the token access
-									li {user:{_id:string}} ( for GET )
-									li {user:} ( for POST and PUT )
+									li GET : no parameter needed.
+									li POST : 
+										ul 
+											li access_token:string - the token access
+											li {user:}
 						tr
 							td(colspan=3)
 								b optional parameters:

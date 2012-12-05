@@ -67,25 +67,12 @@ var db = routes.db(conf);
 
 	
 // Routes
+app.get('/', routes.api_default);
+app.get('/docs/api',  routes.docs_api);
 
-
-// OPEN ACCES ROUTES :
-app.get('/user/login', routes.user_login);
-app.get('/user/logout', routes.user_logout);
-app.get('/user/new', routes.user_new);
-app.get('/user/validate/:token/:password', routes.user_validate);
+// images
 app.get('/pictures/:size/:picture', routes.picture);
 app.get('/static/images/:name', routes.static_image);
-
-app.post('/user',routes.user);
-//app.post('/validate',routes.validate);
-app.post('/session',routes.session);
-
-// SECURED BY LOGIN ROUTES:
-
-//map
-app.get('/', routes.requiresLogin, routes.api_default);
-
 
 // OPEN ACCESS API
 app.get('/api/infos', api.infos);
@@ -110,8 +97,7 @@ app.post('/api/oauth/access_token', api.oauth_access_token);
 app.get('/api/oauth/access_token', api.oauth_access_token);
 app.post('/api/oauth/session',api.oauth_session);
 
-app.get('/api/user/feed',api.list_users_feed); // TODO
-app.get('/api/user/profile', api.list_users_profile); // TODO
+
 
 //app.get('/api/error', api.oauth_error);
 
@@ -161,11 +147,11 @@ app.put('/api/place/:userid',api.requiresToken, api.put_place);
 app.post('/api/updateplace/:userid', api.requiresToken, api.put_place); 
 app.post('/api/delplace/:userid', api.requiresToken, api.del_place); 
 
- 
-//app.get('/api/user/:userid/:access_token',api.requiresToken, api.user_details);
-app.get('/api/user/:userid',api.requiresToken, api.get_user_details);
+// user's profile
+app.get('/api/user/:userid', api.get_user_details);
 app.post('/api/user/:userid',api.requiresToken, api.post_user_details);
 app.put('/api/user/:userid',api.requiresToken, api.put_user_details);
+
 
 
 
