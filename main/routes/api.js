@@ -316,6 +316,114 @@ exports.del_subs_tag = function (req, res) {
 * USER *
 ********/
 
+exports.put_user_details = function (req, res) {
+	var User = db.model('User');
+	if(typeof(req.body.user) != 'undefined'){
+		var theuser = JSON.parse(req.body.user);	
+	
+		if( typeof(theuser._id) != 'undefined' )
+			theuserid = theuser._id;
+		
+		if(theuserid){
+		
+			var now = new Date();
+			
+			// NAME
+			if(typeof(theuser.name) != 'undefined' && theuser.name != ''){
+			
+				User.update({_id:theuserid},{$set:{name:theuser.name,lastModifDate:now}}, function(err,docs){
+					if(err)
+						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+				});
+			}
+			// MAIL	
+			if(typeof(theuser.mail) != 'undefined' && theuser.mail != ''){
+				User.update({_id:theuserid},{$set:{mail:theuser.mail,lastModifDate:now}}, function(err,docs){
+					if(err)
+						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+				});
+			}
+			
+			// THUMB
+			var userThumb = new Object();
+			if(typeof(req.files.picture) != 'undefined' && req.files.picture.size > 0 && req.files.picture.size < 1048576*5){
+				var drawTool = require('../mylib/drawlib.js');
+				var size = [{"width":128,"height":128}];
+				userThumb = drawTool.StoreImg(req.files.picture,size,conf);
+				
+				if(userThumb.err == 0 ){
+					User.update({_id:theuserid},{$set:{thumb:userThumb.name,lastModifDate:now}}, function(err,docs){
+						if(err)
+							res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+					});
+				}else{
+					error = {"error":"Post failed","error_reason": "Image upload failed","error_description":"image should be jpeg and less than 5M"};
+					res.json({error:error});
+				}
+			}
+			
+			// TAGS
+			if(typeof(theuser.tag) != 'undefined' && theuser.tag.length > 0){
+				User.update({_id:theuserid},{$set:{tag:theuser.tag,lastModifDate:now}}, function(err,docs){
+					if(err)
+						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+				});
+			}
+			
+			// LOCATION @todo : do it for each prop of the object
+			if(typeof(theuser.location) != 'undefined' && typeof(theuser.location.lat) != 'undefined' && typeof(theuser.location.lng) != 'undefined'){
+				User.update({_id:theuserid},{$set:{location:theuser.location,lastModifDate:now}}, function(err,docs){
+					if(err)
+						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+				});
+			}
+			
+			// FORMATTED_ADDRESS
+			if(typeof(theuser.formatted_address) != 'undefined' && theuser.formatted_address != ''){
+				User.update({_id:theuserid},{$set:{formatted_address:theuser.formatted_address,lastModifDate:now}}, function(err,docs){
+					if(err)
+						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+				});
+			}
+			
+			// ADDRESS
+			if(typeof(theuser.address) != 'undefined' ){
+				User.update({_id:theuserid},{$set:{address:theuser.address,lastModifDate:now}}, function(err,docs){
+					if(err)
+						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+				});
+			}
+			
+			// WEBSITE
+			if(typeof(theuser.web) != 'undefined' ){
+				User.update({_id:theuserid},{$set:{web:theuser.web,lastModifDate:now}}, function(err,docs){
+					if(err)
+						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+				});
+			}
+			
+			// BIO
+			if(typeof(theuser.bio) != 'undefined' ){
+				User.update({_id:theuserid},{$set:{bio:theuser.bio,lastModifDate:now}}, function(err,docs){
+					if(err)
+						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+				});
+			}
+			
+		}else{
+			error = {"error":"Update failed","error_reason": "Missing paramater","error_description":"user._id is empty"};
+			res.json({error:error});
+		}
+		
+	res.json({user:{_id:theuserid}});
+	
+	}else{
+		error = {"error":"Update failed","error_reason": "Missing paramater","error_description":"user is not set, should be user = {title:string, content:string, yakcat:['id1xxxx','id2xxxx'], yaktype:int, freetag:[string,string], pubdate:int, userid:{_id:string}} "};
+		res.json({error:error});
+	}
+
+}
+
 exports.get_user_details = function (req, res) {
 	var User = db.model('User');
 	User.PublicProfileFindById(req.params.userid,function(err, docs){
