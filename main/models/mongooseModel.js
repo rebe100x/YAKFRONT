@@ -5,10 +5,10 @@
 
 var mongoose = require('mongoose')
   , Schema = mongoose.Schema
-  , S = require('string'),
-  crypto = require('crypto'),
+  , S = require('string')
+  , crypto = require('crypto')
   ObjectId = Schema.ObjectId;
-  ;
+  
 
 mongoose.set('debug', true);
 
@@ -140,6 +140,7 @@ Info.statics.findByUserIds = function (useridArray, count, callback) {
 }
 
 Info.statics.findAllGeo = function (x1,y1,x2,y2,heat,type,str,usersubs,tagsubs,callback) {
+console.log('ELOELOE');
 	var now = new Date();
 	var D = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
 	var DTS = D.getTime() / 1000 - (heat * 60 * 60 * 24);
@@ -157,6 +158,10 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,heat,type,str,usersubs,tagsubs,c
 				"yakType" : {$in:type}
 			};
 	var qInfo = this.find(cond).sort({'pubDate':-1}).limit(100);
+	
+	
+	
+	
 	
 	if(str != 'null' && str.length > 0){  // STRING SEARCH
 		var firstChar = str.substr(0,1);
@@ -208,6 +213,7 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,heat,type,str,usersubs,tagsubs,c
 	
 		
 	}else{  // NO STRING SEARCH
+		
 		res = qInfo.exec(callback);
 	
 	}
@@ -502,7 +508,7 @@ User.statics.identifyByToken = function (token,userid,callback) {
 User.statics.findById = function (id,callback) {
   return this.findOne({'_id': id}, callback);
 }
-User.statics.apiFindById = function (id,callback) {
+User.statics.PublicProfileFindById = function (id,callback) {
   return this.findOne({'_id': id},{_id:1,address:1,bio:1,location:1,login:1,mail:1,name:1,thumb:1,type:1,web:1,lastLoginDate:1,favplace:1,placesubs:1,tagsubs:1,usersubs:1,tags:1}, callback);
 }
 User.statics.findByToken = function (token,callback) {

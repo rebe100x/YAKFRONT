@@ -21,7 +21,8 @@ var app = express();
 
 // Configuration
 
-	
+
+
 
 app.configure(function(){
   app.set('views', __dirname + '/views');
@@ -247,8 +248,12 @@ function requiresPosition(req,res,next){
 	next();
 	
 }
-// Start server
 
-app.listen(conf.port, function(){
-  console.log("Express server listening on port %d in %s mode", conf.port, app.settings.env);
+//exports.app = app;
+
+
+// Start server
+app.listen(conf.backport,conf.backdns, function(){
+ console.log("Express server %s listening on port %d in %s mode", conf.backdns, conf.backport, app.settings.env);
 });
+

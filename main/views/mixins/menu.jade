@@ -41,6 +41,7 @@ mixin menu(active)
 							&nbsp;&nbsp;&nbsp;
 
 					div.nav-collapse
+						span =locals.conf
 						ul.nav
 							- if (active == 'map')
 								li.active
@@ -62,8 +63,8 @@ mixin menu(active)
 									a(href="/user/new") Créer un compte
 							- if (active == 'api')										
 								li.active
-									a(href="/docs/api") API documentation
+									a(target="_blank",href="#{JSON.parse(locals.conf).apiurl}/docs/api") API documentation
 							- else
 								li
-									a(href="/docs/api") API documentation
+									a(target="_blank",href="/docs/api") API documentation
 							
