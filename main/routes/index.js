@@ -19,7 +19,7 @@ exports.api_default = function(req, res){
 exports.picture = function(req,res){
 	var fs = require('fs');
 	var thepath = __dirname+'/../public/uploads/pictures/'+req.params.size+'/'+req.params.picture;
-	var defaultpath = __dirname+'/../public/images/default/'+req.params.size+'/'+req.params.picture;
+	var defaultpath = __dirname+'/../public/images/default/'+req.params.size+'/no-user.png';
 	var path = require('path');
 	if (path.existsSync(thepath)) {
 		var img = fs.readFileSync(thepath);
@@ -36,9 +36,14 @@ exports.picture = function(req,res){
 exports.static_image = function(req,res){
 	var fs = require('fs');
 	var thepath = __dirname+'/../public/images/'+req.params.name;
+	var defaultpath = __dirname+'/../public/images/noImageAvailable.png';
 	var path = require('path');
-	if (path.existsSync(thepath)) {
+	if (path.existsSync(thepath)) {	
 		var img = fs.readFileSync(__dirname+'/../public/images/'+req.params.name);
+		res.writeHead(200, {'Content-Type': 'image/jpeg' });
+		res.end(img, 'binary');
+	}else if(path.existsSync(defaultpath)){
+		var img = fs.readFileSync(defaultpath);
 		res.writeHead(200, {'Content-Type': 'image/jpeg' });
 		res.end(img, 'binary');
 	}else
