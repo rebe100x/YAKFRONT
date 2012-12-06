@@ -428,8 +428,7 @@ exports.get_user_details = function (req, res) {
 	var User = db.model('User');
 	User.PublicProfileFindById(req.params.userid,function(err, docs){
 		if(!err){
-			if(typeof(docs.thumb)== 'undefined')
-				docs.thumb = "/static/images/no-user.png";
+			docs.thumb = conf.fronturl+"/pictures/128_128/"+docs.thumb;
 			res.json({meta:{code:200},data:docs});
 		}
 		else
@@ -445,8 +444,9 @@ exports.get_user_feed = function (req, res) {
 	var Info = db.model('Info');
 	var count =(typeof(req.query.count) != 'undefined') ? req.query.count : 10;
 	Info.findByUser(req.params.userid,count,function(err, docs){
-		if(!err)
+		if(!err){
 			res.json({meta:{code:200},data:docs});
+		}
 		else
 			res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 	

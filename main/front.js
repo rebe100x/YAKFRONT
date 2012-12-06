@@ -169,7 +169,7 @@ function requiresPosition(req,res,next){
 }
 
 //exports.app = app;
-
+console.log(conf.frontdns);
 // Start server
 app.listen(conf.frontport,conf.frontdns, function(){
  console.log("Express server %s listening on port %d in %s mode", conf.frontdns, conf.frontport, app.settings.env);
