@@ -98,41 +98,42 @@ Info.statics.findAll = function (callback) {
 
 }
 
-
-Info.statics.findAllByPage = function (callback, skip, limit, yakType, _id, loadmore, what, where, depuis, cattype) {
+Info.statics.findAllByPage = function (callback, skip, limit, yakType, _id, loadmore, what, where, depuis, yakCat) {
 	
+	var mydateUtils = require('../mylib/dateUtils.js');
 
-	var now = new Date();
+	var now = mydateUtils.substractDays(new Date(), parseInt(0));
+	var from = mydateUtils.substractDays(new Date(), parseInt(depuis.split(',')[1]));
+	var till = mydateUtils.substractDays(new Date(), parseInt(depuis.split(',')[0]));
 
 	var daterange = depuis.split(',');
-
-	var depuis = now.setDate(now.getDate() - daterange[0]); 
-	var till = now.setDate(now.getDate() - daterange[1]); 
 
 	var cond = new Object();
 
 	 var types = new Array();
 	 types = yakType.split(',');
 
-     var cats = new Array();
-     cats = cattype.split(',');
-
-
      var location = new Array();
      location = where.split(',');
 
 	cond["status"] = 1;
 
-	cond["pubDate"] = {$gte:depuis, $lte: till};
-
+	if (depuis.split(',')[1] == depuis.split(',')[0]){
+		cond["pubDate"] = {$gte: from, $lte: now};
+	}
+	else
+	{
+		cond["pubDate"] = {$gte: from, $lte: till};
+	}
 
 	if (yakType != ""){
 		cond["yakType"] =  {$in:types};
 	};
 
 	if (what != "") {
-		cond["content"] =  {$regex:what};
+			cond["content"] =  {$regex:what}
 	};
+
 
 	if (where != "") {
 		 cond["location"] = {$near : [parseFloat(location[0]),parseFloat(location[1])]};
