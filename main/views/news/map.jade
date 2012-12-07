@@ -81,7 +81,7 @@ block content
 		var markerCluster = null;
 		var pinkParksStyles = [{featureType: "Water",stylers: [{ hue: "#006eff" },{ saturation:1 },{ lightness: -13 }]},{featureType: "Road",stylers: [{ hue: "#ff0000" },{ saturation: -100 },{ lightness: 31 }]},{featureType: "Landscape",stylers: [{ hue: "#ff0008" },{saturation: -90 },{ lightness: 66 }]}];
 		var pinkParksStyles =[{}];
-		var heat = 3;
+		var dateFrom = 3;
 		//var type = [1];
 		var type = [!{type}];
 		
@@ -536,7 +536,8 @@ block content
 				getAndPrintInfo();
 			});
 			
-			
+				
+
 		});/*END READY*/
 		function drawNewsFeed(){	
 			var newsfeedContainerHeight = window.innerHeight-$('#newsfeedContainer').offset().top-50+'px';
@@ -703,12 +704,17 @@ block content
 		
 			//searchString = encodeURIComponent(searchString);		
 			bounds = map.getBounds();
-			$.getJSON('/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+heat+'/'+type.toString()+'/'+searchString,function(data) {
-				
+			var apiUrl = '';
+			if(type.toString() == 5)
+				apiUrl = '/api/geoalerts/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/1/'+searchString;
+			else	
+				apiUrl = '/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/1/'+type.toString()+'/'+searchString;
+			
+			$.getJSON(apiUrl,function(data) {	
 				$.each(data.info, function(key,val) {
 					
 					
-					
+
 					var flagExists = 0;
 					
 					$.each(infoArray,function(key2,val2){
@@ -718,35 +724,42 @@ block content
 					});
 					
 					if(flagExists == 0){
+
+						var yakCatNameArray = val.yakCatName.map(function(item){
+							if(item.substr(0,1)!="#")
+								return "#"+item;
+							else
+								return item;
+						});
 						var uniqueHL = new Date().getTime();
 						
 						var dateTmp = new Date(val.pubDate);
-					var dateCreation = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
-					infoContent = "<div class=\'infowindow mapHighlighter\' infoId='"+val._id+"'>";					
-					if(!(typeof val.thumb === 'undefined') && val.thumb != '' && val.thumb != null){
-						if(val.user == 0 || val.user === undefined)
-							infoContent += "<img src=\'"+conf.batchurl+val.thumb+"\' />";
-						else
-							infoContent += "<img src=\'/uploads/pictures/120_90/"+val.thumb+"\' />";
-					}
-					infoContent += "<div class=\'title\'> <img class='yakTypeImg' src=\'/images/markers/type"+val.yakType+".png\' />"+val.title.linkify()+" ("+dateCreation+")</div>";
-					infoContent += "<div class=\'tags\'>";					
-						if(val.yakCatName)
-								infoContent +="<div class=\'\'>"+yakCatNameArray.map(function(item){return item.linkify();}).join(',')+"</div>";	
-					infoContent += "</div>";		
-					infoContent += "<div class=\'links\'>";					
-						if(val.origin && val.origin !=  'undefined'){
-							if(val.origin.substring(0,1) == '@')
-								infoContent += "<div class=\'\'>Posté par <a href='/news/map/search/"+encodeURIComponent(val.origin)+"'>"+val.origin+"</a></div>";
+						var dateCreation = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
+						infoContent = "<div class=\'infowindow mapHighlighter\' infoId='"+val._id+"'>";					
+						if(!(typeof val.thumb === 'undefined') && val.thumb != '' && val.thumb != null){
+							if(val.user == 0 || val.user === undefined)
+								infoContent += "<img src=\'"+conf.batchurl+val.thumb+"\' />";
 							else
-								infoContent += "<div class=\'\'>Posté par <a target='_blank' href='"+val.outGoingLink+"'>"+val.origin+"</a></div>";
+								infoContent += "<img src=\'/uploads/pictures/120_90/"+val.thumb+"\' />";
 						}
-					if(typeof(val.address) != 'undefined' && val.address != 'null' && val.address != '')
-							infoContent += "<div class=\'infodetail\'>"+val.address+"</div>";
-					infoContent += "</div>";	
-					//infoContent += "<div class=\'content\'>"+val.content.substring(0,250).linkify()+"...</div>";
-					
-					infoContent += "</div>";
+						infoContent += "<div class=\'title\'> <img class='yakTypeImg' src=\'/images/markers/type"+val.yakType+".png\' />"+val.title.linkify()+" ("+dateCreation+")</div>";
+						infoContent += "<div class=\'tags\'>";					
+							if(val.yakCatName)
+									infoContent +="<div class=\'\'>"+yakCatNameArray.map(function(item){return item.linkify();}).join(',')+"</div>";	
+						infoContent += "</div>";		
+						infoContent += "<div class=\'links\'>";					
+							if(val.origin && val.origin !=  'undefined'){
+								if(val.origin.substring(0,1) == '@')
+									infoContent += "<div class=\'\'>Posté par <a href='/news/map/search/"+encodeURIComponent(val.origin)+"'>"+val.origin+"</a></div>";
+								else
+									infoContent += "<div class=\'\'>Posté par <a target='_blank' href='"+val.outGoingLink+"'>"+val.origin+"</a></div>";
+							}
+						if(typeof(val.address) != 'undefined' && val.address != 'null' && val.address != '')
+								infoContent += "<div class=\'infodetail\'>"+val.address+"</div>";
+						infoContent += "</div>";	
+						//infoContent += "<div class=\'content\'>"+val.content.substring(0,250).linkify()+"...</div>";
+						
+						infoContent += "</div>";
 						
 						/*PRINT ON THE MAP*/
 						var latLng = new google.maps.LatLng(val.location['lat'],val.location['lng']);
@@ -806,15 +819,21 @@ block content
 		}
 		
 		function getAndPrintInfo(){
-			
+			infoArray = [];
 			bounds = map.getBounds();
 			drawNewsFeed();
 			
 			cleanMarkers();
 			searchString = encodeURIComponent(searchString);
 			
-			$.getJSON('/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+heat+'/'+type.toString()+'/'+searchString.toString(),function(data) {
-				
+			var apiUrl = '';
+			if(type.toString() == 5)
+				apiUrl = '/api/geoalerts/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/'+searchString;
+			else	
+				apiUrl = '/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/'+type.toString()+'/'+searchString;
+			
+			$.getJSON(apiUrl,function(data) {	
+			
 				// empty the news feed
 				if(data.info.length == 0)
 					$('#newsfeed').html('Aucune info !');
@@ -826,7 +845,7 @@ block content
 				
 					
 					/*PRINT ON THE MAP*/	
-					var yakCatNameArray = new Array();
+					/*var yakCatNameArray = new Array();
 					if(val.yakCatName){
 						$.each(val.yakCatName,function(x,y){
 							if(y.substr(0,1)!="#")
@@ -834,7 +853,13 @@ block content
 							else
 								yakCatNameArray.push(y);
 						});
-					}
+					}*/
+					var yakCatNameArray = val.yakCatName.map(function(item){
+						if(item.substr(0,1)!="#")
+							return "#"+item;
+						else
+							return item;
+					});
 					infoArray.push(val);
 					var latLng = new google.maps.LatLng(val.location['lat'],val.location['lng']);
 					var marker = new google.maps.Marker({position: latLng,icon:"/images/markers/type"+val.yakType+".png"});

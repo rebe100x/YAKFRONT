@@ -186,7 +186,8 @@ exports.news = function(req, res){
 				
 				
 				
-				
+				info.yakCatName = yakCatName;
+				info.yakCat = yakCat;
 				info.title = req.body.title;
 				info.content = req.body.content;
 				
@@ -449,7 +450,6 @@ exports.user = function(req, res){
 						var fs    = require('fs');
 						fs.readFile(__dirname+'/../views/mails/account_validation.html', 'utf8', function(err, data) {
 							var link = conf.validationUrl+user.token+'/'+password;
-							console.log('LINK'+link);
 							data = data.replace("*|MC:SUBJECT|*","Votre inscription");
 							data = data.replace("*|MC:HEADERIMG|*",conf.fronturl+"/static/images/yakwala-logo_petit.png");
 							data = data.replace("*|MC:VALIDATIONLINK|*",link);

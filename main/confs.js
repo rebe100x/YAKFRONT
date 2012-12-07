@@ -1,5 +1,5 @@
 exports.confs = {
-	"dev" : {
+	"devdany" : {
 		"validationUrl":"localhost:3000/user/validate/",
 		"batchurl":"localhost:3000/BACKEND/",
 		"backurl":"localhost:3000",

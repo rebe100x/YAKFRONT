@@ -52,22 +52,23 @@ exports.afeed = function (req, res) {
 	}, req.query["id"]); 
 };
 
+exports.geoalerts = function (req, res) {
+	var Info = db.model('Info');
+	var usersubs= res.locals.user.usersubs;
+	var tagsubs= res.locals.user.tagsubs;
+	
+	Info.findAllGeoAlert(req.params.x1,req.params.y1,req.params.x2,req.params.y2,req.params.heat,req.params.str,usersubs,tagsubs,function (err, docs){
+		res.json({info: docs});
+	}); 
+};
 exports.geoinfos = function (req, res) {
 	var Info = db.model('Info');
 	var type = [];
-	console.log(req.params);
+	//console.log(req.params);
 	type = req.params.type.split(',');
-	if(req.session.user){
-		var usersubs= req.session.user.usersubs;
-		var tagsubs= req.session.user.tagsubs;
-	}
-	else{
-		var usersubs = [];
-		var tagsubs = [];
-	}
-	console.log('ELOELOE');
-	Info.findAllGeo(req.params.x1,req.params.y1,req.params.x2,req.params.y2,req.params.heat,type,req.params.str,usersubs,tagsubs,function (err, docs){
-	  console.log(docs);
+	
+	Info.findAllGeo(req.params.x1,req.params.y1,req.params.x2,req.params.y2,req.params.from,type,req.params.str,function (err, docs){
+	  
 	  res.json({
 	  
 		info: docs
@@ -678,7 +679,7 @@ exports.put_user_feed = function (req, res) {
 				
 			// THUMB
 			var infoThumb = new Object();
-			console.log('filesize'+req.files.picture.size);
+			
 			if(typeof(req.files.picture) != 'undefined' && req.files.picture.size > 0 && req.files.picture.size < 1048576*5){
 				var drawTool = require('../mylib/drawlib.js');
 				var size = [{"width":120,"height":90},{"width":512,"height":0}];
@@ -748,8 +749,6 @@ exports.put_user_feed = function (req, res) {
 				Yakcat.findByIds(theinfo.yakcat,function(err,theyakcats){
 					if(theyakcats){
 						theyakcats.forEach(function(theyakcat){
-							console.log(theyakcat);
-							console.log(yakCatNames.indexOf(theyakcat.title));
 							if(yakCatNames.indexOf(theyakcat.title)){
 								yakCatIds.push(mongoose.Types.ObjectId(theyakcat._id.toString()));
 								yakCatNames.push(theyakcat.title);
@@ -994,7 +993,6 @@ exports.put_place = function (req, res) {
 			
 			// THUMB
 			var placeThumb = new Object();
-			console.log('filesize'+req.files.picture.size);
 			if(typeof(req.files.picture) != 'undefined' && req.files.picture.size > 0 && req.files.picture.size < 1048576*5){
 				var drawTool = require('../mylib/drawlib.js');
 				var size = [{"width":120,"height":90},{"width":512,"height":0}];
