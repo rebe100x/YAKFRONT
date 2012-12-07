@@ -711,9 +711,6 @@ block content
 				apiUrl = '/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/1/'+type.toString()+'/'+searchString;
 			
 			$.getJSON(apiUrl,function(data) {	
-				console.log(apiUrl);
-				console.log(infoArray);
-					console.log(data.info);
 				$.each(data.info, function(key,val) {
 					
 					
