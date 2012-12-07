@@ -207,7 +207,7 @@ block content
 					$("#loading").html("no more results to load");
 					return;
 				}
-				var item, title, content, address, more, postedby, date, type, cat, img, outlink;
+				var item, title, content, address, more, postedby, date, type, cat, img, outlink, hot;
 				
 				$.each(data.info, function(key,val) {
 
@@ -231,11 +231,20 @@ block content
 					
 					postedby = $("<div />");
 					postedby.attr("class", "postedby");
+
+					hot = $("<div />");
+					hot.attr("class", "hot");
+
+					hot.append("<div class='hotLevel' style='width: " + val.heat + "%'></div>");
 					
 					date= new Date(val.pubDate);
-					postedby.html("Posted by " + val.origin + " at " + date);
+					if(val.origin != null)
+						postedby.html("Posted by " + val.origin + " at " + date);
+					else
+						postedby.html("Posted by ananomys at " + date);
 					
 					title.append(postedby);
+					title.append(hot);
 					
 					
 					img = $("<img />");

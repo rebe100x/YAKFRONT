@@ -57,6 +57,8 @@ a {
 #feedContent .myitem .title { font-size: 14px; font-weight: bold; padding-bottom: 10px;}
 #feedContent .myitem .title .postedby { font-size: 11px; font-style: italic; font-weight: normal;}
 #feedContent .myitem .title .postedat { font-size: 11px; }
+#feedContent .myitem .title .hot { width: 200px; background: #cecece; height: 8px; clear: both; left: 40px; position: relative;; top: -3px;}
+#feedContent .myitem .title .hot .hotLevel{ background: #D71921;  height: 8px;}
 #feedContent .myitem  .content { font-size: 13px; line-height: 18px; }
 #feedContent .myitem  .content .more { float: right;}
 #feedContent .myitem .title .yakImg { float: left; padding-right: 10px; }
