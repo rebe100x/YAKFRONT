@@ -1,6 +1,6 @@
 exports.confs = {
 	"dev" : {
-		"validationUrl":"localhost:3000:3000/user/validate/",
+		"validationUrl":"localhost:3000/user/validate/",
 		"batchurl":"localhost:3000/BACKEND/",
 		"backurl":"localhost:3000",
 		"fronturl":"localhost:3000",

@@ -40,7 +40,7 @@ block content
 
 			$('.btn-group2').button();
 
-			$('.searchButton').trigger('click', [currentPage]);
+			$('.searchButton').trigger('click', [currentPage, 0]);
 
 		});
 			
@@ -52,14 +52,14 @@ block content
 
 			var skip = (currentPage - 1)*limit;
 			
-			$('.searchButton').trigger('click', [currentPage]);
+			$('.searchButton').trigger('click', [currentPage, 1]);
 			
 			var height = $('#feedContent')[0].scrollHeight;
 
 			$("html, body").animate({ scrollTop: $(document).height() }, 1000);
 		});
 		
-		$(".searchButton").click(function(event, currentpage){
+		$(".searchButton").click(function(event, currentpage, next=0){
 
 			if(event.which)
 			{
@@ -98,7 +98,7 @@ block content
 
 
 			//apage, askip, alimit, next, _id='', loadmore=0, what='', where='', yaktype=''
-			loadData(1, skip, limit, 0 , "", 0, $("#SearchWhat").attr("value"), lngslatstr, yaktype, depuis, "");
+			loadData(1, skip, limit, next , "", 0, $("#SearchWhat").attr("value"), lngslatstr, yaktype, depuis, "");
 
 		});
 		function setClickableArea()
@@ -207,8 +207,8 @@ block content
 					$("#loading").html("no more results to load");
 					return;
 				}
-				var item, title, content, address, more, postedby, date, type, cat;
-
+				var item, title, content, address, more, postedby, date, type, cat, img;
+				
 				$.each(data.info, function(key,val) {
 
 					item = $("<div />");
@@ -238,11 +238,15 @@ block content
 					title.append(postedby);
 					
 					
+					img = $("<img />");
+					img.attr("class", "img");
+					img.attr("src", "http://localhost:8080/YAKREP/BACKEND/" + val.thumb.replace("\/", "/"));
 					
 					content = $("<div />");
 					content.attr("class", "content");
 					content.html(val.content.substring(0, subSize));
 					//content.append(more);
+					content.prepend(img);
 					content.append("<br /><br />");
 					
 					type = $("<div />");
