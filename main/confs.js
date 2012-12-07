@@ -1,6 +1,22 @@
 exports.confs = {
-	"dev" : {
-		"validationUrl":"localhost:3000:3000/user/validate/",
+	"devrenaud" : {
+		"validationUrl":"http://dev.labs.yakwala.fr:3000/user/validate/",
+		"batchurl":"http://dev.batch.yakwala.fr/BACKEND/",
+		"backurl":"http://dev.backend.yakwala.fr:3001",
+		"fronturl":"http://dev.labs.yakwala.fr:3000",
+		"apiurl":"http://dev.api.yakwala.fr:3002",
+		"backdns":"dev.backend.yakwala.fr",
+		"frontdns":"dev.labs.yakwala.fr",
+		"apidns":"dev.api.yakwala.fr",
+		"frontport":3000,
+		"backport":3001,
+		"apiport":3002,
+		"dbname":"yakwala",
+		"env":"DEV",
+		"uploadsDir":__dirname+"\\public\\uploads\\",
+	},
+	"devdany" : {
+		"validationUrl":"localhost:3000/user/validate/",
 		"batchurl":"localhost:3000/BACKEND/",
 		"backurl":"localhost:3000",
 		"fronturl":"localhost:3000",

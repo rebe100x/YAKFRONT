@@ -162,17 +162,17 @@ Info.statics.findByUserIds = function (useridArray, count, callback) {
   return this.aggregate({ $group: {user: {$in:useridArray}}}, callback);
 }
 
-Info.statics.findAllGeo = function (x1,y1,x2,y2,heat,type,str,usersubs,tagsubs,callback) {
-console.log('ELOELOE');
+Info.statics.findAllGeo = function (x1,y1,x2,y2,from,type,str,callback) {
 	var now = new Date();
 	var D = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
-	var DTS = D.getTime() / 1000 - (heat * 60 * 60 * 24);
+	var DTS = D.getTime() / 1000 - (from * 60 * 60 * 24);
 	D.setTime(DTS*1000); 
 	var box = [[parseFloat(x1),parseFloat(y1)],[parseFloat(x2),parseFloat(y2)]];
 	var Yakcat = db.model('Yakcat');
 	var User = db.model('User');
 	var Tag = db.model('Tag');
 	var res = null;
+
 	var cond = {
 				"print":1,
 				"status":1,
@@ -180,11 +180,8 @@ console.log('ELOELOE');
 				"pubDate":{$gte:D},
 				"yakType" : {$in:type}
 			};
+			
 	var qInfo = this.find(cond).sort({'pubDate':-1}).limit(100);
-	
-	
-	
-	
 	
 	if(str != 'null' && str.length > 0){  // STRING SEARCH
 		var firstChar = str.substr(0,1);
@@ -192,7 +189,6 @@ console.log('ELOELOE');
 		var searchStr = new RegExp(strClean,'gi');
 		var searchExactStr = new RegExp("^"+strClean+"$",'gi');
 		if(firstChar=='#'){
-		
 			Yakcat.findOne({'title': {$regex:searchStr}}).exec(function(err,theyakcat){
 				if(theyakcat == null){
 					qInfo.or([{"freeTag": {$regex:searchExactStr}} , {"yakTag": {$regex:searchExactStr}}]);
@@ -201,9 +197,6 @@ console.log('ELOELOE');
 				}
 				res = qInfo.exec(callback);
 			});
-		
-		
-	
 		}else if(firstChar=='@'){
 			User.findOne({'login':{$regex:searchExactStr}}).exec(function(err,theuser){
 				if(theuser != null){
@@ -227,27 +220,88 @@ console.log('ELOELOE');
 					res = qInfo.exec(callback);
 				}
 			});
-		
 		}
-			
-				
-		
-	
-	
-		
 	}else{  // NO STRING SEARCH
-		
 		res = qInfo.exec(callback);
-	
 	}
-	
-	
-	 return res;
-	
-	
-
+	return res;
 }
 
+Info.statics.findAllGeoAlert = function (x1,y1,x2,y2,from,str,usersubs,tagsubs,callback) {
+	var now = new Date();
+	var D = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+	var DTS = D.getTime() / 1000 - (from * 60 * 60 * 24);
+	D.setTime(DTS*1000); 
+	var box = [[parseFloat(x1),parseFloat(y1)],[parseFloat(x2),parseFloat(y2)]];
+	var Yakcat = db.model('Yakcat');
+	var User = db.model('User');
+	var Tag = db.model('Tag');
+	var res = null;
+
+	var cond = {
+				"print":1,
+				"status":1,
+				"location" : {$within:{"$box":box}},
+				"pubDate":{$gte:D},
+			};
+
+	var qInfo = this.find(cond).sort({'pubDate':-1}).limit(100);
+	
+	
+	if( (typeof(usersubs) != 'undefined' && usersubs != 'null') || (typeof(tagsubs) != 'undefined' && tagsubs != 'null' ) ){
+		if(typeof(usersubs) != 'undefined' && usersubs != 'null' ){
+			var usersubsId =  usersubs.map(function(item){return item._id});
+			qInfo.or([ {"user":{$in:usersubsId}}]);
+		}
+		if(typeof(tagsubs) != 'undefined' && tagsubs != 'null' )
+			qInfo.or([{"freeTag": {$in:tagsubs}}]);
+	}
+
+
+
+	if(str != 'null' && str.length > 0){  // STRING SEARCH
+		var firstChar = str.substr(0,1);
+		var strClean = str.replace(/@/g,'').replace(/#/g,'').replace(/%23/g,'').replace(/%40/g,'');
+		var searchStr = new RegExp(strClean,'gi');
+		var searchExactStr = new RegExp("^"+strClean+"$",'gi');
+		if(firstChar=='#'){
+			Yakcat.findOne({'title': {$regex:searchStr}}).exec(function(err,theyakcat){
+				if(theyakcat == null){
+					qInfo.or([{"freeTag": {$regex:searchExactStr}} , {"yakTag": {$regex:searchExactStr}}]);
+				}else{
+					qInfo.or([{"freeTag": {$regex:searchExactStr}} , {"yakTag": {$regex:searchExactStr}},{"yakCat": {$in:[theyakcat._id]}}]);
+				}
+				res = qInfo.exec(callback);
+			});
+		}else if(firstChar=='@'){
+			User.findOne({'login':{$regex:searchExactStr}}).exec(function(err,theuser){
+				if(theuser != null){
+					qInfo.or([  {'user':theuser._id} ]);
+				}
+				res = qInfo.exec(callback);
+			});
+		}else{
+			Yakcat.findOne({'title': {$regex:searchExactStr}}).exec(function(err,theyakcat){
+				if(theyakcat == null){
+					User.findOne({'login':{$regex:searchExactStr}}).exec(function(err,theuser){
+						if(theuser == null){ // NO TAG, NO YAKCAT, NO USER
+							qInfo.or([ {'title': {$regex:searchStr}}, {'content': {$regex:searchStr}} , {"freeTag": {$regex:searchExactStr}} , {"yakTag": {$regex:searchExactStr}}]);
+						}else{
+							qInfo.or([ {'title': {$regex:searchStr}}, {'content': {$regex:searchStr}} , {"freeTag": {$regex:searchExactStr}} , {"yakTag": {$regex:searchExactStr}}, {'user':theuser._id}]);
+						}
+						res = qInfo.exec(callback);
+					});
+				}else{
+					qInfo.or([ {'title': {$regex:searchStr}}, {'content': {$regex:searchStr}} , {"freeTag": {$regex:searchExactStr}} , {"yakTag": {$regex:searchExactStr}},{"yakCat": {$in:[theyakcat._id]}}]);
+					res = qInfo.exec(callback);
+				}
+			});
+		}
+	}else{  // NO STRING SEARCH
+		res = qInfo.exec(callback);
+	}
+	return res;
+}
 
 Info.statics.findAllGeoOLD = function (x1,y1,x2,y2,heat,type,str,usersubs,tagsubs,callback) {
 	var now = new Date();

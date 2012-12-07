@@ -703,8 +703,12 @@ block content
 		
 			//searchString = encodeURIComponent(searchString);		
 			bounds = map.getBounds();
-			$.getJSON('/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+heat+'/'+type.toString()+'/'+searchString,function(data) {
-				
+			if(type.toString() == 5)
+				apiUrl = '/api/geoalerts/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+heat+'/'+searchString;
+			else	
+				apiUrl = '/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+heat+'/'+type.toString()+'/'+searchString;
+			
+			$.getJSON(apiUrl,function(data) {	
 				$.each(data.info, function(key,val) {
 					
 					
@@ -813,8 +817,13 @@ block content
 			cleanMarkers();
 			searchString = encodeURIComponent(searchString);
 			
-			$.getJSON('/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+heat+'/'+type.toString()+'/'+searchString.toString(),function(data) {
-				
+			if(type.toString() == 5)
+				apiUrl = '/api/geoalerts/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+heat+'/'+searchString;
+			else	
+				apiUrl = '/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+heat+'/'+type.toString()+'/'+searchString;
+			
+			$.getJSON(apiUrl,function(data) {	
+			
 				// empty the news feed
 				if(data.info.length == 0)
 					$('#newsfeed').html('Aucune info !');
