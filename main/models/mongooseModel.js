@@ -131,7 +131,8 @@ Info.statics.findAllByPage = function (callback, skip, limit, yakType, _id, load
 	};
 
 	if (what != "") {
-			cond["content"] =  {$regex:what}
+			//cond["$or"] = { 'content': {$regex:what}, 'title': {$regex:what} };
+			cond["content"] = {$regex:what};
 	};
 
 
