@@ -186,7 +186,8 @@ exports.news = function(req, res){
 				
 				
 				
-				
+				info.yakCatName = yakCatName;
+				info.yakCat = yakCat;
 				info.title = req.body.title;
 				info.content = req.body.content;
 				
