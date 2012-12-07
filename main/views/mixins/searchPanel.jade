@@ -43,9 +43,14 @@ mixin searchPanel()
 								input(type="checkbox")
 								|&nbsp;Cinema
 
+			div.searchPlaces
+
 			button(type="button", class="btn searchButton") Search
 
 			script
+				function deleltePlace(el){
+					$(el).parent().remove();
+				}
 				/*slider time selector*/
 				$( "#heatSelector" ).slider({
 					range: true,
@@ -126,6 +131,34 @@ mixin searchPanel()
 						$("#searchPlaceStr").removeClass('searching');
 						var placeGmap = getPlaceFromGmapResult(obj);
 						$('#locationInput').val(JSON.stringify(placeGmap.location));
+
+						var aplace = $("<div />");
+						aplace.attr("class", "aplace");
+						aplace.html('<span class="theplace">- ' + placeGmap.title +'</span>' + '<span class="thedelete" onclick="return deleltePlace(this)">X</span>');
+
+						var placelocation = $("<input />");
+						placelocation.attr("type", "hidden");
+						placelocation.attr("class", "placelocation");
+						placelocation.val(JSON.stringify(placeGmap.location));
+
+						aplace.append(placelocation);
+
+						var exists = 0;
+
+						$(".placelocation").each(function(){
+
+							if($(this).val() == JSON.stringify(placeGmap.location))
+							{
+								exists = 1;
+							}
+						});
+						
+						if(exists == 0)
+						{
+							$(".searchPlaces").append(aplace);
+						}
+						
+						$("#SearchWhere").val("");
 					}
 				});
 

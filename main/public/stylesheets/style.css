@@ -39,6 +39,10 @@ a {
 #search .searchFilters .btn { width:  auto;}
 #search .searchFilters .filterLabel { float: left;}
 
+#search .searchPlaces {  background: white; float: left; left: -79px; position: relative; top: 19px; width: 219px; border: 1px solid #cecece;}
+#search .searchPlaces .aplace .theplace { margin-left: 12px;} 
+#search .searchPlaces .aplace .thedelete { color: red; cursor: pointer; float: right; margin-right: 12px;} 
+
 .btn-group1, .btn-group2 { float: right;}
 #search .searchButton { float: left; position: relative; top: 6px; float: right; right: 12px; margin: 12px; width: 120px; color: #ffffff; font-weight: bolder; height: 51px; font-size: 18px; background: #D71921;}
 #feedContent{ clear: both; padding-top: 12px;}
