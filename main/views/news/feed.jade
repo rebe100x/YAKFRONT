@@ -207,7 +207,7 @@ block content
 					$("#loading").html("no more results to load");
 					return;
 				}
-				var item, title, content, address, more, postedby, date, type, cat, img;
+				var item, title, content, address, more, postedby, date, type, cat, img, outlink;
 				
 				$.each(data.info, function(key,val) {
 
@@ -242,11 +242,17 @@ block content
 					img.attr("class", "img");
 					img.attr("src", "http://localhost:8080/YAKREP/BACKEND/" + val.thumb.replace("\/", "/"));
 					
+					outlink = $("<a />");
+					outlink.attr("href", val.outGoingLink);
+					outlink.attr("target", "_blank");
+					outlink.html("read from source");
+
 					content = $("<div />");
 					content.attr("class", "content");
 					content.html(val.content.substring(0, subSize));
-					//content.append(more);
+					content.append(outlink);
 					content.prepend(img);
+
 					content.append("<br /><br />");
 					
 					type = $("<div />");
