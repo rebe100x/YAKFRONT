@@ -53,7 +53,7 @@ a {
 #feedContent .content{font-size:0.6em;}
 #feedContent .address{font-size:11px;font-style:italic; left: 40px; top: 5px; position: relative; clear: both;}
 #feedContent .img { float: left; margin-right: 12px;}
-#feedContent .myitem { margin: 10px 10px 32px 10px; color: #4A4A4A; width: 90%; border-bottom: 1px dotted #cecece; min-height: 150px; }
+#feedContent .myitem { margin: 10px 10px 32px 10px; color: #4A4A4A; width: 90%; border-bottom: 1px dotted #cecece; min-height: 200px; }
 #feedContent .myitem .title { font-size: 14px; font-weight: bold; padding-bottom: 10px;}
 #feedContent .myitem .title .postedby { font-size: 11px; font-style: italic; font-weight: normal;}
 #feedContent .myitem .title .postedat { font-size: 11px; }

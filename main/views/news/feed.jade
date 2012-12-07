@@ -30,6 +30,19 @@ block content
 
 		var currentPage = 1;
 
+
+		function getCatName(_id)
+		{
+			$.get('/api/cats', function(data){
+
+			$.each(data.cats, function(key,val) {
+				if(val._id == _id)
+					alert(val.title);
+			});
+
+			});
+			
+		}
 		$(document).ready(function() {
 
 			//setInterval("setRefreshNews()", 30000);
@@ -40,11 +53,13 @@ block content
 
 			$('.btn-group2').button();
 
-			$('.searchButton').trigger('click', [currentPage, 0]);
+			
 
+			$('.searchButton').trigger('click', [currentPage, 0]);
+			
 		});
 			
-			
+		
 			
 		$(".next").click(function(){
 
@@ -270,15 +285,15 @@ block content
 					
 					cat = $("<div />");
 					cat.attr("class", "cat");
-					cat.html("Category: " + val.yakCat);
+					cat.html("YakCats: " + val.yakCatName);
 					
 					//content.append(type);
-					//content.append(cat);
+					content.append(cat);
 										
 					address = $("<div />");
 					address.attr("class", "address");
 					address.html(val.address);
-					
+
 					item.append(title);
 					item.append(content);
 					item.append(address);
