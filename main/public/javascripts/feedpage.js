@@ -28,9 +28,9 @@
 
 			triggerSearch(currentPage, 1);
 			
-			var height = $('#feedContent')[0].scrollHeight;
+			//var height = $('#feedContent')[0].scrollHeight;
 
-			$("html, body").animate({ scrollTop: $(document).height() }, 1000);
+			//$("html, body").animate({ scrollTop: $(document).height() }, 1000);
 		});
 		
 		$(".searchButton").click(function(event, currentpage, next=0){
@@ -120,10 +120,7 @@
 				$.each(data.info, function(key,val) {
 
 					item = $("<div />");
-					if (next == 2 || next == 1)
-						item.attr("class", "myitem graybg");
-					else
-						item.attr("class", "myitem");
+					item.attr("class", "myitem");
 
 					more = $("<a />");
 					more.attr("class", "more");
@@ -145,7 +142,7 @@
 
 					hot.append("<div class='hotLevel' style='width: " + val.heat + "%'></div>");
 					
-					date= new Date(val.pubDate);
+					date = new Date(val.pubDate).toLocaleDateString();
 					if(val.origin != null)
 						postedby.html("Posted by " + val.origin + " at " + date);
 					else
@@ -203,11 +200,7 @@
 					
 					
 				});
-				if(next == 1)
-					{
-						var height = $('#feedContent')[0].scrollHeight;
-						$("html, body").animate({ scrollTop: $(document).height() });
-					}
+				
 				setClickableArea();
 			});
 		}
