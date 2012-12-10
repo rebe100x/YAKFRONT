@@ -137,7 +137,7 @@ Array.prototype.cleanArray=function(id){
 }
 
 
-Array.prototype.cleanArrayByLocation=function(lng,lat){
+Array.prototype.cleanArrayByLocation=function(lat,lng){
 	for(i=0;i<this.length;i++){
 		//console.log(this[i].location.lng+"="+lng);
 		if(lng==this[i].location.lng && lat==this[i].location.lat) 
@@ -327,8 +327,10 @@ function getformattedAddress(position){
 			var placeGmap = getPlaceFromGmapResult(results[0]);
 			//console.log(results);
 			placeArray.push(placeGmap);
+			console.log(results[0].geometry.location);
 			$("#placeInput").val(JSON.stringify(placeArray));
-			$('#btn-place-adder').parent().before("<div><i class='icon-remove' onclick='placeArray.cleanArrayByLocation("+results[0].geometry.location.Ya+","+results[0].geometry.location.Xa+");$(\"#placeInput\").val(JSON.stringify(placeArray));$(this).parent().remove();'></i> "+results[0].formatted_address+"</div>");
+			
+			$('#btn-place-adder').parent().before("<div><i class='icon-remove' onclick='placeArray.cleanArrayByLocation("+results[0].geometry.location.Ya+","+results[0].geometry.location.Za+");$(\"#placeInput\").val(JSON.stringify(placeArray));$(this).parent().remove();'></i> "+results[0].formatted_address+"</div>");
 		} else {
 			var salt = new Date().getTime();
 			$('#btn-place-adder').parent().before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide ("+status+")</div>");

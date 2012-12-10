@@ -186,10 +186,11 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,from,type,str,callback) {
 	
 	if(str != 'null' && str.length > 0){  // STRING SEARCH
 		var firstChar = str.substr(0,1);
+		var thirdChar = str.substr(0,3);
 		var strClean = str.replace(/@/g,'').replace(/#/g,'').replace(/%23/g,'').replace(/%40/g,'');
 		var searchStr = new RegExp(strClean,'gi');
 		var searchExactStr = new RegExp("^"+strClean+"$",'gi');
-		if(firstChar=='#'){
+		if(firstChar=='#' || thirdChar == '%23'){
 			Yakcat.findOne({'title': {$regex:searchStr}}).exec(function(err,theyakcat){
 				if(theyakcat == null){
 					qInfo.or([{"freeTag": {$regex:searchExactStr}} , {"yakTag": {$regex:searchExactStr}}]);
@@ -198,8 +199,8 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,from,type,str,callback) {
 				}
 				res = qInfo.exec(callback);
 			});
-		}else if(firstChar=='@'){
-			User.findOne({'login':{$regex:searchExactStr}}).exec(function(err,theuser){
+		}else if(firstChar=='@' || thirdChar == '%40' ){
+			User.findOne({'login':{$regex:searchExactStr}}).exec(function(err,theuser){			
 				if(theuser != null){
 					qInfo.or([  {'user':theuser._id} ]);
 				}

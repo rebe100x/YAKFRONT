@@ -94,6 +94,7 @@ exports.cats = function (req, res) {
 	  });
 	});
 };
+	
 exports.catsandtags = function (req, res) {
 	var Yakcat = db.model('Yakcat');
 	var Tag = db.model('Tag');

@@ -498,7 +498,9 @@ block content
 								var placeGmap = getPlaceFromGmapResult(results[0]);
 								placeArray.push(placeGmap);
 								$("#placeInput").val(JSON.stringify(placeArray));
-								$('#btn-place-adder').parent().before("<div><i class='icon-remove icon-pointer' onclick='placeArray.cleanArrayByLocation("+results[0].geometry.location.Ya+","+results[0].geometry.location.Xa+");$(\"#placeInput\").val(JSON.stringify(placeArray));$(this).parent().remove();'></i> "+results[0].formatted_address+"</div>");
+								console.log(results[0].geometry.location);
+								console.log('RRRRRRRRRRRRRRRRRRRRRRRRRRRR');
+								$('#btn-place-adder').parent().before("<div><i class='icon-remove icon-pointer' onclick='placeArray.cleanArrayByLocation("+results[0].geometry.location.Ya+","+results[0].geometry.location.Za+");$(\"#placeInput\").val(JSON.stringify(placeArray));$(this).parent().remove();'></i> "+results[0].formatted_address+"</div>");
 								
 							} else {
 								var salt = new Date().getTime();
@@ -522,7 +524,7 @@ block content
 				
 				
 				$('#searchStr').val(searchString);
-				searchString = encodeURIComponent(searchString);
+				//searchString = encodeURIComponent(searchString);
 				
 				getAndPrintInfo();
 			});
@@ -531,7 +533,7 @@ block content
 				searchString = $(this).html();
 				
 				$('#searchStr').val(searchString);
-				searchString = encodeURIComponent(searchString);
+				//searchString = encodeURIComponent(searchString);
 				
 				getAndPrintInfo();
 			});
@@ -704,6 +706,7 @@ block content
 		
 			//searchString = encodeURIComponent(searchString);		
 			bounds = map.getBounds();
+			// NOTE : here we take only one day of history : it is enough to refresh.
 			var apiUrl = '';
 			if(type.toString() == 5)
 				apiUrl = '/api/geoalerts/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/1/'+searchString;
