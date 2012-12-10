@@ -19,7 +19,7 @@ exports.confs = {
 	"devdany" : {
 		"validationUrl":"localhost:3000/user/validate/",
 		"batchurl":"localhost:3000/BACKEND/",
-		"backurl":"localhost:3000",
+		"backurl":"http://localhost:8080/YAKREP/BACKEND/",
 		"fronturl":"localhost:3000",
 		"apiurl":"localhost:3000",
 		"backdns":"localhost",
@@ -31,6 +31,11 @@ exports.confs = {
 		"dbname":"yakwala",
 		"env":"DEV",
 		"uploadsDir":__dirname+"\\public\\uploads\\",
+		"searchParams": 
+			{
+				"subSize": 200,
+				"limit": 10,
+			},
 	},
 	
 	"preprod" : {

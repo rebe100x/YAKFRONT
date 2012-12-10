@@ -98,15 +98,15 @@ Info.statics.findAll = function (callback) {
 
 }
 
-Info.statics.findAllByPage = function (callback, skip, limit, yakType, _id, loadmore, what, where, depuis, yakCat) {
+Info.statics.findAllByPage = function (callback, skip, limit, yakType, _id, what, where, dateInterval, yakCat) {
 	
 	var mydateUtils = require('../mylib/dateUtils.js');
 
 	var now = mydateUtils.substractDays(new Date(), parseInt(0));
-	var from = mydateUtils.substractDays(new Date(), parseInt(depuis.split(',')[1]));
-	var till = mydateUtils.substractDays(new Date(), parseInt(depuis.split(',')[0]));
+	var from = mydateUtils.substractDays(new Date(), parseInt(dateInterval.split(',')[1]));
+	var till = mydateUtils.substractDays(new Date(), parseInt(dateInterval.split(',')[0]));
 
-	var daterange = depuis.split(',');
+	var daterange = dateInterval.split(',');
 
 	var cond = new Object();
 
@@ -118,7 +118,7 @@ Info.statics.findAllByPage = function (callback, skip, limit, yakType, _id, load
 
 	cond["status"] = 1;
 
-	if (depuis.split(',')[1] == depuis.split(',')[0]){
+	if (dateInterval.split(',')[1] == dateInterval.split(',')[0]){
 		cond["pubDate"] = {$gte: from, $lte: now};
 	}
 	else

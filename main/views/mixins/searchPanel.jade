@@ -1,6 +1,6 @@
 mixin searchPanel()
 	div#search
-			div#seacrhBox
+			div#searchBox
 				input#locationInput(type='hidden', name='locationInput', value='')
 				input#SearchWhat(type="text", class="searchInput", placeholder="Quoi ?")
 				input#SearchWhere(type="text", data-provide="typeahead", class="searchInput2", placeholder="Où ?")
@@ -170,3 +170,4 @@ mixin searchPanel()
 						$('#searchButton').trigger('click');
 					}
 				});
+

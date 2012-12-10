@@ -130,6 +130,10 @@ exports.news_afeed = function(req, res){
 	}); 
 };
 
+exports.loadingModal = function(req, res){
+		res.render('news/loadingModal');
+};
+
 exports.news = function(req, res){
 
 	var formMessage = new Array();
