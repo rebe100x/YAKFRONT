@@ -565,14 +565,14 @@ var User = new Schema({
 	, lastModifDate	: {type: Date, required: true, default: Date.now}		
 	, lastLoginDate	: {type: Date, required: true, default: Date.now}		
 	, status	: {type: Number,required: true, default: 2,index: true}	
-	, apiData	: { type: {
+	, apiData	: { type: [{
 							apiClientId : {type: Schema.ObjectId,index: true}  
 							, apiStatus	: {type: Number, required: true, default: 2,index: true}
 							, apiCode       : { type: String ,index: true}
 							, apiCodeCreationDate     :  {type: Date,index: true}		
 							, apiToken     :  {type: String , index: true}		
 							, apiTokenCreationDate     :  {type: Date,index: true}	
-						}
+						}]
 					}
 }, { collection: 'user' });
 
@@ -585,7 +585,7 @@ User.statics.findByIds = function (ids,callback) {
   return this.find({'_id': { $in: ids}}, callback);
 }
 User.statics.identifyByToken = function (token,userid,callback) {
-  return this.findOne({'_id':userid,'apiToken': token,'status':1}, callback);
+  return this.findOne({'_id':userid,'apiData.apiToken': token,'status':1}, callback);
 }
 User.statics.findById = function (id,callback) {
   return this.findOne({'_id': id}, callback);
@@ -600,8 +600,11 @@ User.statics.findAll = function (callback) {
   return this.find({},{},{sort:{name:1}}, callback);
 }
 	
-User.statics.search = function(string,limit,callback){
-	var input = new RegExp(string,'gi');
+User.statics.search = function(string,count,from,sensitive,callback){
+	var limit = (typeof(count) != 'undefined' && count > 0) ? count : 100;		
+	var skip = (typeof(from) != 'undefined' && from > 0) ? from : 0;	
+	var case_sensitive = (typeof(sensitive) != 'undefined' && sensitive > 0) ? 'g' : 'gi';	
+	var input = new RegExp(string,case_sensitive);
 	return this.find(
 	{	$or:[ {'login': {$regex:input}}, {'name': {$regex:input}} , {"tag": {$regex:input}} ],
 		
@@ -610,7 +613,7 @@ User.statics.search = function(string,limit,callback){
 	{_id:1,address:1,bio:1,location:1,login:1,mail:1,name:1,thumb:1,type:1,web:1,lastLoginDate:1,favplace:1,placesubs:1,tagsubs:1,usersubs:1,tags:1},
 	{
 		
-		skip:0, // Starting Row
+		skip:skip, // Starting Row
 		limit:limit, // Ending Row
 		sort:{
 			lastLoginDate: -1 //Sort by Date Added DESC
@@ -777,12 +780,27 @@ Place.statics.searchOne = function (str,exact,callback) {
   return this.find(cond,{},{limit:1}, callback);
 }
 
-Place.statics.search = function(string,limit,location,maxd,callback){
-	var input = new RegExp(string,'gi');
-	if(typeof(location) != 'undefined' && typeof(maxd) != 'undefined' && maxd > 0)
+/* Search for places :
+* call /api/search/string for basic search and refine with following params
+* params : 
+	- count : limit
+	- sensitive : 1 for case sensitive search 	
+	- location : {lat:float, lng:float}
+	- maxd : maxDistance to location // default : 1
+* string : the string to search
+*
+*/
+Place.statics.search = function(string,count,from,sensitive,lat,lng,maxd,callback){
+	var limit = (typeof(count) != 'undefined' && count > 0) ? count : 100;		
+	var case_sensitive = (typeof(sensitive) != 'undefined' && sensitive > 0) ? 'g' : 'gi';	
+	var maxDistance = (typeof(maxd) != 'undefined' && maxd > 0) ? maxd : 1;	
+	var skip = (typeof(from) != 'undefined' && from > 0) ? from : 0;		
+	var input = new RegExp(string,case_sensitive);
+	
+	if(typeof(lat) != 'undefined' && lat > 0 && typeof(lng) != 'undefined' && lng > 0 && typeof(maxDistance) != 'undefined' && maxDistance > 0)
 		var cond = {
 			"title": {$regex:input},	
-			"location" : {  "$near" : location, $maxDistance : maxd },
+			"location" : {  "$near" : [parseFloat(lat),parseFloat(lng)], $maxDistance : parseFloat(maxDistance) },
 			"status":1,
 		};
 	else
@@ -794,7 +812,7 @@ Place.statics.search = function(string,limit,location,maxd,callback){
 	cond,
 	{},
 	{	
-		skip:0, // Starting Row
+		skip:skip, // Starting Row
 		limit:limit, // Ending Row
 		
 	},callback);

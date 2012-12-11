@@ -26,14 +26,106 @@ block content
 					h3#authentification Authentification
 					p.subheader Yakwala's API uses the OAuth 2.0 protocol for simple, but effective authentication and authorization.
 					h4 Do you need to authenticate?
-					p For the most part, Yakwala's API only requires the use of a client_id. A client_id simply associates your server, script, or program with a specific application. However, some requests require authentication - specifically requests made on behalf of a user. Authenticated requests require an access_token.  These tokens are unique to a user and should be stored securely. Access tokens may expire at any time in the future.
+					p For the most part, Yakwala's API only requires the use of a client_id. A client_id simply associates your server, script, or program with a specific application. However, some requests require authentication - specifically requests made on behalf of a user. 
+					p Authenticated requests require an access_token.  These tokens are unique to a user and should be stored securely. Access tokens may expire at any time in the future.
 					br
+					h4 Receiving an access_token
+					p In order to receive an access_token, you must do the following:
+						ol
+							li Direct the user to our authorization url.
+								ul
+									li If the user is not logged in, they will be asked to log in.
+									li The user will be asked if they’d like to give your application access to his/her Yakwala data.
+							li The server will redirect the user in one of two ways that you choose:
+								ul
+									li 
+										b Server-side flow (more secured): 
+										span Redirect the user to a URI of your choice. Take the provided code parameter and exchange it for an access_token by POSTing the code to our access_token url.
+									li 
+										b Implicit flow: 
+										span Instead of handling a code, we include the access_token as a fragment (#) in the URL. This method allows applications without any server component to receive an access_token with ease.
+
+					h4 Server-side (Explicit) Flow
+					p Using the server-side flow is quite easy. Simply follow these steps:
+					h5 
+						b Step One: 
+						span Direct your user to our authorization URL
+					p
+						pre #{JSON.parse(locals.conf).apiurl}/api/oauth/authorize?client_id=YOUR_CLIENT_ID&response_type=code&redirect_uri=YOUR_REDIRECT_URI
+						p At this point, we present the user with a login screen and then a confirmation screen where they approve your app’s access to his/her Yakwala data.
+
+					h5
+						b Step Two: 
+						span Receive the redirect from Yakwala
+					p	
+						Once a user successfully authenticates and authorizes your application, we will redirect the user to your redirect_uri with a code parameter that you’ll use in step three.
+						code http://YOUR_REDIRECT_URI?code=CODE
+					p
+						b Note that your redirect URI's host and path MUST match exactly (including trailing slashes) to your registered redirect_uri. You may also include additional query parameters in the supplied redirect_uri, if you need to vary your behavior dynamically.
+					
+					h5 
+						b Step Three: 
+						Request the access_token
+
+					p
+						In the previous step, you’ll have received a code which you’ll have to exchange in order to receive an access_token for the user. In order to make this exchange, you simply have to POST this code, along with some app identification parameters to our access_token endpoint. Here are the required parameters:
+					pre		
+						ul
+							li client_id: your client id
+							li client_secret: your client secret
+							li grant_type: authorization_code is currently the only supported value
+							li redirect_uri: the redirect_uri you used in the authorization request. Note: this has to be the same value as in the authorization request.
+							li code: the exact code you received during the authorization step.
+					
+					p For example, you could request an access_token like so:
+					
+					pre
+						div curl \-F 'client_id=CLIENT-ID' \
+						div -F 'client_secret=YOUR_CLIENT_SECRET' \
+						div -F 'grant_type=YOUR_AUTH_CODE' \
+						div -F 'redirect_uri=YOUR_REDIRECT_URI' \
+						div -F 'code=CODE' \http://#{JSON.parse(locals.conf).apidns}/api/oauth/access_token
+					
+					p	
+						If successful, this call will return a neatly packaged OAuth Token that you can use to make authenticated calls to the API. We also include the user who just authenticated for your convenience:
+					pre
+						div {
+						div &nbsp;&nbsp;"access_token": "xxx",
+						div &nbsp;&nbsp;"user": {
+						div &nbsp;&nbsp;&nbsp;&nbsp;"id": "xxx",
+						div &nbsp;&nbsp;&nbsp;&nbsp;"username": "xxx",
+						div &nbsp;&nbsp;&nbsp;&nbsp;"full_name": "xxx",
+						div &nbsp;&nbsp;&nbsp;&nbsp;"profile_picture": "xxx"
+						div &nbsp;&nbsp;}
+						div }
+					p Note that we do not include an expiry time. Our access_tokens have no explicit expiry, though your app should handle the case that either the user revokes access or we expire the token after some period of time. In this case, your response’s meta will contain an “error_type=OAuthAccessTokenError”. In other words: do do not assume your access_token is valid forever.
+		
+					h4 Client-Side (Implicit) Authentication
+					p If you’re building an app that does not have a server component (a purely javascript app, for instance), you’ll notice that it’s impossible to complete step three above to receive your access_token without also having to ship your client secret. You should never ship your client secret onto devices you don’t control. Then how do you get an access_token? Well the smart folks in charge of the OAuth 2.0 spec anticipated this problem and created the Implicit Authentication Flow.
+
+					h5
+						b Step One: 
+						span Direct your user to our authorization URL
+
+					pre #{JSON.parse(locals.conf).apiurl}/api/oauth/authorize?client_id=YOUR_CLIENT_ID&response_type=token&redirect_uri=YOUR_REDIRECT_URI
+					p
+						At this point, we present the user with a login screen and then a confirmation screen where they approve your app’s access to their Yakwala data. Note that unlike the explicit flow the response type here is “token”.
+
+					h5
+						b Step Two: 
+						span Receive the access_token via the URL fragment
+					p	
+						Once the user has authenticated and then authorized your application, we’ll redirect them to your redirect_uri with the access_token in the url fragment. It’ll look like so:
+
+					pre http://your-redirect-uri#access_token=ACCESS-TOKEN
+					p Simply grab the access_token off the URL fragment and you’re good to go. If the user chooses not to authorize your application, you’ll receive the same error response as in the explicit flow
+
 					h4 How to get a client id and secret ?
-					p For the moment, ask our team develpement by sending a request at this email : info at yakwala  dot fr
+					p For the moment, ask our developement team by sending a request at this email : info at yakwala  dot fr, explaining what you will do, your redirect url and we will provide you with a client id and secret.
 					hr
 					h3#endpoints Endpoints
 					p.subheader User endpoints
-					
+
 					
 					// USERS PROFILE
 					table.table.table-bordered  
@@ -136,20 +228,16 @@ block content
 							td(colspan=3)
 								b parameters:
 								ul
-									li access_token:string - the token access
-									li {user:{_id:string}} for GET
-									li {user:} for POST and PUT
-						tr
-							td(colspan=3)
-								b optional parameters:
-								ul			
+									li count:int - limit the number of results
+									li skip:int - start results number
+									li sensitive: 1/0 - perform a case sensitive if set to 1, default : 0 => not sensitive
 									li v=1 - the version of the api
 									li local='fr' - response language
 						tr
 							td(colspan=3)
 								b response:
 								ul
-									li {user : {_id:string, name:string, login:string}}
+									li {user : [_id:string, userdetails:string, name:string, login:string, thumb:string]}
 								
 					// USER SUBSCRIBTIONS TO USERS				
 					table.table.table-bordered
@@ -248,7 +336,37 @@ block content
 							td GET
 							td /api/geoinfos/
 							td Get infos in the box
-							
+					
+					br
+					br
+					// PLACE
+					h3 Place endpoints
+					hr
+					// PLACE SEARCH	
+					table.table.table-bordered
+						tr
+							th METHODS
+							th URL
+							th DESCRIPTION
+			
+						tr	
+							td GET
+							td /place/search/<code>string</code>
+							td Search for a place by name.
+						tr
+							td(colspan=3)
+								b parameters:
+								ul
+									li count:int - limit the number of results
+									li skip:int - start results number
+									li sensitive: 1/0 - perform a case sensitive if set to 1, default : 0 => not sensitive
+									li v=1 - the version of the api
+									li local='fr' - response language
+						tr
+							td(colspan=3)
+								b response:
+								ul
+									li {user : [_id:string, userdetails:string, name:string, login:string, thumb:string]}		
 					h3#libraires Librairies
 					p.subheader
 					

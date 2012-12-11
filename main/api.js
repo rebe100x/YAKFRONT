@@ -49,8 +49,8 @@ app.configure(function(){
 });
 
 app.configure('development', function(){
-	conf = config.confs.dev;
-	app.locals.conf = JSON.stringify(config.confs.dev);
+	conf = config.confs.devrenaud;
+	app.locals.conf = JSON.stringify(config.confs.devrenaud);
 	
 	app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
@@ -207,7 +207,7 @@ function requiresPosition(req,res,next){
 
 
 // Start server
-app.listen(conf.apiport,conf.apidns, function(){
+app.listen(conf.apiport, function(){
  console.log("Express server %s listening on port %d in %s mode", conf.apidns, conf.apiport, app.settings.env);
 });
 

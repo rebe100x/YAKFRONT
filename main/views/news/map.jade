@@ -170,7 +170,7 @@ block content
 						
 						/* our db is not ready for this ! => use google !
 						$.ajax({
-							url: "/api/searchplaces/"+placeName,				
+							url: "/api/search/place/"+placeName,				
 							success: function( data ) {
 								if(data.places.length > 0 && data.places[0] != "undefined"){
 									var latLng = new google.maps.LatLng(data.places[0].location.lat,data.places[0].location.lng);

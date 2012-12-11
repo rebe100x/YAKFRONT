@@ -179,13 +179,23 @@ function auth (schema, options) {
 		var tmp = now.getTime() + 1000*60*60*2;
 		var maxApiCodeCreationDate = new Date();
 		maxApiCodeCreationDate.setTime(tmp);
-		User.findOne({"apiData.apiClientId":clientid,"apiData.apiCode":code,"apiData.apiStatus":1},{}, function(err, user) {
+//		User.findOne({"apiData.apiClientId":clientid},{}, function(err, userFound) {
+    User.findOne({"apiData.apiClientId":clientid,"apiData.apiCode":code,"apiData.apiStatus":1},{}, function(err, userFound) {
+      var user = null;
+      if(userFound){
+        userFound.apiData.forEach(function(item){
+          
+          if(item.apiClientId == clientid && item.apiCode == code && item.apiStatus == 1)
+            user = userFound;
+        });
+      }
 			if(!(typeof(user) == 'undefined' || user === null || user === '')){
 				var crypto = require('crypto');
 				//var now = new Date();
 				var salt = Math.round(now.valueOf() * Math.random());
 				var token = crypto.createHash('sha1').update("yakwala@secure"+salt).digest("hex");
-				User.update({"_id":user._id,"apiData.apiClientId":clientid},{$set:{"apiData.apiToken":token,"apiData.apiTokenCreationDate":now}}, function(err,docs){
+
+				User.update({"_id":user._id,"apiData.apiClientId":clientid},{$set:{"apiData.$.apiToken":token,"apiData.$.apiTokenCreationDate":now}}, function(err,docs){
 					if(err)
 						throw err;
 					else{
@@ -208,7 +218,7 @@ function auth (schema, options) {
 				});
 			
 			}else{
-				var error = {"error":"access_denied","error_reason": "Login failed","error_description":"Wrong login or password"};
+				var error = {"error":"access_denied","error_reason": "Login failed","error_description":"Client is not allowed."};
 				next(error);
 				//res.redirect('http://'+redirect_uri+"?error="+JSON.parms(error));
 			}

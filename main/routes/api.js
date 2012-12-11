@@ -1087,9 +1087,8 @@ exports.put_place = function (req, res) {
 SEARCH : users, infos, cats, places
 ******************************/
 exports.user_search = function (req, res) {
-	var User = db.model('User');
-	var count = (typeof(req.query.count) != 'undefined' && req.query.count > 0) ? req.query.count : 100;		
-	User.search(req.params.string,count,function (err, docs){
+	var User = db.model('User');	
+	User.search(req.params.string,req.query.count,req.query.skip,req.query.sensitive,function (err, docs){
 		var docsConcat = new Array();
 		docs.forEach(function(o){
 			var tmp = new Object();
@@ -1109,8 +1108,8 @@ exports.user_search = function (req, res) {
 
 exports.place_search = function (req, res) {
 	var Place = db.model('Place');
-	var count = (typeof(req.query.count) != 'undefined' && req.query.count > 0) ? req.query.count : 100;		
-	Place.search(req.params.string,count,null,null,function (err, docs){
+	console.log(req.query.location);
+	Place.search(req.params.string,req.query.count,req.query.skip,req.query.sensitive,req.query.lat,req.query.lng,req.query.maxd,function (err, docs){
 		if(docs)
 			docs.map(function(item){return {_id:item._id,title:item.title,formatted_address:item.formatted_address};});
 		res.json({
@@ -1120,15 +1119,7 @@ exports.place_search = function (req, res) {
 };
 
 
-exports.searchplaces = function (req, res) {
-	var Place = db.model('Place');
-	
-	Place.searchOne(req.params.str,1,function (err, docs){
-	  res.json({
-		places: docs
-	  });
-	});
-};
+
 
 /*****************************
 LIST : users, infos, cats, places
@@ -1149,12 +1140,14 @@ exports.places = function (req, res) {
 /*****************************
 API OAUTH
 ******************************/
+/* check if the client id is authorised and redirect to a login form
+*
+*/
 exports.oauth_authorize = function(req,res){
 
 	var params = (req.query.client_id)?req.query:req.params;	
 	var JSON = {parms : function(a1){t=[];for(x in a1)t.push(x+"="+encodeURI(a1[x]));return t.join("&");}};
 	var Client = db.model('Client');
-	var User = db.model('User');
 	Client.findOne({_id:params.client_id,status:1},{},function (err, client){
 	  if(client){
 		res.render('api/login',{redirect_uri:params.redirect_uri,client_name:client.name,client_id:client._id,response_type:params.response_type});
@@ -1171,10 +1164,9 @@ exports.oauth_authorize = function(req,res){
 	
 }
 /*
-exports.oauth_login = function(req, res){
-	res.render('api/login',{redirect_uri:redirect_uri});
-};*/
-
+* Create a token for the api
+* tokens are stored in the apiData field for each client
+*/
 exports.oauth_session = function(req, res){
 
 	var JSON = {parms : function(a1){t=[];for(x in a1)t.push(x+"="+encodeURI(a1[x]));return t.join("&");}};
@@ -1194,7 +1186,6 @@ exports.oauth_session = function(req, res){
 		if(docs.link.substring(docs.link.length-1,docs.link.length) != '/')
 			link = link + '/';
 		
-		
 		if(req.body.redirect_uri == '' || req.body.redirect_uri == "undefined" || url_tmp[0]+"/" != link){
 			var error = {"error":"access_denied","error_reason": "Redirect uri does not match","error_description":"Redirection uri was not provided or is not matching the client redirect url"};			
 			res.json({error:error});
@@ -1211,12 +1202,12 @@ exports.oauth_session = function(req, res){
 						var code = crypto.createHash('sha1').update("yakwala@secure"+salt).digest("hex");
 						// delete the previous api token for this client
 						User.update({_id:user._id},{$pull:{apiData:{apiClientId:req.body.client_id}}}, function(err,docs){
-							var apiData = {
+							var apiData = [{
 											apiClientId:req.body.client_id,
 											apiCode:code,
 											apiCodeCreationDate:now,
 											apiStatus:1
-							};
+							}];
 							User.update({_id:user._id},{$pushAll:{"apiData":apiData}}, function(err,docs){
 								if(err)
 									throw err;
@@ -1227,7 +1218,7 @@ exports.oauth_session = function(req, res){
 										var redir = req.body.redirect_uri;
 									
 									if(req.body.response_type == 'token'){
-										var tokenObject = User.createApiToken(code,req.body.redirect_uri,conf,function(tokenObject){
+										var tokenObject = User.createApiToken(req.body.client_id,code,req.body.redirect_uri,conf,function(tokenObject){
 											if(tokenObject.access_token)
 												res.redirect('http://'+redir+"?access_token="+tokenObject.access_token+"&id="+tokenObject.user.id);
 											else
