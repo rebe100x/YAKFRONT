@@ -1153,9 +1153,10 @@ exports.oauth_authorize = function(req,res){
 	var params = (req.query.client_id)?req.query:req.params;	
 	var JSON = {parms : function(a1){t=[];for(x in a1)t.push(x+"="+encodeURI(a1[x]));return t.join("&");}};
 	var Client = db.model('Client');
-	Client.findOne({_id:params.client_id,status:1},{},function (err, docs){
-	  if(docs){
-		res.render('api/login',{redirect_uri:params.redirect_uri,client_name:docs.name,client_id:docs._id,response_type:params.response_type});
+	var User = db.model('User');
+	Client.findOne({_id:params.client_id,status:1},{},function (err, client){
+	  if(client){
+		res.render('api/login',{redirect_uri:params.redirect_uri,client_name:client.name,client_id:client._id,response_type:params.response_type});
 	  }else{
 		var error = {"error":"access_denied","error_reason": "Client Id does not match anything in database","error_description":"Client id is not active"};
 		if(params.redirect_uri == '' || params.redirect_uri == "undefined"){
@@ -1179,7 +1180,6 @@ exports.oauth_session = function(req, res){
 	var Client = db.model('Client');
 	Client.findOne({_id:req.body.client_id,status:1},{},function (err, docs){
 	if(docs){
-		//console.log(docs);
 		if(req.body.redirect_uri.substring(0,6) == 'http://')
 			var uri = req.body.redirect_uri.substring(7,req.body.redirect_uri.length);
 		else
@@ -1208,32 +1208,42 @@ exports.oauth_session = function(req, res){
 						var now = new Date();
 						var salt = Math.round(now.valueOf() * Math.random());
 						var code = crypto.createHash('sha1').update("yakwala@secure"+salt).digest("hex");
-						User.update({_id:user._id},{$set:{apiCode:code,apiCodeCreationDate:now}}, function(err,docs){
-							if(err)
-								throw err;
-							else{
-								if(req.body.redirect_uri.substring(0,6)=='http://')
-									var redir = req.body.redirect_uri.substring(7,req.body.redirect_uri.length);
-								else
-									var redir = req.body.redirect_uri;
-								
-								if(req.body.response_type == 'token'){
-									var tokenObject = User.createApiToken(code,req.body.redirect_uri,conf,function(tokenObject){
-										if(tokenObject.access_token)
-											res.redirect('http://'+redir+"?access_token="+tokenObject.access_token+"&id="+tokenObject.user.id);
-										else
-											res.redirect('http://'+redir+"?error="+JSON.parms(tokenObject));
-									});
-								}else if(req.body.response_type == 'code'){
-									res.redirect('http://'+redir+"?code="+code);
-								}else{
-									var error = {error:'response_type must be either code or token'};
-									res.redirect('http://'+redir+"?error="+JSON.parms(error));
-								}
+						// delete the previous api token for this client
+						User.update({_id:user._id},{$pull:{apiData:{apiClientId:req.body.client_id}}}, function(err,docs){
+							var apiData = {
+											apiClientId:req.body.client_id,
+											apiCode:code,
+											apiCodeCreationDate:now,
+											apiStatus:1
+							};
+							User.update({_id:user._id},{$pushAll:{"apiData":apiData}}, function(err,docs){
+								if(err)
+									throw err;
+								else{
+									if(req.body.redirect_uri.substring(0,6)=='http://')
+										var redir = req.body.redirect_uri.substring(7,req.body.redirect_uri.length);
+									else
+										var redir = req.body.redirect_uri;
 									
+									if(req.body.response_type == 'token'){
+										var tokenObject = User.createApiToken(code,req.body.redirect_uri,conf,function(tokenObject){
+											if(tokenObject.access_token)
+												res.redirect('http://'+redir+"?access_token="+tokenObject.access_token+"&id="+tokenObject.user.id);
+											else
+												res.redirect('http://'+redir+"?error="+JSON.parms(tokenObject));
+										});
+									}else if(req.body.response_type == 'code'){
+										res.redirect('http://'+redir+"?code="+code);
+									}else{
+										var error = {error:'response_type must be either code or token'};
+										res.redirect('http://'+redir+"?error="+JSON.parms(error));
+									}
+										
 
-							}
-						});
+								}
+							});
+						});					
+						
 						
 					}else{
 						var error = {"error":"access_denied","error_reason": "Login failed","error_description":"Wrong login or password"};
@@ -1284,7 +1294,7 @@ exports.oauth_access_token = function(req, res){
 					res.json({error:error});
 				}else{
 					
-					var tokenObject = User.createApiToken(params.code,params.redirect_uri,conf,function(tokenObject){
+					var tokenObject = User.createApiToken(params.client_id,params.code,params.redirect_uri,conf,function(tokenObject){
 						if(tokenObject.access_token)
 							res.json(tokenObject)
 						else

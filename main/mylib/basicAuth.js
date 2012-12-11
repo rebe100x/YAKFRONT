@@ -172,21 +172,20 @@ function auth (schema, options) {
 	
 	
 	
-	schema.static('createApiToken',function (code,redirect_uri,conf,next){
+	schema.static('createApiToken',function (clientid,code,redirect_uri,conf,next){
 		var User = this;
 		var results = new Object();
 		var now = new Date();
 		var tmp = now.getTime() + 1000*60*60*2;
 		var maxApiCodeCreationDate = new Date();
 		maxApiCodeCreationDate.setTime(tmp);
-		//User.findOne({apiCode:code,apiCodeCreationDate:{$le:maxApiCodeCreationDate}},{}, function(err, user) {
-		User.findOne({apiCode:code},{}, function(err, user) {
+		User.findOne({"apiData.apiClientId":clientid,"apiData.apiCode":code,"apiData.apiStatus":1},{}, function(err, user) {
 			if(!(typeof(user) == 'undefined' || user === null || user === '')){
 				var crypto = require('crypto');
 				//var now = new Date();
 				var salt = Math.round(now.valueOf() * Math.random());
 				var token = crypto.createHash('sha1').update("yakwala@secure"+salt).digest("hex");
-				User.update({_id:user._id},{$set:{apiToken:token,apiTokenCreationDate:now}}, function(err,docs){
+				User.update({"_id":user._id,"apiData.apiClientId":clientid},{$set:{"apiData.apiToken":token,"apiData.apiTokenCreationDate":now}}, function(err,docs){
 					if(err)
 						throw err;
 					else{

@@ -557,20 +557,23 @@ var User = new Schema({
 								state: String,
 								area: String,
 								country: String,
-								zip: String}
+								zip: String
 							}
+					}
 	, favplace : [Point]
 	, creationDate	: {type: Date, required: true, default: Date.now}		
 	, lastModifDate	: {type: Date, required: true, default: Date.now}		
 	, lastLoginDate	: {type: Date, required: true, default: Date.now}		
 	, status	: {type: Number,required: true, default: 2,index: true}	
-	, apiStatus	: {type: Number, required: true, default: 2,index: true}
-	, apiCode       : { type: String ,index: true}
-	, apiCodeCreationDate     :  {type: Date,index: true}		
-	, apiToken     :  {type: String , index: true}		
-	, apiTokenCreationDate     :  {type: Date,index: true}		
-  
-  
+	, apiData	: { type: {
+							apiClientId : {type: Schema.ObjectId,index: true}  
+							, apiStatus	: {type: Number, required: true, default: 2,index: true}
+							, apiCode       : { type: String ,index: true}
+							, apiCodeCreationDate     :  {type: Date,index: true}		
+							, apiToken     :  {type: String , index: true}		
+							, apiTokenCreationDate     :  {type: Date,index: true}	
+						}
+					}
 }, { collection: 'user' });
 
 
