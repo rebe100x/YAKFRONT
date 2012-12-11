@@ -40,7 +40,7 @@ exports.feeds = function (req, res) {
 	  res.json({
 		info: docs
 	  });
-	}, req.query["skip"], req.query["limit"], req.query["yaktype"], req.query["_id"], req.query["loadmore"], req.query["what"], req.query["where"], req.query["depuis"], req.query["cattype"]); 
+	}, req.query["skip"], req.query["limit"], req.query["yaktype"], req.query["_id"], req.query["what"], req.query["where"], req.query["dateInterval"], req.query["cattype"]); 
 };
 
 exports.afeed = function (req, res) {
@@ -51,6 +51,7 @@ exports.afeed = function (req, res) {
 	  });
 	}, req.query["id"]); 
 };
+
 
 exports.geoalerts = function (req, res) {
 	var Info = db.model('Info');

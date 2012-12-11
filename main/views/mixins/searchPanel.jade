@@ -1,172 +1,167 @@
 mixin searchPanel()
-	div#search
-			div#seacrhBox
-				input#locationInput(type='hidden', name='locationInput', value='')
-				input#SearchWhat(type="text", class="searchInput", placeholder="Quoi ?")
-				input#SearchWhere(type="text", data-provide="typeahead", class="searchInput2", placeholder="Où ?")
-				div#heatModule.row
-					input#daynumber(type='hidden', name='daynumber', value='')
-					input#daynumber2(type='hidden', name='daynumber', value='')
-					div#dayPrinter(class="dayPrinter") Depuis 3 jours	
-					div#heatSelector(class="upperHeight")
-			div.searchFilters
-				div(data-toggle="buttons-checkbox", class="searchTypes")
-					div(class="btn-group1")
-						span.btn(title="Actu", type=1) 
-							img(src="/images/markers/type1.png", class="smallImg")
-						span.btn(title="Discussion", type=4) 
-							img(src="/images/markers/type4.png", class="smallImg")
-						span.btn(title="Agenda", type=2) 
-							img(src="/images/markers/type2.png", class="smallImg")
-						span.btn(title="Infos Pratiques", type=3) 
-							img(src="/images/markers/type3.png", class="smallImg")
-						span.btn(title="Mes alertes", type=5)
-							img(src="/images/markers/type5.png", class="smallImg")
-				div(data-toggle="buttons-checkbox", class="searchGenres")
-					div(class="dropdown")
-					//
-						img(src="/images/categoriesicon.png", class="dropdown-toggle", data-toggle="dropdown", data-title="dfsdfds")
-					ul(class="dropdown-menu input-list", role="menu", aria-labelledby="dLabel")
-						li
-							label
-								|&nbsp;
-								input(type="checkbox")
-								|&nbsp;Sports
-						li
-							label
-								|&nbsp;
-								input(type="checkbox")
-								|&nbsp;Theatres
-						li
-							label
-								|&nbsp;
-								input(type="checkbox")
-								|&nbsp;Cinema
+	div#search.container
+		div.row
+			div.span6
+				div.row.input-block-level
+					div.span5
+						div(data-toggle="buttons-checkbox", class="searchTypes")
+							div(class="btn-group1")
+								span.btn(title="Actu", type=1) 
+									img(src="/images/markers/type1.png", class="smallImg")
+								span.btn(title="Discussion", type=4) 
+									img(src="/images/markers/type4.png", class="smallImg")
+								span.btn(title="Agenda", type=2) 
+									img(src="/images/markers/type2.png", class="smallImg")
+								span.btn(title="Infos Pratiques", type=3) 
+									img(src="/images/markers/type3.png", class="smallImg")
+								span.btn(title="Mes alertes", type=5)
+									img(src="/images/markers/type5.png", class="smallImg")
 
-			div.searchPlaces
+				div.row.input-block-level
+					div.span3
+						div#heatModule
+							input#daynumber(type='hidden', name='daynumber', value='')
+							input#daynumber2(type='hidden', name='daynumber', value='')
+							div#heatSelector(class="upperHeight")
+					div.span2
+						div#dayPrinter(class="dayPrinter") Depuis 3 jours	
 
-			button(type="button", class="btn searchButton") Search
+				div.row.input-block-level
+					div.span5
+						input#locationInput(type='hidden', name='locationInput', value='')
+						input#SearchWhat(type="text", class="searchInput", placeholder="Quoi ?")
+						input#SearchWhere(type="text", data-provide="typeahead", class="searchInput2", placeholder="Où ?")
 
-			script
-				function deleltePlace(el){
-					$(el).parent().remove();
-				}
-				/*slider time selector*/
-				$( "#heatSelector" ).slider({
-					range: true,
-					values: [90, 90],
-					min: 1,
-					max: 100,
-					slide: function( event, ui ) {
+				
 
-						var minx = ui.values[0];
+			div.span3
+				div.searchPlaces
+			
+		
 
-						var maxx = ui.values[1];
+		button(type="button", class="btn searchButton") Search
 
-						var miny = Math.ceil(-7.222723628*Math.pow(10,-7)*Math.pow(minx,5) + 2.123355095*Math.pow(10,-4)*Math.pow(minx,4) - 2.178300623*Math.pow(10,-2)*Math.pow(minx,3) + 0.906040198*Math.pow(minx,2) - 16.47223075*minx + 360.0000001);
+		script
+			function deleltePlace(el){
+				$(el).parent().remove();
+			}
+			/*slider time selector*/
+			$( "#heatSelector" ).slider({
+				range: true,
+				values: [90, 90],
+				min: 1,
+				max: 100,
+				slide: function( event, ui ) {
 
-						var maxy = Math.ceil(-7.222723628*Math.pow(10,-7)*Math.pow(maxx,5) + 2.123355095*Math.pow(10,-4)*Math.pow(maxx,4) - 2.178300623*Math.pow(10,-2)*Math.pow(maxx,3) + 0.906040198*Math.pow(maxx,2) - 16.47223075*maxx + 360.0000001);
+					var minx = ui.values[0];
 
-						var yText = "";
-						var yText2 = "";
-						if(miny == maxy)
-						{
-							if(miny <= 1)
-								yText = "depuis "+miny+" jour";
-							else
-								yText = "depuis "+miny+" jours";
+					var maxx = ui.values[1];
 
-							$( "#dayPrinter" ).html(yText);
-						}
+					var miny = Math.ceil(-7.222723628*Math.pow(10,-7)*Math.pow(minx,5) + 2.123355095*Math.pow(10,-4)*Math.pow(minx,4) - 2.178300623*Math.pow(10,-2)*Math.pow(minx,3) + 0.906040198*Math.pow(minx,2) - 16.47223075*minx + 360.0000001);
 
+					var maxy = Math.ceil(-7.222723628*Math.pow(10,-7)*Math.pow(maxx,5) + 2.123355095*Math.pow(10,-4)*Math.pow(maxx,4) - 2.178300623*Math.pow(10,-2)*Math.pow(maxx,3) + 0.906040198*Math.pow(maxx,2) - 16.47223075*maxx + 360.0000001);
+
+					var yText = "";
+					var yText2 = "";
+					if(miny == maxy)
+					{
+						if(miny <= 1)
+							yText = "depuis "+miny+" jour";
 						else
-						{
+							yText = "depuis "+miny+" jours";
 
-							var txt1 = ""; var txt2 = "";
-
-							if(miny <= 1)
-								txt1 = "entre "+maxy+" jour";
-							else
-								txt1 = "entre "+maxy+" jours";
-
-							if(maxy <= 1)
-								txt2 = "et "+miny+" jour";
-							else
-								txt2 = "et "+miny+" jours";
-
-							$( "#dayPrinter" ).html(txt1 + " " + txt2);
-						}
-						
-
-						
-						//heat = y;
-						$("#daynumber").val(miny);
-						$("#daynumber2").val(maxy);
-						
-					},
-					change:function(event, ui){
-						getAndPrintInfo();
-						
+						$( "#dayPrinter" ).html(yText);
 					}
-				});
 
-				$('#SearchWhere').typeahead({
-					minLength : 3,							
-					source: function (typeahead, query) {
-						if(query.length >= 3){
-							encodeURIComponent(query);
-							$("#searchPlaceStr").addClass('searching');
-							var addressQuery = {"address": query ,"region":"fr","language":"fr"};
-							var geocoder = new google.maps.Geocoder();
-							geocoder.geocode( addressQuery, function(results, status) {						
-							if (status == google.maps.GeocoderStatus.OK) {
-								typeahead.process(results);
-								$("#searchPlaceStr").removeClass('searching');
-							} 
-							});
-						}
-					},
-					property: "formatted_address",
-					onselect: function(obj) { 
-						$("#searchPlaceStr").removeClass('searching');
-						var placeGmap = getPlaceFromGmapResult(obj);
-						$('#locationInput').val(JSON.stringify(placeGmap.location));
+					else
+					{
 
-						var aplace = $("<div />");
-						aplace.attr("class", "aplace");
-						aplace.html('<span class="theplace">- ' + placeGmap.title +'</span>' + '<span class="thedelete" onclick="return deleltePlace(this)">X</span>');
+						var txt1 = ""; var txt2 = "";
 
-						var placelocation = $("<input />");
-						placelocation.attr("type", "hidden");
-						placelocation.attr("class", "placelocation");
-						placelocation.val(JSON.stringify(placeGmap.location));
+						if(miny <= 1)
+							txt1 = "entre "+maxy+" jour";
+						else
+							txt1 = "entre "+maxy+" jours";
 
-						aplace.append(placelocation);
+						if(maxy <= 1)
+							txt2 = "et "+miny+" jour";
+						else
+							txt2 = "et "+miny+" jours";
 
-						var exists = 0;
+						$( "#dayPrinter" ).html(txt1 + " " + txt2);
+					}
+					
 
-						$(".placelocation").each(function(){
+					
+					//heat = y;
+					$("#daynumber").val(miny);
+					$("#daynumber2").val(maxy);
+					
+				},
+				change:function(event, ui){
+					getAndPrintInfo();
+					
+				}
+			});
 
-							if($(this).val() == JSON.stringify(placeGmap.location))
-							{
-								exists = 1;
-							}
+			$('#SearchWhere').typeahead({
+				minLength : 3,							
+				source: function (typeahead, query) {
+					if(query.length >= 3){
+						encodeURIComponent(query);
+						$("#searchPlaceStr").addClass('searching');
+						var addressQuery = {"address": query ,"region":"fr","language":"fr"};
+						var geocoder = new google.maps.Geocoder();
+						geocoder.geocode( addressQuery, function(results, status) {						
+						if (status == google.maps.GeocoderStatus.OK) {
+							typeahead.process(results);
+							$("#searchPlaceStr").removeClass('searching');
+						} 
 						});
-						
-						if(exists == 0)
-						{
-							$(".searchPlaces").append(aplace);
-						}
-						
-						$("#SearchWhere").val("");
 					}
-				});
+				},
+				property: "formatted_address",
+				onselect: function(obj) { 
+					$("#searchPlaceStr").removeClass('searching');
+					var placeGmap = getPlaceFromGmapResult(obj);
+					$('#locationInput').val(JSON.stringify(placeGmap.location));
 
-				$('#SearchWhere').keyup(function(event){
-					if($(this).val()==''){
-						$('#locationInput').val('');
+					var aplace = $("<div />");
+					aplace.attr("class", "aplace");
+					aplace.html('<span class="theplace">- ' + placeGmap.title +'</span>' + '<span class="thedelete" onclick="return deleltePlace(this)">X</span>');
+
+					var placelocation = $("<input />");
+					placelocation.attr("type", "hidden");
+					placelocation.attr("class", "placelocation");
+					placelocation.val(JSON.stringify(placeGmap.location));
+
+					aplace.append(placelocation);
+
+					var exists = 0;
+
+					$(".placelocation").each(function(){
+
+						if($(this).val() == JSON.stringify(placeGmap.location))
+						{
+							exists = 1;
+						}
+					});
+					
+					if(exists == 0)
+					{
+						$(".searchPlaces").append(aplace);
 					}
-					if (event.which == 13) {
-						$('#searchButton').trigger('click');
-					}
-				});
+					
+					$("#SearchWhere").val("");
+				}
+			});
+
+			$('#SearchWhere').keyup(function(event){
+				if($(this).val()==''){
+					$('#locationInput').val('');
+				}
+				if (event.which == 13) {
+					$('#searchButton').trigger('click');
+				}
+			});
+

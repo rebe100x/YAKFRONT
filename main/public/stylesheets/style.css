@@ -24,27 +24,24 @@ a {
 
 /* THE FEED
 ---------------------------------------------------*/
-#mainFeedWrapper {width: 100%; border: 1px solid #292929;}
-#search { float: left; background: #E8E8E8; width: 100%; border-top: 5px solid #292929; padding-top: 0px;}  
-#search .searchInput { float: left; margin: 12px; position: relative; top: 5px; background: url("../images/libLoupe.png") no-repeat #ffffff; text-indent: 50px; border-right: 0px; height: 43px; font-size: 24px}
-#search .searchInput2 { float: left; margin: 12px; position: relative; top: 5px; background: url("../images/pin_marker.png") no-repeat #ffffff; text-indent: 50px; left: -25px; border-left: 0px; height: 43px; font-size: 24px;}
-#search .searchTypes { float: left; margin: 12px; position: relative; top: 4px; clear: both; left: -48px;}
-#search .searchGenres { float: right; margin: 12px; position: relative; top: 6px; left: -68px;}
-#search .searchGenres .iconGendre { width: 35px; height: 32px; background: url("../images/tinfoicon.png") no-repeat;}
-#search .searchGenres .dropdown { float: left;}
-#search .searchGenres .dropdown-toggle { cursor: pointer; padding-left: 12px;}
-/*#search .searchGenres button { background-color: #FFFFFF; background-image: url("../images/styles.png"); background-repeat: no-repeat; width: 35px; height:  35px;}
-#search .searchGenres button#video { background-position: -287px -722px; } */
-#search .searchFilters { float: left; margin: 12px; position: relative; top: -10px;}
-#search .searchFilters .btn { width:  auto;}
+#mainFeedWrapper {border: 1px solid #292929;}
+#search { padding-top: 8px; padding-left: 8px; background: #dedede}  
+#search .searchInput { }
+#search .searchInput2 { }
+#search .searchTypes { }
+
+
+#search .searchFilters { float: left; margin: 12px; position: relative; top: -10px; left: 25px;}
+#search .searchFilters .btn { width:  10px; height: 20px;}
 #search .searchFilters .filterLabel { float: left;}
 
-#search .searchPlaces {  background: white; float: left; left: -79px; position: relative; top: 19px; width: 219px; border: 1px solid #cecece;}
+#search .searchPlaces { }
 #search .searchPlaces .aplace .theplace { margin-left: 12px;} 
 #search .searchPlaces .aplace .thedelete { color: red; cursor: pointer; float: right; margin-right: 12px;} 
 
-.btn-group1, .btn-group2 { float: right;}
-#search .searchButton { float: left; position: relative; top: 6px; float: right; right: 12px; margin: 12px; width: 120px; color: #ffffff; font-weight: bolder; height: 51px; font-size: 18px; background: #D71921;}
+.btn-group1, .btn-group2 { text-align: center;}
+.btn-group1 img { width: 13px;}
+#search .searchButton { float: left; position: relative; top: 6px; float: right; right: 12px; margin: 12px; }
 #feedContent{ clear: both; padding-top: 12px;}
 #feedContent .item{margin:5px;}
 #feedContent .title{font-size:0.85em;font-weight:bold;}
@@ -63,13 +60,13 @@ a {
 #feedContent .myitem  .content .more { float: right;}
 #feedContent .myitem .title .yakImg { float: left; padding-right: 10px; }
 
-#search #heatModule { width:  433px; position: relative;; left: 45px; bottom: 10px; height: 15px;}
-#search #heatModule .upperHeight { height: 5px; }
-#search #heatModule .dayPrinter { color: #D71921; top: 11px; left: 449px; position: relative; font-weight: bold; font-size: 12px;}
+#search #heatModule { text-align: center;}
+#search #heatModule .upperHeight { height: 5px; margin-top: 9px;}
+.dayPrinter { margin-top: 5px; }
 .paging { width: 100%; text-align: center; background: #F4F4F4; padding-bottom: 10px; padding-top: 10px;}
 .sets {width: 100%; text-align: center; background: #292929; padding-bottom: 10px; padding-top: 10px; color: white; visibility: hidden;}
 
-#seacrhBox { float: left; }
+#searchBox { float: left; }
 #searchBox .loupe { float: left;}
 
 #newsLoader { text-align: right; float: right; background: #D71921; color: white; font-weight: bold; cursor: pointer; visibility: hidden;}
