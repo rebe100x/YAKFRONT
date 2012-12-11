@@ -47,8 +47,8 @@ mixin searchPanel()
 			}
 			/*slider time selector*/
 			$( "#heatSelector" ).slider({
-				range: true,
-				values: [90, 90],
+				range: false,
+				values: [90],
 				min: 1,
 				max: 100,
 				slide: function( event, ui ) {
@@ -84,18 +84,15 @@ mixin searchPanel()
 							txt1 = "entre "+maxy+" jours";
 
 						if(maxy <= 1)
-							txt2 = "et "+miny+" jour";
+							txt2 = "Depuis "+miny+" jour";
 						else
-							txt2 = "et "+miny+" jours";
+							txt2 = "Depuis "+miny+" jours";
 
-						$( "#dayPrinter" ).html(txt1 + " " + txt2);
+						$( "#dayPrinter" ).html(txt2);
 					}
 					
-
-					
-					//heat = y;
 					$("#daynumber").val(miny);
-					$("#daynumber2").val(maxy);
+					$("#daynumber2").val(miny);
 					
 				},
 				change:function(event, ui){

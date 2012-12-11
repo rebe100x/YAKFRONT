@@ -1,10 +1,32 @@
+Date.prototype.toLongFrenchFormat = function ()
+{
+	var months = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
+	var date = this.getDate();
+	if (date < 10)
+	{
+		date = "0" + date;	
+	}
+	var output = date + " " + months[this.getMonth()] + " " + this.getFullYear();
+	return output;
+}
+
 
 		
 		var limit = conf.searchParams.limit;
+		var yakImages = new Array ( 
+				"/images/yakfav.png", 
+				"/images/markers/type1.png", 
+				"/images/markers/type2.png", 
+				"/images/markers/type3.png", 
+				"/images/markers/type4.png", 
+				"/images/markers/type5.png" 
+			);
 		var subSize = conf.searchParams.subSize;
 		var currentPage = 1;
 
 		$(document).ready(function() {
+
+			
 
 			//setInterval("setRefreshNews()", 30000);
 
@@ -131,7 +153,7 @@
 
 					title = $("<div />");
 					title.attr("class", "title");
-					title.html("<img class='yakImg' src='/images/yakfav.png' />");
+					title.html("<img class='yakImg' src='" + yakImages[val.yakType] + "' />");
 					title.append(more);
 					
 					postedby = $("<div />");
@@ -142,14 +164,15 @@
 
 					hot.append("<div class='hotLevel' style='width: " + val.heat + "%'></div>");
 					
-					date = new Date(val.pubDate).toLocaleDateString();
+					date = new Date(val.pubDate).toLongFrenchFormat();
 					if(val.origin != null)
-						postedby.html("Posted by " + val.origin + " at " + date);
+						postedby.html("Posté par " + val.origin + " le " + date);
 					else
-						postedby.html("Posted by ananomys at " + date);
+						postedby.html("Posté by ananomys le " + date);
 					
+
 					title.append(postedby);
-					title.append(hot);
+					//title.append(hot);
 					
 					
 					img = $("<img />");
