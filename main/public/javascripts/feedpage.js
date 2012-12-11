@@ -137,7 +137,7 @@ Date.prototype.toLongFrenchFormat = function ()
 				if (!next) {
 					$("#feedContent").html("");
 				};
-				var item, title, content, address, more, postedby, date, type, cat, img, outlink, hot;
+				var item, title, content, address, more, postedby, date, type, cat, img, outlink, hot, ago;
 				
 				$.each(data.info, function(key,val) {
 
@@ -151,10 +151,14 @@ Date.prototype.toLongFrenchFormat = function ()
 					more.attr("data-toggle", "data-toggle");
 					more.html(val.title);
 
+
+
 					title = $("<div />");
 					title.attr("class", "title");
 					title.html("<img class='yakImg' src='" + yakImages[val.yakType] + "' />");
 					title.append(more);
+
+
 					
 					postedby = $("<div />");
 					postedby.attr("class", "postedby");
@@ -164,6 +168,13 @@ Date.prototype.toLongFrenchFormat = function ()
 
 					hot.append("<div class='hotLevel' style='width: " + val.heat + "%'></div>");
 					
+					ago = $("<abbr />");
+					ago.attr("class", "timeago");
+					ago.css("float", "right");
+					ago.attr("title", val.pubDate);
+
+					title.append(ago);
+
 					date = new Date(val.pubDate).toLongFrenchFormat();
 					if(val.origin != null)
 						postedby.html("Posté par " + val.origin + " le " + date);
@@ -225,6 +236,7 @@ Date.prototype.toLongFrenchFormat = function ()
 				});
 				
 				setClickableArea();
+				$("abbr.timeago").timeago();
 			});
 		}
 
