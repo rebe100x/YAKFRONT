@@ -815,6 +815,11 @@ exports.put_user_feed = function (req, res) {
 PLACES : GET, POST , DELETE and UPDATE PLACE
 ******************************/
 
+/* NOTE :
+* This function is built for the external API and retrieves places with ACCESS = 1
+* For security reasons, it should not be modified to allow an extra param with a different access right
+*
+*/
 exports.get_place = function (req, res) {
 	var Place = db.model('Place');
 	if(typeof(req.query.place) != 'undefined'){

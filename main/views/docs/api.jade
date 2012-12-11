@@ -366,7 +366,58 @@ block content
 							td(colspan=3)
 								b response:
 								ul
-									li {user : [_id:string, userdetails:string, name:string, login:string, thumb:string]}		
+									li 
+										div { "places": 
+										div &nbsp;&nbsp;[ { 
+										div &nbsp;&nbsp;&nbsp;&nbsp;"_id": "xxx", 
+										div &nbsp;&nbsp;&nbsp;&nbsp;"title": "xxx",
+										div &nbsp;&nbsp;&nbsp;&nbsp;"content": "xxx", 
+										div &nbsp;&nbsp;&nbsp;&nbsp;"thumb": "xxx",
+										div &nbsp;&nbsp;&nbsp;&nbsp;"outGoingLink": "xxx",
+										div &nbsp;&nbsp;&nbsp;&nbsp;"yakCat": [ "504d89f4fa9a958808000001" ],
+										div &nbsp;&nbsp;&nbsp;&nbsp;"creationDate": "2012-12-08T09:36:39.000Z",
+										div &nbsp;&nbsp;&nbsp;&nbsp;"lastModifDate": "2012-12-08T09:36:39.000Z",
+										div &nbsp;&nbsp;&nbsp;&nbsp;"location": { "lng": 2.4031025, "lat": 48.8596632 },
+										div &nbsp;&nbsp;&nbsp;&nbsp;"address": { 
+										div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"zip": "75020", 
+										div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"country": "France", 
+										div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"area": "Ile-de-France", 
+										div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"state": "Paris", 
+										div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"city": "Paris", 
+										div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"arr": "20th arrondissement of Paris", 
+										div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"street": "Rue de Bagnolet", 
+										div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"street_number": "" 
+										div &nbsp;&nbsp;&nbsp;&nbsp;}, 
+										div &nbsp;&nbsp;"formatted_address": "Rue de Bagnolet, 75020 Paris, France" 
+										div &nbsp;&nbsp;} ] }" 
+
+					// PLACE MANAGEMENT
+					table.table.table-bordered  
+						tr
+							th METHODS
+							th URL
+							th DESCRIPTION
+						tr
+							td GET/POST/PUT/DELETE
+							td /users/<code>user-id</code>
+							td Manage places
+						tr
+							td(colspan=3)
+								b parameters:
+								ul
+									li GET : 
+									li GET : 
+										ul 
+											li access_token:string - the token access
+											li GET{place:[{_id:string},{_id:string}]}			
+											li v=1 - the version of the api
+											li local='fr' - response language
+						tr
+							td(colspan=3)
+								b response:
+								ul
+									li {user : {_id:string, name:string, login:string}}
+
 					h3#libraires Librairies
 					p.subheader
 					

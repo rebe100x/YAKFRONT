@@ -802,15 +802,28 @@ Place.statics.search = function(string,count,from,sensitive,lat,lng,maxd,callbac
 			"title": {$regex:input},	
 			"location" : {  "$near" : [parseFloat(lat),parseFloat(lng)], $maxDistance : parseFloat(maxDistance) },
 			"status":1,
+			"access":1
 		};
 	else
 		var cond = {
 			"title": {$regex:input},	
 			"status":1,
+			"access":1
 		};
 	return this.find(
 	cond,
-	{},
+	{
+		_id: 1, 
+		title: 1,
+		content: 1, 
+		thumb: 1,
+		outGoingLink: 1,
+		yakCat: 1,
+		creationDate: 1,
+		lastModifDate: 1,
+		location: 1,
+		address: 1 
+	},
 	{	
 		skip:skip, // Starting Row
 		limit:limit, // Ending Row
