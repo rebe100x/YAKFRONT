@@ -48,8 +48,8 @@ app.configure(function(){
 });
 
 app.configure('development', function(){
-	conf = config.confs.devdany;
-	app.locals.conf = JSON.stringify(config.confs.devdany);
+	conf = config.confs.devrenaud;
+	app.locals.conf = JSON.stringify(config.confs.devrenaud);
 	
 	app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
@@ -169,10 +169,8 @@ function requiresPosition(req,res,next){
 	
 }
 
-//exports.app = app;
-console.log(conf.frontdns);
 // Start server
-app.listen(conf.frontport,conf.frontdns, function(){
+app.listen(conf.frontport, function(){
  console.log("Express server %s listening on port %d in %s mode", conf.frontdns, conf.frontport, app.settings.env);
 });
 

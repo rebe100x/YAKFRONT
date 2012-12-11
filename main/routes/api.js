@@ -815,6 +815,11 @@ exports.put_user_feed = function (req, res) {
 PLACES : GET, POST , DELETE and UPDATE PLACE
 ******************************/
 
+/* NOTE :
+* This function is built for the external API and retrieves places with ACCESS = 1
+* For security reasons, it should not be modified to allow an extra param with a different access right
+*
+*/
 exports.get_place = function (req, res) {
 	var Place = db.model('Place');
 	if(typeof(req.query.place) != 'undefined'){
@@ -1087,9 +1092,8 @@ exports.put_place = function (req, res) {
 SEARCH : users, infos, cats, places
 ******************************/
 exports.user_search = function (req, res) {
-	var User = db.model('User');
-	var count = (typeof(req.query.count) != 'undefined' && req.query.count > 0) ? req.query.count : 100;		
-	User.search(req.params.string,count,function (err, docs){
+	var User = db.model('User');	
+	User.search(req.params.string,req.query.count,req.query.skip,req.query.sensitive,function (err, docs){
 		var docsConcat = new Array();
 		docs.forEach(function(o){
 			var tmp = new Object();
@@ -1109,8 +1113,8 @@ exports.user_search = function (req, res) {
 
 exports.place_search = function (req, res) {
 	var Place = db.model('Place');
-	var count = (typeof(req.query.count) != 'undefined' && req.query.count > 0) ? req.query.count : 100;		
-	Place.search(req.params.string,count,null,null,function (err, docs){
+	console.log(req.query.location);
+	Place.search(req.params.string,req.query.count,req.query.skip,req.query.sensitive,req.query.lat,req.query.lng,req.query.maxd,function (err, docs){
 		if(docs)
 			docs.map(function(item){return {_id:item._id,title:item.title,formatted_address:item.formatted_address};});
 		res.json({
@@ -1120,15 +1124,7 @@ exports.place_search = function (req, res) {
 };
 
 
-exports.searchplaces = function (req, res) {
-	var Place = db.model('Place');
-	
-	Place.searchOne(req.params.str,1,function (err, docs){
-	  res.json({
-		places: docs
-	  });
-	});
-};
+
 
 /*****************************
 LIST : users, infos, cats, places
@@ -1149,14 +1145,17 @@ exports.places = function (req, res) {
 /*****************************
 API OAUTH
 ******************************/
+/* check if the client id is authorised and redirect to a login form
+*
+*/
 exports.oauth_authorize = function(req,res){
 
 	var params = (req.query.client_id)?req.query:req.params;	
 	var JSON = {parms : function(a1){t=[];for(x in a1)t.push(x+"="+encodeURI(a1[x]));return t.join("&");}};
 	var Client = db.model('Client');
-	Client.findOne({_id:params.client_id,status:1},{},function (err, docs){
-	  if(docs){
-		res.render('api/login',{redirect_uri:params.redirect_uri,client_name:docs.name,client_id:docs._id,response_type:params.response_type});
+	Client.findOne({_id:params.client_id,status:1},{},function (err, client){
+	  if(client){
+		res.render('api/login',{redirect_uri:params.redirect_uri,client_name:client.name,client_id:client._id,response_type:params.response_type});
 	  }else{
 		var error = {"error":"access_denied","error_reason": "Client Id does not match anything in database","error_description":"Client id is not active"};
 		if(params.redirect_uri == '' || params.redirect_uri == "undefined"){
@@ -1170,17 +1169,15 @@ exports.oauth_authorize = function(req,res){
 	
 }
 /*
-exports.oauth_login = function(req, res){
-	res.render('api/login',{redirect_uri:redirect_uri});
-};*/
-
+* Create a token for the api
+* tokens are stored in the apiData field for each client
+*/
 exports.oauth_session = function(req, res){
 
 	var JSON = {parms : function(a1){t=[];for(x in a1)t.push(x+"="+encodeURI(a1[x]));return t.join("&");}};
 	var Client = db.model('Client');
 	Client.findOne({_id:req.body.client_id,status:1},{},function (err, docs){
 	if(docs){
-		//console.log(docs);
 		if(req.body.redirect_uri.substring(0,6) == 'http://')
 			var uri = req.body.redirect_uri.substring(7,req.body.redirect_uri.length);
 		else
@@ -1193,7 +1190,6 @@ exports.oauth_session = function(req, res){
 			var link = docs.link;
 		if(docs.link.substring(docs.link.length-1,docs.link.length) != '/')
 			link = link + '/';
-		
 		
 		if(req.body.redirect_uri == '' || req.body.redirect_uri == "undefined" || url_tmp[0]+"/" != link){
 			var error = {"error":"access_denied","error_reason": "Redirect uri does not match","error_description":"Redirection uri was not provided or is not matching the client redirect url"};			
@@ -1209,32 +1205,42 @@ exports.oauth_session = function(req, res){
 						var now = new Date();
 						var salt = Math.round(now.valueOf() * Math.random());
 						var code = crypto.createHash('sha1').update("yakwala@secure"+salt).digest("hex");
-						User.update({_id:user._id},{$set:{apiCode:code,apiCodeCreationDate:now}}, function(err,docs){
-							if(err)
-								throw err;
-							else{
-								if(req.body.redirect_uri.substring(0,6)=='http://')
-									var redir = req.body.redirect_uri.substring(7,req.body.redirect_uri.length);
-								else
-									var redir = req.body.redirect_uri;
-								
-								if(req.body.response_type == 'token'){
-									var tokenObject = User.createApiToken(code,req.body.redirect_uri,conf,function(tokenObject){
-										if(tokenObject.access_token)
-											res.redirect('http://'+redir+"?access_token="+tokenObject.access_token+"&id="+tokenObject.user.id);
-										else
-											res.redirect('http://'+redir+"?error="+JSON.parms(tokenObject));
-									});
-								}else if(req.body.response_type == 'code'){
-									res.redirect('http://'+redir+"?code="+code);
-								}else{
-									var error = {error:'response_type must be either code or token'};
-									res.redirect('http://'+redir+"?error="+JSON.parms(error));
-								}
+						// delete the previous api token for this client
+						User.update({_id:user._id},{$pull:{apiData:{apiClientId:req.body.client_id}}}, function(err,docs){
+							var apiData = [{
+											apiClientId:req.body.client_id,
+											apiCode:code,
+											apiCodeCreationDate:now,
+											apiStatus:1
+							}];
+							User.update({_id:user._id},{$pushAll:{"apiData":apiData}}, function(err,docs){
+								if(err)
+									throw err;
+								else{
+									if(req.body.redirect_uri.substring(0,6)=='http://')
+										var redir = req.body.redirect_uri.substring(7,req.body.redirect_uri.length);
+									else
+										var redir = req.body.redirect_uri;
 									
+									if(req.body.response_type == 'token'){
+										var tokenObject = User.createApiToken(req.body.client_id,code,req.body.redirect_uri,conf,function(tokenObject){
+											if(tokenObject.access_token)
+												res.redirect('http://'+redir+"?access_token="+tokenObject.access_token+"&id="+tokenObject.user.id);
+											else
+												res.redirect('http://'+redir+"?error="+JSON.parms(tokenObject));
+										});
+									}else if(req.body.response_type == 'code'){
+										res.redirect('http://'+redir+"?code="+code);
+									}else{
+										var error = {error:'response_type must be either code or token'};
+										res.redirect('http://'+redir+"?error="+JSON.parms(error));
+									}
+										
 
-							}
-						});
+								}
+							});
+						});					
+						
 						
 					}else{
 						var error = {"error":"access_denied","error_reason": "Login failed","error_description":"Wrong login or password"};
@@ -1285,7 +1291,7 @@ exports.oauth_access_token = function(req, res){
 					res.json({error:error});
 				}else{
 					
-					var tokenObject = User.createApiToken(params.code,params.redirect_uri,conf,function(tokenObject){
+					var tokenObject = User.createApiToken(params.client_id,params.code,params.redirect_uri,conf,function(tokenObject){
 						if(tokenObject.access_token)
 							res.json(tokenObject)
 						else

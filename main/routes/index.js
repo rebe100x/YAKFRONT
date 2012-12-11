@@ -61,9 +61,7 @@ exports.requiresLogin = function(req,res,next){
 				res.locals.user.token ='xxx';
 				res.locals.user.salt = 'xxx';
 				res.locals.user.hash='xxx';
-				res.locals.user.apiToken='xxx';
-				res.locals.user.apiCode='xxx';
-				
+				res.locals.user.apiData=[];
 				console.log('LOGGED IN');
 				next();
 			}else{
@@ -582,8 +580,7 @@ exports.settings_alerts = function(req, res){
 		usersubs.hash="xxx";
 		usersubs.salt="xxx";
 		usersubs.token="xxx";
-		usersubs.apiToken="xxx";
-		usersubs.apiCode="xxx";
+		usersubs.apiData=[];
 		res.render('settings/alerts',{usersubs:usersubs,tagsubs:res.locals.user.tagsubs});
 		
 	}else{
