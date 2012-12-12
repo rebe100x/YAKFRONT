@@ -40,6 +40,7 @@ app.configure(function(){
 	res.locals.redir = req.query.redir;
 	res.locals.message = req.session.message;
 	res.locals.type = req.session.type;
+	res.locals.mainConf = config.confs.main;
     next();
   });
   
