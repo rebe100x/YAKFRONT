@@ -86,8 +86,7 @@ block content
 						div -F 'redirect_uri=YOUR_REDIRECT_URI' \
 						div -F 'code=CODE' \http://#{JSON.parse(locals.conf).apidns}/api/oauth/access_token
 					
-					p	
-						If successful, this call will return a neatly packaged OAuth Token that you can use to make authenticated calls to the API. We also include the user who just authenticated for your convenience:
+					p If successful, this call will return a neatly packaged OAuth Token that you can use to make authenticated calls to the API. We also include the user who just authenticated for your convenience:
 					pre
 						div {
 						div &nbsp;&nbsp;"access_token": "xxx",
@@ -98,7 +97,7 @@ block content
 						div &nbsp;&nbsp;&nbsp;&nbsp;"profile_picture": "xxx"
 						div &nbsp;&nbsp;}
 						div }
-					p Note that we do not include an expiry time. Our access_tokens have no explicit expiry, though your app should handle the case that either the user revokes access or we expire the token after some period of time. In this case, your response’s meta will contain an “error_type=OAuthAccessTokenError”. In other words: do do not assume your access_token is valid forever.
+					p Note that we do not include an expiry time. Our access_tokens have no explicit expiry, though your app should handle the case that either the user revokes access or we expire the token after some period of time. 
 		
 					h4 Client-Side (Implicit) Authentication
 					p If you’re building an app that does not have a server component (a purely javascript app, for instance), you’ll notice that it’s impossible to complete step three above to receive your access_token without also having to ship your client secret. You should never ship your client secret onto devices you don’t control. Then how do you get an access_token? Well the smart folks in charge of the OAuth 2.0 spec anticipated this problem and created the Implicit Authentication Flow.
@@ -108,8 +107,7 @@ block content
 						span Direct your user to our authorization URL
 
 					pre #{JSON.parse(locals.conf).apiurl}/api/oauth/authorize?client_id=YOUR_CLIENT_ID&response_type=token&redirect_uri=YOUR_REDIRECT_URI
-					p
-						At this point, we present the user with a login screen and then a confirmation screen where they approve your app’s access to their Yakwala data. Note that unlike the explicit flow the response type here is “token”.
+					p At this point, we present the user with a login screen and then a confirmation screen where they approve your app’s access to their Yakwala data. Note that unlike the explicit flow the response type here is “token”.
 
 					h5
 						b Step Two: 
@@ -124,7 +122,7 @@ block content
 					p For the moment, ask our developement team by sending a request at this email : info at yakwala  dot fr, explaining what you will do, your redirect url and we will provide you with a client id and secret.
 					hr
 					h3#endpoints Endpoints
-					p.subheader User endpoints
+					h4 User endpoints
 
 					
 					// USERS PROFILE
@@ -136,7 +134,7 @@ block content
 						tr
 							td GET/POST/PUT
 							td /users/<code>user-id</code>
-							td Get the user's data details.<br> Note : you cannot delete user accounts through the api. 
+							td Get the user's data details.<br> Note : you cannot delete user accounts with the api. 
 						tr
 							td(colspan=3)
 								b parameters:
@@ -406,12 +404,13 @@ block content
 								b parameters:
 								ul
 									li GET : 
-									li GET : 
 										ul 
 											li access_token:string - the token access
 											li GET{place:[{_id:string},{_id:string}]}			
 											li v=1 - the version of the api
 											li local='fr' - response language
+									li POST
+										
 						tr
 							td(colspan=3)
 								b response:
@@ -419,7 +418,7 @@ block content
 									li {user : {_id:string, name:string, login:string}}
 
 					h3#libraires Librairies
-					p.subheader
+					p We provide you with some libraries to handle the api.
 					
 					h4 PHP
 					pre https://github.com/rebe100x/API

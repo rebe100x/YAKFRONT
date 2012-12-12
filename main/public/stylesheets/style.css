@@ -1,6 +1,6 @@
 body {
   padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 13px "Lucida Grande", Helvetica, Arial, sans-serif;
   
 }
 
@@ -11,6 +11,7 @@ a {
 
 /* GENERAL
 -------------------------------------------------- */
+h4, h3, h2 , h1{margin-bottom:5px;}
 .icon-pointer{cursor:pointer;margin:2px;}
 .icon-pointer:hover{opacity:0.7;}
 

@@ -119,7 +119,7 @@ exports.catsandtags = function (req, res) {
 **********************************************/
 exports.list_favplace = function (req, res) {
 	var User = db.model('User');
-	User.findOne({'_id': res.locals.user._id},{favplace:1}, function(err,docs){
+	User.findOne({'_id': req.params.userid},{favplace:1}, function(err,docs){
 		if(!err)
 				res.json({meta:{code:200},data:docs});
 			else
@@ -183,7 +183,7 @@ exports.del_favplace = function (req, res) {
 **********************************************/
 exports.list_subs_user = function (req, res) {
 	var User = db.model('User');
-	User.findOne({'_id': res.locals.user._id},{usersubs:1}, function(err,docs){
+	User.findOne({'_id': req.params.userid},{usersubs:1}, function(err,docs){
 		if(!err)
 				res.json({meta:{code:200},data:docs});
 			else
@@ -258,7 +258,7 @@ exports.del_subs_user = function (req, res) {
 **********************************************/
 exports.list_subs_tag = function (req, res) {
 	var User = db.model('User');
-	User.findOne({'_id': res.locals.user._id},{tagsubs:1}, function(err,docs){
+	User.findOne({'_id': req.params.userid},{tagsubs:1}, function(err,docs){
 		if(!err)
 				res.json({meta:{code:200},data:docs});
 			else

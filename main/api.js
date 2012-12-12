@@ -105,7 +105,7 @@ app.post('/api/oauth/session',api.oauth_session);
 //favplace
 app.post('/api/favplace/:userid', api.requiresToken, api.add_favplace); 
 app.delete('/api/favplace/:userid', api.requiresToken, api.del_favplace); 
-app.get('/api/favplace/:userid', api.requiresToken, api.list_favplace); 
+app.get('/api/favplace/:userid', api.list_favplace); 
 app.put('/api/favplace/:userid', api.requiresToken, api.put_favplace); 
 // for non restfull guys
 app.post('/api/delfavplace/:userid', api.requiresToken, api.del_favplace); 
@@ -115,7 +115,7 @@ app.post('/api/updatefavplace/:userid', api.requiresToken, api.put_favplace);
 app.post('/api/subscribe/user/:userid', api.requiresToken, api.add_subs_user); 
 app.put('/api/subscribe/user/:userid', api.requiresToken, api.put_subs_user); 
 app.delete('/api/subscribe/user/:userid', api.requiresToken, api.del_subs_user); 
-app.get('/api/subscribe/user/:userid', api.requiresToken, api.list_subs_user);
+app.get('/api/subscribe/user/:userid', api.list_subs_user);
 // for non restfull guys
 app.post('/api/unsubscribe/user/:userid', api.requiresToken, api.del_subs_user); 
 app.post('/api/updatesubscribe/user/:userid', api.requiresToken, api.put_subs_user); 
@@ -124,7 +124,7 @@ app.post('/api/updatesubscribe/user/:userid', api.requiresToken, api.put_subs_us
 app.post('/api/subscribe/tag/:userid', api.requiresToken, api.add_subs_tag); 
 app.put('/api/subscribe/tag/:userid', api.requiresToken, api.put_subs_tag); 
 app.delete('/api/subscribe/tag/:userid', api.requiresToken, api.del_subs_tag); 
-app.get('/api/subscribe/tag/:userid', api.requiresToken, api.list_subs_tag);
+app.get('/api/subscribe/tag/:userid',  api.list_subs_tag);
 // for non restfull guys
 app.post('/api/unsubscribe/tag/:userid', api.requiresToken, api.del_subs_tag); 
 app.post('/api/updatesubscribe/tag/:userid', api.requiresToken, api.put_subs_tag); 
