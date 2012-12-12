@@ -98,7 +98,7 @@ Info.statics.findAll = function (callback) {
 
 }
 
-Info.statics.findAllByPage = function (callback, skip, limit, yakType, _id, what, where, dateInterval, yakCat) {
+Info.statics.findAllByPage = function (callback, skip, limit, yakType, _id, what, where, dateInterval, yakCat, next) {
 	
 	var mydateUtils = require('../mylib/dateUtils.js');
 
@@ -140,7 +140,7 @@ Info.statics.findAllByPage = function (callback, skip, limit, yakType, _id, what
 		 cond["location"] = {$near : [parseFloat(location[0]),parseFloat(location[1])]};
 	};
 	
-	var infos = this.find(cond).sort({'pubDate':-1}).skip(skip).limit(limit);
+	var infos = this.find(cond).sort({'pubDate':1}).skip(skip).limit(limit);
 
 	res = infos.exec(callback)
 
