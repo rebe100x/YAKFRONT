@@ -23,7 +23,11 @@ block content
 							p.subheader 
 				hr
 				div.row-fluid
-					h3#authentification Authentification
+					div#authentification
+					br
+					br
+					br
+					h3 Authentification
 					p.subheader Yakwala's API uses the OAuth 2.0 protocol for simple, but effective authentication and authorization.
 					h4 Do you need to authenticate?
 					p For the most part, Yakwala's API only requires the use of a client_id. A client_id simply associates your server, script, or program with a specific application. However, some requests require authentication - specifically requests made on behalf of a user. 
@@ -86,8 +90,7 @@ block content
 						div -F 'redirect_uri=YOUR_REDIRECT_URI' \
 						div -F 'code=CODE' \http://#{JSON.parse(locals.conf).apidns}/api/oauth/access_token
 					
-					p	
-						If successful, this call will return a neatly packaged OAuth Token that you can use to make authenticated calls to the API. We also include the user who just authenticated for your convenience:
+					p If successful, this call will return a neatly packaged OAuth Token that you can use to make authenticated calls to the API. We also include the user who just authenticated for your convenience:
 					pre
 						div {
 						div &nbsp;&nbsp;"access_token": "xxx",
@@ -98,7 +101,7 @@ block content
 						div &nbsp;&nbsp;&nbsp;&nbsp;"profile_picture": "xxx"
 						div &nbsp;&nbsp;}
 						div }
-					p Note that we do not include an expiry time. Our access_tokens have no explicit expiry, though your app should handle the case that either the user revokes access or we expire the token after some period of time. In this case, your response’s meta will contain an “error_type=OAuthAccessTokenError”. In other words: do do not assume your access_token is valid forever.
+					p Note that we do not include an expiry time. Our access_tokens have no explicit expiry, though your app should handle the case that either the user revokes access or we expire the token after some period of time. 
 		
 					h4 Client-Side (Implicit) Authentication
 					p If you’re building an app that does not have a server component (a purely javascript app, for instance), you’ll notice that it’s impossible to complete step three above to receive your access_token without also having to ship your client secret. You should never ship your client secret onto devices you don’t control. Then how do you get an access_token? Well the smart folks in charge of the OAuth 2.0 spec anticipated this problem and created the Implicit Authentication Flow.
@@ -108,8 +111,7 @@ block content
 						span Direct your user to our authorization URL
 
 					pre #{JSON.parse(locals.conf).apiurl}/api/oauth/authorize?client_id=YOUR_CLIENT_ID&response_type=token&redirect_uri=YOUR_REDIRECT_URI
-					p
-						At this point, we present the user with a login screen and then a confirmation screen where they approve your app’s access to their Yakwala data. Note that unlike the explicit flow the response type here is “token”.
+					p At this point, we present the user with a login screen and then a confirmation screen where they approve your app’s access to their Yakwala data. Note that unlike the explicit flow the response type here is “token”.
 
 					h5
 						b Step Two: 
@@ -122,10 +124,91 @@ block content
 
 					h4 How to get a client id and secret ?
 					p For the moment, ask our developement team by sending a request at this email : info at yakwala  dot fr, explaining what you will do, your redirect url and we will provide you with a client id and secret.
+					
 					hr
-					h3#endpoints Endpoints
-					p.subheader User endpoints
+					div#formats
+					br
+					br
+					br
 
+					h3 Formats
+					h4 Exchange formats:
+					h5 Images
+					p All images uploaded are available with the following urls depending on the size you need : 
+					ul
+						li 
+							div user's profile image:
+							div
+								code #{JSON.parse(locals.conf).fronturl}/pictures/128_128/856433cd5588bc6914fc9c64a91aabcb.jpeg
+							div
+								code #{JSON.parse(locals.conf).fronturl}/pictures/48_48/856433cd5588bc6914fc9c64a91aabcb.jpeg
+							div
+								code #{JSON.parse(locals.conf).fronturl}/pictures/24_24/856433cd5588bc6914fc9c64a91aabcb.jpeg
+						li 
+							div place's thumb:
+							div
+								code #{JSON.parse(locals.conf).fronturl}/pictures/512_0/856433cd5588bc6914fc9c64a91aabcb.jpeg
+							div
+								code #{JSON.parse(locals.conf).fronturl}/pictures/120_90/856433cd5588bc6914fc9c64a91aabcb.jpeg
+						li 
+							div news' thumb:
+							div
+								code #{JSON.parse(locals.conf).fronturl}/pictures/512_0/856433cd5588bc6914fc9c64a91aabcb.jpeg
+							div
+								code #{JSON.parse(locals.conf).fronturl}/pictures/120_90/856433cd5588bc6914fc9c64a91aabcb.jpeg
+					h5 Parameters
+					p Paramaters are defined below for each endpoint.
+					p All params are typed as much as possible : an id must be passed with an array(_id=>'xxxx')
+					h5 Responses
+					p Responses are following the schemas below:
+					ul
+						li info : {
+							div &nbsp;&nbsp;<b>_id</b>:string, 
+								i.muted news id
+							div &nbsp;&nbsp; <b>title</b>:string, 
+								i.muted news title (<b>*required</b>)
+							div &nbsp;&nbsp; <b>placeid</b>:string, 
+								i.muted JSON object the place id ( see the /api/place to create a place)  (<b>*required</b>)
+							div &nbsp;&nbsp; <b>location</b>:array(lat,lng): {lat:float,lng:float}, 
+								i.muted the geographical location of the news (<b>*required</b>)	
+							div &nbsp;&nbsp; <b>content</b>:string, 
+								i.muted news main content - <b>default</b> : empty
+							div &nbsp;&nbsp; <b>thumb</b>:string,  
+								i.muted news thumb - <b>default</b> : empty
+							div &nbsp;&nbsp; <b>print</b>:boolean, 
+								i.muted set to 0 if you want only the news to appear on the news feed and not on the map - <b>default: </b>: 1 (on map and on feed)
+							div &nbsp;&nbsp; <b>address</b>:string, 
+								i.muted the human redable address string - <b>default</b> : empty
+							div &nbsp;&nbsp; <b>pubdate</b>:date, 
+								i.muted date to be published, Unix timestamp - <b>default</b> : now
+							div &nbsp;&nbsp; <b>dateEndPrint</b>:date, 
+								i.muted date of the end of the news, :  every news has a limited life time begining at pubDate and ending at dateEndPrint - <b>default</b> : datePub + 3 days
+							div &nbsp;&nbsp; <b>creationDate</b>:date, 
+								i.muted creation date - <b>default</b> : empty
+							div &nbsp;&nbsp; <b>lastModifDate</b>:date, 
+								i.muted last modif date - <b>default</b> : empty
+							div &nbsp;&nbsp; <b>yaktype</b>:int, 
+								i.muted 
+									div&nbsp;&nbsp;&nbsp;&nbsp; Yakwala type - <b>default</b> : 4 
+									div&nbsp;&nbsp;&nbsp;&nbsp; Values allowed are : actu = 1 , agenda = 2 , Infos Pratiques = 3 , Discussion = 4
+							&nbsp;&nbsp;<b>freetag</b>:[string,string], 
+							i.muted array of string tags - <b>default</b> : empty array
+							div &nbsp;&nbsp;<b>yakCatName</b>:['Sports','Football'], 
+							i.muted array of Yakwala categories names - <b>default</b> : empty
+							div &nbsp;&nbsp;<b>yakCat</b>:['id1xxxx','id2xxxx'], 
+							i.muted array of Yakwala categories - <b>default</b> : empty
+							br
+							}
+					hr
+					div#endpoints
+					br
+					br
+					br
+					h3 Endpoints
+					h4 User endpoints
+					p 
+						b Note:
+						All endpoints are built to be RESTfull, but we also provide non RESTfull methods to access data. There are mentionned below for each endpoint.
 					
 					// USERS PROFILE
 					table.table.table-bordered  
@@ -135,14 +218,14 @@ block content
 							th DESCRIPTION
 						tr
 							td GET/POST/PUT
-							td /users/<code>user-id</code>
-							td Get the user's data details.<br> Note : you cannot delete user accounts through the api. 
+							td /user/<code>user-id</code>
+							td Get the user's data details.<br> Note : you cannot delete user accounts with the api. 
 						tr
 							td(colspan=3)
 								b parameters:
 								ul
 									li GET : no parameter needed.
-									li POST : 
+									li POST/PUT : 
 										ul 
 											li access_token:string - the token access
 											li {user:}
@@ -170,43 +253,57 @@ block content
 							td Manage the authenticated user's news feed.
 						tr
 							td(colspan=3)
-								b parameters:
-								ul
-									li access_token:string - the token access
-									li GET : count:int - number of news to get
-									li POST : 
-										ul
-											li info : JSON object 
-											{
-											<br>&nbsp;&nbsp;title:string, 
-											i.muted news title
-											<br>&nbsp;&nbsp;content:string, 
-											i.muted news main content
-											<br>&nbsp;&nbsp;yakcat:['id1xxxx','id2xxxx'], 
-											i.muted array of Yakwala categories
-											<br>&nbsp;&nbsp;yaktype:int,
-											i.muted 
-												ul
-													li Yakwala type : , optional, default : 4 
-													li Values : actu = 1 , agenda = 2 , Infos Pratiques = 3 , Discussion = 4  
-											&nbsp;&nbsp;freetag:[string,string], 
-											i.muted array of string tags
-											<br>&nbsp;&nbsp;pubdate:int, 
-											i.muted date to be published, Unix timestamp
-											<br>&nbsp;&nbsp;placeid:{_id:string}, 
-											i.muted JSON object the place id ( see the /api/place to create a place)
-											br
-											}
-											li picture : posted image 
-												i.muted The photo should be uploaded as a jpeg and the Content-Type should be set to "image/jpeg". Images may not exceed 5MB in size. 
-										ul
-											li returns the info object created
-						tr
-							td(colspan=3)
-								b optional parameters:
-								ul			
-									li v=1 - the version of the api
-									li local='fr' - response language
+								table.table.table-bordered
+									tr
+										td GET :
+									tr
+										td Parameters :
+											ul 
+												li count:int - number of news to get
+												li v:int - the version of the api - <b>default:</b>the last version
+												li local:string - response language - <b>default:</b>'fr'
+									tr
+										td Response :
+											ul
+												li Array of info objects
+								table.table.table-bordered
+									tr
+										td POST : 
+									tr
+										td Paramaters:
+											ul
+												li info : JSON object 
+												{
+												<br>&nbsp;&nbsp;title:string, 
+												i.muted news title (<b>*required</b>)
+												<br>&nbsp;&nbsp;content:string, 
+												i.muted news main content, <b>default</b> : empty
+												<br>&nbsp;&nbsp;print:boolean, 
+												i.muted set to 0 if you want only the news appears on the news feed and not on the map/ Defautl : 1 (on map and on feed)
+												<br>&nbsp;&nbsp;yakcat:['id1xxxx','id2xxxx'], 
+												i.muted array of Yakwala categories, <b>default</b> : empty
+												<br>&nbsp;&nbsp;yaktype:int,
+												i.muted 
+													ul
+														li Yakwala type : , optional, <b>default</b> : 4 
+														li Values : actu = 1 , agenda = 2 , Infos Pratiques = 3 , Discussion = 4  
+												&nbsp;&nbsp;freetag:[string,string], 
+												i.muted array of string tags, <b>default</b> : empty array
+												<br>&nbsp;&nbsp;pubdate:int, 
+												i.muted date to be published, Unix timestamp, <b>default</b> : now
+												<br>&nbsp;&nbsp;placeid:{_id:string}, 
+												i.muted JSON object the place id ( see the /api/place to create a place)  (<b>*required</b>)
+												br
+												}
+												li picture : posted image 
+													i.muted The photo should be uploaded as a jpeg and the Content-Type should be set to "image/jpeg". Images may not exceed 5MB in size.
+												li v:int - the version of the api - <b>default:</b>the last version
+												li local:string - response language - <b>default:</b>'fr'
+									tr
+										td Response:
+											ul
+												li returns the info object created
+						
 						tr
 							td(colspan=3)
 								b response:
@@ -230,7 +327,7 @@ block content
 								ul
 									li count:int - limit the number of results
 									li skip:int - start results number
-									li sensitive: 1/0 - perform a case sensitive if set to 1, default : 0 => not sensitive
+									li sensitive: 1/0 - perform a case sensitive if set to 1, <b>default</b> : 0 => not sensitive
 									li v=1 - the version of the api
 									li local='fr' - response language
 						tr
@@ -359,7 +456,7 @@ block content
 								ul
 									li count:int - limit the number of results
 									li skip:int - start results number
-									li sensitive: 1/0 - perform a case sensitive if set to 1, default : 0 => not sensitive
+									li sensitive: 1/0 - perform a case sensitive if set to 1, <b>default</b> : 0 => not sensitive
 									li v=1 - the version of the api
 									li local='fr' - response language
 						tr
@@ -406,20 +503,25 @@ block content
 								b parameters:
 								ul
 									li GET : 
-									li GET : 
 										ul 
 											li access_token:string - the token access
 											li GET{place:[{_id:string},{_id:string}]}			
 											li v=1 - the version of the api
 											li local='fr' - response language
+									li POST
+										
 						tr
 							td(colspan=3)
 								b response:
 								ul
 									li {user : {_id:string, name:string, login:string}}
-
-					h3#libraires Librairies
-					p.subheader
+					hr
+					div#librairies
+					br
+					br
+					br				
+					h3 Librairies
+					p We provide you with some libraries to handle the api.
 					
 					h4 PHP
 					pre https://github.com/rebe100x/API
@@ -427,7 +529,11 @@ block content
 					br
 					br
 					hr
-					h3#tou Conditions d'utilisation
+					div#cgu
+					br
+					br
+					br
+					h3 Conditions d'utilisation
 						p.subheader
 					@todo
 			div.span2				

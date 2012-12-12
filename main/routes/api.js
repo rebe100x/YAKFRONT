@@ -119,7 +119,7 @@ exports.catsandtags = function (req, res) {
 **********************************************/
 exports.list_favplace = function (req, res) {
 	var User = db.model('User');
-	User.findOne({'_id': res.locals.user._id},{favplace:1}, function(err,docs){
+	User.findOne({'_id': req.params.userid},{favplace:1}, function(err,docs){
 		if(!err)
 				res.json({meta:{code:200},data:docs});
 			else
@@ -183,7 +183,7 @@ exports.del_favplace = function (req, res) {
 **********************************************/
 exports.list_subs_user = function (req, res) {
 	var User = db.model('User');
-	User.findOne({'_id': res.locals.user._id},{usersubs:1}, function(err,docs){
+	User.findOne({'_id': req.params.userid},{usersubs:1}, function(err,docs){
 		if(!err)
 				res.json({meta:{code:200},data:docs});
 			else
@@ -258,7 +258,7 @@ exports.del_subs_user = function (req, res) {
 **********************************************/
 exports.list_subs_tag = function (req, res) {
 	var User = db.model('User');
-	User.findOne({'_id': res.locals.user._id},{tagsubs:1}, function(err,docs){
+	User.findOne({'_id': req.params.userid},{tagsubs:1}, function(err,docs){
 		if(!err)
 				res.json({meta:{code:200},data:docs});
 			else
@@ -351,7 +351,7 @@ exports.put_user_details = function (req, res) {
 			var userThumb = new Object();
 			if(typeof(req.files.picture) != 'undefined' && req.files.picture.size > 0 && req.files.picture.size < 1048576*5){
 				var drawTool = require('../mylib/drawlib.js');
-				var size = [{"width":128,"height":128}];
+				var size = res.locals.mainConf.imgSizeAvatar;
 				userThumb = drawTool.StoreImg(req.files.picture,size,conf);
 				
 				if(userThumb.err == 0 ){
@@ -509,7 +509,7 @@ exports.add_user_feed = function (req, res) {
 			var infoThumb = new Object();
 			if(typeof(req.files.picture) != 'undefined' && req.files.picture.size && req.files.picture.size < 1048576*5){
 				var drawTool = require('../mylib/drawlib.js');
-				var size = [{"width":120,"height":90},{"width":512,"height":0}];
+				var size = res.locals.mainConf.imgSizeInfo;
 				infoThumb = drawTool.StoreImg(req.files.picture,size,conf);
 			}else
 				infoThumb.err = 0;
@@ -571,12 +571,14 @@ exports.add_user_feed = function (req, res) {
 							var DTS = D.getTime() / 1000 + (3 * 60 * 60 * 24);
 							D.setTime(DTS*1000); 
 							info.dateEndPrint = D;
-							//console.log(info);
-							info.print = 1;
+							if(typeof(theinfo.print) == 'undefined' || theinfo.print != 0)
+								info.print = 1;
+							else
+								info.print = 0;
 							info.status = 1;
 							info.access = 1;
 							info.yakType = Math.floor(theYakType);
-							info.thumb = infoThumb.name;
+							info.thumb = conf.fronturl+"/pictures/128_128/"+infoThumb.name;
 							info.licence = 'Yakwala';
 							info.heat = 80;
 							info.freeTag = theinfo.freetag;
@@ -585,11 +587,28 @@ exports.add_user_feed = function (req, res) {
 							
 								if (!err){ 
 									console.log('Success!');
-									res.json({info:thenewwinfo});
+									var formattedInfo = {
+										_id:thenewwinfo._id,
+										title:thenewwinfo.title,
+										content:thenewwinfo.content,
+										thumb:thenewwinfo.thumb,
+										yakType:thenewwinfo.yakType,
+										print:thenewwinfo.print,
+										dateEndPrint:thenewwinfo.dateEndPrint,
+										address:thenewwinfo.address,
+										location:thenewwinfo.location,
+										lastModifDate:thenewwinfo.lastModifDate,
+										creationDate:thenewwinfo.creationDate,
+										pubDate:thenewwinfo.pubDate,
+										freeTag:thenewwinfo.freeTag,
+										yakTag:thenewwinfo.yakTag,
+										yakCatName:thenewwinfo.yakCatName,
+										yakCat:thenewwinfo.yakCat,
+										placeId:thenewwinfo.placeId,
+									};
+									res.json({meta:{code:200,data:{info:formattedInfo}}});
 								}else{
-									console.log(err);
-									error = {"error":"Post failed","error_reason": "Save in db failled","error_description":err.toString()};
-									res.json({error:error});
+									res.json({meta:{code:404,error_type:'Save in db failled',error_description:err.toString()}});				
 								} 
 							});
 							
@@ -609,8 +628,7 @@ exports.add_user_feed = function (req, res) {
 								});
 							}
 					}else{
-						error = {"error":"Post failed","error_reason": "Place not found","error_description":"placeid does not correspond to anything"};
-						res.json({error:error});
+						res.json({meta:{code:404,error_type:'Place not found',error_description:"placeid does not correspond to anything"}});				
 					}				
 				});
 			}else{
@@ -620,10 +638,9 @@ exports.add_user_feed = function (req, res) {
 			
 		}else{
 			if(!theinfo.title)
-				error = {"error":"Post failed","error_reason": "Missing paramater","error_description":"title is empty"};
+				res.json({meta:{code:404,error_type:'Missing paramater',error_description:"title is empty"}});				
 			if(!theplaceid)
-				error = {"error":"Post failed","error_reason": "Missing paramater","error_description":"placeid is empty should be {_id:'XXXX'}"};
-			res.json({error:error});
+				res.json({meta:{code:404,error_type:'Missing paramater',error_description:"placeid is empty should be {_id:'XXXX'}"}});			
 		}
 	}else{
 		error = {"error":"Post failed","error_reason": "Missing paramater","error_description":"info is not set, should be info = {title:string, content:string, yakcat:['id1xxxx','id2xxxx'], yaktype:int, freetag:[string,string], pubdate:int, placeid:{_id:string}} "};
@@ -660,6 +677,8 @@ exports.put_user_feed = function (req, res) {
 				Info.update({_id:theinfoid,user:res.locals.user._id},{$set:{title:theinfo.title,lastModifDate:now}}, function(err,docs){
 					if(err)
 						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+					else
+						res.json({meta:{code:200,data:{info:theinfoid}}});
 				});
 			}
 			// CONTENT	
@@ -667,6 +686,8 @@ exports.put_user_feed = function (req, res) {
 				Info.update({_id:theinfoid,user:res.locals.user._id},{$set:{content:theinfo.content,lastModifDate:now}}, function(err,docs){
 					if(err)
 						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+					else
+						res.json({meta:{code:200,data:{info:theinfoid}}});
 				});
 			}
 			// YAKTYPE
@@ -675,6 +696,8 @@ exports.put_user_feed = function (req, res) {
 				Info.update({_id:theinfoid,user:res.locals.user._id},{$set:{yaktype:Math.floor(theinfo.yaktype),lastModifDate:now}}, function(err,docs){
 					if(err)
 						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+					else
+						res.json({meta:{code:200,data:{info:theinfoid}}});
 				});
 			}else
 				theYakType = 4; // by default : DISCUSSION
@@ -684,17 +707,18 @@ exports.put_user_feed = function (req, res) {
 			
 			if(typeof(req.files.picture) != 'undefined' && req.files.picture.size > 0 && req.files.picture.size < 1048576*5){
 				var drawTool = require('../mylib/drawlib.js');
-				var size = [{"width":120,"height":90},{"width":512,"height":0}];
+				var size = res.locals.mainConf.imgSizeInfo;
 				infoThumb = drawTool.StoreImg(req.files.picture,size,conf);
 				
 				if(infoThumb.err == 0 ){
 					Info.update({_id:theinfoid,user:res.locals.user._id},{$set:{thumb:infoThumb.name,lastModifDate:now}}, function(err,docs){
 						if(err)
 							res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+						else
+							res.json({meta:{code:200,data:{info:theinfoid}}});
 					});
 				}else{
-					error = {"error":"Post failed","error_reason": "Image upload failed","error_description":"image should be jpeg and less than 5M"};
-					res.json({error:error});
+					res.json({meta:{code:404,error_type:'Image upload failed',error_description:"image should be jpeg and less than 5M"}});	
 				}
 			}
 			// DATES 
@@ -703,6 +727,8 @@ exports.put_user_feed = function (req, res) {
 				Info.update({_id:theinfoid,user:res.locals.user._id},{$set:{dateEndPrint:new Date(theinfo.pubdate*1000),lastModifDate:now}}, function(err,docs){
 					if(err)
 						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+					else
+							res.json({meta:{code:200,data:{info:theinfoid}}});
 				});
 			}
 			// TAGS
@@ -710,6 +736,8 @@ exports.put_user_feed = function (req, res) {
 				Info.update({_id:theinfoid,user:res.locals.user._id},{$set:{freeTag:theinfo.freetag,lastModifDate:now}}, function(err,docs){
 					if(err)
 						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+					else
+							res.json({meta:{code:200,data:{info:theinfoid}}});
 				});
 				
 				theinfo.freetag.forEach(function(freeTag){
@@ -764,6 +792,8 @@ exports.put_user_feed = function (req, res) {
 					Info.update({_id:theinfoid,user:res.locals.user._id},{$set:{yakCat:yakCatIds,yakCatName:yakCatNames,lastModifDate:now}}, function(err,docs){
 						if(err)
 							res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+						else
+							res.json({meta:{code:200,data:{info:theinfoid}}});
 					});
 				});	
 			}
@@ -784,6 +814,8 @@ exports.put_user_feed = function (req, res) {
 						Info.update({_id:theinfoid,user:res.locals.user._id},{$set:{placeId:theplaceid,address:theplace.formatted_address,location:{lat:parseFloat(theplace.location.lat),lng:parseFloat(theplace.location.lng)},lastModifDate:now}}, function(err,docs){
 						if(err)
 							res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+						else
+							res.json({meta:{code:200,data:{place:docs._id}}});
 					});	
 						
 						
@@ -874,7 +906,7 @@ exports.add_place = function (req, res) {
 					var placeThumb = new Object();
 					if(typeof(req.files.picture) != 'undefined' && req.files.picture.size && req.files.picture.size < 1048576*5){
 						var drawTool = require('../mylib/drawlib.js');
-						var size = [{"width":120,"height":90},{"width":512,"height":0}];
+						var size = res.locals.mainConf.imgSizePlace;
 						placeThumb = drawTool.StoreImg(req.files.picture,size,conf);
 					}else
 						placeThumb.err = 0;
@@ -1002,7 +1034,7 @@ exports.put_place = function (req, res) {
 			var placeThumb = new Object();
 			if(typeof(req.files.picture) != 'undefined' && req.files.picture.size > 0 && req.files.picture.size < 1048576*5){
 				var drawTool = require('../mylib/drawlib.js');
-				var size = [{"width":120,"height":90},{"width":512,"height":0}];
+				var size = res.locals.mainConf.imgSizePlace;
 				placeThumb = drawTool.StoreImg(req.files.picture,size,conf);
 				
 				if(placeThumb.err == 0 ){

@@ -8,6 +8,14 @@ mixin docsSubMenu(active)
 			li
 				a(href="/docs/api#authentification",data-nav="authentification") Authentification
 					i.icon-chevron-right
+		- if (active == 'formats')		
+			li.active
+				a(href="/docs/api#formats",data-nav="formats") Formats
+					i.icon-chevron-right
+		- else
+			li
+				a(href="/docs/api#formats",data-nav="formats") Formats
+					i.icon-chevron-right
 		- if (active == 'endpoints')		
 			li.active
 				a(href="/docs/api#endpoints",data-nav="endpoints") Endpoints
@@ -24,11 +32,11 @@ mixin docsSubMenu(active)
 			li
 				a(href="/docs/api#librairies",data-nav="librairies") Librairies
 					i.icon-chevron-right
-		- if (active == 'tou')		
+		- if (active == 'cgu')		
 			li.active
-				a(href="/docs/api#tou",data-nav="tou") Conditions d'utilisations	
+				a(href="/docs/api#cgu",data-nav="cgu") Conditions d'utilisations	
 					i.icon-chevron-right
 		- else
 			li
-				a(href="/docs/api#tou",data-nav="tou") Conditions d'utilisations	
+				a(href="/docs/api#cgu",data-nav="cgu") Conditions d'utilisations	
 					i.icon-chevron-right

@@ -39,7 +39,8 @@ app.configure(function(){
 	res.locals.redir = req.query.redir;
 	res.locals.message = req.session.message;
 	res.locals.type = req.session.type;
-    next();
+	res.locals.mainConf = config.confs.main;
+	next();
   });
   
   app.use(express.methodOverride());
@@ -48,8 +49,9 @@ app.configure(function(){
 });
 
 app.configure('development', function(){
-	conf = config.confs.devdany;
-	app.locals.conf = JSON.stringify(config.confs.devdany);
+	conf = config.confs.devrenaud;
+	app.locals.conf = JSON.stringify(config.confs.devrenaud);
+
 	
 	app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
