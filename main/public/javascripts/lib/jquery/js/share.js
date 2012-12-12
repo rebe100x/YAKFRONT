@@ -65,7 +65,8 @@
         hashtags: '',
         via: '',
         related: '',
-        lang: 'en'
+        lang: 'en',
+        text: ''
       },
       digg: { //http://about.digg.com/downloads/button/smart
         url: '',  //if you need to personalize url button
@@ -154,7 +155,7 @@
     },
     twitter : function(self){
       var sett = self.options.buttons.twitter;
-      $(self.element).find('.buttons').append('<div class="button twitter"><a href="https://twitter.com/share" class="twitter-share-button" data-url="'+(sett.url !== '' ? sett.url : self.options.url)+'" data-count="'+sett.count+'" data-text="'+self.options.text+'" data-via="'+sett.via+'" data-hashtags="'+sett.hashtags+'" data-related="'+sett.related+'" data-lang="'+sett.lang+'">Tweet</a></div>');
+      $(self.element).find('.buttons').append('<div class="button twitter"><a href="https://twitter.com/share" class="twitter-share-button" data-url="'+(sett.url !== '' ? sett.url : self.options.url)+'" data-count="'+sett.count+'" data-text="'+sett.text+'" data-via="'+sett.via+'" data-hashtags="'+sett.hashtags+'" data-related="'+sett.related+'" data-lang="'+sett.lang+'" text="'+sett.text+'">Tweet</a></div>');
       var loading = 0;
       if(typeof twttr === 'undefined' && loading == 0){
         loading = 1;

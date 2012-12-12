@@ -248,34 +248,40 @@ Date.prototype.toLongFrenchFormat = function ()
 		}
 
 		function setShare(){
-		   
-		   		$('.icon-comment, .icon-share').sharrre({
-					share: {
-					googlePlus: true,
-					facebook: true,
-					twitter: true
-					},
-					enableTracking: true,
-					buttons: {
-						googlePlus: {
-							size: 'medium'
+		   		$('.icon-comment, .icon-share').each(function(){
+		   			$(this).sharrre({
+						share: {
+						googlePlus: true,
+						facebook: true,
+						twitter: true
+						},
+						enableTracking: true,
+						buttons: {
+							googlePlus: {
+								url: $(this).parent().parent().find(".title").find(".more").attr("href"),
+								size: 'medium'
+							},
+
+						facebook: {
+							url:  $(this).parent().parent().find(".title").find(".more").attr("href"),
+							layout: 'button_count'
 						},
 
-					facebook: {
-						layout: 'button_count',
-					},
-
-					twitter: {
-						count: 'horizontal'
-					}					
-					},
-					hover: function(api, options){
-					$(api.element).find('.buttons').show();
-					},
-					hide: function(api, options){
-					$(api.element).find('.buttons').hide();
-					}
-				});
+						twitter: {
+							text: $(this).parent().parent().find(".content").text().substring(0, 100) + "...",
+							count: 'horizontal',
+							url: 'http://www.yakwala.fr'
+						}					
+						},
+						hover: function(api, options){
+							$(api.element).find('.buttons').show();
+						},
+						hide: function(api, options){
+						$(api.element).find('.buttons').hide();
+						}
+					});
+		   		});
+		   		
 		 
 		}
 

@@ -49,8 +49,8 @@ app.configure(function(){
 });
 
 app.configure('development', function(){
-	conf = config.confs.devrenaud;
-	app.locals.conf = JSON.stringify(config.confs.devrenaud);
+	conf = config.confs.devdany;
+	app.locals.conf = JSON.stringify(config.confs.devdany);
 
 	
 	app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
