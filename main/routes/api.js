@@ -121,7 +121,7 @@ exports.list_favplace = function (req, res) {
 	var User = db.model('User');
 	User.findOne({'_id': req.params.userid},{favplace:1}, function(err,docs){
 		if(!err)
-				res.json({meta:{code:200},data:docs});
+				res.json({meta:{code:200},data:docs.favplace});
 			else
 				res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 	});
@@ -324,27 +324,18 @@ exports.put_user_details = function (req, res) {
 	if(typeof(req.body.user) != 'undefined'){
 		var theuser = JSON.parse(req.body.user);	
 	
-		if( typeof(theuser._id) != 'undefined' )
-			theuserid = theuser._id;
 		
-		if(theuserid){
-		
+		if( typeof(theuser._id) != 'undefined' ){
+			var theuserid = theuser._id;
 			var now = new Date();
 			
 			// NAME
 			if(typeof(theuser.name) != 'undefined' && theuser.name != ''){
-			
-				User.update({_id:theuserid},{$set:{name:theuser.name,lastModifDate:now}}, function(err,docs){
-					if(err)
-						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
-				});
+				User.update({_id:theuserid},{$set:{name:theuser.name,lastModifDate:now}}, function(err,docs){});
 			}
 			// MAIL	
 			if(typeof(theuser.mail) != 'undefined' && theuser.mail != ''){
-				User.update({_id:theuserid},{$set:{mail:theuser.mail,lastModifDate:now}}, function(err,docs){
-					if(err)
-						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
-				});
+				User.update({_id:theuserid},{$set:{mail:theuser.mail,lastModifDate:now}}, function(err,docs){});
 			}
 			
 			// THUMB
@@ -355,74 +346,50 @@ exports.put_user_details = function (req, res) {
 				userThumb = drawTool.StoreImg(req.files.picture,size,conf);
 				
 				if(userThumb.err == 0 ){
-					User.update({_id:theuserid},{$set:{thumb:userThumb.name,lastModifDate:now}}, function(err,docs){
-						if(err)
-							res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
-					});
+					User.update({_id:theuserid},{$set:{thumb:userThumb.name,lastModifDate:now}}, function(err,docs){});
 				}else{
-					error = {"error":"Post failed","error_reason": "Image upload failed","error_description":"image should be jpeg and less than 5M"};
-					res.json({error:error});
+					res.json({meta:{code:404,error_type:'operation failed',error_description:"Image upload failed: image should be jpeg and less than 5M"}});
 				}
 			}
 			
 			// TAGS
 			if(typeof(theuser.tag) != 'undefined' && theuser.tag.length > 0){
-				User.update({_id:theuserid},{$set:{tag:theuser.tag,lastModifDate:now}}, function(err,docs){
-					if(err)
-						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
-				});
+				User.update({_id:theuserid},{$set:{tag:theuser.tag,lastModifDate:now}}, function(err,docs){});
 			}
 			
 			// LOCATION @todo : do it for each prop of the object
 			if(typeof(theuser.location) != 'undefined' && typeof(theuser.location.lat) != 'undefined' && typeof(theuser.location.lng) != 'undefined'){
-				User.update({_id:theuserid},{$set:{location:theuser.location,lastModifDate:now}}, function(err,docs){
-					if(err)
-						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
-				});
+				User.update({_id:theuserid},{$set:{location:theuser.location,lastModifDate:now}}, function(err,docs){});
 			}
 			
 			// FORMATTED_ADDRESS
 			if(typeof(theuser.formatted_address) != 'undefined' && theuser.formatted_address != ''){
-				User.update({_id:theuserid},{$set:{formatted_address:theuser.formatted_address,lastModifDate:now}}, function(err,docs){
-					if(err)
-						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
-				});
+				User.update({_id:theuserid},{$set:{formatted_address:theuser.formatted_address,lastModifDate:now}}, function(err,docs){});
 			}
 			
 			// ADDRESS
 			if(typeof(theuser.address) != 'undefined' ){
-				User.update({_id:theuserid},{$set:{address:theuser.address,lastModifDate:now}}, function(err,docs){
-					if(err)
-						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
-				});
+				User.update({_id:theuserid},{$set:{address:theuser.address,lastModifDate:now}}, function(err,docs){});
 			}
 			
 			// WEBSITE
 			if(typeof(theuser.web) != 'undefined' ){
-				User.update({_id:theuserid},{$set:{web:theuser.web,lastModifDate:now}}, function(err,docs){
-					if(err)
-						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
-				});
+				User.update({_id:theuserid},{$set:{web:theuser.web,lastModifDate:now}}, function(err,docs){});
 			}
 			
 			// BIO
 			if(typeof(theuser.bio) != 'undefined' ){
-				User.update({_id:theuserid},{$set:{bio:theuser.bio,lastModifDate:now}}, function(err,docs){
-					if(err)
-						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
-				});
+				User.update({_id:theuserid},{$set:{bio:theuser.bio,lastModifDate:now}}, function(err,docs){});
 			}
 			
+			res.json({meta:{code:200}});
+
 		}else{
-			error = {"error":"Update failed","error_reason": "Missing paramater","error_description":"user._id is empty"};
-			res.json({error:error});
+			console.log('elo');
+			res.json({meta:{code:404,error_type:'Save in db failled',error_description:"Missing paramater: user._id is empty"}});				
 		}
-		
-	res.json({user:{_id:theuserid}});
-	
 	}else{
-		error = {"error":"Update failed","error_reason": "Missing paramater","error_description":"user is not set, should be user = {title:string, content:string, yakcat:['id1xxxx','id2xxxx'], yaktype:int, freetag:[string,string], pubdate:int, userid:{_id:string}} "};
-		res.json({error:error});
+		res.json({meta:{code:404,error_type:'Save in db failled',error_description:"user is not set, should be user = {title:string, content:string, yakcat:['id1xxxx','id2xxxx'], yaktype:int, freetag:[string,string], pubdate:int, userid:{_id:string}}" }});				
 	}
 
 }
@@ -560,17 +527,24 @@ exports.add_user_feed = function (req, res) {
 							info.origin = "@"+res.locals.user.name;
 							
 							var now = new Date();
-							info.creationDate = now;
+							
+
 							info.lastModifDate = now;
 							if(typeof(theinfo.pubdate) != 'undefined'){
 								info.pubDate = new Date(theinfo.pubdate*1000);
 							}else
 								info.pubDate = now;
 							
-							var D = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
-							var DTS = D.getTime() / 1000 + (3 * 60 * 60 * 24);
-							D.setTime(DTS*1000); 
-							info.dateEndPrint = D;
+							if(theinfo.dateendprint == '' || typeof(theinfo.dateendprint) == 'undefined' || theinfo.dateendprint < theinfo.pubDate ){
+								var dateTmp = info.pubDate;
+								var numberOfDaysToAdd = 40;
+								dateTmp.setDate(dateTmp.getDate() + numberOfDaysToAdd);
+								info.dateEndPrint = dateTmp;
+
+							}else
+								info.dateEndPrint = theinfo.dateendprint;
+
+							
 							if(typeof(theinfo.print) == 'undefined' || theinfo.print != 0)
 								info.print = 1;
 							else
@@ -583,30 +557,28 @@ exports.add_user_feed = function (req, res) {
 							info.heat = 80;
 							info.freeTag = theinfo.freetag;
 							info.placeId = theplaceid;
-							info.save(function (err,thenewwinfo) {
+							/*info.save(function (err,thenewwinfo) {
 							
 								if (!err){ 
 									console.log('Success!');
-									var formattedInfo = {
-										_id:thenewwinfo._id,
-										title:thenewwinfo.title,
-										content:thenewwinfo.content,
-										thumb:thenewwinfo.thumb,
-										yakType:thenewwinfo.yakType,
-										print:thenewwinfo.print,
-										dateEndPrint:thenewwinfo.dateEndPrint,
-										address:thenewwinfo.address,
-										location:thenewwinfo.location,
-										lastModifDate:thenewwinfo.lastModifDate,
-										creationDate:thenewwinfo.creationDate,
-										pubDate:thenewwinfo.pubDate,
-										freeTag:thenewwinfo.freeTag,
-										yakTag:thenewwinfo.yakTag,
-										yakCatName:thenewwinfo.yakCatName,
-										yakCat:thenewwinfo.yakCat,
-										placeId:thenewwinfo.placeId,
-									};
+									var formattedInfo = Info.format(thenewwinfo);	
+
 									res.json({meta:{code:200,data:{info:formattedInfo}}});
+								}else{
+									res.json({meta:{code:404,error_type:'Save in db failled',error_description:err.toString()}});				
+								} 
+							});*/
+
+							var upsertData = info.toObject();
+							
+							if(typeof(upsertData._id) != 'undefined')
+								delete upsertData._id;
+
+							Info.update({_id: info._id},upsertData,{upsert: true}, function(err){
+								if (!err){ 
+									console.log('Success!');
+									
+									res.json({meta:{code:200}});
 								}else{
 									res.json({meta:{code:404,error_type:'Save in db failled',error_description:err.toString()}});				
 								} 
@@ -651,195 +623,7 @@ exports.add_user_feed = function (req, res) {
 	
 }
 
-exports.put_user_feed = function (req, res) {
-	var Info = db.model('Info');
-	var Place = db.model('Place');
-	var Tag = db.model('Tag');
-	var Yakcat = db.model('Yakcat');
-	var info = new Info();
-	var place = new Place();
-	var tag = new Tag();
-	var error = {};
-	var theYakType = 4;
-	
-	if(typeof(req.body.info) != 'undefined'){
-		var theinfo = JSON.parse(req.body.info);	
-	
-		if( typeof(theinfo._id) != 'undefined' )
-			theinfoid = theinfo._id;
-		
-		if(theinfoid){
-		
-			var now = new Date();
-			
-			// TITLE
-			if(typeof(theinfo.title) != 'undefined' && theinfo.title != ''){
-				Info.update({_id:theinfoid,user:res.locals.user._id},{$set:{title:theinfo.title,lastModifDate:now}}, function(err,docs){
-					if(err)
-						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
-					else
-						res.json({meta:{code:200,data:{info:theinfoid}}});
-				});
-			}
-			// CONTENT	
-			if(typeof(theinfo.content) != 'undefined' && theinfo.content != ''){
-				Info.update({_id:theinfoid,user:res.locals.user._id},{$set:{content:theinfo.content,lastModifDate:now}}, function(err,docs){
-					if(err)
-						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
-					else
-						res.json({meta:{code:200,data:{info:theinfoid}}});
-				});
-			}
-			// YAKTYPE
-			var yaktypeAccepted = [1,2,3,4];
-			if(yaktypeAccepted.indexOf(theinfo.yaktype)>0){
-				Info.update({_id:theinfoid,user:res.locals.user._id},{$set:{yaktype:Math.floor(theinfo.yaktype),lastModifDate:now}}, function(err,docs){
-					if(err)
-						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
-					else
-						res.json({meta:{code:200,data:{info:theinfoid}}});
-				});
-			}else
-				theYakType = 4; // by default : DISCUSSION
-				
-			// THUMB
-			var infoThumb = new Object();
-			
-			if(typeof(req.files.picture) != 'undefined' && req.files.picture.size > 0 && req.files.picture.size < 1048576*5){
-				var drawTool = require('../mylib/drawlib.js');
-				var size = res.locals.mainConf.imgSizeInfo;
-				infoThumb = drawTool.StoreImg(req.files.picture,size,conf);
-				
-				if(infoThumb.err == 0 ){
-					Info.update({_id:theinfoid,user:res.locals.user._id},{$set:{thumb:infoThumb.name,lastModifDate:now}}, function(err,docs){
-						if(err)
-							res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
-						else
-							res.json({meta:{code:200,data:{info:theinfoid}}});
-					});
-				}else{
-					res.json({meta:{code:404,error_type:'Image upload failed',error_description:"image should be jpeg and less than 5M"}});	
-				}
-			}
-			// DATES 
-			
-			if(typeof(theinfo.pubdate) != 'undefined' && theinfo.pubdate > 0){
-				Info.update({_id:theinfoid,user:res.locals.user._id},{$set:{dateEndPrint:new Date(theinfo.pubdate*1000),lastModifDate:now}}, function(err,docs){
-					if(err)
-						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
-					else
-							res.json({meta:{code:200,data:{info:theinfoid}}});
-				});
-			}
-			// TAGS
-			if(typeof(theinfo.freetag) != 'undefined' && theinfo.freetag.length > 0){
-				Info.update({_id:theinfoid,user:res.locals.user._id},{$set:{freeTag:theinfo.freetag,lastModifDate:now}}, function(err,docs){
-					if(err)
-						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
-					else
-							res.json({meta:{code:200,data:{info:theinfoid}}});
-				});
-				
-				theinfo.freetag.forEach(function(freeTag){
-					Tag.findOne({'title':freeTag},function(err,thetag){
-						if(thetag == null){
-							tag.title=freeTag;
-							tag.save();
-						}
-						else{
-							Tag.update({_id: thetag._id}, {lastUsageDate:now}, {upsert: false}, function(err){if (err) console.log(err);});						
-						}
-					});				
-				});
-			}
-			
-			
-			
-			
-			
-			if(typeof(theinfo.yakcat) != 'undefined' && theinfo.yakcat.length > 0){
-				var yakCatIds = new Array();
-				var yakCatNames = new Array(); 
-			
-				// we introduce a redondancy between types and yakcat to be able to forget the type in the future
-				if(theYakType == 4){ // if type =4 ( discussion : by default push it in YAKCAT discussion )
-					yakCatIds.push(mongoose.Types.ObjectId("5092390bfa9a95f40c000000")); 
-					yakCatNames.push('Discussion');
-				}
-				if(theYakType == 2){ // if type =2 ( agenda : by default push it in yakCat agenda )
-					yakCatIds.push(mongoose.Types.ObjectId("50923b9afa9a95d409000000")); 
-					yakCatNames.push('Agenda');
-				}
-				if(theYakType == 3){ // if type =3 ( infos pratiques : by default push it in yakCat infos pratiques )
-					yakCatIds.push(mongoose.Types.ObjectId("50923b9afa9a95d409000001")); 
-					yakCatNames.push('InfosPratiques');
-				}
-				
-			
-				Yakcat.findByIds(theinfo.yakcat,function(err,theyakcats){
-					if(theyakcats){
-						theyakcats.forEach(function(theyakcat){
-							if(yakCatNames.indexOf(theyakcat.title)){
-								yakCatIds.push(mongoose.Types.ObjectId(theyakcat._id.toString()));
-								yakCatNames.push(theyakcat.title);
-							}
-						});
-					}else{
-						info.yakCat = yakCatIds;
-						info.yakCatName = yakCatNames;
-					}
-					
-					Info.update({_id:theinfoid,user:res.locals.user._id},{$set:{yakCat:yakCatIds,yakCatName:yakCatNames,lastModifDate:now}}, function(err,docs){
-						if(err)
-							res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
-						else
-							res.json({meta:{code:200,data:{info:theinfoid}}});
-					});
-				});	
-			}
-			
-				
 
-			
-			// PLACE
-			var theplaceid = '';	
-			if( typeof(theinfo.placeid) != 'undefined' )
-				if(typeof(theinfo.placeid._id) != 'undefined')
-					theplaceid = theinfo.placeid._id;
-					
-			if(theplaceid){
-				Place.findById(theplaceid,function(err,theplace){
-					if(theplace){
-						// NOTE : in the query below, order is important : in DB we have lat, lng but need to insert in reverse order : lng,lat  (=> bug mongoose ???)
-						Info.update({_id:theinfoid,user:res.locals.user._id},{$set:{placeId:theplaceid,address:theplace.formatted_address,location:{lat:parseFloat(theplace.location.lat),lng:parseFloat(theplace.location.lng)},lastModifDate:now}}, function(err,docs){
-						if(err)
-							res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
-						else
-							res.json({meta:{code:200,data:{place:docs._id}}});
-					});	
-						
-						
-					}else{
-						error = {"error":"Update failed","error_reason": "Place not found","error_description":"placeid does not correspond to anything"};
-						res.json({error:error});
-					}				
-				});
-			}
-		}else{
-			error = {"error":"Update failed","error_reason": "Missing paramater","error_description":"info._id is empty"};
-			res.json({error:error});
-		}
-		
-	res.json({info:{_id:theinfoid}});
-	
-	}else{
-		error = {"error":"Update failed","error_reason": "Missing paramater","error_description":"info is not set, should be info = {title:string, content:string, yakcat:['id1xxxx','id2xxxx'], yaktype:int, freetag:[string,string], pubdate:int, placeid:{_id:string}} "};
-		res.json({error:error});
-	}
-
-	
-	
-}
 
 
 
