@@ -49,7 +49,9 @@ h4, h3, h2 , h1{margin-bottom:5px;}
 #feedContent .title a { color: #4A4A4A;}
 #feedContent .title a:hover { color: #D71921;}
 #feedContent .content{font-size:0.6em;}
-#feedContent .address{font-size:11px;font-style:italic; left: 40px; top: 5px; position: relative; clear: both;}
+#feedContent .address{font-size:11px;font-style:italic; left: 40px; top: 5px; position: relative; clear: both; text-align: right;}
+#feedContent .shareMe { text-align: right; margin-top: 10px; }
+#feedContent .shareMe i {cursor: pointer;}
 #feedContent .img { float: left; margin-right: 12px;}
 #feedContent .myitem { margin: 10px 10px 32px 10px; color: #4A4A4A; width: 90%; border-bottom: 1px dotted #cecece; min-height: 200px; }
 #feedContent .myitem .title { font-size: 14px; font-weight: bold; padding-bottom: 10px;}
@@ -59,7 +61,8 @@ h4, h3, h2 , h1{margin-bottom:5px;}
 #feedContent .myitem .title .hot .hotLevel{ background: #D71921;  height: 8px;}
 #feedContent .myitem  .content { font-size: 13px; line-height: 18px; }
 #feedContent .myitem  .content .more { float: right;}
-#feedContent .myitem .title .yakImg { float: left; padding-right: 10px; }
+#feedContent .myitem .title .yakImg { float: right; padding-right: 10px; }
+#feedContent .myitem .title .PersonImg { float: left; padding-right: 10px; }
 
 #search #heatModule { text-align: center;}
 #search #heatModule .upperHeight { height: 5px; margin-top: 9px;}

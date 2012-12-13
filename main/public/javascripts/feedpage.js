@@ -123,7 +123,7 @@ Date.prototype.toLongFrenchFormat = function ()
 
 		
 			
-			$.getJSON('/api/feeds', { skip: askip, limit: alimit,  yaktype: yaktype, _id: _id, what: what, where: where, dateInterval: dateInterval, cattype: cattype} ,function(data) {
+			$.getJSON('/api/feeds', { skip: askip, limit: alimit,  yaktype: yaktype, _id: _id, what: what, where: where, dateInterval: dateInterval, cattype: cattype, next: next} ,function(data) {
 				var len = data.info.length;
 				
 				if(len == 0)
@@ -137,7 +137,7 @@ Date.prototype.toLongFrenchFormat = function ()
 				if (!next) {
 					$("#feedContent").html("");
 				};
-				var item, title, content, address, more, postedby, date, type, cat, img, outlink, hot, ago;
+				var item, title, content, address, more, postedby, date, type, cat, img, outlink, hot, ago, yakimage;
 				
 				$.each(data.info, function(key,val) {
 
@@ -155,7 +155,7 @@ Date.prototype.toLongFrenchFormat = function ()
 
 					title = $("<div />");
 					title.attr("class", "title");
-					title.html("<img class='yakImg' src='" + yakImages[val.yakType] + "' />");
+					title.html("<img class='PersonImg' src='" + "/images/yakfav.png"+ "' />");
 					title.append(more);
 
 
@@ -173,7 +173,11 @@ Date.prototype.toLongFrenchFormat = function ()
 					ago.css("float", "right");
 					ago.attr("title", val.pubDate);
 
+					yakimage = $("<div />");
+					yakimage.html("<img class='yakImg' src='" + yakImages[val.yakType] + "' />");
+
 					title.append(ago);
+					title.append(yakimage);
 
 					date = new Date(val.pubDate).toLongFrenchFormat();
 					if(val.origin != null)
@@ -218,9 +222,11 @@ Date.prototype.toLongFrenchFormat = function ()
 					address.attr("class", "address");
 					address.html(val.address);
 
+
 					item.append(title);
 					item.append(content);
 					item.append(address);
+					item.append("<div class='shareMe'>Share or comment <i class='icon-share' title='Share Me'></i><i class='icon-comment'></i></div>");
 					
 					if(next != 1)
 						$("#feedContent").prepend(item);
@@ -236,8 +242,47 @@ Date.prototype.toLongFrenchFormat = function ()
 				});
 				
 				setClickableArea();
+				setShare();
 				$("abbr.timeago").timeago();
 			});
+		}
+
+		function setShare(){
+		   		$('.icon-comment, .icon-share').each(function(){
+		   			$(this).sharrre({
+						share: {
+						googlePlus: true,
+						facebook: true,
+						twitter: true
+						},
+						enableTracking: true,
+						buttons: {
+							googlePlus: {
+								url: $(this).parent().parent().find(".title").find(".more").attr("href"),
+								size: 'medium'
+							},
+
+						facebook: {
+							url:  $(this).parent().parent().find(".title").find(".more").attr("href"),
+							layout: 'button_count'
+						},
+
+						twitter: {
+							text: $(this).parent().parent().find(".content").text().substring(0, 100) + "...",
+							count: 'horizontal',
+							url: 'http://www.yakwala.fr'
+						}					
+						},
+						hover: function(api, options){
+							$(api.element).find('.buttons').show();
+						},
+						hide: function(api, options){
+						$(api.element).find('.buttons').hide();
+						}
+					});
+		   		});
+		   		
+		 
 		}
 
 		function triggerSearch(currentPage, ismore)
