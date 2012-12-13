@@ -161,44 +161,166 @@ block content
 					p All params are typed as much as possible : an id must be passed with an array(_id=>'xxxx')
 					h5 Responses
 					p Responses are following the schemas below:
+						pre
+							div { "meta": { "code": XXX, "data": { [{DATA}] } } }
+							div with XXX is an http code ( 200 for success ...)
+							div the data is an array of objects following the templates below :
+
 					ul
-						li info : {
-							div &nbsp;&nbsp;<b>_id</b>:string, 
-								i.muted news id
-							div &nbsp;&nbsp; <b>title</b>:string, 
-								i.muted news title (<b>*required</b>)
-							div &nbsp;&nbsp; <b>placeid</b>:string, 
-								i.muted JSON object the place id ( see the /api/place to create a place)  (<b>*required</b>)
-							div &nbsp;&nbsp; <b>location</b>:array(lat,lng): {lat:float,lng:float}, 
-								i.muted the geographical location of the news (<b>*required</b>)	
-							div &nbsp;&nbsp; <b>content</b>:string, 
-								i.muted news main content - <b>default</b> : empty
-							div &nbsp;&nbsp; <b>thumb</b>:string,  
-								i.muted news thumb - <b>default</b> : empty
-							div &nbsp;&nbsp; <b>print</b>:boolean, 
-								i.muted set to 0 if you want only the news to appear on the news feed and not on the map - <b>default: </b>: 1 (on map and on feed)
-							div &nbsp;&nbsp; <b>address</b>:string, 
-								i.muted the human redable address string - <b>default</b> : empty
-							div &nbsp;&nbsp; <b>pubdate</b>:date, 
-								i.muted date to be published, Unix timestamp - <b>default</b> : now
-							div &nbsp;&nbsp; <b>dateEndPrint</b>:date, 
-								i.muted date of the end of the news, :  every news has a limited life time begining at pubDate and ending at dateEndPrint - <b>default</b> : datePub + 3 days
-							div &nbsp;&nbsp; <b>creationDate</b>:date, 
-								i.muted creation date - <b>default</b> : empty
-							div &nbsp;&nbsp; <b>lastModifDate</b>:date, 
-								i.muted last modif date - <b>default</b> : empty
-							div &nbsp;&nbsp; <b>yaktype</b>:int, 
-								i.muted 
-									div&nbsp;&nbsp;&nbsp;&nbsp; Yakwala type - <b>default</b> : 4 
-									div&nbsp;&nbsp;&nbsp;&nbsp; Values allowed are : actu = 1 , agenda = 2 , Infos Pratiques = 3 , Discussion = 4
-							&nbsp;&nbsp;<b>freetag</b>:[string,string], 
-							i.muted array of string tags - <b>default</b> : empty array
-							div &nbsp;&nbsp;<b>yakCatName</b>:['Sports','Football'], 
-							i.muted array of Yakwala categories names - <b>default</b> : empty
-							div &nbsp;&nbsp;<b>yakCat</b>:['id1xxxx','id2xxxx'], 
-							i.muted array of Yakwala categories - <b>default</b> : empty
+						div#format_info
+							pre
+								div <b>info</b> : {
+								div &nbsp;&nbsp;<b>_id</b> : string, 
+									i.muted news id
+								div &nbsp;&nbsp; <b>title</b> : string, 
+									i.muted news title
+								div &nbsp;&nbsp; <b>placeid</b> : string, 
+									i.muted each news is linked to a place id ( see the /api/place to create a place)
+								div &nbsp;&nbsp; <b>location</b> : array(lat,lng): {lat:float,lng:float}, 
+									i.muted the geographical location of the news
+								div &nbsp;&nbsp; <b>content</b> : string, 
+									i.muted news main content 
+								div &nbsp;&nbsp; <b>thumb</b> : string,  
+									i.muted news thumb
+								div &nbsp;&nbsp; <b>print</b> : boolean, 
+									div
+										i.muted &nbsp;&nbsp;&nbsp;&nbsp; 0 => the news appears only on the news feed and not on the map
+									div 
+										i.muted &nbsp;&nbsp;&nbsp;&nbsp;1 => the news appears on the news feed and on the map
+								div &nbsp;&nbsp; <b>address</b> : string, 
+									i.muted the human redable address string
+								div &nbsp;&nbsp; <b>pubdate</b> : date, 
+									i.muted date to be published, Unix timestamp 
+								div &nbsp;&nbsp; <b>dateEndPrint</b> : date, 
+									i.muted date of the end of the news,
+									div
+										i.muted &nbsp;&nbsp;&nbsp;&nbsp; every item has a limited lifetime begining at pubDate and ending at dateEndPrint
+								div &nbsp;&nbsp; <b>creationDate</b> : date, 
+									i.muted creation date
+								div &nbsp;&nbsp; <b>lastModifDate</b> : date, 
+									i.muted last modif date
+								div &nbsp;&nbsp; <b>yaktype</b> : int, 
+									i.muted &nbsp;&nbsp;&nbsp;&nbsp; Yakwala type
+									i.muted 
+										div &nbsp;&nbsp;&nbsp;&nbsp; Values allowed are : Actu = 1 , Agenda = 2 , Info Pratique = 3 , Discussion = 4
+								div &nbsp;&nbsp;<b>freetag</b> : [string,string], 
+									i.muted array of string tags 
+								div &nbsp;&nbsp;<b>yakCatName</b> : ['Sports','Football'], 
+									i.muted array of Yakwala categories names
+								div &nbsp;&nbsp;<b>yakCat</b> : ['id1xxxx','id2xxxx'], 
+									i.muted array of Yakwala categories
+								}
+						div#format_lightPlace
 							br
-							}
+							br 
+							br
+							pre
+								div <b>lightPlace</b> : {
+								div &nbsp;&nbsp;&nbsp;&nbsp;<b>_id</b> : string, 
+									i.muted place id
+								div &nbsp;&nbsp;&nbsp;&nbsp;<b>title</b> : string, 
+									i.muted place name
+								div &nbsp;&nbsp;&nbsp;&nbsp;<b>location</b> : { lng : float, lat : float },
+									i.muted place latitude and longitude
+						div#format_place
+							br
+							br
+							br
+							pre
+								div <b>place</b> : {
+								div &nbsp;&nbsp;&nbsp;&nbsp;<b>_id</b> : string, 
+									i.muted place id
+								div &nbsp;&nbsp;&nbsp;&nbsp;<b>title</b> : string,
+									i.muted place name
+								div &nbsp;&nbsp;&nbsp;&nbsp;<b>content</b> : string,
+									i.muted place description
+								div &nbsp;&nbsp;&nbsp;&nbsp;<b>thumb</b> : string,
+									i.muted place thumbnail url
+								div &nbsp;&nbsp;&nbsp;&nbsp;<b>outGoingLink</b> : string,
+									i.muted link to a resource describing the place
+								div &nbsp;&nbsp;&nbsp;&nbsp;<b>yakCat</b> : [string] 
+									i.muted array of yakcat ids , see <a href="/docs/api#endpoint_Yakcat">the yakCat</a> endpoint to know how to get an id.
+								div &nbsp;&nbsp;&nbsp;&nbsp;<b>creationDate</b> : string,
+									i.muted creation date of the place
+								div &nbsp;&nbsp;&nbsp;&nbsp;<b>lastModifDate</b> : date,
+									i.muted last modification date of the place
+								div &nbsp;&nbsp;&nbsp;&nbsp;<b>location</b> : { lng : float, lat : float },
+									i.muted place latitude and longitude
+								div &nbsp;&nbsp;&nbsp;&nbsp;<b>formatted_address</b> : string 
+									i.muted human readable address ("Rue de Bagnolet, 75020 Paris, France")
+								div &nbsp;&nbsp;&nbsp;&nbsp;<b>address</b> : {
+								div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>zip</b> : "75020", 
+								div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>country</b> : "France", 
+								div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>area</b> : "Ile-de-France", 
+								div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>state</b> : "Paris", 
+								div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>city</b> : "Paris", 
+								div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>arr</b> : "20th arrondissement of Paris", 
+								div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>street</b> : "Rue de Bagnolet", 
+								div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>street_number</b> : "12" 
+								div &nbsp;&nbsp;&nbsp;&nbsp;}, 
+									i.muted an object address following gmap response format
+								div &nbsp;&nbsp;&nbsp;&nbsp;<b>contact</b> : {
+								div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>tel</b> : "0112345678", 
+								div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>mobile</b> : "06012345678", 
+								div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>mail</b> : "lemail@mail.com", 
+								div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>transportation</b> : "Métro 2 station Jaurès", 
+								div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>web</b> : "http://lesite.com", 
+								div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>opening</b> : "Tous les jours sauf mardi de 8h à 12h", 
+								div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>closing</b> : "Mardi", 
+								div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>special_opening</b>: 'nocturne le vendredi'
+								div &nbsp;&nbsp;&nbsp;&nbsp;}, 
+								div }
+						div#format_lightUser
+							br
+							br
+							br
+							pre
+								div <b>lightUser</b> : {
+								div &nbsp;&nbsp;&nbsp;&nbsp;<b>_id</b> : string, 
+								div &nbsp;&nbsp;&nbsp;&nbsp;<b>name</b> : string,
+								div &nbsp;&nbsp;&nbsp;&nbsp;<b>login</b> : string,
+								div &nbsp;&nbsp;&nbsp;&nbsp;<b>userdetails</b> : string, 
+									i.muted concatenation of the 2 former fields like this : "name (@login)"
+								div &nbsp;&nbsp;&nbsp;&nbsp;<b>thumb</b> : string,
+								
+						div#format_user
+							br
+							br
+							br
+							pre
+								div <b>user</b> : {
+								div &nbsp;&nbsp;&nbsp;&nbsp;<b>_id</b> : string, 
+								div &nbsp;&nbsp;&nbsp;&nbsp;<b>name</b> : string,
+								div &nbsp;&nbsp;&nbsp;&nbsp;<b>bio</b> : string,
+									i.muted user biography
+								div &nbsp;&nbsp;&nbsp;&nbsp;<b>thumb</b> : string,
+									i.muted user's avatar url
+								div &nbsp;&nbsp;&nbsp;&nbsp;<b>web</b> : string,
+									i.muted user's website url
+								div &nbsp;&nbsp;&nbsp;&nbsp;<b>login</b> : string,
+								div &nbsp;&nbsp;&nbsp;&nbsp;<b>name</b> : string,
+								div &nbsp;&nbsp;&nbsp;&nbsp;<b>mail</b> : string,
+								div &nbsp;&nbsp;&nbsp;&nbsp;<b>lastLoginDate</b> : string,
+								div &nbsp;&nbsp;&nbsp;&nbsp;<b>location</b> : { lng : float, lat : float },
+									i.muted this data is used to set the default map's center
+								div &nbsp;&nbsp;&nbsp;&nbsp;<b>address</b> : {
+								div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>zip</b> : "75020", 
+								div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>country</b> : "France", 
+								div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>area</b> : "Ile-de-France", 
+								div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>state</b> : "Paris", 
+								div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>city</b> : "Paris", 
+								div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>arr</b> : "20th arrondissement of Paris", 
+								div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>street</b> : "Rue de Bagnolet", 
+								div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>street_number</b> : "12" 
+								div &nbsp;&nbsp;&nbsp;&nbsp;}, 
+									i.muted an object address following gmap response format
+								div &nbsp;&nbsp;<b>favplace</b> : [lightPlace], 
+									i.muted user's favorite places, array of <a href="/docs/api#format_lightPlace">lightPlace</a> objects
+								div &nbsp;&nbsp;&nbsp;&nbsp;<b>tagsubs</b> : [string] 
+									i.muted user's tags to be able to be search on, array of strings
+								div &nbsp;&nbsp;<b>usersubs</b> : [lightUser], 
+									i.muted user follows news of this list of users, array of <a href="/docs/api#format_lightUser">lightUser</a> objects
+								div }		
 					hr
 					div#endpoints
 					br
@@ -302,7 +424,7 @@ block content
 									tr
 										td Response:
 											ul
-												li returns the info object created
+												li returns the code 200 if operation succeded
 						
 						tr
 							td(colspan=3)
@@ -463,30 +585,7 @@ block content
 							td(colspan=3)
 								b response:
 								ul
-									li 
-										div { "places": 
-										div &nbsp;&nbsp;[ { 
-										div &nbsp;&nbsp;&nbsp;&nbsp;"_id": "xxx", 
-										div &nbsp;&nbsp;&nbsp;&nbsp;"title": "xxx",
-										div &nbsp;&nbsp;&nbsp;&nbsp;"content": "xxx", 
-										div &nbsp;&nbsp;&nbsp;&nbsp;"thumb": "xxx",
-										div &nbsp;&nbsp;&nbsp;&nbsp;"outGoingLink": "xxx",
-										div &nbsp;&nbsp;&nbsp;&nbsp;"yakCat": [ "504d89f4fa9a958808000001" ],
-										div &nbsp;&nbsp;&nbsp;&nbsp;"creationDate": "2012-12-08T09:36:39.000Z",
-										div &nbsp;&nbsp;&nbsp;&nbsp;"lastModifDate": "2012-12-08T09:36:39.000Z",
-										div &nbsp;&nbsp;&nbsp;&nbsp;"location": { "lng": 2.4031025, "lat": 48.8596632 },
-										div &nbsp;&nbsp;&nbsp;&nbsp;"address": { 
-										div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"zip": "75020", 
-										div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"country": "France", 
-										div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"area": "Ile-de-France", 
-										div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"state": "Paris", 
-										div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"city": "Paris", 
-										div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"arr": "20th arrondissement of Paris", 
-										div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"street": "Rue de Bagnolet", 
-										div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"street_number": "" 
-										div &nbsp;&nbsp;&nbsp;&nbsp;}, 
-										div &nbsp;&nbsp;"formatted_address": "Rue de Bagnolet, 75020 Paris, France" 
-										div &nbsp;&nbsp;} ] }" 
+									li array of objects Place ( see <a href="/docs/api#formats">Formats</a> for exact reference )
 
 					// PLACE MANAGEMENT
 					table.table.table-bordered  

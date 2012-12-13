@@ -75,6 +75,29 @@ var Info = new Schema({
 //Info.index({location : '2d',pubDate:-1,yakType:1,print:1,status:1});
 //Info.index({location : '2d'});
 
+Info.statics.format = function (theinfo) {
+	var formattedInfo = {
+		_id:theinfo._id,
+		title:theinfo.title,
+		content:theinfo.content,
+		thumb:theinfo.thumb,
+		yakType:theinfo.yakType,
+		print:theinfo.print,
+		dateEndPrint:theinfo.dateEndPrint,
+		address:theinfo.address,
+		location:theinfo.location,
+		lastModifDate:theinfo.lastModifDate,
+		creationDate:theinfo.creationDate,
+		pubDate:theinfo.pubDate,
+		freeTag:theinfo.freeTag,
+		yakTag:theinfo.yakTag,
+		yakCatName:theinfo.yakCatName,
+		yakCat:theinfo.yakCat,
+		placeId:theinfo.placeId,
+	};
+  return formattedInfo;
+}
+
 
 Info.statics.findByTitle = function (title, callback) {
   return this.find({ title: title }, callback);
@@ -620,6 +643,36 @@ var User = new Schema({
 					}
 }, { collection: 'user' });
 
+
+User.statics.format = function (theuser) {
+	var formattedUser = {
+		_id:theuser._id,
+		name:theuser.name,
+		bio:theuser.bio,
+		thumb:theuser.thumb,
+		web:theuser.web,
+		login:theuser.login,
+		mail:theuser.mail,
+		lastLoginDate:theuser.lastLoginDate,
+		location:theuser.location,
+		address:theuser.address,
+		favplace:theuser.favplace,
+		usersubs:theuser.usersubs,
+		tagsubs:theuser.tagsubs,
+	};
+  return formattedUser;
+}
+
+User.statics.formatLight = function (theuser) {
+	var formattedUser = {
+		_id:theuser._id,
+		name:theuser.name,
+		login:theuser.login,
+		userdetails:theuser.name+'(@'+theuser.login+')',
+		thumb:theuser.thumb
+	};
+  return formattedUser;
+}
 
 User.statics.findByLogin = function (login,callback) {
   return this.find({login:login,status:1}, callback);

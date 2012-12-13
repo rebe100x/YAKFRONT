@@ -242,6 +242,7 @@ width: 270px;
 	height:100px;
 }
 
+
 /* Sidenav
 -------------------------------------------------- */
 
@@ -310,3 +311,25 @@ width: 270px;
   top: auto;
   bottom: 270px;
 }
+
+
+/* DOC
+----------------------------------------------------*/
+.yak-sidenav-fixed {
+     position:fixed;
+     top:60px;
+     
+ }
+
+ @media (max-width: 767px) {
+     .yak-sidenav-fixed {
+         width:auto;
+     }
+ }
+
+ @media (max-width: 979px) {
+     .yak-sidenav-fixed {
+         position:static;
+        width: auto;
+     }
+ }

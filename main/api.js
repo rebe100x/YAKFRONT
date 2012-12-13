@@ -134,7 +134,7 @@ app.post('/api/updatesubscribe/tag/:userid', api.requiresToken, api.put_subs_tag
 app.get('/api/user/feed/:userid', api.get_user_feed);
 app.post('/api/user/feed/:userid',api.requiresToken, api.add_user_feed);
 app.delete('/api/user/feed/:userid',api.requiresToken, api.del_user_feed);
-app.put('/api/user/feed/:userid',api.requiresToken, api.put_user_feed);
+app.put('/api/user/feed/:userid',api.requiresToken, api.add_user_feed);
 // for non restfull guys
 app.post('/api/user/updatefeed/:userid', api.requiresToken, api.put_user_feed); 
 app.post('/api/user/delfeed/:userid', api.requiresToken, api.del_user_feed); 
