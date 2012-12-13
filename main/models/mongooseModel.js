@@ -98,7 +98,7 @@ Info.statics.findAll = function (callback) {
 
 }
 
-Info.statics.findAllByPage = function (callback, skip, limit, yakType, _id, what, where, dateInterval, yakCat, next) {
+/*Info.statics.findAllByPage = function (callback, skip, limit, yakType, _id, what, where, dateInterval, yakCat, next) {
 	
 	var mydateUtils = require('../mylib/dateUtils.js');
 
@@ -137,10 +137,54 @@ Info.statics.findAllByPage = function (callback, skip, limit, yakType, _id, what
 
 
 	if (where != "") {
-		 cond["location"] = {$near : [parseFloat(location[0]),parseFloat(location[1])]};
+		 cond["location"] = {$near : [parseFloat(location[0]),parseFloat(location[1])], $maxDistance: 1};
 	};
 	
 	var infos = this.find(cond).sort({'pubDate':1}).skip(skip).limit(limit);
+
+	res = infos.exec(callback)
+
+}
+*/
+
+Info.statics.findAllByPage = function (callback, skip, limit, yakType, _id, what, where, dateInterval, yakCat, next) {
+	
+	var mydateUtils = require('../mylib/dateUtils.js');
+	var now = mydateUtils.substractDays(new Date(), parseInt(0));
+	var from = mydateUtils.substractDays(new Date(), parseInt(dateInterval.split(',')[1]));
+	var till = mydateUtils.substractDays(new Date(), parseInt(dateInterval.split(',')[0]));
+	var daterange = dateInterval.split(',');
+	var types = new Array();
+	types = yakType.split(',');
+    var location = new Array();
+    location = where.split(',');
+
+    var infos = this.find();
+
+    infos.where('status').equals(1);
+
+	if (dateInterval.split(',')[1] == dateInterval.split(',')[0]){
+		infos.where('pubDate').gt(from).lt(now);
+	}
+	else
+	{
+		infos.where('pubDate').gt(from).lt(till);
+	}
+
+	if (yakType != ""){
+		infos.where('yakType').in(types);
+	};
+
+	if (what != "") {
+			infos.or([{ 'content': { $regex: what }}, { 'title': { $regex: what }}])
+	};
+
+
+	if (where != "") {
+		 infos.where('location').near( [parseFloat(location[0]),parseFloat(location[1])] ).maxDistance(5);
+	};
+	
+	infos.sort({ pubDate: 'asc' }).skip(skip).limit(limit);
 
 	res = infos.exec(callback)
 
