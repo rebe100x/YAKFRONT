@@ -194,16 +194,37 @@ Date.prototype.toLongFrenchFormat = function ()
 					img.attr("class", "img");
 					img.attr("src", conf.backurl + val.thumb.replace("\/", "/"));
 					
-					outlink = $("<a />");
-					outlink.attr("href", val.outGoingLink);
-					outlink.attr("target", "_blank");
-					outlink.html("read from source");
+					outlink = $("<div />");
+					outlink.html("<a></a>");
+					outlink.find("a").attr("href", val.outGoingLink);
+					outlink.find("a").attr("target", "_blank");
+					outlink.find("a").html("read from source");
+
+					readmore = $("<a />");
+					readmore.attr("class", "expand");
+					readmore.css("cursor", "pointer");
+					readmore.css("marginLeft", "12px");
+					readmore.click(function(){
+						var loading = $("<span />");
+						loading.html("loading...");
+						$(this).after(loading);
+						$(this).css("visibility", "hidden");
+						$.getJSON('/api/afeed', { id: val._id} ,function(data) {
+							
+							readmore.parent().html(data.info[0].content);
+
+						});	
+					});
+					readmore.html("+");
+					
+
 
 					content = $("<div />");
 					content.attr("class", "content");
-					content.html(val.content.substring(0, subSize));
-					content.append(outlink);
+					content.html("<div class='theContent'>" + val.content.substring(0, subSize) + "</div>");
+					
 					content.prepend(img);
+					content.find(".theContent").append(readmore);
 
 					content.append("<br /><br />");
 					
@@ -241,6 +262,7 @@ Date.prototype.toLongFrenchFormat = function ()
 					
 					content.append(freetags)
 
+					content.append(outlink);
 
 					address = $("<div />");
 					address.attr("class", "address");
