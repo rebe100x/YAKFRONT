@@ -12,7 +12,7 @@ Date.prototype.toLongFrenchFormat = function ()
 
 
 		
-		var limit = conf.searchParams.limit;
+		var limit = mainConf.searchParams.limit;
 		var yakImages = new Array ( 
 				"/images/yakfav.png", 
 				"/images/markers/type1.png", 
@@ -21,7 +21,7 @@ Date.prototype.toLongFrenchFormat = function ()
 				"/images/markers/type4.png", 
 				"/images/markers/type5.png" 
 			);
-		var subSize = conf.searchParams.subSize;
+		var subSize = mainConf.searchParams.subSize;
 		var currentPage = 1;
 
 		$(document).ready(function() {
@@ -55,7 +55,7 @@ Date.prototype.toLongFrenchFormat = function ()
 			//$("html, body").animate({ scrollTop: $(document).height() }, 1000);
 		});
 		
-		$(".searchButton").click(function(event, currentpage, next=0){
+		$(".searchButton").click(function(event, currentpage, next){
 
 			if(event.which)
 			{

@@ -167,7 +167,7 @@ exports.del_favplace = function (req, res) {
 		var placeId = JSON.parse(req.body.place)._id;
 		User.update({_id:res.locals.user._id},{$pull:{favplace:{_id:placeId}}}, function(err,docs){
 			if(!err)
-				res.json({meta:{code:200},data:{_id:placeId}});
+				res.json({meta:{code:200}});
 			else
 				res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 		});

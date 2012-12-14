@@ -532,22 +532,45 @@ block content
 							td mange user's favorite places
 						tr
 							td(colspan=3)
-								b parameters:
-								ul
-									li GET/POST/DELETE/PUT : access_token=string - the token access
-									li DELETE:  favplace:[{_id:string},{_id:string},{_id:string}] - array of object of ids
-									li POST/PUT : favplace:[{name:string,location:{lat:float,lng:float}},{name:string,location:{lat:float,lng:float}}] - array of object of places
+								table.table.table-bordered
+									tr
+										td GET :
+									tr
+										td Parameters :
+											ul 
+												li v:int - the version of the api - <b>default: </b>the last version
+												li local:string - response language - <b>default: </b>'fr'
+									tr
+										td Response :
+											ul
+												li Array of lightPlace objects	
 						tr
 							td(colspan=3)
-								b optional parameters:
-								ul			
-									li v=1 - the version of the api
-									li local='fr' - response language
-						tr
-							td(colspan=3)
-								b response:
-								ul
-									li favplace:[{name:string,location:{lat:float,lng:float}},{name:string,location:{lat:float,lng:float}}]
+								table.table.table-bordered
+									tr
+										td POST/PUT :
+									tr
+										td Parameters :
+											ul 
+												li 
+													div
+														div <b>favplace</b> = Array of JSON objects [
+														div &nbsp;&nbsp;{name:string,location:{lat:float,lng:float}},
+														div &nbsp;&nbsp;{name:string,location:{lat:float,lng:float}}
+														div ]
+												li v:int - the version of the api - <b>default: </b>the last version
+												li local:string - response language - <b>default: </b>'fr'
+									tr
+										td Response :
+											ul
+												li Array of lightPlace objects	
+									tr
+										td Alias for non-RESTfull methods : call in POST :
+											ul 
+												li PUT: updatefavplace
+												li DELETE: delfavplace
+
+
 									
 					p.subheader Info endpoints
 					table.table.table-bordered
@@ -574,18 +597,22 @@ block content
 							td Search for a place by name.
 						tr
 							td(colspan=3)
-								b parameters:
-								ul
-									li count:int - limit the number of results
-									li skip:int - start results number
-									li sensitive: 1/0 - perform a case sensitive if set to 1, <b>default</b> : 0 => not sensitive
-									li v=1 - the version of the api
-									li local='fr' - response language
+								table.table.table-bordered
+									tr
+										td GET:
+									tr 
+										td Parameters:
+											ul
+												li count:int - limit the number of results
+												li skip:int - start results number
+												li sensitive: 1/0 - perform a case sensitive if set to 1, <b>default</b> : 0 => not sensitive
+												li v=1 - the version of the api
+												li local='fr' - response language
 						tr
 							td(colspan=3)
 								b response:
 								ul
-									li array of objects Place ( see <a href="/docs/api#formats">Formats</a> for exact reference )
+									li array of objects Place ( see <a href="/docs/api#formats_place">Formats</a> for exact reference )
 
 					// PLACE MANAGEMENT
 					table.table.table-bordered  

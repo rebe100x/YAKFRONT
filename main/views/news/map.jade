@@ -366,7 +366,11 @@ block content
 			drawNewsFeed();
 
 			$('#newsfeedContainer').mCustomScrollbar({mouseWheel:true,scrollButtons:{enable:true,scrollType:"continuous",},advanced:{autoExpandHorizontalScroll:true,updateOnContentResize: true,updateOnBrowserResize:true}});
-			$(window).resize(function(){drawNewsFeed();});
+			$(window).resize(function(){
+				drawNewsFeed();
+				bounds = getMyBounds();
+				console.log($(window).height()+' '+$(window).width());
+			});
 			
 			$('#newsfeed').delegate(".mapHighlighter",'click', function () {
 				unhighlightInfo($(this),highlightInfo);
@@ -541,6 +545,51 @@ block content
 				
 
 		});/*END READY*/
+
+		/* getMyBounds
+		* calculate bounds according to screen size and feed position.
+		*/
+		function getMyBounds(){
+			thebounds = map.getBounds();
+			
+			var width = $(window).width();
+			var height = $(window).height();
+			var pos = $("#newsfeedContainer").position();
+			if(width>768){
+				var borderOffset = 0.1; // to avoid printing news at the hedge of the screen	
+				var offsetPercent = pos.left/width;
+				var offsetDegree = (parseFloat(thebounds.ea.f) - parseFloat(thebounds.ea.b))*offsetPercent;
+				var myBounds = {
+					ca:{
+						f: thebounds.ca.f-borderOffset,
+						b: thebounds.ca.b+borderOffset,	
+					},
+					ea:{
+						f: thebounds.ea.b+offsetDegree-borderOffset,
+						b: thebounds.ea.b+borderOffset,
+					}
+				};
+			}else{
+				var borderOffset = 0.025; // to avoid printing news at the hedge of the screen	
+				var offsetPercent = pos.top/height;
+				var offsetDegree = (parseFloat(thebounds.ca.f) - parseFloat(thebounds.ca.b))*offsetPercent;
+				var myBounds = {
+					ca:{
+						f: thebounds.ca.f-borderOffset,
+						b: thebounds.ca.f-offsetDegree+borderOffset,	
+					},
+					ea:{
+						f: thebounds.ea.f-borderOffset,
+						b: thebounds.ea.b+borderOffset,
+					}
+				};
+			}
+			
+			
+			
+			return myBounds;
+		}
+
 		function drawNewsFeed(){	
 			var newsfeedContainerHeight = window.innerHeight-$('#newsfeedContainer').offset().top-50+'px';
 			$('#newsfeedContainer').css('height',newsfeedContainerHeight);
@@ -604,6 +653,7 @@ block content
 				disableDefaultUI: true,
 			});
 			bounds = map.getBounds();
+			//bounds = getMyBounds();
 			map.setOptions({styles: pinkParksStyles});
 			//var markerClustererOptions = {gridSize:30,maxZoom: 17,styles: [{height: 28,width: 28,url: "/images/markers/m1.png"},{height: 38,width: 38,url: "/images/markers/m2.png"},{height: 55,width:55,url: "/images/markers/m3.png"},{height: 85,width: 85,url: "/images/markers/m4.png"},{height: 85,width: 85,url: "/images/markers/m5.png"}]};
 			//markerCluster = new MarkerClusterer(map, markers,markerClustererOptions);
@@ -664,7 +714,10 @@ block content
 			
 			google.maps.event.addListener(map, 'idle', function() {
 				cleanMarkers();
-				bounds = this.getBounds();
+				//bounds = this.getBounds();
+
+				bounds = getMyBounds();
+				console.log(bounds);
 				center = this.getCenter();
 				curPos.x = center.lat();
 				curPos.y = center.lng();
@@ -705,7 +758,8 @@ block content
 		function silentMarkerAdder(){
 		
 			//searchString = encodeURIComponent(searchString);		
-			bounds = map.getBounds();
+			//bounds = map.getBounds();
+			bounds = getMyBounds();
 			// NOTE : here we take only one day of history : it is enough to refresh.
 			var apiUrl = '';
 			if(type.toString() == 5)
@@ -713,6 +767,11 @@ block content
 			else	
 				apiUrl = '/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/1/'+type.toString()+'/'+searchString;
 			
+			/*if(type.toString() == 5)
+				apiUrl = '/api/geoalerts/'+bounds.br.lat+'/'+bounds.br.lng+'/'+bounds.lt.lat+'/'+bounds.tl.lng+'/1/'+searchString;
+			else	
+				apiUrl = '/api/geoinfos/'+bounds.br.lat+'/'+bounds.br.lng+'/'+bounds.lt.lat+'/'+bounds.tl.lng+'/1/'+type.toString()+'/'+searchString;
+			*/
 			$.getJSON(apiUrl,function(data) {	
 				$.each(data.info, function(key,val) {
 					
@@ -823,7 +882,10 @@ block content
 		
 		function getAndPrintInfo(){
 			infoArray = [];
-			bounds = map.getBounds();
+			//bounds = map.getBounds();
+			bounds = getMyBounds();
+			console.log(bounds);
+			console.log(map.getBounds());
 			drawNewsFeed();
 			
 			cleanMarkers();
