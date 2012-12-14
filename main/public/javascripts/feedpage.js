@@ -26,8 +26,6 @@ Date.prototype.toLongFrenchFormat = function ()
 
 		$(document).ready(function() {
 
-			
-
 			//setInterval("setRefreshNews()", 30000);
 
 			$('.typeahead').typeahead();
@@ -148,6 +146,8 @@ Date.prototype.toLongFrenchFormat = function ()
 					more.attr("class", "more");
 					more.attr("href", "news/afeed?id=" + val._id);
 					more.attr("rel", val._id);
+					//var shorturl = return(get_short_url("http://www.yakwala.fr/news/afeed/?id=" + val._id));
+					//alert(shorturl);
 					more.attr("data-toggle", "data-toggle");
 					more.html(val.title);
 
@@ -242,14 +242,17 @@ Date.prototype.toLongFrenchFormat = function ()
 				});
 				
 				setClickableArea();
-				setShare();
+				setshortUrl();
+				
 				$("abbr.timeago").timeago();
 			});
 		}
 
-		function setShare(){
-		   		$('.icon-comment, .icon-share').each(function(){
-		   			$(this).sharrre({
+		function setShare(el){
+		   		
+		   			//alert($(this).parent().parent().find(".title").find(".more").attr("title"));
+		   			//console.log(el.parent().parent().find(".icon-share"));
+		   			el.parent().parent().find(".icon-share").sharrre({
 						share: {
 						googlePlus: true,
 						facebook: true,
@@ -258,19 +261,19 @@ Date.prototype.toLongFrenchFormat = function ()
 						enableTracking: true,
 						buttons: {
 							googlePlus: {
-								url: $(this).parent().parent().find(".title").find(".more").attr("href"),
+								url: el.parent().parent().find(".title").find(".more").attr("href"),
 								size: 'medium'
 							},
 
 						facebook: {
-							url:  $(this).parent().parent().find(".title").find(".more").attr("href"),
+							url:  el.parent().parent().find(".title").find(".more").attr("href"),
 							layout: 'button_count'
 						},
 
 						twitter: {
-							text: $(this).parent().parent().find(".content").text().substring(0, 100) + "...",
+							text: el.parent().parent().find(".content").text().substring(0, 100) + "...",
 							count: 'horizontal',
-							url: 'http://www.yakwala.fr'
+							url: el.parent().parent().find(".title").find(".more").attr("title")
 						}					
 						},
 						hover: function(api, options){
@@ -279,7 +282,7 @@ Date.prototype.toLongFrenchFormat = function ()
 						hide: function(api, options){
 						$(api.element).find('.buttons').hide();
 						}
-					});
+				
 		   		});
 		   		
 		 
@@ -355,4 +358,26 @@ Date.prototype.toLongFrenchFormat = function ()
 
 					});
 				}
+		}
+
+		function setshortUrl()
+		{
+
+			$(".more").each(function(){
+				var more = $(this);
+				
+				$.getJSON("https://api-ssl.bitly.com/v3/shorten?", 
+		        { 
+		            "format": "json",
+		            "apiKey": "R_99c6f442bb006c1b26237dd9ef91ddda",
+		            "login": "o_5ko6l8pajb",
+		            "longUrl": "http://www.yakwala.fr/news/feed/?id=" + more.attr("rel")
+		        }, function(data){
+		        	more.attr("title", data.data.url);
+		        	setShare(more);
+		        }
+		        
+    			);
+			});
+		    
 		}
