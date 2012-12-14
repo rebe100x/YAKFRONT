@@ -213,11 +213,35 @@ Date.prototype.toLongFrenchFormat = function ()
 					
 					cat = $("<div />");
 					cat.attr("class", "cat");
-					cat.html("YakCats: " + val.yakCatName);
+					//alert(val.yakCatName);
+					var yakCatNames = "";
+					$.each(val.yakCatName, function(key, val){
+						yakCatNames += "#" + val + " "
+					});
+
+					yakCatNames = yakCatNames.replace(/#(\S*)/g,'<a href="news/map/search/%23$1">$1</a>');
+
+					cat.html("YakCats: <b>" + yakCatNames + "</b>");
 					
 					//content.append(type);
 					content.append(cat);
 										
+					freetags = $("<div />");
+					freetags.attr("class", "freetags");
+					//alert(val.yakCatName);
+					var freetagNames = "";
+					$.each(val.freeTag, function(key, val){
+						freetagNames += "#" + val + " "
+					});
+
+
+					freetagNames = freetagNames.replace(/#(\S*)/g,'<a href="news/map/search/%23$1">$1</a>');
+
+					freetags.html("Tags: <b>" + freetagNames + "</b>");
+					
+					content.append(freetags)
+
+
 					address = $("<div />");
 					address.attr("class", "address");
 					address.html(val.address);
@@ -226,8 +250,9 @@ Date.prototype.toLongFrenchFormat = function ()
 					item.append(title);
 					item.append(content);
 					item.append(address);
-					item.append("<div class='shareMe'>Share or comment <i class='icon-share' title='Share Me'></i><i class='icon-comment'></i></div>");
+					item.append("<div class='shareMe'>Share or comment <i class='icon-share' title='Share Me'></i></div>");
 					
+
 					if(next != 1)
 						$("#feedContent").prepend(item);
 					else
@@ -271,7 +296,8 @@ Date.prototype.toLongFrenchFormat = function ()
 						},
 
 						twitter: {
-							text: el.parent().parent().find(".content").text().substring(0, 100) + "...",
+							//text: el.parent().parent().find(".content").text().substring(0, 100) + "...",
+							text: "J'ai vu ca dans YAKWALA..." + el.parent().parent().find(".content").find(".cat").find("b").text(),
 							count: 'horizontal',
 							url: el.parent().parent().find(".title").find(".more").attr("title")
 						}					
