@@ -133,6 +133,10 @@ block content
 
 					h3 Formats
 					h4 Exchange formats:
+					div#format_images
+					br
+					br
+					br
 					h5 Images
 					p All images uploaded are available with the following urls depending on the size you need : 
 					ul
@@ -156,18 +160,31 @@ block content
 								code #{JSON.parse(locals.conf).fronturl}/pictures/512_0/856433cd5588bc6914fc9c64a91aabcb.jpeg
 							div
 								code #{JSON.parse(locals.conf).fronturl}/pictures/120_90/856433cd5588bc6914fc9c64a91aabcb.jpeg
+					
+					div#format_parameters
+					br
+					br
+					br
 					h5 Parameters
 					p Paramaters are defined below for each endpoint.
 					p All params are typed as much as possible : an id must be passed with an array(_id=>'xxxx')
+					div#format_response
+					br
+					br
+					br
 					h5 Responses
 					p Responses are following the schemas below:
 						pre
-							div { "meta": { "code": XXX, "data": { [{DATA}] } } }
-							div with XXX is an http code ( 200 for success ...)
-							div the data is an array of objects following the templates below :
+							div { "meta": { "code": 200, "data": { [{DATA}] } } }
+						div Or fi an error occurred:
+						pre
+							div { "meta": { "code": 404, error_type:'xxx',error_description:'xxx'}};	
 
-					ul
-						div#format_info
+						div#format_info the data is an array of objects following the templates below :
+						br 
+						br
+						br
+						div
 							pre
 								div <b>info</b> : {
 								div &nbsp;&nbsp;<b>_id</b> : string, 
@@ -210,6 +227,7 @@ block content
 								div &nbsp;&nbsp;<b>yakCat</b> : ['id1xxxx','id2xxxx'], 
 									i.muted array of Yakwala categories
 								}
+
 						div#format_lightPlace
 							br
 							br 
@@ -222,6 +240,7 @@ block content
 									i.muted place name
 								div &nbsp;&nbsp;&nbsp;&nbsp;<b>location</b> : { lng : float, lat : float },
 									i.muted place latitude and longitude
+
 						div#format_place
 							br
 							br
@@ -270,57 +289,58 @@ block content
 								div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>special_opening</b>: 'nocturne le vendredi'
 								div &nbsp;&nbsp;&nbsp;&nbsp;}, 
 								div }
-						div#format_lightUser
-							br
-							br
-							br
-							pre
-								div <b>lightUser</b> : {
-								div &nbsp;&nbsp;&nbsp;&nbsp;<b>_id</b> : string, 
-								div &nbsp;&nbsp;&nbsp;&nbsp;<b>name</b> : string,
-								div &nbsp;&nbsp;&nbsp;&nbsp;<b>login</b> : string,
-								div &nbsp;&nbsp;&nbsp;&nbsp;<b>userdetails</b> : string, 
-									i.muted concatenation of the 2 former fields like this : "name (@login)"
-								div &nbsp;&nbsp;&nbsp;&nbsp;<b>thumb</b> : string,
-								
-						div#format_user
-							br
-							br
-							br
-							pre
-								div <b>user</b> : {
-								div &nbsp;&nbsp;&nbsp;&nbsp;<b>_id</b> : string, 
-								div &nbsp;&nbsp;&nbsp;&nbsp;<b>name</b> : string,
-								div &nbsp;&nbsp;&nbsp;&nbsp;<b>bio</b> : string,
-									i.muted user biography
-								div &nbsp;&nbsp;&nbsp;&nbsp;<b>thumb</b> : string,
-									i.muted user's avatar url
-								div &nbsp;&nbsp;&nbsp;&nbsp;<b>web</b> : string,
-									i.muted user's website url
-								div &nbsp;&nbsp;&nbsp;&nbsp;<b>login</b> : string,
-								div &nbsp;&nbsp;&nbsp;&nbsp;<b>name</b> : string,
-								div &nbsp;&nbsp;&nbsp;&nbsp;<b>mail</b> : string,
-								div &nbsp;&nbsp;&nbsp;&nbsp;<b>lastLoginDate</b> : string,
-								div &nbsp;&nbsp;&nbsp;&nbsp;<b>location</b> : { lng : float, lat : float },
-									i.muted this data is used to set the default map's center
-								div &nbsp;&nbsp;&nbsp;&nbsp;<b>address</b> : {
-								div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>zip</b> : "75020", 
-								div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>country</b> : "France", 
-								div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>area</b> : "Ile-de-France", 
-								div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>state</b> : "Paris", 
-								div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>city</b> : "Paris", 
-								div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>arr</b> : "20th arrondissement of Paris", 
-								div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>street</b> : "Rue de Bagnolet", 
-								div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>street_number</b> : "12" 
-								div &nbsp;&nbsp;&nbsp;&nbsp;}, 
-									i.muted an object address following gmap response format
-								div &nbsp;&nbsp;<b>favplace</b> : [lightPlace], 
-									i.muted user's favorite places, array of <a href="/docs/api#format_lightPlace">lightPlace</a> objects
-								div &nbsp;&nbsp;&nbsp;&nbsp;<b>tagsubs</b> : [string] 
-									i.muted user's tags to be able to be search on, array of strings
-								div &nbsp;&nbsp;<b>usersubs</b> : [lightUser], 
-									i.muted user follows news of this list of users, array of <a href="/docs/api#format_lightUser">lightUser</a> objects
-								div }		
+
+					div#format_lightUser
+						br
+						br
+						br
+						pre
+							div <b>lightUser</b> : {
+							div &nbsp;&nbsp;&nbsp;&nbsp;<b>_id</b> : string, 
+							div &nbsp;&nbsp;&nbsp;&nbsp;<b>name</b> : string,
+							div &nbsp;&nbsp;&nbsp;&nbsp;<b>login</b> : string,
+							div &nbsp;&nbsp;&nbsp;&nbsp;<b>userdetails</b> : string, 
+								i.muted concatenation of the 2 former fields like this : "name (@login)"
+							div &nbsp;&nbsp;&nbsp;&nbsp;<b>thumb</b> : string,
+							
+					div#format_user
+						br
+						br
+						br
+						pre
+							div <b>user</b> : {
+							div &nbsp;&nbsp;&nbsp;&nbsp;<b>_id</b> : string, 
+							div &nbsp;&nbsp;&nbsp;&nbsp;<b>name</b> : string,
+							div &nbsp;&nbsp;&nbsp;&nbsp;<b>bio</b> : string,
+								i.muted user biography
+							div &nbsp;&nbsp;&nbsp;&nbsp;<b>thumb</b> : string,
+								i.muted user's avatar url
+							div &nbsp;&nbsp;&nbsp;&nbsp;<b>web</b> : string,
+								i.muted user's website url
+							div &nbsp;&nbsp;&nbsp;&nbsp;<b>login</b> : string,
+							div &nbsp;&nbsp;&nbsp;&nbsp;<b>name</b> : string,
+							div &nbsp;&nbsp;&nbsp;&nbsp;<b>mail</b> : string,
+							div &nbsp;&nbsp;&nbsp;&nbsp;<b>lastLoginDate</b> : string,
+							div &nbsp;&nbsp;&nbsp;&nbsp;<b>location</b> : { lng : float, lat : float },
+								i.muted this data is used to set the default map's center
+							div &nbsp;&nbsp;&nbsp;&nbsp;<b>address</b> : {
+							div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>zip</b> : "75020", 
+							div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>country</b> : "France", 
+							div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>area</b> : "Ile-de-France", 
+							div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>state</b> : "Paris", 
+							div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>city</b> : "Paris", 
+							div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>arr</b> : "20th arrondissement of Paris", 
+							div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>street</b> : "Rue de Bagnolet", 
+							div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>street_number</b> : "12" 
+							div &nbsp;&nbsp;&nbsp;&nbsp;}, 
+								i.muted an object address following gmap response format
+							div &nbsp;&nbsp;<b>favplace</b> : [lightPlace], 
+								i.muted user's favorite places, array of <a href="/docs/api#format_lightPlace">lightPlace</a> objects
+							div &nbsp;&nbsp;&nbsp;&nbsp;<b>tagsubs</b> : [string] 
+								i.muted user's tags to be able to be search on, array of strings
+							div &nbsp;&nbsp;<b>usersubs</b> : [lightUser], 
+								i.muted user follows news of this list of users, array of <a href="/docs/api#format_lightUser">lightUser</a> objects
+							div }		
 					hr
 					div#endpoints
 					br
@@ -333,37 +353,83 @@ block content
 						All endpoints are built to be RESTfull, but we also provide non RESTfull methods to access data. There are mentionned below for each endpoint.
 					
 					// USERS PROFILE
+					div#endpoint_userprofile
+					br
+					br
+					br
+					h4 Access and modify user's profile
 					table.table.table-bordered  
 						tr
 							th METHODS
 							th URL
 							th DESCRIPTION
 						tr
-							td GET/POST/PUT
+							td GET/PUT
 							td /user/<code>user-id</code>
 							td Get the user's data details.<br> Note : you cannot delete user accounts with the api. 
 						tr
 							td(colspan=3)
-								b parameters:
-								ul
-									li GET : no parameter needed.
-									li POST/PUT : 
-										ul 
-											li access_token:string - the token access
-											li {user:}
+								table.table.table-bordered
+									tr
+										td GET : do not need access token
+									tr
+										td Parameters :
+											ul 
+												li v:int - the version of the api - <b>default: </b>the last version
+												li local:string - response language - <b>default: </b>'fr'
+									tr
+										td Response :
+											ul 
+												li user : { JSON object } , ( see <a href="/docs/api#format_user">user formats</a> for exact reference )
 						tr
 							td(colspan=3)
-								b optional parameters:
-								ul			
-									li v=1 - the version of the api
-									li local='fr' - response language
-						tr
-							td(colspan=3)
-								b response:
-								ul
-									li {user : {_id:string, name:string, login:string}}
+								table.table.table-bordered
+									tr
+										td PUT : need access token
+									tr
+										td Parameters:
+											ul
+												li <b>access_token :</b> see the <a href="/docs/api/#authentification">authentification doc</a> to get a valid token.
+												li <b>user :</b> JSON object {
+												div &nbsp;&nbsp;&nbsp;&nbsp;<b>_id</b>: string, 
+													i.muted user id to be modified (<b>*required</b>)
+												div &nbsp;&nbsp;&nbsp;&nbsp;<b>name</b>: string,
+												div &nbsp;&nbsp;&nbsp;&nbsp;<b>mail</b>: string,
+												div &nbsp;&nbsp;&nbsp;&nbsp;<b>bio</b>: string,
+												div &nbsp;&nbsp;&nbsp;&nbsp;<b>web</b>: string,
+												div &nbsp;&nbsp;&nbsp;&nbsp;<b>tag</b>: string,
+												div &nbsp;&nbsp;&nbsp;&nbsp;<b>formatted_address</b>: string, 
+													i.muted human readable address
+												div &nbsp;&nbsp;&nbsp;&nbsp;<b>location</b> : { lng : float, lat : float }, 
+													i.muted this data is used to set the default map's center
+												div &nbsp;&nbsp;&nbsp;&nbsp;<b>address</b> : {
+												div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>zip</b> : "75020", 
+												div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>country</b> : "France", 
+												div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>area</b> : "Ile-de-France", 
+												div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>state</b> : "Paris", 
+												div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>city</b> : "Paris", 
+												div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>arr</b> : "20th arrondissement of Paris", 
+												div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>street</b> : "Rue de Bagnolet", 
+												div &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>street_number</b> : "12" 
+												div &nbsp;&nbsp;&nbsp;&nbsp;}, 
+												li <b>picture :</b> posted image 
+													i.muted The photo should be uploaded as a jpeg and the Content-Type should be set to "image/jpeg". Images may not exceed 5MB in size.
+									tr
+										td Response:
+											ul
+												li Standard <a href="/docs/api#format_response">response format</a>
+									tr
+										td Non RESTfull method in POST : /api/updateuser/<code>userid</code>
+											
+
+						
 					
 					// USERS FEED
+					div#endpoint_userfeed
+					br
+					br
+					br
+					h4 Post an info on behalf of a user
 					table.table.table-bordered
 						tr
 							th METHODS
@@ -377,23 +443,25 @@ block content
 							td(colspan=3)
 								table.table.table-bordered
 									tr
-										td GET :
+										td GET : list news posted by the user
 									tr
 										td Parameters :
 											ul 
-												li count:int - number of news to get
+												li limit:int - number of news to get
+												li skip:int - starting row
 												li v:int - the version of the api - <b>default:</b>the last version
 												li local:string - response language - <b>default:</b>'fr'
 									tr
 										td Response :
 											ul
-												li Array of info objects
+												li Array of <a href="/docs/api/#format_info">info</a> objects
 								table.table.table-bordered
 									tr
-										td POST : 
+										td POST/PUT : 
 									tr
 										td Paramaters:
 											ul
+												li <b>access_token :</b> see the <a href="/docs/api/#authentification">authentification doc</a> to get a valid token.
 												li info : JSON object 
 												{
 												<br>&nbsp;&nbsp;title:string, 
@@ -424,15 +492,30 @@ block content
 									tr
 										td Response:
 											ul
-												li returns the code 200 if operation succeded
-						
-						tr
-							td(colspan=3)
-								b response:
-								ul
-									li {user : {_id:string, name:string, login:string}}
+												li returns the code 200 if operation succeeded or a <a href="/docs/api/#format_response">standard error</a> object if failed
+									tr
+										td Non RESTfull method in POST : /api/user/updatefeed/<code>userid</code>
 									
-					// USER SEARCH	
+									table.table.table-bordered
+										tr
+											td DELETE : delete one info
+										tr
+											td Paramaters:
+												ul
+													li <b>access_token :</b> see the <a href="/docs/api/#authentification">authentification doc</a> to get a valid token.
+													li <b>info :</b> li info : JSON object {_id:xxxxx}
+										tr
+											td Response:
+												li returns the code 200 if operation succeeded
+										tr
+											td Non RESTfull method in POST : /api/user/delfeed/<code>userid</code>		
+									
+					// USER SEARCH
+					div#endpoint_usersearch
+					br
+					br
+					br
+					h4 Search a user by name
 					table.table.table-bordered
 						tr
 							th METHODS
@@ -445,20 +528,27 @@ block content
 							td Search for a user by name.
 						tr
 							td(colspan=3)
-								b parameters:
-								ul
-									li count:int - limit the number of results
-									li skip:int - start results number
-									li sensitive: 1/0 - perform a case sensitive if set to 1, <b>default</b> : 0 => not sensitive
-									li v=1 - the version of the api
-									li local='fr' - response language
-						tr
-							td(colspan=3)
-								b response:
-								ul
-									li {user : [_id:string, userdetails:string, name:string, login:string, thumb:string]}
+								table.table.table-bordered
+									tr
+										td GET : list news posted by the user
+									tr
+										td Parameters :
+											ul
+												li limit:int - limit the number of results
+												li skip:int - start results number
+												li sensitive: 1/0 - perform a case sensitive if set to 1, <b>default</b> : 0 => not sensitive
+												li v=1 - the version of the api
+												li local='fr' - response language
+										tr
+											td Response:
+												div Array of <a href="/docs/api/#format_lightUser">lightUser</a> objects
 								
-					// USER SUBSCRIBTIONS TO USERS				
+					// USER SUBSCRIBTIONS TO USERS
+					div#endpoint_useralert_user
+					br
+					br
+					br
+					h4 Manage alerts : subscribe to a user feed				
 					table.table.table-bordered
 						tr
 							th METHODS
@@ -471,25 +561,118 @@ block content
 							td subscribe to a user's feed
 						tr
 							td(colspan=3)
-								b parameters:
-								ul
-									li GET/POST/DELETE/PUT : access_token=string - the token access
-									li DELETE:  usersubs: array of JSON object : [{_id:string},{_id:string},{_id:string}]
-									li POST/PUT : usersubs:  array of JSON object : [{_id:'string',name:'string',login:'string'},{_id:'string',name:'string',login:'string'}] 
-						tr
-							td(colspan=3)
-								b optional parameters:
-								ul			
-									li v=1 - the version of the api
-									li local='fr' - response language
+								table.table.table-bordered
+									tr
+										td GET : list user's subscribtion to other users
+									tr
+										td Parameters :
+											ul
+												li v=1 - the version of the api
+												li local='fr' - response language
+										td Response
+											div Array of <a href="/docs/api/#format_lightUser">lightUser</a> objects
+								table.table.table-bordered
+									tr
+										td POST : create a subscribtion to a user feed
+									tr
+										td Parameters :
+											ul
+												li <b>access_token :</b> see the <a href="/docs/api/#authentification">authentification doc</a> to get a valid token.
+												li <b>usersubs</b>: Array of JSON objects : [{_id:"xxx"}]
+										td Response
+											div returns the code 200 if operation succeeded
+										
+								table.table.table-bordered
+									tr
+										td PUT : update a user's subscribtion to other users
+									tr
+										td Parameters :
+											ul
+												li <b>access_token :</b> see the <a href="/docs/api/#authentification">authentification doc</a> to get a valid token.
+												li <b>usersubs</b>: Array of JSON ids objects : [{_id:"xxx"}]
+										td Response
+											li returns the code 200 if operation succeeded
+										td Non RESTfull method in POST : /api/updatesubscribe/user/<code>userid</code>
+								table.table.table-bordered
+									tr
+										td DELETE : delete one user's subscribtion to another user
+									tr
+										td Parameters :
+											ul
+												li <b>access_token :</b> see the <a href="/docs/api/#authentification">authentification doc</a> to get a valid token.
+												li <b>usersubs</b>: JSON object : {_id:"xxx"}
+										td Response
+											li returns the code 200 if operation succeeded
+										td Non RESTfull method in POST : /api/unsubscribe/user/<code>userid</code>			
 						
-						tr
-							td(colspan=3)
-								b response:
-								ul
-									li usersubs:[{_id:'string',name:'string',login:'string'},{_id:'string',name:'string',login:'string'}] 
-					
 					// USER SUBSCRIBTIONS TO TAGS
+					div#endpoint_useralert_tag
+					br
+					br
+					br
+					h4 Manage alerts : subscribe to a tag
+					table.table.table-bordered
+						tr
+							th METHODS
+							th URL
+							th DESCRIPTION
+							
+						tr	
+							td POST/GET/DELETE/PUT
+							td /subscribe/tags/<code>user-id</code>
+							td#highlight subscribe to an alert on a tag
+						tr
+							td(colspan=3)
+								table.table.table-bordered
+									tr
+										td GET : list user's subscribtion tags
+									tr
+										td Parameters :
+											ul
+												li v=1 - the version of the api
+												li local='fr' - response language
+										td Response
+											div Array of strings.
+								table.table.table-bordered
+									tr
+										td POST : create an alert on a tag
+									tr
+										td Parameters :
+											ul
+												li <b>access_token :</b> see the <a href="/docs/api/#authentification">authentification doc</a> to get a valid token.
+												li <b>tagsubs</b>: Array of strings : ["tag1","tag2","tag3"]
+										td Response
+											div returns the code 200 if operation succeeded
+										
+								table.table.table-bordered
+									tr
+										td PUT : update a user's tag list
+									tr
+										td Parameters :
+											ul
+												li <b>access_token :</b> see the <a href="/docs/api/#authentification">authentification doc</a> to get a valid token.
+												li <b>tagsubs</b>: Array of strings : ["tag1","tag2","tag3"]
+										td Response
+											li returns the code 200 if operation succeeded
+										td Non RESTfull method in POST : /api/updatesubscribe/tag/<code>userid</code>
+								table.table.table-bordered
+									tr
+										td DELETE : delete one user's subscribtion to a tag alert
+									tr
+										td Parameters :
+											ul
+												li <b>access_token :</b> see the <a href="/docs/api/#authentification">authentification doc</a> to get a valid token.
+												li <b>usersubs</b>: string ( the name of the tag)
+										td Response
+											li returns the code 200 if operation succeeded
+										td Non RESTfull method in POST : /api/unsubscribe/tag/<code>userid</code>	
+
+					// USER FAVPLACE	
+					div#endpoint_userfavplace
+					br
+					br
+					br
+					h4 Manage user's favorite places			
 					table.table.table-bordered
 						tr
 							th METHODS
@@ -498,28 +681,66 @@ block content
 			
 						tr	
 							td POST/GET/DELETE/PUT
-							td /subscribe/tag/<code>user-id</code>
-							td subscribe to a tag
+							td /api/favplace/<code>user-id</code>
+							td Manage user's favorite places
 						tr
 							td(colspan=3)
-								b parameters:
-								ul
-									li GET/POST/DELETE/PUT : access_token=string - the token access
-									li DELETE :  tagsubs:[string]
-									li POST/PUT : tagsubs:[string]
-						tr
-							td(colspan=3)
-								b optional parameters:
-								ul			
-									li v=1 - the version of the api
-									li local='fr' - response language
-						tr
-							td(colspan=3)
-								b response:
-								ul
-									li tagsubs:[string]
+								table.table.table-bordered
+									tr
+										td GET : list user's favorite places
+									tr
+										td Parameters :
+											ul
+												li v=1 - the version of the api
+												li local='fr' - response language
+										td Response
+											div Array of <a href="/docs/api/#format_lightPlace">lightPlace</a> objects
+								table.table.table-bordered
+									tr
+										td POST : create a favorite place
+									tr
+										td Parameters :
+											ul
+												li <b>access_token :</b> see the <a href="/docs/api/#authentification">authentification doc</a> to get a valid token.
+												li <b>favplace</b>: Array of JSON objects <a href="/docs/api/#format_lightPlace">lightPlace</a> objects
+										td Response
+											div returns the code 200 if operation succeeded
+										
+								table.table.table-bordered
+									tr
+										td PUT : update a user's favorite place
+									tr
+										td Parameters :
+											ul
+												li <b>access_token :</b> see the <a href="/docs/api/#authentification">authentification doc</a> to get a valid token.
+												li <b>favplace</b>: Array of JSON lightPlace objects.
+										td Response
+											li returns the code 200 if operation succeeded
+										td Non RESTfull method in POST : /api/updatefavplace/<code>userid</code>
+								table.table.table-bordered
+									tr
+										td DELETE : delete one user's favorite place
+									tr
+										td Parameters :
+											ul
+												li <b>access_token :</b> see the <a href="/docs/api/#authentification">authentification doc</a> to get a valid token.
+												li <b>favplace</b>: JSON object : {_id:"xxx"}
+										td Response
+											li returns the code 200 if operation succeeded
+										td Non RESTfull method in POST : /api/delfavplace/<code>userid</code>	
 
-					// USER FAVPLACE					
+
+					div#endpoint_info
+					br
+					br
+					br					
+					h3 Info endpoints
+					div To add an info check the <a href="/docs/api/#endpoint_userfeed">user endpoint section</a>
+					div#endpoint_infosearch
+					br
+					br
+					br
+					h4 Search in infos
 					table.table.table-bordered
 						tr
 							th METHODS
@@ -527,63 +748,50 @@ block content
 							th DESCRIPTION
 			
 						tr	
-							td POST/GET/DELETE/PUT
-							td /favplace/<code>user-id</code>
-							td mange user's favorite places
-						tr
-							td(colspan=3)
-								table.table.table-bordered
-									tr
-										td GET :
-									tr
-										td Parameters :
-											ul 
-												li v:int - the version of the api - <b>default: </b>the last version
-												li local:string - response language - <b>default: </b>'fr'
-									tr
-										td Response :
-											ul
-												li Array of lightPlace objects	
-						tr
-							td(colspan=3)
-								table.table.table-bordered
-									tr
-										td POST/PUT :
-									tr
-										td Parameters :
-											ul 
-												li 
-													div
-														div <b>favplace</b> = Array of JSON objects [
-														div &nbsp;&nbsp;{name:string,location:{lat:float,lng:float}},
-														div &nbsp;&nbsp;{name:string,location:{lat:float,lng:float}}
-														div ]
-												li v:int - the version of the api - <b>default: </b>the last version
-												li local:string - response language - <b>default: </b>'fr'
-									tr
-										td Response :
-											ul
-												li Array of lightPlace objects	
-									tr
-										td Alias for non-RESTfull methods : call in POST :
-											ul 
-												li PUT: updatefavplace
-												li DELETE: delfavplace
-
-
-									
-					p.subheader Info endpoints
-					table.table.table-bordered
-						tr
 							td GET
-							td /api/geoinfos/
-							td Get infos in the box
-					
+							td /api/geoinfos
+							td Search infos in a box
+						tr
+							td(colspan=3)
+								table.table.table-bordered
+									tr
+										td GET : list user's favorite places
+									tr
+										td Parameters :
+											ul
+												li 
+													code /api/geoinfos/bl.lat/bl.lng/tr.lat/tr.lng/daysBack/type,type,type/searchString
+												li bl.lat : latitude of the bottom left point
+												li bl.lng : longitude of the bottom left point
+												li tr.lat : latitude of the top right point
+												li tr.lng : longitude of the top right point
+												li daysBack :
+												li type : a list of coma-separated int
+													ul
+														li 1 : Actu
+														li 2 : Agenda
+														li 3 : Discussion 
+														li 4 : Info Pratique
+												li searchString : string to search for in title and descriptions of infos. Send 'null' to get all news.
+												
+										td Response
+											div Array of <a href="/docs/api/#format_lightPlace">lightPlace</a> objects
+
+
+
+
+
+
+
+					div#endpoint_place 
+					br
 					br
 					br
 					// PLACE
 					h3 Place endpoints
 					hr
+
+
 					// PLACE SEARCH	
 					table.table.table-bordered
 						tr
@@ -603,7 +811,7 @@ block content
 									tr 
 										td Parameters:
 											ul
-												li count:int - limit the number of results
+												li limit:int - limit the number of results
 												li skip:int - start results number
 												li sensitive: 1/0 - perform a case sensitive if set to 1, <b>default</b> : 0 => not sensitive
 												li v=1 - the version of the api
@@ -612,7 +820,7 @@ block content
 							td(colspan=3)
 								b response:
 								ul
-									li array of objects Place ( see <a href="/docs/api#formats_place">Formats</a> for exact reference )
+									li array of objects Place ( see <a href="/docs/api#format_place">Formats</a> for exact reference )
 
 					// PLACE MANAGEMENT
 					table.table.table-bordered  

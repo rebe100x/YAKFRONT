@@ -2,6 +2,7 @@
  * Serve JSON
  */
 
+/*tests*/
 exports.test1 = function (req, res) {
 	var Info = db.model('Info');
 	Info.test1(function (err, docs){
@@ -20,6 +21,9 @@ exports.test2 = function (req, res) {
 	  });
 	}); 
 };
+/*end tests*/
+
+
 exports.requiresToken = function(req,res,next){
 	
 	var access_token =  (req.query.access_token)?req.query.access_token:req.body.access_token;
@@ -137,13 +141,12 @@ exports.catsandtags = function (req, res) {
 **********************************************/
 exports.list_favplace = function (req, res) {
 	var User = db.model('User');
-	User.findOne({'_id': req.params.userid},{favplace:1}, function(err,docs){
+	User.findOne({'_id': req.params.userid},{favplace:1}, function(err,docs){		
 		if(!err)
-				res.json({meta:{code:200},data:docs.favplace});
+				res.json({meta:{code:200},data:{favplace:docs.favplace}});
 			else
 				res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
-	});
-	
+	});	
 }
 
 exports.add_favplace = function (req, res) {
@@ -154,7 +157,7 @@ exports.add_favplace = function (req, res) {
 		var pointArray = favplaceArray.map(function(item){ return new Point(item);});		
 		User.update({_id:res.locals.user._id},{$pushAll:{"favplace":pointArray}}, function(err,docs){			
 			if(!err)
-				res.json({meta:{code:200},data:pointArray});
+				res.json({meta:{code:200}});
 			else
 				res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 		});
@@ -170,7 +173,7 @@ exports.put_favplace = function (req, res) {
 		var pointArray = favplaceArray.map(function(item){ return new Point(item);});		
 		User.update({_id:res.locals.user._id},{$set:{"favplace":pointArray}}, function(err,docs){			
 			if(!err)
-				res.json({meta:{code:200},data:pointArray});
+				res.json({meta:{code:200}});
 			else
 				res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 		});
@@ -203,7 +206,7 @@ exports.list_subs_user = function (req, res) {
 	var User = db.model('User');
 	User.findOne({'_id': req.params.userid},{usersubs:1}, function(err,docs){
 		if(!err)
-				res.json({meta:{code:200},data:docs});
+				res.json({meta:{code:200},data:{usersubs:docs.usersubs}});
 			else
 				res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 	});
@@ -221,7 +224,7 @@ var User = db.model('User');
 				users.map(function(item){return {_id:item._id,name:item.name,login:item.login,userdetails:item.name+' ( @'+item.login+' )'}});
 				User.update({_id:res.locals.user._id},{$pushAll:{"usersubs":users}}, function(err,docs){			
 					if(!err)
-						res.json({meta:{code:200},data:docs});
+						res.json({meta:{code:200}});
 					else
 						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 				});
@@ -243,7 +246,7 @@ exports.put_subs_user = function (req, res) {
 				users.map(function(item){return {_id:item._id,name:item.name,login:item.login,userdetails:item.name+' ( @'+item.login+' )'}});
 				User.update({_id:res.locals.user._id},{$set:{"usersubs":users}}, function(err,docs){			
 					if(!err)
-						res.json({meta:{code:200},data:docs});
+						res.json({meta:{code:200}});
 					else
 						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 				});
@@ -260,7 +263,7 @@ exports.del_subs_user = function (req, res) {
 	if(usersubs){
 		User.update({_id:res.locals.user._id},{$pull:{usersubs:{_id:usersubs}}}, function(err,docs){
 			if(!err)
-				res.json({meta:{code:200},data:{_id:usersubs}});
+				res.json({meta:{code:200}});
 			else
 				res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 		});
@@ -278,7 +281,7 @@ exports.list_subs_tag = function (req, res) {
 	var User = db.model('User');
 	User.findOne({'_id': req.params.userid},{tagsubs:1}, function(err,docs){
 		if(!err)
-				res.json({meta:{code:200},data:docs});
+				res.json({meta:{code:200},data:{tagsubs:docs.tagsubs}});
 			else
 				res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 	});
@@ -430,36 +433,36 @@ USER FEED : POST , PUT DELETE, GET infos
 
 exports.get_user_feed = function (req, res) {
 	var Info = db.model('Info');
-	var count =(typeof(req.query.count) != 'undefined') ? req.query.count : 10;
-	Info.findByUser(req.params.userid,count,function(err, docs){
+	Info.findByUser(req.params.userid,req.query.limit,req.query.skip,function(err, docs){
 		if(!err){
-			res.json({meta:{code:200},data:docs});
+			var infosFormated = docs.map(function(item){
+				var Info = db.model('Info');
+				return Info.format(item);
+			});
+			res.json({meta:{code:200},data:infosFormated});
 		}
 		else
 			res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
-	
 	});
 }
 
 exports.del_user_feed = function (req, res) {
 	var Info = db.model('Info');
-	
-		
-		if(typeof(req.body.info) != 'undefined'){
-			var info = JSON.parse(req.body.info);
-			var theinfoid = info._id;
-			Info.update({_id:theinfoid,user:res.locals.user._id},{$set:{status:3}}, function(err,docs){
-				if(!err)
-					if(docs)
-						res.json({meta:{code:200},data:docs});
-					else
-						res.json({meta:{code:404,error_type:'operation failed',error_description:"you don't own any info with this id"}});
+	if(typeof(req.body.info) != 'undefined' && typeof(req.body.info._id) != 'undefined' ) {
+		var info = JSON.parse(req.body.info);
+		var theinfoid = info._id;
+		Info.update({_id:theinfoid,user:res.locals.user._id},{$set:{status:3}}, function(err,docs){
+			if(!err)
+				if(docs)
+					res.json({meta:{code:200}});
 				else
-					res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
-			});
-		}else{
-			res.json({meta:{code:404,error_type:'missing parameter',error_description:'info not set. info = {_id:string} }'}});
-		}
+					res.json({meta:{code:404,error_type:'operation failed',error_description:"you don't own any info with this id"}});
+			else
+				res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+		});
+	}else{
+		res.json({meta:{code:404,error_type:'missing parameter',error_description:'info not set. info = {_id:string} }'}});
+	}
 }
 
 exports.add_user_feed = function (req, res) {
@@ -927,20 +930,14 @@ SEARCH : users, infos, cats, places
 ******************************/
 exports.user_search = function (req, res) {
 	var User = db.model('User');	
-	User.search(req.params.string,req.query.count,req.query.skip,req.query.sensitive,function (err, docs){
-		var docsConcat = new Array();
-		docs.forEach(function(o){
-			var tmp = new Object();
-			//tmp.userdetails="<img width=\"24\" height=\"24\" class=\"size100 img-rounded\" src=\"/uploads/pictures/24_24/"+o['thumb']+"\"  />"+o['name']+" <span class=\"autocompleteScreenName\"> @"+o['login']+"</span>";
-			tmp.userdetails=o['name']+" (@"+o['login']+")";
-			tmp.name =o['name'];
-			tmp.login =o['login'];
-			tmp._id =o['_id'];
-			tmp.thumb =o['thumb'];
-			docsConcat.push(tmp);
+	User.search(req.params.string,req.query.limit,req.query.skip,req.query.sensitive,function (err, docs){
+		var usersFormated = docs.map(function(item){
+			var User = db.model('User');
+			return User.formatLight(item);
 		});
+
 		res.json({
-			users: docsConcat
+			users: usersFormated
 		  });
 	});
 };
@@ -948,7 +945,7 @@ exports.user_search = function (req, res) {
 exports.place_search = function (req, res) {
 	var Place = db.model('Place');
 	console.log(req.query.location);
-	Place.search(req.params.string,req.query.count,req.query.skip,req.query.sensitive,req.query.lat,req.query.lng,req.query.maxd,function (err, docs){
+	Place.search(req.params.string,req.query.limit,req.query.skip,req.query.sensitive,req.query.lat,req.query.lng,req.query.maxd,function (err, docs){
 		if(docs)
 			docs.map(function(item){return {_id:item._id,title:item.title,formatted_address:item.formatted_address};});
 		res.json({

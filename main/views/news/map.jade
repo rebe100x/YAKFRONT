@@ -55,9 +55,9 @@ block content
 					span#newspostContent.tabContent
 						mixin postForm()
 					
-				
+	script(src='http://maps.google.com/maps/api/js?v=3.9&sensor=false&libraries=drawing')						
 	script
-		
+	
 	
 
 		/*INIT*/
@@ -553,7 +553,7 @@ block content
 			var height = $(window).height();
 			var pos = $("#newsfeedContainer").position();
 			if(width>768){
-				var borderOffset = 0.1; // to avoid printing news at the hedge of the screen	
+				var borderOffset = 0.075; // to avoid printing news at the hedge of the screen	
 				var offsetPercent = pos.left/width;
 				var offsetDegree = (parseFloat(thebounds.ea.f) - parseFloat(thebounds.ea.b))*offsetPercent;
 				var myBounds = {

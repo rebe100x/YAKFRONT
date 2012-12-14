@@ -333,3 +333,7 @@ width: 270px;
         width: auto;
      }
  }
+ td#highlight{
+ 	background-color: #F7F7F9;
+ 	font-weight:bold;
+ }

@@ -157,7 +157,7 @@ exports.news = function(req, res){
 		var infoThumb = new Object();
 		if(req.files.picture.size && req.files.picture.size > 0 && req.files.picture.size < 1048576*5){
 			var drawTool = require('../mylib/drawlib.js');
-			var size = res.locals.mainConf.imgSizeInfo;
+			var size = mainConf.imgSizeInfo;
 			infoThumb = drawTool.StoreImg(req.files.picture,size,conf);
 			formMessage.push(infoThumb.msg);	
 		}
@@ -773,7 +773,7 @@ exports.profile = function(req, res){
 	if(req.session.user){
 		var avatar = req.body.avatar;
 		var drawTool = require('../mylib/drawlib.js');
-		var size = res.locals.mainConf.imgSizeAvatar;
+		var size = mainConf.imgSizeAvatar;
 		var infoThumb = drawTool.StoreImg(req.files.avatar,size,conf);
 		
 		if(infoThumb.msg)

@@ -153,7 +153,7 @@ app.post('/api/delplace/:userid', api.requiresToken, api.del_place);
 // user's profile
 app.get('/api/user/:userid', api.get_user_details);
 app.put('/api/user/:userid',api.requiresToken, api.put_user_details);
-
+app.post('/api/updateuser/:userid',api.requiresToken, api.put_user_details);
 
 //SEARCH
 app.get('/api/user/search/:string', api.user_search);

@@ -76,11 +76,16 @@ var Info = new Schema({
 //Info.index({location : '2d'});
 
 Info.statics.format = function (theinfo) {
+	if(theinfo.thumb)
+		var thethumb = 	conf.fronturl+'/pictures/120_90/'+theinfo.thumb;
+	else
+		var thethumb = 	'';
+
 	var formattedInfo = {
 		_id:theinfo._id,
 		title:theinfo.title,
 		content:theinfo.content,
-		thumb:theinfo.thumb,
+		thumb:thethumb,
 		yakType:theinfo.yakType,
 		print:theinfo.print,
 		dateEndPrint:theinfo.dateEndPrint,
@@ -232,8 +237,12 @@ Info.statics.findAllByID = function (callback, id) {
 
 }
 
-Info.statics.findByUser = function (userid,count, callback) {
-  return this.find({ user: userid,status :1 },{},{limit:count,sort:{pudDate:-1}}, callback);
+Info.statics.findByUser = function (userid,count,from, callback) {
+	var limit = (typeof(count) != 'undefined' && count > 0) ? count : 100;	
+	var skip = (typeof(from) != 'undefined' && from > 0) ? from : 0;
+	var Info = db.model('Info');
+
+	this.find({ user: userid,status :1}).limit(limit).skip(skip).sort({'pubDate':-1}).exec(callback);
 }
 
 Info.statics.findByUserIds = function (useridArray, count, callback) {
@@ -472,7 +481,6 @@ Info.statics.findAllGeoOLD = function (x1,y1,x2,y2,heat,type,str,usersubs,tagsub
 							
 						}
 						console.log('USER FOUND');
-						console.log(cond);
 						var Info = db.model('Info');
 						return Info.find(
 							cond,
@@ -655,11 +663,16 @@ var User = new Schema({
 
 
 User.statics.format = function (theuser) {
+	if(theuser.thumb)
+		var thethumb = 	conf.fronturl+'/pictures/128_128/'+theuser.thumb;
+	else
+		var thethumb = 	'';
+
 	var formattedUser = {
 		_id:theuser._id,
 		name:theuser.name,
 		bio:theuser.bio,
-		thumb:theuser.thumb,
+		thumb:thethumb,
 		web:theuser.web,
 		login:theuser.login,
 		mail:theuser.mail,
@@ -670,17 +683,24 @@ User.statics.format = function (theuser) {
 		usersubs:theuser.usersubs,
 		tagsubs:theuser.tagsubs,
 	};
+	
   return formattedUser;
 }
 
 User.statics.formatLight = function (theuser) {
+	if(theuser.thumb)
+		var thethumb = 	conf.fronturl+'/pictures/128_128/'+theuser.thumb;
+	else
+		var thethumb = 	'';
+
 	var formattedUser = {
 		_id:theuser._id,
 		name:theuser.name,
 		login:theuser.login,
-		userdetails:theuser.name+'(@'+theuser.login+')',
-		thumb:theuser.thumb
+		userdetails:theuser.name+' (@'+theuser.login+')',
+		thumb:conf.fronturl+'/pictures/128_128/'+theuser.thumb,
 	};
+
   return formattedUser;
 }
 
