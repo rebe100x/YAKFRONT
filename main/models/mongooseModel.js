@@ -76,16 +76,11 @@ var Info = new Schema({
 //Info.index({location : '2d'});
 
 Info.statics.format = function (theinfo) {
-	if(theinfo.thumb)
-		var thethumb = 	conf.fronturl+'/pictures/120_90/'+theinfo.thumb;
-	else
-		var thethumb = 	'';
-
 	var formattedInfo = {
 		_id:theinfo._id,
 		title:theinfo.title,
 		content:theinfo.content,
-		thumb:thethumb,
+		thumb:theinfo.thumb,
 		yakType:theinfo.yakType,
 		print:theinfo.print,
 		dateEndPrint:theinfo.dateEndPrint,
@@ -175,16 +170,6 @@ Info.statics.findAll = function (callback) {
 }
 */
 
-Info.statics.test1 = function(callback){
-	
-	return this.find().sort({pubDate:-1}).limit(5).skip(5).exec(callback);
-	
-}
-Info.statics.test2 = function(callback){
-	
-	return this.find().sort({pubDate:-1}).limit(0).skip(0).exec(callback);
-	
-}
 Info.statics.findAllByPage = function (callback, skip, limit, yakType, _id, what, where, dateInterval, yakCat, next) {
 	
 	var mydateUtils = require('../mylib/dateUtils.js');
@@ -195,7 +180,13 @@ Info.statics.findAllByPage = function (callback, skip, limit, yakType, _id, what
 	var types = new Array();
 	types = yakType.split(',');
     var location = new Array();
-    location = where.split(',');
+    location = where.split('-');
+
+    var geopoint = new Object();
+
+    for (var i = 0; i < location.length; i++) {
+    	geopoint[i] = { "lat" : location[i].split(',')[0], "lng": location[i].split(',')[1]};
+    };
 
     var infos = this.find();
 
@@ -219,8 +210,9 @@ Info.statics.findAllByPage = function (callback, skip, limit, yakType, _id, what
 
 
 	if (where != "") {
-		 infos.where('location').near( [parseFloat(location[0]),parseFloat(location[1])] ).maxDistance(5);
+		 infos.where('location').near( [parseFloat(geopoint[0].lat),parseFloat(geopoint[0].lng)] ).maxDistance(5);
 	};
+		
 	
 	infos.sort({ pubDate: 'asc' }).skip(skip).limit(limit);
 
@@ -237,13 +229,10 @@ Info.statics.findAllByID = function (callback, id) {
 
 }
 
-Info.statics.findByUser = function (userid,count,from, callback) {
-	var limit = (typeof(count) != 'undefined' && count > 0) ? count : 100;	
-	var skip = (typeof(from) != 'undefined' && from > 0) ? from : 0;
-	var Info = db.model('Info');
-
-	this.find({ user: userid,status :1}).limit(limit).skip(skip).sort({'pubDate':-1}).exec(callback);
+Info.statics.findByUser = function (userid,count, callback) {
+  return this.find({ user: userid,status :1 },{},{limit:count,sort:{pudDate:-1}}, callback);
 }
+
 
 Info.statics.findByUserIds = function (useridArray, count, callback) {
   return this.aggregate({ $group: {user: {$in:useridArray}}}, callback);
@@ -481,6 +470,7 @@ Info.statics.findAllGeoOLD = function (x1,y1,x2,y2,heat,type,str,usersubs,tagsub
 							
 						}
 						console.log('USER FOUND');
+						console.log(cond);
 						var Info = db.model('Info');
 						return Info.find(
 							cond,
@@ -663,16 +653,11 @@ var User = new Schema({
 
 
 User.statics.format = function (theuser) {
-	if(theuser.thumb)
-		var thethumb = 	conf.fronturl+'/pictures/128_128/'+theuser.thumb;
-	else
-		var thethumb = 	'';
-
 	var formattedUser = {
 		_id:theuser._id,
 		name:theuser.name,
 		bio:theuser.bio,
-		thumb:thethumb,
+		thumb:theuser.thumb,
 		web:theuser.web,
 		login:theuser.login,
 		mail:theuser.mail,
@@ -683,24 +668,17 @@ User.statics.format = function (theuser) {
 		usersubs:theuser.usersubs,
 		tagsubs:theuser.tagsubs,
 	};
-	
   return formattedUser;
 }
 
 User.statics.formatLight = function (theuser) {
-	if(theuser.thumb)
-		var thethumb = 	conf.fronturl+'/pictures/128_128/'+theuser.thumb;
-	else
-		var thethumb = 	'';
-
 	var formattedUser = {
 		_id:theuser._id,
 		name:theuser.name,
 		login:theuser.login,
-		userdetails:theuser.name+' (@'+theuser.login+')',
-		thumb:conf.fronturl+'/pictures/128_128/'+theuser.thumb,
+		userdetails:theuser.name+'(@'+theuser.login+')',
+		thumb:theuser.thumb
 	};
-
   return formattedUser;
 }
 

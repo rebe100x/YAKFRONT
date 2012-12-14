@@ -80,20 +80,25 @@ Date.prototype.toLongFrenchFormat = function ()
 				yaktype += $(this).attr("type") + ",";
 			});
 
-			var lnglat = $.parseJSON($("#locationInput").attr("value"));
+			var geoLocation = "";
+			$("#myfavplace li").each(function(){
+				var lng = $(this).attr("lng");
+				var lat = $(this).attr("lat");	
+				geoLocation += lat + "," + lng + "-";
+			});
+			
 			
 			var lngslatstr = "";
 
-			if(lnglat != null)
-				lngslatstr = lnglat.lat + "," + lnglat.lng;
+			
 
-			loadData(skip, limit, next , "", $("#SearchWhat").attr("value"), lngslatstr, yaktype, dateInterval, "");
+			loadData(skip, limit, next , "", $("#SearchWhat").attr("value"), geoLocation, yaktype, dateInterval, "");
 
 		});
 		
 		function loadData(askip, alimit, next, _id, what, where, yaktype, dateInterval, cattype)
 		{
-			
+			//alert(where);
 			if (!next) {
 				$("#feedContent").html("loading...");
 			};

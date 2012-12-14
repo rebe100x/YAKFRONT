@@ -35,7 +35,7 @@ mixin searchPanel()
 
 				
 
-			div.span3
+			div.span6
 				div.searchPlaces
 				ul#myfavplace.favplacelist.unstyled
 					- if(locals.user.favplace)
@@ -43,7 +43,7 @@ mixin searchPanel()
 								li.zoneLoc(pointId=favplace._id, lat=favplace.location.lat, lng=favplace.location.lng)
 									i.icon-map-marker
 									span= favplace.name
-									i.icon-remove.icon-pointer
+									i.icon-remove.icon-pointer(onclick='deleltePlace(this)')
 			
 		
 
@@ -138,7 +138,7 @@ mixin searchPanel()
 					aplace.attr("lng", placeGmap.location.lng);
 					aplace.append("<i class='icon-map-marker'></i>");
 					aplace.append("<span>" + placeGmap.title + "</span>");
-					aplace.append("<i class='icon-remove icon-pointer'></i>");
+					aplace.append("<i class='icon-remove icon-pointer' onclick='deleltePlace(this)'></i>");
 
 					$("#myfavplace").append(aplace);
 
