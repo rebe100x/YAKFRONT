@@ -7,8 +7,11 @@ block content
 	include ../mixins/newsLoader.jade
 	include ../mixins/paging.jade
 	include ../mixins/popup.jade
+	include ../mixins/locationChooser.jade
 
-	mixin menu('feed')
+	mixin menu('map')
+	mixin locationChooser()
+
 	div#mainFeedWrapper.row
 		mixin searchPanel()
 		mixin newsLoader()

@@ -181,11 +181,11 @@ Date.prototype.toLongFrenchFormat = function ()
 
 					date = new Date(val.pubDate).toLongFrenchFormat();
 					if(val.origin != null)
-						postedby.html("Posté par " + val.origin + " le " + date);
+						postedby.html("Posté par @" + val.origin + " le " + date);
 					else
-						postedby.html("Posté by ananomys le " + date);
+						postedby.html("Posté by @ananomys le " + date);
+					postedby.html(postedby.html().replace(/@(\S*)/g,'<a href="news/map/search/@$1">@$1</a>'))
 					
-
 					title.append(postedby);
 					//title.append(hot);
 					
@@ -241,7 +241,7 @@ Date.prototype.toLongFrenchFormat = function ()
 						yakCatNames += "#" + val + " "
 					});
 
-					yakCatNames = yakCatNames.replace(/#(\S*)/g,'<a href="news/map/search/%23$1">$1</a>');
+					yakCatNames = yakCatNames.replace(/#(\S*)/g,'<a href="news/map/search/%23$1">#$1</a>');
 
 					cat.html("YakCats: <b>" + yakCatNames + "</b>");
 					
@@ -257,7 +257,7 @@ Date.prototype.toLongFrenchFormat = function ()
 					});
 
 
-					freetagNames = freetagNames.replace(/#(\S*)/g,'<a href="news/map/search/%23$1">$1</a>');
+					freetagNames = freetagNames.replace(/#(\S*)/g,'<a href="news/map/search/%23$1">#$1</a>');
 
 					freetags.html("Tags: <b>" + freetagNames + "</b>");
 					

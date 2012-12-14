@@ -1,4 +1,5 @@
 mixin searchPanel()
+	script(src="http://maps.google.com/maps/api/js?v=3.9&amp;sensor=false&amp;libraries=drawing")		
 	div#search.container
 		div.row
 			div.span6
@@ -36,6 +37,13 @@ mixin searchPanel()
 
 			div.span3
 				div.searchPlaces
+				ul#myfavplace.favplacelist.unstyled
+					- if(locals.user.favplace)
+							- each favplace in locals.user.favplace
+								li.zoneLoc(pointId=favplace._id, lat=favplace.location.lat, lng=favplace.location.lng)
+									i.icon-map-marker
+									span= favplace.name
+									i.icon-remove.icon-pointer
 			
 		
 
@@ -123,31 +131,20 @@ mixin searchPanel()
 					var placeGmap = getPlaceFromGmapResult(obj);
 					$('#locationInput').val(JSON.stringify(placeGmap.location));
 
-					var aplace = $("<div />");
-					aplace.attr("class", "aplace");
-					aplace.html('<span class="theplace">- ' + placeGmap.title +'</span>' + '<span class="thedelete" onclick="return deleltePlace(this)">X</span>');
+					
+					var aplace = $("<li />");
+					aplace.attr("class", "zoneLoc");
+					aplace.attr("lat", placeGmap.location.lat);
+					aplace.attr("lng", placeGmap.location.lng);
+					aplace.append("<i class='icon-map-marker'></i>");
+					aplace.append("<span>" + placeGmap.title + "</span>");
+					aplace.append("<i class='icon-remove icon-pointer'></i>");
 
-					var placelocation = $("<input />");
-					placelocation.attr("type", "hidden");
-					placelocation.attr("class", "placelocation");
-					placelocation.val(JSON.stringify(placeGmap.location));
-
-					aplace.append(placelocation);
+					$("#myfavplace").append(aplace);
 
 					var exists = 0;
 
-					$(".placelocation").each(function(){
-
-						if($(this).val() == JSON.stringify(placeGmap.location))
-						{
-							exists = 1;
-						}
-					});
-					
-					if(exists == 0)
-					{
-						$(".searchPlaces").append(aplace);
-					}
+				
 					
 					$("#SearchWhere").val("");
 				}
