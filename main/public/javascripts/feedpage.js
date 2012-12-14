@@ -207,11 +207,12 @@ Date.prototype.toLongFrenchFormat = function ()
 					readmore.click(function(){
 						var loading = $("<span />");
 						loading.html("loading...");
-						$(this).after(loading);
-						$(this).css("visibility", "hidden");
+						var readmore1 = $(this);
+						readmore1.after(loading);
+						readmore1.css("visibility", "hidden");
 						$.getJSON('/api/afeed', { id: val._id} ,function(data) {
 							
-							readmore.parent().html(data.info[0].content);
+							readmore1.parent().html(data.info[0].content);
 
 						});	
 					});
