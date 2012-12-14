@@ -170,6 +170,16 @@ Info.statics.findAll = function (callback) {
 }
 */
 
+Info.statics.test1 = function(callback){
+	
+	return this.find().sort({pubDate:-1}).limit(5).skip(5).exec(callback);
+	
+}
+Info.statics.test2 = function(callback){
+	
+	return this.find().sort({pubDate:-1}).limit(0).skip(0).exec(callback);
+	
+}
 Info.statics.findAllByPage = function (callback, skip, limit, yakType, _id, what, where, dateInterval, yakCat, next) {
 	
 	var mydateUtils = require('../mylib/dateUtils.js');

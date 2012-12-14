@@ -102,6 +102,8 @@ app.post('/api/oauth/session',api.oauth_session);
 
 //app.get('/api/error', api.oauth_error);
 
+app.get('/api/test1', api.test1); 
+app.get('/api/test2', api.test2); 
 
 //favplace
 app.post('/api/favplace/:userid', api.requiresToken, api.add_favplace); 

@@ -2,6 +2,24 @@
  * Serve JSON
  */
 
+exports.test1 = function (req, res) {
+	var Info = db.model('Info');
+	Info.test1(function (err, docs){
+		var thedoc = docs.map(function(item){return item.pubDate+' - '+item.title;});
+	  res.json({
+		info: thedoc
+	  });
+	}); 
+};
+exports.test2 = function (req, res) {
+	var Info = db.model('Info');
+	Info.test2(function (err, docs){
+		var thedoc = docs.map(function(item){return item.pubDate+' - '+item.title;});
+	  res.json({
+		info: thedoc
+	  });
+	}); 
+};
 exports.requiresToken = function(req,res,next){
 	
 	var access_token =  (req.query.access_token)?req.query.access_token:req.body.access_token;
