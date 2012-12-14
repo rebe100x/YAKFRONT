@@ -369,7 +369,6 @@ block content
 			$(window).resize(function(){
 				drawNewsFeed();
 				bounds = getMyBounds();
-				console.log($(window).height()+' '+$(window).width());
 			});
 			
 			$('#newsfeed').delegate(".mapHighlighter",'click', function () {
@@ -502,8 +501,6 @@ block content
 								var placeGmap = getPlaceFromGmapResult(results[0]);
 								placeArray.push(placeGmap);
 								$("#placeInput").val(JSON.stringify(placeArray));
-								console.log(results[0].geometry.location);
-								console.log('RRRRRRRRRRRRRRRRRRRRRRRRRRRR');
 								$('#btn-place-adder').parent().before("<div><i class='icon-remove icon-pointer' onclick='placeArray.cleanArrayByLocation("+results[0].geometry.location.Ya+","+results[0].geometry.location.Za+");$(\"#placeInput\").val(JSON.stringify(placeArray));$(this).parent().remove();'></i> "+results[0].formatted_address+"</div>");
 								
 							} else {
@@ -652,8 +649,7 @@ block content
 				mapTypeId: google.maps.MapTypeId.ROADMAP,
 				disableDefaultUI: true,
 			});
-			bounds = map.getBounds();
-			//bounds = getMyBounds();
+			
 			map.setOptions({styles: pinkParksStyles});
 			//var markerClustererOptions = {gridSize:30,maxZoom: 17,styles: [{height: 28,width: 28,url: "/images/markers/m1.png"},{height: 38,width: 38,url: "/images/markers/m2.png"},{height: 55,width:55,url: "/images/markers/m3.png"},{height: 85,width: 85,url: "/images/markers/m4.png"},{height: 85,width: 85,url: "/images/markers/m5.png"}]};
 			//markerCluster = new MarkerClusterer(map, markers,markerClustererOptions);
@@ -714,10 +710,7 @@ block content
 			
 			google.maps.event.addListener(map, 'idle', function() {
 				cleanMarkers();
-				//bounds = this.getBounds();
-
 				bounds = getMyBounds();
-				console.log(bounds);
 				center = this.getCenter();
 				curPos.x = center.lat();
 				curPos.y = center.lng();
@@ -882,10 +875,7 @@ block content
 		
 		function getAndPrintInfo(){
 			infoArray = [];
-			//bounds = map.getBounds();
 			bounds = getMyBounds();
-			console.log(bounds);
-			console.log(map.getBounds());
 			drawNewsFeed();
 			
 			cleanMarkers();
