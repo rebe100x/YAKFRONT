@@ -44,12 +44,36 @@ mixin searchPanel()
 									i.icon-map-marker
 									span= favplace.name
 									i.icon-remove.icon-pointer(onclick='deleltePlace(this)')
+									i.icon-signal.icon-pointer(onclick='showRangeSelector(this)')
 			
 		
 
 		button(type="button", class="btn searchButton") Search
 
 		script
+			function showRangeSelector(el)
+			{
+				if ($(el).parent().find(".theslider").length > 0){
+					$(el).parent().find(".theslider").remove();
+					return;
+				}
+				else
+				{
+					$(".theslider").remove();
+				}
+				var theslider = $("<div />");
+
+				theslider.attr("class", "theslider");
+
+				$(el).after(theslider);
+				$(".theslider").slider({
+				range: false,
+				values: [3],
+				min: 1,
+				max: 10,
+				
+			});
+			}
 			function deleltePlace(el){
 				$(el).parent().remove();
 			}
