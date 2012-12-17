@@ -88,13 +88,22 @@ Date.prototype.toLongFrenchFormat = function ()
 			{
 				geoLocation = $("#wheretosearch").val();
 			}
+
+			var dimension = "";
+			if ($("#dimensionInput").val() == "") {
+				dimension = mainConf.searchParams.sliderDefault;
+			}
+			else
+			{
+				dimension = $("#dimensionInput").val();
+			}
 			
 			
 			var lngslatstr = "";
 
 			
 
-			loadData(skip, limit, next , "", $("#SearchWhat").attr("value"), geoLocation, yaktype, dateInterval, "");
+			loadData(skip, limit, next , "", $("#SearchWhat").attr("value"), geoLocation, yaktype, dateInterval, "", dimension);
 
 		});
 		

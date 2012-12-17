@@ -29,6 +29,7 @@ mixin searchPanel()
 
 				div.row.input-block-level
 					div.span5
+
 						input#locationInput(type='hidden', name='locationInput', value='')
 						input#SearchWhat(type="text", class="searchInput", placeholder="Quoi ?")
 						input#SearchWhere(type="text", data-provide="typeahead", class="searchInput2", placeholder="Où ?")
@@ -37,6 +38,7 @@ mixin searchPanel()
 
 			div.span6
 				div.searchPlaces
+				input#dimensionInput(type='hidden', value='')
 				input#wheretosearch(type="hidden", value="")
 				ul#myfavplace.favplacelist.unstyled
 					- if(locals.user.favplace)
@@ -46,12 +48,28 @@ mixin searchPanel()
 									span(onclick="setGeoLocaton(this)")= favplace.name
 									i.icon-remove.icon-pointer(onclick='deleltePlace(this)')
 									i.icon-signal.icon-pointer(onclick='showRangeSelector(this)')
+									div.theslider
 			
 		
 
 		button(type="button", class="btn searchButton") Search
 
 		script
+			$(document).ready(function(){
+				$(".theslider").slider({
+				range: false,
+				values: [mainConf.searchParams.sliderDefault],
+				min: mainConf.searchParams.sliderMin,
+				max: mainConf.searchParams.sliderMax,
+				change: function( event, ui ) {
+					var dim = ui.values[0];
+					$("#dimensionInput").val(dim);
+					//alert(dim);
+					setGeoLocaton(this);
+				}
+				
+			});
+			});
 			function setGeoLocaton(el)
 			{
 				var curLat = $(el).parent().attr("lat");
@@ -61,26 +79,8 @@ mixin searchPanel()
 			}
 			function showRangeSelector(el)
 			{
-				if ($(el).parent().find(".theslider").length > 0){
-					$(el).parent().find(".theslider").remove();
-					return;
-				}
-				else
-				{
-					$(".theslider").remove();
-				}
-				var theslider = $("<div />");
-
-				theslider.attr("class", "theslider");
-
-				$(el).after(theslider);
-				$(".theslider").slider({
-				range: false,
-				values: [mainConf.searchParams.sliderDefault],
-				min: mainConf.searchParams.sliderMin,
-				max: mainConf.searchParams.sliderMax,
-				
-			});
+				$(".theslider").hide();
+				$(el).parent().find(".theslider").show();
 			}
 			function deleltePlace(el){
 				$(el).parent().remove();
