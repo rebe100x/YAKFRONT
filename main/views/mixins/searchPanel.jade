@@ -68,9 +68,9 @@ mixin searchPanel()
 				$(el).after(theslider);
 				$(".theslider").slider({
 				range: false,
-				values: [3],
-				min: 1,
-				max: 10,
+				values: [mainConf.searchParams.sliderDefault],
+				min: mainConf.searchParams.sliderMin,
+				max: mainConf.searchParams.sliderMax,
 				
 			});
 			}
