@@ -170,7 +170,7 @@ Info.statics.findAll = function (callback) {
 }
 */
 
-Info.statics.findAllByPage = function (callback, skip, limit, yakType, _id, what, where, dateInterval, yakCat, next) {
+Info.statics.findAllByPage = function (callback, skip, limit, yakType, _id, what, where, dateInterval, yakCat, next, dimension) {
 	
 	var mydateUtils = require('../mylib/dateUtils.js');
 	var now = mydateUtils.substractDays(new Date(), parseInt(0));
@@ -210,7 +210,7 @@ Info.statics.findAllByPage = function (callback, skip, limit, yakType, _id, what
 
 
 	if (where != "") {
-		 infos.where('location').near( [parseFloat(geopoint[0].lat),parseFloat(geopoint[0].lng)] ).maxDistance(5);
+		 infos.where('location').near( [parseFloat(geopoint[0].lat),parseFloat(geopoint[0].lng)] ).maxDistance(dimension);
 	};
 		
 	

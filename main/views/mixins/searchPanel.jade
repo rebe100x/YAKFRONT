@@ -37,12 +37,13 @@ mixin searchPanel()
 
 			div.span6
 				div.searchPlaces
+				input#wheretosearch(type="hidden", value="")
 				ul#myfavplace.favplacelist.unstyled
 					- if(locals.user.favplace)
 							- each favplace in locals.user.favplace
 								li.zoneLoc(pointId=favplace._id, lat=favplace.location.lat, lng=favplace.location.lng)
 									i.icon-map-marker
-									span= favplace.name
+									span(onclick="setGeoLocaton(this)")= favplace.name
 									i.icon-remove.icon-pointer(onclick='deleltePlace(this)')
 									i.icon-signal.icon-pointer(onclick='showRangeSelector(this)')
 			
@@ -51,6 +52,13 @@ mixin searchPanel()
 		button(type="button", class="btn searchButton") Search
 
 		script
+			function setGeoLocaton(el)
+			{
+				var curLat = $(el).parent().attr("lat");
+				var curLng = $(el).parent().attr("lng");
+				$("#wheretosearch").val(curLat + "," + curLng + "-");
+				triggerSearch(currentPage, 0);
+			}
 			function showRangeSelector(el)
 			{
 				if ($(el).parent().find(".theslider").length > 0){
@@ -163,6 +171,7 @@ mixin searchPanel()
 					aplace.append("<i class='icon-map-marker'></i>");
 					aplace.append("<span>" + placeGmap.title + "</span>");
 					aplace.append("<i class='icon-remove icon-pointer' onclick='deleltePlace(this)'></i>");
+					aplace.append("<i class='icon-signal icon-pointer' onclick='showRangeSelector(this)'></i>");
 
 					$("#myfavplace").append(aplace);
 
