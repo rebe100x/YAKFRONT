@@ -553,13 +553,13 @@ block content
 			var height = $(window).height();
 			var pos = $("#newsfeedContainer").position();
 			if(width>768){
-				var borderOffset = 0.075; // to avoid printing news at the hedge of the screen	
+				var borderOffset = 0.01; // to avoid printing news at the hedge of the screen	
 				var offsetPercent = pos.left/width;
 				var offsetDegree = (parseFloat(thebounds.ea.f) - parseFloat(thebounds.ea.b))*offsetPercent;
 				var myBounds = {
 					ca:{
-						f: thebounds.ca.f-borderOffset,
-						b: thebounds.ca.b+borderOffset,	
+						f: thebounds.ca.f-1.5*borderOffset,
+						b: thebounds.ca.b+borderOffset/2,	
 					},
 					ea:{
 						f: thebounds.ea.b+offsetDegree-borderOffset,
@@ -567,7 +567,7 @@ block content
 					}
 				};
 			}else{
-				var borderOffset = 0.025; // to avoid printing news at the hedge of the screen	
+				var borderOffset = 0.0001; // to avoid printing news at the hedge of the screen	
 				var offsetPercent = pos.top/height;
 				var offsetDegree = (parseFloat(thebounds.ca.f) - parseFloat(thebounds.ca.b))*offsetPercent;
 				var myBounds = {

@@ -254,6 +254,7 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,from,type,str,callback) {
 				"status":1,
 				"location" : {$within:{"$box":box}},
 				"pubDate":{$gte:D},
+				"dateEndPrint":{$lte:D},
 				"yakType" : {$in:type}
 			};
 			
