@@ -32,7 +32,7 @@ mixin searchPanel()
 					div.span5
 
 						input#locationInput(type='hidden', name='locationInput', value='')
-						input#SearchWhat(type="text", class="searchInput", placeholder="Quoi ?")
+						input#SearchWhat(type="text", class="searchInput", placeholder="Quoi ? YakCats? Users?")
 						input#SearchWhere(type="text", data-provide="typeahead", class="searchInput2", placeholder="Où ?")
 
 				
@@ -79,6 +79,25 @@ mixin searchPanel()
 
 		script
 			$(document).ready(function(){
+				$('#SearchWhat').typeahead({
+					minLength : 3,
+					source: function (typeahead, query) {
+					encodeURIComponent(query);
+						if(query.length >= 3){
+							$.ajax({
+									url: "/api/catsandtags",				
+									success: function( ajax ) {
+										typeahead.process(ajax.data.catsandtags);
+									}
+								})}
+					},
+					property: "title",
+					onselect: function(obj) { 
+						$("#SearchWhat").removeClass('searching');
+						triggerSearch(currentPage, 0);
+					}
+				});
+
 				$('#SearchWhat').keypress(function(event){
 						var keycode = (event.keyCode ? event.keyCode : event.which);
 						if(keycode == '13'){
