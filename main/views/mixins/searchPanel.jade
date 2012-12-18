@@ -52,10 +52,17 @@ mixin searchPanel()
 			
 		
 
-		button(type="button", class="btn searchButton") Search
+		button(type="button", class="btn searchButton", style="display: none") Search
 
 		script
 			$(document).ready(function(){
+				$('#SearchWhat').keypress(function(event){
+						var keycode = (event.keyCode ? event.keyCode : event.which);
+						if(keycode == '13'){
+							triggerSearch(currentPage, 0);
+						}
+				});
+
 				$(".theslider").slider({
 				range: false,
 				values: [mainConf.searchParams.sliderDefault],
@@ -136,7 +143,8 @@ mixin searchPanel()
 					
 				},
 				change:function(event, ui){
-					getAndPrintInfo();
+					//getAndPrintInfo();
+					triggerSearch(currentPage, 0);
 					
 				}
 			});
