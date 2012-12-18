@@ -857,12 +857,51 @@ block content
 											ul
 												li 
 													code /api/cat/search/searchString
-												li searchString : string to search for in title and descriptions of infos. Send 'null' to get all news.
+												li searchString : string to search for in cat's title 
+												li limit:int - number of news to get
+												li skip:int - starting row
+												li v:int - the version of the api - <b>default:</b> the last version
+												li local:string - response language - <b>default:</b>  'fr'
 									tr			
 										td Response
 											div Array of <a href="/docs/api/#format_yakcat">Yakcat</a> objects
 						
+					div#endpoint_tagsearch
+					br
+					br
+					br
+					h4 Search in tags
+					table.table.table-bordered
+						tr
+							th METHODS
+							th URL
+							th DESCRIPTION
+			
+						tr	
+							td GET
+							td /api/tag/search/<code>string</code>
+							td Search in Yakwala tags
+						tr
+							td(colspan=3)
+								table.table.table-bordered
+									tr
+										td GET : 
+									tr
+										td Parameters :
+											ul
+												li 
+													code /api/cat/search/searchString
+												li searchString : string to search for in tag's title.
+												li limit:int - number of news to get
+												li skip:int - starting row
+												li sort:string - orde to sort
+													i.muted Values : 'lastUsed' or 'mostUsed' - default:'mostUsed'
+												li v:int - the version of the api - <b>default:</b> the last version
+												li local:string - response language - <b>default:</b>  'fr'
 
+									tr			
+										td Response
+											div Array of <a href="/docs/api/#format_yakcat">Yakcat</a> objects						
 
 
 
@@ -979,7 +1018,7 @@ block content
 												li returns the code 200 if operation succeeded
 										tr
 											td Non RESTfull method in POST : /api/delplace/<code>userid</code>
-					h4 MaGet one place
+					h4 Get one place
 					table.table.table-bordered
 						tr
 							th METHODS

@@ -661,6 +661,7 @@ exports.add_user_feed = function (req, res) {
 						Tag.findOne({'title':freeTag},function(err,thetag){
 							if(thetag == null){
 								tag.title=freeTag;
+								tag.numUsed = 1;
 								tag.save();
 							}
 							else{
@@ -1043,7 +1044,7 @@ exports.tag_search = function (req, res) {
 	var Tag = db.model('Tag');
 	Tag.search(req.params.string,req.query.limit,req.query.skip,req.query.sensitive,req.query.sort,function (err, docs){
 	  if(!err)
-	  	res.json({meta:{code:200},data:{cats:docs}});
+	  	res.json({meta:{code:200},data:{tags:docs}});
 	  else
 	  	res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 	});

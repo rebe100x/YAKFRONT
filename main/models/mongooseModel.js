@@ -859,7 +859,7 @@ mongoose.model('Yakcat', Yakcat);
 /******************************YAKTAG*/
 var Tag = new Schema({
     title     : { type: String, required: true, index:true}
-  , lastUsageDate       : { type:Date , default: Date.now, index:-1}
+  , lastUsageDate       : { type:Date , default: Date.now, index:true}
   , numUsed :{type:Number}
   
 }, { collection: 'tag' });
@@ -875,12 +875,11 @@ Tag.statics.search = function(string,count,from,sensitive,order,callback){
 	var limit = (typeof(count) != 'undefined' && count > 0) ? count : 100;		
 	var case_sensitive = (typeof(sensitive) != 'undefined' && sensitive > 0) ? 'g' : 'gi';	
 	var skip = (typeof(from) != 'undefined' && from > 0) ? from : 0;		
-	var sort = (typeof(order) != 'undefined' && order == 'lastUsed') ? 'lastUsageDate' : 'numUsed';		
+	var thesort = (typeof(order) != 'undefined' && order == 'lastUsed') ? {sort:{lastUsageDate:-1}} : {sort:{numUsed:1}};		
 	var input = new RegExp(string,case_sensitive);
 	
 	var cond = {
 		"title": {$regex:input},	
-		"status":1,
 	};
 	return this.find(
 	cond,
@@ -888,7 +887,7 @@ Tag.statics.search = function(string,count,from,sensitive,order,callback){
 	{	
 		skip:skip, // Starting Row
 		limit:limit, // Ending Row
-		sort:{sort:-1}
+		sort:thesort
 		
 	},callback);
 }
