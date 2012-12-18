@@ -80,8 +80,11 @@ exports.geoalerts = function (req, res) {
 	var usersubs= res.locals.user.usersubs;
 	var tagsubs= res.locals.user.tagsubs;
 	
-	Info.findAllGeoAlert(req.params.x1,req.params.y1,req.params.x2,req.params.y2,req.params.heat,req.params.str,usersubs,tagsubs,function (err, docs){
-		res.json({info: docs});
+	Info.findAllGeoAlert(req.params.x1,req.params.y1,req.params.x2,req.params.y2,req.params.from,req.params.str,usersubs,tagsubs,function (err, docs){
+		if(!err)
+			res.json({meta:{code:200},data:{info:docs}});
+		else
+			res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 	}); 
 };
 exports.geoinfos = function (req, res) {
@@ -91,30 +94,35 @@ exports.geoinfos = function (req, res) {
 	type = req.params.type.split(',');
 	
 	Info.findAllGeo(req.params.x1,req.params.y1,req.params.x2,req.params.y2,req.params.from,type,req.params.str,function (err, docs){
-	  
-	  res.json({
-	  
-		info: docs
-	  });
-	}); 
+		var infosFormated = docs.map(function(item){
+				var Info = db.model('Info');
+				return Info.format(item);
+			});
+		if(!err)
+			res.json({meta:{code:200},data:{info:infosFormated}});
+		else
+			res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+		}); 
 };
 
 
 exports.zones = function (req, res) {
 	var Zone = db.model('Zone');
 	Zone.findNear(req.params.x,req.params.y,function (err, docs){
-	  res.json({
-		zone: docs
-	  });
+	  if(!err)
+	  	res.json({meta:{code:200},data:{zone:docs}});
+	  else
+	  	res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 	}); 
 };
 
 exports.cats = function (req, res) {
 	var Yakcat = db.model('Yakcat');
 	Yakcat.findAll(function (err, docs){
-	  res.json({
-		cats: docs
-	  });
+	  if(!err)
+	  	res.json({meta:{code:200},data:{cats:docs}});
+	  else
+	  	res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 	});
 };
 	
@@ -125,9 +133,10 @@ exports.catsandtags = function (req, res) {
 	Yakcat.find({},'title',function (err, cats){
 		Tag.find({},{title:1,_id:1},function (err, tags){
 		results = tags.concat(cats);		
-			res.json({
-				catsandtags: results
-			  });	
+			if(!err)
+				res.json({meta:{code:200},data:{catsandtags:results}});
+			else
+				res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 		});
 	});
 };

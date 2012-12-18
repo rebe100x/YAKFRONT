@@ -33,7 +33,7 @@ block content
 							//span.btn.btn-link(title="testfeed", type=10)
 							//	i.icon-fire
 						div#heatModule.row
-							div#dayPrinter Depuis 3 jours	
+							div#dayPrinter Maintenant	
 							div#heatSelector
 						div#searchBox.row
 							div.input-append
@@ -55,7 +55,7 @@ block content
 					span#newspostContent.tabContent
 						mixin postForm()
 					
-	script(src='http://maps.google.com/maps/api/js?v=3.9&sensor=false&libraries=drawing')						
+	
 	script
 	
 	
@@ -81,7 +81,7 @@ block content
 		var markerCluster = null;
 		var pinkParksStyles = [{featureType: "Water",stylers: [{ hue: "#006eff" },{ saturation:1 },{ lightness: -13 }]},{featureType: "Road",stylers: [{ hue: "#ff0000" },{ saturation: -100 },{ lightness: 31 }]},{featureType: "Landscape",stylers: [{ hue: "#ff0008" },{saturation: -90 },{ lightness: 66 }]}];
 		var pinkParksStyles =[{}];
-		var dateFrom = 3;
+		var dateFrom = 0;
 		//var type = [1];
 		var type = [!{type}];
 		
@@ -171,9 +171,9 @@ block content
 						/* our db is not ready for this ! => use google !
 						$.ajax({
 							url: "/api/search/place/"+placeName,				
-							success: function( data ) {
-								if(data.places.length > 0 && data.places[0] != "undefined"){
-									var latLng = new google.maps.LatLng(data.places[0].location.lat,data.places[0].location.lng);
+							success: function( ajax ) {
+								if(ajax.data.places.length > 0 && ajax.data.places[0] != "undefined"){
+									var latLng = new google.maps.LatLng(ajax.data.places[0].location.lat,ajax.data.places[0].location.lng);
 									map.panTo(latLng);
 								}else{
 									var salt = new Date().getTime();
@@ -256,8 +256,8 @@ block content
 						if(query.length >= 3){
 							$.ajax({
 									url: "/api/catsandtags",				
-									success: function( data ) {
-										typeahead.process(data.catsandtags);
+									success: function( ajax ) {
+										typeahead.process(ajax.data.catsandtags);
 									}
 								})}
 					},
@@ -312,15 +312,51 @@ block content
 				range: "min",
 				min: 1,
 				max: 100,
-				value: 90,
+				value: 100,
 				slide: function( event, ui ) {
 					var x = ui.value;
-					var y = Math.ceil(-7.222723628*Math.pow(10,-7)*Math.pow(x,5) + 2.123355095*Math.pow(10,-4)*Math.pow(x,4) - 2.178300623*Math.pow(10,-2)*Math.pow(x,3) + 0.906040198*Math.pow(x,2) - 16.47223075*x + 360.0000001);
+					var y = 0;
+					if(x==100){
+						y= 0;
+						yText = "Maintenant";
+					}else{
+						y = Math.floor(-7.222723628*Math.pow(10,-7)*Math.pow(x,5) + 2.123355095*Math.pow(10,-4)*Math.pow(x,4) - 2.178300623*Math.pow(10,-2)*Math.pow(x,3) + 0.906040198*Math.pow(x,2) - 16.47223075*x + 360.0000001);
+					}
+					
 					var yText = "";
-					if(y <= 1)
-						yText = "Depuis "+y+" jour";
+					
+					var months = Math.floor(y / 30);
+					var days = y % 30;
+					var dayText = "";
+					var monthText = "";
+					
+					if(days == 0 && months == 0)
+						dayText = "Maintenant";
+					else if(days == 0 && months > 0)
+						dayText = "";
+					else if(days == 1 && months == 0)
+						dayText = "Hier";
+					else if(days == 1)
+						dayText = "1 jour";
 					else
-						yText = "Depuis "+y+" jours";
+						dayText = days+" jours";
+					if(months == 0)
+						monthText = "";	
+					else if(months == 1)
+						monthText = "1 mois";	
+					else
+						monthText = months+" mois";	
+				
+
+					if(monthText && dayText)
+						yText = monthText+" et "+ dayText;
+					else if(monthText && !dayText)
+						yText = monthText
+					else
+						yText = dayText;
+					
+					if(y >= 2)
+						yText = "Il y a "+yText;
 					$( "#dayPrinter" ).html(yText);
 					dateFrom = y;
 					
@@ -452,8 +488,8 @@ block content
 					source: function (typeahead, query) {
 						$.ajax({
 								url: "/api/cats",				
-								success: function( data ) {
-									typeahead.process(data.cats);
+								success: function( ajax ) {
+									typeahead.process(ajax.data.cats);
 								}
 							})},
 					property: "title",
@@ -471,8 +507,8 @@ block content
 					source: function (typeahead, query) {
 						$.ajax({
 								url: "/api/places",		
-								success: function( data ) {
-									typeahead.process(data.places);
+								success: function( ajax ) {
+									typeahead.process(ajax.data.places);
 								}
 							})},
 					property: "title",
@@ -753,20 +789,14 @@ block content
 			//searchString = encodeURIComponent(searchString);		
 			//bounds = map.getBounds();
 			bounds = getMyBounds();
-			// NOTE : here we take only one day of history : it is enough to refresh.
 			var apiUrl = '';
 			if(type.toString() == 5)
-				apiUrl = '/api/geoalerts/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/1/'+searchString;
+				apiUrl = '/api/geoalerts/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/'+searchString;
 			else	
-				apiUrl = '/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/1/'+type.toString()+'/'+searchString;
+				apiUrl = '/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/'+type.toString()+'/'+searchString;
 			
-			/*if(type.toString() == 5)
-				apiUrl = '/api/geoalerts/'+bounds.br.lat+'/'+bounds.br.lng+'/'+bounds.lt.lat+'/'+bounds.tl.lng+'/1/'+searchString;
-			else	
-				apiUrl = '/api/geoinfos/'+bounds.br.lat+'/'+bounds.br.lng+'/'+bounds.lt.lat+'/'+bounds.tl.lng+'/1/'+type.toString()+'/'+searchString;
-			*/
-			$.getJSON(apiUrl,function(data) {	
-				$.each(data.info, function(key,val) {
+			$.getJSON(apiUrl,function(ajax) {	
+				$.each(ajax.data.info, function(key,val) {
 					
 					
 
@@ -791,12 +821,16 @@ block content
 						var dateTmp = new Date(val.pubDate);
 						var dateCreation = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
 						infoContent = "<div class=\'infowindow mapHighlighter\' infoId='"+val._id+"'>";					
-						if(!(typeof val.thumb === 'undefined') && val.thumb != '' && val.thumb != null){
+						
+						/*if(!(typeof val.thumb === 'undefined') && val.thumb != '' && val.thumb != null){
 							if(val.user == 0 || val.user === undefined)
 								infoContent += "<img src=\'"+conf.batchurl+val.thumb+"\' />";
 							else
 								infoContent += "<img src=\'/uploads/pictures/120_90/"+val.thumb+"\' />";
-						}
+						}*/
+						if(!(typeof val.thumb === 'undefined') && val.thumb != '' && val.thumb != null)
+							infoContent += "<img src=\'"+val.thumb+"\' />";
+
 						infoContent += "<div class=\'title\'> <img class='yakTypeImg' src=\'/images/markers/type"+val.yakType+".png\' />"+val.title.linkify()+" ("+dateCreation+")</div>";
 						infoContent += "<div class=\'tags\'>";					
 							if(val.yakCatName)
@@ -887,16 +921,16 @@ block content
 			else	
 				apiUrl = '/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/'+type.toString()+'/'+searchString;
 			
-			$.getJSON(apiUrl,function(data) {	
+			$.getJSON(apiUrl,function(ajax) {	
 			
 				// empty the news feed
-				if(data.info.length == 0)
+				if(ajax.data.info.length == 0)
 					$('#newsfeed').html('Aucune info !');
 				else
 					$('#newsfeed').html('');
 				
 				
-				$.each(data.info, function(key,val) {
+				$.each(ajax.data.info, function(key,val) {
 				
 					
 					/*PRINT ON THE MAP*/	
@@ -922,14 +956,22 @@ block content
 					marker.setMap(map);	
 					var dateTmp = new Date(val.pubDate);
 					var dateCreation = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
+					dateTmp = new Date(val.dateEndPrint);
+					var dateEndPrint = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
+					
+					
 					infoContent = "<div class=\'infowindow mapHighlighter\' infoId='"+val._id+"'>";					
-					if(!(typeof val.thumb === 'undefined') && val.thumb != '' && val.thumb != null){
-						if(val.user == 0 || val.user === undefined)
-							infoContent += "<img src=\'"+conf.batchurl+val.thumb+"\' />";
-						else
-							infoContent += "<img src=\'/uploads/pictures/120_90/"+val.thumb+"\' />";
-					}
-					infoContent += "<div class=\'title\'> <img class='yakTypeImg' src=\'/images/markers/type"+val.yakType+".png\' />"+val.title.linkify()+" ("+dateCreation+")</div>";
+					
+					/*if(!(typeof val.thumb === 'undefined') && val.thumb != '' && val.thumb != null){
+							if(val.user == 0 || val.user === undefined)
+								infoContent += "<img src=\'"+conf.batchurl+val.thumb+"\' />";
+							else
+								infoContent += "<img src=\'/uploads/pictures/120_90/"+val.thumb+"\' />";
+						}*/
+						if(!(typeof val.thumb === 'undefined') && val.thumb != '' && val.thumb != null)
+							infoContent += "<img src=\'"+val.thumb+"\' />";
+
+					infoContent += "<div class=\'title\'> <img class='yakTypeImg' src=\'/images/markers/type"+val.yakType+".png\' />"+val.title.linkify()+" ("+dateCreation+" >> "+dateEndPrint+")</div>";
 					infoContent += "<div class=\'tags\'>";					
 						if(val.yakCatName)
 								infoContent +="<div class=\'\'>"+yakCatNameArray.map(function(item){return item.linkify();}).join(',')+"</div>";	

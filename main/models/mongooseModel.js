@@ -76,11 +76,20 @@ var Info = new Schema({
 //Info.index({location : '2d'});
 
 Info.statics.format = function (theinfo) {
+	if(theinfo.thumb != undefined)
+		if(theinfo.user != undefined)
+			var thethumb = 	conf.fronturl+'/pictures/120_90/'+theinfo.thumb;
+		else
+			var thethumb = 	conf.batchurl+theinfo.thumb;
+	else
+		var thethumb = 	'';
+
+	console.log(theinfo.user);
 	var formattedInfo = {
 		_id:theinfo._id,
 		title:theinfo.title,
 		content:theinfo.content,
-		thumb:theinfo.thumb,
+		thumb:thethumb,
 		yakType:theinfo.yakType,
 		print:theinfo.print,
 		dateEndPrint:theinfo.dateEndPrint,
@@ -239,10 +248,21 @@ Info.statics.findByUserIds = function (useridArray, count, callback) {
 }
 
 Info.statics.findAllGeo = function (x1,y1,x2,y2,from,type,str,callback) {
+	// we create the date rounded to the last day, except if from = 0, we take the last few hours
+	var DPUB = new Date();
+	var DEND = new Date();
 	var now = new Date();
 	var D = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
 	var DTS = D.getTime() / 1000 - (from * 60 * 60 * 24);
-	D.setTime(DTS*1000); 
+	DPUB .setTime(DTS*1000);
+	DEND .setTime(DTS*1000);
+	if(from == 0){ // from this morning to now
+		DPUB.setTime(now.getTime()+3*60*60*1000);
+		DEND = D; // this morning
+	}
+		
+	console.log(from);
+	console.log(D);
 	var box = [[parseFloat(x1),parseFloat(y1)],[parseFloat(x2),parseFloat(y2)]];
 	var Yakcat = db.model('Yakcat');
 	var User = db.model('User');
@@ -253,8 +273,8 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,from,type,str,callback) {
 				"print":1,
 				"status":1,
 				"location" : {$within:{"$box":box}},
-				"pubDate":{$gte:D},
-				"dateEndPrint":{$lte:D},
+				"pubDate":{$lte:DPUB},
+				"dateEndPrint":{$gte:DEND},
 				"yakType" : {$in:type}
 			};
 			
@@ -310,6 +330,7 @@ Info.statics.findAllGeoAlert = function (x1,y1,x2,y2,from,str,usersubs,tagsubs,c
 	var D = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
 	var DTS = D.getTime() / 1000 - (from * 60 * 60 * 24);
 	D.setTime(DTS*1000); 
+	console.log(from);
 	var box = [[parseFloat(x1),parseFloat(y1)],[parseFloat(x2),parseFloat(y2)]];
 	var Yakcat = db.model('Yakcat');
 	var User = db.model('User');
@@ -320,7 +341,9 @@ Info.statics.findAllGeoAlert = function (x1,y1,x2,y2,from,str,usersubs,tagsubs,c
 				"print":1,
 				"status":1,
 				"location" : {$within:{"$box":box}},
-				"pubDate":{$gte:D},
+				"pubDate":{$lte:D},
+				"dateEndPrint":{$gte:D},
+
 			};
 
 	var qInfo = this.find(cond).sort({'pubDate':-1}).limit(100);
@@ -654,11 +677,16 @@ var User = new Schema({
 
 
 User.statics.format = function (theuser) {
+	if(theuser.thumb)
+		var thethumb = 	conf.fronturl+'/pictures/128_128/'+theuser.thumb;
+	else
+		var thethumb = 	'';
+
 	var formattedUser = {
 		_id:theuser._id,
 		name:theuser.name,
 		bio:theuser.bio,
-		thumb:theuser.thumb,
+		thumb:thethumb,
 		web:theuser.web,
 		login:theuser.login,
 		mail:theuser.mail,

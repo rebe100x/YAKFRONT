@@ -424,91 +424,7 @@ block content
 
 						
 					
-					// USERS FEED
-					div#endpoint_userfeed
-					br
-					br
-					br
-					h4 Post an info on behalf of a user
-					table.table.table-bordered
-						tr
-							th METHODS
-							th URL
-							th DESCRIPTION
-						tr
-							td GET/POST/DELETE/PUT
-							td /users/feed/<code>user-id</code>
-							td Manage the authenticated user's news feed.
-						tr
-							td(colspan=3)
-								table.table.table-bordered
-									tr
-										td GET : list news posted by the user
-									tr
-										td Parameters :
-											ul 
-												li limit:int - number of news to get
-												li skip:int - starting row
-												li v:int - the version of the api - <b>default:</b>the last version
-												li local:string - response language - <b>default:</b>'fr'
-									tr
-										td Response :
-											ul
-												li Array of <a href="/docs/api/#format_info">info</a> objects
-								table.table.table-bordered
-									tr
-										td POST/PUT : 
-									tr
-										td Paramaters:
-											ul
-												li <b>access_token :</b> see the <a href="/docs/api/#authentification">authentification doc</a> to get a valid token.
-												li info : JSON object 
-												{
-												<br>&nbsp;&nbsp;title:string, 
-												i.muted news title (<b>*required</b>)
-												<br>&nbsp;&nbsp;content:string, 
-												i.muted news main content, <b>default</b> : empty
-												<br>&nbsp;&nbsp;print:boolean, 
-												i.muted set to 0 if you want only the news appears on the news feed and not on the map/ Defautl : 1 (on map and on feed)
-												<br>&nbsp;&nbsp;yakcat:['id1xxxx','id2xxxx'], 
-												i.muted array of Yakwala categories, <b>default</b> : empty
-												<br>&nbsp;&nbsp;yaktype:int,
-												i.muted 
-													ul
-														li Yakwala type : , optional, <b>default</b> : 4 
-														li Values : actu = 1 , agenda = 2 , Infos Pratiques = 3 , Discussion = 4  
-												&nbsp;&nbsp;freetag:[string,string], 
-												i.muted array of string tags, <b>default</b> : empty array
-												<br>&nbsp;&nbsp;pubdate:int, 
-												i.muted date to be published, Unix timestamp, <b>default</b> : now
-												<br>&nbsp;&nbsp;placeid:{_id:string}, 
-												i.muted JSON object the place id ( see the /api/place to create a place)  (<b>*required</b>)
-												br
-												}
-												li picture : posted image 
-													i.muted The photo should be uploaded as a jpeg and the Content-Type should be set to "image/jpeg". Images may not exceed 5MB in size.
-												li v:int - the version of the api - <b>default:</b>the last version
-												li local:string - response language - <b>default:</b>'fr'
-									tr
-										td Response:
-											ul
-												li returns the code 200 if operation succeeded or a <a href="/docs/api/#format_response">standard error</a> object if failed
-									tr
-										td Non RESTfull method in POST : /api/user/updatefeed/<code>userid</code>
-									
-									table.table.table-bordered
-										tr
-											td DELETE : delete one info
-										tr
-											td Paramaters:
-												ul
-													li <b>access_token :</b> see the <a href="/docs/api/#authentification">authentification doc</a> to get a valid token.
-													li <b>info :</b> li info : JSON object {_id:xxxxx}
-										tr
-											td Response:
-												li returns the code 200 if operation succeeded
-										tr
-											td Non RESTfull method in POST : /api/user/delfeed/<code>userid</code>		
+							
 									
 					// USER SEARCH
 					div#endpoint_usersearch
@@ -735,7 +651,91 @@ block content
 					br
 					br					
 					h3 Info endpoints
-					div To add an info check the <a href="/docs/api/#endpoint_userfeed">user endpoint section</a>
+					// INFO ADD
+					div#endpoint_userfeed
+					br
+					br
+					br
+					h4 Post an info on behalf of a user
+					table.table.table-bordered
+						tr
+							th METHODS
+							th URL
+							th DESCRIPTION
+						tr
+							td GET/POST/DELETE/PUT
+							td /users/feed/<code>user-id</code>
+							td Manage the authenticated user's news feed.
+						tr
+							td(colspan=3)
+								table.table.table-bordered
+									tr
+										td GET : list news posted by the user
+									tr
+										td Parameters :
+											ul 
+												li limit:int - number of news to get
+												li skip:int - starting row
+												li v:int - the version of the api - <b>default:</b>the last version
+												li local:string - response language - <b>default:</b>'fr'
+									tr
+										td Response :
+											ul
+												li Array of <a href="/docs/api/#format_info">info</a> objects
+								table.table.table-bordered
+									tr
+										td POST/PUT : 
+									tr
+										td Paramaters:
+											ul
+												li <b>access_token :</b> see the <a href="/docs/api/#authentification">authentification doc</a> to get a valid token.
+												li info : JSON object 
+												{
+												<br>&nbsp;&nbsp;title:string, 
+												i.muted news title (<b>*required</b>)
+												<br>&nbsp;&nbsp;content:string, 
+												i.muted news main content, <b>default</b> : empty
+												<br>&nbsp;&nbsp;print:boolean, 
+												i.muted set to 0 if you want only the news appears on the news feed and not on the map/ Defautl : 1 (on map and on feed)
+												<br>&nbsp;&nbsp;yakcat:['id1xxxx','id2xxxx'], 
+												i.muted array of Yakwala categories, <b>default</b> : empty
+												<br>&nbsp;&nbsp;yaktype:int,
+												i.muted 
+													ul
+														li Yakwala type : , optional, <b>default</b> : 4 
+														li Values : actu = 1 , agenda = 2 , Infos Pratiques = 3 , Discussion = 4  
+												&nbsp;&nbsp;freetag:[string,string], 
+												i.muted array of string tags, <b>default</b> : empty array
+												<br>&nbsp;&nbsp;pubdate:int, 
+												i.muted date to be published, Unix timestamp, <b>default</b> : now
+												<br>&nbsp;&nbsp;placeid:{_id:string}, 
+												i.muted JSON object the place id ( see the /api/place to create a place)  (<b>*required</b>)
+												br
+												}
+												li picture : posted image 
+													i.muted The photo should be uploaded as a jpeg and the Content-Type should be set to "image/jpeg". Images may not exceed 5MB in size.
+												li v:int - the version of the api - <b>default:</b>the last version
+												li local:string - response language - <b>default:</b>'fr'
+									tr
+										td Response:
+											ul
+												li returns the code 200 if operation succeeded or a <a href="/docs/api/#format_response">standard error</a> object if failed
+									tr
+										td Non RESTfull method in POST : /api/user/updatefeed/<code>userid</code>
+									
+									table.table.table-bordered
+										tr
+											td DELETE : delete one info
+										tr
+											td Paramaters:
+												ul
+													li <b>access_token :</b> see the <a href="/docs/api/#authentification">authentification doc</a> to get a valid token.
+													li <b>info :</b> li info : JSON object {_id:xxxxx}
+										tr
+											td Response:
+												li returns the code 200 if operation succeeded
+										tr
+											td Non RESTfull method in POST : /api/user/delfeed/<code>userid</code>
 					div#endpoint_infosearch
 					br
 					br
@@ -773,9 +773,9 @@ block content
 														li 3 : Discussion 
 														li 4 : Info Pratique
 												li searchString : string to search for in title and descriptions of infos. Send 'null' to get all news.
-												
+									tr			
 										td Response
-											div Array of <a href="/docs/api/#format_lightPlace">lightPlace</a> objects
+											div Array of <a href="/docs/api/#format_lightPlace">Inofs</a> objects
 
 
 
