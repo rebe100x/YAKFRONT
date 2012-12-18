@@ -217,7 +217,7 @@ exports.news = function(req, res){
 				info.lastModifDate = now;
 				info.pubDate = now;
 				
-				var D = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+				var D = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 				var DTS = D.getTime() / 1000 + (3 * 60 * 60 * 24);
 				D.setTime(DTS*1000); 
 				info.dateEndPrint = D;
@@ -235,10 +235,11 @@ exports.news = function(req, res){
 						Tag.findOne({'title':freeTag},function(err,thetag){
 							if(thetag == null){
 								tag.title=freeTag;
+								tag.numUsed = 1;
 								tag.save();
 							}
 							else{
-								Tag.update({_id: thetag._id}, {lastUsageDate:now}, {upsert: false}, function(err){if (err) console.log(err);});						
+								Tag.update({_id: thetag._id}, {lastUsageDate:now,$inc:{numUsed:1}}, {upsert: false}, function(err){if (err) console.log(err);});						
 							}
 						});
 					});

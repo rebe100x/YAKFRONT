@@ -94,12 +94,15 @@ exports.geoinfos = function (req, res) {
 	type = req.params.type.split(',');
 	
 	Info.findAllGeo(req.params.x1,req.params.y1,req.params.x2,req.params.y2,req.params.from,type,req.params.str,function (err, docs){
-		var infosFormated = docs.map(function(item){
+		
+		if(!err && docs){
+			var infosFormated = docs.map(function(item){
 				var Info = db.model('Info');
 				return Info.format(item);
 			});
-		if(!err)
 			res.json({meta:{code:200},data:{info:infosFormated}});
+		}
+			
 		else
 			res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 		}); 
@@ -140,7 +143,6 @@ exports.catsandtags = function (req, res) {
 		});
 	});
 };
-
 
 
 
@@ -194,8 +196,11 @@ exports.put_favplace = function (req, res) {
 exports.del_favplace = function (req, res) {
 	var User = db.model('User');
 	if(req.body.place){
-		var placeId = JSON.parse(req.body.place)._id;
-		User.update({_id:res.locals.user._id},{$pull:{favplace:{_id:placeId}}}, function(err,docs){
+		var placeid = JSON.parse(req.body.place);
+		if(placeid._id != undefined)
+			placeid = JSON.parse(req.query.place)._id;
+		
+		User.update({_id:res.locals.user._id},{$pull:{favplace:{_id:placeid}}}, function(err,docs){
 			if(!err)
 				res.json({meta:{code:200}});
 			else
@@ -267,7 +272,10 @@ exports.put_subs_user = function (req, res) {
 };
 exports.del_subs_user = function (req, res) {
 	var User = db.model('User');
-	var usersubs = JSON.parse(req.body.usersubs)._id;
+	var usersubs = JSON.parse(req.body.usersubs);
+	if(usersubs._id[0] != undefined)
+		usersubs = JSON.parse(req.query.usersubs).map(function(item){return item._id;});
+		
 	//console.log(usersubs);
 	if(usersubs){
 		User.update({_id:res.locals.user._id},{$pull:{usersubs:{_id:usersubs}}}, function(err,docs){
@@ -415,7 +423,6 @@ exports.put_user_details = function (req, res) {
 			res.json({meta:{code:200}});
 
 		}else{
-			console.log('elo');
 			res.json({meta:{code:404,error_type:'Save in db failled',error_description:"Missing paramater: user._id is empty"}});				
 		}
 	}else{
@@ -457,9 +464,11 @@ exports.get_user_feed = function (req, res) {
 
 exports.del_user_feed = function (req, res) {
 	var Info = db.model('Info');
-	if(typeof(req.body.info) != 'undefined' && typeof(req.body.info._id) != 'undefined' ) {
-		var info = JSON.parse(req.body.info);
-		var theinfoid = info._id;
+	if(typeof(req.body.info) != 'undefined') {
+		var theinfoid = JSON.parse(req.body.info);
+		if(theinfoid._id != undefined)
+			theinfoid = JSON.parse(req.body.info)._id;
+			
 		Info.update({_id:theinfoid,user:res.locals.user._id},{$set:{status:3}}, function(err,docs){
 			if(!err)
 				if(docs)
@@ -490,18 +499,28 @@ exports.add_user_feed = function (req, res) {
 	// we need a title, a placeid
 	if(typeof(req.body.info) != 'undefined'){
 		var theinfo = JSON.parse(req.body.info);	
+		console.log(theinfo);
 		var theplaceid = '';
 		
 		if( typeof(theinfo.placeid) != 'undefined' )
 			if(typeof(theinfo.placeid._id) != 'undefined')
 				theplaceid = theinfo.placeid._id;
-		
-		if(theplaceid && typeof(theinfo.title) != 'undefined' && theinfo.title != ''){
-			var yaktypeAccepted = [1,2,3,4];
+			else
+				theplaceid = theinfo.placeid;
+		else
+			theplaceid = 0;	
+		if(typeof(theinfo.title) != 'undefined' && theinfo.title != '' && (  theplaceid != 0 || ( theinfo.location != undefined && theinfo.address != undefined )  ) ){
+			var yaktypeAccepted = [2,3,4];
+			if(res.locals.user.type== 1) // normal user
+				yaktypeAccepted = [4];
+			if(res.locals.user.type == 2)
+				yaktypeAccepted = [1,2,3,4];
+			
 			if(yaktypeAccepted.indexOf(theinfo.yaktype)>0)
 				theYakType = theinfo.yaktype; 
 			else
 				theYakType = 4; // by default : DISCUSSION
+
 			
 			var infoThumb = new Object();
 			if(typeof(req.files.picture) != 'undefined' && req.files.picture.size && req.files.picture.size < 1048576*5){
@@ -512,127 +531,145 @@ exports.add_user_feed = function (req, res) {
 				infoThumb.err = 0;
 
 			if(infoThumb.err == 0 ){
-				Place.findById(theplaceid,function(err,theplace){
-					if(theplace){
-						var yakCatIds = new Array();
-						var yakCatNames = new Array(); 
-						// we introduce a redondancy between types and yakcat to be able to forget the type in the future
-						if(theYakType == 4){ // if type =4 ( discussion : by default push it in YAKCAT discussion )
-							yakCatIds.push(mongoose.Types.ObjectId("5092390bfa9a95f40c000000")); 
-							yakCatNames.push('Discussion');
-						}
-						if(theYakType == 2){ // if type =2 ( agenda : by default push it in yakCat agenda )
-							yakCatIds.push(mongoose.Types.ObjectId("50923b9afa9a95d409000000")); 
-							yakCatNames.push('Agenda');
-						}
-						if(theYakType == 3){ // if type =3 ( infos pratiques : by default push it in yakCat infos pratiques )
-							yakCatIds.push(mongoose.Types.ObjectId("50923b9afa9a95d409000001")); 
-							yakCatNames.push('InfosPratiques');
-						}
-						Yakcat.findByIds(theinfo.yakcat,function(err,theyakcats){
-							if(theyakcats){
-								theyakcats.forEach(function(theyakcat){
-									if(yakCatNames.indexOf(theyakcat.title)){
-										yakCatIds.push(mongoose.Types.ObjectId(theyakcat._id.toString()));
-										yakCatNames.push(theyakcat.title);
-									}
-									info.yakCat = yakCatIds;
-									info.yakCatName = yakCatNames;
-								});
-							}else{
-								info.yakCat = yakCatIds;
-								info.yakCatName = yakCatNames;
+				var yakCatIds = new Array();
+				var yakCatNames = new Array(); 
+				// we introduce a redondancy between types and yakcat to be able to forget the type in the future
+				if(theYakType == 4){ // if type =4 ( discussion : by default push it in YAKCAT discussion )
+					yakCatIds.push(mongoose.Types.ObjectId("5092390bfa9a95f40c000000")); 
+					yakCatNames.push('Discussion');
+				}
+				if(theYakType == 2){ // if type =2 ( agenda : by default push it in yakCat agenda )
+					yakCatIds.push(mongoose.Types.ObjectId("50923b9afa9a95d409000000")); 
+					yakCatNames.push('Agenda');
+				}
+				if(theYakType == 3){ // if type =3 ( infos pratiques : by default push it in yakCat infos pratiques )
+					yakCatIds.push(mongoose.Types.ObjectId("50923b9afa9a95d409000001")); 
+					yakCatNames.push('InfosPratiques');
+				}
+				Yakcat.findByIds(theinfo.yakcat,function(err,theyakcats){
+					if(theyakcats){
+						theyakcats.forEach(function(theyakcat){
+							if(yakCatNames.indexOf(theyakcat.title)){
+								yakCatIds.push(mongoose.Types.ObjectId(theyakcat._id.toString()));
+								yakCatNames.push(theyakcat.title);
 							}
-						});	
-							
-							info.title = theinfo.title;
-							info.content = theinfo.content;
-							
-							// NOTE : in the query below, order is important : in DB we have lat, lng but need to insert in reverse order : lng,lat  (=> bug mongoose ???)
-							info.location = {lng:parseFloat(theplace.location.lng),lat:parseFloat(theplace.location.lat)};
-							info.address = theplace.formatted_address;
-							
-							info.user = mongoose.Types.ObjectId(res.locals.user._id.toString());
-							
-							info.origin = "@"+res.locals.user.name;
-							
-							var now = new Date();
-							
-
-							info.lastModifDate = now;
-							if(typeof(theinfo.pubdate) != 'undefined'){
-								info.pubDate = new Date(theinfo.pubdate*1000);
-							}else
-								info.pubDate = now;
-							
-							if(theinfo.dateendprint == '' || typeof(theinfo.dateendprint) == 'undefined' || theinfo.dateendprint < theinfo.pubDate ){
-								var dateTmp = info.pubDate;
-								var numberOfDaysToAdd = 40;
-								dateTmp.setDate(dateTmp.getDate() + numberOfDaysToAdd);
-								info.dateEndPrint = dateTmp;
-
-							}else
-								info.dateEndPrint = theinfo.dateendprint;
-
-							
-							if(typeof(theinfo.print) == 'undefined' || theinfo.print != 0)
-								info.print = 1;
-							else
-								info.print = 0;
-							info.status = 1;
-							info.access = 1;
-							info.yakType = Math.floor(theYakType);
-							info.thumb = conf.fronturl+"/pictures/128_128/"+infoThumb.name;
-							info.licence = 'Yakwala';
-							info.heat = 80;
-							info.freeTag = theinfo.freetag;
-							info.placeId = theplaceid;
-							/*info.save(function (err,thenewwinfo) {
-							
-								if (!err){ 
-									console.log('Success!');
-									var formattedInfo = Info.format(thenewwinfo);	
-
-									res.json({meta:{code:200,data:{info:formattedInfo}}});
-								}else{
-									res.json({meta:{code:404,error_type:'Save in db failled',error_description:err.toString()}});				
-								} 
-							});*/
-
-							var upsertData = info.toObject();
-							
-							if(typeof(upsertData._id) != 'undefined')
-								delete upsertData._id;
-
-							Info.update({_id: info._id},upsertData,{upsert: true}, function(err){
-								if (!err){ 
-									console.log('Success!');
-									
-									res.json({meta:{code:200}});
-								}else{
-									res.json({meta:{code:404,error_type:'Save in db failled',error_description:err.toString()}});				
-								} 
-							});
-							
-							// update the tag collection
-							if(theinfo.freetag.length > 0){
-								theinfo.freetag.forEach(function(freeTag){
-									Tag.findOne({'title':freeTag},function(err,thetag){
-										if(thetag == null){
-											tag.title=freeTag;
-											tag.save();
-										}
-										else{
-											Tag.update({_id: thetag._id}, {lastUsageDate:now}, {upsert: false}, function(err){if (err) console.log(err);});						
-										}
-									});
-								
-								});
-							}
+							info.yakCat = yakCatIds;
+							info.yakCatName = yakCatNames;
+						});
 					}else{
-						res.json({meta:{code:404,error_type:'Place not found',error_description:"placeid does not correspond to anything"}});				
-					}				
-				});
+						info.yakCat = yakCatIds;
+						info.yakCatName = yakCatNames;
+					}
+				});	
+					
+				info.title = theinfo.title;
+				info.content = theinfo.content;
+				info.user = mongoose.Types.ObjectId(res.locals.user._id.toString());
+				info.origin = "@"+res.locals.user.name;
+				var now = new Date();
+				info.lastModifDate = now;
+				if(typeof(theinfo.pubdate) != 'undefined'){
+					thepubDate = new Date(theinfo.pubdate*1000);
+				}else
+					thepubDate = new Date();
+
+
+				if(res.locals.user.type == 1  // normal users or not set
+					|| theinfo.dateendprint == '' 
+					|| typeof(theinfo.dateendprint) == 'undefined' 
+					|| theinfo.dateendprint < theinfo.pubDate ){
+					var dateTmp = thepubDate;
+					var numberOfDaysToAdd = 3;
+					dateTmp.setDate(dateTmp.getDate() + numberOfDaysToAdd);
+					info.dateEndPrint = dateTmp;
+				}else
+					info.dateEndPrint = new Date(theinfo.dateendprint*1000);
+				
+				console.log(info.dateEndPrint);
+				
+				if(typeof(theinfo.print) == 'undefined' || theinfo.print != 0)
+					info.print = 1;
+				else
+					info.print = 0;
+				info.status = 1;
+				info.access = 1;
+				info.yakType = Math.floor(theYakType);
+				info.thumb = conf.fronturl+"/pictures/128_128/"+infoThumb.name;
+				info.licence = 'Yakwala';
+				info.heat = 80;
+				info.freeTag = theinfo.freetag;
+				
+				
+				info.placeId = theplaceid;
+				if(theplaceid){
+					Place.findById(theplaceid,function(err,theplace){
+						if(theplace && theplace.status==1){	
+							
+								info.location = {lng:parseFloat(theplace.location.lng),lat:parseFloat(theplace.location.lat)};
+								info.address = theplace.formatted_address;
+								if(typeof(theinfo.pubdate) != 'undefined'){
+									info.pubDate = new Date(theinfo.pubdate*1000);
+								}else
+									info.pubDate = new Date();
+								var upsertData = info.toObject();
+								if(typeof(upsertData._id) != 'undefined')
+									delete upsertData._id;
+								Info.update({_id: info._id},upsertData,{upsert: true}, function(err){
+									if (!err){ 
+										console.log('Success!');
+										
+										res.json({meta:{code:200}});
+									}else{
+										res.json({meta:{code:404,error_type:'Save in db failled',error_description:err.toString()}});				
+									} 
+								});
+							
+						}else{
+								res.json({meta:{code:404,error_type:'Place not found',error_description:"placeid does not correspond to anything"}});				
+							}				
+										
+					});
+
+					
+				}else{
+					info.location = {lng:parseFloat(theinfo.location.lng),lat:parseFloat(theinfo.location.lat)};
+					info.address = theinfo.address;
+					
+					if(typeof(theinfo.pubdate) != 'undefined'){
+							info.pubDate = new Date(theinfo.pubdate*1000);
+						}else
+							info.pubDate = new Date();
+					var upsertData = info.toObject();
+					console.log(upsertData);
+					if(typeof(upsertData._id) != 'undefined')
+						delete upsertData._id;
+
+					Info.update({_id: info._id},upsertData,{upsert: true}, function(err){
+						if (!err){ 
+							console.log('Success!');
+							
+							res.json({meta:{code:200}});
+						}else{
+							res.json({meta:{code:404,error_type:'Save in db failled',error_description:err.toString()}});				
+						} 
+					});
+				}
+
+				// update the tag collection
+				if(theinfo.freetag.length > 0){
+					theinfo.freetag.forEach(function(freeTag){
+						Tag.findOne({'title':freeTag},function(err,thetag){
+							if(thetag == null){
+								tag.title=freeTag;
+								tag.save();
+							}
+							else{
+								Tag.update({_id: thetag._id}, {lastUsageDate:now,$inc:{numUsed:1}}, {upsert: false}, function(err){if (err) console.log(err);});						
+							}
+						});
+					
+					});
+				}
 			}else{
 				error = {"error":"Post failed","error_reason": "Image upload failed","error_description":"image should be jpeg and less than 5M"};
 				res.json({error:error});
@@ -641,11 +678,11 @@ exports.add_user_feed = function (req, res) {
 		}else{
 			if(!theinfo.title)
 				res.json({meta:{code:404,error_type:'Missing paramater',error_description:"title is empty"}});				
-			if(!theplaceid)
-				res.json({meta:{code:404,error_type:'Missing paramater',error_description:"placeid is empty should be {_id:'XXXX'}"}});			
+			if(!theplaceid && ( theinfo.location === undefined || theinfo.address === undefined ) )
+				res.json({meta:{code:404,error_type:'Missing paramater',error_description:"placeid and location or address are empty"}});			
 		}
 	}else{
-		error = {"error":"Post failed","error_reason": "Missing paramater","error_description":"info is not set, should be info = {title:string, content:string, yakcat:['id1xxxx','id2xxxx'], yaktype:int, freetag:[string,string], pubdate:int, placeid:{_id:string}} "};
+		error = {"error":"Post failed","error_reason": "Missing paramater","error_description":"info is not set, should be info = {title:string, placeid:{string}} or info = {title:string, location:{lat:float,lng:float}, address:string} "};
 		res.json({error:error});
 	}
 
@@ -661,33 +698,63 @@ exports.add_user_feed = function (req, res) {
 PLACES : GET, POST , DELETE and UPDATE PLACE
 ******************************/
 
-/* NOTE :
-* This function is built for the external API and retrieves places with ACCESS = 1
-* For security reasons, it should not be modified to allow an extra param with a different access right
-*
+/* get places by array of ids
+*  accept 2 types of input : [id1,id2] or [{_id1:xxx},{_id2:yyy}]
 */
-exports.get_place = function (req, res) {
+exports.get_places = function (req, res) {
 	var Place = db.model('Place');
 	if(typeof(req.query.place) != 'undefined'){
-		var placeids = JSON.parse(req.query.place).map(function(item){return item._id;});
-		//var placeids = JSON.parse(req.query.place);
+		var placeids = JSON.parse(req.query.place);
+		if(placeids._id != undefined)
+			placeids = JSON.parse(req.query.place).map(function(item){return item._id;});
 		Place.findByIds(placeids,function(err, docs){
-			if(!err)
-				res.json({meta:{code:200},data:docs});
-			else
-				res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});		
+			console.log(docs);
+			var placeFormated = docs.map(function(item){
+				var Place = db.model('Place');
+				return Place.format(item);
+			});
+		if(!err)
+			res.json({meta:{code:200},data:placeFormated});
+		else
+			res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});		
 		});
+		
+		
 	}else{
 			res.json({meta:{code:404,error_type:'missing parameter',error_description:'place not set. place should be an array of objects = [{_id:string}] }'}});
 		}
 }
 
+/* get a place by id
+* 
+*/
+exports.get_place = function (req, res) {
+	var Place = db.model('Place');
+	if(req.params.placeid != undefined){
+		var placeid = req.params.placeid;
+		if(placeid._id != undefined)
+			placeid = JSON.parse(req.query.place)._id;
+		
+		Place.findById(placeid,function(err, docs){
+			var Place = db.model('Place');
+			var placeFormated = Place.format(docs);
+			
+			if(!err)
+				res.json({meta:{code:200},data:placeFormated});
+			else
+				res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});		
+		});
+	
+		
+	}else{
+			res.json({meta:{code:404,error_type:'missing parameter',error_description:'place not set. place should be an array of objects = [{_id:string}] }'}});
+		}
+}
 
 exports.del_place = function (req, res) {
 	var Place = db.model('Place');
 	if(typeof(req.body.place) != 'undefined'){
-		var placeid = JSON.parse(req.body.place)._id;
-		
+		var placeid = req.body.place;
 		Place.update({_id:placeid,user:res.locals.user._id},{$set:{status:3}}, function(err,docs){
 			if(!err)
 				if(docs)
@@ -953,7 +1020,6 @@ exports.user_search = function (req, res) {
 
 exports.place_search = function (req, res) {
 	var Place = db.model('Place');
-	console.log(req.query.location);
 	Place.search(req.params.string,req.query.limit,req.query.skip,req.query.sensitive,req.query.lat,req.query.lng,req.query.maxd,function (err, docs){
 		if(docs)
 			docs.map(function(item){return {_id:item._id,title:item.title,formatted_address:item.formatted_address};});
@@ -963,6 +1029,25 @@ exports.place_search = function (req, res) {
 	});
 };
 
+exports.cat_search = function (req, res) {
+	var Yakcat = db.model('Yakcat');
+	Yakcat.search(req.params.string,req.query.limit,req.query.skip,req.query.sensitive,function (err, docs){
+	  if(!err)
+	  	res.json({meta:{code:200},data:{cats:docs}});
+	  else
+	  	res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+	});
+};
+
+exports.tag_search = function (req, res) {
+	var Tag = db.model('Tag');
+	Tag.search(req.params.string,req.query.limit,req.query.skip,req.query.sensitive,req.query.sort,function (err, docs){
+	  if(!err)
+	  	res.json({meta:{code:200},data:{cats:docs}});
+	  else
+	  	res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+	});
+};
 
 
 
@@ -1023,11 +1108,12 @@ exports.oauth_session = function(req, res){
 		else
 			var uri = req.body.redirect_uri;
 		var url_tmp = req.body.redirect_uri.split('/');	
-		//console.log(url_tmp[0]+"/" +"!="+ docs.link);
+		
 		if(docs.link.substring(0,6) == 'http://')
 			var link = docs.link.substring(7,docs.link.length);
 		else
 			var link = docs.link;
+		
 		if(docs.link.substring(docs.link.length-1,docs.link.length) != '/')
 			link = link + '/';
 		
@@ -1036,7 +1122,12 @@ exports.oauth_session = function(req, res){
 			res.json({error:error});
 		}else{
 			if(req.body.appauth == 1){
-			
+		
+		if(req.body.redirect_uri.substring(0,6)=='http://')
+			var redir = req.body.redirect_uri.substring(7,req.body.redirect_uri.length);
+		else
+			var redir = req.body.redirect_uri;
+
 				var User = db.model('User');
 				User.authenticate(req.body.login,req.body.password, function(err, user) {
 				if(!(typeof(user) == 'undefined' || user === null || user === '')){
@@ -1045,6 +1136,7 @@ exports.oauth_session = function(req, res){
 						var now = new Date();
 						var salt = Math.round(now.valueOf() * Math.random());
 						var code = crypto.createHash('sha1').update("yakwala@secure"+salt).digest("hex");
+												
 						// delete the previous api token for this client
 						User.update({_id:user._id},{$pull:{apiData:{apiClientId:req.body.client_id}}}, function(err,docs){
 							var apiData = [{
@@ -1057,10 +1149,6 @@ exports.oauth_session = function(req, res){
 								if(err)
 									throw err;
 								else{
-									if(req.body.redirect_uri.substring(0,6)=='http://')
-										var redir = req.body.redirect_uri.substring(7,req.body.redirect_uri.length);
-									else
-										var redir = req.body.redirect_uri;
 									
 									if(req.body.response_type == 'token'){
 										var tokenObject = User.createApiToken(req.body.client_id,code,req.body.redirect_uri,conf,function(tokenObject){
@@ -1151,4 +1239,4 @@ exports.oauth_access_token = function(req, res){
 		res.redirect('http://'+params.redirect_uri+"?error="+JSON.parms(error)+JSON.parms(params));
 	}
 }
-/*****END OAUTH******/
+/*****END OAUTH*****/

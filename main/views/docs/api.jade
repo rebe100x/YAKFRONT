@@ -219,7 +219,11 @@ block content
 								div &nbsp;&nbsp; <b>yaktype</b> : int, 
 									i.muted &nbsp;&nbsp;&nbsp;&nbsp; Yakwala type
 									i.muted 
-										div &nbsp;&nbsp;&nbsp;&nbsp; Values allowed are : Actu = 1 , Agenda = 2 , Info Pratique = 3 , Discussion = 4
+										div &nbsp;&nbsp;&nbsp;&nbsp; Values allowed are :
+											ul
+												li for a normal user : Discussion = 4
+												li for a premium media user : Actu = 1 , Agenda = 2 , Info Pratique = 3 , Discussion = 4
+												li for any other premium account : Agenda = 2 , Info Pratique = 3 , Discussion = 4
 								div &nbsp;&nbsp;<b>freetag</b> : [string,string], 
 									i.muted array of string tags 
 								div &nbsp;&nbsp;<b>yakCatName</b> : ['Sports','Football'], 
@@ -341,6 +345,26 @@ block content
 							div &nbsp;&nbsp;<b>usersubs</b> : [lightUser], 
 								i.muted user follows news of this list of users, array of <a href="/docs/api#format_lightUser">lightUser</a> objects
 							div }		
+
+							
+					div#format_yakcat
+						br
+						br
+						br
+						pre
+							div <b>yakcat</b> : {
+							div &nbsp;&nbsp;&nbsp;&nbsp;<b>_id</b> : string, 
+							div &nbsp;&nbsp;&nbsp;&nbsp;<b>title</b> : string,
+								i.muted the name of the category.
+							div &nbsp;&nbsp;&nbsp;&nbsp;<b>path</b> : string,
+								i.muted human readable path to the category ( ex: Sport,  Football ).
+							div &nbsp;&nbsp;&nbsp;&nbsp;<b>pathN</b> : string, 
+								i.muted normalized path to the category ( ex: SPORT#FOOTBALL ).
+							div &nbsp;&nbsp;&nbsp;&nbsp;<b>level</b> : int,
+							div &nbsp;&nbsp;&nbsp;&nbsp;<b>creationDate</b> : string,
+							div &nbsp;&nbsp;&nbsp;&nbsp;<b>lastModifDate</b> : string,
+						
+        
 					hr
 					div#endpoints
 					br
@@ -375,8 +399,8 @@ block content
 									tr
 										td Parameters :
 											ul 
-												li v:int - the version of the api - <b>default: </b>the last version
-												li local:string - response language - <b>default: </b>'fr'
+												li v:int - the version of the api - <b>default: </b> the last version
+												li local:string - response language - <b>default: </b>  'fr'
 									tr
 										td Response :
 											ul 
@@ -454,7 +478,7 @@ block content
 												li skip:int - start results number
 												li sensitive: 1/0 - perform a case sensitive if set to 1, <b>default</b> : 0 => not sensitive
 												li v=1 - the version of the api
-												li local='fr' - response language
+												li local=  'fr' - response language
 										tr
 											td Response:
 												div Array of <a href="/docs/api/#format_lightUser">lightUser</a> objects
@@ -484,7 +508,7 @@ block content
 										td Parameters :
 											ul
 												li v=1 - the version of the api
-												li local='fr' - response language
+												li local=  'fr' - response language
 										td Response
 											div Array of <a href="/docs/api/#format_lightUser">lightUser</a> objects
 								table.table.table-bordered
@@ -546,7 +570,7 @@ block content
 										td Parameters :
 											ul
 												li v=1 - the version of the api
-												li local='fr' - response language
+												li local=  'fr' - response language
 										td Response
 											div Array of strings.
 								table.table.table-bordered
@@ -608,7 +632,7 @@ block content
 										td Parameters :
 											ul
 												li v=1 - the version of the api
-												li local='fr' - response language
+												li local=  'fr' - response language
 										td Response
 											div Array of <a href="/docs/api/#format_lightPlace">lightPlace</a> objects
 								table.table.table-bordered
@@ -676,8 +700,8 @@ block content
 											ul 
 												li limit:int - number of news to get
 												li skip:int - starting row
-												li v:int - the version of the api - <b>default:</b>the last version
-												li local:string - response language - <b>default:</b>'fr'
+												li v:int - the version of the api - <b>default:</b> the last version
+												li local:string - response language - <b>default:</b>  'fr'
 									tr
 										td Response :
 											ul
@@ -688,34 +712,65 @@ block content
 									tr
 										td Paramaters:
 											ul
-												li <b>access_token :</b> see the <a href="/docs/api/#authentification">authentification doc</a> to get a valid token.
-												li info : JSON object 
-												{
-												<br>&nbsp;&nbsp;title:string, 
-												i.muted news title (<b>*required</b>)
-												<br>&nbsp;&nbsp;content:string, 
-												i.muted news main content, <b>default</b> : empty
-												<br>&nbsp;&nbsp;print:boolean, 
-												i.muted set to 0 if you want only the news appears on the news feed and not on the map/ Defautl : 1 (on map and on feed)
-												<br>&nbsp;&nbsp;yakcat:['id1xxxx','id2xxxx'], 
-												i.muted array of Yakwala categories, <b>default</b> : empty
-												<br>&nbsp;&nbsp;yaktype:int,
-												i.muted 
-													ul
-														li Yakwala type : , optional, <b>default</b> : 4 
-														li Values : actu = 1 , agenda = 2 , Infos Pratiques = 3 , Discussion = 4  
-												&nbsp;&nbsp;freetag:[string,string], 
-												i.muted array of string tags, <b>default</b> : empty array
-												<br>&nbsp;&nbsp;pubdate:int, 
-												i.muted date to be published, Unix timestamp, <b>default</b> : now
-												<br>&nbsp;&nbsp;placeid:{_id:string}, 
-												i.muted JSON object the place id ( see the /api/place to create a place)  (<b>*required</b>)
-												br
-												}
-												li picture : posted image 
+												li <b>access_token :</b> see the <a href="/docs/api/#authentification">authentification doc</a> to get a valid token
+												li <b>info</b> : JSON object 
+													div {
+													div &nbsp;&nbsp;<b>_id</b> : string, 
+														i.muted news id ( <b>required for the update only )</b>)
+													div &nbsp;&nbsp; <b>title</b> : string, 
+														i.muted news title  - <b>required</b>
+													div &nbsp;&nbsp; <b>placeid</b> : string, 
+														div
+															i.muted &nbsp;&nbsp;&nbsp;&nbsp;<b>Required if address and location are empty</b>
+														div
+															i.muted &nbsp;&nbsp;&nbsp;&nbsp;News can be linked to a place id ( see the /api/place to create a place
+														div
+															i.muted &nbsp;&nbsp;&nbsp;&nbsp;<b>default :</b> 0
+														div
+															i.muted &nbsp;&nbsp;&nbsp;&nbsp; =>if this id is set, you do not need to provide address and location
+													div &nbsp;&nbsp; <b>location</b> : array(lat,lng): {lat:float,lng:float}, 
+														div
+															i.muted &nbsp;&nbsp;&nbsp;&nbsp;<b>required if placeid is empty</b> 
+														div
+															i.muted &nbsp;&nbsp;&nbsp;&nbsp;the geographical location of the news
+													div &nbsp;&nbsp; <b>address</b> : string, 
+														div
+															i.muted &nbsp;&nbsp;&nbsp;&nbsp;<b>required if placeid is empty</b> 
+														div
+															i.muted &nbsp;&nbsp;&nbsp;&nbsp;the human redable address string
+													div &nbsp;&nbsp; <b>content</b> : string, 
+														i.muted news main content - <b>default :</b> empty
+													div &nbsp;&nbsp; <b>print</b> : boolean, 
+														div
+															i.muted &nbsp;&nbsp;&nbsp;&nbsp; 0 => the news appears only on the news feed and not on the map
+														div 
+															i.muted &nbsp;&nbsp;&nbsp;&nbsp;1 => the news appears on the news feed and on the map
+															i.muted - <b>default :</b> 1
+													div &nbsp;&nbsp; <b>pubdate</b> : date, 
+														i.muted date to be published, Unix timestamp - <b>default :</b> now
+													div &nbsp;&nbsp; <b>dateEndPrint</b> : date, 
+														i.muted date of the end of the news, - <b>default :</b> now + 3 days
+														div
+															i.muted &nbsp;&nbsp;&nbsp;&nbsp; every item has a limited lifetime begining at pubDate and ending at dateEndPrint
+															div
+																i.muted &nbsp;&nbsp;&nbsp;&nbsp;<b>This param cannot be set for normal users, reserved to premium accounts</b>
+													div &nbsp;&nbsp; <b>yaktype</b> : int, 
+														i.muted &nbsp;&nbsp;&nbsp;&nbsp; Yakwala type
+														i.muted 
+															div &nbsp;&nbsp;&nbsp;&nbsp; Values allowed are :
+																ul
+																	li for a normal user : Discussion = 4
+																	li for a premium media user : Actu = 1 , Agenda = 2 , Info Pratique = 3 , Discussion = 4
+																	li for any other premium account : Agenda = 2 , Info Pratique = 3 , Discussion = 4
+													div &nbsp;&nbsp;<b>freetag</b> : [string,string], 
+														i.muted array of string tags 
+													div &nbsp;&nbsp;<b>yakCat</b> : ['id1xxxx','id2xxxx'], 
+														i.muted array of Yakwala categories <a href="/docs/api/#endpoint_yakcatsearch"> see here to search in Yakcats</a>
+													}
+												li <b>picture</b> : posted image 
 													i.muted The photo should be uploaded as a jpeg and the Content-Type should be set to "image/jpeg". Images may not exceed 5MB in size.
-												li v:int - the version of the api - <b>default:</b>the last version
-												li local:string - response language - <b>default:</b>'fr'
+												li v:int - the version of the api - <b>default:</b> the last version
+												li local:string - response language - <b>default:</b>  'fr'
 									tr
 										td Response:
 											ul
@@ -755,7 +810,206 @@ block content
 							td(colspan=3)
 								table.table.table-bordered
 									tr
-										td GET : list user's favorite places
+										td GET : 
+									tr
+										td Parameters :
+											ul
+												li 
+													code /api/geoinfos/bl.lat/bl.lng/tr.lat/tr.lng/daysBack/type,type,type/searchString
+												li bl.lat : latitude of the bottom left point
+												li bl.lng : longitude of the bottom left point
+												li tr.lat : latitude of the top right point
+												li tr.lng : longitude of the top right point
+												li daysBack :
+												li type : a list of coma-separated int
+													ul
+														li 1 : Actu
+														li 2 : Agenda
+														li 3 : Discussion 
+														li 4 : Info Pratique
+												li searchString : string to search for in title and descriptions of infos. Send 'null' to get all news.
+									tr			
+										td Response
+											div Array of <a href="/docs/api/#format_info">Info</a> objects
+
+					div#endpoint_yakcatsearch
+					br
+					br
+					br
+					h4 Search in categories ( yakcat )
+					table.table.table-bordered
+						tr
+							th METHODS
+							th URL
+							th DESCRIPTION
+			
+						tr	
+							td GET
+							td /api/cat/search/<code>string</code>
+							td Search in Yakwala categories
+						tr
+							td(colspan=3)
+								table.table.table-bordered
+									tr
+										td GET : 
+									tr
+										td Parameters :
+											ul
+												li 
+													code /api/cat/search/searchString
+												li searchString : string to search for in title and descriptions of infos. Send 'null' to get all news.
+									tr			
+										td Response
+											div Array of <a href="/docs/api/#format_yakcat">Yakcat</a> objects
+						
+
+
+
+
+
+					div#endpoint_place 
+					br
+					br
+					br
+					// PLACE
+					h3 Place endpoints
+					div#endpoint_place
+					br
+					br
+					br
+					h4 Manage places : create, modify, update, delete
+					table.table.table-bordered
+						tr
+							th METHODS
+							th URL
+							th DESCRIPTION
+						tr
+							td GET/POST/DELETE/PUT
+							td /place/<code>user-id</code>
+							td Manage a place
+						tr
+							td(colspan=3)
+								table.table.table-bordered
+									tr
+										td GET : ( you can omit the userid param in the GET request. ) list places 
+
+									tr
+										td Parameters : (do not forget to urlencode your parameters)
+											ul 
+												li <b>place</b> : an array of ids ['xxx','yyyy'] or an array of _id objects : [{_id:xxx},{_id:yyy}] 
+												li v:int - the version of the api - <b>default:</b>  the last version
+												li local:string - response language - <b>default:</b>   'fr'
+									tr
+										td Response :
+											ul
+												li Array of <a href="/docs/api/#format_place">place</a> objects
+								table.table.table-bordered
+									tr
+										td POST/PUT : 
+									tr
+										td 
+											i Note :
+											div If you try to create a place that already exists in the neighborhood, we will return the existing place.
+									tr
+										td Paramaters:
+											ul
+												li <b>access_token :</b> see the <a href="/docs/api/#authentification">authentification doc</a> to get a valid token.
+												li <b>place</b> : JSON object 
+												{
+												div &nbsp;&nbsp;<b>_id</b> : string, 
+													i.muted place id (<b>*required only for the update</b>)												
+												div &nbsp;&nbsp;<b>title</b> : string, 
+													i.muted place title (<b>*required</b>)
+												div &nbsp;&nbsp;<b>location</b> : { lng : float, lat : float }, 
+													i.muted a latitude / longitude object (<b>*required</b>)
+												div &nbsp;&nbsp;<b>content</b> : string, 
+													i.muted place main content, <b>default</b> : empty
+												div &nbsp;&nbsp;<b>yakcat</b> : array of strings : ['id1xxxx','id2xxxx'], 
+													i.muted array of Yakwala categories, <b>default</b> : empty
+												div &nbsp;&nbsp;<b>freetag</b> : array of strings : [string,string], 
+													i.muted array of string tags, <b>default</b> : empty array
+												div &nbsp;&nbsp;<b>outgoinglink</b> : string, 
+													i.muted place link on the web, <b>default</b> : empty
+												div &nbsp;&nbsp;<b>formatted_address</b> : string, 
+													i.muted human readable address of the place, <b>default</b> : empty
+												div &nbsp;&nbsp;<b>address</b> : {
+												div &nbsp;&nbsp;&nbsp;&nbsp;<b>zip</b> : "75020", 
+												div &nbsp;&nbsp;&nbsp;&nbsp;<b>country</b> : "France", 
+												div &nbsp;&nbsp;&nbsp;&nbsp;<b>area</b> : "Ile-de-France", 
+												div &nbsp;&nbsp;&nbsp;&nbsp;<b>state</b> : "Paris", 
+												div &nbsp;&nbsp;&nbsp;&nbsp;<b>city</b> : "Paris", 
+												div &nbsp;&nbsp;&nbsp;&nbsp;<b>arr</b> : "20th arrondissement of Paris", 
+												div &nbsp;&nbsp;&nbsp;&nbsp;<b>street</b> : "Rue de Bagnolet", 
+												div &nbsp;&nbsp;&nbsp;&nbsp;<b>street_number</b> : "12" 
+												div &nbsp;&nbsp;}, 
+													i.muted an object address following gmap response format,  <b>default</b> : empty
+												div &nbsp;&nbsp;<b>contact</b> : {
+												div &nbsp;&nbsp;&nbsp;&nbsp;<b>tel</b> : "0112345678", 
+												div &nbsp;&nbsp;&nbsp;&nbsp;<b>mobile</b> : "06012345678", 
+												div &nbsp;&nbsp;&nbsp;&nbsp;<b>mail</b> : "lemail@mail.com", 
+												div &nbsp;&nbsp;&nbsp;&nbsp;<b>transportation</b> : "Métro 2 station Jaurès", 
+												div &nbsp;&nbsp;&nbsp;&nbsp;<b>web</b> : "http://lesite.com", 
+												div &nbsp;&nbsp;&nbsp;&nbsp;<b>opening</b> : "Tous les jours sauf mardi de 8h à 12h", 
+												div &nbsp;&nbsp;&nbsp;&nbsp;<b>closing</b> : "Mardi", 
+												div &nbsp;&nbsp;&nbsp;&nbsp;<b>special_opening</b>: 'nocturne le vendredi'
+												div &nbsp;&nbsp;}, 
+													i.muted a contact object ,  <b>default</b> : empty
+												}
+												li <b>picture</b> : posted image 
+													i.muted The photo should be uploaded as a jpeg and the Content-Type should be set to "image/jpeg". Images may not exceed 5MB in size.
+												li v:int - the version of the api - <b>default:</b> the last version
+												li local:string - response language - <b>default:</b>  'fr'
+									tr
+										td Response:
+											ul
+												li returns the code 200 if operation succeeded or a <a href="/docs/api/#format_response">standard error</a> object if failed
+									tr
+										td Non RESTfull method in POST : /api/updateplace/<code>userid</code>
+									
+									table.table.table-bordered
+										tr
+											td DELETE : delete a place
+										tr
+											td Paramaters:
+												ul
+													li <b>access_token :</b> see the <a href="/docs/api/#authentification">authentification doc</a> to get a valid token.
+													li <b>place :</b> placeid
+										tr
+											td Response:
+												li returns the code 200 if operation succeeded
+										tr
+											td Non RESTfull method in POST : /api/delplace/<code>userid</code>
+					h4 MaGet one place
+					table.table.table-bordered
+						tr
+							th METHODS
+							th URL
+							th DESCRIPTION
+						tr
+							td GET
+							td /thisplace/<code>place-id</code>
+							td Get details of one place
+					
+					div#endpoint_infosearch
+					br
+					br
+					br
+					h4 Search in infos
+					table.table.table-bordered
+						tr
+							th METHODS
+							th URL
+							th DESCRIPTION
+			
+						tr	
+							td GET
+							td /api/geoinfos
+							td Search infos in a box
+						tr
+							td(colspan=3)
+								table.table.table-bordered
+									tr
+										td GET : 
 									tr
 										td Parameters :
 											ul
@@ -783,13 +1037,7 @@ block content
 
 
 
-					div#endpoint_place 
-					br
-					br
-					br
-					// PLACE
-					h3 Place endpoints
-					hr
+					
 
 
 					// PLACE SEARCH	
@@ -815,7 +1063,7 @@ block content
 												li skip:int - start results number
 												li sensitive: 1/0 - perform a case sensitive if set to 1, <b>default</b> : 0 => not sensitive
 												li v=1 - the version of the api
-												li local='fr' - response language
+												li local=  'fr' - response language
 						tr
 							td(colspan=3)
 								b response:
@@ -841,7 +1089,7 @@ block content
 											li access_token:string - the token access
 											li GET{place:[{_id:string},{_id:string}]}			
 											li v=1 - the version of the api
-											li local='fr' - response language
+											li local=  'fr' - response language
 									li POST
 										
 						tr

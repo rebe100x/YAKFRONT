@@ -62,7 +62,7 @@ var Info = new Schema({
   , pubDate	: {type: Date, required: true, default: Date.now,index:1}		  
   , creationDate	: {type: Date, required: true, default: Date.now}		
   , lastModifDate	: {type: Date, required: true, default: Date.now}		
-  , dateEndPrint	: {type: Date}		
+  , dateEndPrint	: {type: Date,index:1}		
   , address	: {type : String}	
   , location	: { type : { lat: Number, lng: Number }, index : '2d'}	
   , status	: {type: Number,index:1}		
@@ -84,7 +84,6 @@ Info.statics.format = function (theinfo) {
 	else
 		var thethumb = 	'';
 
-	console.log(theinfo.user);
 	var formattedInfo = {
 		_id:theinfo._id,
 		title:theinfo.title,
@@ -238,13 +237,17 @@ Info.statics.findAllByID = function (callback, id) {
 
 }
 
-Info.statics.findByUser = function (userid,count, callback) {
-  return this.find({ user: userid,status :1 },{},{limit:count,sort:{pudDate:-1}}, callback);
+Info.statics.findByUser = function (userid, count, from, callback) {
+	var limit = (typeof(count) != 'undefined' && count > 0) ? count : 100;		
+	var skip = (typeof(from) != 'undefined' && from > 0) ? from : 0;	
+  return this.find({ user: userid,status :1 },{},{limit:limit,skip:skip,sort:{pudDate:-1}}, callback);
 }
 
 
-Info.statics.findByUserIds = function (useridArray, count, callback) {
-  return this.aggregate({ $group: {user: {$in:useridArray}}}, callback);
+Info.statics.findByUserIds = function (useridArray, count, from, callback) {
+	var limit = (typeof(count) != 'undefined' && count > 0) ? count : 100;		
+	var skip = (typeof(from) != 'undefined' && from > 0) ? from : 0;	
+  return this.aggregate({ $group: {user: {$in:useridArray}}},{},{limit:limit,skip:skip,sort:{pudDate:-1}}, callback);
 }
 
 Info.statics.findAllGeo = function (x1,y1,x2,y2,from,type,str,callback) {
@@ -261,8 +264,6 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,from,type,str,callback) {
 		DEND = D; // this morning
 	}
 		
-	console.log(from);
-	console.log(D);
 	var box = [[parseFloat(x1),parseFloat(y1)],[parseFloat(x2),parseFloat(y2)]];
 	var Yakcat = db.model('Yakcat');
 	var User = db.model('User');
@@ -701,12 +702,17 @@ User.statics.format = function (theuser) {
 }
 
 User.statics.formatLight = function (theuser) {
+	if(theuser.thumb)
+		var thethumb = 	conf.fronturl+'/pictures/128_128/'+theuser.thumb;
+	else
+		var thethumb = 	'';
+
 	var formattedUser = {
 		_id:theuser._id,
 		name:theuser.name,
 		login:theuser.login,
 		userdetails:theuser.name+'(@'+theuser.login+')',
-		thumb:theuser.thumb
+		thumb:thethumb
 	};
   return formattedUser;
 }
@@ -805,7 +811,7 @@ mongoose.model('Zone', Zone);
 
 /******************************YAKCAT*/
 var Yakcat = new Schema({
-    title     : { type: String, index:true}
+    title     : { type: String, index:true, required: true}
   , path       : { type:String }
   , pathN       : { type:String, uppercase: true, index:true }
   , tag       : { type:[String] }
@@ -827,6 +833,25 @@ Yakcat.statics.searchOne = function (str,callback) {
 Yakcat.statics.findByIds = function (ids,callback) {
   return this.find({'_id': { $in: ids}}, callback);
 }
+Yakcat.statics.search = function(string,count,from,sensitive,callback){
+	var limit = (typeof(count) != 'undefined' && count > 0) ? count : 100;		
+	var skip = (typeof(from) != 'undefined' && from > 0) ? from : 0;	
+	var case_sensitive = (typeof(sensitive) != 'undefined' && sensitive > 0) ? 'g' : 'gi';	
+	var input = new RegExp(string,case_sensitive);
+	return this.find(
+	{
+		'title': {$regex:input},
+		"status":1,
+	},
+	{},
+	{
+		skip:skip, // Starting Row
+		limit:limit, // Ending Row
+		sort:{
+			title: 1
+		}
+	}).exec(callback);
+}
 
 mongoose.model('Yakcat', Yakcat);
 
@@ -835,6 +860,7 @@ mongoose.model('Yakcat', Yakcat);
 var Tag = new Schema({
     title     : { type: String, required: true, index:true}
   , lastUsageDate       : { type:Date , default: Date.now, index:-1}
+  , numUsed :{type:Number}
   
 }, { collection: 'tag' });
 
@@ -845,7 +871,27 @@ Tag.statics.searchOne = function (str,callback) {
 	searchStr = new RegExp(str,'i');
 	return this.find({'title': {$regex:searchStr}},{},{limit:1}, callback);
 }
-
+Tag.statics.search = function(string,count,from,sensitive,order,callback){
+	var limit = (typeof(count) != 'undefined' && count > 0) ? count : 100;		
+	var case_sensitive = (typeof(sensitive) != 'undefined' && sensitive > 0) ? 'g' : 'gi';	
+	var skip = (typeof(from) != 'undefined' && from > 0) ? from : 0;		
+	var sort = (typeof(order) != 'undefined' && order == 'lastUsed') ? 'lastUsageDate' : 'numUsed';		
+	var input = new RegExp(string,case_sensitive);
+	
+	var cond = {
+		"title": {$regex:input},	
+		"status":1,
+	};
+	return this.find(
+	cond,
+	{},
+	{	
+		skip:skip, // Starting Row
+		limit:limit, // Ending Row
+		sort:{sort:-1}
+		
+	},callback);
+}
 mongoose.model('Tag', Tag);
 
 
@@ -861,7 +907,7 @@ var Place = new Schema({
 ,	outGoingLink	: { type: String }
 ,	creationDate	: {type: Date, required: true, default: Date.now}		
 ,	lastModifDate	: {type: Date, required: true, default: Date.now}		
-,	location	: { type : { lat: Number, lng: Number }, index : '2d'}
+,	location	: { type : { lat: Number, lng: Number }, index : '2d',required: true}
 ,	formatted_address : { type: String }
 ,	address		: { type : { 
 								street_number: String,
@@ -894,8 +940,40 @@ var Place = new Schema({
 ,	zone	: {type: Schema.ObjectId}
 },{ collection: 'place' });
 
+Place.statics.format = function (theplace) {
+	if(theplace.thumb != undefined)
+		if(theplace.user != 0 && theplace.user != undefined  )
+			var thethumb = 	conf.fronturl+'/pictures/120_90/'+theplace.thumb;
+		else
+			var thethumb = 	conf.batchurl+theplace.thumb;
+	else
+		var thethumb = 	'';
 
-  
+	var formattedPlace = {
+		_id:theplace._id,
+		title: theplace.title,
+		content: theplace.content, 
+		thumb: theplace.thumb,
+		outGoingLink: theplace.outGoingLink,
+		yakCat: theplace.yakCat,
+		creationDate: theplace.creationDate,
+		lastModifDate: theplace.lastModifDate,
+		location: theplace.location,
+		address: theplace.address,
+		contact: theplace.contact,
+		formatted_address: theplace.formatted_address 
+	};
+  return formattedPlace;
+}  
+
+Place.statics.formatLight = function (theplace) {
+	var formattedPlace = {
+		_id:theplace._id,
+		title: theplace.title,
+		formatted_address: theplace.formatted_address 
+	};
+  return formattedPlace;
+}  
   
 Place.statics.findAll = function (callback) {
   return this.find({},{},{sort:{title:1}}, callback);
@@ -942,7 +1020,7 @@ Place.statics.search = function(string,count,from,sensitive,lat,lng,maxd,callbac
 		var cond = {
 			"title": {$regex:input},	
 			"status":1,
-			"access":1
+			//"access":1
 		};
 	return this.find(
 	cond,

@@ -142,7 +142,9 @@ app.post('/api/user/updatefeed/:userid', api.requiresToken, api.put_user_feed);
 app.post('/api/user/delfeed/:userid', api.requiresToken, api.del_user_feed); 
 
 // places
-app.get('/api/place', api.get_place);
+app.get('/api/thisplace/:placeid	', api.get_place);
+app.get('/api/place/', api.get_places);
+app.get('/api/place/:userid', api.get_places);
 app.post('/api/place/:userid',api.requiresToken, api.add_place);
 app.delete('/api/place/:userid',api.requiresToken, api.del_place);
 app.put('/api/place/:userid',api.requiresToken, api.put_place);
@@ -158,7 +160,8 @@ app.post('/api/updateuser/:userid',api.requiresToken, api.put_user_details);
 //SEARCH
 app.get('/api/user/search/:string', api.user_search);
 app.get('/api/place/search/:string', api.place_search);
-
+app.get('/api/cat/search/:string', api.cat_search);
+app.get('/api/tag/search/:string', api.tag_search);
 
  
 
