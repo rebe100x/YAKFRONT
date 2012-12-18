@@ -104,6 +104,7 @@ Date.prototype.toLongFrenchFormat = function ()
 			
 
 			loadData(skip, limit, next , "", $("#SearchWhat").attr("value"), geoLocation, yaktype, dateInterval, "", dimension);
+			serCurrentSearchInfo();
 
 		});
 		
@@ -288,7 +289,7 @@ Date.prototype.toLongFrenchFormat = function ()
 					item.append(title);
 					item.append(content);
 					item.append(address);
-					item.append("<div class='shareMe'>Share or comment <i class='icon-share' title='Share Me'></i></div>");
+					item.append("<div class='shareMe'>Share <i class='icon-share' title='Share Me'></i></div>");
 					
 
 					if(next != 1)
@@ -444,4 +445,22 @@ Date.prototype.toLongFrenchFormat = function ()
     			);
 			});
 		    
+		}
+
+		function serCurrentSearchInfo()
+		{
+			if ($("#SearchWhat").val() != "") {
+				$(".searchingWhat").html(" " + $("#SearchWhat").val() + " ");	
+			}
+			else
+			{
+				$(".searchingWhat").html(" tous les infos");
+			}
+			
+			if ($(".searchingWhere").val() == "") {
+				$(".searchingWhere").html(" " + $("#myfavplace li").eq(0).find("span").html());
+			}
+			
+			$(".searchingDays").html($("#dayPrinter").html());
+
 		}

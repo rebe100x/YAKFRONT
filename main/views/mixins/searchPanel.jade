@@ -1,8 +1,9 @@
 mixin searchPanel()
 	script(src="http://maps.google.com/maps/api/js?v=3.9&amp;sensor=false&amp;libraries=drawing")		
 	div#search.container
+
 		div.row
-			div.span6
+			div.span5
 				div.row.input-block-level
 					div.span5
 						div(data-toggle="buttons-checkbox", class="searchTypes")
@@ -19,24 +20,24 @@ mixin searchPanel()
 									img(src="/images/markers/type5.png", class="smallImg")
 
 				div.row.input-block-level
-					div.span3
+					div.span4
 						div#heatModule
 							input#daynumber(type='hidden', name='daynumber', value='')
 							input#daynumber2(type='hidden', name='daynumber', value='')
 							div#heatSelector(class="upperHeight")
-					div.span2
+					div.span4
 						div#dayPrinter(class="dayPrinter") Depuis 3 jours	
 
 				div.row.input-block-level
 					div.span5
 
 						input#locationInput(type='hidden', name='locationInput', value='')
-						input#SearchWhat(type="text", class="searchInput", placeholder="Quoi ?")
+						input#SearchWhat(type="text", class="searchInput", placeholder="Quoi ? YakCats? Users?")
 						input#SearchWhere(type="text", data-provide="typeahead", class="searchInput2", placeholder="Où ?")
 
 				
 
-			div.span6
+			div.span4
 				div.searchPlaces
 				input#dimensionInput(type='hidden', value='')
 				input#wheretosearch(type="hidden", value="")
@@ -49,13 +50,61 @@ mixin searchPanel()
 									i.icon-remove.icon-pointer(onclick='deleltePlace(this)')
 									i.icon-signal.icon-pointer(onclick='showRangeSelector(this)')
 									div.theslider
-			
+
 		
 
-		button(type="button", class="btn searchButton") Search
+		button(type="button", class="btn searchButton", style="display: none") Search
+		div.row
+			div.span12
+				|Vous cherchez
+				span.searchingWhat
+					|&nbsp;everything&nbsp;
+				|&nbsp;dans
+				span.searchingWhere
+					|
+				|&nbsp;a l'entourage de
+				span.searchingRange
+					|&nbsp;3 Km&nbsp;
+
+			div.span12
+				|Dans les Categories:
+				span.searchingTypes
+					|Actualitees
+
+			div.span12
+				|Les infos sont collectees 
+				span.searchingDays
+					|3 days
+
 
 		script
 			$(document).ready(function(){
+				$('#SearchWhat').typeahead({
+					minLength : 3,
+					source: function (typeahead, query) {
+					encodeURIComponent(query);
+						if(query.length >= 3){
+							$.ajax({
+									url: "/api/catsandtags",				
+									success: function( ajax ) {
+										typeahead.process(ajax.data.catsandtags);
+									}
+								})}
+					},
+					property: "title",
+					onselect: function(obj) { 
+						$("#SearchWhat").removeClass('searching');
+						triggerSearch(currentPage, 0);
+					}
+				});
+
+				$('#SearchWhat').keypress(function(event){
+						var keycode = (event.keyCode ? event.keyCode : event.which);
+						if(keycode == '13'){
+							triggerSearch(currentPage, 0);
+						}
+				});
+
 				$(".theslider").slider({
 				range: false,
 				values: [mainConf.searchParams.sliderDefault],
@@ -72,10 +121,21 @@ mixin searchPanel()
 			});
 			function setGeoLocaton(el)
 			{
+				
 				var curLat = $(el).parent().attr("lat");
 				var curLng = $(el).parent().attr("lng");
+				
 				$("#wheretosearch").val(curLat + "," + curLng + "-");
+				
+				
 				triggerSearch(currentPage, 0);
+				if($(el).find("a").length == 0)
+					$(".searchingWhere").html(" " + $(el).text());
+				else
+				{
+					$(".searchingWhere").html(" " + $(el).parent().find("span").text());
+					$(".searchingRange").html(" " + $("#dimensionInput").val() + "Km")
+				}
 			}
 			function showRangeSelector(el)
 			{
@@ -136,7 +196,8 @@ mixin searchPanel()
 					
 				},
 				change:function(event, ui){
-					getAndPrintInfo();
+					//getAndPrintInfo();
+					triggerSearch(currentPage, 0);
 					
 				}
 			});

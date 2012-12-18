@@ -186,6 +186,8 @@ Info.statics.findAllByPage = function (callback, skip, limit, yakType, _id, what
 	var till = mydateUtils.substractDays(new Date(), parseInt(dateInterval.split(',')[0]));
 	var daterange = dateInterval.split(',');
 	var types = new Array();
+	var cats = new Array();
+	cats[0] = what;
 	types = yakType.split(',');
     var location = new Array();
     location = where.split('-');
@@ -213,7 +215,7 @@ Info.statics.findAllByPage = function (callback, skip, limit, yakType, _id, what
 	};
 
 	if (what != "") {
-			infos.or([{ 'content': { $regex: what }}, { 'title': { $regex: what }}])
+			infos.or([{ 'content': { $regex: what }}, { 'title': { $regex: what }}, { 'yakCatName': { $regex: what }} ])
 	};
 
 
@@ -222,7 +224,7 @@ Info.statics.findAllByPage = function (callback, skip, limit, yakType, _id, what
 	};
 		
 	
-	infos.sort({ pubDate: 'asc' }).skip(skip).limit(limit);
+	infos.sort({'pubDate': -1}).skip(skip).limit(limit);
 
 	res = infos.exec(callback)
 
