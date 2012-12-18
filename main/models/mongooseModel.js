@@ -215,7 +215,7 @@ Info.statics.findAllByPage = function (callback, skip, limit, yakType, _id, what
 	};
 
 	if (what != "") {
-			infos.or([{ 'content': /what/i}, { 'title': { $regex: what }}, { 'yakCatName': { $regex: what }},  { 'origin': { $regex: what }} ])
+			infos.or([{ 'content': what}, { 'title': { $regex: what }}, { 'yakCatName': { $regex: what }},  { 'origin': { $regex: what }},  { 'freeTag': { $regex: what }} ])
 	};
 
 
