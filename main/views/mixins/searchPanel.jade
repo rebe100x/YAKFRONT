@@ -29,6 +29,7 @@ mixin searchPanel()
 
 				div.row.input-block-level
 					div.span5
+
 						input#locationInput(type='hidden', name='locationInput', value='')
 						input#SearchWhat(type="text", class="searchInput", placeholder="Quoi ?")
 						input#SearchWhere(type="text", data-provide="typeahead", class="searchInput2", placeholder="Où ?")
@@ -37,19 +38,50 @@ mixin searchPanel()
 
 			div.span6
 				div.searchPlaces
+				input#dimensionInput(type='hidden', value='')
+				input#wheretosearch(type="hidden", value="")
 				ul#myfavplace.favplacelist.unstyled
 					- if(locals.user.favplace)
 							- each favplace in locals.user.favplace
 								li.zoneLoc(pointId=favplace._id, lat=favplace.location.lat, lng=favplace.location.lng)
 									i.icon-map-marker
-									span= favplace.name
+									span(onclick="setGeoLocaton(this)")= favplace.name
 									i.icon-remove.icon-pointer(onclick='deleltePlace(this)')
+									i.icon-signal.icon-pointer(onclick='showRangeSelector(this)')
+									div.theslider
 			
 		
 
 		button(type="button", class="btn searchButton") Search
 
 		script
+			$(document).ready(function(){
+				$(".theslider").slider({
+				range: false,
+				values: [mainConf.searchParams.sliderDefault],
+				min: mainConf.searchParams.sliderMin,
+				max: mainConf.searchParams.sliderMax,
+				change: function( event, ui ) {
+					var dim = ui.values[0];
+					$("#dimensionInput").val(dim);
+					//alert(dim);
+					setGeoLocaton(this);
+				}
+				
+			});
+			});
+			function setGeoLocaton(el)
+			{
+				var curLat = $(el).parent().attr("lat");
+				var curLng = $(el).parent().attr("lng");
+				$("#wheretosearch").val(curLat + "," + curLng + "-");
+				triggerSearch(currentPage, 0);
+			}
+			function showRangeSelector(el)
+			{
+				$(".theslider").hide();
+				$(el).parent().find(".theslider").show();
+			}
 			function deleltePlace(el){
 				$(el).parent().remove();
 			}
@@ -139,6 +171,7 @@ mixin searchPanel()
 					aplace.append("<i class='icon-map-marker'></i>");
 					aplace.append("<span>" + placeGmap.title + "</span>");
 					aplace.append("<i class='icon-remove icon-pointer' onclick='deleltePlace(this)'></i>");
+					aplace.append("<i class='icon-signal icon-pointer' onclick='showRangeSelector(this)'></i>");
 
 					$("#myfavplace").append(aplace);
 

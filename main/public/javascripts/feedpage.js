@@ -81,24 +81,35 @@ Date.prototype.toLongFrenchFormat = function ()
 			});
 
 			var geoLocation = "";
-			$("#myfavplace li").each(function(){
-				var lng = $(this).attr("lng");
-				var lat = $(this).attr("lat");	
-				geoLocation += lat + "," + lng + "-";
-			});
+			if ($("#wheretosearch").val() == "") {
+				geoLocation = $("#myfavplace li").eq(0).attr("lat") + "," + $("#myfavplace li").eq(0).attr("lng") + "-";
+			}
+			else
+			{
+				geoLocation = $("#wheretosearch").val();
+			}
+
+			var dimension = "";
+			if ($("#dimensionInput").val() == "") {
+				dimension = mainConf.searchParams.sliderDefault;
+			}
+			else
+			{
+				dimension = $("#dimensionInput").val();
+			}
 			
 			
 			var lngslatstr = "";
 
 			
 
-			loadData(skip, limit, next , "", $("#SearchWhat").attr("value"), geoLocation, yaktype, dateInterval, "");
+			loadData(skip, limit, next , "", $("#SearchWhat").attr("value"), geoLocation, yaktype, dateInterval, "", dimension);
 
 		});
 		
-		function loadData(askip, alimit, next, _id, what, where, yaktype, dateInterval, cattype)
+		function loadData(askip, alimit, next, _id, what, where, yaktype, dateInterval, cattype, dimension)
 		{
-			//alert(where);
+			//alert(mainConf.searchParams.sliderDefault);
 			if (!next) {
 				$("#feedContent").html("loading...");
 			};
@@ -108,8 +119,7 @@ Date.prototype.toLongFrenchFormat = function ()
 			if(typeof(yaktype)==='undefined') yaktype = '';
 			if(typeof(cattype)==='undefined') cattype = '';
 			if(typeof(next)==='undefined') next = 0;
-
-
+			if(typeof(dimension)==='undefined') dimension = mainConf.searchParams.sliderDefault;
 			var currentPage = parseInt($("#resultSet").html().trim());
 
 			currentPage = currentPage + 1;
@@ -126,7 +136,7 @@ Date.prototype.toLongFrenchFormat = function ()
 
 		
 			
-			$.getJSON('/api/feeds', { skip: askip, limit: alimit,  yaktype: yaktype, _id: _id, what: what, where: where, dateInterval: dateInterval, cattype: cattype, next: next} ,function(data) {
+			$.getJSON('/api/feeds', { skip: askip, limit: alimit,  yaktype: yaktype, _id: _id, what: what, where: where, dateInterval: dateInterval, cattype: cattype, next: next, dimension: dimension} ,function(data) {
 				var len = data.info.length;
 				
 				if(len == 0)

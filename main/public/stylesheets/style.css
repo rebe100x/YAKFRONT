@@ -75,6 +75,7 @@ h4, h3, h2 , h1{margin-bottom:5px;}
 
 #newsLoader { text-align: right; float: right; background: #D71921; color: white; font-weight: bold; cursor: pointer; visibility: hidden;}
 .graybg { background: #E8E8E8;}
+.theslider { width: 200px; display: none}
 /* THE MAP
 -------------------------------------------------- */
 	/*MAP TOOLS CONTROLLERS*/

@@ -62,7 +62,7 @@ exports.feeds = function (req, res) {
 	  res.json({
 		info: docs
 	  });
-	}, req.query["skip"], req.query["limit"], req.query["yaktype"], req.query["_id"], req.query["what"], req.query["where"], req.query["dateInterval"], req.query["cattype"], req.query["next"]); 
+	}, req.query["skip"], req.query["limit"], req.query["yaktype"], req.query["_id"], req.query["what"], req.query["where"], req.query["dateInterval"], req.query["cattype"], req.query["next"], req.query["dimension"]); 
 };
 
 exports.afeed = function (req, res) {
