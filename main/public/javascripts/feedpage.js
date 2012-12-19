@@ -230,11 +230,19 @@ Date.prototype.toLongFrenchFormat = function ()
 						readmore1.css("visibility", "hidden");
 						$.getJSON('/api/afeed', { id: val._id} ,function(data) {
 							
-							readmore1.parent().html(data.info[0].content);
-
-							if ((findUrls(data.info[0].content).length > 0)) {
-								//readmore1.parent().append()
+							
+							var youtubes = findUrls(data.info[0].content);
+							if (youtubes.length > 0) {
+								//readmore1.parent().append();
+								//alert(readmore1.html());
+								for (var i = 0; i< youtubes.length; i++) {
+									readmore1.parent().after('<a href="' + youtubes[i] +'" target="_blank" style="margin-right: 12px"><img src="http://img.youtube.com/vi/' + getVcode("v", youtubes[i])  + '/1.jpg" style="border: 0px;"></a>');	
+								};
+								
+								
 							};
+
+							readmore1.parent().html(data.info[0].content);
 
 						});	
 					});
@@ -490,4 +498,15 @@ Date.prototype.toLongFrenchFormat = function ()
 		    }
 
 		    return urlArray;
+		}
+		function getVcode( name, url )
+		{
+		  name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+		  var regexS = "[\\?&]"+name+"=([^&#]*)";
+		  var regex = new RegExp( regexS );
+		  var results = regex.exec( url );
+		  if( results == null )
+		    return "";
+		  else
+		    return results[1];
 		}
