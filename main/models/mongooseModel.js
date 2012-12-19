@@ -284,6 +284,10 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,from,type,str,callback) {
 	var qInfo = this.find(cond).sort({'pubDate':-1}).limit(100);
 	
 	if(str != 'null' && str.length > 0){  // STRING SEARCH
+		var S = require('string');
+		str = decodeURIComponent(str);
+		str = S(str).trim();
+				
 		var firstChar = str.substr(0,1);
 		var thirdChar = str.substr(0,3);
 		var strClean = str.replace(/@/g,'').replace(/#/g,'').replace(/%23/g,'').replace(/%40/g,'');
