@@ -63,6 +63,7 @@ var Info = new Schema({
   , creationDate	: {type: Date, required: true, default: Date.now}		
   , lastModifDate	: {type: Date, required: true, default: Date.now}		
   , dateEndPrint	: {type: Date,index:1}		
+  , eventDate	: {type: {dateFrom: Date,dateEnd:Date,hreventdate:String}}		
   , address	: {type : String}	
   , location	: { type : { lat: Number, lng: Number }, index : '2d'}	
   , status	: {type: Number,index:1}		
@@ -84,6 +85,7 @@ Info.statics.format = function (theinfo) {
 	else
 		var thethumb = 	'';
 
+
 	var formattedInfo = {
 		_id:theinfo._id,
 		title:theinfo.title,
@@ -96,6 +98,7 @@ Info.statics.format = function (theinfo) {
 		location:theinfo.location,
 		lastModifDate:theinfo.lastModifDate,
 		creationDate:theinfo.creationDate,
+		eventDate:theinfo.eventDate,
 		pubDate:theinfo.pubDate,
 		freeTag:theinfo.freeTag,
 		yakTag:theinfo.yakTag,

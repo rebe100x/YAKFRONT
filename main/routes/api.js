@@ -106,6 +106,7 @@ exports.geoinfos = function (req, res) {
 				// if no result, we search in all types // WE TRY FOR A WHILE TO SEE IF IT IS NICER
 				type = new Array(1,2,3,4);
 				Info.findAllGeo(req.params.x1,req.params.y1,req.params.x2,req.params.y2,req.params.from,type,req.params.str,function (err, docs){
+					
 					if(!err){
 						var infosFormated = docs.map(function(item){
 							var Info = db.model('Info');
