@@ -85,11 +85,15 @@ mixin searchPanel()
 					source: function (typeahead, query) {
 					encodeURIComponent(query);
 						if(query.length >= 3){
-							var url =  "/api/catsandtags";
 							
+							var url =  "/api/getContentTitles";
 							if(query.indexOf('@') == 0)
 							{
 								url = "/api/getUsers";
+							}
+							if(query.indexOf('#') == 0)
+							{
+								url = "/api/catsandtags";
 							}
 							$.ajax({
 
@@ -102,10 +106,15 @@ mixin searchPanel()
 											typeahead.process(ajax.data.users);
 											$("#SearchWhat").val(query);
 										}
+										if(query.indexOf('#') == 0)
+										{
+											$("#SearchWhat").val(query.substring(1, query.length));
+											typeahead.process(ajax.data.catsandtags);
+											$("#SearchWhat").val(query);
+										}
 										else
 										{
-											typeahead.process(ajax.data.catsandtags);	
-											//console.log(ajax.data.catsandtags);
+											typeahead.process(ajax.data.titles);
 										}
 									}
 								})}

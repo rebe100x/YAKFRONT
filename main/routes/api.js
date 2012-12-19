@@ -170,6 +170,18 @@ exports.getUsers = function (req, res) {
 		});
 };
 
+exports.getContentTitles = function (req, res) {
+	var Infos = db.model('Info');
+	var results =  new Array();
+	Infos.find({},'title',function (err, infos){
+		results = infos;
+			if(!err)
+				res.json({meta:{code:200},data:{titles:results}});
+			else
+				res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+		});
+};
+
 
 
 /*********************************************

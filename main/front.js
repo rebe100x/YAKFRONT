@@ -132,7 +132,7 @@ app.get('/api/places', api.places);
 app.get('/api/searchplaces/:str', api.searchplaces);
 app.get('/api/usersearch/:string', api.user_search);
 app.get('/api/getUsers', api.getUsers);
-
+app.get('/api/getContentTitles', api.getContentTitles);
 
 // DOCS
 app.get('/docs/api', routes.docs_api);
