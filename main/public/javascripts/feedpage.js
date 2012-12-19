@@ -28,6 +28,8 @@ Date.prototype.toLongFrenchFormat = function ()
 
 			//setInterval("setRefreshNews()", 30000);
 
+			//alert(findUrls("Les policiers du commissariat du XIIIe arrondissement à Paris ont interpellé lundi un contrôleur de la SNCF qui avait menacé de mort un médecin et un inspecteur du travail. Au cours de la https://www.youtube.com/watch?v=kPBuwY03mN0 https://www.youtube.com/watch?v=kPBuwY03mN0"));
+
 			$('.typeahead').typeahead();
 
 			$('.btn-group1').button();
@@ -230,6 +232,10 @@ Date.prototype.toLongFrenchFormat = function ()
 							
 							readmore1.parent().html(data.info[0].content);
 
+							if ((findUrls(data.info[0].content).length > 0)) {
+								//readmore1.parent().append()
+							};
+
 						});	
 					});
 					readmore.html("+");
@@ -239,6 +245,7 @@ Date.prototype.toLongFrenchFormat = function ()
 					content = $("<div />");
 					content.attr("class", "content");
 					content.html("<div class='theContent'>" + val.content.substring(0, subSize) + "</div>");
+					
 					
 					content.prepend(img);
 					content.find(".theContent").append(readmore);
@@ -269,7 +276,7 @@ Date.prototype.toLongFrenchFormat = function ()
 					//alert(val.yakCatName);
 					var freetagNames = "";
 					$.each(val.freeTag, function(key, val){
-						freetagNames += "#" + val + " "
+						freetagNames += "#" + val.replace(" ", "&nbsp;") + " "
 					});
 
 
@@ -463,4 +470,24 @@ Date.prototype.toLongFrenchFormat = function ()
 			
 			$(".searchingDays").html($("#dayPrinter").html());
 
+		}
+
+		function findUrls( text )
+		{
+		    var source = (text || '').toString();
+		    var urlArray = [];
+		    var url;
+		    var matchArray;
+
+		    // Regular expression to find FTP, HTTP(S) and email URLs.
+		    var regexToken = /(((ftp|https?):\/\/)[\-\w@:%_\+.~#?,&\/\/=]+)|((mailto:)?[_.\w-]+@([\w][\w\-]+\.)+[a-zA-Z]{2,3})/g;
+
+		    // Iterate through any URLs in the text.
+		    while( (matchArray = regexToken.exec( source )) !== null )
+		    {
+		        var token = matchArray[0];
+		        urlArray.push( token );
+		    }
+
+		    return urlArray;
 		}

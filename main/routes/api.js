@@ -144,6 +144,18 @@ exports.catsandtags = function (req, res) {
 	});
 };
 
+exports.getUsers = function (req, res) {
+	var Users = db.model('User');
+	var results =  new Array();
+	Users.find({},'login',function (err, users){
+		results = users;
+			if(!err)
+				res.json({meta:{code:200},data:{users:results}});
+			else
+				res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+		});
+};
+
 
 
 /*********************************************

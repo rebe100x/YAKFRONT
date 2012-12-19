@@ -81,17 +81,35 @@ mixin searchPanel()
 			$(document).ready(function(){
 				$('#SearchWhat').typeahead({
 					minLength : 3,
+					property: "title",
 					source: function (typeahead, query) {
 					encodeURIComponent(query);
 						if(query.length >= 3){
+							var url =  "/api/catsandtags";
+							
+							if(query.indexOf('@') == 0)
+							{
+								url = "/api/getUsers";
+							}
 							$.ajax({
-									url: "/api/catsandtags",				
+
+									url: url,				
 									success: function( ajax ) {
-										typeahead.process(ajax.data.catsandtags);
+										if(query.indexOf('@') == 0)
+										{
+											ajax = JSON.parse(JSON.stringify(ajax).replace(/login/g, "title"));
+											$("#SearchWhat").val(query.substring(1, query.length));
+											typeahead.process(ajax.data.users);
+											$("#SearchWhat").val(query);
+										}
+										else
+										{
+											typeahead.process(ajax.data.catsandtags);	
+											//console.log(ajax.data.catsandtags);
+										}
 									}
 								})}
-					},
-					property: "title",
+					},					
 					onselect: function(obj) { 
 						$("#SearchWhat").removeClass('searching');
 						triggerSearch(currentPage, 0);

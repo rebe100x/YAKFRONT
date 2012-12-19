@@ -224,7 +224,7 @@ Info.statics.findAllByPage = function (callback, skip, limit, yakType, _id, what
 	};
 		
 	
-	infos.sort({'pubDate': -1}).skip(skip).limit(limit);
+	infos.sort({'pubDate': 1}).skip(skip).limit(limit);
 
 	res = infos.exec(callback)
 
