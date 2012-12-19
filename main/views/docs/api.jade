@@ -415,8 +415,6 @@ block content
 											ul
 												li <b>access_token :</b> see the <a href="/docs/api/#authentification">authentification doc</a> to get a valid token.
 												li <b>user :</b> JSON object {
-												div &nbsp;&nbsp;&nbsp;&nbsp;<b>_id</b>: string, 
-													i.muted user id to be modified (<b>*required</b>)
 												div &nbsp;&nbsp;&nbsp;&nbsp;<b>name</b>: string,
 												div &nbsp;&nbsp;&nbsp;&nbsp;<b>mail</b>: string,
 												div &nbsp;&nbsp;&nbsp;&nbsp;<b>bio</b>: string,
@@ -518,7 +516,7 @@ block content
 										td Parameters :
 											ul
 												li <b>access_token :</b> see the <a href="/docs/api/#authentification">authentification doc</a> to get a valid token.
-												li <b>usersubs</b>: Array of JSON objects : [{_id:"xxx"}]
+												li <b>usersubs</b>: [string] Array of user ids
 										td Response
 											div returns the code 200 if operation succeeded
 										
@@ -529,7 +527,7 @@ block content
 										td Parameters :
 											ul
 												li <b>access_token :</b> see the <a href="/docs/api/#authentification">authentification doc</a> to get a valid token.
-												li <b>usersubs</b>: Array of JSON ids objects : [{_id:"xxx"}]
+												li <b>usersubs</b>: [string] Array of user ids
 										td Response
 											li returns the code 200 if operation succeeded
 										td Non RESTfull method in POST : /api/updatesubscribe/user/<code>userid</code>
@@ -540,7 +538,7 @@ block content
 										td Parameters :
 											ul
 												li <b>access_token :</b> see the <a href="/docs/api/#authentification">authentification doc</a> to get a valid token.
-												li <b>usersubs</b>: JSON object : {_id:"xxx"}
+												li <b>usersubs</b>: string - the user id to delete
 										td Response
 											li returns the code 200 if operation succeeded
 										td Non RESTfull method in POST : /api/unsubscribe/user/<code>userid</code>			
@@ -664,7 +662,7 @@ block content
 										td Parameters :
 											ul
 												li <b>access_token :</b> see the <a href="/docs/api/#authentification">authentification doc</a> to get a valid token.
-												li <b>favplace</b>: JSON object : {_id:"xxx"}
+												li <b>favplace</b>: string - id of the favplace to delete
 										td Response
 											li returns the code 200 if operation succeeded
 										td Non RESTfull method in POST : /api/delfavplace/<code>userid</code>	
@@ -785,7 +783,7 @@ block content
 											td Paramaters:
 												ul
 													li <b>access_token :</b> see the <a href="/docs/api/#authentification">authentification doc</a> to get a valid token.
-													li <b>info :</b> li info : JSON object {_id:xxxxx}
+													li <b>info :</b> li info : string - the info id to delete
 										tr
 											td Response:
 												li returns the code 200 if operation succeeded
@@ -857,12 +855,51 @@ block content
 											ul
 												li 
 													code /api/cat/search/searchString
-												li searchString : string to search for in title and descriptions of infos. Send 'null' to get all news.
+												li searchString : string to search for in cat's title 
+												li limit:int - number of news to get
+												li skip:int - starting row
+												li v:int - the version of the api - <b>default:</b> the last version
+												li local:string - response language - <b>default:</b>  'fr'
 									tr			
 										td Response
 											div Array of <a href="/docs/api/#format_yakcat">Yakcat</a> objects
 						
+					div#endpoint_tagsearch
+					br
+					br
+					br
+					h4 Search in tags
+					table.table.table-bordered
+						tr
+							th METHODS
+							th URL
+							th DESCRIPTION
+			
+						tr	
+							td GET
+							td /api/tag/search/<code>string</code>
+							td Search in Yakwala tags
+						tr
+							td(colspan=3)
+								table.table.table-bordered
+									tr
+										td GET : 
+									tr
+										td Parameters :
+											ul
+												li 
+													code /api/cat/search/searchString
+												li searchString : string to search for in tag's title.
+												li limit:int - number of news to get
+												li skip:int - starting row
+												li sort:string - orde to sort
+													i.muted Values : 'lastUsed' or 'mostUsed' - default:'mostUsed'
+												li v:int - the version of the api - <b>default:</b> the last version
+												li local:string - response language - <b>default:</b>  'fr'
 
+									tr			
+										td Response
+											div Array of <a href="/docs/api/#format_yakcat">Yakcat</a> objects						
 
 
 
@@ -979,7 +1016,7 @@ block content
 												li returns the code 200 if operation succeeded
 										tr
 											td Non RESTfull method in POST : /api/delplace/<code>userid</code>
-					h4 MaGet one place
+					h4 Get one place
 					table.table.table-bordered
 						tr
 							th METHODS

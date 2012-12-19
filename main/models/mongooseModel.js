@@ -63,6 +63,7 @@ var Info = new Schema({
   , creationDate	: {type: Date, required: true, default: Date.now}		
   , lastModifDate	: {type: Date, required: true, default: Date.now}		
   , dateEndPrint	: {type: Date,index:1}		
+  , eventDate	: {type: {dateFrom: Date,dateEnd:Date,hreventdate:String}}		
   , address	: {type : String}	
   , location	: { type : { lat: Number, lng: Number }, index : '2d'}	
   , status	: {type: Number,index:1}		
@@ -84,6 +85,7 @@ Info.statics.format = function (theinfo) {
 	else
 		var thethumb = 	'';
 
+
 	var formattedInfo = {
 		_id:theinfo._id,
 		title:theinfo.title,
@@ -96,6 +98,7 @@ Info.statics.format = function (theinfo) {
 		location:theinfo.location,
 		lastModifDate:theinfo.lastModifDate,
 		creationDate:theinfo.creationDate,
+		eventDate:theinfo.eventDate,
 		pubDate:theinfo.pubDate,
 		freeTag:theinfo.freeTag,
 		yakTag:theinfo.yakTag,
@@ -284,6 +287,10 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,from,type,str,callback) {
 	var qInfo = this.find(cond).sort({'pubDate':-1}).limit(100);
 	
 	if(str != 'null' && str.length > 0){  // STRING SEARCH
+		var S = require('string');
+		str = decodeURIComponent(str);
+		str = S(str).trim();
+				
 		var firstChar = str.substr(0,1);
 		var thirdChar = str.substr(0,3);
 		var strClean = str.replace(/@/g,'').replace(/#/g,'').replace(/%23/g,'').replace(/%40/g,'');
@@ -861,7 +868,7 @@ mongoose.model('Yakcat', Yakcat);
 /******************************YAKTAG*/
 var Tag = new Schema({
     title     : { type: String, required: true, index:true}
-  , lastUsageDate       : { type:Date , default: Date.now, index:-1}
+  , lastUsageDate       : { type:Date , default: Date.now, index:true}
   , numUsed :{type:Number}
   
 }, { collection: 'tag' });
@@ -877,12 +884,11 @@ Tag.statics.search = function(string,count,from,sensitive,order,callback){
 	var limit = (typeof(count) != 'undefined' && count > 0) ? count : 100;		
 	var case_sensitive = (typeof(sensitive) != 'undefined' && sensitive > 0) ? 'g' : 'gi';	
 	var skip = (typeof(from) != 'undefined' && from > 0) ? from : 0;		
-	var sort = (typeof(order) != 'undefined' && order == 'lastUsed') ? 'lastUsageDate' : 'numUsed';		
+	var thesort = (typeof(order) != 'undefined' && order == 'lastUsed') ? {sort:{lastUsageDate:-1}} : {sort:{numUsed:1}};		
 	var input = new RegExp(string,case_sensitive);
 	
 	var cond = {
 		"title": {$regex:input},	
-		"status":1,
 	};
 	return this.find(
 	cond,
@@ -890,7 +896,7 @@ Tag.statics.search = function(string,count,from,sensitive,order,callback){
 	{	
 		skip:skip, // Starting Row
 		limit:limit, // Ending Row
-		sort:{sort:-1}
+		sort:thesort
 		
 	},callback);
 }

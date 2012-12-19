@@ -149,11 +149,16 @@ exports.news = function(req, res){
 	//console.log(req.files);
 	// we need a title, a location and a user
 	if(req.body.placeInput && req.body.title && req.session.user){
-	
-		if(req.body.yakType > 0 )
-			theYakType = req.body.yakType; 
-		
-		//console.log(req.files);
+		var userType = res.locals.user.type;
+		if(userType == 1){
+			theYakType = 4;
+		}else{
+			if(req.body.yakType > 0 && req.body.yakType < 5 )
+				theYakType = req.body.yakType; 
+			else
+				theYakType = 4;			
+		}
+
 		var infoThumb = new Object();
 		if(req.files.picture.size && req.files.picture.size > 0 && req.files.picture.size < 1048576*5){
 			var drawTool = require('../mylib/drawlib.js');

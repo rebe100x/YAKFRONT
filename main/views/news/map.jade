@@ -962,16 +962,31 @@ block content
 					
 					infoContent = "<div class=\'infowindow mapHighlighter\' infoId='"+val._id+"'>";					
 					
-					/*if(!(typeof val.thumb === 'undefined') && val.thumb != '' && val.thumb != null){
-							if(val.user == 0 || val.user === undefined)
-								infoContent += "<img src=\'"+conf.batchurl+val.thumb+"\' />";
-							else
-								infoContent += "<img src=\'/uploads/pictures/120_90/"+val.thumb+"\' />";
-						}*/
-						if(!(typeof val.thumb === 'undefined') && val.thumb != '' && val.thumb != null)
-							infoContent += "<img src=\'"+val.thumb+"\' />";
+					if(!(typeof val.thumb === 'undefined') && val.thumb != '' && val.thumb != null)
+						infoContent += "<img src=\'"+val.thumb+"\' />";
 
-					infoContent += "<div class=\'title\'> <img class='yakTypeImg' src=\'/images/markers/type"+val.yakType+".png\' />"+val.title.linkify()+" ("+dateCreation+" >> "+dateEndPrint+")</div>";
+					infoContent += "<div class=\'title\'> <img class='yakTypeImg' src=\'/images/markers/type"+val.yakType+".png\' />";
+					if(typeof(val.eventDate) != 'undefined')
+						if(typeof(val.eventDate.dateFrom) != 'undefined' ){
+							var dateTmp = new Date(val.eventDate.dateFrom);
+							var m = dateTmp.getMinutes();
+							if (m<10) {m = "0" + m}
+							var thedate = 'Le '+dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear()+' à '+dateTmp.getHours()+':'+m;
+					
+						}else{
+							var dateTmp = new Date(val.pubDate);
+							var thedate = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
+						}
+							
+					else{
+							var dateTmp = new Date(val.pubDate);
+							var thedate = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
+					}
+					
+					infoContent += "<span class=\'date\'>"+thedate+"</span>";
+					
+					infoContent += val.title.linkify()+"</div>";
+
 					infoContent += "<div class=\'tags\'>";					
 						if(val.yakCatName)
 								infoContent +="<div class=\'\'>"+yakCatNameArray.map(function(item){return item.linkify();}).join(',')+"</div>";	
@@ -985,6 +1000,8 @@ block content
 						}
 					if(typeof(val.address) != 'undefined' && val.address != 'null' && val.address != '')
 							infoContent += "<div class=\'infodetail\'>"+val.address+"</div>";
+							if(user.login == 'renaud.bessieres') /// this is debug
+								infoContent += "<div class=\'infodetail\'>"+dateCreation+" >> "+dateEndPrint+"</div>";
 					infoContent += "</div>";	
 					//infoContent += "<div class=\'content\'>"+val.content.substring(0,250).linkify()+"...</div>";
 					

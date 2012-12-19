@@ -95,17 +95,31 @@ exports.geoinfos = function (req, res) {
 	
 	Info.findAllGeo(req.params.x1,req.params.y1,req.params.x2,req.params.y2,req.params.from,type,req.params.str,function (err, docs){
 		
-		if(!err && docs){
-			var infosFormated = docs.map(function(item){
-				var Info = db.model('Info');
-				return Info.format(item);
-			});
-			res.json({meta:{code:200},data:{info:infosFormated}});
-		}
-			
-		else
+		if(!err){
+			if(docs.length > 0){
+				var infosFormated = docs.map(function(item){
+					var Info = db.model('Info');
+					return Info.format(item);
+				});
+				res.json({meta:{code:200},data:{info:infosFormated}});	
+			}else{
+				// if no result, we search in all types // WE TRY FOR A WHILE TO SEE IF IT IS NICER
+				type = new Array(1,2,3,4);
+				Info.findAllGeo(req.params.x1,req.params.y1,req.params.x2,req.params.y2,req.params.from,type,req.params.str,function (err, docs){
+					
+					if(!err){
+						var infosFormated = docs.map(function(item){
+							var Info = db.model('Info');
+							return Info.format(item);
+						});
+						res.json({meta:{code:200},data:{info:infosFormated}});	
+					}else
+						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+				}); 
+			}
+		}else
 			res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
-		}); 
+	}); 
 };
 
 
@@ -175,8 +189,8 @@ exports.list_favplace = function (req, res) {
 exports.add_favplace = function (req, res) {
 	var User = db.model('User');
 	var Point = db.model('Point');
-	var favplaceArray = eval(req.body.place);
-	if(favplaceArray.length > 0){
+	if(typeof(req.body.place) != 'undefined') {
+		var favplaceArray = JSON.parse(req.body.place);
 		var pointArray = favplaceArray.map(function(item){ return new Point(item);});		
 		User.update({_id:res.locals.user._id},{$pushAll:{"favplace":pointArray}}, function(err,docs){			
 			if(!err)
@@ -191,8 +205,8 @@ exports.add_favplace = function (req, res) {
 exports.put_favplace = function (req, res) {
 	var User = db.model('User');
 	var Point = db.model('Point');
-	var favplaceArray = eval(req.body.place);
-	if(favplaceArray.length > 0){
+	if(typeof(req.body.place) != 'undefined') {
+		var favplaceArray = JSON.parse(req.body.place);
 		var pointArray = favplaceArray.map(function(item){ return new Point(item);});		
 		User.update({_id:res.locals.user._id},{$set:{"favplace":pointArray}}, function(err,docs){			
 			if(!err)
@@ -207,8 +221,8 @@ exports.put_favplace = function (req, res) {
 
 exports.del_favplace = function (req, res) {
 	var User = db.model('User');
-	if(req.body.place){
-		var placeid = JSON.parse(req.body.place);
+	if(typeof(req.body.place) != 'undefined') {
+		var placeid = req.body.place;
 		if(placeid._id != undefined)
 			placeid = JSON.parse(req.query.place)._id;
 		
@@ -240,37 +254,44 @@ exports.list_subs_user = function (req, res) {
 }
 
 exports.add_subs_user = function (req, res) {
-var User = db.model('User');
-	var usersubsIdArrayStr = eval(req.body.usersubs);
-	var usersubsIdArray = usersubsIdArrayStr.map(function(item) { return item['_id'] });
-	if(usersubsIdArrayStr){
+	var User = db.model('User');
+	if(typeof(req.body.usersubs) != 'undefined'){
+		var usersubsIdArray = JSON.parse(req.body.usersubs);	
+
 		var usersubsArray = new Array();
 		User.findByIds(usersubsIdArray,function(err,users){
-			if(users.length>0){
-				users.map(function(item){return {_id:item._id,name:item.name,login:item.login,userdetails:item.name+' ( @'+item.login+' )'}});
-				User.update({_id:res.locals.user._id},{$pushAll:{"usersubs":users}}, function(err,docs){			
+			if(typeof(users) != 'undefined' && users.length > 0 ){
+				var usersFormated = users.map(function(item){
+					var User = db.model('User');
+					return User.formatLight(item);
+				});
+				User.update({_id:res.locals.user._id},{$pushAll:{"usersubs":usersFormated}}, function(err,docs){			
 					if(!err)
 						res.json({meta:{code:200}});
 					else
 						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 				});
 			}else
-				res.json({meta:{code:404,error_type:'missing parameter',error_description:' not user with this id !'}});
+				res.json({meta:{code:404,error_type:'parameter not valid',error_description:' not user with this id !'}});
 		});	
 	}else
-		res.json({meta:{code:404,error_type:'missing parameter',error_description:'usersubsid not set: {usersubs:[{_id:string}{_id:string}{_id:string}]}'}});
+		res.json({meta:{code:404,error_type:'missing parameter',error_description:'usersubsid not set: usersubs:[string]'}});
 };
 
 
 exports.put_subs_user = function (req, res) {
 	var User = db.model('User');
-	var usersubsIdArrayStr = eval(req.body.usersubs);
-	var usersubsIdArray = usersubsIdArrayStr.map(function(item) { return item['_id'] });
-	if(usersubsIdArrayStr){
+	if(typeof(req.body.usersubs) != 'undefined'){
+		var usersubsIdArray = JSON.parse(req.body.usersubs);
+	
 		User.findByIds(usersubsIdArray,function(err,users){
 			if(users.length>0){
-				users.map(function(item){return {_id:item._id,name:item.name,login:item.login,userdetails:item.name+' ( @'+item.login+' )'}});
-				User.update({_id:res.locals.user._id},{$set:{"usersubs":users}}, function(err,docs){			
+				var usersFormated = users.map(function(item){
+					var User = db.model('User');
+					return User.formatLight(item);
+				});
+				
+				User.update({_id:res.locals.user._id},{$set:{"usersubs":usersFormated}}, function(err,docs){			
 					if(!err)
 						res.json({meta:{code:200}});
 					else
@@ -280,16 +301,14 @@ exports.put_subs_user = function (req, res) {
 				res.json({meta:{code:404,error_type:'missing parameter',error_description:' not user with this id !'}});
 		});	
 	}else
-		res.json({meta:{code:404,error_type:'missing parameter',error_description:'usersubsid not set: {usersubs:[{_id:string}{_id:string}{_id:string}]}'}});
+		res.json({meta:{code:404,error_type:'missing parameter',error_description:'usersubsid not set: usersubs:[string]'}});
 };
+
 exports.del_subs_user = function (req, res) {
 	var User = db.model('User');
-	var usersubs = JSON.parse(req.body.usersubs);
-	if(usersubs._id[0] != undefined)
-		usersubs = JSON.parse(req.query.usersubs).map(function(item){return item._id;});
+	if(typeof(req.body.usersubs) != 'undefined') {
+		var usersubs = req.body.usersubs;
 		
-	//console.log(usersubs);
-	if(usersubs){
 		User.update({_id:res.locals.user._id},{$pull:{usersubs:{_id:usersubs}}}, function(err,docs){
 			if(!err)
 				res.json({meta:{code:200}});
@@ -297,7 +316,7 @@ exports.del_subs_user = function (req, res) {
 				res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 		});
 	}else{
-		res.json({meta:{code:404,error_type:'missing parameter',error_description:'usersubsid not set : {usersubs:{_id:XXXX}}'}});
+		res.json({meta:{code:404,error_type:'missing parameter',error_description:'usersubsnot set : usersubs : string'}});
 	}		
 };
 
@@ -321,7 +340,7 @@ exports.list_subs_tag = function (req, res) {
 exports.add_subs_tag = function (req, res) {
 	var User = db.model('User');
 	
-	if(req.body.tagsubs){
+	if(typeof(req.body.tagsubs) != 'undefined' && req.body.tagsubs != ''){
 		var tagsubs = eval(req.body.tagsubs).map(function(item){return item.replace(/[^\wàáâãäåçèéêëìíîïðòóôõöùúûüýÿ]/gi, '');});
 		User.update({_id:res.locals.user._id},{$pushAll:{"tagsubs":tagsubs}}, function(err,docs){			
 			if(!err)
@@ -330,14 +349,14 @@ exports.add_subs_tag = function (req, res) {
 				res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 		});
 	}else
-		res.json({meta:{code:404,error_type:'missing parameter',error_description:'tagsubs not set: tagsubs=string'}});
+		res.json({meta:{code:404,error_type:'missing parameter',error_description:'tagsubs not set: tagsubs=[string]'}});
 };
 
 
 exports.put_subs_tag = function (req, res) {
 	var User = db.model('User');
 	
-	if(req.body.tagsubs){
+	if(typeof(req.body.tagsubs) != 'undefined' && req.body.tagsubs != ''){
 		var tagsubs = eval(req.body.tagsubs).map(function(item){return item.replace(/[^\wàáâãäåçèéêëìíîïðòóôõöùúûüýÿ]/gi, '');});
 		User.update({_id:res.locals.user._id},{$set:{"tagsubs":tagsubs}}, function(err,docs){			
 			if(!err)
@@ -346,14 +365,13 @@ exports.put_subs_tag = function (req, res) {
 				res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 		});
 	}else
-		res.json({meta:{code:404,error_type:'missing parameter',error_description:'tagsubs not set: tagsubs=string'}});
+		res.json({meta:{code:404,error_type:'missing parameter',error_description:'tagsubs not set: tagsubs=[string]'}});
 };
 
 exports.del_subs_tag = function (req, res) {
 	var User = db.model('User');
-	var tagsubs = req.body.tagsubs;
-	//console.log(tagsubs);
-	if(tagsubs){
+	if(typeof(req.body.tagsubs) != 'undefined') {
+		var tagsubs = req.body.tagsubs;
 		User.update({_id:res.locals.user._id},{$pull:{tagsubs:tagsubs}}, function(err,docs){
 			if(!err)
 				res.json({meta:{code:200},data:tagsubs});
@@ -361,7 +379,7 @@ exports.del_subs_tag = function (req, res) {
 				res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 		});
 	}else{
-		res.json({meta:{code:404,error_type:'missing parameter',error_description:'tagsubs not set. tagsubs=string }'}});
+		res.json({meta:{code:404,error_type:'missing parameter',error_description:'tagsubs not set. tagsubs=[string] }'}});
 	}		
 };
 
@@ -373,72 +391,66 @@ exports.put_user_details = function (req, res) {
 	var User = db.model('User');
 	if(typeof(req.body.user) != 'undefined'){
 		var theuser = JSON.parse(req.body.user);	
-	
-		
-		if( typeof(theuser._id) != 'undefined' ){
-			var theuserid = theuser._id;
-			var now = new Date();
-			
-			// NAME
-			if(typeof(theuser.name) != 'undefined' && theuser.name != ''){
-				User.update({_id:theuserid},{$set:{name:theuser.name,lastModifDate:now}}, function(err,docs){});
-			}
-			// MAIL	
-			if(typeof(theuser.mail) != 'undefined' && theuser.mail != ''){
-				User.update({_id:theuserid},{$set:{mail:theuser.mail,lastModifDate:now}}, function(err,docs){});
-			}
-			
-			// THUMB
-			var userThumb = new Object();
-			if(typeof(req.files.picture) != 'undefined' && req.files.picture.size > 0 && req.files.picture.size < 1048576*5){
-				var drawTool = require('../mylib/drawlib.js');
-				var size = res.locals.mainConf.imgSizeAvatar;
-				userThumb = drawTool.StoreImg(req.files.picture,size,conf);
-				
-				if(userThumb.err == 0 ){
-					User.update({_id:theuserid},{$set:{thumb:userThumb.name,lastModifDate:now}}, function(err,docs){});
-				}else{
-					res.json({meta:{code:404,error_type:'operation failed',error_description:"Image upload failed: image should be jpeg and less than 5M"}});
-				}
-			}
-			
-			// TAGS
-			if(typeof(theuser.tag) != 'undefined' && theuser.tag.length > 0){
-				User.update({_id:theuserid},{$set:{tag:theuser.tag,lastModifDate:now}}, function(err,docs){});
-			}
-			
-			// LOCATION @todo : do it for each prop of the object
-			if(typeof(theuser.location) != 'undefined' && typeof(theuser.location.lat) != 'undefined' && typeof(theuser.location.lng) != 'undefined'){
-				User.update({_id:theuserid},{$set:{location:theuser.location,lastModifDate:now}}, function(err,docs){});
-			}
-			
-			// FORMATTED_ADDRESS
-			if(typeof(theuser.formatted_address) != 'undefined' && theuser.formatted_address != ''){
-				User.update({_id:theuserid},{$set:{formatted_address:theuser.formatted_address,lastModifDate:now}}, function(err,docs){});
-			}
-			
-			// ADDRESS
-			if(typeof(theuser.address) != 'undefined' ){
-				User.update({_id:theuserid},{$set:{address:theuser.address,lastModifDate:now}}, function(err,docs){});
-			}
-			
-			// WEBSITE
-			if(typeof(theuser.web) != 'undefined' ){
-				User.update({_id:theuserid},{$set:{web:theuser.web,lastModifDate:now}}, function(err,docs){});
-			}
-			
-			// BIO
-			if(typeof(theuser.bio) != 'undefined' ){
-				User.update({_id:theuserid},{$set:{bio:theuser.bio,lastModifDate:now}}, function(err,docs){});
-			}
-			
-			res.json({meta:{code:200}});
+		var theuserid = res.locals.user._id;
+		var now = new Date();
 
-		}else{
-			res.json({meta:{code:404,error_type:'Save in db failled',error_description:"Missing paramater: user._id is empty"}});				
+		// NAME
+		if(typeof(theuser.name) != 'undefined' && theuser.name != ''){
+			User.update({_id:theuserid},{$set:{name:theuser.name,lastModifDate:now}}, function(err,docs){});
 		}
+		// MAIL	
+		if(typeof(theuser.mail) != 'undefined' && theuser.mail != ''){
+			User.update({_id:theuserid},{$set:{mail:theuser.mail,lastModifDate:now}}, function(err,docs){});
+		}
+		
+		// THUMB
+		var userThumb = new Object();
+		if(typeof(req.files.picture) != 'undefined' && req.files.picture.size > 0 && req.files.picture.size < 1048576*5){
+			var drawTool = require('../mylib/drawlib.js');
+			var size = res.locals.mainConf.imgSizeAvatar;
+			userThumb = drawTool.StoreImg(req.files.picture,size,conf);
+			
+			if(userThumb.err == 0 ){
+				User.update({_id:theuserid},{$set:{thumb:userThumb.name,lastModifDate:now}}, function(err,docs){});
+			}else{
+				res.json({meta:{code:404,error_type:'operation failed',error_description:"Image upload failed: image should be jpeg and less than 5M"}});
+			}
+		}
+		
+		// TAGS
+		if(typeof(theuser.tag) != 'undefined' && theuser.tag.length > 0){
+			User.update({_id:theuserid},{$set:{tag:theuser.tag,lastModifDate:now}}, function(err,docs){});
+		}
+		
+		// LOCATION @todo : do it for each prop of the object
+		if(typeof(theuser.location) != 'undefined' && typeof(theuser.location.lat) != 'undefined' && typeof(theuser.location.lng) != 'undefined'){
+			User.update({_id:theuserid},{$set:{location:theuser.location,lastModifDate:now}}, function(err,docs){});
+		}
+		
+		// FORMATTED_ADDRESS
+		if(typeof(theuser.formatted_address) != 'undefined' && theuser.formatted_address != ''){
+			User.update({_id:theuserid},{$set:{formatted_address:theuser.formatted_address,lastModifDate:now}}, function(err,docs){});
+		}
+		
+		// ADDRESS
+		if(typeof(theuser.address) != 'undefined' ){
+			User.update({_id:theuserid},{$set:{address:theuser.address,lastModifDate:now}}, function(err,docs){});
+		}
+		
+		// WEBSITE
+		if(typeof(theuser.web) != 'undefined' ){
+			User.update({_id:theuserid},{$set:{web:theuser.web,lastModifDate:now}}, function(err,docs){});
+		}
+		
+		// BIO
+		if(typeof(theuser.bio) != 'undefined' ){
+			User.update({_id:theuserid},{$set:{bio:theuser.bio,lastModifDate:now}}, function(err,docs){});
+		}
+		
+		res.json({meta:{code:200}});
+	
 	}else{
-		res.json({meta:{code:404,error_type:'Save in db failled',error_description:"user is not set, should be user = {title:string, content:string, yakcat:['id1xxxx','id2xxxx'], yaktype:int, freetag:[string,string], pubdate:int, userid:{_id:string}}" }});				
+		res.json({meta:{code:404,error_type:'Save in db failed',error_description:"User is not set, should be a JSON object" }});				
 	}
 
 }
@@ -477,21 +489,19 @@ exports.get_user_feed = function (req, res) {
 exports.del_user_feed = function (req, res) {
 	var Info = db.model('Info');
 	if(typeof(req.body.info) != 'undefined') {
-		var theinfoid = JSON.parse(req.body.info);
-		if(theinfoid._id != undefined)
-			theinfoid = JSON.parse(req.body.info)._id;
+		var theinfoid = req.body.info;
 			
 		Info.update({_id:theinfoid,user:res.locals.user._id},{$set:{status:3}}, function(err,docs){
 			if(!err)
 				if(docs)
 					res.json({meta:{code:200}});
 				else
-					res.json({meta:{code:404,error_type:'operation failed',error_description:"you don't own any info with this id"}});
+					res.json({meta:{code:404,error_type:'Access right failed',error_description:"You can only delete info you have created"}});
 			else
-				res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+				res.json({meta:{code:404,error_type:'Operation failed',error_description:err.toString()}});
 		});
 	}else{
-		res.json({meta:{code:404,error_type:'missing parameter',error_description:'info not set. info = {_id:string} }'}});
+		res.json({meta:{code:404,error_type:'Missing parameter',error_description:'Info not set: info = string }'}});
 	}
 }
 
@@ -511,7 +521,6 @@ exports.add_user_feed = function (req, res) {
 	// we need a title, a placeid
 	if(typeof(req.body.info) != 'undefined'){
 		var theinfo = JSON.parse(req.body.info);	
-		console.log(theinfo);
 		var theplaceid = '';
 		
 		if( typeof(theinfo.placeid) != 'undefined' )
@@ -597,7 +606,6 @@ exports.add_user_feed = function (req, res) {
 				}else
 					info.dateEndPrint = new Date(theinfo.dateendprint*1000);
 				
-				console.log(info.dateEndPrint);
 				
 				if(typeof(theinfo.print) == 'undefined' || theinfo.print != 0)
 					info.print = 1;
@@ -626,7 +634,7 @@ exports.add_user_feed = function (req, res) {
 								var upsertData = info.toObject();
 								if(typeof(upsertData._id) != 'undefined')
 									delete upsertData._id;
-								Info.update({_id: info._id},upsertData,{upsert: true}, function(err){
+								Info.update({_id: theinfo._id},upsertData,{upsert: true}, function(err){
 									if (!err){ 
 										console.log('Success!');
 										
@@ -656,7 +664,7 @@ exports.add_user_feed = function (req, res) {
 					if(typeof(upsertData._id) != 'undefined')
 						delete upsertData._id;
 
-					Info.update({_id: info._id},upsertData,{upsert: true}, function(err){
+					Info.update({_id: theinfo._id},upsertData,{upsert: true}, function(err){
 						if (!err){ 
 							console.log('Success!');
 							
@@ -673,6 +681,7 @@ exports.add_user_feed = function (req, res) {
 						Tag.findOne({'title':freeTag},function(err,thetag){
 							if(thetag == null){
 								tag.title=freeTag;
+								tag.numUsed = 1;
 								tag.save();
 							}
 							else{
@@ -772,7 +781,7 @@ exports.del_place = function (req, res) {
 				if(docs)
 					res.json({meta:{code:200},data:docs});
 				else
-					res.json({meta:{code:404,error_type:'operation failed',error_description:"you don't own any place with this id"}});
+					res.json({meta:{code:404,error_type:'Access right failed',error_description:"You can only delete places you have created."}});
 			else
 				res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 		});
@@ -907,101 +916,115 @@ exports.put_place = function (req, res) {
 		if(theplaceid){
 		
 			var now = new Date();
-			
-			// TITLE
-			if(typeof(theplace.title) != 'undefined' && theplace.title != ''){
-				Place.update({_id:theplaceid,user:res.locals.user._id},{$set:{title:theplace.title,lastModifDate:now}}, function(err,docs){
-					if(err)
-						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
-				});
-			}
-			// CONTENT	
-			if(typeof(theplace.content) != 'undefined' && theplace.content != ''){
-				Place.update({_id:theplaceid,user:res.locals.user._id},{$set:{content:theplace.content,lastModifDate:now}}, function(err,docs){
-					if(err)
-						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
-				});
-			}
-			
-			// THUMB
-			var placeThumb = new Object();
-			if(typeof(req.files.picture) != 'undefined' && req.files.picture.size > 0 && req.files.picture.size < 1048576*5){
-				var drawTool = require('../mylib/drawlib.js');
-				var size = res.locals.mainConf.imgSizePlace;
-				placeThumb = drawTool.StoreImg(req.files.picture,size,conf);
+			Place.findOne({_id:theplaceid},function(err,theplaceexists){
+				if(theplaceexists){
+					console.log(theplaceexists.user +"=="+ res.locals.user._id);	
+					if(theplaceexists.user.toString() == res.locals.user._id.toString()){
+						// TITLE
+						if(typeof(theplace.title) != 'undefined' && theplace.title != ''){
+							Place.update({_id:theplaceid,user:res.locals.user._id},{$set:{title:theplace.title,lastModifDate:now}}, function(err,docs){
+								if(err)
+									res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+							});
+						}
+						// CONTENT	
+						if(typeof(theplace.content) != 'undefined' && theplace.content != ''){
+							Place.update({_id:theplaceid,user:res.locals.user._id},{$set:{content:theplace.content,lastModifDate:now}}, function(err,docs){
+								if(err)
+									res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+							});
+						}
+						
+						// THUMB
+						var placeThumb = new Object();
+						if(typeof(req.files.picture) != 'undefined' && req.files.picture.size > 0 && req.files.picture.size < 1048576*5){
+							var drawTool = require('../mylib/drawlib.js');
+							var size = res.locals.mainConf.imgSizePlace;
+							placeThumb = drawTool.StoreImg(req.files.picture,size,conf);
+							
+							if(placeThumb.err == 0 ){
+								Place.update({_id:theplaceid,user:res.locals.user._id},{$set:{thumb:placeThumb.name,lastModifDate:now}}, function(err,docs){
+									if(err)
+										res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+								});
+							}else{
+								error = {"error":"Post failed","error_reason": "Image upload failed","error_description":"image should be jpeg and less than 5M"};
+								res.json({error:error});
+							}
+						}
+						
+						// TAGS
+						if(typeof(theplace.freetag) != 'undefined' && theplace.freetag.length > 0){
+							Place.update({_id:theplaceid,user:res.locals.user._id},{$set:{freeTag:theplace.freetag,lastModifDate:now}}, function(err,docs){
+								if(err)
+									res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+							});
+						}
+						
+						// YAKCAT
+						if(typeof(theplace.yakcat) != 'undefined' && theplace.yakcat.length > 0){
+							var yakcatidArray = theplace.yakcat.map(function(item){ return mongoose.Types.ObjectId(item);});
+							Place.update({_id:theplaceid,user:res.locals.user._id},{$set:{yakCat:yakcatidArray,lastModifDate:now}}, function(err,docs){
+								if(err)
+									res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+							});
+						}
+						
+						// OUTGOING LINK
+						if(typeof(theplace.outgoinglink) != 'undefined' && theplace.outgoinglink != ''){
+							Place.update({_id:theplaceid,user:res.locals.user._id},{$set:{outGoingLink:theplace.outgoinglink,lastModifDate:now}}, function(err,docs){
+								if(err)
+									res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+							});
+						}
+						// LOCATION @todo : do it for each prop of the object
+						if(typeof(theplace.location) != 'undefined' && typeof(theplace.location.lat) != 'undefined' && typeof(theplace.location.lng) != 'undefined'){
+							Place.update({_id:theplaceid,user:res.locals.user._id},{$set:{location:theplace.location,lastModifDate:now}}, function(err,docs){
+								if(err)
+									res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+							});
+						}
+						
+						// FORMATTED_ADDRESS
+						if(typeof(theplace.formatted_address) != 'undefined' && theplace.formatted_address != ''){
+							Place.update({_id:theplaceid,user:res.locals.user._id},{$set:{formatted_address:theplace.formatted_address,lastModifDate:now}}, function(err,docs){
+								if(err)
+									res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+							});
+						}
+						
+						// ADDRESS
+						if(typeof(theplace.address) != 'undefined' ){
+							Place.update({_id:theplaceid,user:res.locals.user._id},{$set:{address:theplace.address,lastModifDate:now}}, function(err,docs){
+								if(err)
+									res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+							});
+						}
+						// CONTACT @todo : do it for each prop of the object
+						if(typeof(theplace.contact) != 'undefined' ){
+							Place.update({_id:theplaceid,user:res.locals.user._id},{$set:{contact:theplace.contact,lastModifDate:now}}, function(err,docs){
+								if(err)
+									res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+							});
+						}
+						
+						res.json({place:{_id:theplaceid}});	
+
+					}else
+						res.json({meta:{code:404,error_type:'Access right failed',error_description:'You are not allowed to modify places you did not created'}});
+
+				}else
+					res.json({meta:{code:404,error_type:'Place id is not valid',error_description:'No existing place with this id'}});
+
 				
-				if(placeThumb.err == 0 ){
-					Place.update({_id:theplaceid,user:res.locals.user._id},{$set:{thumb:placeThumb.name,lastModifDate:now}}, function(err,docs){
-						if(err)
-							res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
-					});
-				}else{
-					error = {"error":"Post failed","error_reason": "Image upload failed","error_description":"image should be jpeg and less than 5M"};
-					res.json({error:error});
-				}
-			}
-			
-			// TAGS
-			if(typeof(theplace.freetag) != 'undefined' && theplace.freetag.length > 0){
-				Place.update({_id:theplaceid,user:res.locals.user._id},{$set:{freeTag:theplace.freetag,lastModifDate:now}}, function(err,docs){
-					if(err)
-						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
-				});
-			}
-			
-			// YAKCAT
-			if(typeof(theplace.yakcat) != 'undefined' && theplace.yakcat.length > 0){
-				var yakcatidArray = theplace.yakcat.map(function(item){ return mongoose.Types.ObjectId(item);});
-				Place.update({_id:theplaceid,user:res.locals.user._id},{$set:{yakCat:yakcatidArray,lastModifDate:now}}, function(err,docs){
-					if(err)
-						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
-				});
-			}
-			
-			// OUTGOING LINK
-			if(typeof(theplace.outgoinglink) != 'undefined' && theplace.outgoinglink != ''){
-				Place.update({_id:theplaceid,user:res.locals.user._id},{$set:{outGoingLink:theplace.outgoinglink,lastModifDate:now}}, function(err,docs){
-					if(err)
-						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
-				});
-			}
-			// LOCATION @todo : do it for each prop of the object
-			if(typeof(theplace.location) != 'undefined' && typeof(theplace.location.lat) != 'undefined' && typeof(theplace.location.lng) != 'undefined'){
-				Place.update({_id:theplaceid,user:res.locals.user._id},{$set:{location:theplace.location,lastModifDate:now}}, function(err,docs){
-					if(err)
-						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
-				});
-			}
-			
-			// FORMATTED_ADDRESS
-			if(typeof(theplace.formatted_address) != 'undefined' && theplace.formatted_address != ''){
-				Place.update({_id:theplaceid,user:res.locals.user._id},{$set:{formatted_address:theplace.formatted_address,lastModifDate:now}}, function(err,docs){
-					if(err)
-						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
-				});
-			}
-			
-			// ADDRESS
-			if(typeof(theplace.address) != 'undefined' ){
-				Place.update({_id:theplaceid,user:res.locals.user._id},{$set:{address:theplace.address,lastModifDate:now}}, function(err,docs){
-					if(err)
-						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
-				});
-			}
-			// CONTACT @todo : do it for each prop of the object
-			if(typeof(theplace.contact) != 'undefined' ){
-				Place.update({_id:theplaceid,user:res.locals.user._id},{$set:{contact:theplace.contact,lastModifDate:now}}, function(err,docs){
-					if(err)
-						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
-				});
-			}
+			});
 			
 		}else{
 			error = {"error":"Update failed","error_reason": "Missing paramater","error_description":"place._id is empty"};
 			res.json({error:error});
 		}
 		
-	res.json({place:{_id:theplaceid}});
+	
 	
 	}else{
 		error = {"error":"Update failed","error_reason": "Missing paramater","error_description":"place is not set, should be place = {title:string, content:string, yakcat:['id1xxxx','id2xxxx'], yaktype:int, freetag:[string,string], pubdate:int, placeid:{_id:string}} "};
@@ -1055,7 +1078,7 @@ exports.tag_search = function (req, res) {
 	var Tag = db.model('Tag');
 	Tag.search(req.params.string,req.query.limit,req.query.skip,req.query.sensitive,req.query.sort,function (err, docs){
 	  if(!err)
-	  	res.json({meta:{code:200},data:{cats:docs}});
+	  	res.json({meta:{code:200},data:{tags:docs}});
 	  else
 	  	res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 	});
