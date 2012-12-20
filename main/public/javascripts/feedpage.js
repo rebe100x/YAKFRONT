@@ -274,10 +274,10 @@ Date.prototype.toLongFrenchFormat = function ()
 
 					yakCatNames = yakCatNames.replace(/#(\S*)/g,'<a href="news/map/search/%23$1">#$1</a>');
 
-					cat.html("YakCats: <b>" + yakCatNames + "</b>");
+					cat.html(yakCatNames);
 					
 					//content.append(type);
-					content.append(cat);
+					//content.append(cat);
 										
 					freetags = $("<div />");
 					freetags.attr("class", "freetags");
@@ -290,7 +290,7 @@ Date.prototype.toLongFrenchFormat = function ()
 
 					freetagNames = freetagNames.replace(/#(\S*)/g,'<a href="news/map/search/%23$1">#$1</a>');
 
-					freetags.html("Tags: <b>" + freetagNames + "</b>");
+					freetags.html(freetagNames + cat.html());
 					
 					content.append(freetags)
 
@@ -351,7 +351,7 @@ Date.prototype.toLongFrenchFormat = function ()
 
 						twitter: {
 							//text: el.parent().parent().find(".content").text().substring(0, 100) + "...",
-							text: "J'ai vu ca dans YAKWALA..." + el.parent().parent().find(".content").find(".cat").find("b").text(),
+							text: "J'ai vu ca dans #YAKWALA..." + el.parent().parent().find(".content").find(".cat").find("b").text(),
 							count: 'horizontal',
 							url: el.parent().parent().find(".title").find(".more").attr("title")
 						}					
@@ -451,7 +451,7 @@ Date.prototype.toLongFrenchFormat = function ()
 		            "format": "json",
 		            "apiKey": "R_99c6f442bb006c1b26237dd9ef91ddda",
 		            "login": "o_5ko6l8pajb",
-		            "longUrl": "http://www.yakwala.fr/news/feed/?id=" + more.attr("rel")
+		            "longUrl": conf.fronturl + "/news/feed/?id=" + more.attr("rel")
 		        }, function(data){
 		        	more.attr("title", data.data.url);
 		        	setShare(more);

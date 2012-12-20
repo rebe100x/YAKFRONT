@@ -41,7 +41,7 @@ h4, h3, h2 , h1{margin-bottom:5px;}
 #search .searchPlaces .aplace .thedelete { color: red; cursor: pointer; float: right; margin-right: 12px;} 
 
 .btn-group1, .btn-group2 { text-align: center;}
-.btn-group1 img { width: 13px;}
+.btn-group1 img { }
 #search .searchButton { float: left; position: relative; top: 6px; float: right; right: 12px; margin: 12px; }
 #feedContent{ clear: both; padding-top: 12px;}
 #feedContent .item{margin:5px;}
@@ -75,7 +75,7 @@ h4, h3, h2 , h1{margin-bottom:5px;}
 
 #newsLoader { text-align: right; float: right; background: #D71921; color: white; font-weight: bold; cursor: pointer; visibility: hidden;}
 .graybg { background: #E8E8E8;}
-.theslider { width: 200px; display: none}
+.theslider { width: 200px;}
 /* THE MAP
 -------------------------------------------------- */
 	/*MAP TOOLS CONTROLLERS*/
