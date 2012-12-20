@@ -653,6 +653,7 @@ var User = new Schema({
 	, hash       : { type: String ,required: true, index: true}
 	, salt       : { type: String ,required: true, index: true}
 	, token       : { type: String ,required: true, index: true}
+	, validationKey       : { type: String ,required: true, index: true}
 	, usersubs	: { type: [User],ref: 'User',  index: true}
 	, tagsubs	: { type: [String], index: true}
 	, placesubs	: { type: [Schema.Types.ObjectId], index: true}

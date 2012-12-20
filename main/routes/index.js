@@ -384,7 +384,7 @@ exports.user = function(req, res){
 				var password = user.generatePassword(5);
 				var link = conf.validationUrl+token+"/"+password;
 				var hash = crypto.createHash('sha1').update(password+"yakwala@secure"+salt).digest("hex");
-				User.update({_id: theuser._id}, {hash : hash,token:token,salt:salt}, {upsert: false}, function(err){
+				User.update({_id: theuser._id}, {hash : hash,token:token,salt:salt,password:password}, {upsert: false}, function(err){
 					
 				
 					var fs    = require('fs');
@@ -461,6 +461,7 @@ exports.user = function(req, res){
 							data = data.replace("*|MC:SUBJECT|*","Votre inscription");
 							data = data.replace("*|MC:HEADERIMG|*",conf.fronturl+"/static/images/yakwala-logo_petit.png");
 							data = data.replace("*|MC:VALIDATIONLINK|*",link);
+							data = data.replace("*|MC:VALIDATIONKEY|*",password);
 							data = data.replace("*|CURRENT_YEAR|*",new Date().getFullYear());
 							
 							
@@ -474,7 +475,7 @@ exports.user = function(req, res){
 								from: "Labs Yakwala <labs.yakwala@gmail.com>", // sender address
 								to: user.mail, // list of receivers
 								subject: "Votre inscription à Yakwala", // Subject line
-								text: "Bonjour, \r\n Pour valider votre compte Yakwala, entrez ce lien dans votre navigateur : "+link+" et validez votre compte avec cette clé de validation : "+password, // plaintext bod
+								text: "Bonjour, \r\n Votre clé de validation est : "+password, // plaintext bod
 								html: data
 							}	
 								

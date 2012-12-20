@@ -1,5 +1,5 @@
 extends ../layout
-script(src='/javascripts/lib/bootstrap/js/bootstrap-collapse.js')
+
 block content
 
 	include ../mixins/docsMenu.jade
@@ -23,17 +23,13 @@ block content
 							p.subheader 
 				hr
 				div.row-fluid
-					div#authentification
-					br
-					br
-					br
-					h3 Authentification
+					h3#authentification Authentification
 					p.subheader Yakwala's API uses the OAuth 2.0 protocol for simple, but effective authentication and authorization.
-					h4 Do you need to authenticate?
+					h4#auth_1 Do you need to authenticate?
 					p For the most part, Yakwala's API only requires the use of a client_id. A client_id simply associates your server, script, or program with a specific application. However, some requests require authentication - specifically requests made on behalf of a user. 
 					p Authenticated requests require an access_token.  These tokens are unique to a user and should be stored securely. Access tokens may expire at any time in the future.
 					br
-					h4 Receiving an access_token
+					h4#auth_2 Receiving an access_token
 					p In order to receive an access_token, you must do the following:
 						ol
 							li Direct the user to our authorization url.
@@ -49,7 +45,7 @@ block content
 										b Implicit flow: 
 										span Instead of handling a code, we include the access_token as a fragment (#) in the URL. This method allows applications without any server component to receive an access_token with ease.
 
-					h4 Server-side (Explicit) Flow
+					h4#auth_3 Server-side (Explicit) Flow
 					p Using the server-side flow is quite easy. Simply follow these steps:
 					h5 
 						b Step One: 
@@ -103,7 +99,7 @@ block content
 						div }
 					p Note that we do not include an expiry time. Our access_tokens have no explicit expiry, though your app should handle the case that either the user revokes access or we expire the token after some period of time. 
 		
-					h4 Client-Side (Implicit) Authentication
+					h4#auth_4 Client-Side (Implicit) Authentication
 					p If you’re building an app that does not have a server component (a purely javascript app, for instance), you’ll notice that it’s impossible to complete step three above to receive your access_token without also having to ship your client secret. You should never ship your client secret onto devices you don’t control. Then how do you get an access_token? Well the smart folks in charge of the OAuth 2.0 spec anticipated this problem and created the Implicit Authentication Flow.
 
 					h5
@@ -122,22 +118,14 @@ block content
 					pre http://your-redirect-uri#access_token=ACCESS-TOKEN
 					p Simply grab the access_token off the URL fragment and you’re good to go. If the user chooses not to authorize your application, you’ll receive the same error response as in the explicit flow
 
-					h4 How to get a client id and secret ?
+					h4#auth_5 How to get a client id and secret ?
 					p For the moment, ask our developement team by sending a request at this email : info at yakwala  dot fr, explaining what you will do, your redirect url and we will provide you with a client id and secret.
 					
 					hr
-					div#formats
-					br
-					br
-					br
-
-					h3 Formats
-					h4 Exchange formats:
-					div#format_images
-					br
-					br
-					br
-					h5 Images
+					
+					h3#formats Formats
+					p How data is formatted
+					h4#format_images Images
 					p All images uploaded are available with the following urls depending on the size you need : 
 					ul
 						li 
@@ -161,30 +149,20 @@ block content
 							div
 								code #{JSON.parse(locals.conf).fronturl}/pictures/120_90/856433cd5588bc6914fc9c64a91aabcb.jpeg
 					
-					div#format_parameters
-					br
-					br
-					br
-					h5 Parameters
+					h4#format_parameters Parameters
 					p Paramaters are defined below for each endpoint.
 					p All params are typed as much as possible : an id must be passed with an array(_id=>'xxxx')
-					div#format_response
-					br
-					br
-					br
-					h5 Responses
+					h4#format_response Responses
 					p Responses are following the schemas below:
 						pre
 							div { "meta": { "code": 200, "data": { [{DATA}] } } }
 						div Or fi an error occurred:
 						pre
 							div { "meta": { "code": 404, error_type:'xxx',error_description:'xxx'}};	
-
-						div#format_info the data is an array of objects following the templates below :
-						br 
+						br	
+						p the data is an array of objects following the templates below :
 						br
-						br
-						div
+						div#format_info
 							pre
 								div <b>info</b> : {
 								div &nbsp;&nbsp;<b>_id</b> : string, 
@@ -366,22 +344,14 @@ block content
 						
         
 					hr
-					div#endpoints
-					br
-					br
-					br
-					h3 Endpoints
-					h4 User endpoints
+					h3#endpoints Endpoints
+					h4#endpoint_user User endpoints
 					p 
 						b Note:
 						All endpoints are built to be RESTfull, but we also provide non RESTfull methods to access data. There are mentionned below for each endpoint.
 					
 					// USERS PROFILE
-					div#endpoint_userprofile
-					br
-					br
-					br
-					h4 Access and modify user's profile
+					h4#endpoint_userprofile Access and modify user's profile
 					table.table.table-bordered  
 						tr
 							th METHODS
@@ -448,45 +418,10 @@ block content
 					
 							
 									
-					// USER SEARCH
-					div#endpoint_usersearch
-					br
-					br
-					br
-					h4 Search a user by name
-					table.table.table-bordered
-						tr
-							th METHODS
-							th URL
-							th DESCRIPTION
-			
-						tr	
-							td GET
-							td /users/search/<code>string</code>
-							td Search for a user by name.
-						tr
-							td(colspan=3)
-								table.table.table-bordered
-									tr
-										td GET : list news posted by the user
-									tr
-										td Parameters :
-											ul
-												li limit:int - limit the number of results
-												li skip:int - start results number
-												li sensitive: 1/0 - perform a case sensitive if set to 1, <b>default</b> : 0 => not sensitive
-												li v=1 - the version of the api
-												li local=  'fr' - response language
-										tr
-											td Response:
-												div Array of <a href="/docs/api/#format_lightUser">lightUser</a> objects
+					
 								
 					// USER SUBSCRIBTIONS TO USERS
-					div#endpoint_useralert_user
-					br
-					br
-					br
-					h4 Manage alerts : subscribe to a user feed				
+					h4#endpoint_useralert_user Manage alerts : subscribe to a user feed				
 					table.table.table-bordered
 						tr
 							th METHODS
@@ -544,11 +479,7 @@ block content
 										td Non RESTfull method in POST : /api/unsubscribe/user/<code>userid</code>			
 						
 					// USER SUBSCRIBTIONS TO TAGS
-					div#endpoint_useralert_tag
-					br
-					br
-					br
-					h4 Manage alerts : subscribe to a tag
+					h4#endpoint_useralert_tag Manage alerts : subscribe to a tag
 					table.table.table-bordered
 						tr
 							th METHODS
@@ -606,11 +537,7 @@ block content
 										td Non RESTfull method in POST : /api/unsubscribe/tag/<code>userid</code>	
 
 					// USER FAVPLACE	
-					div#endpoint_userfavplace
-					br
-					br
-					br
-					h4 Manage user's favorite places			
+					h4#endpoint_userfavplace Manage user's favorite places			
 					table.table.table-bordered
 						tr
 							th METHODS
@@ -668,17 +595,10 @@ block content
 										td Non RESTfull method in POST : /api/delfavplace/<code>userid</code>	
 
 
-					div#endpoint_info
-					br
-					br
-					br					
-					h3 Info endpoints
+										
+					h3#endpoint_info Info endpoints
 					// INFO ADD
-					div#endpoint_userfeed
-					br
-					br
-					br
-					h4 Post an info on behalf of a user
+					h4#endpoint_userfeed List, create, modify, delete infos on behalf of a user
 					table.table.table-bordered
 						tr
 							th METHODS
@@ -789,11 +709,42 @@ block content
 												li returns the code 200 if operation succeeded
 										tr
 											td Non RESTfull method in POST : /api/user/delfeed/<code>userid</code>
-					div#endpoint_infosearch
-					br
-					br
-					br
-					h4 Search in infos
+					
+
+					
+					h3#endpoint_search Search
+
+					// USER SEARCH
+					h4#endpoint_usersearch Search a user by name
+					table.table.table-bordered
+						tr
+							th METHODS
+							th URL
+							th DESCRIPTION
+			
+						tr	
+							td GET
+							td /users/search/<code>string</code>
+							td Search for a user by name.
+						tr
+							td(colspan=3)
+								table.table.table-bordered
+									tr
+										td GET : list news posted by the user
+									tr
+										td Parameters :
+											ul
+												li limit:int - limit the number of results
+												li skip:int - start results number
+												li sensitive: 1/0 - perform a case sensitive if set to 1, <b>default</b> : 0 => not sensitive
+												li v=1 - the version of the api
+												li local=  'fr' - response language
+										tr
+											td Response:
+												div Array of <a href="/docs/api/#format_lightUser">lightUser</a> objects
+
+
+					h4#endpoint_infosearch Search in infos
 					table.table.table-bordered
 						tr
 							th METHODS
@@ -829,12 +780,42 @@ block content
 									tr			
 										td Response
 											div Array of <a href="/docs/api/#format_info">Info</a> objects
+					
 
-					div#endpoint_yakcatsearch
-					br
-					br
-					br
-					h4 Search in categories ( yakcat )
+					h4#endpoint_placesearch Search in places
+					// PLACE SEARCH	
+					table.table.table-bordered
+						tr
+							th METHODS
+							th URL
+							th DESCRIPTION
+			
+						tr	
+							td GET
+							td /place/search/<code>string</code>
+							td Search for a place by name.
+						tr
+							td(colspan=3)
+								table.table.table-bordered
+									tr
+										td GET:
+									tr 
+										td Parameters:
+											ul
+												li limit:int - limit the number of results
+												li skip:int - start results number
+												li sensitive: 1/0 - perform a case sensitive if set to 1, <b>default</b> : 0 => not sensitive
+												li v=1 - the version of the api
+												li local=  'fr' - response language
+						tr
+							td(colspan=3)
+								b response:
+								ul
+									li array of objects Place ( see <a href="/docs/api#format_place">Formats</a> for exact reference )						
+											
+
+						
+					h4#endpoint_yakcatsearch Search in categories ( yakcat )
 					table.table.table-bordered
 						tr
 							th METHODS
@@ -864,11 +845,8 @@ block content
 										td Response
 											div Array of <a href="/docs/api/#format_yakcat">Yakcat</a> objects
 						
-					div#endpoint_tagsearch
-					br
-					br
-					br
-					h4 Search in tags
+
+					h4#endpoint_tagsearch Search in tags
 					table.table.table-bordered
 						tr
 							th METHODS
@@ -900,20 +878,11 @@ block content
 									tr			
 										td Response
 											div Array of <a href="/docs/api/#format_yakcat">Yakcat</a> objects						
+					
 
 
-
-
-					div#endpoint_place 
-					br
-					br
-					br
 					// PLACE
-					h3 Place endpoints
-					div#endpoint_place
-					br
-					br
-					br
+					h3#endpoint_place  Place endpoints
 					h4 Manage places : create, modify, update, delete
 					table.table.table-bordered
 						tr
@@ -1027,119 +996,11 @@ block content
 							td /thisplace/<code>place-id</code>
 							td Get details of one place
 					
-					div#endpoint_infosearch
-					br
-					br
-					br
-					h4 Search in infos
-					table.table.table-bordered
-						tr
-							th METHODS
-							th URL
-							th DESCRIPTION
-			
-						tr	
-							td GET
-							td /api/geoinfos
-							td Search infos in a box
-						tr
-							td(colspan=3)
-								table.table.table-bordered
-									tr
-										td GET : 
-									tr
-										td Parameters :
-											ul
-												li 
-													code /api/geoinfos/bl.lat/bl.lng/tr.lat/tr.lng/daysBack/type,type,type/searchString
-												li bl.lat : latitude of the bottom left point
-												li bl.lng : longitude of the bottom left point
-												li tr.lat : latitude of the top right point
-												li tr.lng : longitude of the top right point
-												li daysBack :
-												li type : a list of coma-separated int
-													ul
-														li 1 : Actu
-														li 2 : Agenda
-														li 3 : Discussion 
-														li 4 : Info Pratique
-												li searchString : string to search for in title and descriptions of infos. Send 'null' to get all news.
-									tr			
-										td Response
-											div Array of <a href="/docs/api/#format_lightPlace">Inofs</a> objects
-
-
-
-
-
-
-
 					
 
-
-					// PLACE SEARCH	
-					table.table.table-bordered
-						tr
-							th METHODS
-							th URL
-							th DESCRIPTION
-			
-						tr	
-							td GET
-							td /place/search/<code>string</code>
-							td Search for a place by name.
-						tr
-							td(colspan=3)
-								table.table.table-bordered
-									tr
-										td GET:
-									tr 
-										td Parameters:
-											ul
-												li limit:int - limit the number of results
-												li skip:int - start results number
-												li sensitive: 1/0 - perform a case sensitive if set to 1, <b>default</b> : 0 => not sensitive
-												li v=1 - the version of the api
-												li local=  'fr' - response language
-						tr
-							td(colspan=3)
-								b response:
-								ul
-									li array of objects Place ( see <a href="/docs/api#format_place">Formats</a> for exact reference )
-
-					// PLACE MANAGEMENT
-					table.table.table-bordered  
-						tr
-							th METHODS
-							th URL
-							th DESCRIPTION
-						tr
-							td GET/POST/PUT/DELETE
-							td /users/<code>user-id</code>
-							td Manage places
-						tr
-							td(colspan=3)
-								b parameters:
-								ul
-									li GET : 
-										ul 
-											li access_token:string - the token access
-											li GET{place:[{_id:string},{_id:string}]}			
-											li v=1 - the version of the api
-											li local=  'fr' - response language
-									li POST
-										
-						tr
-							td(colspan=3)
-								b response:
-								ul
-									li {user : {_id:string, name:string, login:string}}
+					
 					hr
-					div#librairies
-					br
-					br
-					br				
-					h3 Librairies
+					h3#librairies Librairies
 					p We provide you with some libraries to handle the api.
 					
 					h4 PHP
@@ -1148,11 +1009,7 @@ block content
 					br
 					br
 					hr
-					div#cgu
-					br
-					br
-					br
-					h3 Conditions d'utilisation
+					h3#cgu Conditions d'utilisation
 						p.subheader
 					@todo
 			div.span2				

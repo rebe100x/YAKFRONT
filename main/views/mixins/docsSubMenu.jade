@@ -1,42 +1,89 @@
 mixin docsSubMenu(active)
 	ul.nav.nav-list.yak-sidenav-fixed.yak-sidenav.affix
-		- if (active == 'authentification')		
-			li.active
-				a(href="/docs/api#authentification",data-nav="authentification") Authentification
-					i.icon-chevron-right
-		- else
-			li
-				a(href="/docs/api#authentification",data-nav="authentification") Authentification
-					i.icon-chevron-right
-		- if (active == 'formats')		
-			li.active
-				a(href="/docs/api#formats",data-nav="formats") Formats
-					i.icon-chevron-right
-		- else
-			li
-				a(href="/docs/api#formats",data-nav="formats") Formats
-					i.icon-chevron-right
-		- if (active == 'endpoints')		
-			li.active
-				a(href="/docs/api#endpoints",data-nav="endpoints") Endpoints
-					i.icon-chevron-right
-		- else
-			li
-				a(href="/docs/api#endpoints",data-nav="endpoints") Endpoints
-					i.icon-chevron-right
-		- if (active == 'librairies')		
-			li.active
-				a(href="/docs/api#librairies",data-nav="librairies") Librairies
-					i.icon-chevron-right
-		- else
-			li
-				a(href="/docs/api#librairies",data-nav="librairies") Librairies
-					i.icon-chevron-right
-		- if (active == 'cgu')		
-			li.active
-				a(href="/docs/api#cgu",data-nav="cgu") Conditions d'utilisations	
-					i.icon-chevron-right
-		- else
-			li
-				a(href="/docs/api#cgu",data-nav="cgu") Conditions d'utilisations	
-					i.icon-chevron-right
+		li
+			a(href="#authentification") Authentification
+				i.icon-chevron-right
+			ul.nav.nav-list.nav-sublist
+					li 
+						a(href="#auth_1") Do you need to authenticate?
+					li 
+						a(href="#auth_2") Receiving an access_token
+					li 
+						a(href="#auth_3") Server-side (Explicit) Flow
+					li 
+						a(href="#auth_4") Client-Side (Implicit) Authentication
+					li 
+						a(href="#auth_5") How to get a client id and secret ?
+					
+
+		li
+			a(href="#formats",data-nav="formats") Formats
+				i.icon-chevron-right
+			ul.nav.nav-list.nav-sublist
+				li 
+					a(href="#format_images") Images
+				li 
+					a(href="#format_parameters") Parameters
+				li 
+					a(href="#format_response") Response
+					
+	
+		li
+			a(href="#endpoints",data-nav="endpoints") Endpoints
+				i.icon-chevron-right
+			ul.nav.nav-list.nav-sublist
+				li 
+					a(href="#endpoint_user") User
+					ul.nav.nav-list
+						li 
+							a(href="#endpoint_userprofile") User profile
+						li 
+							a(href="#endpoint_useralert_user") User alerts on other user's feeds
+						li 
+							a(href="#endpoint_useralert_tag") User alerts on tag words
+						li 
+							a(href="#endpoint_userfavplace") User favorite places
+				li 
+					a(href="#endpoint_info") Info
+					ul.nav.nav-list
+						li 
+							a(href="#endpoint_userfeed") Manage infos
+						
+				li 
+					a(href="#endpoint_search") Search
+					ul.nav.nav-list
+						li 
+							a(href="#endpoint_usersearch") Search in users
+						li 
+							a(href="#endpoint_infosearch") Search in infos
+						li 
+							a(href="#endpoint_placesearch") Search in places
+						li 
+							a(href="#endpoint_yakcatsearch") Search in Yakwala categories	
+						li 
+							a(href="#endpoint_tagsearch") Search in tags	
+
+
+		li
+			a(href="#librairies",data-nav="librairies") Librairies
+				i.icon-chevron-right
+		li
+			a(href="#cgu",data-nav="cgu") Conditions d'utilisations	
+				i.icon-chevron-right
+script
+	$(document).ready(function() {
+		$('.yak-sidenav li a').click(function(event){
+			
+			event.preventDefault();
+			var t = $(this);
+			$('.yak-sidenav li').removeClass('active').children('a').children('i').removeClass('icon-chevron-down').addClass('icon-chevron-right');
+			$('ul.nav-sublist').not(t.parent().parent()).not(t.parent().parent().parent().parent()).slideUp();
+			
+			t.next('ul.nav-sublist').toggle();
+			t.parent('li').toggleClass('active');
+			t.children('i').removeClass('icon-chevron-right').addClass('icon-chevron-down');
+			$.scrollTo( t.attr('href'), 500,{offset:-50});
+		});
+	
+
+	});
