@@ -32,29 +32,29 @@ mixin searchPanel()
 					div.span5
 
 						input#locationInput(type='hidden', name='locationInput', value='')
-						input#SearchWhat(type="text", class="searchInput", placeholder="Quoi ? YakCats? Users?")
+						input#SearchWhat(type="text", class="searchInput", placeholder="#Quoi ? @Qui?")
 						input#SearchWhere(type="text", data-provide="typeahead", class="searchInput2", placeholder="Où ?")
 
 				
-
-			div.span4
-				div.searchPlaces
-				input#dimensionInput(type='hidden', value='')
-				input#wheretosearch(type="hidden", value="")
-				ul#myfavplace.favplacelist.unstyled
-					- if(locals.user.favplace)
-							- each favplace in locals.user.favplace
-								li.zoneLoc(pointId=favplace._id, lat=favplace.location.lat, lng=favplace.location.lng)
-									i.icon-map-marker
-									span(onclick="setGeoLocaton(this)")= favplace.name
-									i.icon-remove.icon-pointer(onclick='deleltePlace(this)')
-									i.icon-signal.icon-pointer(onclick='showRangeSelector(this)')
-									div.theslider
+			//			
+				div.span4
+					div.searchPlaces
+					input#dimensionInput(type='hidden', value='')
+					input#wheretosearch(type="hidden", value="")
+					ul#myfavplace.favplacelist.unstyled
+						- if(locals.user.favplace)
+								- each favplace in locals.user.favplace
+									li.zoneLoc(pointId=favplace._id, lat=favplace.location.lat, lng=favplace.location.lng)
+										i.icon-map-marker
+										span(onclick="setGeoLocaton(this)")= favplace.name
+										i.icon-remove.icon-pointer(onclick='deleltePlace(this)')
+										i.icon-signal.icon-pointer(onclick='showRangeSelector(this)')
+										div.theslider
 
 		
 
 		button(type="button", class="btn searchButton", style="display: none") Search
-		div.row
+		div.row(style="display:none")
 			div.span12
 				|Vous cherchez
 				span.searchingWhat
@@ -132,19 +132,28 @@ mixin searchPanel()
 						}
 				});
 
-				$(".theslider").slider({
-				range: false,
-				values: [mainConf.searchParams.sliderDefault],
-				min: mainConf.searchParams.sliderMin,
-				max: mainConf.searchParams.sliderMax,
-				change: function( event, ui ) {
-					var dim = ui.values[0];
-					$("#dimensionInput").val(dim);
-					//alert(dim);
-					setGeoLocaton(this);
-				}
-				
-			});
+				$(".theslider").each(function(){
+					$(this).slider({
+						range: false,
+						values: [$(this).attr("title")],
+						min: mainConf.searchParams.sliderMin,
+						max: mainConf.searchParams.sliderMax,
+						change: function( event, ui ) {
+							var dim = ui.values[0];
+							$("#dimensionInput").val(dim);
+							//alert(dim);
+							//alert($(this).attr("title"));
+							setGeoLocaton(this);
+							var user =!{JSON.stringify(user)};
+							//alert(user.favplace);
+							//console.log(user.favplace);
+							$.post('/api/updatefavplace/' + user._id, { favplace: user.favplace} ,function(data) {
+								
+							});
+						}
+						
+					});
+				});
 			});
 			function setGeoLocaton(el)
 			{
