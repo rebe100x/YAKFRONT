@@ -82,6 +82,9 @@ mixin searchPanel()
 				$('#SearchWhat').typeahead({
 					minLength : 3,
 					property: "title",
+					items:8,
+					menu:'<ul class="typeahead dropdown-menu"></ul>',
+					item:'<li><a href="#"></a></li>',
 					source: function (typeahead, query) {
 					encodeURIComponent(query);
 						if(query.length >= 3){

@@ -227,7 +227,7 @@ function loadData(askip, alimit, next, _id, what, where, yaktype, dateInterval, 
 						};
 					};
 
-					readmore1.parent().html(data.info[0].content);
+					readmore1.parent().html(data.info[0].content.linkify());
 				});	
 			});
 			readmore.html("+");
@@ -256,8 +256,8 @@ function loadData(askip, alimit, next, _id, what, where, yaktype, dateInterval, 
 			$.each(val.yakCatName, function(key, val){
 				yakCatNames += "#" + val + " "
 			});
-			yakCatNames = yakCatNames.replace(/#(\S*)/g,'<a href="news/map/search/%23$1">#$1</a>');
-			cat.html(yakCatNames);
+			//yakCatNames = yakCatNames.replace(/#(\S*)/g,'<a href="news/map/search/%23$1">#$1</a>');
+			cat.html(yakCatNames.linkify("/news/map/search/%23"));
 
 			/*create the freetags element*/
 			freetags = $("<div />");
@@ -266,8 +266,8 @@ function loadData(askip, alimit, next, _id, what, where, yaktype, dateInterval, 
 			$.each(val.freeTag, function(key, val){
 				freetagNames += "#" + val.replace(" ", "&nbsp;") + " "
 			});
-			freetagNames = freetagNames.replace(/#(\S*)/g,'<a href="news/map/search/%23$1">#$1</a>');
-			freetags.html(freetagNames + cat.html());
+			//freetagNames = freetagNames.replace(/#(\S*)/g,'<a href="news/map/search/%23$1">#$1</a>');
+			freetags.html(freetagNames.linkify() + cat.html());
 
 			/*create the address element*/
 			address = $("<div />");
