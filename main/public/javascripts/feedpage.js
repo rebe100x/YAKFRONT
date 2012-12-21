@@ -14,6 +14,7 @@ $.timeago.settings.strings = {
    months: "environ %d mois",
    year: "un an",
    years: "%d ans"
+   //gerterter
 };
 
 Date.prototype.toLongFrenchFormat = function ()
