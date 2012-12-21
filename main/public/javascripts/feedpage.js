@@ -179,22 +179,17 @@ Date.prototype.toLongFrenchFormat = function ()
 					item = $("<div />");
 					item.attr("class", "myitem");
 
-					more = $("<a />");
-					more.attr("class", "more");
-					more.attr("href", "news/afeed?id=" + val._id);
-					more.attr("rel", val._id);
-					//var shorturl = return(get_short_url("http://www.yakwala.fr/news/afeed/?id=" + val._id));
-					//alert(shorturl);
-					more.attr("data-toggle", "data-toggle");
-					more.html(val.title);
-
-
-
 					title = $("<div />");
 					title.attr("class", "title");
 					title.html("<img class='PersonImg' src='" + "/images/yakfav.png"+ "' />");
-					title.append(more);
 
+					more = $("<a />");
+					more.attr("class", "more");
+					more.attr("href", val.outGoingLink);
+					more.attr("target", "_blank");
+					more.attr("rel", val._id);
+					more.attr("data-toggle", "data-toggle");
+					more.html(val.title);
 
 					
 					postedby = $("<div />");
@@ -202,19 +197,22 @@ Date.prototype.toLongFrenchFormat = function ()
 
 					hot = $("<div />");
 					hot.attr("class", "hot");
-
 					hot.append("<div class='hotLevel' style='width: " + val.heat + "%'></div>");
 					
 					ago = $("<abbr />");
 					ago.attr("class", "timeago");
 					ago.css("float", "right");
+					ago.css("marginRight", "8px");
+					ago.css("fontSize", "11px")
 					ago.attr("title", val.pubDate);
 
-					yakimage = $("<div />");
+					yakimage = $("<span />");
 					yakimage.html("<img class='yakImg' src='" + yakImages[val.yakType] + "' />");
 
-					title.append(ago);
+					title.append(more);
 					title.append(yakimage);
+					title.append(ago);
+					
 
 					date = new Date(val.pubDate).toLongFrenchFormat();
 					if(val.origin != null)
@@ -277,7 +275,7 @@ Date.prototype.toLongFrenchFormat = function ()
 					content.prepend(img);
 					content.find(".theContent").append(readmore);
 
-					content.append("<br /><br />");
+					content.append("<br />");
 					
 					type = $("<div />");
 					type.attr("class", "type");
@@ -311,9 +309,9 @@ Date.prototype.toLongFrenchFormat = function ()
 
 					freetags.html(freetagNames + cat.html());
 					
-					content.append(freetags)
+					//content.append(freetags)
 
-					content.append(outlink);
+					//content.append(outlink);
 
 					address = $("<div />");
 					address.attr("class", "address");
@@ -321,9 +319,11 @@ Date.prototype.toLongFrenchFormat = function ()
 
 
 					item.append(title);
+					content.append(address);
+					content.append("<div class='shareMe'>Share <i class='icon-share' title='Share Me'></i></div>");
 					item.append(content);
-					item.append(address);
-					item.append("<div class='shareMe'>Share <i class='icon-share' title='Share Me'></i></div>");
+					item.append(freetags);
+					
 					
 
 					if(next != 1)
@@ -394,7 +394,7 @@ Date.prototype.toLongFrenchFormat = function ()
 
 		function setClickableArea()
 		{
-			$(".more").click(function(e){
+			/*$(".more").click(function(e){
 
 				e.preventDefault();
 
@@ -417,7 +417,7 @@ Date.prototype.toLongFrenchFormat = function ()
 					})
 				});
 				
-			});
+			});*/
 		}
 		
 
