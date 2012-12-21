@@ -431,3 +431,86 @@ str=str.replace(/\\0/g,'\0');
 str=str.replace(/\\\\/g,'\\');
 return str;
 }
+
+Date.prototype.toLongFrenchFormat = function ()
+{
+	var months = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
+	var date = this.getDate();
+	if (date < 10)
+	{
+		date = "0" + date;	
+	}
+	var output = date + " " + months[this.getMonth()] + " " + this.getFullYear();
+	return output;
+}
+
+function setShare(el){
+
+	el.parent().parent().find(".icon-share").sharrre({
+	share: {
+	googlePlus: true,
+	facebook: true,
+	twitter: true
+	},
+	enableTracking: true,
+	buttons: {
+		googlePlus: {
+			url: el.parent().parent().find(".title").find(".more").attr("href"),
+			size: 'medium'
+		},
+
+	facebook: {
+		url:  el.parent().parent().find(".title").find(".more").attr("href"),
+		layout: 'button_count'
+	},
+
+	twitter: {
+		text: "J'ai vu ca dans #YAKWALA..." + el.parent().parent().find(".content").find(".cat").find("b").text(),
+		count: 'horizontal',
+		url: el.parent().parent().find(".title").find(".more").attr("title")
+	}					
+	},
+	hover: function(api, options){
+		$(api.element).find('.buttons').show();
+	},
+	hide: function(api, options){
+	$(api.element).find('.buttons').hide();
+	}
+
+});
+   		
+ 
+}
+
+function getVcode( name, url )
+{
+  name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+  var regexS = "[\\?&]"+name+"=([^&#]*)";
+  var regex = new RegExp( regexS );
+  var results = regex.exec( url );
+  if( results == null )
+    return "";
+  else
+    return results[1];
+}
+
+function findUrls( text )
+{
+    var source = (text || '').toString();
+    var urlArray = [];
+    var url;
+    var matchArray;
+
+    // Regular expression to find FTP, HTTP(S) and email URLs.
+    var regexToken = /(((ftp|https?):\/\/)[\-\w@:%_\+.~#?,&\/\/=]+)|((mailto:)?[_.\w-]+@([\w][\w\-]+\.)+[a-zA-Z]{2,3})/g;
+
+    // Iterate through any URLs in the text.
+    while( (matchArray = regexToken.exec( source )) !== null )
+    {
+        var token = matchArray[0];
+        urlArray.push( token );
+    }
+
+    return urlArray;
+}
+
