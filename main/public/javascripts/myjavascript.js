@@ -514,3 +514,14 @@ function findUrls( text )
     return urlArray;
 }
 
+$("document").ready(function(){
+
+		var $scrollingDiv = $(".alwaysShown");
+ 
+		$(window).scroll(function(){			
+			$scrollingDiv
+				.stop()
+				.animate({"marginTop": ($(window).scrollTop() + 10) + "px"}, "slow" );			
+		});
+});
+
