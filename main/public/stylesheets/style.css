@@ -1,5 +1,5 @@
 body {
-  padding: 50px;
+  padding: 0px 50px;
   font: 13px "Lucida Grande", Helvetica, Arial, sans-serif;
   
 }
@@ -149,7 +149,7 @@ h4, h3, h2 , h1{margin-bottom:5px;}
 
 
 	/*MAP TAB CONTENT*/
-#newsfeedContainer{overflow:auto;height:auto;background-color:#FFF;opacity:1;}
+#newsfeedContainer{overflow:auto;height:auto;background-color:#FFF;opacity:1;margin: 40px -40px 0 0;}
 .tabContent{
 width:100%;
 display: none;
@@ -326,18 +326,21 @@ width: 270px;
 .yak-sidenav-fixed {
      position:fixed;
      top:60px;
+     left:50px;
      
  }
 
  @media (max-width: 767px) {
      .yak-sidenav-fixed {
          width:auto;
+         position:static;
+
      }
  }
 
  @media (max-width: 979px) {
      .yak-sidenav-fixed {
-         position:static;
+         
         width: auto;
      }
  }

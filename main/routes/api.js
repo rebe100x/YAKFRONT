@@ -2,26 +2,6 @@
  * Serve JSON
  */
 
-/*tests*/
-exports.test1 = function (req, res) {
-	var Info = db.model('Info');
-	Info.test1(function (err, docs){
-		var thedoc = docs.map(function(item){return item.pubDate+' - '+item.title;});
-	  res.json({
-		info: thedoc
-	  });
-	}); 
-};
-exports.test2 = function (req, res) {
-	var Info = db.model('Info');
-	Info.test2(function (err, docs){
-		var thedoc = docs.map(function(item){return item.pubDate+' - '+item.title;});
-	  res.json({
-		info: thedoc
-	  });
-	}); 
-};
-/*end tests*/
 
 
 exports.requiresToken = function(req,res,next){
@@ -37,13 +17,32 @@ exports.requiresToken = function(req,res,next){
 				next();
 			}else{
 				console.log('NOT IDENTIFIED BY TOKEN');
-				req.session.message = 'Please login to access this section:';
-				res.redirect('/user/login?redir='+req.url);
+				res.json({meta:{code:404,error_type:'operation failed',error_description:'User unknown.'}});
 			}
 		});
 	}else{
-		req.session.message = 'Please provide a valid token.';
-		res.redirect('/user/login?redir='+req.url);
+		res.json({meta:{code:404,error_type:'operation failed',error_description:'Please provide a valid token.'}});
+	}	
+};
+
+exports.requiresClient = function(req,res,next){
+	
+	var clientKey =  (req.query.client_key)?req.query.client_key:req.body.client_key;	
+	if(clientKey){
+		var Client = db.model('Client');
+
+		Client.findById(clientKey,function (err, theclient){
+			console.log(theclient);
+			if(theclient != undefined && theclient != null){
+				console.log('IDENTIFIED BY CLIENT');
+				next();
+			}else{
+				console.log('NOT IDENTIFIED BY CLIENT');
+				res.json({meta:{code:404,error_type:'operation failed',error_description:'Client id and client key does not match.'}});
+			}
+		});
+	}else{
+		res.json({meta:{code:404,error_type:'operation failed',error_description:'Please provide a client id and a client key.'}});
 	}	
 };
 
@@ -80,7 +79,7 @@ exports.geoalerts = function (req, res) {
 	var usersubs= res.locals.user.usersubs;
 	var tagsubs= res.locals.user.tagsubs;
 	
-	Info.findAllGeoAlert(req.params.x1,req.params.y1,req.params.x2,req.params.y2,req.params.from,req.params.str,usersubs,tagsubs,function (err, docs){
+	Info.findAllGeoAlert(req.params.x1,req.params.y1,req.params.x2,req.params.y2,req.params.heat,req.params.str,usersubs,tagsubs,function (err, docs){
 		if(!err)
 			res.json({meta:{code:200},data:{info:docs}});
 		else
@@ -92,8 +91,8 @@ exports.geoinfos = function (req, res) {
 	var type = [];
 	//console.log(req.params);
 	type = req.params.type.split(',');
-	
-	Info.findAllGeo(req.params.x1,req.params.y1,req.params.x2,req.params.y2,req.params.from,type,req.params.str,function (err, docs){
+	console.log(req.params);
+	Info.findAllGeo(req.params.x1,req.params.y1,req.params.x2,req.params.y2,req.params.heat,type,req.params.str,req.query.limit,req.query.skip,function (err, docs){
 		
 		if(!err){
 			if(docs.length > 0){
@@ -105,7 +104,7 @@ exports.geoinfos = function (req, res) {
 			}else{
 				// if no result, we search in all types // WE TRY FOR A WHILE TO SEE IF IT IS NICER
 				type = new Array(1,2,3,4);
-				Info.findAllGeo(req.params.x1,req.params.y1,req.params.x2,req.params.y2,req.params.from,type,req.params.str,function (err, docs){
+				Info.findAllGeo(req.params.x1,req.params.y1,req.params.x2,req.params.y2,req.params.heat,type,req.params.str,req.query.limit,req.query.skip,function (err, docs){
 					
 					if(!err){
 						var infosFormated = docs.map(function(item){
@@ -398,7 +397,104 @@ exports.del_subs_tag = function (req, res) {
 /*******
 * USER *
 ********/
+exports.user_validation = function(req, res){
+	var User = db.model('User');	
+	console.log(req.body);
+	User.authenticateByKey(req.body.userid,req.body.key, function(err, theuser) {
+		
+	if(!(typeof(theuser) == 'undefined' || theuser === null || theuser === '')){
+			User.update({_id: theuser._id}, {status:1}, {upsert: false}, function(err){if (err) console.log(err);});						
+				res.json({meta:{code:200}});
+		}else{
+			res.json({meta:{code:404,error_type:'Identification failed',error_description:"Votre clé d'activation est incorrecte"}});				
+		}
+	
+	});
+	
+};
+exports.user_creation = function(req, res){
 
+	var crypto = require('crypto')
+	var themail = req.body.mail;
+	var User = db.model('User');
+	var Point = db.model('Point');
+	var user = new User();
+	
+	/*check if the mail is valid*/
+	
+	
+	/*check if user exists*/
+	User.findOne({'mail': themail},{_ids:1,status:1,mail:1}, function(err,theuser){
+		if(theuser){
+			//console.log(theuser);
+			if(theuser.status == 1){
+				//console.log('STATUS1');
+				req.session.message = 'Cet utilisateur est déjà enregistré.';
+				res.redirect('user/new');
+			
+			}
+			if(theuser.status == 2){
+				//console.log('STATUS2');
+				
+				var salt = Math.round(new Date().valueOf() * Math.random());
+				var token = crypto.createHash('sha1').update("yakwala@secure"+salt).digest("hex");
+				var password = user.generatePassword(5);
+				var link = conf.validationUrl+token+"/"+password;
+				var hash = crypto.createHash('sha1').update(password+"yakwala@secure"+salt).digest("hex");
+				var logo = conf.fronturl+"/static/images/yakwala-logo_petit.png";				
+				var templateMail = "code";
+				User.update({_id: theuser._id}, {hash : hash,token:token,salt:salt,password:password}, {upsert: false}, function(err){
+					User.sendValidationMail(password,themail,templateMail,logo,function(err){
+						if(!err)
+							res.json({meta:{code:200}});
+						else
+							res.json({meta:{code:404,error_type:'Mail failed',error_description:err.toString()}});				
+					});
+				});
+				//res.json({meta:{code:404,error_type:'operation failed',error_description:"Cet utilisateur est en attente de validation. Un nouveau mail vient de lui être renvoyé avec une nouvelle clé d'activation. Veuillez vérifier qu'il n'est pas dans les spams."}});
+			}
+		}else{
+				//console.log('NEW');
+				/*create user*/
+				var tmp = req.body.mail.split('@');
+				var login = tmp[0];
+				var salt = Math.round(new Date().valueOf() * Math.random());
+				var token = crypto.createHash('sha1').update("yakwala@secure"+salt).digest("hex");
+				var password = user.generatePassword(5);
+				var logo = conf.fronturl+"/static/images/yakwala-logo_petit.png";
+				var templateMail = "code";
+				user.name=login;
+				user.login=login;
+				user.mail=themail;
+				user.token=token;
+				user.status=2;
+				user.hash= password;
+				user.password= password;
+				user.salt="1";
+				user.type=1;
+				user.favplace = [{'name':'Paris, France','location':{'lat':48.851875,'lng':2.356374}},{'name':'Eghézée, Belgique','location':{'lat':50.583346,'lng':4.900031}},{'name':'Montpellier, France','location':{'lat':43.610787,'lng':3.876715}}];
+				
+				//console.log(user);
+				user.save(function (err) {
+					console.log(err);
+					if (!err){
+						User.sendValidationMail(password,themail,templateMail,logo,function(err){
+							if(!err)
+								res.json({meta:{code:200,userid:user._id}});
+							else
+								res.json({meta:{code:404,error_type:'Mail failed',error_description:err.toString()}});				
+						});
+					} 
+					else{
+						res.json({meta:{code:404,error_type:'Save in db failed',error_description:err.toString()}});				
+					} 
+				});
+				
+		}
+	});
+	
+	
+};
 exports.put_user_details = function (req, res) {
 	var User = db.model('User');
 	if(typeof(req.body.user) != 'undefined'){

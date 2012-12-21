@@ -323,12 +323,8 @@ exports.user_logout = function(req, res){
 
 
 
-
-
 exports.session = function(req, res){
-
 	var User = db.model('User');
-	
 	User.authenticate(req.body.login,req.body.password, function(err, user) {
 	if(!(typeof(user) == 'undefined' || user === null || user === '')){
 			req.session.user = user._id;
@@ -337,14 +333,11 @@ exports.session = function(req, res){
 			req.session.message = 'Identifiants incorrects.';
 			res.redirect('user/login?redir='+req.body.redir);
 		}
-	
 	});
-	
 };
 
 exports.user = function(req, res){
 
-	var nodemailer = require("nodemailer");
 	var crypto = require('crypto')
 	var themail = req.body.mail;
 	var User = db.model('User');
@@ -367,58 +360,17 @@ exports.user = function(req, res){
 			if(theuser.status == 2){
 				//console.log('STATUS2');
 				
-				/*
-				var smtpTransport = nodemailer.createTransport("SMTP",{
-					service: "Gmail",
-					auth: {
-						//user: "bessieres.biz@gmail.com",
-						//pass: "/m.gmail"
-						user: "labs.yakwala@gmail.com",
-						pass: "/m.yakwala"
-					}
-				});*/
-				
-				
 				var salt = Math.round(new Date().valueOf() * Math.random());
 				var token = crypto.createHash('sha1').update("yakwala@secure"+salt).digest("hex");
 				var password = user.generatePassword(5);
 				var link = conf.validationUrl+token+"/"+password;
 				var hash = crypto.createHash('sha1').update(password+"yakwala@secure"+salt).digest("hex");
+				var logo = conf.fronturl+"/static/images/yakwala-logo_petit.png";
+				var templateMail = "link";
 				User.update({_id: theuser._id}, {hash : hash,token:token,salt:salt,password:password}, {upsert: false}, function(err){
 					
 				
-					var fs    = require('fs');
-					fs.readFile(__dirname+'/../views/mails/account_validation3.html', 'utf8', function(err, data) {
-						data = data.replace("*|MC:SUBJECT|*","Votre inscription");
-						data = data.replace("*|MC:HEADERIMG|*",conf.fronturl+"/static/images/yakwala-logo_petit.png");
-						data = data.replace("*|MC:VALIDATIONLINK|*",link);
-						data = data.replace("*|CURRENT_YEAR|*",new Date().getFullYear());
-						
-						
-						var smtpTransport = nodemailer.createTransport("SES", {
-							AWSAccessKeyID: "AKIAJ6EBI6LCECLYVM5Q",
-							AWSSecretKey: "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",
-							//ServiceUrl: "https://email.us-east-1.amazonaws.com" // optional
-						});
-					
-						var mailOptions = {
-							from: "Labs Yakwala <labs.yakwala@gmail.com>", // sender address
-							to: theuser.mail, // list of receivers
-							subject: "Votre inscription à Yakwala", // Subject line
-							text: "Bonjour, \r\n Pour valider votre compte Yakwala, entrez ce lien dans votre navigateur : "+link+" et validez votre compte avec cette clé de validation : "+password, // plaintext bod
-							html: data
-						}	
-							
-						
-						smtpTransport.sendMail(mailOptions, function(error, response){
-							if(error)
-								console.log(error);
-							else
-								console.log(response);
-							smtpTransport.close(); // shut down the connection pool, no more messages
-						});
-					});
-					
+					User.sendValidationMail(link,logo);
 					
 
 				
@@ -436,7 +388,8 @@ exports.user = function(req, res){
 				var salt = Math.round(new Date().valueOf() * Math.random());
 				var token = crypto.createHash('sha1').update("yakwala@secure"+salt).digest("hex");
 				var password = user.generatePassword(5);
-				
+				var logo = conf.fronturl+"/static/images/yakwala-logo_petit.png";
+				var templateMail = "link";
 				user.name=login;
 				user.login=login;
 				user.mail=themail;
@@ -446,76 +399,16 @@ exports.user = function(req, res){
 				user.password= password;
 				user.salt="1";
 				user.type=1;
-				
-				
-				
-			
 				user.favplace = [{'name':'Paris, France','location':{'lat':48.851875,'lng':2.356374}},{'name':'Eghézée, Belgique','location':{'lat':50.583346,'lng':4.900031}},{'name':'Montpellier, France','location':{'lat':43.610787,'lng':3.876715}}];
 				
 				
 				user.save(function (err) {
 					if (!err){
-						var fs    = require('fs');
-						fs.readFile(__dirname+'/../views/mails/account_validation.html', 'utf8', function(err, data) {
-							var link = conf.validationUrl+user.token+'/'+password;
-							data = data.replace("*|MC:SUBJECT|*","Votre inscription");
-							data = data.replace("*|MC:HEADERIMG|*",conf.fronturl+"/static/images/yakwala-logo_petit.png");
-							data = data.replace("*|MC:VALIDATIONLINK|*",link);
-							data = data.replace("*|MC:VALIDATIONKEY|*",password);
-							data = data.replace("*|CURRENT_YEAR|*",new Date().getFullYear());
-							
-							
-							var smtpTransport = nodemailer.createTransport("SES", {
-								AWSAccessKeyID: "AKIAJ6EBI6LCECLYVM5Q",
-								AWSSecretKey: "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",
-								//ServiceUrl: "https://email.us-east-1.amazonaws.com" // optional
-							});
-						
-							var mailOptions = {
-								from: "Labs Yakwala <labs.yakwala@gmail.com>", // sender address
-								to: user.mail, // list of receivers
-								subject: "Votre inscription à Yakwala", // Subject line
-								text: "Bonjour, \r\n Votre clé de validation est : "+password, // plaintext bod
-								html: data
-							}	
-								
-							
-							smtpTransport.sendMail(mailOptions, function(error, response){
-								if(error)
-									console.log(error);
-								else
-									console.log(response);
-								smtpTransport.close(); // shut down the connection pool, no more messages
-							});
-						});
-					
+						User.sendValidationMail(link,logo);
 					} 
 					else console.log(err);
 				});
-				/*send mail*/
 				
-				/*
-				var smtpTransport = nodemailer.createTransport("SMTP",{
-					service: "Gmail",
-					auth: {
-						//user: "bessieres.biz@gmail.com",
-						//pass: "/m.gmail"
-						user: "labs.yakwala@gmail.com",
-						pass: "/m.yakwala"
-					}
-				});
-				var mailOptions = {
-					from: "Yakwala <noreply@yakwala.fr>", // sender address
-					to: themail, // list of receivers
-					subject: "Votre inscription à Yakwala", // Subject line
-					text: "Bonjour, \r\n Pour valider votre compte Yakwala, entrez ce lien dans votre navigateur : "+link+" et validez votre compte avec cette clé de validation : "+password, // plaintext bod
-					html: "Bonjour,<br><br>Pour valider votre compte Yakwala, clickez sur ce <a href=\""+link+"\">lien</a> et entrer la clé de validation suivante : <b>"+password+"</b>" // html body
-				}
-
-				smtpTransport.sendMail(mailOptions, function(error, response){
-					smtpTransport.close(); // shut down the connection pool, no more messages
-				});*/
-
 				req.session.message = 'Un email vous a été envoyé contenant un lien et une clé de validation de votre compte.';
 				res.redirect('user/new');
 		}

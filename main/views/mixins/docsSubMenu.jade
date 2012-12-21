@@ -36,6 +36,10 @@ mixin docsSubMenu(active)
 					a(href="#endpoint_user") User
 					ul.nav.nav-list
 						li 
+							a(href="#endpoint_usercreate") User creation
+						li 
+							a(href="#endpoint_uservalidate") User validation	
+						li 
 							a(href="#endpoint_userprofile") User profile
 						li 
 							a(href="#endpoint_useralert_user") User alerts on other user's feeds
@@ -72,6 +76,10 @@ mixin docsSubMenu(active)
 				i.icon-chevron-right
 script
 	$(document).ready(function() {
+		$('a.insideLink').click(function(event){
+			event.preventDefault();
+			$.scrollTo( $(this).attr('href'), 500,{offset:-50});
+		});
 		$('.yak-sidenav li a').click(function(event){
 			
 			event.preventDefault();

@@ -80,6 +80,11 @@ app.get('/api/infos', api.infos);
 app.get('/api/feeds', api.feeds);
 app.get('/api/afeed', api.afeed);
 app.get('/api/geoinfos/:x1/:y1/:x2/:y2/:heat/:type/:str', api.geoinfos);
+app.get('/api/geoinfos/:x1/:y1/:x2/:y2/:heat/:type/:str/:limit', api.geoinfos);
+app.get('/api/geoinfos/:x1/:y1/:x2/:y2/:heat/:type/:str/:limit/:skip', api.geoinfos);
+app.get('/api/geoalerts/:x1/:y1/:x2/:y2/:from/:str', routes.requiresLogin, api.geoalerts);
+app.get('/api/geoalerts/:x1/:y1/:x2/:y2/:from/:str/:limit', routes.requiresLogin, api.geoalerts);
+app.get('/api/geoalerts/:x1/:y1/:x2/:y2/:from/:str/:limit/:skip', routes.requiresLogin, api.geoalerts);
 app.get('/api/zones/:x/:y', api.zones);
 app.get('/api/cats', api.cats);
 app.get('/api/catsandtags', api.catsandtags);
@@ -153,6 +158,8 @@ app.post('/api/updateplace/:userid', api.requiresToken, api.put_place);
 app.post('/api/delplace/:userid', api.requiresToken, api.del_place); 
 
 // user's profile
+app.post('/api/user/create',api.requiresClient, api.user_creation);
+app.post('/api/user/validate', api.requiresClient, api.user_validation);
 app.get('/api/user/:userid', api.get_user_details);
 app.put('/api/user/:userid',api.requiresToken, api.put_user_details);
 app.post('/api/updateuser/:userid',api.requiresToken, api.put_user_details);

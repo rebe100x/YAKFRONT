@@ -17,8 +17,8 @@ function auth (schema, options) {
   // Options
   var loginPath = options.loginPath || 'login'
 	, mailPath = options.mailPath || 'mail'
-    , hashPath = options.hashPath || 'hash'
-	, saltPath = options.hashPath || 'salt'
+  , hashPath = options.hashPath || 'hash'
+	, saltPath = options.hashSalt || 'salt'
     , workFactor = options.workFactor || 10
     , query = {}
     , fields = {}
@@ -116,6 +116,22 @@ function auth (schema, options) {
     return this
   })
   
+  // Authenticate by key, passing the authenticated instance into the callback
+  schema.static('authenticateByKey', function (userid, key, next) {
+    query = {'_id':userid};
+    this.findOne(query, function (err, model) {
+      if (err) return next(err)
+      if (!model) return next('model does not exist')
+
+      model.authenticate(key, function (err, valid) {
+        if (err) return next(err)
+        if (valid) return next(null, model)
+        return next('invalid password', null)
+      })
+    })
+    return this
+  })
+
   // Register a new user instance with the supplied attributes, passing
   // the new instance into the callback if no errors were found
   schema.static('register', function (attr, next) {
@@ -159,7 +175,7 @@ function auth (schema, options) {
 		if(!len)
 			len = 6;
 		var password = "";
-		var chars    = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		var chars    = "23456789ABCDEFGHJKMNPQRSTUWXYZ#@";
 		var charsN   = chars.length;
 		var nextChar;
 	 
@@ -225,7 +241,62 @@ function auth (schema, options) {
 		});
 	})
 	
+
+
+
+  // Send an email with the validation link or the validation code
+  schema.static('sendValidationMail', function ( link, mail, template, logo, next) {
+
+    var nodemailer = require("nodemailer");
+    var fs = require('fs');
+    var error = '';
+    if(template == 'code')
+      var mailTemplate = __dirname+'/../views/mails/account_validationByCode.html';
+    else
+      var mailTemplate = __dirname+'/../views/mails/account_validationByLink.html';
+
+    fs.readFile(mailTemplate, 'utf8', function(err, data) {
+      data = data.replace("*|MC:SUBJECT|*","Votre inscription");
+      data = data.replace("*|MC:HEADERIMG|*",logo);
+      data = data.replace("*|MC:VALIDATIONLINK|*",link);
+      data = data.replace("*|CURRENT_YEAR|*",new Date().getFullYear());
+      
+      
+      
+      var smtpTransport = nodemailer.createTransport("SES", {
+        AWSAccessKeyID: "AKIAJ6EBI6LCECLYVM5Q",
+        AWSSecretKey: "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",
+        //ServiceUrl: "https://email.us-east-1.amazonaws.com" // optional
+      });
+    
+      var mailOptions = {
+        from: "Labs Yakwala <labs.yakwala@gmail.com>", // sender address
+        to: mail, // list of receivers
+        subject: "Votre inscription à Yakwala", // Subject line
+        text: "Bonjour, \r\n Votre clé de validation est : "+link, // plaintext bod
+        html: data
+      } 
+        
+      
+      smtpTransport.sendMail(mailOptions, function(error, response){
+        if(error)
+          console.log(error);
+        else
+          console.log(response);
+        smtpTransport.close(); // shut down the connection pool, no more messages
+      });
+    });
+    
+    next(error);
+  })
+
+
+
+
+
 }
+
+
 
 
 module.exports = auth

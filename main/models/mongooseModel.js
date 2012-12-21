@@ -256,7 +256,10 @@ Info.statics.findByUserIds = function (useridArray, count, from, callback) {
   return this.aggregate({ $group: {user: {$in:useridArray}}},{},{limit:limit,skip:skip,sort:{pudDate:-1}}, callback);
 }
 
-Info.statics.findAllGeo = function (x1,y1,x2,y2,from,type,str,callback) {
+
+Info.statics.findAllGeo = function (x1,y1,x2,y2,from,type,str,count,theskip,callback) {
+	var limit = (typeof(count) != 'undefined' && count > 0) ? count : 100;		
+	var skip = (typeof(theskip) != 'undefined' && theskip > 0) ? theskip : 0;	
 	// we create the date rounded to the last day, except if from = 0, we take the last few hours
 	var DPUB = new Date();
 	var DEND = new Date();
@@ -285,7 +288,7 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,from,type,str,callback) {
 				"yakType" : {$in:type}
 			};
 			
-	var qInfo = this.find(cond).sort({'pubDate':-1}).limit(100);
+	var qInfo = this.find(cond).sort({'pubDate':-1}).limit(limit).skip(skip);
 	
 	if(str != 'null' && str.length > 0){  // STRING SEARCH
 		var S = require('string');
@@ -336,12 +339,14 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,from,type,str,callback) {
 	return res;
 }
 
-Info.statics.findAllGeoAlert = function (x1,y1,x2,y2,from,str,usersubs,tagsubs,callback) {
+Info.statics.findAllGeoAlert = function (x1,y1,x2,y2,from,str,usersubs,tagsubs,count,skip,callback) {
+	var limit = (typeof(count) != 'undefined' && count > 0) ? count : 100;		
+	var skip = (typeof(skip) != 'undefined' && skip > 0) ? skip : 0;	
+	
 	var now = new Date();
 	var D = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
 	var DTS = D.getTime() / 1000 - (from * 60 * 60 * 24);
 	D.setTime(DTS*1000); 
-	console.log(from);
 	var box = [[parseFloat(x1),parseFloat(y1)],[parseFloat(x2),parseFloat(y2)]];
 	var Yakcat = db.model('Yakcat');
 	var User = db.model('User');
@@ -357,7 +362,7 @@ Info.statics.findAllGeoAlert = function (x1,y1,x2,y2,from,str,usersubs,tagsubs,c
 
 			};
 
-	var qInfo = this.find(cond).sort({'pubDate':-1}).limit(100);
+	var qInfo = this.find(cond).sort({'pubDate':-1}).limit(limit).skip(skip);
 	
 	
 	if( (typeof(usersubs) != 'undefined' && usersubs != 'null') || (typeof(tagsubs) != 'undefined' && tagsubs != 'null' ) ){
@@ -651,10 +656,9 @@ var User = new Schema({
 	, thumb	: { type: String, default:'no-user.png'}
 	, type	: { type: Number, required: true, index: true}
 	, login     : { type: String, lowercase: true, required: true, index: { unique: true }}
-	, hash       : { type: String ,required: true, index: true}
-	, salt       : { type: String ,required: true, index: true}
-	, token       : { type: String ,required: true, index: true}
-	, validationKey       : { type: String ,required: true, index: true}
+	, hash      : { type: String ,required: true, index: true}
+	, salt      : { type: String ,required: true, index: true}
+	, token     : { type: String ,required: true, index: true}
 	, usersubs	: { type: [User],ref: 'User',  index: true}
 	, tagsubs	: { type: [String], index: true}
 	, placesubs	: { type: [Schema.Types.ObjectId], index: true}
@@ -1076,6 +1080,13 @@ var Client = new Schema({
 ,	secret	: { type: String, required: true, index:'unique'}
 ,	status	: {type: Number, required: true, index:true}		
 },{ collection: 'client' });
+
+Client.statics.identify = function(key,secret,callback){
+	return this.findOne({'_id': key,'secret':secret,'status':1}, callback);
+}
+Client.statics.findById = function(key,callback){
+	return this.findOne({'_id': key,'status':1}, callback);
+}
 
 
 mongoose.model('Client', Client);
