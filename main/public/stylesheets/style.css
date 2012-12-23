@@ -1,5 +1,5 @@
 body {
-  padding: 0px 50px;
+  padding:50px;
   font: 13px "Lucida Grande", Helvetica, Arial, sans-serif;
   
 }
@@ -342,7 +342,7 @@ width: 270px;
 
  @media (max-width: 979px) {
      .yak-sidenav-fixed {
-         
+         margin-top:100px;
         width: auto;
      }
  }

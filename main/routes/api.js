@@ -400,15 +400,18 @@ exports.del_subs_tag = function (req, res) {
 exports.user_validation = function(req, res){
 	var User = db.model('User');	
 	console.log(req.body);
-	User.authenticateByKey(req.body.userid,req.body.key, function(err, theuser) {
+	User.authenticateByToken(req.body.token,req.body.key, function(err, theuser) {
 		
 	if(!(typeof(theuser) == 'undefined' || theuser === null || theuser === '')){
-			User.update({_id: theuser._id}, {status:1}, {upsert: false}, function(err){if (err) console.log(err);});						
+			if(theuser.status == 1)
+					res.json({meta:{code:404,error_type:'Identification failed',error_description:"User is already valid"}});				
+			else{
+				User.update({_id: theuser._id}, {status:1}, {upsert: false}, function(err){if (err) console.log(err);});						
 				res.json({meta:{code:200}});
+			}
 		}else{
 			res.json({meta:{code:404,error_type:'Identification failed',error_description:"Votre clé d'activation est incorrecte"}});				
 		}
-	
 	});
 	
 };
@@ -446,7 +449,7 @@ exports.user_creation = function(req, res){
 				User.update({_id: theuser._id}, {hash : hash,token:token,salt:salt,password:password}, {upsert: false}, function(err){
 					User.sendValidationMail(password,themail,templateMail,logo,function(err){
 						if(!err)
-							res.json({meta:{code:200}});
+							res.json({meta:{code:200,token:token}});
 						else
 							res.json({meta:{code:404,error_type:'Mail failed',error_description:err.toString()}});				
 					});
@@ -480,7 +483,7 @@ exports.user_creation = function(req, res){
 					if (!err){
 						User.sendValidationMail(password,themail,templateMail,logo,function(err){
 							if(!err)
-								res.json({meta:{code:200,userid:user._id}});
+								res.json({meta:{code:200,token:token}});
 							else
 								res.json({meta:{code:404,error_type:'Mail failed',error_description:err.toString()}});				
 						});

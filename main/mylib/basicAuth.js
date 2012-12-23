@@ -58,7 +58,7 @@ function auth (schema, options) {
         throw new Error('data and hash must be strings');
     }
 
-   if(crypto.createHash('sha1').update(password+"yakwala@secure"+this[saltPath]).digest("hex") == this[hashPath])
+   if(crypto.createHash('sha1').update(password+"yakwala@secure"+this[saltPath]).digest("hex") == this[hashPath]) 
 		next(null,1)
 	else
 		next(null,null)
@@ -101,7 +101,7 @@ function auth (schema, options) {
   })
 
   // Authenticate by token, passing the authenticated instance into the callback
-  schema.static('authenticateByToken', function (token, password, next) {
+  schema.static('authenticateByToken', function ( token, password, next) {
     query = {'token':token};
     this.findOne(query, function (err, model) {
       if (err) return next(err)
@@ -116,21 +116,7 @@ function auth (schema, options) {
     return this
   })
   
-  // Authenticate by key, passing the authenticated instance into the callback
-  schema.static('authenticateByKey', function (userid, key, next) {
-    query = {'_id':userid};
-    this.findOne(query, function (err, model) {
-      if (err) return next(err)
-      if (!model) return next('model does not exist')
-
-      model.authenticate(key, function (err, valid) {
-        if (err) return next(err)
-        if (valid) return next(null, model)
-        return next('invalid password', null)
-      })
-    })
-    return this
-  })
+ 
 
   // Register a new user instance with the supplied attributes, passing
   // the new instance into the callback if no errors were found
@@ -175,7 +161,7 @@ function auth (schema, options) {
 		if(!len)
 			len = 6;
 		var password = "";
-		var chars    = "23456789ABCDEFGHJKMNPQRSTUWXYZ#@";
+		var chars    = "23456789ABCDEFGHJKMNPQRSTUWXYZ";
 		var charsN   = chars.length;
 		var nextChar;
 	 

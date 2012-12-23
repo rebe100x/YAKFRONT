@@ -326,11 +326,14 @@ exports.user_logout = function(req, res){
 exports.session = function(req, res){
 	var User = db.model('User');
 	User.authenticate(req.body.login,req.body.password, function(err, user) {
-	if(!(typeof(user) == 'undefined' || user === null || user === '')){
+	if(!(typeof(user) == 'undefined' || user === null || user === '') && user.status == 1){
 			req.session.user = user._id;
 			res.redirect(req.body.redir || '/news/map');
 		}else{
-			req.session.message = 'Identifiants incorrects.';
+			if(user.status == 2)
+				req.session.message = 'Compte non validé.';
+			else
+				req.session.message = 'Identifiants incorrects.';	
 			res.redirect('user/login?redir='+req.body.redir);
 		}
 	});
@@ -370,9 +373,10 @@ exports.user = function(req, res){
 				User.update({_id: theuser._id}, {hash : hash,token:token,salt:salt,password:password}, {upsert: false}, function(err){
 					
 				
-					User.sendValidationMail(link,logo);
-					
-
+					User.sendValidationMail(link,themail,templateMail,logo,function(err){
+						if(!err)
+							console.log(err);				
+					});
 				
 					
 				});
@@ -400,11 +404,14 @@ exports.user = function(req, res){
 				user.salt="1";
 				user.type=1;
 				user.favplace = [{'name':'Paris, France','location':{'lat':48.851875,'lng':2.356374}},{'name':'Eghézée, Belgique','location':{'lat':50.583346,'lng':4.900031}},{'name':'Montpellier, France','location':{'lat':43.610787,'lng':3.876715}}];
-				
+				var link = conf.validationUrl+token+"/"+password;
 				
 				user.save(function (err) {
 					if (!err){
-						User.sendValidationMail(link,logo);
+						User.sendValidationMail(link,themail,templateMail,logo,function(err){
+						if(!err)
+							console.log(err);
+					});
 					} 
 					else console.log(err);
 				});
@@ -532,13 +539,16 @@ exports.firstvisit = function(req,res){
 						formMessage = "Votre nouveau mot de passe est enregistré";
 						//delete req.session.user;
 						User.authenticate(login,req.body.password, function(err, user) {
-							if(!(typeof(user) == 'undefined' || user === null || user === '')){
+							if(!(typeof(user) == 'undefined' || user === null || user === '') && user.status == 1){
 									req.session.user = user._id;
 									res.locals.user = user;
 									req.session.message = formMessage;
 									res.redirect('news/map');
 								}else{
-									req.session.message = 'Identifiants incorrects.';
+									if(user.status == 2)
+										req.session.message = 'Compte non validé.';
+									else
+										req.session.message = 'Identifiants incorrects.';
 									res.redirect('user/login?redir='+req.body.redir);
 								}
 						});
@@ -581,14 +591,18 @@ exports.password = function(req,res){
 									formMessage = "Votre nouveau mot de passe est enregistré";
 									//delete req.session.user;
 									User.authenticate(login,req.body.newpass1, function(err, user) {
-										if(!(typeof(user) == 'undefined' || user === null || user === '')){
+										if(!(typeof(user) == 'undefined' || user === null || user === '') && user.status == 1 ){
 												req.session.user = user._id;
 												res.locals.user = user;
 												req.session.message = formMessage;
 												res.redirect('settings/password');
 										}else{
+											if(user.status == 2)
+												req.session.message = 'Compte non validé.';
+											else
 												req.session.message = 'Identifiants incorrects.';
-												res.redirect('user/login?redir=settings/password');
+
+											res.redirect('user/login?redir=settings/password');
 										}
 									});
 								}

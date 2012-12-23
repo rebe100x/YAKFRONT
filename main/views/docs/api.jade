@@ -376,7 +376,7 @@ block content
 									tr
 										td Response :
 											ul 
-												li {meta:{code:200,userid:user._id}} you need the user id to validate the account
+												li {meta:{code:200,token:xxxxxxx}} you need the token to validate the account
 							
 					// USERS VALIDATE ACCOUNT
 					h4#endpoint_uservalidate Validate a Yakwala account
@@ -388,7 +388,7 @@ block content
 						tr
 							td POST
 							td /user/validate<code>client-key</code>
-							td Validate an account
+							td Validate an account. The password of the new account is the key given at the creation of the account.
 						tr
 							td(colspan=3)
 								table.table.table-bordered
@@ -397,7 +397,7 @@ block content
 									tr
 										td Parameters :
 											ul 
-												li userid : string - the id of the user send at the creation of the account
+												li token : string - the token send at the creation of the account
 												li key : string - the key sent by email to the user
 												li client_key : string - your client key
 									tr
