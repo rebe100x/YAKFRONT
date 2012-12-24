@@ -79,20 +79,22 @@ exports.geoalerts = function (req, res) {
 	var usersubs= res.locals.user.usersubs;
 	var tagsubs= res.locals.user.tagsubs;
 	
-	Info.findAllGeoAlert(req.params.x1,req.params.y1,req.params.x2,req.params.y2,req.params.heat,req.params.str,usersubs,tagsubs,function (err, docs){
+	Info.findAllGeoAlert(req.params.x1,req.params.y1,req.params.x2,req.params.y2,req.params.heat,req.params.str,usersubs,tagsubs,req.params.limit,req.params.skip,function (err, docs){
 		if(!err)
 			res.json({meta:{code:200},data:{info:docs}});
 		else
 			res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 	}); 
 };
+
+
 exports.geoinfos = function (req, res) {
 	var Info = db.model('Info');
 	var type = [];
 	//console.log(req.params);
 	type = req.params.type.split(',');
 	console.log(req.params);
-	Info.findAllGeo(req.params.x1,req.params.y1,req.params.x2,req.params.y2,req.params.heat,type,req.params.str,req.query.limit,req.query.skip,function (err, docs){
+	Info.findAllGeo(req.params.x1,req.params.y1,req.params.x2,req.params.y2,req.params.heat,type,req.params.str,req.params.limit,req.params.skip,function (err, docs){
 		
 		if(!err){
 			if(docs.length > 0){
@@ -104,7 +106,57 @@ exports.geoinfos = function (req, res) {
 			}else{
 				// if no result, we search in all types // WE TRY FOR A WHILE TO SEE IF IT IS NICER
 				type = new Array(1,2,3,4);
-				Info.findAllGeo(req.params.x1,req.params.y1,req.params.x2,req.params.y2,req.params.heat,type,req.params.str,req.query.limit,req.query.skip,function (err, docs){
+				Info.findAllGeo(req.params.x1,req.params.y1,req.params.x2,req.params.y2,req.params.heat,type,req.params.str,req.params.limit,req.params.skip,function (err, docs){
+					
+					if(!err){
+						var infosFormated = docs.map(function(item){
+							var Info = db.model('Info');
+							return Info.format(item);
+						});
+						res.json({meta:{code:200},data:{info:infosFormated}});	
+					}else
+						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+				}); 
+			}
+		}else
+			res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+	}); 
+};
+
+
+exports.feedalerts = function (req, res) {
+	var Info = db.model('Info');
+	var usersubs= res.locals.user.usersubs;
+	var tagsubs= res.locals.user.tagsubs;
+	
+	Info.findAllGeoAlert(req.params.x1,req.params.y1,req.params.range,null,req.params.heat,req.params.str,usersubs,tagsubs,req.params.limit,req.params.skip,function (err, docs){
+		if(!err)
+			res.json({meta:{code:200},data:{info:docs}});
+		else
+			res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+	}); 
+};
+
+
+exports.feedinfos = function (req, res) {
+	var Info = db.model('Info');
+	var type = [];
+	//console.log(req.params);
+	type = req.params.type.split(',');
+	console.log(req.params);
+	Info.findAllGeo(req.params.x1,req.params.y1,req.params.range,null,req.params.heat,type,req.params.str,req.query.limit,req.query.skip,function (err, docs){
+		
+		if(!err){
+			if(docs.length > 0){
+				var infosFormated = docs.map(function(item){
+					var Info = db.model('Info');
+					return Info.format(item);
+				});
+				res.json({meta:{code:200},data:{info:infosFormated}});	
+			}else{
+				// if no result, we search in all types // WE TRY FOR A WHILE TO SEE IF IT IS NICER
+				type = new Array(1,2,3,4);
+				Info.findAllGeoCircle(req.params.x1,req.params.y1,req.params.range,null,req.params.heat,type,req.params.str,req.query.limit,req.query.skip,function (err, docs){
 					
 					if(!err){
 						var infosFormated = docs.map(function(item){
@@ -141,7 +193,7 @@ exports.cats = function (req, res) {
 	  	res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 	});
 };
-	
+
 exports.catsandtags = function (req, res) {
 	var Yakcat = db.model('Yakcat');
 	var Tag = db.model('Tag');

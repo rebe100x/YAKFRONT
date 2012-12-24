@@ -812,9 +812,13 @@ block content
 
 						var yakCatNameArray = val.yakCatName.map(function(item){
 							if(item.substr(0,1)!="#")
-								return "#"+item;
-							else
-								return item;
+								item = "#"+item;
+							return item.linkify();
+						});
+						var tagNameArray = val.freeTag.map(function(item){
+							if(item.substr(0,1)!="#")
+								item = "#"+item;
+							return item.linkify();
 						});
 						var uniqueHL = new Date().getTime();
 						
@@ -833,8 +837,8 @@ block content
 
 						infoContent += "<div class=\'title\'> <img class='yakTypeImg' src=\'/images/markers/type"+val.yakType+".png\' />"+val.title.linkify()+" ("+dateCreation+")</div>";
 						infoContent += "<div class=\'tags\'>";					
-							if(val.yakCatName)
-									infoContent +="<div class=\'\'>"+yakCatNameArray.map(function(item){return item.linkify();}).join(',')+"</div>";	
+							if(val.yakCatName || val.freeTag.length > 0)
+									infoContent +="<div class=\'\'>"+yakCatNameArray.join(',')+tagNameArray.join(',')+"</div>";	
 						infoContent += "</div>";		
 						infoContent += "<div class=\'links\'>";					
 							if(val.origin && val.origin !=  'undefined'){
@@ -931,24 +935,18 @@ block content
 				
 				
 				$.each(ajax.data.info, function(key,val) {
-				
 					
-					/*PRINT ON THE MAP*/	
-					/*var yakCatNameArray = new Array();
-					if(val.yakCatName){
-						$.each(val.yakCatName,function(x,y){
-							if(y.substr(0,1)!="#")
-								yakCatNameArray.push("#"+y);
-							else
-								yakCatNameArray.push(y);
-						});
-					}*/
 					var yakCatNameArray = val.yakCatName.map(function(item){
+							if(item.substr(0,1)!="#")
+								item = "#"+item;
+							return item.linkify();
+						});
+					var tagNameArray = val.freeTag.map(function(item){
 						if(item.substr(0,1)!="#")
-							return "#"+item;
-						else
-							return item;
+							item = "#"+item;
+						return item.linkify();
 					});
+
 					infoArray.push(val);
 					var latLng = new google.maps.LatLng(val.location['lat'],val.location['lng']);
 					var marker = new google.maps.Marker({position: latLng,icon:"/images/markers/type"+val.yakType+".png"});
@@ -988,8 +986,8 @@ block content
 					infoContent += val.title.linkify()+"</div>";
 
 					infoContent += "<div class=\'tags\'>";					
-						if(val.yakCatName)
-								infoContent +="<div class=\'\'>"+yakCatNameArray.map(function(item){return item.linkify();}).join(',')+"</div>";	
+						if(val.yakCatName || val.freeTag.length > 0)
+								infoContent +="<div class=\'\'>"+yakCatNameArray.join(', ')+', '+tagNameArray.join(', ')+"</div>";	
 					infoContent += "</div>";		
 					infoContent += "<div class=\'links\'>";					
 						if(val.origin && val.origin !=  'undefined'){

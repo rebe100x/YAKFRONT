@@ -257,8 +257,8 @@ Info.statics.findByUserIds = function (useridArray, count, from, callback) {
 }
 
 
-Info.statics.findAllGeo = function (x1,y1,x2,y2,from,type,str,count,theskip,callback) {
-	var limit = (typeof(count) != 'undefined' && count > 0) ? count : 100;		
+Info.statics.findAllGeo = function (x1,y1,x2,y2,from,type,str,thecount,theskip,callback) {
+	var limit = (typeof(thecount) != 'undefined' && thecount > 0) ? thecount : 100;		
 	var skip = (typeof(theskip) != 'undefined' && theskip > 0) ? theskip : 0;	
 	// we create the date rounded to the last day, except if from = 0, we take the last few hours
 	var DPUB = new Date();
@@ -273,7 +273,15 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,from,type,str,count,theskip,call
 		DEND = D; // this morning
 	}
 		
-	var box = [[parseFloat(x1),parseFloat(y1)],[parseFloat(x2),parseFloat(y2)]];
+	if(y2 == 'null'){		
+		var locationQuery = {$near:[parseFloat(x1),parseFloat(y1)],$maxDistance:parseFloat(x2)};
+	}else{
+		var box = [[parseFloat(x1),parseFloat(y1)],[parseFloat(x2),parseFloat(y2)]];
+		var locationQuery = {$within:{"$box":box}};
+	}
+console.log(limit+' '+skip);
+			console.log(locationQuery);
+	
 	var Yakcat = db.model('Yakcat');
 	var User = db.model('User');
 	var Tag = db.model('Tag');
@@ -282,7 +290,7 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,from,type,str,count,theskip,call
 	var cond = {
 				"print":1,
 				"status":1,
-				"location" : {$within:{"$box":box}},
+				"location" : locationQuery,
 				"pubDate":{$lte:DPUB},
 				"dateEndPrint":{$gte:DEND},
 				"yakType" : {$in:type}
@@ -420,222 +428,9 @@ Info.statics.findAllGeoAlert = function (x1,y1,x2,y2,from,str,usersubs,tagsubs,c
 	return res;
 }
 
-Info.statics.findAllGeoOLD = function (x1,y1,x2,y2,heat,type,str,usersubs,tagsubs,callback) {
-	var now = new Date();
-	var D = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
-	var DTS = D.getTime() / 1000 - (heat * 60 * 60 * 24);
-	D.setTime(DTS*1000); 
-	var box = [[parseFloat(x1),parseFloat(y1)],[parseFloat(x2),parseFloat(y2)]];
 
-	
-	if(str != 'null' && str.length > 0){  // STRING SEARCH
-		
-		//encodeURIComponent(str);
-		
-		
-		var Yakcat = db.model('Yakcat');
-		var User = db.model('User');
-		
-		var firstChar = str.substr(0,1);
-		var strClean = str.replace(/@/g,'').replace(/#/g,'');
-		var searchStr = new RegExp(strClean,'i');
-		console.log('str'+str);
-		console.log('strClean'+strClean);
-		console.log('searchStr'+searchStr);
-		
-		Yakcat.findOne({'title': strClean},function(err,theyakcat){
-		
-		
-		console.log('YAKCAT');
-		console.log(theyakcat);
-		
-		
-			if(theyakcat == null || theyakcat == 'null'){ // NO YAKCAT MATCHING
-				console.log('NO YAKCAT');
-				if(firstChar=='#'){
-					console.log('TAG');
-					// all types
-					var cond = {
-						"print":1,
-						"status":1,
-						"location" : {$within:{"$box":box}},
-						"pubDate":{$gte:D},
-						"yakType" : {$in:type},
-						$or:[ {"freeTag": strClean} , {"yakTag": strClean}],	
-					};
 
-					//alerts : type = 5				
-					if(type == 5){
-						cond = {
-							"print":1,
-							"status":1,
-							"location" : {$within:{"$box":box}},
-							"pubDate":{$gte:D},
-							$or:[ {"user":{$in:usersubs}}, {"freeTag": {$in:tagsubs}}],
-							$or:[ {"freeTag": strClean} , {"yakTag": strClean} ],	
-						};
-					}
-				
-				}else if(firstChar=='@'){
-					// all types
-					console.log('USER');
-					//User.findByNameorLogin(strClean,function(err,userMatched){
-					User.findOne({'login':strClean},function(err,userMatched){
-						console.log(userMatched);
-						if(userMatched != null){
-							console.log(userMatched._id);
-							var cond = {
-								"print":1,
-								"status":1,
-								"location" : {$within:{"$box":box}},
-								"pubDate":{$gte:D},
-								"yakType" : {$in:type},
-								"user":mongoose.Types.ObjectId(new String(userMatched._id)),	
-							};
 
-							//alerts : type = 5				
-							if(type == 5){
-								cond = {
-									"print":1,
-									"status":1,
-									"location" : {$within:{"$box":box}},
-									"pubDate":{$gte:D},
-									"user":mongoose.Types.ObjectId(userMatched._id),
-									$or:[ {"user":{$in:usersubs}}, {"freeTag": {$in:tagsubs}}],
-								};
-							}
-							
-							
-							
-							
-						}
-						console.log('USER FOUND');
-						console.log(cond);
-						var Info = db.model('Info');
-						return Info.find(
-							cond,
-							{},
-							{
-								skip:0, // Starting Row
-								limit:100, // Ending Row
-								sort:{
-									pubDate: -1 //Sort by Date Added DESC
-								}
-							},
-						callback);
-					});
-					
-					
-				
-				}else{
-					console.log('STRING');
-					// all types
-					var cond = {
-						"print":1,
-						"status":1,
-						"location" : {$within:{"$box":box}},
-						"pubDate":{$gte:D},
-						"yakType" : {$in:type},
-						$or:[ {'title': {$regex:searchStr}}, {'content': {$regex:searchStr}} , {"freeTag": {$regex:searchStr}} , {"yakTag": {$regex:searchStr}}],	
-					};
-
-					//alerts : type = 5				
-					if(type == 5){
-						cond = {
-							"print":1,
-							"status":1,
-							"location" : {$within:{"$box":box}},
-							"pubDate":{$gte:D},
-							$or:[ {"user":{$in:usersubs}}, {"freeTag": {$in:tagsubs}}],
-							$or:[ {'title': {$regex:searchStr}}, {'content': {$regex:searchStr}} , {"freeTag": {$regex:searchStr}} , {"yakTag": {$regex:searchStr}}],	
-						};
-					}
-					
-				}
-				
-				
-				
-			}else{
-				console.log('YAKCAT FOUND !!');
-				// all types
-				var cond = {
-					"print":1,
-					"status":1,
-					"location" : {$within:{"$box":box}},
-					"pubDate":{$gte:D},
-					"yakType" : {$in:type},
-					"yakCat": {$in:[mongoose.Types.ObjectId(new String(theyakcat._id))]},
-				};
-
-			//alerts				
-			if(type == 5){
-				cond = {
-					"print":1,
-					"status":1,
-					"location" : {$within:{"$box":box}},
-					"pubDate":{$gte:D},
-					$or:[ {"user":{$in:usersubs}}, {"freeTag": {$in:tagsubs}} ],
-					"yakCat": {$in:mongoose.Types.ObjectId(new String(theyakcat._id))},
-				};
-			}
-			
-			}
-				
-			
-			console.log('CALL HERE');
-			var Info = db.model('Info');
-			return Info.find(
-				cond,
-				{},
-				{
-					skip:0, // Starting Row
-					limit:100, // Ending Row
-					sort:{
-						pubDate: -1 //Sort by Date Added DESC
-					}
-				},
-			callback);
-		});
-		
-		
-	}else{  // NO STRING SEARCH
-		var cond = {
-			"print":1,
-			"status":1,
-			"location" : {$within:{"$box":box}},
-			"pubDate":{$gte:D},
-			"yakType" : {$in:type}
-		};
-
-		//alerts				
-		if(type == 5)
-			cond = {
-				"print":1,
-				"status":1,
-				"location" : {$within:{"$box":box}},
-				"pubDate":{$gte:D},
-				$or:[ {"user":{$in:usersubs}}, {"freeTag": {$in:tagsubs}} ],
-			};
-	
-	return this.find(
-		cond,
-		{},
-		{
-			skip:0, // Starting Row
-			limit:100, // Ending Row
-			sort:{
-				pubDate: -1 //Sort by Date Added DESC
-			}
-		},
-	callback);
-	
-	}
-	
-	
-	
-	
-
-}
 mongoose.model('Info', Info);
 
 
