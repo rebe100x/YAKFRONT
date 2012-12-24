@@ -310,9 +310,9 @@ block content
 			/*slider time selector*/
 			$( "#heatSelector" ).slider({
 				range: "min",
-				min: 1,
-				max: 100,
-				value: 100,
+				min: -50,
+				max: 50,
+				value: 0,
 				slide: function( event, ui ) {
 					var x = ui.value;
 					var y = 0;
@@ -320,12 +320,16 @@ block content
 						y= 0;
 						yText = "Maintenant";
 					}else{
-						y = Math.floor(-7.222723628*Math.pow(10,-7)*Math.pow(x,5) + 2.123355095*Math.pow(10,-4)*Math.pow(x,4) - 2.178300623*Math.pow(10,-2)*Math.pow(x,3) + 0.906040198*Math.pow(x,2) - 16.47223075*x + 360.0000001);
+						if(x < 0)
+							y = Math.floor(Math.pow(x,2)/25); 
+						else
+							y = (-1)*Math.floor(Math.pow(x,2)/25); 
+						//y = Math.floor(-7.222723628*Math.pow(10,-7)*Math.pow(x,5) + 2.123355095*Math.pow(10,-4)*Math.pow(x,4) - 2.178300623*Math.pow(10,-2)*Math.pow(x,3) + 0.906040198*Math.pow(x,2) - 16.47223075*x + 360.0000001);
 					}
 					
 					var yText = "";
 					
-					var months = Math.floor(y / 30);
+					var months = parseInt(y / 30);
 					var days = y % 30;
 					var dayText = "";
 					var monthText = "";
@@ -334,18 +338,20 @@ block content
 						dayText = "Maintenant";
 					else if(days == 0 && months > 0)
 						dayText = "";
+					else if(days == -1 && months == 0)
+						dayText = "Demain";
 					else if(days == 1 && months == 0)
 						dayText = "Hier";
-					else if(days == 1)
+					else if(days == 1 || days == -1)
 						dayText = "1 jour";
 					else
-						dayText = days+" jours";
+						dayText = Math.abs(days)+" jours";
 					if(months == 0)
 						monthText = "";	
 					else if(months == 1)
 						monthText = "1 mois";	
 					else
-						monthText = months+" mois";	
+						monthText = Math.abs(months)+" mois";	
 				
 
 					if(monthText && dayText)
@@ -355,8 +361,10 @@ block content
 					else
 						yText = dayText;
 					
-					if(y >= 2)
+					if(y >= 2 && x < 0)
 						yText = "Il y a "+yText;
+					else if(y <= -2 && x > 0)
+						yText = "Dans "+yText;
 					$( "#dayPrinter" ).html(yText);
 					dateFrom = y;
 					

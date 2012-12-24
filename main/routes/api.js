@@ -32,7 +32,7 @@ exports.requiresClient = function(req,res,next){
 		var Client = db.model('Client');
 
 		Client.findById(clientKey,function (err, theclient){
-			console.log(theclient);
+			
 			if(theclient != undefined && theclient != null){
 				console.log('IDENTIFIED BY CLIENT');
 				next();
@@ -93,7 +93,7 @@ exports.geoinfos = function (req, res) {
 	var type = [];
 	//console.log(req.params);
 	type = req.params.type.split(',');
-	console.log(req.params);
+	
 	Info.findAllGeo(req.params.x1,req.params.y1,req.params.x2,req.params.y2,req.params.heat,type,req.params.str,req.params.limit,req.params.skip,function (err, docs){
 		
 		if(!err){
@@ -143,7 +143,7 @@ exports.feedinfos = function (req, res) {
 	var type = [];
 	//console.log(req.params);
 	type = req.params.type.split(',');
-	console.log(req.params);
+	
 	Info.findAllGeo(req.params.x1,req.params.y1,req.params.range,null,req.params.heat,type,req.params.str,req.query.limit,req.query.skip,function (err, docs){
 		
 		if(!err){
@@ -451,7 +451,7 @@ exports.del_subs_tag = function (req, res) {
 ********/
 exports.user_validation = function(req, res){
 	var User = db.model('User');	
-	console.log(req.body);
+	
 	User.authenticateByToken(req.body.token,req.body.key, function(err, theuser) {
 		
 	if(!(typeof(theuser) == 'undefined' || theuser === null || theuser === '')){
@@ -823,7 +823,7 @@ exports.add_user_feed = function (req, res) {
 						}else
 							info.pubDate = new Date();
 					var upsertData = info.toObject();
-					console.log(upsertData);
+					
 					if(typeof(upsertData._id) != 'undefined')
 						delete upsertData._id;
 
@@ -892,7 +892,7 @@ exports.get_places = function (req, res) {
 		if(placeids._id != undefined)
 			placeids = JSON.parse(req.query.place).map(function(item){return item._id;});
 		Place.findByIds(placeids,function(err, docs){
-			console.log(docs);
+			
 			var placeFormated = docs.map(function(item){
 				var Place = db.model('Place');
 				return Place.format(item);
@@ -1081,7 +1081,7 @@ exports.put_place = function (req, res) {
 			var now = new Date();
 			Place.findOne({_id:theplaceid},function(err,theplaceexists){
 				if(theplaceexists){
-					console.log(theplaceexists.user +"=="+ res.locals.user._id);	
+					
 					if(theplaceexists.user.toString() == res.locals.user._id.toString()){
 						// TITLE
 						if(typeof(theplace.title) != 'undefined' && theplace.title != ''){
