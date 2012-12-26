@@ -447,7 +447,7 @@ Date.prototype.toLongFrenchFormat = function ()
 
 function setShare(el){
 
-	el.parent().parent().find(".icon-share").sharrre({
+	el.sharrre({
 	share: {
 	googlePlus: true,
 	facebook: true,
@@ -466,7 +466,7 @@ function setShare(el){
 	},
 
 	twitter: {
-		text: "J'ai vu ca dans #YAKWALA..." + el.parent().parent().find(".content").find(".cat").find("b").text(),
+		text: "J'ai vu ca dans #Yakwala..." + el.parent().parent().find(".freetags").text(),
 		count: 'horizontal',
 		url: el.parent().parent().find(".title").find(".more").attr("title")
 	}					
@@ -475,11 +475,14 @@ function setShare(el){
 		$(api.element).find('.buttons').show();
 	},
 	hide: function(api, options){
-	$(api.element).find('.buttons').hide();
+		$(api.element).find('.buttons').hide();
+	},
+	render: function(api, options){
+		//console.log($(api.element).find('.buttons'));
+		//$(api.element).find('.buttons').css("display", "block");
 	}
 
 });
-   		
  
 }
 
@@ -515,14 +518,14 @@ function findUrls( text )
     return urlArray;
 }
 
-$("document").ready(function(){
+/*$("document").ready(function(){
 
 		var $scrollingDiv = $(".alwaysShown");
  
 		$(window).scroll(function(){			
 			$scrollingDiv
 				.stop()
-				.animate({"marginTop": ($(window).scrollTop() + 0) + "px"}, "slow" );			
+				.css({"top": ($(window).scrollTop() + 0) + "px", "position": "absolute", "right": "0px"}, "slow" );			
 		});
-});
+});*/
 

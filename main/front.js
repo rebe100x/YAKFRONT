@@ -48,8 +48,8 @@ app.configure(function(){
 });
 
 app.configure('development', function(){
-	conf = config.confs.devrenaud;
-	app.locals.conf = JSON.stringify(config.confs.devrenaud);
+	conf = config.confs.devdany;
+	app.locals.conf = JSON.stringify(config.confs.devdany);
 	mainConf = config.confs.main;
 	app.locals.mainConf = JSON.stringify(config.confs.main);
 
@@ -92,6 +92,7 @@ app.get('/', routes.requiresLogin, routes.front_default);
 app.get('/news/map', routes.requiresLogin, routes.news_map);
 app.get('/news/map/search/:str', routes.requiresLogin, routes.news_map_search);
 app.get('/news/feed', routes.requiresLogin, routes.news_feed);
+app.get('/news/feed/:id', routes.requiresLogin, routes.news_feed);
 app.get('/news/afeed', routes.requiresLogin, routes.news_afeed);
 app.get('/news/loadingModal', routes.loadingModal);
 app.post('/news',routes.requiresLogin, routes.news);

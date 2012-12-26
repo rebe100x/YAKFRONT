@@ -89,7 +89,8 @@ mixin searchPanel()
 					encodeURIComponent(query);
 						if(query.length >= 3){
 							
-							var url =  "/api/getContentTitles";
+							//var url =  "/api/getContentTitles";
+							var url =  "/api/catsandtags";
 							if(query.indexOf('@') == 0)
 							{
 								url = "/api/getUsers";
@@ -117,7 +118,8 @@ mixin searchPanel()
 										}
 										else
 										{
-											typeahead.process(ajax.data.titles);
+											//typeahead.process(ajax.data.titles);
+											typeahead.process(ajax.data.catsandtags);
 										}
 									}
 								})}

@@ -267,7 +267,7 @@ function loadData(askip, alimit, next, _id, what, where, yaktype, dateInterval, 
 				freetagNames += "#" + val.replace(" ", "&nbsp;") + " "
 			});
 			//freetagNames = freetagNames.replace(/#(\S*)/g,'<a href="news/map/search/%23$1">#$1</a>');
-			freetags.html(freetagNames.linkify() + cat.html());
+			freetags.html(cat.html() +freetagNames.linkify());
 
 			/*create the address element*/
 			address = $("<div />");
@@ -382,21 +382,22 @@ else
 function setshortUrl()
 {
 
-	$(".more").each(function(){
-		var more = $(this);
-		
-		$.getJSON("https://api-ssl.bitly.com/v3/shorten?", 
-        { 
-            "format": "json",
-            "apiKey": "R_99c6f442bb006c1b26237dd9ef91ddda",
-            "login": "o_5ko6l8pajb",
-            "longUrl": conf.fronturl + "/news/feed/?id=" + more.attr("rel")
-        }, function(data){
-        	more.attr("title", data.data.url);
-        	setShare(more);
-        }
-        
-		);
+	$(".myitem").mouseenter(function(){
+		if ($(this).find(".buttons").length == 0) {
+			var more = $(this).find(".icon-share");
+			$.getJSON("https://api-ssl.bitly.com/v3/shorten?", 
+	        { 
+	            "format": "json",
+	            "apiKey": "R_99c6f442bb006c1b26237dd9ef91ddda",
+	            "login": "o_5ko6l8pajb",
+	            "longUrl": conf.fronturl + "/news/feed/?id=" + more.parent().parent().parent().find(".more").attr("rel")
+	        }, function(data){
+	        	more.parent().parent().parent().find(".more").attr("title", data.data.url);
+	        	setShare(more);
+	        }
+	        
+			);
+		}
 	});
     
 }

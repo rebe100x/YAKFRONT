@@ -25,7 +25,7 @@ h4, h3, h2 , h1{margin-bottom:5px;}
 
 /* THE FEED
 ---------------------------------------------------*/
-#mainFeedWrapper {border: 1px solid #292929;}
+#mainFeedWrapper {border: 0px solid #292929;}
 #search { padding-top: 0px; padding-left: 0px; background: #dedede; width: 100%}  
 #search .searchInput { }
 #search .searchInput2 { }
