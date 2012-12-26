@@ -85,7 +85,7 @@ exports.news_map = function(req, res){
 	delete req.session.message;
 	if(typeof(req.session.type) == 'undefined' || req.session.type === null ){
 		var type = new Array();
-		type.push(1);
+		type.push([1,2,4]);
 		req.session.type = type;
 	}	
 	res.render('news/map',{type:req.session.type,str:null});  

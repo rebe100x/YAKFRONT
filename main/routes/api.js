@@ -93,7 +93,7 @@ exports.geoinfos = function (req, res) {
 	var type = [];
 	//console.log(req.params);
 	type = req.params.type.split(',');
-	
+	console.log(type);
 	Info.findAllGeo(req.params.x1,req.params.y1,req.params.x2,req.params.y2,req.params.heat,type,req.params.str,req.params.limit,req.params.skip,function (err, docs){
 		
 		if(!err){

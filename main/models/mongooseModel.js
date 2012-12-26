@@ -279,8 +279,6 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,from,type,str,thecount,theskip,c
 		var box = [[parseFloat(x1),parseFloat(y1)],[parseFloat(x2),parseFloat(y2)]];
 		var locationQuery = {$within:{"$box":box}};
 	}
-console.log(limit+' '+skip);
-			console.log(locationQuery);
 	
 	var Yakcat = db.model('Yakcat');
 	var User = db.model('User');
@@ -296,6 +294,8 @@ console.log(limit+' '+skip);
 				"yakType" : {$in:type}
 			};
 			
+			console.log(type);
+
 	var qInfo = this.find(cond).sort({'pubDate':-1}).limit(limit).skip(skip);
 	
 	if(str != 'null' && str.length > 0){  // STRING SEARCH

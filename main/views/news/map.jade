@@ -20,7 +20,7 @@ block content
 				div#newsfeedContainer
 					span#newsfeedMenu
 						div#typeContainer.row
-							span.btn.active(title="Actu", type=1) 
+							span.btn(title="Actu", type=1) 
 								img(src="/images/markers/type1.png")
 							span.btn(title="Discussion", type=4) 
 								img(src="/images/markers/type4.png")
@@ -84,7 +84,7 @@ block content
 		var dateFrom = 0;
 		//var type = [1];
 		var type = [!{type}];
-		
+		var skip = 0;
 		var searchString = "!{str}".toString();
 		if(searchString=='')
 			searchString = null;
@@ -380,7 +380,7 @@ block content
 			
 			
 			$.each(type,function(key,val){
-						$("#newsfeedMenu span.btn[type=\""+val+"\"]").addClass('active');
+				$("#newsfeedMenu span.btn[type=\""+val+"\"]").addClass('active');
 			});
 
 			$('#newsfeedMenu span.btn[type="5"]').removeClass('active');
@@ -409,7 +409,7 @@ block content
 			// init news feed
 			drawNewsFeed();
 
-			$('#newsfeedContainer').mCustomScrollbar({mouseWheel:true,scrollButtons:{enable:true,scrollType:"continuous",},advanced:{autoExpandHorizontalScroll:true,updateOnContentResize: true,updateOnBrowserResize:true}});
+			$('#newsfeedContent').mCustomScrollbar({mouseWheel:true,callbacks:{onTotalScroll:printArrayFeedItem},scrollButtons:{enable:true,scrollType:"continuous",},advanced:{autoExpandHorizontalScroll:true,updateOnContentResize: true,updateOnBrowserResize:true}});
 			$(window).resize(function(){
 				drawNewsFeed();
 				bounds = getMyBounds();
@@ -634,6 +634,9 @@ block content
 		function drawNewsFeed(){	
 			var newsfeedContainerHeight = window.innerHeight-$('#newsfeedContainer').offset().top-50+'px';
 			$('#newsfeedContainer').css('height',newsfeedContainerHeight);
+			var newsfeedContentHeight = window.innerHeight-$('#newsfeedContent').offset().top-50+'px';
+			$('#newsfeedContent').css('height',newsfeedContentHeight);
+			$('#newspostContent').css('height',newsfeedContentHeight);
 		}
 		
 		function unhighlightInfo(obj,callback){
@@ -794,7 +797,7 @@ block content
 		
 		function silentMarkerAdder(){
 		
-			//searchString = encodeURIComponent(searchString);		
+			searchString = encodeURIComponent(searchString);		
 			//bounds = map.getBounds();
 			bounds = getMyBounds();
 			var apiUrl = '';
@@ -884,7 +887,7 @@ block content
 								cleanMarkers();
 								$("#newsfeed li").removeClass('highlighted');
 								$("#newsfeed li[infoId=\""+val._id+"\"]").addClass('highlighted');
-								$('#newsfeedContainer').mCustomScrollbar("scrollTo",".mapHighlighter[infoId=\""+val._id+"\"]");
+								$('#newsfeedContent').mCustomScrollbar("scrollTo",".mapHighlighter[infoId=\""+val._id+"\"]");
 								
 								/*
 								var dateTmp = new Date(val.pubDate);
@@ -929,131 +932,141 @@ block content
 			
 			var apiUrl = '';
 			if(type.toString() == 5)
-				apiUrl = '/api/geoalerts/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/'+searchString;
+				apiUrl = '/api/geoalerts/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/'+searchString+'/500';
 			else	
-				apiUrl = '/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/'+type.toString()+'/'+searchString;
+				apiUrl = '/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/'+type.toString()+'/'+searchString+'/500';
 			
 			$.getJSON(apiUrl,function(ajax) {	
 			
 				// empty the news feed
-				if(ajax.data.info.length == 0)
-					$('#newsfeed').html('Aucune info !');
-				else
-					$('#newsfeed').html('');
-				
-				
-				$.each(ajax.data.info, function(key,val) {
+				$('#newsfeed').html('');
+				if(ajax.data.info.length == 0){
+					//$('#newsfeed').html('Aucune info !');
+					printEmptyFeedItem();
+				}
 					
-					var yakCatNameArray = val.yakCatName.map(function(item){
-							if(item.substr(0,1)!="#")
-								item = "#"+item;
-							return item.linkify();
-						});
-					var tagNameArray = val.freeTag.map(function(item){
-						if(item.substr(0,1)!="#")
-							item = "#"+item;
-						return item.linkify();
+				else{
+					
+					$.each(ajax.data.info, function(key,val) {
+						infoArray.push(val);					
+						printMapItem(val);
+						if(key<10)
+							printFeedItem(val);	
+						
 					});
-
-					infoArray.push(val);
-					var latLng = new google.maps.LatLng(val.location['lat'],val.location['lng']);
-					var marker = new google.maps.Marker({position: latLng,icon:"/images/markers/type"+val.yakType+".png"});
-					markers.push(marker);
-					marker.setMap(map);	
-					var dateTmp = new Date(val.pubDate);
-					var dateCreation = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
-					dateTmp = new Date(val.dateEndPrint);
-					var dateEndPrint = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
-					
-					
-					infoContent = "<div class=\'infowindow mapHighlighter\' infoId='"+val._id+"'>";					
-					
-					if(!(typeof val.thumb === 'undefined') && val.thumb != '' && val.thumb != null)
-						infoContent += "<img src=\'"+val.thumb+"\' />";
-
-					infoContent += "<div class=\'title\'> <img class='yakTypeImg' src=\'/images/markers/type"+val.yakType+".png\' />";
-					if(typeof(val.eventDate) != 'undefined')
-						if(typeof(val.eventDate.dateFrom) != 'undefined' ){
-							var dateTmp = new Date(val.eventDate.dateFrom);
-							var m = dateTmp.getMinutes();
-							if (m<10) {m = "0" + m}
-							var thedate = 'Le '+dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear()+' à '+dateTmp.getHours()+':'+m;
-					
-						}else{
-							var dateTmp = new Date(val.pubDate);
-							var thedate = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
-						}
-							
-					else{
-							var dateTmp = new Date(val.pubDate);
-							var thedate = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
-					}
-					
-					infoContent += "<span class=\'date\'>"+thedate+"</span>";
-					
-					infoContent += val.title.linkify()+"</div>";
-
-					infoContent += "<div class=\'tags\'>";					
-						if(val.yakCatName || val.freeTag.length > 0)
-								infoContent +="<div class=\'\'>"+yakCatNameArray.join(', ')+', '+tagNameArray.join(', ')+"</div>";	
-					infoContent += "</div>";		
-					infoContent += "<div class=\'links\'>";					
-						if(val.origin && val.origin !=  'undefined'){
-							if(val.origin.substring(0,1) == '@')
-								infoContent += "<div class=\'\'>Posté par <a href='/news/map/search/"+encodeURIComponent(val.origin)+"'>"+val.origin+"</a></div>";
-							else
-								infoContent += "<div class=\'\'>Posté par <a target='_blank' href='"+val.outGoingLink+"'>"+val.origin+"</a></div>";
-						}
-					if(typeof(val.address) != 'undefined' && val.address != 'null' && val.address != '')
-							infoContent += "<div class=\'infodetail\'>"+val.address+"</div>";
-							if(user.login == 'renaud.bessieres') /// this is debug
-								infoContent += "<div class=\'infodetail\'>"+dateCreation+" >> "+dateEndPrint+"</div>";
-					infoContent += "</div>";	
-					//infoContent += "<div class=\'content\'>"+val.content.substring(0,250).linkify()+"...</div>";
-					
-					infoContent += "</div>";
-					/*PRINT ON THE FEED*/
-					//$('#newsfeed').append('<li class=\'mapHighlighter\' infoId=\''+val._id+'\'><i class=\'icon-eye-open\' ></i> '+val.title+'</li>')
-					$('#newsfeed').append('<li class=\'mapHighlighterDetails\' infoId=\''+val._id+'\' >'+infoContent+'</li>');
-					
-					
-					google.maps.event.addListener(marker, 'click', function() {
-						//cleanMarkers();
-						$("#newsfeed li").removeClass('highlighted');
-						$("#newsfeed li[infoId=\""+val._id+"\"]").addClass('highlighted');
-						$('#newsfeedContainer').mCustomScrollbar("scrollTo",".mapHighlighter[infoId=\""+val._id+"\"]");
-						
-						
-					/*	var dateTmp = new Date(val.pubDate);
-						var dateCreation = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
-						infoContent = "<div class=\'infowindow\' >";
-						if(!(typeof val.thumb === 'undefined') && val.thumb != ''){
-						if(val.user == 0 || val.user === undefined)
-								infoContent += "<img src=\'"+conf.batchurl+val.thumb+"\' />";
-							else
-								infoContent += "<img src=\'/uploads/pictures/120_90/"+val.thumb+"\' />";
-						}
-						infoContent += "<div class=\'title\'> "+val.title.replace(rule2,'')+" ("+dateCreation+")";
-						if(!(typeof val.outGoingLink === 'undefined') && val.outGoingLink != '')
-							infoContent += "<div class=\'readmore\'><a target=\'_blank\' href=\'"+val.outGoingLink+"\'> >> lire l\'article</a></div>";
-						infoContent += "</div>";
-						infoContent += "<div class=\'content\'>"+val.content.substring(0,250).replace(rule2,'')+"...</div>";
-						infoContent += "</div>";
-						infowindow.setContent(infoContent);
-						infowindow.open(map, this);*/
-					
-					});	
-					
-					
-				
-					
-					
-				});
-				
-				
-				
+				printLoadingFeedItem();	
 				//markerCluster.addMarkers(markers);
+				}
 				
 			});
-		
+		}
+
+		function printMapItem(item){
+			var latLng = new google.maps.LatLng(item.location['lat'],item.location['lng']);
+			var marker = new google.maps.Marker({position: latLng,icon:"/images/markers/type"+item.yakType+".png"});
+			markers.push(marker);
+			marker.setMap(map);	
+			google.maps.event.addListener(marker, 'click', function() {
+				//cleanMarkers();
+				$("#newsfeed li").removeClass('highlighted');
+				$("#newsfeed li[infoId=\""+item._id+"\"]").addClass('highlighted');
+				$('#newsfeedContent').mCustomScrollbar("scrollTo",".mapHighlighter[infoId=\""+item._id+"\"]");
+			});	
+		}
+
+		function printFeedItem(item){
+
+			var yakCatNameArray = item.yakCatName.map(function(item){
+				if(item.substr(0,1)!="#")
+					item = "#"+item;
+				return item.linkify();
+			});
+
+			var tagNameArray = item.freeTag.map(function(item){
+				if(item.substr(0,1)!="#")
+					item = "#"+item;
+				return item.linkify();
+			});
+			var dateTmp = new Date(item.pubDate);
+			var pubDate = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
+			dateTmp = new Date(item.dateEndPrint);
+			var dateTmp2 = new Date(item.dateEndPrint);
+			var dateEndPrint = dateTmp2.getDate()+'/'+(dateTmp2.getMonth()+1)+'/'+dateTmp2.getFullYear();
+
+			infoContent = "<div class=\'infowindow mapHighlighter\' infoId='"+item._id+"'>";					
+			
+			if(!(typeof item.thumb === 'undefined') && item.thumb != '' && item.thumb != null)
+				infoContent += "<img src=\'"+item.thumb+"\' />";
+
+			infoContent += "<div class=\'title\'> <img class='yakTypeImg' src=\'/images/markers/type"+item.yakType+".png\' />";
+			if(typeof(item.eventDate) != 'undefined')
+				if(typeof(item.eventDate.dateFrom) != 'undefined' ){
+					var dateTmp = new Date(item.eventDate.dateFrom);
+					var m = dateTmp.getMinutes();
+					if (m<10) {m = "0" + m}
+					var thedate = 'Le '+dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear()+' à '+dateTmp.getHours()+':'+m;
+			
+				}else{
+					var dateTmp = new Date(item.pubDate);
+					var thedate = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
+				}
+					
+			else{
+					var dateTmp = new Date(item.pubDate);
+					var thedate = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
+			}
+			
+			infoContent += "<span class=\'date\'>"+thedate+"</span>";
+			
+			infoContent += item.title.linkify()+"</div>";
+
+			infoContent += "<div class=\'tags\'>";					
+				if(item.yakCatName || item.freeTag.length > 0)
+						infoContent +="<div class=\'\'>"+yakCatNameArray.join(', ')+', '+tagNameArray.join(', ')+"</div>";	
+			infoContent += "</div>";		
+			infoContent += "<div class=\'links\'>";					
+				if(item.origin && item.origin !=  'undefined'){
+					if(item.origin.substring(0,1) == '@')
+						infoContent += "<div class=\'\'>Posté par <a href='/news/map/search/"+encodeURIComponent(item.origin)+"'>"+item.origin+"</a></div>";
+					else
+						infoContent += "<div class=\'\'>Posté par <a target='_blank' href='"+item.outGoingLink+"'>"+item.origin+"</a></div>";
+				}
+			if(typeof(item.address) != 'undefined' && item.address != 'null' && item.address != '')
+					infoContent += "<div class=\'infodetail\'>"+item.address+"</div>";
+					if(user.login == 'renaud.bessieres') /// this is debug
+						infoContent += "<div class=\'infodetail\'>"+pubDate+" >> "+dateEndPrint+"</div>";
+			infoContent += "</div>";	
+			//infoContent += "<div class=\'content\'>"+item.content.substring(0,250).linkify()+"...</div>";
+			
+			infoContent += "</div>";
+			/*PRINT ON THE FEED*/
+			//$('#newsfeed').append('<li class=\'mapHighlighter\' infoId=\''+item._id+'\'><i class=\'icon-eye-open\' ></i> '+item.title+'</li>')
+			$('#newsfeed').append('<li class=\'mapHighlighterDetails\' infoId=\''+item._id+'\' >'+infoContent+'</li>');
+			//$('#newsfeedContent').mCustomScrollbar("update");
+
+		}
+
+		function printLoadingFeedItem(){
+			$('.loadingfeeditem').hide();
+			if(skip < infoArray.length - 10){
+				infoContent = "<div class=\'infowindow loadingfeeditem\'></div>";					
+				$('#newsfeed').append('<li class=\'mapHighlighterDetails\'>'+infoContent+'</li>');
+			}
+			
+		}
+
+		function printEmptyFeedItem(){
+			$('.emptyfeeditem').hide();
+			infoContent = "<div class=\'infowindow emptyfeeditem\'>Aucune info !</div>";					
+			$('#newsfeed').append('<li class=\'mapHighlighterDetails\'>'+infoContent+'</li>');
+		}
+
+		function printArrayFeedItem(){
+			skip = skip + 10;
+			var itemArray = infoArray.slice(skip,skip+10);
+			$.each(itemArray,function(key,val){
+				printFeedItem(val);
+			});
+			printLoadingFeedItem();
+			$('#newsfeedContent').mCustomScrollbar("update");
 		}
