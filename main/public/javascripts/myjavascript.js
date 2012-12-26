@@ -518,14 +518,21 @@ function findUrls( text )
     return urlArray;
 }
 
-/*$("document").ready(function(){
+$("document").ready(function(){
 
 		var $scrollingDiv = $(".alwaysShown");
  
 		$(window).scroll(function(){			
-			$scrollingDiv
-				.stop()
-				.css({"top": ($(window).scrollTop() + 0) + "px", "position": "absolute", "right": "0px"}, "slow" );			
+			if ($(window).scrollTop() != 0) {
+			
+				$scrollingDiv
+					.stop()
+					.css({"top": ($(window).scrollTop() + 50) + "px", "position": "absolute", "right": "0px"}, "slow" );			
+			}
+			else
+			{
+				$scrollingDiv.removeAttr("style")
+			}
 		});
-});*/
+});
 
