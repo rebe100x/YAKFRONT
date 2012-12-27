@@ -184,7 +184,7 @@ function loadData(askip, alimit, next, _id, what, where, yaktype, dateInterval, 
 		//alert(data.info.length);
 		
 		$.getJSON('/api/afeed', { id: getVcode("id", window.location)} ,function(data1) {
-		console.log(data1);
+		//console.log(data1);
 		
 		
 		data = mergeDeep(data, data1);
@@ -443,9 +443,12 @@ else
 function setshortUrl()
 {
 
-	$(".myitem").mouseenter(function(){
+	$(".icon-share").mouseenter(function(){
+		if ($(this).find("span").length == 0) {
+			$(this).prepend('<span>&nbsp;&nbsp;&nbsp;&nbsp;Loading</span>');
+		};
 		if ($(this).find(".buttons").length == 0) {
-			var more = $(this).find(".icon-share");
+			var more = $(this);
 			$.getJSON("https://api-ssl.bitly.com/v3/shorten?", 
 	        { 
 	            "format": "json",

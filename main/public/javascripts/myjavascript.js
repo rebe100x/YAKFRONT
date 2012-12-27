@@ -453,7 +453,7 @@ Date.prototype.toLongFrenchFormat = function ()
 }
 
 function setShare(el){
-	el.prepend('<span>&nbsp;&nbsp;&nbsp;&nbsp;Loading</span>');
+	//el.prepend('<span>&nbsp;&nbsp;&nbsp;&nbsp;Loading</span>');
 	el.sharrre({
 	share: {
 	googlePlus: true,
