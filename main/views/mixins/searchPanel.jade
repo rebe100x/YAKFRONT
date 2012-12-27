@@ -93,7 +93,7 @@ mixin searchPanel()
 							var url =  "/api/catsandtags";
 							if(query.indexOf('@') == 0)
 							{
-								url = "/api/getUsers";
+								url = "api/usersearch/" + query.substring(1, query.length);
 							}
 							if(query.indexOf('#') == 0)
 							{
@@ -103,14 +103,16 @@ mixin searchPanel()
 
 									url: url,				
 									success: function( ajax ) {
+										//console.log(ajax);
 										if(query.indexOf('@') == 0)
 										{
-											ajax = JSON.parse(JSON.stringify(ajax).replace(/login/g, "title"));
+											ajax = JSON.parse(JSON.stringify(ajax).replace(/name/g, "title"));
+											console.log(ajax);
 											$("#SearchWhat").val(query.substring(1, query.length));
-											typeahead.process(ajax.data.users);
+											typeahead.process(ajax.users);
 											$("#SearchWhat").val(query);
 										}
-										if(query.indexOf('#') == 0)
+										else if(query.indexOf('#') == 0)
 										{
 											$("#SearchWhat").val(query.substring(1, query.length));
 											typeahead.process(ajax.data.catsandtags);
