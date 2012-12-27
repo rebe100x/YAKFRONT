@@ -222,9 +222,9 @@ exports.getUsers = function (req, res) {
 };
 
 exports.getContentTitles = function (req, res) {
-	var Infos = db.model('Info');
+	var infoTitles = db.model('infoTitles');
 	var results =  new Array();
-	Infos.find({},'title',function (err, infos){
+	infoTitles.find({},'title',function (err, infos){
 		results = infos;
 			if(!err)
 				res.json({meta:{code:200},data:{titles:results}});

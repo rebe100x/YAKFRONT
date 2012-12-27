@@ -41,6 +41,15 @@ var UserLight = new Schema({
 });
 mongoose.model('UserLight', UserLight);
 
+/**
+ * Schema InfoTitles
+*/
+
+var infoTitles = new Schema({
+    title     : { type: String,required: true,}
+}, { collection: 'infoTitles' });
+mongoose.model('infoTitles', infoTitles);
+
 
 /**
  * Schema definition
