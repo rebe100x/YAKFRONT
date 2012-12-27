@@ -448,7 +448,7 @@ Date.prototype.toLongFrenchFormat = function ()
 }
 
 function setShare(el){
-
+	el.prepend('<span>&nbsp;&nbsp;&nbsp;&nbsp;Loading</span>');
 	el.sharrre({
 	share: {
 	googlePlus: true,
@@ -474,14 +474,23 @@ function setShare(el){
 	}					
 	},
 	hover: function(api, options){
+		
 		$(api.element).find('.buttons').show();
 	},
 	hide: function(api, options){
+		//$(api.element).find("span").eq(0).remove();
 		$(api.element).find('.buttons').hide();
 	},
 	render: function(api, options){
 		//console.log($(api.element).find('.buttons'));
 		//$(api.element).find('.buttons').css("display", "block");
+		$(api.element).find('.buttons').livequery(function(){
+    		//element created
+    		//alert("created");
+
+    		$(api.element).find('.buttons').css("display", "block");
+    		$(api.element).find("span").eq(0).remove();
+		});
 	}
 
 });
