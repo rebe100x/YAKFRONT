@@ -320,7 +320,7 @@ block content
 						markerLocation.setVisible(false);
 					}
 				}
-					
+					drawNewsFeed();
 			});
 				
 			
@@ -428,6 +428,7 @@ block content
 			drawNewsFeed();
 
 			$('#newsfeedContent').mCustomScrollbar({mouseWheel:true,callbacks:{onTotalScroll:printArrayFeedItem},scrollButtons:{enable:true,scrollType:"continuous",},advanced:{autoExpandHorizontalScroll:true,updateOnContentResize: true,updateOnBrowserResize:true}});
+			$('#newspostContent').mCustomScrollbar({mouseWheel:true,scrollButtons:{enable:true,scrollType:"continuous",},advanced:{autoExpandHorizontalScroll:true,updateOnContentResize: true,updateOnBrowserResize:true}});
 			$(window).resize(function(){
 				drawNewsFeed();
 				bounds = getMyBounds();
@@ -653,9 +654,13 @@ block content
 			var newsfeedContainerHeight = window.innerHeight-$('#newsfeedContainer').offset().top-50+'px';
 			$('#newsfeedContainer').css('height',newsfeedContainerHeight);
 			var newsfeedContentHeight = window.innerHeight-$('#newsfeedContent').offset().top-50+'px';
+			//console.log(newsfeedContentHeight);
 			$('#newsfeedContent').css('height',newsfeedContentHeight);
-			$('#newspostContent').css('height',newsfeedContentHeight);
 			$('#newsfeedContent').mCustomScrollbar("update");
+
+			var newspostContentHeight = window.innerHeight-$('#newspostContent').offset().top-50+'px';
+			$('#newspostContent').css('height',newspostContentHeight);
+			$('#newspostContent').mCustomScrollbar("update");
 		}
 		
 		function unhighlightInfo(obj,callback){
