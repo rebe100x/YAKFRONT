@@ -18,6 +18,7 @@ block content
 					div#zoomminus
 			div.span4
 				div#newsfeedContainer
+					div#boxOpener.row.opened Chercher & Filtrer
 					span#newsfeedMenu
 						div#typeContainer.row
 							span.btn(title="Actu", type=1) 
@@ -268,7 +269,24 @@ block content
 					}
 				});
 			
-			
+			/*control opener*/
+			$('#boxOpener').click(function(event){
+				event.preventDefault();
+				if($(this).hasClass('opened')){
+					$(this).removeClass('opened').addClass('closed');
+					$('#newsfeedMenu').animate({height:'0px',opacity:0},200,function(){
+						drawNewsFeed();
+					});	
+				}else{
+					$(this).removeClass('closed').addClass('opened');
+					$('#newsfeedMenu').animate({height:'140px',opacity:1},200,function(){
+						drawNewsFeed();
+						
+					});
+				}
+				
+			});
+
 			/*news nav*/
 			$('#newsNav li').click(function(event){
 				event.preventDefault();
@@ -637,6 +655,7 @@ block content
 			var newsfeedContentHeight = window.innerHeight-$('#newsfeedContent').offset().top-50+'px';
 			$('#newsfeedContent').css('height',newsfeedContentHeight);
 			$('#newspostContent').css('height',newsfeedContentHeight);
+			$('#newsfeedContent').mCustomScrollbar("update");
 		}
 		
 		function unhighlightInfo(obj,callback){
