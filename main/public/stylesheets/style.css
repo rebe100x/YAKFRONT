@@ -19,7 +19,7 @@ h4, h3, h2 , h1{margin-bottom:5px;}
 //input[type="search"].searching{background-image:url('../images/loader.gif');background-repeat:no-repeat;background-position: 0px 5px;}
 .searchInput{background-repeat:no-repeat;background-position: 0px 5px;padding-left:0px;background-image: none;}
 
-
+.pillItem{display: inline-block;float: left;padding: 1px 4px 2px;margin: 2px;font-size: 11.844px;font-weight: bold;line-height: 15px;color: white;vertical-align: baseline;cursor: pointer;background-color: #d8242b;-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;}
 
 
 
@@ -183,7 +183,7 @@ ul#newsfeed li.highlighted .mapHighlighter{background-color:#F0F0F0;}
 
 /*#newsPostContainer{overflow:auto;height:auto;}
 #newsPostContainer #newsPostForm{margin:0px auto;padding:10px;text-align:left;opacity:0.95;background:#FFFFFF;}*/
-#postForm {position:relative;opacity:1;z-index:2000;background:#FFFFFF;display: block;height:auto;width: 95%;padding: 0px;margin: 0px 0px 10px 5px;}
+#postForm {position:relative;opacity:1;z-index:2000;background:#FFFFFF;display: block;height:auto;width: 93%;padding: 0px;margin: 0px 0px 1% 2%;}
 #postForm legend{font-size: 18px;line-height: 28px;color: #333333;border: 0;border-bottom: 1px solid #e5e5e5;}
 
 #newspostContent{display:none;position:relative;height:0px;width:100%;}
