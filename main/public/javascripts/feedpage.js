@@ -17,6 +17,12 @@ $.timeago.settings.strings = {
    //gerterter
 };
 
+function setSearchFor(el)
+{
+	$("#SearchWhat").val($(el).text().substring(1, $(el).text().length));
+	triggerSearch(currentPage, 0);
+}
+
 function colorFirstRecord()
 {
 	//alert("fdsfsd");
@@ -210,7 +216,8 @@ function loadData(askip, alimit, next, _id, what, where, yaktype, dateInterval, 
 			else
 				postedby.html("Posté by @ananomys le " + date);
 
-			postedby.html(postedby.html().replace(/@(\S*)/g,'<a href="news/map/search/@$1">@$1</a>'))
+			//postedby.html(postedby.html().replace(/@(\S*)/g,'<a href="news/map/search/@$1">@$1</a>'))
+			postedby.html(postedby.html().replace(/@(\S*)/g,'<a onclick="setSearchFor(this)">@$1</a>'));
 
 			/*create hot level element*/
 			hot = $("<div />");
@@ -302,7 +309,7 @@ function loadData(askip, alimit, next, _id, what, where, yaktype, dateInterval, 
 				yakCatNames += "#" + val + " "
 			});
 			//yakCatNames = yakCatNames.replace(/#(\S*)/g,'<a href="news/map/search/%23$1">#$1</a>');
-			cat.html(yakCatNames.linkify("/news/map/search/%23"));
+			cat.html(yakCatNames.linkify("/news/map/search/%23", 1));
 
 			/*create the freetags element*/
 			freetags = $("<div />");
@@ -312,7 +319,7 @@ function loadData(askip, alimit, next, _id, what, where, yaktype, dateInterval, 
 				freetagNames += "#" + val.replace(" ", "&nbsp;") + " "
 			});
 			//freetagNames = freetagNames.replace(/#(\S*)/g,'<a href="news/map/search/%23$1">#$1</a>');
-			freetags.html(cat.html() +freetagNames.linkify());
+			freetags.html(cat.html() +freetagNames.linkify("/news/map/search/%23", 1));
 
 			/*create the address element*/
 			address = $("<div />");
