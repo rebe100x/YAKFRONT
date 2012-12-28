@@ -53,7 +53,7 @@ function createFeedPageItem(val)
 			/*create info image*/
 			img = $("<img />");
 			img.attr("class", "img");
-			img.attr("src", conf.backurl + val.thumb.replace("\/", "/"));
+			img.attr("src", conf.backurl + val.thumb);
 			
 			/*create the read from source link*/
 			outlink = $("<div />");

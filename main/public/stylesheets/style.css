@@ -43,6 +43,9 @@ h4, h3, h2 , h1{margin-bottom:5px;}
 .btn-group1, .btn-group2 { text-align: center;}
 .btn-group1 img { }
 #search .searchButton { float: left; position: relative; top: 6px; float: right; right: 12px; margin: 12px; }
+#feedContent #liveupdate { background: #DEDEDE; text-align: center; color: #D71921; padding-top: 12px; padding-bottom: 12px; font-size: 14px; font-weight: bold; cursor: pointer;}
+#feedContent #liveupdate:hover { text-decoration: underline;}
+#feedContent .hidden { display: none;}
 #feedContent{ clear: both; padding-top: 12px;}
 #feedContent .item{margin:5px;}
 #feedContent .title{font-size:0.85em;font-weight:bold;}

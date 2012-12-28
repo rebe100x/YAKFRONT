@@ -17,7 +17,33 @@ $.timeago.settings.strings = {
    //gerterter
 };
 
+function setLiveUpdateTrigger()
+{
+	if ($("#feedContent #liveupdate").length > 0)
+		return;
+	var urltosearch = '/api/geoinfos/48.68397799017688/1.8129054937500177/0.9/null/0/1/null/0/10';
+	$("#feedContent .hidden").remove();
+	var liveupdate = $("<div />");
+	var itemsCount = 0;
+	liveupdate.attr("id", "liveupdate");
+	liveupdate.click(function(){
+		$("#feedContent .hidden").removeClass("hidden");
+		$("#feedContent #liveupdate").remove();
+	});
+	$.getJSON(urltosearch ,function(data) {
+		itemsCount = data.data.info.length;
+		$.each(data.data.info, function(key,val) {
+			var item = createFeedPageItem(val);
+			item.addClass("hidden");
+			
+			$("#liveupdate").after(item);
+		});
+		liveupdate.html(itemsCount + " more news, click here to load");
+	});
 
+	
+	$("#feedContent").prepend(liveupdate);
+}
 var limit = mainConf.searchParams.limit;
 var yakImages = new Array ( 
 		"/images/yakfav.png", 
@@ -35,6 +61,7 @@ $(document).ready(function() {
 	$('.typeahead').typeahead();
 	$('.btn-group1').button();
 	triggerSearch(currentPage, 0);
+	
 });
 
 $(".btn-group1").click(function(){
@@ -162,6 +189,7 @@ function loadData(askip, alimit, next, _id, what, where, yaktype, dateInterval, 
 		});
 		setClickableArea();
 		setshortUrl();
+	    setInterval("setLiveUpdateTrigger()", 5000);
 
 		$("abbr.timeago").timeago();
 		if(typeof(data1.info) === 'undefined')
