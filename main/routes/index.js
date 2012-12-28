@@ -85,7 +85,9 @@ exports.news_map = function(req, res){
 	delete req.session.message;
 	if(typeof(req.session.type) == 'undefined' || req.session.type === null ){
 		var type = new Array();
-		type.push([1,2,4]);
+		type.push(1);
+		type.push(2);
+		type.push(4);
 		req.session.type = type;
 	}	
 	res.render('news/map',{type:req.session.type,str:null});  
@@ -222,10 +224,24 @@ exports.news = function(req, res){
 				info.lastModifDate = now;
 				info.pubDate = now;
 				
-				var D = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-				var DTS = D.getTime() / 1000 + (3 * 60 * 60 * 24);
-				D.setTime(DTS*1000); 
-				info.dateEndPrint = D;
+				// event date for agenda
+				if(Math.floor(theYakType) == 2){
+					info.eventDate = {dateTimeFrom : new Date(req.body.eventDateFrom), dateTimeEnd : new Date(req.body.eventDateEnd)};
+					var dateEnd = new Date(req.body.eventDateEnd);
+					var D = new Date(dateEnd.getFullYear(), dateEnd.getMonth(), dateEnd.getDate());
+					var DTS = D.getTime() / 1000 + (1 * 60 * 60 * 24);
+					D.setTime(DTS*1000); 
+					info.dateEndPrint = D;
+
+				}else{
+					var D = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+					var DTS = D.getTime() / 1000 + (1 * 60 * 60 * 24);
+					D.setTime(DTS*1000); 
+					info.dateEndPrint = D;
+				}
+
+				
+				
 				info.print = 1;
 				info.status = 1;
 				info.yakType = Math.floor(theYakType);
@@ -280,9 +296,11 @@ exports.news = function(req, res){
 	}
 	
 	req.session.message = formMessage;
-	for(i=0;i<req.session.type.length;i++)
-		if(theYakType==req.session.type[i]) 
+	for(i=0;i<req.session.type.length;i++){
+		if(theYakType==req.session.type[i]){
 			req.session.type.splice(i, 1);
+		} 
+	}
 	req.session.type.push(theYakType);
 	res.redirect('news/map');
 };

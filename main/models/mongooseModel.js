@@ -73,7 +73,7 @@ var Info = new Schema({
   , creationDate	: {type: Date, required: true, default: Date.now}		
   , lastModifDate	: {type: Date, required: true, default: Date.now}		
   , dateEndPrint	: {type: Date,index:1}		
-  , eventDate	: {type: {dateFrom: Date,dateEnd:Date,hreventdate:String}}		
+  , eventDate	: {type: [{dateTimeFrom: Date,dateTimeEnd:Date}]}		
   , address	: {type : String}	
   , location	: { type : { lat: Number, lng: Number }, index : '2d'}	
   , status	: {type: Number,index:1}		
@@ -115,6 +115,7 @@ Info.statics.format = function (theinfo) {
 		yakCatName:theinfo.yakCatName,
 		yakCat:theinfo.yakCat,
 		placeId:theinfo.placeId,
+		origin:theinfo.origin,
 	};
   return formattedInfo;
 }

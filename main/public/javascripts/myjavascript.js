@@ -438,7 +438,7 @@ String.prototype.linkify = function(myurl, ajaxified) {
 	if(typeof(ajaxified)==='undefined') ajaxified = 0;
 	if(typeof(myurl)==='undefined') myurl = "/news/map/search/%23";
 	var res = this;
-	var hash = res.replace(/(^|\s)@([A-Za-z0-9àáâãäåçèéêëìíîïðòóôõöùúûüýÿ])/gi, "$1<a class=\"userHashLink\" href=\"$2\">@$2</a>");
+	var hash = res.replace(/(^|\s)@([A-Za-z0-9àáâãäåçèéêëìíîïðòóôõöùúûüýÿ\.]+)/gi, "$1<a class=\"userHashLink\" href=\"$2\">@$2</a>");
 	if (ajaxified == 0)
     	res = hash.replace(/(^|\s)#([A-Za-z0-9àáâãäåçèéêëìíîïðòóôõöùúûüýÿ]+)/gi, "$1<a class=\"tagHashLink\" href=\"" + myurl +"$2\">#$2</a>");
    	else
@@ -446,6 +446,8 @@ String.prototype.linkify = function(myurl, ajaxified) {
 	res = res.replace(/(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/, "<a target=\"_blank\" class=\"externalLink\" href=\"http://$3\">$3</a>");
 	return res;
  }
+
+ 
  
 
 Array.prototype.cleanArrayByName=function(str){

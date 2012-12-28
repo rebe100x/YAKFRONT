@@ -14,7 +14,7 @@ mixin postForm()
 						textarea#content.span12.hashtagMaker(name='content', placeholder='Texte: vous pouvez utiliser des hashtags dans votre texte ( #maisonavendre )',rows='3')
 				div.control-group
 					label(for='type') Choisissez la rubrique danslaquelle votre info apparaitra:
-					div.controls
+					div.controls#yakTypeController
 						label.radio.inline Actu
 							input#option1(type="radio", name="yakType", value="1" , checked) 
 						- if(type != 2)
@@ -24,6 +24,11 @@ mixin postForm()
 							input#option2(type="radio", name="yakType", value="2")
 						label.radio.inline Infos&nbsp;pratiques
 							input#options3(type="radio", name="yakType", value="3")
+				div.control-group#eventDateController
+					label(for='eventDate') Date de l événement :
+						div.controls
+							input#eventDateFrom.span6(style="float:left;margin-right:5px;	", type="text",name="eventDateFrom", autocomplete="off", placeholder='Du...')
+							input#eventDateEnd.span6(type="text",name="eventDateEnd", autocomplete="off", placeholder='Au...')
 				div.control-group
 					label(for='category') Choisissez une ou plusieurs thèmes:
 					div.controls
@@ -74,3 +79,28 @@ mixin postForm()
 				button.btn.btn-large.btn-block.btn-inverse(style='width:100%',type='submit', name='submit', id='submit', value='Envoyer') Envoyer
 	- else
 		mixin loginForm() 
+	script(src='/javascripts/lib/plugin/jquery-ui-timepicker-addon.js')
+	script
+		$(document).ready(function() {
+			$('#yakTypeController').live('change', function() { 
+				if($("input[name='yakType']:checked").val()==2)
+					$('#eventDateController').slideDown();
+				else
+					$('#eventDateController').slideUp();
+			});
+
+			$( "#eventDateFrom" ).datetimepicker({
+				timeFormat: 'HH:mm',
+				stepHour: 1,
+				stepMinute: 10,
+				//defaultValue:new Date(),
+
+			});
+			$( "#eventDateEnd" ).datetimepicker({
+				timeFormat: 'HH:mm',
+				stepHour: 1,
+				stepMinute: 10,
+			});
+
+		});
+	

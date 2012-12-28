@@ -16,7 +16,6 @@ mixin validateUserForm()
 				button.btn.btn-large.btn-block.btn-inverse(,type='submit', name='submit', id='submit', value='envoyer') Activer
 	script
 		var user =!{JSON.stringify(user)};
-		console.log(user);
 		$('#mail').val(user.mail);
 		$('#token').val(user.token);
 		$('#password').focus();
