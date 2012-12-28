@@ -1,3 +1,14 @@
+var limit = mainConf.searchParams.limit;
+var yakImages = new Array ( 
+		"/images/yakfav.png", 
+		"/images/markers/type1.png", 
+		"/images/markers/type2.png", 
+		"/images/markers/type3.png", 
+		"/images/markers/type4.png", 
+		"/images/markers/type5.png" 
+);
+var subSize = mainConf.searchParams.subSize;
+var currentPage = 1;
 // French
 $.timeago.settings.strings = {
    // environ ~= about, it's optional
@@ -21,41 +32,41 @@ function setLiveUpdateTrigger()
 {
 	if ($("#feedContent #liveupdate").length > 0)
 		return;
+
 	var urltosearch = '/api/geoinfos/48.68397799017688/1.8129054937500177/0.9/null/0/1/null/0/10';
+
 	$("#feedContent .hidden").remove();
+
 	var liveupdate = $("<div />");
+
 	var itemsCount = 0;
+
 	liveupdate.attr("id", "liveupdate");
+
 	liveupdate.click(function(){
 		$("#feedContent .hidden").removeClass("hidden");
 		$("#feedContent #liveupdate").remove();
 	});
+
 	$.getJSON(urltosearch ,function(data) {
+
 		itemsCount = data.data.info.length;
+
 		$.each(data.data.info, function(key,val) {
 			var item = createFeedPageItem(val);
 			item.addClass("hidden");
 			
 			$("#liveupdate").after(item);
 		});
+
 		liveupdate.html(itemsCount + " more news, click here to load");
 	});
 
 	
 	$("#feedContent").prepend(liveupdate);
 }
-var limit = mainConf.searchParams.limit;
-var yakImages = new Array ( 
-		"/images/yakfav.png", 
-		"/images/markers/type1.png", 
-		"/images/markers/type2.png", 
-		"/images/markers/type3.png", 
-		"/images/markers/type4.png", 
-		"/images/markers/type5.png" 
-);
 
-var subSize = mainConf.searchParams.subSize;
-var currentPage = 1;
+
 
 $(document).ready(function() {
 	$('.typeahead').typeahead();
@@ -82,80 +93,62 @@ $(".searchButton").click(function(event, currentpage, next){
 		$("#feedContent").html("");
 	}
 
+	var x1 = $("#locationChooser .zoneLoc").eq(0).attr("lat");
+
+	var y1 = $("#locationChooser .zoneLoc").eq(0).attr("lng");
+
+	var x2 = mainConf.searchParams.sliderDefault;
+
+	var y2 = "null";
+
+	var heat = 0;
+
+	var type = 1;
+
+	var str = $("#SearchWhat").attr("value");
+	if ($.trim(str) == "") {
+		str = "null";
+	};
+
 	var skip = (currentPage - 1)*limit;
-	var yaktype = "";
-	var dateInterval = "";
 
-	if($("#daynumber").val() =="" || $("#daynumber2").val() == "")
-	{
-		dateInterval = "3,3";
-	}
-	else
-	{
-		dateInterval = $("#daynumber2").val() + "," + $("#daynumber").val();
-	}
-	
-	$(".searchTypes .active").each(function(){
-		yaktype += $(this).attr("type") + ",";
-	});
+	loadData(x1, y1, x2, y2, heat, type, str, skip, limit, next);
 
-	var geoLocation = "";
-
-	if ($("#wheretosearch").val() == "") {
-		geoLocation = $("#myfavplace li").eq(0).attr("lat") + "," + $("#myfavplace li").eq(0).attr("lng") + "-";
-	}
-	else
-	{
-		geoLocation = $("#wheretosearch").val();
-	}
-
-	var dimension = "";
-
-	if ($("#dimensionInput").val() == "") {
-		dimension = mainConf.searchParams.sliderDefault;
-	}
-	else
-	{
-		dimension = $("#dimensionInput").val();
-	}
-	
-	var lngslatstr = "";
-	loadData(skip, limit, next , "", $("#SearchWhat").attr("value"), geoLocation, yaktype, dateInterval, "", dimension);
-	serCurrentSearchInfo();
 });
 		
-function loadData(askip, alimit, next, _id, what, where, yaktype, dateInterval, cattype, dimension)
+//function loadData(askip, alimit, next, _id, what, where, yaktype, dateInterval, cattype, dimension)
+function loadData(x1, y1, x2, y2, heat, type, str, skip, limit, next)
 {
 	if (!next) {
 		$("#feedContent").html("loading...");
 	};
-
-	if(typeof(what)==='undefined') what = '';
-	if(typeof(where)==='undefined') where = '';
-	if(typeof(yaktype)==='undefined') yaktype = '';
-	if(typeof(cattype)==='undefined') cattype = '';
-	if(typeof(next)==='undefined') next = 0;
-	if(typeof(dimension)==='undefined') dimension = mainConf.searchParams.sliderDefault;
-
-	var currentPage = parseInt($("#resultSet").html().trim());
-	currentPage = currentPage + 1;
-
-	var skip = (currentPage - 1)*limit;
 
 	if (next == 1)
 	{
 		$(".next").hide();
 		$("#loading").html("loading...");
 	}
-
-	$.getJSON('/api/feeds', { skip: askip, limit: alimit,  yaktype: yaktype, _id: _id, what: what, where: where, dateInterval: dateInterval, cattype: cattype, next: next, dimension: dimension} ,function(data) {
 	
-		var len = data.info.length;
+	// searching throuhg cirle 
+	//variables to be used x1/y1/x2/y2/heat/type/str/limit/skip
+	var urltouse = 'api/geoinfos/';
+	urltouse += x1 + "/" // x1;
+	urltouse += y1	 + "/" // y1;
+	urltouse += x2 + "/" // x2;
+	urltouse += y2 + "/" // y2;
+	urltouse += heat + "/" // heat;
+	urltouse += type + "/" // type;
+	urltouse += str + "/" // str;
+	urltouse += skip + "/" // skip;
+	urltouse += limit // limit;
+	$.getJSON(urltouse ,function(data) {
+	
+		var len = data.data.info.length;
 		
 		if(len == 0)
 			$("#newsLoader").css("visibility", "hidden");
 
-		if(next == 1 && data.info.length == 0)
+		if(next == 1 && data.data.info.length == 0)
 		{
 			$("#loading").html("no more results to load");
 			return;
@@ -173,7 +166,7 @@ function loadData(askip, alimit, next, _id, what, where, yaktype, dateInterval, 
 		
 		data = mergeDeep(data, data1);
 			//console.log(data);
-		$.each(data.info, function(key,val) {
+		$.each(data.data.info, function(key,val) {
 			/*define item element*/
 			
 			var item = createFeedPageItem(val);

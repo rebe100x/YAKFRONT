@@ -53,7 +53,8 @@ function createFeedPageItem(val)
 			/*create info image*/
 			img = $("<img />");
 			img.attr("class", "img");
-			img.attr("src", conf.backurl + val.thumb);
+			//img.attr("src", conf.backurl + val.thumb);
+			img.attr("src", val.thumb);
 			
 			/*create the read from source link*/
 			outlink = $("<div />");
@@ -105,7 +106,7 @@ function createFeedPageItem(val)
 			/*append the read more*/
 			content.find(".theContent").append(readmore);
 
-			content.append("<br />");
+			content.append("<br /><br />");
 			
 			/*create the types elements*/
 			type = $("<div />");
