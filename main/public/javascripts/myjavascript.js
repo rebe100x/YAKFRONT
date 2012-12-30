@@ -1,3 +1,25 @@
+function changeTitle(el)
+{
+	var username = $(el).text().substring(1, $(el).text().length)
+	var url = "api/usersearch/" + username;
+	var title = "";
+	$.getJSON(url ,function(data) {
+		//console.log(data);
+		title += data.users[0].userdetails;
+		el.attr("title", title);
+		setToolTip(el);
+	});
+	
+}
+
+function setToolTip(el)
+{
+	$(el).tooltip({
+	      'selector': '',
+	      'placement': 'bottom',
+	      'title' : $(el).attr("title")
+		});
+}
 function createFeedPageItem(val)
 {
 	item = $("<div />");
@@ -31,6 +53,11 @@ function createFeedPageItem(val)
 			//postedby.html(postedby.html().replace(/@(\S*)/g,'<a href="news/map/search/@$1">@$1</a>'))
 			postedby.html(postedby.html().replace(/@(\S*)/g,'<a onclick="setSearchFor(this)">@$1</a>'));
 
+			postedby.find("a").mouseenter(function(){
+				changeTitle(postedby.find("a"));	
+			});
+			
+			setToolTip(postedby.find("a"));
 			/*create hot level element*/
 			hot = $("<div />");
 			hot.attr("class", "hot");
@@ -263,7 +290,7 @@ function createTopsItem(val)
 			content.html("<div class='theContent'>" + val.content.substring(0, subSize) + "...</div>");
 			
 			/*place image in content*/
-			content.prepend(img);
+			//content.prepend(img);
 			/*append the read more*/
 			content.find(".theContent").append(readmore);
 
@@ -307,7 +334,8 @@ function createTopsItem(val)
 
 			/*append title to item*/
 			item.append(title);
-			content.append(address);
+			//content.append(address);
+			content.append(postedby);
 			//content.append("<div class='shareMe'>Partager <i class='icon-share' title='Share Me'></i></div>");
 			item.append(content);
 			item.append(freetags);
@@ -1043,12 +1071,12 @@ function findUrls( text )
     return urlArray;
 }
 
-/* $("document").ready(function(){
+ $("document").ready(function(){
 
 		var $scrollingDiv = $(".alwaysShown");
  
 		$(window).scroll(function(){			
-			if ($(window).scrollTop() != 0) {
+			/*if ($(window).scrollTop() != 0) {
 			
 				$scrollingDiv
 					.stop()
@@ -1057,7 +1085,7 @@ function findUrls( text )
 			else
 			{
 				$scrollingDiv.removeAttr("style")
-			}
+			}*/
 
 			if (isScrolledIntoView($(".next"))) {
 				if ($(".next").css("display") != "none")
@@ -1065,7 +1093,7 @@ function findUrls( text )
 			};
 		});
 });
-*/
+
 function isScrolledIntoView(elem)
 {
     var docViewTop = $(window).scrollTop();

@@ -85,9 +85,9 @@ h4, h3, h2 , h1{margin-bottom:5px;}
 .typeaheadImg { height: 25px; float: left;}
 
 #topsFeed { margin-top: 5px;}
-#topsFeed .myitem { margin:  12px; border-bottom: 1px dotted #cecece;}
+#topsFeed .myitem { margin:  12px; border-bottom: 1px dotted #cecece; background: white;}
 #topsFeed .myitem:even { background-color:  white;}
-#topsFeed .address{font-size:9px;font-style:italic; right: 10px; top: 0px; position: relative; clear: both; text-align: right;}
+#topsFeed .postedby {font-size:9px;font-style:italic; right: 10px; top: 0px; position: relative; clear: both; text-align: right;}
 #topsFeed .title{font-size:0.85em;font-weight:bold;}
 #topsFeed .title a { color: #4A4A4A;}
 #topsFeed .title a:hover { color: #D71921;}

@@ -189,7 +189,7 @@ function loadData(x1, y1, x2, y2, heat, type, str, skip, limit, next)
 		});
 		setClickableArea();
 		setshortUrl();
-	    setInterval("setLiveUpdateTrigger()", 5000);
+	    setInterval("setLiveUpdateTrigger()", 30000);
 
 		$("abbr.timeago").timeago();
 		if(typeof(data1.info) === 'undefined')
