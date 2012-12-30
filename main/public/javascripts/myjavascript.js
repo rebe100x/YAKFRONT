@@ -157,6 +157,164 @@ function createFeedPageItem(val)
 			return item;
 }
 
+function createTopsItem(val)
+{
+			item = $("<div />");
+			item.attr("class", "myitem");
+
+			/*define title element*/
+			title = $("<div />");
+			title.attr("class", "title");
+			title.html("<img class='PersonImg' src='" + "/images/yakfav.png"+ "' />");
+
+			/*create more linked element for title*/
+			more = $("<a />");
+			more.attr("class", "more");
+			more.attr("href", "/news/feed?id=" + val._id);
+			more.attr("rel", val._id);
+			more.attr("data-toggle", "data-toggle");
+			more.html(val.title);
+
+			/*create posted by element*/
+			postedby = $("<div />");
+			postedby.attr("class", "postedby");
+			/*convert date to french date*/
+			date = new Date(val.pubDate).toLongFrenchFormat();
+
+			if(val.origin != null)
+				postedby.html("Posté par @" + val.origin + " le " + date);
+			else
+				postedby.html("Posté by @ananomys le " + date);
+
+			//postedby.html(postedby.html().replace(/@(\S*)/g,'<a href="news/map/search/@$1">@$1</a>'))
+			postedby.html(postedby.html().replace(/@(\S*)/g,'<a onclick="setSearchFor(this)">@$1</a>'));
+
+			/*create hot level element*/
+			hot = $("<div />");
+			hot.attr("class", "hot");
+			hot.append("<div class='hotLevel' style='width: " + val.heat + "%'></div>");
+			
+			/*create time ago element*/
+			ago = $("<abbr />");
+			ago.attr("class", "timeago");
+			ago.css("float", "right");
+			ago.css("marginRight", "8px");
+			ago.css("fontSize", "11px")
+			ago.attr("title", val.pubDate);
+
+			/*create the yak image element*/
+			yakimage = $("<span />");
+			yakimage.html("<img class='yakImg' src='" + yakImages[val.yakType] + "' />");
+
+			
+			
+			/*create info image*/
+			img = $("<img />");
+			img.attr("class", "img");
+			//img.attr("src", conf.backurl + val.thumb);
+			img.attr("src", val.thumb);
+			
+			/*create the read from source link*/
+			outlink = $("<div />");
+			outlink.html("<a></a>");
+			outlink.find("a").attr("href", val.outGoingLink);
+			outlink.find("a").attr("target", "_blank");
+			outlink.find("a").html("read from source");
+
+			/*create the expand button the +*/
+			readmore = $("<a />");
+			readmore.attr("class", "expand");
+			readmore.css("cursor", "pointer");
+			readmore.css("marginLeft", "12px");
+			readmore.click(function(){
+
+				var loading = $("<span />");
+
+				loading.html("loading...");
+
+				var readmore1 = $(this);
+
+				readmore1.after(loading);
+
+				readmore1.css("visibility", "hidden");
+
+				$.getJSON('/api/afeed', { id: val._id} ,function(data) {
+
+					var youtubes = findUrls(data.info[0].content);
+
+					if (youtubes.length > 0) {
+
+						for (var i = 0; i< youtubes.length; i++) {
+							readmore1.parent().after('<a href="' + youtubes[i] +'" target="_blank" style="margin-right: 12px"><img src="http://img.youtube.com/vi/' + getVcode("v", youtubes[i])  + '/1.jpg" style="border: 0px;"></a>');	
+						};
+					};
+					var phones = phoniphy(data.info[0].content);
+					//alert(phones.html());
+					readmore1.parent().parent().parent().append(phones);
+					readmore1.parent().html(data.info[0].content.linkify());
+					
+				});	
+			});
+			//readmore.html("+");
+
+			/*create the content element*/
+			content = $("<div />");
+			content.attr("class", "content");
+			content.html("<div class='theContent'>" + val.content.substring(0, subSize) + "...</div>");
+			
+			/*place image in content*/
+			content.prepend(img);
+			/*append the read more*/
+			content.find(".theContent").append(readmore);
+
+			//content.append("<br /><br />");
+			
+			/*create the types elements*/
+			type = $("<div />");
+			type.attr("class", "type");
+			type.html("Type: " + val.yakType);
+
+			/*create the cats elements*/
+			cat = $("<div />");
+			cat.attr("class", "cat");
+			var yakCatNames = "";
+			$.each(val.yakCatName, function(key, val){
+				yakCatNames += "#" + val + " "
+			});
+			//yakCatNames = yakCatNames.replace(/#(\S*)/g,'<a href="news/map/search/%23$1">#$1</a>');
+			cat.html(yakCatNames.linkify("/news/map/search/%23", 1));
+
+			/*create the freetags element*/
+			freetags = $("<div />");
+			freetags.attr("class", "freetags");
+			var freetagNames = "";
+			$.each(val.freeTag, function(key, val){
+				freetagNames += "#" + val.replace(" ", "&nbsp;") + " "
+			});
+			//freetagNames = freetagNames.replace(/#(\S*)/g,'<a href="news/map/search/%23$1">#$1</a>');
+			freetags.html(cat.html() +freetagNames.linkify("/news/map/search/%23", 1));
+
+			/*create the address element*/
+			address = $("<div />");
+			address.attr("class", "address");
+			address.html(val.address);
+
+			/*append the more yakimage ago and posted by to title*/
+			title.append(more);
+			//title.append(yakimage);
+			//title.append(ago);
+			//title.append(postedby);
+
+			/*append title to item*/
+			item.append(title);
+			content.append(address);
+			//content.append("<div class='shareMe'>Partager <i class='icon-share' title='Share Me'></i></div>");
+			item.append(content);
+			item.append(freetags);
+
+			return item;
+}
+
 function setSearchFor(el)
 {
 	$("html, body").animate({ scrollTop: 0 }, "slow");
@@ -885,7 +1043,7 @@ function findUrls( text )
     return urlArray;
 }
 
-$("document").ready(function(){
+/* $("document").ready(function(){
 
 		var $scrollingDiv = $(".alwaysShown");
  
@@ -907,7 +1065,7 @@ $("document").ready(function(){
 			};
 		});
 });
-
+*/
 function isScrolledIntoView(elem)
 {
     var docViewTop = $(window).scrollTop();

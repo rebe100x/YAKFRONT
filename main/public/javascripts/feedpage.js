@@ -72,6 +72,9 @@ $(document).ready(function() {
 	$('.typeahead').typeahead();
 	$('.btn-group1').button();
 	triggerSearch(currentPage, 0);
+
+	//for testing
+	loadTops();
 	
 });
 
@@ -170,10 +173,14 @@ function loadData(x1, y1, x2, y2, heat, type, str, skip, limit, next)
 			/*define item element*/
 			
 			var item = createFeedPageItem(val);
+			//var item2 = item;
 			if(next != 1)
 				$("#feedContent").prepend(item);
 			else
 				$("#feedContent").append(item);
+
+			//for testing 
+			//$("#topsFeed").prepend(item2);
 
 			$("#resultSet").html(currentPage);
 			$(".next").show();
@@ -198,6 +205,27 @@ function loadData(x1, y1, x2, y2, heat, type, str, skip, limit, next)
 	});
 }
 
+//for testing
+function loadTops()
+{
+	var urltouse = '/api/geoinfos/48.851875/2.356374/5/null/0/1/null/0/10';
+	/*urltouse += x1 + "/" // x1;
+	urltouse += y1	 + "/" // y1;
+	urltouse += x2 + "/" // x2;
+	urltouse += y2 + "/" // y2;
+	urltouse += heat + "/" // heat;
+	urltouse += type + "/" // type;
+	urltouse += str + "/" // str;
+	urltouse += skip + "/" // skip;
+	urltouse += limit // limit; */
 
+	$.getJSON(urltouse ,function(data) {
+		$.each(data.data.info, function(key,val) {
+			var item = createTopsItem(val);
+			$("#topsFeed").prepend(item);
+		});
+	});
+
+}
 
 

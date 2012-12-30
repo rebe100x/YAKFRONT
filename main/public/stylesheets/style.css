@@ -43,7 +43,7 @@ h4, h3, h2 , h1{margin-bottom:5px;}
 .btn-group1, .btn-group2 { text-align: center;}
 .btn-group1 img { }
 #search .searchButton { float: left; position: relative; top: 6px; float: right; right: 12px; margin: 12px; }
-#feedContent #liveupdate { background: #DEDEDE; text-align: center; color: #D71921; padding-top: 12px; padding-bottom: 12px; font-size: 14px; font-weight: bold; cursor: pointer;}
+#feedContent #liveupdate { text-align: center; color: #D71921; padding-top: 12px; padding-bottom: 12px; font-size: 14px; font-weight: bold; cursor: pointer;}
 #feedContent #liveupdate:hover { text-decoration: underline;}
 #feedContent .hidden { display: none;}
 #feedContent{ clear: both; padding-top: 12px;}
@@ -84,6 +84,17 @@ h4, h3, h2 , h1{margin-bottom:5px;}
 
 .typeaheadImg { height: 25px; float: left;}
 
+#topsFeed { margin-top: 5px;}
+#topsFeed .myitem { margin:  12px; border-bottom: 1px dotted #cecece;}
+#topsFeed .myitem:even { background-color:  white;}
+#topsFeed .address{font-size:9px;font-style:italic; right: 10px; top: 0px; position: relative; clear: both; text-align: right;}
+#topsFeed .title{font-size:0.85em;font-weight:bold;}
+#topsFeed .title a { color: #4A4A4A;}
+#topsFeed .title a:hover { color: #D71921;}
+#topsFeed .myitem .title .PersonImg { float: left; padding-right: 10px; height: 25px;}
+#topsFeed .content{font-size:11px; margin-top: 11px;}
+#topsFeed .myitem .freetags { clear: both; position: relative; top: 0px; left: 0px; font-size: 11px;}
+#topsFeed .myitem .freetags a { color: #D81A21; font-size: 11px; margin-right: 10px;}
 /* THE MAP
 -------------------------------------------------- */
 	/*MAP TOOLS CONTROLLERS*/
