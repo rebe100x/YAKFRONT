@@ -103,6 +103,7 @@ mixin searchPanel()
 
 									url: url,				
 									success: function( ajax ) {
+
 										//console.log(ajax);
 										if(query.indexOf('@') == 0)
 										{
@@ -111,6 +112,16 @@ mixin searchPanel()
 											$("#SearchWhat").val(query.substring(1, query.length));
 											typeahead.process(ajax.users);
 											$("#SearchWhat").val(query);
+											$("ul.typeahead li").each(function(){
+												var personThumb = (JSON.parse($(this).attr('data-value'))).thumb;
+												//console.log(personThumb);
+												var imgPerson = $("<img />");
+												imgPerson.attr("class", "typeaheadImg");
+												imgPerson.attr("src", "http://" + personThumb);
+												$(this).css("clear", "both");
+												$(this).find("a").css("clear", "none");
+												$(this).prepend(imgPerson);
+											});
 										}
 										else if(query.indexOf('#') == 0)
 										{

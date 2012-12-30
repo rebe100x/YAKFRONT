@@ -82,6 +82,8 @@ h4, h3, h2 , h1{margin-bottom:5px;}
 .graybg { background: #E8E8E8;}
 .theslider { width: 200px;}
 
+.typeaheadImg { height: 25px; float: left;}
+
 /* THE MAP
 -------------------------------------------------- */
 	/*MAP TOOLS CONTROLLERS*/
