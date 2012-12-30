@@ -90,8 +90,11 @@ function createFeedPageItem(val)
 							readmore1.parent().after('<a href="' + youtubes[i] +'" target="_blank" style="margin-right: 12px"><img src="http://img.youtube.com/vi/' + getVcode("v", youtubes[i])  + '/1.jpg" style="border: 0px;"></a>');	
 						};
 					};
-
+					var phones = phoniphy(data.info[0].content);
+					//alert(phones.html());
+					readmore1.parent().parent().parent().append(phones);
 					readmore1.parent().html(data.info[0].content.linkify());
+					
 				});	
 			});
 			readmore.html("+");
@@ -448,8 +451,37 @@ String.prototype.linkify = function(myurl, ajaxified) {
 	return res;
  }
 
- 
- 
+function isValidPhone(phonenumber){
+	if (phonenumber != "") {
+		var goodChars = "+- 1234567890()"
+		for (i = 0; i < phonenumber.length; i++){   
+		    var c = phonenumber.charAt(i);
+		    if (goodChars.indexOf(c) < 0) return false;
+		}
+		return true;
+	} else {
+		return false;
+	}
+}
+ function phoniphy(str){
+ 	var regex = '[2-9]\d{2}-\d{3}-\d{4}';
+ 	var numArray = str.match(/(\+3[23](?:\s*?\(0\))?(?:\s*?\d){8,9})/g);
+ 	var phones = $("<div />");
+ 	phones.append("<span>Phone numbers: </span>");
+ 	phones.attr("class", "phoneNumbers");
+ 	if (numArray != null) {
+ 		//alert(numArray.length);
+ 		for(j=0; j<numArray.length;j++)
+	    {
+	        if (isValidPhone(numArray[j])) {
+	        	phones.append("<a href='tel:" + numArray[j] + "'><i class='icon-phone-sign'></i>" + numArray[j]  + "</a>");
+	        }
+	    }
+
+ 	}
+ 	return phones;
+ }
+
 
 Array.prototype.cleanArrayByName=function(str){
 	for(i=0;i<this.length;i++)

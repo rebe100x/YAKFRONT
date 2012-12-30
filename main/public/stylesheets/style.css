@@ -68,6 +68,8 @@ h4, h3, h2 , h1{margin-bottom:5px;}
 #feedContent .myitem .title .PersonImg { float: left; padding-right: 10px; }
 #feedContent .myitem .freetags { clear: both; position: relative; top: 0px; left: 40px;}
 #feedContent .myitem .freetags a { color: #D81A21; font-size: 12px; margin-right: 10px;}
+#feedContent .myitem .phoneNumbers { clear: both; position: relative; top: 0px; left: 40px;}
+#feedContent .myitem .phoneNumbers a { color: #D81A21; font-size: 12px; margin-right: 10px;}
 .expand { z-index: 1111};
 #search #heatModule { text-align: center;}
 #search #heatModule .upperHeight { height: 5px; margin-top: 9px;}
