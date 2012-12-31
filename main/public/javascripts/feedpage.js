@@ -33,7 +33,7 @@ function setLiveUpdateTrigger()
 	if ($("#feedContent #liveupdate").length > 0)
 		return;
 
-	var urltosearch = '/api/geoinfos/48.68397799017688/1.8129054937500177/0.9/null/0/1/null/0/10';
+	var urltosearch = '/api/geoinfos/48.851875/2.356374/5/null/0/1,2,3,4/null/10/0';
 
 	$("#feedContent .hidden").remove();
 
@@ -106,7 +106,7 @@ $(".searchButton").click(function(event, currentpage, next){
 
 	var heat = 0;
 
-	var type = 1;
+	var type = "1,2,3,4";
 
 	var str = $("#SearchWhat").attr("value");
 	if ($.trim(str) == "") {
@@ -115,12 +115,12 @@ $(".searchButton").click(function(event, currentpage, next){
 
 	var skip = (currentPage - 1)*limit;
 
-	loadData(x1, y1, x2, y2, heat, type, str, skip, limit, next);
+	loadData(x1, y1, x2, y2, heat, type, str, limit, skip, next);
 
 });
 		
 //function loadData(askip, alimit, next, _id, what, where, yaktype, dateInterval, cattype, dimension)
-function loadData(x1, y1, x2, y2, heat, type, str, skip, limit, next)
+function loadData(x1, y1, x2, y2, heat, type, str, limit, skip, next)
 {
 	if (!next) {
 		$("#feedContent").html("loading...");
@@ -142,8 +142,8 @@ function loadData(x1, y1, x2, y2, heat, type, str, skip, limit, next)
 	urltouse += heat + "/" // heat;
 	urltouse += type + "/" // type;
 	urltouse += str + "/" // str;
+	urltouse += limit + "/"  // limit;
 	urltouse += skip + "/" // skip;
-	urltouse += limit // limit;
 	$.getJSON(urltouse ,function(data) {
 	
 		var len = data.data.info.length;
@@ -208,7 +208,7 @@ function loadData(x1, y1, x2, y2, heat, type, str, skip, limit, next)
 //for testing
 function loadTops()
 {
-	var urltouse = '/api/geoinfos/48.851875/2.356374/5/null/0/1/null/0/10';
+	var urltouse = '/api/geoinfos/48.851875/2.356374/5/null/0/1,2,3,4/null/10/0';
 	/*urltouse += x1 + "/" // x1;
 	urltouse += y1	 + "/" // y1;
 	urltouse += x2 + "/" // x2;

@@ -83,6 +83,7 @@ exports.requiresLogin = function(req,res,next){
 /**NEWS */
 exports.news_map = function(req, res){
 	delete req.session.message;
+	
 	if(typeof(req.session.type) == 'undefined' || req.session.type === null ){
 		var type = new Array();
 		type.push(1);

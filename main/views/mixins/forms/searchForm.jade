@@ -1,9 +1,132 @@
 mixin searchForm()
-	- if (message)
-		div.alert.fade.in
-			button.close(type="button",data-dismiss="alert") x
-			strong=message
-	form.form-search
-		div.input-append
-			input#login(type="text",name="login", autocomplete="on", placeholder='...')
-			button.btn Chercher
+	span#newsfeedMenu
+		div#typeContainer.row
+			span.btn(title="Actu", type=1) 
+				img(src="/images/markers/type1.png")
+			span.btn(title="Discussion", type=4) 
+				img(src="/images/markers/type4.png")
+			span.btn(title="Agenda", type=2) 
+				img(src="/images/markers/type2.png")
+			span.btn(title="Infos Pratiques", type=3) 
+				img(src="/images/markers/type3.png")
+			span.btn(title="Mes alertes", type=5)
+				img(src="/images/markers/type5.png")
+			//span.btn.btn-link(title="testfeed", type=10)
+			//	i.icon-fire
+		div#heatModule.row
+			div#dayPrinter Aujourd hui	
+			div#heatSelector
+		div#searchBox.row
+			div.input-append
+				input#locationInput(type='hidden', name='locationInput', value='')
+				input.span5.search-query#searchStr(type="text",placeholder="Quoi ?",autocomplete="off", )
+				input.span5.search-query#searchPlaceStr(type="search",placeholder="Où ?",autocomplete="off", data-provide="typeahead",)
+				button.btn#searchBtn(type="submit") Go
+	script
+		var type = [!{type}];
+		var dateFrom = 0;
+		var searchString = "!{str}".toString();
+		if(searchString=='')
+			searchString = null;
+		
+		$(document).ready(function() {
+			/*search info and place*/
+				
+				$('#searchStr').val(searchString);
+				// reset
+				$('#searchStr').keyup(function(event){
+					if($(this).val()==''){
+						searchString = null;
+						getAndPrintInfo();
+					}
+					if (event.which == 13) {
+						$('#searchBtn').trigger('click');
+					}
+				});
+				$('#searchPlaceStr').keyup(function(event){
+					if($(this).val()==''){
+						$('#locationInput').val('');
+					}
+					if (event.which == 13) {
+						$('#searchBtn').trigger('click');
+					}
+				});
+				
+				
+				
+				// search button
+				$('#searchBtn').click(function(){
+					var str = encodeURIComponent($('#searchStr').val());
+					var placeName = $('#searchPlaceStr').val();
+					var location = $('#locationInput').val();				
+					if(location != ''){
+						var locationObj = JSON.parse(location);
+						var latLng = new google.maps.LatLng(locationObj.lat,locationObj.lng);
+						markerHL.setPosition(latLng);
+						markerHL.setVisible(true);
+						markerHL.setMap(map);
+						markerHL.setOptions({icon:"/images/markers/target3.png"});
+						setTimeout(function() {
+							markerHL.setMap(null);
+						}, 3000);
+						map.panTo(latLng);
+						//map.setCenter(latLng);
+						
+					}else{
+						if(placeName != ''){
+							
+							/* our db is not ready for this ! => use google !
+							$.ajax({
+								url: "/api/search/place/"+placeName,				
+								success: function( ajax ) {
+									if(ajax.data.places.length > 0 && ajax.data.places[0] != "undefined"){
+										var latLng = new google.maps.LatLng(ajax.data.places[0].location.lat,ajax.data.places[0].location.lng);
+										map.panTo(latLng);
+									}else{
+										var salt = new Date().getTime();
+										$('#searchStr').before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide</div>");
+										setTimeout(function() {
+											$("#alert"+salt).fadeOut();
+										}, 3000);
+									$('#searchPlaceStr').select();
+									}
+								}
+							});*/
+							var addressQuery = {"address": placeName ,"region":"fr","language":"fr"};
+							var geocoder = new google.maps.Geocoder();
+							geocoder.geocode( addressQuery, function(results, status) {						
+							if (status == google.maps.GeocoderStatus.OK) {
+								var latLng = new google.maps.LatLng(results[0].geometry.location.Ya,results[0].geometry.location.Za);
+								markerHL.setPosition(latLng);
+								markerHL.setVisible(true);
+								markerHL.setMap(map);
+								markerHL.setOptions({icon:"/images/markers/target3.png"});
+								
+								setTimeout(function() {
+									markerHL.setMap(null);
+								}, 3000);
+								map.panTo(latLng);
+							}else{
+								var salt = new Date().getTime();
+								$('#searchStr').before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide</div>");
+								setTimeout(function() {
+									$("#alert"+salt).fadeOut();
+								}, 3000);
+								$('#searchPlaceStr').select();
+							} 
+							});
+						}
+					}
+					
+					
+					if(str != 'Quoi ?' && str != ''){
+						searchString = str;
+						
+					}else
+						searchString = null;
+			
+					getAndPrintInfo();
+					$('#searchStr').focus();
+				});
+		});
+		
