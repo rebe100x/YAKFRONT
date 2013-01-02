@@ -1,4 +1,4 @@
-mixin searchForm()
+mixin searchForm(page)
 	span#newsfeedMenu
 		div#typeContainer.row
 			span.btn(title="Actu", type=1) 
@@ -16,6 +16,9 @@ mixin searchForm()
 		div#heatModule.row
 			div#dayPrinter Aujourd hui	
 			div#heatSelector
+		- if(page == 'feed' || page == 'map')	
+			div#rangeModule.row
+				div#rangeSelector
 		div#searchBox.row
 			div.input-append
 				input#locationInput(type='hidden', name='locationInput', value='')
@@ -23,7 +26,8 @@ mixin searchForm()
 				input.span5.search-query#searchPlaceStr(type="search",placeholder="Où ?",autocomplete="off", data-provide="typeahead",)
 				button.btn#searchBtn(type="submit") Go
 	script
-		var type = [!{type}];
+		var yakType = [!{type}];
+		//console.log(yakType);
 		var dateFrom = 0;
 		var searchString = "!{str}".toString();
 		if(searchString=='')
@@ -60,16 +64,7 @@ mixin searchForm()
 					var placeName = $('#searchPlaceStr').val();
 					var location = $('#locationInput').val();				
 					if(location != ''){
-						var locationObj = JSON.parse(location);
-						var latLng = new google.maps.LatLng(locationObj.lat,locationObj.lng);
-						markerHL.setPosition(latLng);
-						markerHL.setVisible(true);
-						markerHL.setMap(map);
-						markerHL.setOptions({icon:"/images/markers/target3.png"});
-						setTimeout(function() {
-							markerHL.setMap(null);
-						}, 3000);
-						map.panTo(latLng);
+						changeLocation(location);
 						//map.setCenter(latLng);
 						
 					}else{
@@ -202,12 +197,25 @@ mixin searchForm()
 					
 				}
 			});
-		
-			/*init type selector*/
+			
+			/*slider range selector*/
+			$( "#rangeSelector" ).slider({
+				range: "min",
+				min: 0,
+				max: 100,
+				value: 75,
+				change:function(event, ui){
+					curPos.z =  ui.value;
+					getAndPrintInfo(0);
+					
+				}
+			});
+
+			/*init yakType selector*/
 			$('#newsfeedMenu span.btn').removeClass('active');
 			
 			
-			$.each(type,function(key,val){
+			$.each(yakType,function(key,val){
 				$("#newsfeedMenu span.btn[type=\""+val+"\"]").addClass('active');
 			});
 
@@ -218,18 +226,20 @@ mixin searchForm()
 				if(curtype == 5){
 					$('#newsfeedMenu span.btn').removeClass('active');
 					$(this).addClass('active');
-					type = [5];
+					yakType = [5];
 					
 				}else{
 					$('#newsfeedMenu span.btn[type="5"]').removeClass('active');
 					if($(this).hasClass('active')){
 						$(this).removeClass('active');
-						type.cleanArrayByName(curtype);	
+						yakType.cleanArrayByName(curtype);	
 					}
 					else{
 						$(this).addClass('active');
-						type.push(curtype);
+						yakType.push(curtype);
 					}
+					if(yakType.length == 0)
+						yakType = [0];
 				}
 				getAndPrintInfo();
 			});

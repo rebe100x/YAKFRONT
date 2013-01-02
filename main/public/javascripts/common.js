@@ -1,3 +1,15 @@
+/*VAR INIT COMMON VARIABLES*/
+var yakImages = new Array ( 
+				"/images/yakfav.png", 
+				"/images/markers/type1.png", 
+				"/images/markers/type2.png", 
+				"/images/markers/type3.png", 
+				"/images/markers/type4.png", 
+				"/images/markers/type5.png" 
+		);
+
+
+
 function changeTitle(el)
 {
 	var username = $(el).text().substring(1, $(el).text().length)
@@ -64,13 +76,8 @@ function createFeedPageItem(val)
 			hot.append("<div class='hotLevel' style='width: " + val.heat + "%'></div>");
 			
 			/*create time ago element*/
-			ago = $("<abbr />");
-			ago.attr("class", "timeago");
-			ago.css("float", "right");
-			ago.css("marginRight", "8px");
-			ago.css("fontSize", "11px")
-			ago.attr("title", val.pubDate);
-
+			
+			
 			/*create the yak image element*/
 			yakimage = $("<span />");
 			yakimage.html("<img class='yakImg' src='" + yakImages[val.yakType] + "' />");
@@ -175,7 +182,7 @@ function createFeedPageItem(val)
 			/*append the more yakimage ago and posted by to title*/
 			title.append(more);
 			title.append(yakimage);
-			title.append(ago);
+			title.append(buildItemDate(val));
 			title.append(postedby);
 
 			/*append title to item*/
@@ -394,11 +401,44 @@ function mergeDeep(o1, o2) {
 };
 
 
+function buildItemDate(item){
+	var thedate = '';
+	if(item.yakType == 2){
+		if(typeof(item.eventDate) != 'undefined' && typeof(item.eventDate[0]) != 'undefined' ){
+			var dateTmpFrom = new Date(item.eventDate[0].dateTimeFrom);
+			//console.log('TEST'+item.eventDate[0].dateTimeFrom);
+			// TODO this does not work on SAFARI
+			var dateTmpEnd = new Date(item.eventDate[item.eventDate.length-1].dateTimeFrom);
+			var m = dateTmpFrom.getMinutes();
+			if (m<10) {m = "0" + m}
 
+			if(item.eventDate.length == 1)	
+				thedate = 'Le '+dateTmpFrom.getDate()+'/'+(dateTmpFrom.getMonth()+1)+'/'+dateTmpFrom.getFullYear()+' à '+dateTmpFrom.getHours()+':'+m;
+			else
+				thedate = 'Du '+dateTmpFrom.getDate()+'/'+(dateTmpFrom.getMonth()+1)+'/'+dateTmpFrom.getFullYear()+' au '+dateTmpEnd.getDate()+'/'+(dateTmpEnd.getMonth()+1)+'/'+dateTmpEnd.getFullYear();
+		}else{
+			var dateTmp = new Date(item.pubDate);
+			thedate = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
+		}
+		thedate = "<span class='timeago'>"+thedate+"</span>";
+	}else{
+			var div = $("<div />");
+			var ago = $("<abbr />");
+			ago.attr("class", "timeago");
+			ago.attr("title", item.pubDate);
+			div.append(ago);
+
+			thedate = div.html();
+
+	}
+
+	return thedate;
+
+}
 
 function triggerSearch(currentPage, ismore)
 {
-	$('.searchButton').trigger('click', [currentPage, ismore]);
+	$('#searchBtn').trigger('click', [currentPage, ismore]);
 }
 
 function setClickableArea()
@@ -430,43 +470,7 @@ function setClickableArea()
 }
 
 
-function setRefreshNews()
-{
 
-if($("#newsLoader").css("visibility") == "visible")
-	return;
-else
-	{
-		
-		$("#newsLoader").css("visibility", "visible");
-
-		$("#newsLoader").click(function(){
-
-			var _id = $("#feedContent .more").eq(0).attr("rel");
-			//alert(_id);
-
-			$(".graybg").attr("class", "myitem");
-
-			$("#newsLoader").html('Downloading please wait <i class="icon-download"></i>');
-
-			var what = $("#locationInput").val();
-			var where = $("#SearchWhere").val();
-			var yaktype = "";
-			$(".searchTypes active").each(function(){
-				yaktype += $(this).attr("type") + ",";
-			});
-
-			loadData(0, 0, limit, 2, what , where, yaktype);
-
-			//loadData(0, 0, limit, 2, _id, 1);
-
-			$("#newsLoader").html('More recent news to load click here to refresh <i class="icon-refresh"></i>');
-
-			$("#newsLoader").css("visibility", "hidden");
-
-		});
-	}
-}
 
 function setshortUrl()
 {
@@ -519,6 +523,28 @@ function serCurrentSearchInfo()
 $(document).ready(function() {
 
 	
+	/*throw the silent updater*/
+	setInterval(function() {
+		silentUpdater();
+	}, 10000);	
+
+	$.timeago.settings.strings = {
+		// environ ~= about, it's optional
+		prefixAgo: "il y a",
+		prefixFromNow: "d'ici",
+		seconds: "moins d'une minute",
+		minute: "environ une minute",
+		minutes: "environ %d minutes",
+		hour: "environ une heure",
+		hours: "environ %d heures",
+		day: "environ un jour",
+		days: "environ %d jours",
+		month: "environ un mois",
+		months: "environ %d mois",
+		year: "un an",
+		years: "%d ans"
+		//gerterter
+	};
 	
 	/*bootstrap alert plugin*/
 	$(".alert").alert();
@@ -1077,9 +1103,9 @@ function findUrls( text )
     return urlArray;
 }
 
- $("document").ready(function(){
+ function setFixedElement(el){
 
-		var $scrollingDiv = $(".alwaysShown");
+		var $scrollingDiv = el;
  
 		$(window).scroll(function(){			
 			/*if ($(window).scrollTop() != 0) {
@@ -1098,7 +1124,7 @@ function findUrls( text )
 					$(".next").trigger('click');
 			};
 		});
-});
+}
 
 function isScrolledIntoView(elem)
 {
