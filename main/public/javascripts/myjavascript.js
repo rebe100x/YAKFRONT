@@ -153,6 +153,12 @@ function createFeedPageItem(val)
 			//yakCatNames = yakCatNames.replace(/#(\S*)/g,'<a href="news/map/search/%23$1">#$1</a>');
 			cat.html(yakCatNames.linkify("/news/map/search/%23", 1));
 
+			/*create the address element*/
+			address = $("<div />");
+			address.attr("class", "address");
+			address.html(val.address);
+
+
 			/*create the freetags element*/
 			freetags = $("<div />");
 			freetags.attr("class", "freetags");
@@ -162,11 +168,9 @@ function createFeedPageItem(val)
 			});
 			//freetagNames = freetagNames.replace(/#(\S*)/g,'<a href="news/map/search/%23$1">#$1</a>');
 			freetags.html(cat.html() +freetagNames.linkify("/news/map/search/%23", 1));
+			freetags.append(address);
 
-			/*create the address element*/
-			address = $("<div />");
-			address.attr("class", "address");
-			address.html(val.address);
+			
 
 			/*append the more yakimage ago and posted by to title*/
 			title.append(more);
@@ -176,8 +180,9 @@ function createFeedPageItem(val)
 
 			/*append title to item*/
 			item.append(title);
-			content.append(address);
-			content.append("<div class='shareMe'>Partager <i class='icon-share' title='Share Me'></i></div>");
+			//content.append(address);
+			//content.append("<div class='shareMe'>Partager <i class='icon-share' title='Share Me'></i></div>");
+			content.append("<div class='shareMe'><i class='icon-share' title='Share Me'><img src='images/ftg.png' class='ftgIcon' /> </i></div>");
 			item.append(content);
 			item.append(freetags);
 
@@ -653,7 +658,7 @@ function isValidPhone(phonenumber){
  	var regex = '[2-9]\d{2}-\d{3}-\d{4}';
  	var numArray = str.match(/(\+3[23](?:\s*?\(0\))?(?:\s*?\d){8,9})/g);
  	var phones = $("<div />");
- 	phones.append("<span>Phone numbers: </span>");
+ 	phones.append("<span><img src='images/phone.png' /></span>");
  	phones.attr("class", "phoneNumbers");
  	if (numArray != null) {
  		//alert(numArray.length);
@@ -1029,9 +1034,10 @@ function setShare(el){
 		$(api.element).find('.buttons').livequery(function(){
     		//element created
     		//alert("created");
-
-    		$(api.element).find('.buttons').css("display", "block");
     		$(api.element).find("span").eq(0).remove();
+    		$(api.element).prepend("<img src='images/ftg.png' class='ftgIcon' class='icon-share' /> ");
+    		$(api.element).find('.buttons').css("display", "block");
+    		
 		});
 	}
 
