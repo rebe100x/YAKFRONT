@@ -16,7 +16,7 @@ mixin searchForm(page)
 		div#heatModule.row
 			div#dayPrinter Aujourd hui	
 			div#heatSelector
-		- if(page == 'feed')	
+		- if(page == 'feed' || page == 'map')	
 			div#rangeModule.row
 				div#rangeSelector
 		div#searchBox.row
