@@ -216,9 +216,13 @@ exports.news = function(req, res){
 					place.heat = 80;
 					place.user = mongoose.Types.ObjectId(req.session.user);
 					place.save();
-					info.placeId = mongoose.Types.ObjectId(place._id);
-				}else
-					info.placeId = mongoose.Types.ObjectId(item._id);
+					//info.placeId = mongoose.Types.ObjectId(place._id);
+					info.placeId = place._id;
+				}else{
+					info.placeId = item._id;
+					//info.placeId = mongoose.Types.ObjectId(item._id);
+				}
+					
 				
 				var now = new Date();
 				info.creationDate = now;
