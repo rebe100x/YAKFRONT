@@ -208,17 +208,17 @@ exports.news = function(req, res){
 				// if no id, it means the location comes from gmap => we store it
 				
 				
+
 				
 				if(item._id == "" || typeof item._id === "undefined"){
 					item.status=2;
 					place = new Place(item);
 					place.heat = 80;
 					place.user = mongoose.Types.ObjectId(req.session.user);
-					
 					place.save();
-					info.placeId = place._id;
+					info.placeId = mongoose.Types.ObjectId(place._id);
 				}else
-					info.placeId = item._id;
+					info.placeId = mongoose.Types.ObjectId(item._id);
 				
 				var now = new Date();
 				info.creationDate = now;

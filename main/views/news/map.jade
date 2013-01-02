@@ -89,65 +89,16 @@ block content
 			
 			
 			
-			// autocomplete Place
-			$('#searchPlaceStr').typeahead({
-				minLength : 3,							
-				source: function (typeahead, query) {
-					if(query.length >= 3){
-						encodeURIComponent(query);
-						$("#searchPlaceStr").addClass('searching');
-						var addressQuery = {"address": query ,"region":"fr","language":"fr"};
-						var geocoder = new google.maps.Geocoder();
-						geocoder.geocode( addressQuery, function(results, status) {						
-						if (status == google.maps.GeocoderStatus.OK) {
-							typeahead.process(results);
-							$("#searchPlaceStr").removeClass('searching');
-						} 
-						});
-					}
-				},
-				property: "formatted_address",
-				onselect: function(obj) { 
-					$("#searchPlaceStr").removeClass('searching');
-					var placeGmap = getPlaceFromGmapResult(obj);
-					$('#locationInput').val(JSON.stringify(placeGmap.location));
-				}
-			});
-			
-			// autocomplete Info			
-			$('#searchStr').typeahead({
-					minLength : 3,
-					source: function (typeahead, query) {
-					encodeURIComponent(query);
-						if(query.length >= 3){
-							$.ajax({
-									url: "/api/catsandtags",				
-									success: function( ajax ) {
-										typeahead.process(ajax.data.catsandtags);
-									}
-								})}
-					},
-					property: "title",
-					onselect: function(obj) { 
-						$("#searchPlaceStr").removeClass('searching');
-						
-					}
-				});
 			
 			/*control opener*/
 			$('#boxOpener').click(function(event){
 				event.preventDefault();
 				if($(this).hasClass('opened')){
 					$(this).removeClass('opened').addClass('closed');
-					$('#newsfeedMenu').animate({height:'0px',opacity:0},200,function(){
-						drawNewsFeed();
-					});	
+					$('#newsfeedMenu').animate({height:'0px',opacity:0},200,function(){drawNewsFeed();});	
 				}else{
 					$(this).removeClass('closed').addClass('opened');
-					$('#newsfeedMenu').animate({height:'140px',opacity:1},200,function(){
-						drawNewsFeed();
-						
-					});
+					$('#newsfeedMenu').animate({height:'140px',opacity:1},200,function(){drawNewsFeed();});
 				}
 				
 			});
@@ -190,106 +141,7 @@ block content
 				
 			
 			
-			/*slider time selector*/
-			$( "#heatSelector" ).slider({
-				range: "min",
-				min: -100,
-				max: 100,
-				value: 0,
-				slide: function( event, ui ) {
-					var x = ui.value;
-					var y = 0;
-					if(x==0){
-						y= 0;
-						yText = "Aujourd'hui";
-					}else{
-						if(x < 0)
-							//y = Math.floor(Math.pow(x,2)/25); 
-							y = Math.floor(x/2);
-						else
-							//y = (-1)*Math.floor(Math.pow(x,2)/25); 
-							y = (-1)*Math.floor(x/2);
-						//y = Math.floor(-7.222723628*Math.pow(10,-7)*Math.pow(x,5) + 2.123355095*Math.pow(10,-4)*Math.pow(x,4) - 2.178300623*Math.pow(10,-2)*Math.pow(x,3) + 0.906040198*Math.pow(x,2) - 16.47223075*x + 360.0000001);
-					}
-					
-					var yText = "";
-					
-					var months = parseInt(y / 30);
-					var days = y % 30;
-					var dayText = "";
-					var monthText = "";
-					
-					if(days == 0 && months == 0)
-						dayText = "Aujourd'hui";
-					else if(days == 0 && months > 0)
-						dayText = "";
-					else if(days == -1 && months == 0)
-						dayText = "Demain";
-					else if(days == 1 && months == 0)
-						dayText = "Hier";
-					else if(days == 1 || days == -1)
-						dayText = "1 jour";
-					else
-						dayText = Math.abs(days)+" jours";
-					if(months == 0)
-						monthText = "";	
-					else if(months == 1)
-						monthText = "1 mois";	
-					else
-						monthText = Math.abs(months)+" mois";	
-				
-
-					if(monthText && dayText)
-						yText = monthText+" et "+ dayText;
-					else if(monthText && !dayText)
-						yText = monthText
-					else
-						yText = dayText;
-					
-					if(y >= 2 && x < 0)
-						yText = "Il y a "+yText;
-					else if(y <= -2 && x > 0)
-						yText = "Dans "+yText;
-					$( "#dayPrinter" ).html(yText);
-					dateFrom = y;
-					
-				},
-				change:function(event, ui){
-					getAndPrintInfo();
-					
-				}
-			});
-		
-			/*init type selector*/
-			$('#newsfeedMenu span.btn').removeClass('active');
 			
-			
-			$.each(type,function(key,val){
-				$("#newsfeedMenu span.btn[type=\""+val+"\"]").addClass('active');
-			});
-
-			$('#newsfeedMenu span.btn[type="5"]').removeClass('active');
-			/*type selector*/
-			$('#newsfeedMenu span.btn').click(function(){
-				var curtype = $(this).attr('type');
-				if(curtype == 5){
-					$('#newsfeedMenu span.btn').removeClass('active');
-					$(this).addClass('active');
-					type = [5];
-					
-				}else{
-					$('#newsfeedMenu span.btn[type="5"]').removeClass('active');
-					if($(this).hasClass('active')){
-						$(this).removeClass('active');
-						type.cleanArrayByName(curtype);	
-					}
-					else{
-						$(this).addClass('active');
-						type.push(curtype);
-					}
-				}
-				getAndPrintInfo();
-			});
 			
 			// init news feed
 			drawNewsFeed();
@@ -299,6 +151,7 @@ block content
 			$(window).resize(function(){
 				drawNewsFeed();
 				bounds = getMyBounds();
+				manageSearchBox();
 			});
 			
 			$('#newsfeed').delegate(".mapHighlighter",'click', function () {
@@ -442,7 +295,6 @@ block content
 
 				
 				$('#btn-place-adder').click(function(){
-					console.log('DELETE THIS ?');
 					var addressString = $('#place').val();
 					if(addressString != "Rechercher..." && addressString != "" && addressString.length > 1){
 						var addressQuery = {"address": addressString,"latLng":map.getCenter(),"bounds":map.getBounds()};
@@ -496,9 +348,23 @@ block content
 			});
 			
 				
+			manageSearchBox();
 
 		});/*END READY*/
 
+		function manageSearchBox(){
+			var width = $(window).width();
+			console.log(width);
+			if(width<960){
+				$('#boxOpener').removeClass('opened').addClass('closed');
+				$('#newsfeedMenu').animate({height:'0px',opacity:0},200,function(){drawNewsFeed();});
+			}else{
+				$('#boxOpener').removeClass('closed').addClass('opened');
+				$('#newsfeedMenu').animate({height:'140px',opacity:1},200,function(){drawNewsFeed();});
+			}
+
+
+		}
 		/* getMyBounds
 		* calculate bounds according to screen size and feed position.
 		*/
