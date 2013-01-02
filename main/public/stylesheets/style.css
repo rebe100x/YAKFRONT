@@ -1,5 +1,5 @@
 body {
-  padding:50px;
+  padding:0px;
   font: 13px "Lucida Grande", Helvetica, Arial, sans-serif;
   
 }
@@ -8,6 +8,10 @@ a {
   color: #00B7FF;
 }
 
+.navbar-fixed-top {
+  position:relative;
+  z-index:2000;
+}
 
 /* GENERAL
 -------------------------------------------------- */
@@ -61,7 +65,7 @@ h4, h3, h2 , h1{margin-bottom:5px;}
 #feedContent .myitem .title .postedby { font-size: 12px; font-style: italic; font-weight: normal; color: #87888B; margin-top: 5px;}
 #feedContent .myitem .title .postedat { font-size: 11px; }
 #feedContent .myitem .title .more { display: block; width: 75%; }
-#feedContent .myitem .title .timeago { margin-top: -28px; color: #B7B7B7}
+#feedContent .myitem .title .timeago { margin-top: -28px; color: #B7B7B7;float: right; margin-right: 8px; font-size: 11px;}
 #feedContent .myitem .title .hot { width: 200px; background: #cecece; height: 8px; clear: both; left: 40px; position: relative;; top: -3px;}
 #feedContent .myitem .title .hot .hotLevel{ background: #D71921;  height: 8px;}
 #feedContent .myitem  .content { font-size: 13px; line-height: 18px; z-index: 11}
@@ -107,7 +111,7 @@ h4, h3, h2 , h1{margin-bottom:5px;}
 
 /*MAP TOP CONTROLLER*/
 #newsfeedContainer #boxOpener{position: relative;text-align: center; font-weight:bold;line-height:18px;color:white;background-color:#D8242B;cursor:pointer} 
-#newsfeedContainer{position:relative;overflow:auto;height:auto;margin: 10px -40px 0 0;opacity:0.95;}
+#newsfeedContainer{position:relative;overflow:auto;height:auto;margin: 10px 5px 0 0;opacity:0.95;}
 
 #newsfeedMenu #searchBox { position: relative;text-align: center; }
 
@@ -192,6 +196,7 @@ ul#newsfeed li.highlighted .mapHighlighter{background-color:#F0F0F0;}
 	font-weight:bold;
 }
 .infowindow .date{color: #87888B;margin-right:5px;}
+.infowindow .date .timeago { margin-top: -28px; color: #B7B7B7; margin-right: 8px; font-size: 11px;}
 .infowindow .links{float:right;margin-right:3px;text-align:right;font-style:italic;font-size:0.8em;line-height: 1.5em;}
 .infowindow .tags{float:left;margin-left:3px;text-align:left;font-style:italic;font-size:0.8em;line-height: 1.5em;}
 .infowindow .yakTypeImg{width:15px;height:22px;}

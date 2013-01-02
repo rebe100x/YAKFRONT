@@ -99,7 +99,6 @@ exports.news_map_search = function(req, res){
 		type.push(1);
 		req.session.type = type;
 	}	
-	
 	res.render('news/map',{type:req.session.type,str:req.params.str});  
 };
 
@@ -118,10 +117,25 @@ exports.news_post = function(req, res){
   
 };
 exports.news_feed = function(req, res){
-	var Info = db.model('Info');
-	Info.findAll(function (err, docs){
-		res.render('news/feed',{infos:docs});
-	}); 
+	delete req.session.message;
+	if(typeof(req.session.type) == 'undefined' || req.session.type === null ){
+		var type = new Array();
+		type.push(1);
+		type.push(2);
+		type.push(4);
+		req.session.type = type;
+	}	
+
+	res.render('news/feed',{type:req.session.type,str:null});  	
+	 
+};
+exports.news_feed_search = function(req, res){
+	if(typeof(req.session.type) == 'undefined' || req.session.type === null ){
+		var type = new Array();
+		type.push(1);
+		req.session.type = type;
+	}	
+	res.render('news/feed',{type:req.session.type,str:req.params.str});  
 };
 
 exports.news_afeed = function(req, res){

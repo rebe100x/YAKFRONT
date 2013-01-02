@@ -1,27 +1,28 @@
 
 extends ../layout
 block content
-
 	include ../mixins/menu.jade
 	include ../mixins/searchPanel.jade
 	include ../mixins/newsLoader.jade
 	include ../mixins/paging.jade
 	include ../mixins/popup.jade
 	include ../mixins/locationChooser.jade
+	include ../mixins/forms/searchForm.jade
 
 	mixin menu('feed')
 	mixin locationChooser('feed')
 
-	div#mainFeedWrapper.row
-		mixin searchPanel()
-		mixin newsLoader()
+	div.container-fluid
 		div.row-fluid
+			div.span4
+			div.span4
+				div#searchForm
+					mixin searchForm('feed')
+			div.span4	
+		div.row-fluid#mainFeedWrapper
 			div.span8
 				div#feedContent
-			div#topsFeed.span4.alwaysShown
-				//
-					img(src="images/rightcoltest.png")
-					img(src="images/rightcoltest.png")
+			div.span4#topsFeed.alwaysShown
 		mixin paging()
 		mixin popup()
 	
@@ -29,16 +30,212 @@ block content
 	script(src="/javascripts/lib/jquery/js/timeago.js")	
 	script(src="/javascripts/lib/jquery/js/share.js")	
 	script(src="/javascripts/lib/jquery/js/jquery.livequery.js")	
-	script 
+	script(src='/javascripts/json2.js')
+	script
 		var conf = !{conf};
 		var mainConf = !{mainConf};	
-	script(src='/javascripts/feedpage.js')
-	script(src='/javascripts/json2.js')
-
-
-    
-
-
-	
+		var user =!{JSON.stringify(user)};
+		var curPos = new Object();
+		var infoArray = [];
+		var currentDate = new Date();
+		var currentPage = 1;
+		var range = 75;
+		var skip = 0;
+		var limit = mainConf.searchParams.limit;
+		var subSize = mainConf.searchParams.subSize;
 		
+
+		function setLiveUpdateTrigger()
+		{
+			if ($("#feedContent #liveupdate").length > 0)
+				return;
+
+			var urltosearch = '/api/geoinfos/48.851875/2.356374/5/null/0/1,2,3,4/null/10/0';
+
+			$("#feedContent .hidden").remove();
+
+			var liveupdate = $("<div />");
+
+			var itemsCount = 0;
+
+			liveupdate.attr("id", "liveupdate");
+
+			liveupdate.click(function(){
+				$("#feedContent .hidden").removeClass("hidden");
+				$("#feedContent #liveupdate").remove();
+			});
+
+			$.getJSON(urltosearch ,function(data) {
+
+				itemsCount = data.data.info.length;
+
+				$.each(data.data.info, function(key,val) {
+					var item = createFeedPageItem(val);
+					item.addClass("hidden");
+					
+					$("#liveupdate").after(item);
+				});
+
+				liveupdate.html(itemsCount + " more news, click here to load");
+			});
+
+			
+			$("#feedContent").prepend(liveupdate);
+		}
+
+
+
+		$(document).ready(function() {
+
+			/*init position from cookie or db*/
+			curPos = ($.isEmptyObject($.cookie("geoloc")))?{'x':user.location.lat,'y':user.location.lng,'z':14}:JSON.parse($.cookie("geoloc"));
+
+			$('.typeahead').typeahead();
+			$('.btn-group1').button();
+			getAndPrintInfo(0);
+			//triggerSearch(currentPage, 0);
+
+			//for testing
+			loadTops();
+			
+		});
+
+		$(".btn-group1").click(function(){
+			setTimeout(function(){ triggerSearch(currentPage, 0) }, 1000);	
+		});
+
+		$(".next").click(function(){
+			currentPage = currentPage + 1;
+			var skip = (currentPage - 1)*limit;
+			triggerSearch(currentPage, 1);
+		});
+				
 		
+		function changeLocation(location){
+			var locationObj = JSON.parse(location);
+			curPos.x = locationObj.lat;
+			curPos.y=locationObj.lng;
+			getAndPrintInfo(0);	
+		}		
+		
+		function rangeFromZ(){
+			console.log(curPos.z);
+			return curPos.z/100;
+		}
+
+		function getAndPrintInfo (next)
+		{
+			/*if (!next) {
+				$("#feedContent").html("loading...");
+			};
+
+			if (next == 1)
+			{
+				$(".next").hide();
+				$("#loading").html("loading...");
+			}*/
+			
+			range = rangeFromZ();
+			console.log(range);
+			// searching throuhg cirle 
+			//variables to be used x1/y1/range/null/heat/type/str/limit/skip
+			var urltouse = 'api/geoinfos/';
+			urltouse += curPos.x + "/"
+			urltouse += curPos.y	 + "/" 
+			urltouse += range + "/" 
+			urltouse +=  "null/" 
+			urltouse += dateFrom + "/" 
+			urltouse += yakType + "/" // type;
+			urltouse += searchString + "/" // str;
+			urltouse += limit + "/"  // limit;
+			urltouse += skip + "/" // skip;
+			
+			$.getJSON(urltouse ,function(data) {
+		
+				if(data.data.info.length == 0){
+					$("#feedContent").html("Aucune infos");
+					return;
+				}
+
+				var len = data.data.info.length;
+				
+				if(len == 0)
+					$("#newsLoader").css("visibility", "hidden");
+
+				if(next == 1 && data.data.info.length == 0)
+				{
+					$("#loading").html("no more results to load");
+					return;
+				}
+				if (!next) {
+					$("#feedContent").html("");
+				};
+			
+				//var item, title, content, address, more, postedby, date, type, cat, img, outlink, hot, ago, yakimage;
+				//alert(data.info.length);
+				
+				$.getJSON('/api/afeed', { id: getVcode("id", window.location)} ,function(data1) {
+				//console.log(data1);
+				
+				
+
+				data = mergeDeep(data, data1);
+					//console.log(data);
+				$.each(data.data.info, function(key,val) {
+					/*define item element*/
+					
+					var item = createFeedPageItem(val);
+					//var item2 = item;
+					if(next != 1)
+						$("#feedContent").prepend(item);
+					else
+						$("#feedContent").append(item);
+
+					//for testing 
+					//$("#topsFeed").prepend(item2);
+
+					$("#resultSet").html(currentPage);
+					$(".next").show();
+					$("#loading").html("");
+					
+				});
+				setClickableArea();
+				setshortUrl();
+				setInterval("setLiveUpdateTrigger()", 30000);
+
+				$("abbr.timeago").timeago();
+				if(typeof(data1.info) === 'undefined')
+				{
+					
+				}
+				else
+				{
+					if(data1.info.length == 1)
+							colorFirstRecord();
+				}
+				});
+			});
+		}
+
+		//for testing
+		function loadTops()
+		{
+			var urltouse = '/api/geoinfos/48.851875/2.356374/5/null/0/1,2,3,4/null/10/0';
+			/*urltouse += x1 + "/" // x1;
+			urltouse += y1	 + "/" // y1;
+			urltouse += x2 + "/" // x2;
+			urltouse += y2 + "/" // y2;
+			urltouse += heat + "/" // heat;
+			urltouse += type + "/" // type;
+			urltouse += str + "/" // str;
+			urltouse += skip + "/" // skip;
+			urltouse += limit // limit; */
+
+			$.getJSON(urltouse ,function(data) {
+				$.each(data.data.info, function(key,val) {
+					var item = createTopsItem(val);
+					$("#topsFeed").prepend(item);
+				});
+			});
+
+		}
