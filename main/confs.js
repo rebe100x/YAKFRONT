@@ -5,6 +5,7 @@ exports.confs = {
 		"imgSizePlace": [{"width":120,"height":90},{"width":512,"height":0}],
 		"searchParams": {"subSize": 200,"limit": 10, "sliderMin" : 1, "sliderMax" : 10, "sliderDefault": 5},
 		"rangeDefault":75,
+		"typeDefault":'1,2,4',
 	},
 	"devrenaud" : {
 		"validationUrl":"http://dev.labs.yakwala.fr:3000/user/validate/",

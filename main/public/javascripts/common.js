@@ -523,11 +523,6 @@ function serCurrentSearchInfo()
 $(document).ready(function() {
 
 	
-	/*throw the silent updater*/
-	setInterval(function() {
-		silentUpdater();
-	}, 10000);	
-
 	$.timeago.settings.strings = {
 		// environ ~= about, it's optional
 		prefixAgo: "il y a",
@@ -565,8 +560,6 @@ $(document).ready(function() {
 			
 			if(query.length > 3){
 				$(this).addClass('searching');
-				//console.log("encode"+encodeURIComponent(query));
-				//console.log("nomal"+query);
 				/*
 				var urlgmap = "http://maps.googleapis.com/maps/api/geocode/json?address=%C3%A9gh%C3%A9z%C3%A9e&sensor=false";
 				$.post(urlgmap,function(data){
@@ -1137,3 +1130,8 @@ function isScrolledIntoView(elem)
     return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
 }
 
+
+function killCookie(name, path)
+{
+	$.cookie(name, null, { path: path, expires: -5 });
+}

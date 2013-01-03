@@ -26,13 +26,22 @@ mixin searchForm(page)
 				input.span5.search-query#searchPlaceStr(type="search",placeholder="Où ?",autocomplete="off", data-provide="typeahead",)
 				button.btn#searchBtn(type="submit") Go
 	script
-		var yakType = [!{type}];
+		var user =!{JSON.stringify(user)};
+		var mainConf = !{mainConf};	
+		//var yakType = [!{type}];
+		var yakType = ($.isEmptyObject($.cookie("yaktype")))?mainConf.typeDefault.split(','):$.cookie("yaktype").split(',');
+		var curPos = ($.isEmptyObject($.cookie("geoloc")))?{'x':user.location.lat,'y':user.location.lng,'z':mainConf.rangeDefault,'name':user.formatted_address}:JSON.parse($.cookie("geoloc"));
 		//console.log(yakType);
 		var dateFrom = 0;
 		var searchString = "!{str}".toString();
 		if(searchString=='')
-			searchString = null;
+			searchString = ($.isEmptyObject($.cookie("searchString")))?null:$.cookie("searchString");
 		
+		$('#searchPlaceStr').val(curPos.name);
+		$('#locationInput').val(JSON.stringify({lat:curPos.x,lng:curPos.y}));						
+
+		//console.log($.cookie("searchString"));
+
 		$(document).ready(function() {
 			/*search info and place*/
 				
@@ -65,8 +74,6 @@ mixin searchForm(page)
 					var location = $('#locationInput').val();				
 					if(location != ''){
 						changeLocation(location);
-						//map.setCenter(latLng);
-						
 					}else{
 						if(placeName != ''){
 							
@@ -91,7 +98,7 @@ mixin searchForm(page)
 							var geocoder = new google.maps.Geocoder();
 							geocoder.geocode( addressQuery, function(results, status) {						
 							if (status == google.maps.GeocoderStatus.OK) {
-								var latLng = new google.maps.LatLng(results[0].geometry.location.Ya,results[0].geometry.location.Za);
+								/*var latLng = new google.maps.LatLng(results[0].geometry.location.Ya,results[0].geometry.location.Za);
 								markerHL.setPosition(latLng);
 								markerHL.setVisible(true);
 								markerHL.setMap(map);
@@ -100,7 +107,11 @@ mixin searchForm(page)
 								setTimeout(function() {
 									markerHL.setMap(null);
 								}, 3000);
-								map.panTo(latLng);
+								map.panTo(latLng);*/
+								//console.log(results);
+								var placeGmap = getPlaceFromGmapResult((results[0]));
+								changeLocation(JSON.stringify(placeGmap));
+
 							}else{
 								var salt = new Date().getTime();
 								$('#searchStr').before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide</div>");
@@ -116,11 +127,11 @@ mixin searchForm(page)
 					
 					if(str != 'Quoi ?' && str != ''){
 						searchString = str;
-						
 					}else
 						searchString = null;
-			
-					getAndPrintInfo();
+
+					$.cookie("searchString",searchString,{ expires: 10000, path : '/' });	
+					//sgetAndPrintInfo();
 					$('#searchStr').focus();
 				});
 
@@ -206,7 +217,6 @@ mixin searchForm(page)
 				value: 75,
 				change:function(event, ui){
 					curPos.z =  ui.value;
-					//getAndPrintInfo(0);
 					changeRange();
 					$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
 				}
@@ -242,6 +252,7 @@ mixin searchForm(page)
 					if(yakType.length == 0)
 						yakType = [0];
 				}
+				$.cookie("yaktype", yakType.join(','),{ expires: 10000, path : '/' });
 				getAndPrintInfo();
 			});
 
@@ -268,6 +279,10 @@ mixin searchForm(page)
 					$("#searchPlaceStr").removeClass('searching');
 					var placeGmap = getPlaceFromGmapResult(obj);
 					$('#locationInput').val(JSON.stringify(placeGmap.location));
+					curPos.x = placeGmap.location.lat;
+					curPos.y = placeGmap.location.lng;
+					curPos.name = placeGmap.formatted_address;
+					$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
 				}
 			});
 			

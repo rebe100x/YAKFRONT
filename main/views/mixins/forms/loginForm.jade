@@ -18,3 +18,20 @@ mixin loginForm()
 				br	
 				i
 					a(href='/user/new') &nbsp;Vous n'avez pas encore de compte ?
+
+	script
+		//console.log($.cookie);
+		if($.cookie("firstlogin") == null)
+		{ 
+			killCookie("connect.sid");
+			killCookie("geoloc", '/news/map/search');
+			killCookie("geoloc", '/');
+			killCookie("searchString");
+			$.cookie("firstlogin", "1");
+
+		}
+		
+		function killCookie(name, path)
+		{
+			$.cookie(name, null, { path: path, expires: -5 });
+		}

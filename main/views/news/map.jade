@@ -43,9 +43,8 @@ block content
 
 		/*INIT*/
 		var conf = !{conf};
-		var mainConf = !{mainConf};	
-		var user =!{JSON.stringify(user)};
-		var curPos = new Object();
+		
+		
 		
 		var geolocalized = 0;
 		var infowindow = null;
@@ -79,8 +78,6 @@ block content
 
 		/*READY FUNCTIONS*/
 		$(document).ready(function() {
-		
-			curPos = ($.isEmptyObject($.cookie("geoloc")))?{'x':user.location.lat,'y':user.location.lng,'z':mainConf.rangeDefault}:JSON.parse($.cookie("geoloc"));
 			zoom = rangeFromZ();
 			$("#rangeSelector").slider('value',curPos.z).slider( "option", "step", Math.floor(10) );
 
@@ -99,9 +96,6 @@ block content
 				changeZoom();
 			});
 
-			console.log(curPos);
-			
-			
 			
 			/*control opener*/
 			$('#boxOpener').click(function(event){
@@ -372,6 +366,7 @@ block content
 				markerHL.setMap(null);
 			}, 3000);
 			map.panTo(latLng);
+
 		}
 		function manageSearchBox(){
 			var width = $(window).width();
@@ -497,20 +492,13 @@ block content
 		function changeRange(){
 			zoom = rangeFromZ();
 			map.setZoom(zoom);
-			console.log(curPos.z);
-			console.log(zoom);
 			$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
-			console.log(curPos.z);
-			console.log('cookie1');
-			
-
 		};
 		function changeZoom(){
 			curPos.z  = zFromRange();
-			console.log("Z="+curPos.z);
-			$("#rangeSelector").val(curPos.z);
+			$("#rangeSelector").val(curPos.z).slider('value',curPos.z);
 			$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
-			console.log('cookie2');
+			
 		};
 
 		function initialize(x,y,z){
@@ -542,9 +530,6 @@ block content
 				zoom = this.getZoom();
 				curPos.z = zFromRange();
 				$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
-				console.log('cookie3');
-				console.log(zoom);
-				console.log(curPos.z);
 				//markerCluster.clearMarkers();
 				getAndPrintInfo();
 			});
@@ -634,7 +619,8 @@ block content
 			
 				// empty the news feed
 				$('#newsfeed').html('');
-				if(ajax.data.info.length == 0){
+
+				if(typeof(ajax.data.info) == 'undefined' || ajax.data.info.length == 0){
 					//$('#newsfeed').html('Aucune info !');
 					printEmptyFeedItem();
 				}

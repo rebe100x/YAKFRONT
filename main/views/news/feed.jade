@@ -30,13 +30,13 @@ block content
 	link(rel='stylesheet', href='/javascripts/lib/jquery/css/share.css')
 	script(src="/javascripts/lib/jquery/js/timeago.js")	
 	script(src="/javascripts/lib/jquery/js/share.js")	
-	script(src="/javascripts/lib/jquery/js/jquery.livequery.js")	
-	script(src='/javascripts/json2.js')
+	script(src="/javascripts/lib/jquery/js/jquery.livequery.js")
+	script(src="/javascripts/json2.js")	
+	
 	script
 		var conf = !{conf};
 		var mainConf = !{mainConf};	
 		var user =!{JSON.stringify(user)};
-		var curPos = new Object();
 		var infoArray = [];
 		var currentDate = new Date();
 		var currentPage = 1;
@@ -92,7 +92,9 @@ block content
 		$(document).ready(function() {
 
 			/*init position from cookie or db*/
-			curPos = ($.isEmptyObject($.cookie("geoloc")))?{'x':user.location.lat,'y':user.location.lng,'z':14}:JSON.parse($.cookie("geoloc"));
+			
+			range = rangeFromZ();
+			$("#rangeSelector").slider('value',curPos.z).slider( "option", "step", Math.floor(1) );
 
 			$('.typeahead').typeahead();
 			$('.btn-group1').button();
@@ -111,9 +113,23 @@ block content
 			
 		});
 
-		$(".btn-group1").click(function(){
-			setTimeout(function(){ triggerSearch(currentPage, 0) }, 1000);	
-		});
+
+
+		function rangeFromZ(){
+			return (-1)*0.0099/1*(curPos.z)+1;
+		}
+
+		/*function zFromRange(){
+			return (-1)/0.0099*(range-1);
+		}*/
+
+		function changeRange(){
+			range = rangeFromZ();
+			$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
+
+			getAndPrintInfo(0);
+			
+		};
 
 		function changeLocation(location){
 			var locationObj = JSON.parse(location);
@@ -122,25 +138,18 @@ block content
 			getAndPrintInfo(0);	
 		}		
 		
-		function rangeFromZ(){
-			//console.log(curPos.z);
-			return curPos.z/100;
-		}
+		
 
-		function changeRange(){
-			getAndPrintInfo(0);
-		};
 		function getAndPrintInfo (next)
 		{
-			
+
 			if (next == 1)
 			{	
 				skip = skip + limit;
 				$("#feedContent").append(loading)
-			}
-			
-			else
+			}else
 			{
+
 				$("#feedContent").html("");
 			}
 			range = rangeFromZ();
@@ -158,9 +167,10 @@ block content
 			urltouse += limit + "/"  // limit;
 			urltouse += skip + "/" // skip;
 			
+			//console.log(urltouse);
 			$.getJSON(urltouse ,function(data) {
 		
-				if(data.data.info.length == 0 && next != 1){
+				if((typeof(data.data) == 'undefined' ||  data.data.info.length == 0) && next != 1){
 					$("#feedContent").html("Aucune infos");
 					return;
 				}
@@ -196,7 +206,7 @@ block content
 				});
 				setClickableArea();
 				setshortUrl();
-				setInterval("setLiveUpdateTrigger()", 30000);
+				//setInterval("setLiveUpdateTrigger()", 30000);
 				$("#feedContent .loading").remove();
 
 				$("abbr.timeago").timeago();
