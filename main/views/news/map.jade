@@ -43,6 +43,7 @@ block content
 
 		/*INIT*/
 		var conf = !{conf};
+		var mainConf = !{mainConf};	
 		var user =!{JSON.stringify(user)};
 		var curPos = new Object();
 		
@@ -63,32 +64,42 @@ block content
 		var pinkParksStyles =[{}];
 		
 		var skip = 0;
-		
+		var zoom = 1;
 		var infoContent = '';
 		var rule = new RegExp('#([^\\s]*)','g');
 		var rule2 = new RegExp('[#]','g');
 		var postFlag = 0;
 		var listenerHandle = null;
 		
+		var map = new google.maps.Map(document.getElementById('mymap'), {
+				mapTypeId: google.maps.MapTypeId.ROADMAP,
+				disableDefaultUI: true,
+			});
+
+
 		/*READY FUNCTIONS*/
 		$(document).ready(function() {
 		
-			curPos = ($.isEmptyObject($.cookie("geoloc")))?{'x':user.location.lat,'y':user.location.lng,'z':14}:JSON.parse($.cookie("geoloc"));
-			
+			curPos = ($.isEmptyObject($.cookie("geoloc")))?{'x':user.location.lat,'y':user.location.lng,'z':mainConf.rangeDefault}:JSON.parse($.cookie("geoloc"));
+			zoom = rangeFromZ();
+			$("#rangeSelector").slider('value',curPos.z).slider( "option", "step", Math.floor(10) );
+
 			/*map tools*/
 			$('#zoomplus').click(function () {	  
-				mapzoom = map.getZoom();
-				mapzoom++;
-				map.setZoom(mapzoom);		
+				zoom = map.getZoom();
+				zoom++;
+				map.setZoom(zoom);	
+				changeZoom();	
 			});
 
 			$('#zoomminus').click(function () {
-				mapzoom = map.getZoom();
-				mapzoom--;
-				map.setZoom(mapzoom);
+				zoom = map.getZoom();
+				zoom--;
+				map.setZoom(zoom);
+				changeZoom();
 			});
 
-			
+			console.log(curPos);
 			
 			
 			
@@ -102,7 +113,6 @@ block content
 					$(this).removeClass('closed').addClass('opened');
 					$('#newsfeedMenu').animate({height:'140px',opacity:1},200,function(){drawNewsFeed();});
 				}
-				
 			});
 
 			/*news nav*/
@@ -477,17 +487,45 @@ block content
 			});
 		}
 
+		function rangeFromZ(){
+			return Math.floor((curPos.z)/10+4);
+		}
+		function zFromRange(){
+			return Math.floor((zoom-4)*10);
+		}
+
+		function changeRange(){
+			zoom = rangeFromZ();
+			map.setZoom(zoom);
+			console.log(curPos.z);
+			console.log(zoom);
+			$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
+			console.log(curPos.z);
+			console.log('cookie1');
+			
+
+		};
+		function changeZoom(){
+			curPos.z  = zFromRange();
+			console.log("Z="+curPos.z);
+			$("#rangeSelector").val(curPos.z);
+			$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
+			console.log('cookie2');
+		};
+
 		function initialize(x,y,z){
 			// set user cookies
-			$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
+			//$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
 			var center = new google.maps.LatLng(x,y);
 			infowindow = new google.maps.InfoWindow({content: ".",maxWidth : 300});
-			map = new google.maps.Map(document.getElementById('mymap'), {
-				zoom: z,
+			/*map = new google.maps.Map(document.getElementById('mymap'), {
+				zoom: zoom,
 				center: center,
 				mapTypeId: google.maps.MapTypeId.ROADMAP,
 				disableDefaultUI: true,
-			});
+			});*/
+			map.setZoom(zoom);
+			map.setCenter(center);
 			
 			map.setOptions({styles: pinkParksStyles});
 			//var markerClustererOptions = {gridSize:30,maxZoom: 17,styles: [{height: 28,width: 28,url: "/images/markers/m1.png"},{height: 38,width: 38,url: "/images/markers/m2.png"},{height: 55,width:55,url: "/images/markers/m3.png"},{height: 85,width: 85,url: "/images/markers/m4.png"},{height: 85,width: 85,url: "/images/markers/m5.png"}]};
@@ -501,8 +539,12 @@ block content
 				center = this.getCenter();
 				curPos.x = center.lat();
 				curPos.y = center.lng();
-				curPos.z = this.getZoom();
+				zoom = this.getZoom();
+				curPos.z = zFromRange();
 				$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
+				console.log('cookie3');
+				console.log(zoom);
+				console.log(curPos.z);
 				//markerCluster.clearMarkers();
 				getAndPrintInfo();
 			});

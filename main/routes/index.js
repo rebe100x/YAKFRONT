@@ -363,14 +363,15 @@ exports.user_logout = function(req, res){
 exports.session = function(req, res){
 	var User = db.model('User');
 	User.authenticate(req.body.login,req.body.password, function(err, user) {
-	if(!(typeof(user) == 'undefined' || user === null || user === '') && user.status == 1){
-			req.session.user = user._id;
-			res.redirect(req.body.redir || '/news/map');
-		}else{
-			if(user.status == 2)
+		if(!(typeof(user) == 'undefined' || user === null || user === '')){
+			if(user.status == 1){
+				req.session.user = user._id;
+				res.redirect(req.body.redir || '/news/map');
+			}else if(user.status == 2){
 				req.session.message = 'Compte non validé.';
-			else
-				req.session.message = 'Identifiants incorrects.';	
+			}
+		}else{
+			req.session.message = 'Identifiants incorrects.';	
 			res.redirect('user/login?redir='+req.body.redir);
 		}
 	});

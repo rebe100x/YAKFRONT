@@ -60,6 +60,7 @@ block content
 		script(src='http://maps.google.com/maps/api/js?v=3.9&sensor=false&libraries=drawing')		
 		script
 			var conf = !{conf};
+			var mainConf = !{mainConf};	
 			var user =!{JSON.stringify(user)};
 			
 			$(document).ready(function() {
@@ -116,7 +117,7 @@ block content
 						var placeGmap = getPlaceFromGmapResult(obj);
 						
 						$('#location').val(JSON.stringify(placeGmap.location));
-						var curPos = {x:placeGmap.location.lat,y:placeGmap.location.lng,z:14};
+						var curPos = {x:placeGmap.location.lat,y:placeGmap.location.lng,z:mainConf.rangeDefault};
 						$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
 						$('#address').val(JSON.stringify(placeGmap.address));
 						$('#formatted_address').val(JSON.stringify(placeGmap.formatted_address));

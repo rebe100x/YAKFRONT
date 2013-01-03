@@ -123,6 +123,9 @@ block content
 			return curPos.z/100;
 		}
 
+		function changeRange(){
+			getAndPrintInfo(0);
+		};
 		function getAndPrintInfo (next)
 		{
 			/*if (!next) {
@@ -136,7 +139,7 @@ block content
 			}*/
 			
 			range = rangeFromZ();
-			console.log(range);
+			
 			// searching throuhg cirle 
 			//variables to be used x1/y1/range/null/heat/type/str/limit/skip
 			var urltouse = 'api/geoinfos/';

@@ -206,8 +206,9 @@ mixin searchForm(page)
 				value: 75,
 				change:function(event, ui){
 					curPos.z =  ui.value;
-					getAndPrintInfo(0);
-					
+					//getAndPrintInfo(0);
+					changeRange();
+					$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
 				}
 			});
 
