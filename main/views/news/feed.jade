@@ -22,9 +22,10 @@ block content
 		div.row-fluid#mainFeedWrapper
 			div.span8
 				div#feedContent
+				div
+					mixin paging()
 			div.span4#topsFeed.alwaysShown
-		mixin paging()
-		mixin popup()
+		
 	
 	link(rel='stylesheet', href='/javascripts/lib/jquery/css/share.css')
 	script(src="/javascripts/lib/jquery/js/timeago.js")	
@@ -43,7 +44,10 @@ block content
 		var skip = 0;
 		var limit = mainConf.searchParams.limit;
 		var subSize = mainConf.searchParams.subSize;
-		
+		var loading = $("<div />");
+		loading.attr("class", "loading");
+		loading.css("textAlign", "center")
+		loading.html("<img src='images/loader_big.gif' />");
 
 		function setLiveUpdateTrigger()
 		{
@@ -97,6 +101,13 @@ block content
 
 			//for testing
 			loadTops();
+
+			/* Controlling the more flow */
+			$(window).scroll(function(){
+				if (isScrolledIntoView($(".next"))) {
+						getAndPrintInfo(1);
+					}
+			});
 			
 		});
 
@@ -104,13 +115,6 @@ block content
 			setTimeout(function(){ triggerSearch(currentPage, 0) }, 1000);	
 		});
 
-		$(".next").click(function(){
-			currentPage = currentPage + 1;
-			var skip = (currentPage - 1)*limit;
-			triggerSearch(currentPage, 1);
-		});
-				
-		
 		function changeLocation(location){
 			var locationObj = JSON.parse(location);
 			curPos.x = locationObj.lat;
@@ -119,7 +123,7 @@ block content
 		}		
 		
 		function rangeFromZ(){
-			console.log(curPos.z);
+			//console.log(curPos.z);
 			return curPos.z/100;
 		}
 
@@ -128,20 +132,21 @@ block content
 		};
 		function getAndPrintInfo (next)
 		{
-			/*if (!next) {
-				$("#feedContent").html("loading...");
-			};
-
-			if (next == 1)
-			{
-				$(".next").hide();
-				$("#loading").html("loading...");
-			}*/
 			
+			if (next == 1)
+			{	
+				skip = skip + limit;
+				$("#feedContent").append(loading)
+			}
+			
+			else
+			{
+				$("#feedContent").html("");
+			}
 			range = rangeFromZ();
 			
 			// searching throuhg cirle 
-			//variables to be used x1/y1/range/null/heat/type/str/limit/skip
+			
 			var urltouse = 'api/geoinfos/';
 			urltouse += curPos.x + "/"
 			urltouse += curPos.y	 + "/" 
@@ -155,44 +160,31 @@ block content
 			
 			$.getJSON(urltouse ,function(data) {
 		
-				if(data.data.info.length == 0){
+				if(data.data.info.length == 0 && next != 1){
 					$("#feedContent").html("Aucune infos");
 					return;
 				}
 
+
 				var len = data.data.info.length;
-				
-				if(len == 0)
-					$("#newsLoader").css("visibility", "hidden");
 
-				if(next == 1 && data.data.info.length == 0)
-				{
-					$("#loading").html("no more results to load");
-					return;
-				}
-				if (!next) {
-					$("#feedContent").html("");
-				};
-			
-				//var item, title, content, address, more, postedby, date, type, cat, img, outlink, hot, ago, yakimage;
-				//alert(data.info.length);
-				
 				$.getJSON('/api/afeed', { id: getVcode("id", window.location)} ,function(data1) {
-				//console.log(data1);
 				
-				
-
 				data = mergeDeep(data, data1);
-					//console.log(data);
+				
 				$.each(data.data.info, function(key,val) {
 					/*define item element*/
 					
 					var item = createFeedPageItem(val);
-					//var item2 = item;
+
 					if(next != 1)
+					{
 						$("#feedContent").prepend(item);
+					}
 					else
+					{
 						$("#feedContent").append(item);
+					}
 
 					//for testing 
 					//$("#topsFeed").prepend(item2);
@@ -205,6 +197,7 @@ block content
 				setClickableArea();
 				setshortUrl();
 				setInterval("setLiveUpdateTrigger()", 30000);
+				$("#feedContent .loading").remove();
 
 				$("abbr.timeago").timeago();
 				if(typeof(data1.info) === 'undefined')
