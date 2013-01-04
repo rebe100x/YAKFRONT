@@ -36,7 +36,7 @@ mixin searchForm(page)
 			yakType = [];
 		var curPos = ($.isEmptyObject($.cookie("geoloc")))?{'x':user.location.lat,'y':user.location.lng,'z':mainConf.rangeDefault,'name':user.formatted_address}:JSON.parse($.cookie("geoloc"));
 		var dateFrom = ($.isEmptyObject($.cookie("dateFrom")))?mainConf.dateFromDefault:$.cookie("dateFrom");
-		console.log('init'+dateFrom);
+		
 		var searchString = "!{str}".toString();
 		if(searchString=='')
 			searchString = ($.isEmptyObject($.cookie("searchString")))?null:$.cookie("searchString");
@@ -155,7 +155,6 @@ mixin searchForm(page)
 				},
 				change:function(event, ui){
 					getAndPrintInfo();
-					console.log('slider value:'+ui.value);
 					$.cookie("dateFrom", ui.value,{ expires: 10000, path : '/' });
 				}
 			});
