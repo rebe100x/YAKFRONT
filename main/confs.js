@@ -6,6 +6,7 @@ exports.confs = {
 		"searchParams": {"subSize": 200,"limit": 10, "sliderMin" : 1, "sliderMax" : 10, "sliderDefault": 5},
 		"rangeDefault":75,
 		"typeDefault":'1,2,4',
+		"dateFromDefault":0,
 	},
 	"devrenaud" : {
 		"validationUrl":"http://dev.labs.yakwala.fr:3000/user/validate/",

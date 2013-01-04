@@ -517,6 +517,65 @@ function serCurrentSearchInfo()
 }
 //var socket = io.connect('http://localhost:3000');
 
+function setTimeSliderText(x){
+	var y = 0;
+	if(x==0){
+		y= 0;
+		yText = "Aujourd'hui";
+	}else{
+		if(x < 0){
+			y = Math.floor(Math.pow(x,2)/25); 
+			//y = Math.floor(x/2);
+		}else{
+			y = (-1)*Math.floor(Math.pow(x,2)/25); 
+			//y = (-1)*Math.floor(x/2);
+			//y = Math.floor(-7.222723628*Math.pow(10,-7)*Math.pow(x,5) + 2.123355095*Math.pow(10,-4)*Math.pow(x,4) - 2.178300623*Math.pow(10,-2)*Math.pow(x,3) + 0.906040198*Math.pow(x,2) - 16.47223075*x + 360.0000001);
+		}
+			
+	}
+	
+	var yText = "";
+	var months = parseInt(y / 30);
+	var days = y % 30;
+	var dayText = "";
+	var monthText = "";
+	
+	if(days == 0 && months == 0)
+		dayText = "Aujourd'hui";
+	else if(days == 0 && months > 0)
+		dayText = "";
+	else if(days == -1 && months == 0)
+		dayText = "Demain";
+	else if(days == 1 && months == 0)
+		dayText = "Hier";
+	else if(days == 1 || days == -1)
+		dayText = "1 jour";
+	else
+		dayText = Math.abs(days)+" jours";
+	if(months == 0)
+		monthText = "";	
+	else if(months == 1)
+		monthText = "1 mois";	
+	else
+		monthText = Math.abs(months)+" mois";	
+
+	if(monthText && dayText)
+		yText = monthText+" et "+ dayText;
+	else if(monthText && !dayText)
+		yText = monthText
+	else
+		yText = dayText;
+	
+	if(y >= 2 && x < 0)
+		yText = "Il y a "+yText;
+	else if(y <= -2 && x > 0)
+		yText = "Dans "+yText;
+	
+	$( "#dayPrinter" ).html(yText);
+	
+	return y;	
+}
+
 
 		
 /*READY FUNCTIONS*/	

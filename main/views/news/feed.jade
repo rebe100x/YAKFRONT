@@ -94,7 +94,7 @@ block content
 			/*init position from cookie or db*/
 			
 			range = rangeFromZ();
-			$("#rangeSelector").slider('value',curPos.z).slider( "option", "step", Math.floor(1) );
+			$("#rangeSelector").slider( "option", "step", Math.floor(1));
 
 			$('.typeahead').typeahead();
 			$('.btn-group1').button();
