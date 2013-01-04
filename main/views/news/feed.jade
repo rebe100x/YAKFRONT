@@ -47,6 +47,8 @@ block content
 		var limit = mainConf.searchParams.limit;
 		var subSize = mainConf.searchParams.subSize;
 		var loading = $("<div />");
+		var timer;
+		var timestamp; 
 		loading.attr("class", "loading");
 		loading.css("textAlign", "center")
 		loading.html("<img src='images/loader_big.gif' />");
@@ -424,10 +426,10 @@ block content
 						getAndPrintInfo(1);
 					}
 			});
-			
+
+			/* Controlling the silent Updater */
+			timer = setInterval( getSilentUpdate, 30000);
 		});
-
-
 
 		function rangeFromZ(){
 			return (-1)*0.0099/1*(curPos.z)+1;
@@ -454,9 +456,9 @@ block content
 		
 		
 
-		function getAndPrintInfo (next)
+		function getAndPrintInfo (next, silentUpdate)
 		{
-
+		
 			if (next == 1)
 			{	
 				skip = skip + limit;
@@ -538,6 +540,62 @@ block content
 							colorFirstRecord();
 				}
 				});
+			});
+		
+		}
+
+		function getSilentUpdate(){
+
+			$("#feedContent .hidden").remove();
+
+			if ($("#feedContent .silentUpdates").length == 0) {
+				var silentUpdates = $("<div />");
+				silentUpdates.attr("class", "silentUpdates");
+				silentUpdates.hide();
+				$("#feedContent").prepend(silentUpdates);
+			}
+
+			timestamp = Math.round(+new Date()/1000);
+
+			var urltouse = 'api/geoinfos/';
+			urltouse += curPos.x + "/"
+			urltouse += curPos.y	 + "/" 
+			urltouse += range + "/" 
+			urltouse +=  "null/" 
+			urltouse += dateFrom + "/" 
+			urltouse += timestamp + "/" 
+			urltouse += yakType + "/" // type;
+			urltouse += searchString + "/" // str;
+			urltouse += limit + "/"  // limit;
+			urltouse += skip + "/" // skip;	
+			console.log(timestamp);
+			$.getJSON(urltouse ,function(data) {
+
+				var len = data.data.info.length;
+
+				$.each(data.data.info, function(key,val) {
+					var item = createFeedPageItem(val);
+					item.addClass("hidden");
+					$("#feedContent .silentUpdates").after(item);
+				});
+
+				setClickableArea();
+				setshortUrl();
+
+				if (len > 0) {
+					$("#feedContent .silentUpdates").show();
+					$("#feedContent .silentUpdates").html("Il y'en a " + len + " nouvelles infos");
+					$("#feedContent .silentUpdates").click(function(){
+						$("#feedContent .hidden").removeClass("hidden");
+						$("#feedContent .silentUpdates").remove();
+						clearInterval(timer);
+						timer = setInterval( getSilentUpdate, 30000);
+					});
+				}
+				else
+				{
+					$("#feedContent .silentUpdates").hide();
+				}
 			});
 		}
 
