@@ -200,7 +200,8 @@ function serCurrentSearchInfo()
 
 }
 //var socket = io.connect('http://localhost:3000');
-function setLocalnessSliderText(x){	
+function setLocalnessSliderText(x, elid){	
+	
 	var sliderText = 'Localness';
 	switch(x){
 		case 0:
@@ -235,9 +236,19 @@ function setLocalnessSliderText(x){
 		break;	
 		case 100:
 			sliderText = "Hyper local";
+			break;
+		default:
+			sliderText = "Local";
 		break;			
 	}
-	$( "#localnessPrinter" ).html(sliderText);
+	if (typeof(elid) === 'undefined') {
+		$("#localnessPrinter").html(sliderText);
+	}
+	else
+	{
+		$(elid).html(sliderText);
+	}
+	
 }
 
 function setTimeSliderText(x){

@@ -109,6 +109,8 @@ abbr[title] {
 #topsFeed .content{font-size:11px; margin-top: 11px;}
 #topsFeed .myitem .freetags { clear: both; position: relative; top: 0px; left: 0px; font-size: 11px;}
 #topsFeed .myitem .freetags a { color: #D81A21; font-size: 11px; margin-right: 10px;}
+
+.localnessPrinter {position: relative; top: -13px; left: 209px;}
 /* THE MAP
 -------------------------------------------------- */
 	/*MAP TOOLS CONTROLLERS*/

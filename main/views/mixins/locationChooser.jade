@@ -39,6 +39,7 @@ mixin locationChooser(menu)
 										span(data-dismiss="modal", onclick="setGeoLocaton(this)")= favplace.name
 										i.icon-remove.icon-pointer(onclick='removefavPlace($(this));')
 										div.theslider(title=favplace.range, alt=favplace._id)
+										span.localnessPrinter Local
 					br	
 					- if(session)
 						div.control-group
@@ -49,5 +50,27 @@ mixin locationChooser(menu)
 			div.modal-footer
 				span.btn(data-dismiss="modal") Fermer
 
+		script
+			/*slider range selector*/
+
+			$( ".theslider" ).slider({
+				range: "min",
+				min: 0,
+				max: 100,
+				step:10,
+				value: 20,
+				slide: function(event,ui){
+					setLocalnessSliderText(ui.value, $(this).parent().find(".localnessPrinter"));
+				},
+				change:function(event, ui){
+					//curPos.z =  ui.value;
+					//changeRange();
+					//$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
+				},
+				create:function(event, ui){
+					setLocalnessSliderText(parseInt($(this).attr("title")), $(this).parent().find(".localnessPrinter"));
+					$(this).slider( "value", parseInt($(this).attr("title") ) );
+				}
+			});
 
 			
