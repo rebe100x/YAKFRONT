@@ -392,11 +392,34 @@ $(document).ready(function() {
 			$('#favplace,#favplace2').removeClass('searching');
 			var placeGmap = getPlaceFromGmapResult(obj);
 			var point = new Object();
+			
 			point.name = placeGmap.title;
 			point.location = placeGmap.location;
 			$.post('/favplace', {'place':point},function(id) {
-				$('.favplacelist').append("<li pointId='"+id+"' lat='"+placeGmap.location.lat+"' lng='"+placeGmap.location.lng+"' class='zoneLoc'><i class='icon-map-marker'></i><span> "+obj.formatted_address+"</span><i class='icon-remove icon-pointer'  onclick='removefavPlace($(this));'></i></li>");
+				$('.favplacelist').append("<li id='newLI' pointname='" + placeGmap.title + "' location='" + JSON.stringify(placeGmap.location) +"' pointId='"+id+"' lat='"+placeGmap.location.lat+"' lng='"+placeGmap.location.lng+"' class='zoneLoc'><i class='icon-map-marker'></i><span> "+obj.formatted_address+"</span><i class='icon-remove icon-pointer'  onclick='removefavPlace($(this));'></i><div class='theslider' title='" + mainConf.searchParams.sliderDefault + "' alt='" + id +"'></div><span class='localnessPrinter'>Local</span></li>");
+
 				$('#favplace,#favplace2').val('').focus();
+				$('#newLI').find(".theslider").slider({
+				range: "min",
+				min: 0,
+				max: 100,
+				step:10,
+				value: 20,
+				slide: function(event,ui){
+					setLocalnessSliderText(ui.value, $(this).parent().find(".localnessPrinter"));
+				},
+				change:function(event, ui){
+					//changePlaceRange($(this).parent().attr("alt"), $(this).parent().attr("lat"), $(this).parent().attr("lng"), $(this).parent().attr("pointname"), ui.value);
+					// curPos.z =  ui.value;
+					//changeRange();
+					//$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
+				},
+				create:function(event, ui){
+					setLocalnessSliderText(parseInt($(this).attr("title")), $(this).parent().find(".localnessPrinter"));
+					$(this).slider( "value", parseInt($(this).attr("title") ) );
+					$("#newLI").removeAttr("id");
+				}
+			});
 			});
 			
 			//var placeGmap = getPlaceFromGmapResult(obj);
@@ -930,3 +953,24 @@ function killCookie(name, path)
 {
 	$.cookie(name, null, { path: path, expires: -5 });
 }
+
+function changePlaceRange(id, lat, lng, pointname, range)
+{
+	var newid;
+	var point = new Object();
+	var location = '{"lng":' + lng + ',"lat":' + lat +'}'
+	point.name = pointname;
+	
+	point.location = JSON.parse(location);
+	point.range = range;
+	$.post("/delfavplace", {pointId: id}, function(id){
+		newid = id;
+	});
+
+	$.post("/favplace", {'place':point}, function(id){
+
+	});
+
+	return newid;
+}
+
