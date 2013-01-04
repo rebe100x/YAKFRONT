@@ -82,6 +82,7 @@ abbr[title] {
 #feedContent .myitem .freetags a { color: #DC1227; font-size: 13px; margin-right: 10px;cursor:pointer;}
 #feedContent .myitem .phoneNumbers { clear: both; position: relative; margin-top: 12px; left: 0px;}
 #feedContent .myitem .phoneNumbers a { color: #3CB413; font-size: 12px; margin-right: 10px; position: relative; top: -4px; left: -9px;}
+#feedContent .myitem .loadingMore { height: 18px; position: absolute; left: 101px;}  
 .expand { z-index: 1111};
 #search #heatModule { text-align: center;}
 #search #heatModule .upperHeight { height: 5px; margin-top: 9px;}

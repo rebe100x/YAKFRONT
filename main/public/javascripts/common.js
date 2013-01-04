@@ -156,9 +156,13 @@ function setshortUrl()
 {
 
 	$(".icon-share").mouseenter(function(){
-		if ($(this).find("span").length == 0) {
-			$(this).prepend('<span>&nbsp;&nbsp;&nbsp;&nbsp;Loading</span>');
-		};
+		if($(this).find(".box").length > 0)
+		{
+			return;
+		}
+		if ($(this).find(".loadingMore").length == 0) {
+			$(this).prepend('<img src="images/loader_big.gif" class="loadingMore" />');
+		}
 		if ($(this).find(".buttons").length == 0) {
 			var more = $(this);
 			$.getJSON("https://api-ssl.bitly.com/v3/shorten?", 
@@ -830,10 +834,10 @@ function setShare(el){
 	render: function(api, options){
 		//console.log($(api.element).find('.buttons'));
 		//$(api.element).find('.buttons').css("display", "block");
-		$(api.element).find('.buttons').livequery(function(){
+		$(api.element).find('.box').livequery(function(){
     		//element created
     		//alert("created");
-    		$(api.element).find("span").eq(0).remove();
+    		//$(api.element).find(".loadingMore").hide();
     		$(api.element).prepend("<img src='images/ftg.png' class='ftgIcon' class='icon-share' /> ");
     		$(api.element).find('.buttons').css("display", "block");
     		
