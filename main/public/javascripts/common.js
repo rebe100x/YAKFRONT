@@ -38,8 +38,8 @@ function setToolTip(el)
 function setSearchFor(el)
 {
 	$("html, body").animate({ scrollTop: 0 }, "slow");
-	$("#SearchWhat").val($(el).text().substring(1, $(el).text().length));
-	triggerSearch(currentPage, 0);
+	$("#searchStr").val($(el).text().substring(1, $(el).text().length));
+	getAndPrintInfo(0);
 }
 
 function colorFirstRecord()
