@@ -821,12 +821,17 @@ block content
 										td Parameters :
 											ul
 												li 
-													code /api/geoinfos/bl.lat/bl.lng/tr.lat/tr.lng/daysBack/type,type,type/searchString
+													code /api/geoinfos/bl.lat/bl.lng/tr.lat/tr.lng/secondsFromNow/now/type,type,type/searchString
 												li bl.lat : latitude of the bottom left point
 												li bl.lng : longitude of the bottom left point
 												li tr.lat : latitude of the top right point
 												li tr.lng : longitude of the top right point
-												li daysBack :
+												li secondsFromNow : number of seconds. Negative for the past and positive for the future.
+												i.muted Ex : to search info from yesterday : - 1 * 24 * 60 * 60
+												br
+												i.muted Ex : to search info in 2 days and half : 2.5 * 24 * 60 * 60 
+												li now : timestamp. If it is different from 0, we retrive only data created after this timestamp
+												i.muted This param should be set for live update : at pahe loading, get the current timestamp, and call this url with now set to 0. After, to update your list of news without reloading your page, and without getting all news, you have to set this parameter to the timestamp you saved at loading. Thus it will retrieve only data created after you page was loaded. Simply append the new items to your list.
 												li type : a list of coma-separated int
 													ul
 														li 1 : Actu

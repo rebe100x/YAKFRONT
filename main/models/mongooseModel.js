@@ -267,22 +267,30 @@ Info.statics.findByUserIds = function (useridArray, count, from, callback) {
 }
 
 
-Info.statics.findAllGeo = function (x1,y1,x2,y2,from,type,str,thecount,theskip,callback) {
+Info.statics.findAllGeo = function (x1,y1,x2,y2,from,now,type,str,thecount,theskip,callback) {
 	var limit = (typeof(thecount) != 'undefined' && thecount > 0) ? thecount : 100;		
 	var skip = (typeof(theskip) != 'undefined' && theskip > 0) ? theskip : 0;	
-	// we create the date rounded to the last day, except if from = 0, we take the last few hours
+	/*
+	// we create the date rounded to the last day
 	var DPUB = new Date();
 	var DEND = new Date();
 	var now = new Date();
 	var D = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
-	var DTS = D.getTime() / 1000 - (from * 60 * 60 * 24);
+	var DTS = D.getTime() / 1000 - (from * 60);
 	DPUB .setTime(DTS*1000);
 	DEND .setTime(DTS*1000);
 	if(from == 0){ // from this morning to now
 		DPUB.setTime(now.getTime()+3*60*60*1000);
 		DEND = D; // this morning
 	}
-		
+	*/
+	var DPUB = new Date();
+	var DEND = new Date();
+	var offset = 1000;
+	DPUB.setTime(DPUB.getTime()+from*1000-offset);
+	DEND.setTime(DEND.getTime()+from*1000);
+
+
 	if(y2 == 'null'){		
 		var locationQuery = {$near:[parseFloat(x1),parseFloat(y1)],$maxDistance:parseFloat(x2)};
 	}else{
@@ -304,10 +312,16 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,from,type,str,thecount,theskip,c
 				"yakType" : {$in:type}
 			};
 			
-			console.log(type);
-
 	var qInfo = this.find(cond).sort({'pubDate':-1}).limit(limit).skip(skip);
 	
+	/*mode update*/
+	if(now != 0){
+		var DCRE = new Date();
+		DCRE.setTime( now*1000 );
+		qInfo.where('creationDate').gt(DCRE);
+	}
+		
+
 	if(str != 'null' && str.length > 0){  // STRING SEARCH
 		var S = require('string');
 		str = decodeURIComponent(str);
@@ -357,14 +371,25 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,from,type,str,thecount,theskip,c
 	return res;
 }
 
-Info.statics.findAllGeoAlert = function (x1,y1,x2,y2,from,str,usersubs,tagsubs,count,skip,callback) {
+Info.statics.findAllGeoAlert = function (x1,y1,x2,y2,from,now,str,usersubs,tagsubs,count,skip,callback) {
 	var limit = (typeof(count) != 'undefined' && count > 0) ? count : 100;		
 	var skip = (typeof(skip) != 'undefined' && skip > 0) ? skip : 0;	
 	
+	/*var DPUB = new Date();
+	var DEND = new Date();
 	var now = new Date();
 	var D = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
-	var DTS = D.getTime() / 1000 - (from * 60 * 60 * 24);
-	D.setTime(DTS*1000); 
+	var DTS = D.getTime() / 1000 - (from * 60);
+	DPUB .setTime(DTS*1000);
+	DEND .setTime(DTS*1000);*/
+
+	var DPUB = new Date();
+	var DEND = new Date();
+	var offset = 1000;
+	DPUB.setTime(DPUB.getTime()+from*1000-offset);
+	DEND.setTime(DEND.getTime()+from*1000);
+
+
 	var box = [[parseFloat(x1),parseFloat(y1)],[parseFloat(x2),parseFloat(y2)]];
 	var Yakcat = db.model('Yakcat');
 	var User = db.model('User');
@@ -375,13 +400,19 @@ Info.statics.findAllGeoAlert = function (x1,y1,x2,y2,from,str,usersubs,tagsubs,c
 				"print":1,
 				"status":1,
 				"location" : {$within:{"$box":box}},
-				"pubDate":{$lte:D},
-				"dateEndPrint":{$gte:D},
+				"pubDate":{$lte:DPUB},
+				"dateEndPrint":{$gte:DEND},
 
 			};
 
 	var qInfo = this.find(cond).sort({'pubDate':-1}).limit(limit).skip(skip);
 	
+	/*mode update*/
+	if(now != 0){
+		var DCRE = new Date();
+		DCRE.setTime( now*1000 );
+		qInfo.where('creationDate').gt(DCRE);
+	}
 	
 	if( (typeof(usersubs) != 'undefined' && usersubs != 'null') || (typeof(tagsubs) != 'undefined' && tagsubs != 'null' ) ){
 		if(typeof(usersubs) != 'undefined' && usersubs != 'null' ){

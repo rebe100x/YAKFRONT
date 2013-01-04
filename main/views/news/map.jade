@@ -75,6 +75,9 @@ block content
 				disableDefaultUI: true,
 			});
 
+		setInterval(function() {
+				silentUpdater();			
+			}, 10000);
 
 		/*READY FUNCTIONS*/
 		$(document).ready(function() {
@@ -353,6 +356,8 @@ block content
 				
 			manageSearchBox();
 
+			
+
 		});/*END READY*/
 
 		function changeLocation(location){
@@ -563,16 +568,18 @@ block content
 		}
 		
 		function silentUpdater(){
-		
+			
+			console.log('silent');
 			searchString = encodeURIComponent(searchString);		
 			//bounds = map.getBounds();
 			bounds = getMyBounds();
 			var apiUrl = '';
 			if(yakType.toString() == 5)
-				apiUrl = '/api/geoalerts/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/'+searchString;
+				apiUrl = '/api/geoalerts/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/0/'+searchString+'/500';
 			else	
-				apiUrl = '/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/'+yakType.toString()+'/'+searchString;
+				apiUrl = '/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/0/'+yakType.toString()+'/'+searchString+'/500';
 			
+
 			$.getJSON(apiUrl,function(ajax) {	
 				$.each(ajax.data.info, function(key,val) {
 					
@@ -609,12 +616,18 @@ block content
 			cleanMarkers();
 			searchString = encodeURIComponent(searchString);
 			
+			if(typeof(yakType) == 'undefined' || yakType.length == 0){
+				printEmptyFeedItem();
+				return;
+			}
+
 			var apiUrl = '';
 			if(yakType.toString() == 5)
-				apiUrl = '/api/geoalerts/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/'+searchString+'/500';
+				apiUrl = '/api/geoalerts/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/0/'+searchString+'/500';
 			else	
-				apiUrl = '/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/'+yakType.toString()+'/'+searchString+'/500';
+				apiUrl = '/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/0/'+yakType.toString()+'/'+searchString+'/500';
 			
+			console.log('sec:'+dateFrom);
 			$.getJSON(apiUrl,function(ajax) {	
 			
 				// empty the news feed
@@ -623,9 +636,7 @@ block content
 				if(typeof(ajax.data.info) == 'undefined' || ajax.data.info.length == 0){
 					//$('#newsfeed').html('Aucune info !');
 					printEmptyFeedItem();
-				}
-					
-				else{
+				}else{
 					
 					$.each(ajax.data.info, function(key,val) {
 						
@@ -638,7 +649,7 @@ block content
 				//markerCluster.addMarkers(markers);
 				}
 				$("abbr.timeago").timeago();
-				
+				$('#newsfeedContent').mCustomScrollbar("update");
 			});
 
 		}

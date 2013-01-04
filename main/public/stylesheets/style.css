@@ -25,9 +25,15 @@ h4, h3, h2 , h1{margin-bottom:5px;}
 
 .pillItem{display: inline-block;float: left;padding: 1px 4px 2px;margin: 2px;font-size: 11.844px;font-weight: bold;line-height: 15px;color: white;vertical-align: baseline;cursor: pointer;background-color: #d8242b;-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;}
 
+.timeago {color: #B7B7B7;cursor:default;font-size:0.85em;font-weight:bold;}
 
+.columnTitle{font-weight: bold;margin:4px 5px 0px 0px;}
 
-/* THE FEED
+abbr[title] {
+    border-bottom: 0px ;
+    cursor: default;
+}
+/* THE FEED PAGE
 ---------------------------------------------------*/
 #mainFeedWrapper {border: 0px solid #292929; background: #E8E8E8; font-family: helvetica,arial,sans-serif;}
 #search { padding-top: 0px; padding-left: 0px; background: #dedede; width: 100%}  
@@ -52,7 +58,7 @@ h4, h3, h2 , h1{margin-bottom:5px;}
 #feedContent .hidden { display: none;}
 #feedContent{ clear: both; padding-top: 12px; background: white; border-radius: 5px 5px 5px 5px; box-shadow: 0 1px 0 #DDDDDD; margin-top: 20px; padding-right: 12px; margin-left: 12px;}
 #feedContent .item{margin:5px;}
-#feedContent .title{font-size:0.85em;font-weight:bold;}
+#feedContent .title{font-size:0.85em;font-weight:bold;cursor:default;}
 #feedContent .title a { color: #4A4A4A;}
 #feedContent .title a:hover { color: #D71921;}
 #feedContent .content{font-size:0.6em;}
@@ -60,20 +66,20 @@ h4, h3, h2 , h1{margin-bottom:5px;}
 #feedContent .shareMe { text-align: right; margin-top: -27px; position: relative; right: 10px; width: 100%;} 
 #feedContent .shareMe i {cursor: pointer; position: relative; right: 95px;}
 #feedContent .img { float: left; margin-right: 12px;}
-#feedContent .myitem { margin: 10px 10px 32px 10px; color: #4A4A4A; width: 99%; border-bottom: 1px dotted #000000; min-height: 200px; }
+#feedContent .myitem { margin: 10px 10px 10px 10px; color: #4A4A4A; width: 99%; border-bottom: 1px dotted #000000; min-height: 200px; }
 #feedContent .myitem .title { font-size: 14px; font-weight: bold; padding-bottom: 10px;}
 #feedContent .myitem .title .postedby { font-size: 12px; font-style: italic; font-weight: normal; color: #87888B; margin-top: 5px;}
 #feedContent .myitem .title .postedat { font-size: 11px; }
 #feedContent .myitem .title .more { display: block; width: 75%; }
-#feedContent .myitem .title .timeago { margin-top: -28px; color: #B7B7B7;float: right; margin-right: 8px; font-size: 11px;}
+#feedContent .myitem .title .timeago { float: right; margin: 0px 8px 0px 0px;}
 #feedContent .myitem .title .hot { width: 200px; background: #cecece; height: 8px; clear: both; left: 40px; position: relative;; top: -3px;}
 #feedContent .myitem .title .hot .hotLevel{ background: #D71921;  height: 8px;}
 #feedContent .myitem  .content { font-size: 13px; line-height: 18px; z-index: 11}
 #feedContent .myitem  .content .more { float: right;}
-#feedContent .myitem .title .yakImg { float: right; padding-right: 10px; width: 16px; position: relative; bottom: 29px; }
-#feedContent .myitem .title .PersonImg { float: left; padding-right: 10px; }
-#feedContent .myitem .freetags { clear: both; position: relative; top: 12px; left: 0px;}
-#feedContent .myitem .freetags a { color: #DC1227; font-size: 13px; margin-right: 10px;}
+#feedContent .myitem .title .yakImg { float: right; padding-right: 10px;margin: 0px 8px 0px 0px; }
+#feedContent .myitem .title .PersonImg { float: left; padding-right: 10px;width:25px; }
+#feedContent .myitem .freetags { clear: both; float: left;margin:10px;}
+#feedContent .myitem .freetags a { color: #DC1227; font-size: 13px; margin-right: 10px;cursor:pointer;}
 #feedContent .myitem .phoneNumbers { clear: both; position: relative; margin-top: 12px; left: 0px;}
 #feedContent .myitem .phoneNumbers a { color: #3CB413; font-size: 12px; margin-right: 10px; position: relative; top: -4px; left: -9px;}
 .expand { z-index: 1111};
@@ -90,7 +96,7 @@ h4, h3, h2 , h1{margin-bottom:5px;}
 
 .typeaheadImg { height: 25px; float: left;}
 .ftgIcon { height: 14px; position: relative; top: 2px;}
-#topsFeed { margin-top: 5px; background: white; border: 1px solid #cecece; float: right; overflow: hidden;  border-radius: 5px 5px 5px 5px; box-shadow: 0 1px 0 #DDDDDD;}
+#topsFeed { margin: 0px 10px 0px -20px; background: white; border: 1px solid #cecece; float: right; overflow: hidden;  border-radius: 5px 5px 5px 5px; box-shadow: 0 1px 0 #DDDDDD;}
 #topsFeed .myitem { margin:  12px; border-bottom: 1px dotted #cecece; background: white;}
 #topsFeed .myitem:even { background-color:  white;}
 #topsFeed .postedby {font-size:9px;font-style:italic; right: 10px; top: 0px; position: relative; clear: both; text-align: right;}
@@ -196,7 +202,7 @@ ul#newsfeed li.highlighted .mapHighlighter{background-color:#F0F0F0;}
 	font-weight:bold;
 }
 .infowindow .date{color: #87888B;margin-right:5px;}
-.infowindow .date .timeago { margin-top: -28px; color: #B7B7B7; margin-right: 8px; font-size: 11px;}
+.infowindow .date .timeago { margin-top: -28px; margin-right: 8px;}
 .infowindow .links{float:right;margin-right:3px;text-align:right;font-style:italic;font-size:0.8em;line-height: 1.5em;}
 .infowindow .tags{float:left;margin-left:3px;text-align:left;font-style:italic;font-size:0.8em;line-height: 1.5em;}
 .infowindow .yakTypeImg{width:15px;height:22px;}

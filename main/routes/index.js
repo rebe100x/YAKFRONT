@@ -289,12 +289,7 @@ exports.news = function(req, res){
 	}
 	
 	req.session.message = formMessage;
-	for(i=0;i<req.session.type.length;i++){
-		if(theYakType==req.session.type[i]){
-			req.session.type.splice(i, 1);
-		} 
-	}
-	req.session.type.push(theYakType);
+	
 	res.redirect('news/map');
 };
 /******* USER ******/

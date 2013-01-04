@@ -32,9 +32,11 @@ mixin searchForm(page)
 		var mainConf = !{mainConf};	
 		//var yakType = [!{type}];
 		var yakType = ($.isEmptyObject($.cookie("yaktype")))?mainConf.typeDefault.split(','):$.cookie("yaktype").split(',');
+		if(yakType == 0)
+			yakType = [];
 		var curPos = ($.isEmptyObject($.cookie("geoloc")))?{'x':user.location.lat,'y':user.location.lng,'z':mainConf.rangeDefault,'name':user.formatted_address}:JSON.parse($.cookie("geoloc"));
-		//console.log(yakType);
 		var dateFrom = ($.isEmptyObject($.cookie("dateFrom")))?mainConf.dateFromDefault:$.cookie("dateFrom");
+		console.log('init'+dateFrom);
 		var searchString = "!{str}".toString();
 		if(searchString=='')
 			searchString = ($.isEmptyObject($.cookie("searchString")))?null:$.cookie("searchString");
@@ -153,6 +155,7 @@ mixin searchForm(page)
 				},
 				change:function(event, ui){
 					getAndPrintInfo();
+					console.log('slider value:'+ui.value);
 					$.cookie("dateFrom", ui.value,{ expires: 10000, path : '/' });
 				}
 			});
@@ -202,7 +205,7 @@ mixin searchForm(page)
 						yakType.push(curtype);
 					}
 					if(yakType.length == 0)
-						yakType = [0];
+						yakType = [];
 				}
 				$.cookie("yaktype", yakType.join(','),{ expires: 10000, path : '/' });
 				getAndPrintInfo();
