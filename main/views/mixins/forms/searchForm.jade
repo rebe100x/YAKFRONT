@@ -14,10 +14,11 @@ mixin searchForm(page)
 			//span.btn.btn-link(title="testfeed", type=10)
 			//	i.icon-fire
 		div#heatModule.row
-			div#dayPrinter Aujourd hui	
+			div#dayPrinter.sliderText Aujourd hui	
 			div#heatSelector
 		- if(page == 'feed' || page == 'map')	
 			div#rangeModule.row
+				div#localnessPrinter.sliderText Localness
 				div#rangeSelector
 		div#searchBox.row
 			div.input-append
@@ -25,6 +26,7 @@ mixin searchForm(page)
 				input.span5.search-query#searchStr(type="text",placeholder="Quoi ?",autocomplete="off", )
 				input.span5.search-query#searchPlaceStr(type="search",placeholder="Où ?",autocomplete="off", data-provide="typeahead",)
 				button.btn#searchBtn(type="submit") Go
+		
 	script
 		var user =!{JSON.stringify(user)};
 		var mainConf = !{mainConf};	
@@ -44,6 +46,7 @@ mixin searchForm(page)
 
 		$(document).ready(function() {
 				setTimeSliderText(dateFrom);
+				setLocalnessSliderText(curPos.z);
 		
 				/*search info and place*/
 				$('#searchStr').val(searchString);
@@ -159,7 +162,11 @@ mixin searchForm(page)
 				range: "min",
 				min: 0,
 				max: 100,
+				step:10,
 				value: curPos.z,
+				slide: function(event,ui){
+					setLocalnessSliderText(ui.value);
+				},
 				change:function(event, ui){
 					curPos.z =  ui.value;
 					changeRange();

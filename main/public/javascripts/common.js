@@ -516,6 +516,46 @@ function serCurrentSearchInfo()
 
 }
 //var socket = io.connect('http://localhost:3000');
+function setLocalnessSliderText(x){
+	console.log(x);
+	var yText = 'Localness';
+	switch(x){
+		case 0:
+			yText = "Mondial";
+		break;
+		case 10:
+			yText = "Mondial";
+		break;
+		case 20:
+			yText = "National";
+		break;
+		case 30:
+			yText = "National";
+		break;
+		case 40:
+			yText = "Régional";
+		break;	
+		case 50:
+			yText = "Régional";
+		break;	
+		case 60:
+			yText = "Régional";
+		break;	
+		case 70:
+			yText = "Local";
+		break;	
+		case 80:
+			yText = "Très Local";
+		break;	
+		case 90:
+			yText = "Super Local";
+		break;	
+		case 100:
+			yText = "Hyper local";
+		break;			
+	}
+	$( "#localnessPrinter" ).html(yText);
+}
 
 function setTimeSliderText(x){
 	var y = 0;
