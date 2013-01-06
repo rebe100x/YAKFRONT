@@ -430,14 +430,20 @@ block content
 		}
 
 		function drawNewsFeed(){	
-			var newsfeedContainerHeight = window.innerHeight-$('#newsfeedContainer').offset().top-50+'px';
+			var newsfeedContainerHeight = window.innerHeight-$('#newsfeedContainer').offset().top-0+'px';
 			$('#newsfeedContainer').css('height',newsfeedContainerHeight);
-			var newsfeedContentHeight = window.innerHeight-$('#newsfeedContent').offset().top-50+'px';
+			var width = $(window).width();
+			if(width < 767)
+				$('#newsfeedContainer').css('top','300px');
+			else
+				$('#newsfeedContainer').css('top','10px');
+			var newsfeedContentHeight = window.innerHeight-$('#newsfeedContent').offset().top-0+'px';
 			$('#newsfeedContent').css('height',newsfeedContentHeight);
 			$('#newsfeedContent').mCustomScrollbar("update");
 
-			var newspostContentHeight = window.innerHeight-$('#newspostContent').offset().top-50+'px';
+			var newspostContentHeight = window.innerHeight-$('#newspostContent').offset().top-0+'px';
 			$('#newspostContent').css('height',newspostContentHeight);
+
 			$('#newspostContent').mCustomScrollbar("update");
 		}
 		
