@@ -804,11 +804,23 @@ exports.delfavplace = function (req, res) {
 		
 	}else{
 		req.session.message = "Erreur : vous devez être connecté pour sauver vos favoris";
-		res.redirect('/user/login');
+		res.redirect('/user/login');x
 	}
 	
 	
 };
+
+
+exports.updatefavplacerange = function(req, res){
+
+	if(req.session.user){
+			var pointId = req.body.pointId;
+			res.json(pointId);
+	}else{
+		req.session.message = "Erreur : vous devez être connecté pour sauver vos favoris";
+		res.redirect('/user/login');
+	}
+}
 
 /**
 DOCS

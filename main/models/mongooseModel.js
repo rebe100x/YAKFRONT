@@ -29,7 +29,7 @@ mongoose.model('Address', Address);
 var Point = new Schema({
 	  name : String
 	, location	: { type : { lat: Number, lng: Number }}	
-	, range : { type: Number, default:5}
+	, range : { type: Number, default:20}
 });
 mongoose.model('Point', Point);
 

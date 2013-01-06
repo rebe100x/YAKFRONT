@@ -119,7 +119,7 @@ app.post('/firstvisit',routes.requiresLogin, routes.firstvisit);
 app.post('/favplace', routes.requiresLogin, routes.addfavplace); 
 app.post('/delfavplace', routes.requiresLogin, routes.delfavplace); 
 
-
+app.post('/favplacerange', routes.requiresLogin, routes.updatefavplacerange)
 
 // OPEN ACCESS API
 app.get('/api/infos', api.infos);

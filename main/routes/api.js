@@ -250,6 +250,9 @@ exports.add_favplace = function (req, res) {
 		res.json({meta:{code:404,error_type:'missing parameter',error_description:'place not set'}});
 };
 
+exports.updatefavplacerange = function(req, res){	
+}
+
 exports.put_favplace = function (req, res) {
 	var User = db.model('User');
 	var Point = db.model('Point');

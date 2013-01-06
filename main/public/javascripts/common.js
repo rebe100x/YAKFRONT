@@ -38,8 +38,8 @@ function setToolTip(el)
 function setSearchFor(el)
 {
 	$("html, body").animate({ scrollTop: 0 }, "slow");
-	$("#SearchWhat").val($(el).text().substring(1, $(el).text().length));
-	triggerSearch(currentPage, 0);
+	$("#searchStr").val($(el).text().substring(1, $(el).text().length));
+	getAndPrintInfo(0);
 }
 
 function colorFirstRecord()
@@ -156,9 +156,13 @@ function setshortUrl()
 {
 
 	$(".icon-share").mouseenter(function(){
-		if ($(this).find("span").length == 0) {
-			$(this).prepend('<span>&nbsp;&nbsp;&nbsp;&nbsp;Loading</span>');
-		};
+		if($(this).find(".box").length > 0)
+		{
+			return;
+		}
+		if ($(this).find(".loadingMore").length == 0) {
+			$(this).prepend('<img src="images/loader_big.gif" class="loadingMore" />');
+		}
 		if ($(this).find(".buttons").length == 0) {
 			var more = $(this);
 			$.getJSON("https://api-ssl.bitly.com/v3/shorten?", 
@@ -196,7 +200,8 @@ function serCurrentSearchInfo()
 
 }
 //var socket = io.connect('http://localhost:3000');
-function setLocalnessSliderText(x){	
+function setLocalnessSliderText(x, elid){	
+	
 	var sliderText = 'Localness';
 	switch(x){
 		case 0:
@@ -231,9 +236,19 @@ function setLocalnessSliderText(x){
 		break;	
 		case 100:
 			sliderText = "Hyper local";
+			break;
+		default:
+			sliderText = "Local";
 		break;			
 	}
-	$( "#localnessPrinter" ).html(sliderText);
+	if (typeof(elid) === 'undefined') {
+		$("#localnessPrinter").html(sliderText);
+	}
+	else
+	{
+		$(elid).html(sliderText);
+	}
+	
 }
 
 function setTimeSliderText(x){
@@ -377,11 +392,34 @@ $(document).ready(function() {
 			$('#favplace,#favplace2').removeClass('searching');
 			var placeGmap = getPlaceFromGmapResult(obj);
 			var point = new Object();
+			
 			point.name = placeGmap.title;
 			point.location = placeGmap.location;
 			$.post('/favplace', {'place':point},function(id) {
-				$('.favplacelist').append("<li pointId='"+id+"' lat='"+placeGmap.location.lat+"' lng='"+placeGmap.location.lng+"' class='zoneLoc'><i class='icon-map-marker'></i><span> "+obj.formatted_address+"</span><i class='icon-remove icon-pointer'  onclick='removefavPlace($(this));'></i></li>");
+				$('.favplacelist').append("<li id='newLI' pointname='" + placeGmap.title + "' location='" + JSON.stringify(placeGmap.location) +"' pointId='"+id+"' lat='"+placeGmap.location.lat+"' lng='"+placeGmap.location.lng+"' class='zoneLoc'><i class='icon-map-marker'></i><span> "+obj.formatted_address+"</span><i class='icon-remove icon-pointer'  onclick='removefavPlace($(this));'></i><div class='theslider' title='" + mainConf.searchParams.sliderDefault + "' alt='" + id +"'></div><span class='localnessPrinter'>Local</span></li>");
+
 				$('#favplace,#favplace2').val('').focus();
+				$('#newLI').find(".theslider").slider({
+				range: "min",
+				min: 0,
+				max: 100,
+				step:10,
+				value: 20,
+				slide: function(event,ui){
+					setLocalnessSliderText(ui.value, $(this).parent().find(".localnessPrinter"));
+				},
+				change:function(event, ui){
+					//changePlaceRange($(this).parent().attr("alt"), $(this).parent().attr("lat"), $(this).parent().attr("lng"), $(this).parent().attr("pointname"), ui.value);
+					// curPos.z =  ui.value;
+					//changeRange();
+					//$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
+				},
+				create:function(event, ui){
+					setLocalnessSliderText(parseInt($(this).attr("title")), $(this).parent().find(".localnessPrinter"));
+					$(this).slider( "value", parseInt($(this).attr("title") ) );
+					$("#newLI").removeAttr("id");
+				}
+			});
 			});
 			
 			//var placeGmap = getPlaceFromGmapResult(obj);
@@ -830,10 +868,10 @@ function setShare(el){
 	render: function(api, options){
 		//console.log($(api.element).find('.buttons'));
 		//$(api.element).find('.buttons').css("display", "block");
-		$(api.element).find('.buttons').livequery(function(){
+		$(api.element).find('.box').livequery(function(){
     		//element created
     		//alert("created");
-    		$(api.element).find("span").eq(0).remove();
+    		//$(api.element).find(".loadingMore").hide();
     		$(api.element).prepend("<img src='images/ftg.png' class='ftgIcon' class='icon-share' /> ");
     		$(api.element).find('.buttons').css("display", "block");
     		
@@ -915,3 +953,24 @@ function killCookie(name, path)
 {
 	$.cookie(name, null, { path: path, expires: -5 });
 }
+
+function changePlaceRange(id, lat, lng, pointname, range)
+{
+	var newid;
+	var point = new Object();
+	var location = '{"lng":' + lng + ',"lat":' + lat +'}'
+	point.name = pointname;
+	
+	point.location = JSON.parse(location);
+	point.range = range;
+	$.post("/delfavplace", {pointId: id}, function(id){
+		newid = id;
+	});
+
+	$.post("/favplace", {'place':point}, function(id){
+
+	});
+
+	return newid;
+}
+
