@@ -89,7 +89,8 @@ block content
 				zoom = map.getZoom();
 				zoom++;
 				map.setZoom(zoom);	
-				changeZoom();	
+				changeZoom();
+				
 			});
 
 			$('#zoomminus').click(function () {
@@ -97,6 +98,7 @@ block content
 				zoom--;
 				map.setZoom(zoom);
 				changeZoom();
+				
 			});
 
 			
@@ -507,6 +509,7 @@ block content
 		};
 		function changeZoom(){
 			curPos.z  = zFromRange();
+			setLocalnessSliderText(curPos.z);	
 			$("#rangeSelector").val(curPos.z).slider('value',curPos.z);
 			$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
 			
