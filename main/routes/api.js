@@ -220,6 +220,8 @@ exports.getContentTitles = function (req, res) {
 
 
 
+
+
 /*********************************************
 *FAVPLACE
 *ADD, DELETE and LIST user's favorite places

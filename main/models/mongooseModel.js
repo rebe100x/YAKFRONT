@@ -80,7 +80,11 @@ var Info = new Schema({
   , user	: {type: Schema.ObjectId}		
   , userName	: {type: String}		
   , zone	: {type: Schema.ObjectId}
-  ,	placeId	: {type: Schema.ObjectId}  
+  ,	placeId	: {type: Schema.ObjectId} 
+  , likes	: {type: Number, default: 0}
+  , unlikes	: {type: Number, default: 0}
+  , yaklikeUsersIds : {type: [String]}
+  , yakunlikeUsersIds : {type: [String]}
 }, { collection: 'info' });
 
 //Info.index({location : '2d',pubDate:-1,yakType:1,print:1,status:1});
@@ -116,6 +120,10 @@ Info.statics.format = function (theinfo) {
 		yakCat:theinfo.yakCat,
 		placeId:theinfo.placeId,
 		origin:theinfo.origin,
+		likes:theinfo.likes,
+		unlikes:theinfo.unlikes,
+		yaklikeUsersIds:theinfo.yaklikeUsersIds,
+		yakunlikeUsersIds:theinfo.yakunlikeUsersIds
 	};
   return formattedInfo;
 }
@@ -124,6 +132,11 @@ Info.statics.format = function (theinfo) {
 Info.statics.findByTitle = function (title, callback) {
   return this.find({ title: title }, callback);
 }
+
+Info.statics.findByID = function (id, callback) {
+  return this.findOne({ _id: id }, callback);
+}
+
 Info.statics.findByLink = function (link, callback) {
   return this.find({ outGoingLink: link }, callback);
 }

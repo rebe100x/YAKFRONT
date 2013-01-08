@@ -236,7 +236,35 @@ block content
 			freetags.html(cat.html() +freetagNames.linkify("/news/map/search/%23", 1));
 			
 
-			
+			/* create the likes system */ 
+			var yakLikes = $("<span />");
+			yakLikes.attr("class", "yakLikes");
+			yakLikes.attr("rel", val._id);
+
+			var thumbsUp = "<i class='icon-thumbs-up'></i>";
+			var thumbsDown = "<i class='icon-thumbs-down'></i>";
+			if($.inArray(user._id, val.yaklikeUsersIds) > -1)
+			{
+				thumbsUp = "you like this";
+			}
+
+			if($.inArray(user._id, val.yakunlikeUsersIds) > -1)
+			{
+				thumbsDown = "you dislike this";
+			}
+
+			if($.inArray(user._id, val.yaklikeUsersIds) > -1 || $.inArray(user._id, val.yakunlikeUsersIds) > -1)
+			{
+				yakLikes.append("Already Voted " + "<span class='theUps'>" + val.likes + "</span> likes- " + "" + "<span class='theDowns'>" + val.unlikes +"</span> dislikes");			
+
+			}
+			else
+			{
+
+			yakLikes.append(thumbsUp + "<span class='theUps'>" + val.likes + "</span> likes- " + thumbsDown + "<span class='theDowns'>" + val.unlikes +"</span> dislikes");			
+
+			}
+
 
 			/*append the more yakimage ago and posted by to title*/
 			title.append(more);
@@ -252,6 +280,7 @@ block content
 			item.append(content);
 			item.append(freetags);
 			item.append(address);
+			item.append(yakLikes);
 			return item;	
 		}
 
@@ -406,7 +435,7 @@ block content
 		}
 
 		$(document).ready(function() {
-
+			console.log(user);
 			/*init position from cookie or db*/
 			
 			range = rangeFromZ();
@@ -526,6 +555,7 @@ block content
 				});
 				setClickableArea();
 				setshortUrl();
+				setLikeSystem();
 				//setInterval("setLiveUpdateTrigger()", 30000);
 				$("#feedContent .loading").remove();
 
@@ -543,6 +573,44 @@ block content
 			});
 		
 		}
+
+		function setLikeSystem()
+		{
+			$(".icon-thumbs-up").click(function(){
+
+				var currEl = $(this);
+				var thumbs = $(this).parent().find(".theUps");
+
+				var currentLikes = parseInt(thumbs.html());
+				$.post('/setLikes', {infoId : $(this).parent().attr("rel"), islike: 'like'} , function(res){
+					if (res == 'updated')
+					{
+						thumbs.html(currentLikes + 1);
+						currEl.parent().find("i").eq(0).before("Already Voted ");
+						currEl.parent().find("i").remove();
+					}
+
+				});
+			});
+
+			$(".icon-thumbs-down").click(function(){
+				var currEl = $(this);
+				var thumbs = $(this).parent().find(".theDowns");
+				var currentLikes = parseInt(thumbs.html());
+				$.post('/setLikes', {infoId : $(this).parent().attr("rel"), islike: 'dislike'} , function(res){
+					if (res == 'updated')
+					{
+						thumbs.html(currentLikes + 1);
+						currEl.parent().find("i").eq(0).before("Already Voted ");
+						currEl.parent().find("i").remove();
+					}
+				});
+			});
+		}
+
+		
+
+
 
 		function getSilentUpdate(){
 
@@ -568,7 +636,7 @@ block content
 			urltouse += searchString + "/" // str;
 			urltouse += limit + "/"  // limit;
 			urltouse += skip + "/" // skip;	
-			console.log(timestamp);
+			//console.log(timestamp);
 			$.getJSON(urltouse ,function(data) {
 
 				var len = data.data.info.length;

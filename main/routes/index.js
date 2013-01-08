@@ -828,3 +828,35 @@ DOCS
 exports.docs_api = function(req, res){
 	res.render('docs/api');
 }
+
+/* Like System */
+
+exports.setLikes = function(req, res){
+	//console.log(req.session.user);
+	var Info = db.model('Info');
+	
+	if(req.session.user){
+			var infoId = req.body.infoId;
+			var islike = req.body.islike;
+			if (islike == 'like') { 
+				Info.update({_id:infoId},{$inc:{likes : 1}, $push:{yaklikeUsersIds: req.session.user}, new:true}, function(err, result){
+
+					res.json("updated");
+				})
+			}
+			else
+			{
+				Info.update({_id:infoId},{$inc:{unlikes : 1}, $push:{yakunlikeUsersIds: req.session.user}, new:true}, function(err, result){
+					res.json("updated")
+				})	
+			}
+
+			
+			
+		
+	}else{
+		req.session.message = "Erreur : vous devez être connecté pour sauver vos favoris";
+		res.redirect('/user/login');
+	}
+	
+};
