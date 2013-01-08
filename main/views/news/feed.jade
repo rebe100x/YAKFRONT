@@ -535,18 +535,7 @@ block content
 					/*define item element*/
 					
 					var item = createFeedPageItem(val);
-
-					if(next != 1)
-					{
-						$("#feedContent").prepend(item);
-					}
-					else
-					{
-						$("#feedContent").append(item);
-					}
-
-					//for testing 
-					//$("#topsFeed").prepend(item2);
+					$("#feedContent").append(item);
 
 					$("#resultSet").html(currentPage);
 					$(".next").show();
