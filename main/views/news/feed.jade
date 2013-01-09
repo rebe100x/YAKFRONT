@@ -241,6 +241,53 @@ block content
 			yakLikes.attr("class", "yakLikes");
 			yakLikes.attr("rel", val._id);
 
+			var yakComments = $("<span />");
+			yakComments.attr("class", "yakComments");
+			yakComments.attr("rel", val._id);
+			//console.log(val.yakComments);
+			yakComments.html("Il y en a " + val.yakComments.length + " comments");
+
+			yakComments.click(function(){
+				if ($(this).parent().find(".commentBox").length > 0)
+				{
+					return;
+				}
+					
+				var currEleComment = $(this);
+				var divComment = $("<div />");
+				divComment.attr("class", "commentBox");
+				$(this).append('<img class="loadingMore" src="images/loader_big.gif">');
+				$.getJSON('/api/afeed', { id: $(this).attr("rel")} ,function(data) {
+						$.each(data.info[0].yakComments, function(key, val){
+							divComment.append(drawAComment(val));
+						});
+						divComment.append('<textarea></textarea>');
+						divComment.find("textarea").keypress(function(event){
+							if (event.keyCode == 13) {
+								var comment = $(this).val();
+								var theArea = $(this);
+								$(this).val("posting...Please wait");
+								$(this).attr("disabled", "disabled");
+								var newComment = new Array();
+								newComment.username = user.login;
+								newComment.userid = user._id;
+								newComment.comment = comment;
+								$.post('/setComment', {infoId : currEleComment.attr("rel"), username: user.login, comment: comment} , function(res){
+									if (res == 'updated')
+									{
+										theArea.val("Posted...");
+										theArea.removeAttr("disabled");
+										theArea.before(drawAComment(newComment));
+									}
+
+				});
+							};
+						});
+						currEleComment.find(".loadingMore").remove();
+						currEleComment.after(divComment);
+				});	
+			});
+
 			var thumbsUp = "<i class='icon-thumbs-up'></i>";
 			var thumbsDown = "<i class='icon-thumbs-down'></i>";
 			if($.inArray(user._id, val.yaklikeUsersIds) > -1)
@@ -253,10 +300,14 @@ block content
 				thumbsDown = "you dislike this";
 			}
 
-			if($.inArray(user._id, val.yaklikeUsersIds) > -1 || $.inArray(user._id, val.yakunlikeUsersIds) > -1)
+			if($.inArray(user._id, val.yaklikeUsersIds) > -1 && $.inArray(user._id, val.yakunlikeUsersIds) == -1)
 			{
-				yakLikes.append("Already Voted " + "<span class='theUps'>" + val.likes + "</span> likes- " + "" + "<span class='theDowns'>" + val.unlikes +"</span> dislikes");			
+				yakLikes.append("déjà aimé " + "<span class='theUps'>" + val.likes + "</span> likes- " + "" + "<span class='theDowns'>" + val.unlikes +"</span> dislikes");			
 
+			}
+			else if($.inArray(user._id, val.yaklikeUsersIds) == -1 && $.inArray(user._id, val.yakunlikeUsersIds) > -1)
+			{
+				yakLikes.append("déjà détesté " + "<span class='theUps'>" + val.likes + "</span> likes- " + "" + "<span class='theDowns'>" + val.unlikes +"</span> dislikes");							
 			}
 			else
 			{
@@ -281,6 +332,7 @@ block content
 			item.append(freetags);
 			item.append(address);
 			item.append(yakLikes);
+			item.append(yakComments);
 			return item;	
 		}
 
@@ -575,7 +627,7 @@ block content
 					if (res == 'updated')
 					{
 						thumbs.html(currentLikes + 1);
-						currEl.parent().find("i").eq(0).before("Already Voted ");
+						currEl.parent().find("i").eq(0).before("déjà aimé");
 						currEl.parent().find("i").remove();
 					}
 
@@ -590,7 +642,7 @@ block content
 					if (res == 'updated')
 					{
 						thumbs.html(currentLikes + 1);
-						currEl.parent().find("i").eq(0).before("Already Voted ");
+						currEl.parent().find("i").eq(0).before("déjà détesté");
 						currEl.parent().find("i").remove();
 					}
 				});

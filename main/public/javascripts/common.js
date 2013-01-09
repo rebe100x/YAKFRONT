@@ -974,3 +974,11 @@ function changePlaceRange(id, lat, lng, pointname, range)
 	return newid;
 }
 
+function drawAComment(val)
+{
+	var username = val.username;
+	var userid = val.userid;
+	var comment = val.comment;
+
+	return "<div><span class='username'>" + username + "</span><div class='comment'>" + comment + "</div></div>";
+}

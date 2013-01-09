@@ -63,8 +63,11 @@ abbr[title] {
 #feedContent .title a:hover { color: #D71921;}
 #feedContent .content{font-size:0.6em;}
 #feedContent .address{font-size:11px;font-style:italic; position: relative; clear: both; width: auto; float: right; right: 12px;}
-#feedContent .yakLikes{font-size:11px;font-style:italic; position: relative; clear: both; width: auto; float: right; right: 12px; top: 12px; color: #D71920;}
-
+#feedContent .yakLikes{font-size:11px;font-style:italic; position: relative; clear: both; width: auto; float: left; left: 12px; top: 12px; color: #D71920;}
+#feedContent .yakComments{font-size:11px;font-style:italic; position: relative; clear: both; width: auto; float: left; left: 12px; top: 12px; color: #D71920; cursor: pointer;}
+#feedContent .commentBox {font-style:italic; position: relative; clear: both; width: auto; float: left; left: 12px; top: 12px; color: #D71920; cursor: pointer; background: #F1F2F6; width: 98%}
+#feedContent .commentBox .username { color: #3B5998; }
+#feedContent .commentBox .comment { color: black; margin-bottom: 12px;}
 
 #feedContent .shareMe { text-align: right; margin-top: -27px; position: relative; right: 10px; width: 100%;} 
 #feedContent .shareMe i {cursor: pointer; position: relative; right: 95px;}

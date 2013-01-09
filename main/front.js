@@ -122,6 +122,7 @@ app.post('/delfavplace', routes.requiresLogin, routes.delfavplace);
 app.post('/favplacerange', routes.requiresLogin, routes.updatefavplacerange);
 
 app.post('/setLikes', routes.requiresLogin, routes.setLikes);
+app.post('/setComment', routes.requiresLogin, routes.setComment);
 
 // OPEN ACCESS API
 app.get('/api/infos', api.infos);

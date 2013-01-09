@@ -85,6 +85,7 @@ var Info = new Schema({
   , unlikes	: {type: Number, default: 0}
   , yaklikeUsersIds : {type: [String]}
   , yakunlikeUsersIds : {type: [String]}
+  , yakComments : {type : [Schema.Types.Mixed]}
 }, { collection: 'info' });
 
 //Info.index({location : '2d',pubDate:-1,yakType:1,print:1,status:1});
@@ -123,7 +124,8 @@ Info.statics.format = function (theinfo) {
 		likes:theinfo.likes,
 		unlikes:theinfo.unlikes,
 		yaklikeUsersIds:theinfo.yaklikeUsersIds,
-		yakunlikeUsersIds:theinfo.yakunlikeUsersIds
+		yakunlikeUsersIds:theinfo.yakunlikeUsersIds,
+		yakComments:theinfo.yakComments
 	};
   return formattedInfo;
 }
