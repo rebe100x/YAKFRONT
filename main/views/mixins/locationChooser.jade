@@ -39,10 +39,18 @@ mixin locationChooser(menu)
 				setLocalnessSliderText(ui.value, $(this).parent().find(".localnessPrinter"));
 			},
 			change:function(event, ui){
-				// curPos.z =  ui.value;
-				//changeRange();
-				//$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
+				curPos.name = $(this).parent().find("span").eq(0).html();
+				curPos.x =  $(this).parent().attr("lat");
+				curPos.y =  $(this).parent().attr("lng");
+				curPos.z =  ui.value;
+				$("#searchPlaceStr").val(curPos.name);
 				$(this).attr("alt", changePlaceRange($(this).attr("alt"), $(this).parent().attr("lat"), $(this).parent().attr("lng"), $(this).parent().attr("pointname"), ui.value));
+				changeRange();
+				$("#rangeSelector").find("a.ui-slider-handle").css("left", ui.value + "%");
+				$("#rangeSelector").find("div.ui-slider-range").css("width", ui.value + "%");
+				$("#rangeSelector").parent().find("#localnessPrinter").eq(1).html(curPos.name);
+				//$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
+				
 
 			},
 			create:function(event, ui){
