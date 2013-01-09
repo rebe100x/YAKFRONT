@@ -65,7 +65,7 @@ abbr[title] {
 #feedContent .address{font-size:11px;font-style:italic; position: relative; clear: both; width: auto; float: right; right: 12px;}
 #feedContent .yakLikes{font-size:11px;font-style:italic; position: relative; clear: both; width: auto; float: left; left: 12px; top: 12px; color: #D71920;}
 #feedContent .yakComments{font-size:11px;font-style:italic; position: relative; clear: both; width: auto; float: left; left: 12px; top: 12px; color: #D71920; cursor: pointer;}
-#feedContent .commentBox {font-style:italic; position: relative; clear: both; width: auto; float: left; left: 12px; top: 12px; color: #D71920; cursor: pointer; background: #F1F2F6; width: 98%}
+#feedContent .commentBox {font-style:italic; position: relative; clear: both; width: auto; float: left; left: 12px; top: 12px; color: #D71920; cursor: pointer; background: #F1F2F6; width: 98%; margin-bottom: 30px;}
 #feedContent .commentBox .username { color: #3B5998; }
 #feedContent .commentBox .comment { color: black; margin-bottom: 12px;}
 
