@@ -433,18 +433,20 @@ $(document).ready(function() {
 	
 	
 	/*autour de moi*/
-	$('#arroundme').click(function(){
-		if(logged){
+	/*$('#arroundme').click(function(){
+
 			if(user.location){
 				var latLng = new google.maps.LatLng(user.location['lat'],user.location['lng']);
+				curPos.name = user.formatted_address;
+				curPos.x =  user.location.lat;
+				curPos.y =  user.location.lng;
+				$("#searchPlaceStr").val(curPos.name);
 				map.panTo(latLng);
 				//map.setCenter(latLng);
 			}else{
 				window.location = '/settings/profile';
 			}
-		}else
-			window.location = '/user/login';
-	});
+	});*/
 });
 /*END READY FUNCTIONS*/
 
@@ -802,7 +804,7 @@ function setShare(el){
     		//$(api.element).find(".loadingMore").hide();
     		$(api.element).prepend("<img src='images/ftg.png' class='ftgIcon' class='icon-share' /> ");
     		$(api.element).find('.buttons').css("display", "block");
-    		
+    		$(this).trigger('mouseover'); // or similar
 		});
 	}
 

@@ -61,7 +61,7 @@ mixin locationChooser(page)
 		script
 			/*endroits favoris*/
 			$('ul.favplacelist').delegate("li.zoneLoc span",'click', function () {
-				var currentSliderValue = $(this).parent().find('.theslider').attr('title');
+				var currentSliderValue = $(this).parent().find('.theslider').attr('alt');
 				curPos.name = $(this).parent().find("span").eq(0).html();
 				curPos.x =  $(this).parent().attr("lat");
 				curPos.y =  $(this).parent().attr("lng");
@@ -69,7 +69,7 @@ mixin locationChooser(page)
 				$("#searchPlaceStr").val(curPos.name);
 				$("#rangeSelector").find("a.ui-slider-handle").css("left", currentSliderValue + "%");
 				$("#rangeSelector").find("div.ui-slider-range").css("width", currentSliderValue + "%");
-				$("#rangeSelector").parent().find("#localnessPrinter").eq(1).html(curPos.name);
+				$("#rangeSelector").parent().find("#localnessPrinter").html($(this).parent().find(".localnessPrinter").html());
 				moveMap();
 
 			});	
@@ -85,7 +85,7 @@ mixin locationChooser(page)
 				$("#searchPlaceStr").val(curPos.name);
 				$("#rangeSelector").find("a.ui-slider-handle").css("left", currentSliderValue + "%");
 				$("#rangeSelector").find("div.ui-slider-range").css("width", currentSliderValue + "%");
-				$("#rangeSelector").parent().find("#localnessPrinter").eq(1).html(curPos.name);
+				$("#rangeSelector").parent().find("#localnessPrinter").html($(this).parent().find(".localnessPrinter").html());
 				changeRange();
 			});	
 		

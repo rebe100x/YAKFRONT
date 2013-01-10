@@ -43,7 +43,7 @@ block content
 
 		/*INIT*/
 		var conf = !{conf};
-		
+		var mainConf = !{mainConf};	
 		
 		
 		var geolocalized = 0;
@@ -83,7 +83,24 @@ block content
 		$(document).ready(function() {
 			zoom = rangeFromZ();
 			
+			$('#arroundme').click(function(){
 
+				if(user.location){
+					var latLng = new google.maps.LatLng(user.location['lat'],user.location['lng']);
+					curPos.name = user.formatted_address;
+					curPos.x =  user.location.lat;
+					curPos.y =  user.location.lng;
+					curPos.z = mainConf.searchParams.sliderDefault;
+					$("#searchPlaceStr").val(curPos.name);
+					$("#rangeSelector").find("a.ui-slider-handle").css("left", curPos.z + "%");
+					$("#rangeSelector").find("div.ui-slider-range").css("width", curPos.z + "%");
+					setLocalnessSliderText(curPos.z);
+					moveMap();
+					//map.setCenter(latLng);
+				}else{
+					window.location = '/settings/profile';
+				}
+			});
 
 
 			/*map tools*/
