@@ -79,7 +79,7 @@ mixin searchForm(page)
 				$('#searchBtn').click(function(){
 					var str = encodeURIComponent($('#searchStr').val());
 					var placeName = $('#searchPlaceStr').val();
-					var location = $('#locationInput').val();				
+					var location = JSON.stringify({lat:curPos.x,lng:curPos.y});				
 					if(location != ''){
 						changeLocation(location);
 					}else{
@@ -194,7 +194,6 @@ mixin searchForm(page)
 					$('#newsfeedMenu span.btn').removeClass('active');
 					$(this).addClass('active');
 					yakType = [5];
-					
 				}else{
 					$('#newsfeedMenu span.btn[type="5"]').removeClass('active');
 					if($(this).hasClass('active')){

@@ -1,4 +1,4 @@
-mixin locationChooser(menu)
+mixin locationChooser(page)
 
 	div.modal.hide.fade#locationChooser
 		div.modal-header
@@ -11,7 +11,7 @@ mixin locationChooser(menu)
 							- each favplace in locals.user.favplace
 								li.zoneLoc(pointId=favplace._id, lat=favplace.location.lat, lng=favplace.location.lng, pointname=favplace.name)
 									i.icon-map-marker
-									span(data-dismiss="modal", onclick="setGeoLocaton(this)")= favplace.name
+									span(data-dismiss="modal")= favplace.name
 									i.icon-remove.icon-pointer(onclick='removefavPlace($(this));')
 									div.theslider(title=favplace.range, alt=favplace._id)
 									span.localnessPrinter Local
@@ -24,7 +24,7 @@ mixin locationChooser(menu)
 								
 		div.modal-footer
 			span.btn(data-dismiss="modal") Fermer
-
+	
 	script
 		/*slider range selector*/
 		var starter = 1;
@@ -39,16 +39,12 @@ mixin locationChooser(menu)
 				setLocalnessSliderText(ui.value, $(this).parent().find(".localnessPrinter"));
 			},
 			change:function(event, ui){
-				curPos.name = $(this).parent().find("span").eq(0).html();
-				curPos.x =  $(this).parent().attr("lat");
-				curPos.y =  $(this).parent().attr("lng");
-				curPos.z =  ui.value;
-				$("#searchPlaceStr").val(curPos.name);
-				$(this).attr("alt", changePlaceRange($(this).attr("alt"), $(this).parent().attr("lat"), $(this).parent().attr("lng"), $(this).parent().attr("pointname"), ui.value));
-				changeRange();
-				$("#rangeSelector").find("a.ui-slider-handle").css("left", ui.value + "%");
-				$("#rangeSelector").find("div.ui-slider-range").css("width", ui.value + "%");
-				$("#rangeSelector").parent().find("#localnessPrinter").eq(1).html(curPos.name);
+				var favPlaceId = changePlaceRange($(this).attr("alt"), $(this).parent().attr("lat"), $(this).parent().attr("lng"), $(this).parent().attr("pointname"), ui.value);
+				$(this).attr("alt", favPlaceId);
+				//changeRange();
+				//$("#rangeSelector").find("a.ui-slider-handle").css("left", ui.value + "%");
+				//$("#rangeSelector").find("div.ui-slider-range").css("width", ui.value + "%");
+				//$("#rangeSelector").parent().find("#localnessPrinter").eq(1).html(curPos.name);
 				//$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
 				
 
@@ -61,5 +57,35 @@ mixin locationChooser(menu)
 				
 			}
 		});
+	- if(page == 'map')
+		script
+			/*endroits favoris*/
+			$('ul.favplacelist').delegate("li.zoneLoc span",'click', function () {
+				var currentSliderValue = $(this).parent().find('.theslider').attr('title');
+				curPos.name = $(this).parent().find("span").eq(0).html();
+				curPos.x =  $(this).parent().attr("lat");
+				curPos.y =  $(this).parent().attr("lng");
+				curPos.z =  currentSliderValue;
+				$("#searchPlaceStr").val(curPos.name);
+				$("#rangeSelector").find("a.ui-slider-handle").css("left", currentSliderValue + "%");
+				$("#rangeSelector").find("div.ui-slider-range").css("width", currentSliderValue + "%");
+				$("#rangeSelector").parent().find("#localnessPrinter").eq(1).html(curPos.name);
+				moveMap();
 
+			});	
+	- if(page == 'feed')
+		script
+			/*endroits favoris*/
+			$('ul.favplacelist').delegate("li.zoneLoc span",'click', function () {
+				var currentSliderValue = $(this).parent().find('.theslider').attr('title');
+				curPos.name = $(this).parent().find("span").eq(0).html();
+				curPos.x =  $(this).parent().attr("lat");
+				curPos.y =  $(this).parent().attr("lng");
+				curPos.z =  currentSliderValue;
+				$("#searchPlaceStr").val(curPos.name);
+				$("#rangeSelector").find("a.ui-slider-handle").css("left", currentSliderValue + "%");
+				$("#rangeSelector").find("div.ui-slider-range").css("width", currentSliderValue + "%");
+				$("#rangeSelector").parent().find("#localnessPrinter").eq(1).html(curPos.name);
+				changeRange();
+			});	
 		

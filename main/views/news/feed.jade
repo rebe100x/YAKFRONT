@@ -48,7 +48,7 @@ block content
 		var subSize = mainConf.searchParams.subSize;
 		var loading = $("<div />");
 		var timer;
-		var timestamp; 
+		var timestamp = Math.round(+new Date()/1000); 
 		loading.attr("class", "loading");
 		loading.css("textAlign", "center")
 		loading.html("<img src='images/loader_big.gif' />");
@@ -664,7 +664,7 @@ block content
 				$("#feedContent").prepend(silentUpdates);
 			}
 
-			timestamp = Math.round(+new Date()/1000);
+			
 
 			var urltouse = 'api/geoinfos/';
 			urltouse += curPos.x + "/"

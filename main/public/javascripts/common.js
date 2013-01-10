@@ -430,12 +430,7 @@ $(document).ready(function() {
 	});
 	
 	
-	/*endroits favoris*/
-	$('ul.favplacelist').delegate("li.zoneLoc span",'click', function () {
-				var lat = parseFloat($(this).parent().attr('lat'));
-				var lng = parseFloat($(this).parent().attr('lng'));	
-				moveMap(lat,lng);
-			});
+	
 	
 	/*autour de moi*/
 	$('#arroundme').click(function(){
@@ -533,56 +528,6 @@ Array.prototype.cleanArrayByLocation=function(lat,lng){
 }
 
 
-function moveMap(lat,lng){
-	curPos.x = lat;
-	curPos.y = lng;
-	$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000 });
-	var latLng = new google.maps.LatLng(lat,lng);
-	$('#locationChooser').modal('hide');
-	if($('#mymap').length > 0){ // only for the map page
-		google.maps.event.addDomListener(window, 'load', initialize(lat,lng,10)); 
-	}
-	
-}
-
-function updateXY(){
-		
-	var id = $(this).attr('id');
-	switch(id){
-	case 'zone1':
-		x = 48.851875;
-		y = 2.356374;
-		z = 13;
-	break;
-	case 'zone2':
-		x = 43.610787;
-		y = 3.876715;
-		z = 14;
-	break;
-	case 'zone3':
-		x = 50.583346;
-		y = 4.900031;
-		z = 14;
-	break;
-	default:
-		x = 48.851875;
-		y = 2.356374;
-		z = 13;
-	}
-	curPos = {'x':x,'y':y,'z':z};
-
-	//socket.emit('position', curPos);
-	
-	//console.log(curPos);
-			
-	$('#locationChooser').modal('hide');
-	
-	if($('#mymap').length > 0){ // only for the map page
-	// NOTE : initialize function is defined in map.jade and in new.jade : just a bit fifferent to deal the insertion
-		google.maps.event.addDomListener(window, 'load', initialize(curPos.x,curPos.y,curPos.z)); 
-	}
-	//return curPos;
-}
 
 
 
@@ -685,19 +630,7 @@ function getErrHTML5Pos(error) {
 }
 
 
-function placeMarker(location,mk) {
-  	
-	$('#latitude').val(location.lat());	
-	$('#longitude').val(location.lng());	
 
-	
-	mk.setVisible(true);
-	mk.setPosition(location);
-	
-	//getformattedAddress(location);
-	
-	
-}
 
 /* Get reverse address and print the result at the top of the input
 * input : position x, y 
@@ -730,11 +663,6 @@ function getformattedAddress(position){
 }
 
 
-function deletePlaceHTML(placeArray,results,self){
-	
-	
-	
-}
 Array.prototype.inArray=function(needle){
 	var length = this.length;
     for(var i = 0; i < length; i++) {
@@ -963,13 +891,11 @@ function changePlaceRange(id, lat, lng, pointname, range)
 	
 	point.location = JSON.parse(location);
 	point.range = range;
-	$.post("/delfavplace", {pointId: id}, function(id){
-		newid = id;
+	$.post("/delfavplace", {pointId: id}, function(){
+		$.post("/favplace", {'place':point}, function(){});
 	});
 
-	$.post("/favplace", {'place':point}, function(id){
-
-	});
+	
 
 	return newid;
 }

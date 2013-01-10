@@ -282,14 +282,14 @@ block content
 					center = this.getCenter();
 					curPos.x = center.lat();
 					curPos.y = center.lng();
-					$.cookie("geoloc", JSON.stringify(curPos));
+					$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
 					getAndPrintInfo();
 				});
 				
 				google.maps.event.addListener(map, 'zoom_changed', function() {
 					bounds = this.getBounds();	
 					curPos.z = this.getZoom();
-					$.cookie("geoloc", JSON.stringify(curPos));
+					$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
 					getAndPrintInfo();
 				});
 				
