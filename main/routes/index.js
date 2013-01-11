@@ -872,6 +872,7 @@ exports.setComment = function(req, res){
 			var acomment = {
             "userid": req.session.user,
             "username": req.body.username,
+            "userthumb": req.body.userthumb,
             "comment": req.body.comment
           };
 

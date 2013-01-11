@@ -907,6 +907,43 @@ function drawAComment(val)
 	var username = val.username;
 	var userid = val.userid;
 	var comment = val.comment;
+	var thumb	 = val.userthumb;
 
-	return "<div><span class='username'>" + username + "</span><div class='comment'>" + comment + "</div></div>";
+	return "<div class='aComment'><img class='userthumb' src='images/" + thumb + "' /><span class='username'>" + username + "</span><div class='comment'>" + comment + "</div></div>";
 }
+
+function setLikeSystem()
+		{
+			$(".icon-thumbs-up").click(function(){
+
+				var currEl = $(this);
+				var thumbs = $(this).parent().find(".theUps");
+
+				var currentLikes = parseInt(thumbs.html());
+				$.post('/setLikes', {infoId : $(this).parent().attr("rel"), islike: 'like'} , function(res){
+					if (res == 'updated')
+					{
+						thumbs.html(currentLikes + 1);
+						currEl.parent().find("i").eq(0).before("déjà aimé");
+						currEl.parent().find("i").remove();
+					}
+
+				});
+			});
+
+			$(".icon-thumbs-down").click(function(){
+				var currEl = $(this);
+				var thumbs = $(this).parent().find(".theDowns");
+				var currentLikes = parseInt(thumbs.html());
+				$.post('/setLikes', {infoId : $(this).parent().attr("rel"), islike: 'dislike'} , function(res){
+					if (res == 'updated')
+					{
+						thumbs.html(currentLikes + 1);
+						currEl.parent().find("i").eq(0).before("déjà détesté");
+						currEl.parent().find("i").remove();
+					}
+				});
+			});
+		}
+
+		

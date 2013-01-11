@@ -36,7 +36,11 @@ block content
 						mixin postForm()
 					
 	//script(src='http://maps.google.com/maps/api/js?v=3.9&sensor=false&libraries=drawing')		
+	link(rel='stylesheet', href='/javascripts/lib/jquery/css/share.css')
 	script(src="/javascripts/lib/jquery/js/timeago.js")	
+	script(src="/javascripts/lib/jquery/js/share.js")	
+	script(src="/javascripts/lib/jquery/js/jquery.livequery.js")
+	script(src="/javascripts/json2.js")	
 	script
 	
 	
@@ -136,6 +140,7 @@ block content
 			/*news nav*/
 			$('#newsNav li').click(function(event){
 				event.preventDefault();
+				
 				if(!$(this).hasClass('active')){
 					$('#newsNav li').removeClass('active');	
 					$(this).addClass('active');
@@ -184,7 +189,9 @@ block content
 				manageSearchBox();
 			});
 			
-			$('#newsfeed').delegate(".mapHighlighter",'click', function () {
+			$('#newsfeed').delegate(".mapHighlighter",'click', function (e) {
+				if (e.target.className != "yakComments" && e.target.className != "yakLikes")
+					getItemDetails(this);
 				unhighlightInfo($(this),highlightInfo);
 			});
 
@@ -872,4 +879,135 @@ block content
 			});
 			printLoadingFeedItem();
 			$('#newsfeedContent').mCustomScrollbar("update");
+		}
+
+		function getItemDetails(el){
+
+			$("#newsfeed").find(".myitem").hide();
+			var currentItem = $(el);
+			var infoid = currentItem.attr("infoid")
+			if (currentItem.find(".loadingMore").length > 0 || currentItem.find(".myitem").length > 0)
+			{
+				currentItem.find(".myitem").slideToggle();				
+				return;
+			}
+
+
+			
+			currentItem.append('<img src="images/loader_big.gif" class="loadingMore">');
+			$.getJSON('/api/afeed', { id: infoid } ,function(data) {
+
+				var val = data.info[0];
+				var item = createFeedPageItem(val);
+				currentItem.find(".loadingMore").remove();
+				currentItem.append(item);
+				setshortUrl();
+				setLikeSystem();
+			});
+			
+		}
+
+
+		function createFeedPageItem(val)
+		{
+			item = $("<div />");
+			item.attr("class", "myitem");
+
+			
+
+			/*create the content element*/
+			content = $("<div />");
+			content.attr("class", "content");
+			content.html("<div class='theContent'>" + val.content + "</div>");
+			
+			content.append("<br />");
+			
+			/* create the likes system */ 
+			var yakLikes = $("<span />");
+			yakLikes.attr("class", "yakLikes");
+			yakLikes.attr("rel", val._id);
+
+			var yakComments = $("<span />");
+			yakComments.attr("class", "yakComments");
+			yakComments.attr("rel", val._id);
+			//console.log(val.yakComments);
+			yakComments.html("Il y en a " + val.yakComments.length + " comments");
+
+			yakComments.click(function(){
+				if ($(this).parent().find(".commentBox").length > 0)
+				{
+					return;
+				}
+					
+				var currEleComment = $(this);
+				var divComment = $("<div />");
+				divComment.attr("class", "commentBox");
+				$(this).append('<img class="loadingMore" src="images/loader_big.gif">');
+				$.getJSON('/api/afeed', { id: $(this).attr("rel")} ,function(data) {
+						$.each(data.info[0].yakComments, function(key, val){
+							divComment.append(drawAComment(val));
+						});
+						divComment.append('<textarea placeholder="Ajouter un commentaire..."></textarea>');
+						divComment.find("textarea").keypress(function(event){
+							if (event.keyCode == 13) {
+								var comment = $(this).val();
+								var theArea = $(this);
+								$(this).val("posting...Please wait");
+								$(this).attr("disabled", "disabled");
+								var newComment = new Array();
+								newComment.username = user.login;
+								newComment.userid = user._id;
+								newComment.comment = comment;
+								$.post('/setComment', {infoId : currEleComment.attr("rel"), username: user.login, userthumb: user.thumb, comment: comment} , function(res){
+									if (res == 'updated')
+									{
+										theArea.val("");
+										theArea.removeAttr("disabled");
+										theArea.before(drawAComment(newComment));
+									}
+
+				});
+							};
+						});
+						currEleComment.find(".loadingMore").remove();
+						currEleComment.after(divComment);
+				});	
+			});
+
+			var thumbsUp = "<i class='icon-thumbs-up'></i>";
+			var thumbsDown = "<i class='icon-thumbs-down'></i>";
+			if($.inArray(user._id, val.yaklikeUsersIds) > -1)
+			{
+				thumbsUp = "you like this";
+			}
+
+			if($.inArray(user._id, val.yakunlikeUsersIds) > -1)
+			{
+				thumbsDown = "you dislike this";
+			}
+
+			if($.inArray(user._id, val.yaklikeUsersIds) > -1 && $.inArray(user._id, val.yakunlikeUsersIds) == -1)
+			{
+				yakLikes.append("déjà aimé " + "<span class='theUps'>" + val.likes + "</span> likes- " + "" + "<span class='theDowns'>" + val.unlikes +"</span> dislikes");			
+
+			}
+			else if($.inArray(user._id, val.yaklikeUsersIds) == -1 && $.inArray(user._id, val.yakunlikeUsersIds) > -1)
+			{
+				yakLikes.append("déjà détesté " + "<span class='theUps'>" + val.likes + "</span> likes- " + "" + "<span class='theDowns'>" + val.unlikes +"</span> dislikes");							
+			}
+			else
+			{
+
+			yakLikes.append(thumbsUp + "<span class='theUps'>" + val.likes + "</span> likes- " + thumbsDown + "<span class='theDowns'>" + val.unlikes +"</span> dislikes");			
+
+			}
+
+
+			/*append the more yakimage ago and posted by to title*/
+			
+			content.append("<div class='shareMe'><i style='background: none' class='icon-share' title='Share Me'><img src='images/ftg.png' class='ftgIcon' /> </i></div>");
+			item.append(content);
+			item.append(yakLikes);
+			item.append(yakComments);
+			return item;	
 		}
