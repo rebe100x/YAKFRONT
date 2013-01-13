@@ -1003,11 +1003,19 @@ block content
 			}
 
 
-			/*append the more yakimage ago and posted by to title*/
+			more = $("<a />");
+			more.attr("class", "more");
+			more.attr("href", val.outGoingLink);
+			more.attr("target", "_blank");
+			more.attr("rel", val._id);
+			more.attr("data-toggle", "data-toggle");
+			more.html("read from source");
 			
 			content.append("<div class='shareMe'><i style='background: none' class='icon-share' title='Share Me'><img src='images/ftg.png' class='ftgIcon' /> </i></div>");
+			content.find(".theContent").append(more);
 			item.append(content);
 			item.append(yakLikes);
 			item.append(yakComments);
+			item.append()
 			return item;	
 		}
