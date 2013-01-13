@@ -58,6 +58,7 @@ mixin searchForm(page)
 				$('#searchStr').keyup(function(event){
 					if($(this).val()==''){
 						searchString = null;
+						$.cookie("searchString",searchString,{ expires: 10000, path : '/' });
 						getAndPrintInfo();
 					}
 					if (event.which == 13) {
@@ -66,6 +67,8 @@ mixin searchForm(page)
 				});
 				$('#searchPlaceStr').keyup(function(event){
 					if($(this).val()==''){
+						curPos.name = "";
+						$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
 						$('#locationInput').val('');
 					}
 					if (event.which == 13) {
