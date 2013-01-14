@@ -262,6 +262,7 @@ block content
 							divComment.append(drawAComment(val));
 						});
 						divComment.append('<textarea placeholder="Ajouter un commentaire..."></textarea>');
+
 						divComment.find("textarea").keypress(function(event){
 							if (event.keyCode == 13) {
 								var comment = $(this).val();
@@ -272,12 +273,14 @@ block content
 								newComment.username = user.login;
 								newComment.userid = user._id;
 								newComment.comment = comment;
+								newComment.date = new Date();
 								$.post('/setComment', {infoId : currEleComment.attr("rel"), username: user.login, userthumb: user.thumb, comment: comment} , function(res){
 									if (res == 'updated')
 									{
 										theArea.val("");
 										theArea.removeAttr("disabled");
 										theArea.before(drawAComment(newComment));
+										
 									}
 
 				});

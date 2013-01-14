@@ -873,7 +873,8 @@ exports.setComment = function(req, res){
             "userid": req.session.user,
             "username": req.body.username,
             "userthumb": req.body.userthumb,
-            "comment": req.body.comment
+            "comment": req.body.comment,
+           	"date": new Date()
           };
 
 			Info.update({_id:infoId},{$push:{yakComments: acomment}, new:true}, function(err, result){

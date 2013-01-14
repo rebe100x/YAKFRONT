@@ -908,8 +908,12 @@ function drawAComment(val)
 	var userid = val.userid;
 	var comment = val.comment;
 	var thumb	 = val.userthumb;
-
-	return "<div class='aComment'><img class='userthumb' src='images/" + thumb + "' /><span class='username'>" + username + "</span><div class='comment'>" + comment + "</div></div>";
+	date = "";
+	if (typeof(val.date) != 'undefined' ) {
+		var date	 = $.timeago(val.date);
+	}
+			
+	return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><span class='username'>" + username + "</span><div class='comment'>" + comment + "</div><span class='timeago'>" + date + "</span></div>";
 }
 
 function setLikeSystem()
