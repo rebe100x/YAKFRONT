@@ -511,6 +511,7 @@ var User = new Schema({
 	, salt      : { type: String ,required: true, index: true}
 	, token     : { type: String ,required: true, index: true}
 	, usersubs	: { type: [User],ref: 'User',  index: true}
+	, feedsubs	: { type: [],ref: 'Feed',  index: true}
 	, tagsubs	: { type: [String], index: true}
 	, placesubs	: { type: [Schema.Types.ObjectId], index: true}
 	, location	: { type : { lat: Number, lng: Number }, index : '2d'}	
@@ -562,6 +563,7 @@ User.statics.format = function (theuser) {
 		address:theuser.address,
 		favplace:theuser.favplace,
 		usersubs:theuser.usersubs,
+		feedsubs:theuser.feedsubs,
 		tagsubs:theuser.tagsubs,
 	};
   return formattedUser;
@@ -597,7 +599,7 @@ User.statics.findById = function (id,callback) {
   return this.findOne({'_id': id}, callback);
 }
 User.statics.PublicProfileFindById = function (id,callback) {
-  return this.findOne({'_id': id},{_id:1,address:1,bio:1,location:1,login:1,mail:1,name:1,thumb:1,type:1,web:1,lastLoginDate:1,favplace:1,placesubs:1,tagsubs:1,usersubs:1,tags:1}, callback);
+  return this.findOne({'_id': id},{_id:1,address:1,bio:1,location:1,login:1,mail:1,name:1,thumb:1,type:1,web:1,lastLoginDate:1,favplace:1,placesubs:1,tagsubs:1,usersubs:1, feedsubs:1,tags:1}, callback);
 }
 User.statics.findByToken = function (token,callback) {
   return this.findOne({'token': token,'status':2}, callback);
@@ -616,7 +618,7 @@ User.statics.search = function(string,count,from,sensitive,callback){
 		
 	"status":1,
 	},
-	{_id:1,address:1,bio:1,location:1,login:1,mail:1,name:1,thumb:1,type:1,web:1,lastLoginDate:1,favplace:1,placesubs:1,tagsubs:1,usersubs:1,tags:1},
+	{_id:1,address:1,bio:1,location:1,login:1,mail:1,name:1,thumb:1,type:1,web:1,lastLoginDate:1,favplace:1,placesubs:1,tagsubs:1,usersubs:1, feedsubs:1 ,tags:1},
 	{
 		
 		skip:skip, // Starting Row
@@ -671,6 +673,11 @@ Zone.statics.findAll = function (callback) {
 }
 mongoose.model('Zone', Zone);
 
+/****************************************Feeds*/
+
+var Feed = new Schema({
+    name     : { type: String, index:true, required: true}
+}, { collection: 'feed' });
 
 
 

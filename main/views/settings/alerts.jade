@@ -32,19 +32,23 @@ block content
 						input#usersubsInput(type='hidden', name='usersubsInput', value=JSON.stringify(locals.user.usersubs))
 						input#placesubscInput(type='hidden', name='placesubscInput', value='')
 						input#tagsubsInput(type='hidden', name='tagsubsInput', value='')
+						input#feedsubsInput(type='hidden', name='feedsubsInput', value='')
 						div.row-fluid
-							div.span5
+							div.span12
 								div.control-group
 									div.controls
 										label.control-label.label-xlarge(for="usersubs") Abonnez vous au flux d'un utilisateur : 										
 										- each user in usersubs
 											p
 												div
-													i.icon-remove.icon-pointer(onclick="usersubsArray.cleanArray(\""+user._id+"\");console.log(usersubsArray);$(\"#usersubsInput\").val(JSON.stringify(usersubsArray));$(this).parent().remove();") 
+													i.icon-remove.icon-pointer(onclick="usersubsArray.cleanArray(\""+user._id+"\");console.log(usersubsArray);$(\"#usersubsInput\").val(JSON.stringify(usersubsArray));$(this).parent().remove(); clickSubmit()") 
 													= user.name
 										input.input-xlarge#usersubs(type="text",data-provide="typeahead", name="usersubs", autocomplete="off", placeholder="Entrer un nom d'utilisateur") 
-							div.span1(style="border-left:solid 1px #0E0E0E;height:100px;")
-							div.span6
+						div.row-fluid
+							div.span12(style="border-bottom:solid 1px #0E0E0E;width:100%; min-height: 1px;")
+						br
+						div.row-fluid
+							div.span12
 								div.control-group
 									div.controls
 										div.input-append
@@ -52,14 +56,29 @@ block content
 											- each tag in tagsubs
 												p
 													div
-														i.icon-remove.icon-pointer(onclick="tagsubsArray.cleanArrayByName(\""+tag+"\");$(\"#tagsubsInput\").val(JSON.stringify(tagsubsArray));$(this).parent().remove();") 
+														i.icon-remove.icon-pointer(onclick="tagsubsArray.cleanArrayByName(\""+tag+"\");$(\"#tagsubsInput\").val(JSON.stringify(tagsubsArray));$(this).parent().remove(); clickSubmit();") 
 														= tag
-											input#alert(type="text",data-provide="typeahead", name="alert", autocomplete="off", placeholder='Entrer un mot clé') 
+											input.input-xlarge#alert(type="text",data-provide="typeahead", name="alert", autocomplete="off", placeholder='Entrer un mot clé') 
 											button.btn#btn-alert-adder(type="button") Ajouter
 						br
+						div.row-fluid
+							div.span12(style="border-bottom:solid 1px #0E0E0E;width:100%; min-height: 1px;")
 						br
-						div.row-fluid			
-							div.span3 
+						div.row-fluid
+							div.span12
+								div.control-group
+									div.controls
+										div.input-append
+											label.control-label.label-xlarge(for="alert") Abonnez vous à une alerte sur un feed :
+											- each feed in feedsubs
+												p
+													div
+														i.icon-remove.icon-pointer(onclick="feedsubsArray.cleanArrayByName(\""+feed+"\");$(\"#feedsubsInput\").val(JSON.stringify(feedsubsArray));$(this).parent().remove();clickSubmit();") 
+														= feed.name
+											input.input-xlarge#userfeeds(type="text",data-provide="typeahead", name="alert", autocomplete="off", placeholder="Entrer un nom d'un feed")
+						br
+						br
+						div.row-fluid
 							div.span4
 								div.control-group
 									div.controls
@@ -71,6 +90,7 @@ block content
 		var user =!{JSON.stringify(user)};
 		var usersubsArray = user.usersubs; 
 		var tagsubsArray = user.tagsubs; 
+		var feedsubsArray = user.feedsubs; 
 		var placesubscArray = [];
 		$(document).ready(function() {
 			
@@ -92,7 +112,33 @@ block content
 					onselect: function(obj) {
 						if(!usersubsArray.inArrayId(obj._id)){
 							
-							$("label[for='usersubs']").after("<div><i class='icon-remove icon-pointer'  onclick='usersubsArray.cleanArray(\""+obj._id+"\");$(\"#usersubsInput\").val(JSON.stringify(usersubsArray));$(this).parent().remove();'></i> "+obj.name+"</div>");
+							$("label[for='usersubs']").after("<div><i class='icon-remove icon-pointer'  onclick='usersubsArray.cleanArray(\""+obj._id+"\");$(\"#usersubsInput\").val(JSON.stringify(usersubsArray));$(this).parent().remove(); clickSubmit()'></i> "+obj.name+"</div>");
+							$('#usersubs').val('').focus();
+							delete obj.thumb; // NOTE : here the thumb should not be included because it might be updated by the user
+							usersubsArray.push(obj);
+							$("#usersubsInput").val(JSON.stringify(usersubsArray));
+							$("#submit").click();
+						}else{
+							$('#usersubs').val('').focus();
+						}
+					}
+				});
+			
+			$('#userfeeds').typeahead({
+					minLength : 3,
+					source: function (typeahead, query) {
+						$.ajax({
+								url: "/api/feedsearch/"+query,				
+								success: function( data ) {
+								console.log(data);
+									typeahead.process(data.users);
+								}
+							})},
+					property: "userdetails",
+					onselect: function(obj) {
+						if(!usersubsArray.inArrayId(obj._id)){
+							
+							$("label[for='usersubs']").after("<div><i class='icon-remove icon-pointer'  onclick='usersubsArray.cleanArray(\""+obj._id+"\");$(\"#usersubsInput\").val(JSON.stringify(usersubsArray));$(this).parent().remove(); clickSubmit();'></i> "+obj.name+"</div>");
 							$('#usersubs').val('').focus();
 							delete obj.thumb; // NOTE : here the thumb should not be included because it might be updated by the user
 							usersubsArray.push(obj);
@@ -102,15 +148,30 @@ block content
 						}
 					}
 				});
-				
+
 			$('#tagsubsInput').val(JSON.stringify(tagsubsArray));
+
+			$("#alert").keyup(event)
+			{
+				alert(event.which);
+				if(event.which == 13)
+				{
+					alert("great");
+					return;
+				}
+			}
+
 			$('#btn-alert-adder').click(function(){
 				var tag = $('#alert').val();
 				$("label[for='alert']").after("<div><i class='icon-remove icon-pointer'  onclick='tagsubsArray.cleanArrayByname(\""+tag+"\");$(\"#tagsubsInput\").val(JSON.stringify(tagsubsArray));$(this).parent().remove();'></i> "+tag+"</div>");
 				$('#alert').val('').focus();
 				tagsubsArray.push(tag);
 				$("#tagsubsInput").val(JSON.stringify(tagsubsArray));
-				
+				clickSubmit();
 			});
 		}); // END READY
+
+		function clickSubmit() {
+			$("#submit").click();
+		}
 

@@ -495,7 +495,7 @@ exports.settings_alerts = function(req, res){
 		usersubs.salt="xxx";
 		usersubs.token="xxx";
 		usersubs.apiData=[];
-		res.render('settings/alerts',{usersubs:usersubs,tagsubs:res.locals.user.tagsubs});
+		res.render('settings/alerts',{usersubs:usersubs,tagsubs:res.locals.user.tagsubs, feedsubs: res.locals.user.feedsubs});
 		
 	}else{
 		req.session.message = "Erreur : vous devez être connecté pour gérer vos alertes";
