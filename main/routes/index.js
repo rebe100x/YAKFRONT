@@ -674,6 +674,7 @@ exports.alerts = function(req, res){
 			else{
 				console.log('Vos alertes sont enregistrées ');
 				formMessage.push("Vos alertes sont enregistrées");
+				res.json("1");
 			}
 				
 		});
@@ -681,7 +682,7 @@ exports.alerts = function(req, res){
 		formMessage.push("Erreur : vous n'êtes pas connecté !");
 	
 	req.session.message = formMessage;
-	res.redirect('settings/alerts');
+	//res.redirect('settings/alerts');
 }
 
 exports.profile = function(req, res){

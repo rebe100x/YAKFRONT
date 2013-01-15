@@ -28,7 +28,7 @@ block content
 							p.subheader Abonnez vous aux infos d'autres utilisateurs et configurer vos alertes
 				hr
 				div.row-fluid
-					form(action='/alerts', method='POST')
+					form
 						input#usersubsInput(type='hidden', name='usersubsInput', value=JSON.stringify(locals.user.usersubs))
 						input#placesubscInput(type='hidden', name='placesubscInput', value='')
 						input#tagsubsInput(type='hidden', name='tagsubsInput', value='')
@@ -41,7 +41,7 @@ block content
 										- each user in usersubs
 											p
 												div
-													i.icon-remove.icon-pointer(onclick="usersubsArray.cleanArray(\""+user._id+"\");console.log(usersubsArray);$(\"#usersubsInput\").val(JSON.stringify(usersubsArray));$(this).parent().remove(); clickSubmit()") 
+													i.icon-remove.icon-pointer(onclick="usersubsArray.cleanArray(\""+user._id+"\");console.log(usersubsArray);$(\"#usersubsInput\").val(JSON.stringify(usersubsArray));$(this).parent().remove(); clickSubmit(this)") 
 													= user.name
 										input.input-xlarge#usersubs(type="text",data-provide="typeahead", name="usersubs", autocomplete="off", placeholder="Entrer un nom d'utilisateur") 
 						div.row-fluid
@@ -56,7 +56,7 @@ block content
 											- each tag in tagsubs
 												p
 													div
-														i.icon-remove.icon-pointer(onclick="tagsubsArray.cleanArrayByName(\""+tag+"\");$(\"#tagsubsInput\").val(JSON.stringify(tagsubsArray));$(this).parent().remove(); clickSubmit();") 
+														i.icon-remove.icon-pointer(onclick="tagsubsArray.cleanArrayByName(\""+tag+"\");$(\"#tagsubsInput\").val(JSON.stringify(tagsubsArray));$(this).parent().remove(); clickSubmit(this);") 
 														= tag
 											input.input-xlarge#alert(type="text",data-provide="typeahead", name="alert", autocomplete="off", placeholder='Entrer un mot clé') 
 											button.btn#btn-alert-adder(type="button") Ajouter
@@ -73,7 +73,7 @@ block content
 											- each feed in feedsubs
 												p
 													div
-														i.icon-remove.icon-pointer(onclick="feedsubsArray.cleanArrayByName(\""+feed+"\");$(\"#feedsubsInput\").val(JSON.stringify(feedsubsArray));$(this).parent().remove();clickSubmit();") 
+														i.icon-remove.icon-pointer(onclick="feedsubsArray.cleanArrayByName(\""+feed+"\");$(\"#feedsubsInput\").val(JSON.stringify(feedsubsArray));$(this).parent().remove();clickSubmit(this);") 
 														= feed.name
 											input.input-xlarge#userfeeds(type="text",data-provide="typeahead", name="alert", autocomplete="off", placeholder="Entrer un nom d'un feed")
 						br
@@ -82,7 +82,7 @@ block content
 							div.span4
 								div.control-group
 									div.controls
-										button.btn.btn-large.btn-block.btn-inverse(type='submit', name='submit', id='submit', value='Enregistrer',style="width:100%;") Enregistrer
+										button.btn.btn-large.btn-block.btn-inverse(type='button', name='submit', id='submit', value='Enregistrer',style="width:100%; display: none") Enregistrer
 							
 	script
 		/*INIT*/	
@@ -94,7 +94,17 @@ block content
 		var placesubscArray = [];
 		$(document).ready(function() {
 			
-			
+			$("#alert").keyup(function(event){
+				if(event.which == 13 && $.trim($("#alert").val()) != "")
+				{
+					var tag = $('#alert').val();
+					$("label[for='alert']").after("<div><i class='icon-remove icon-pointer'  onclick='tagsubsArray.cleanArrayByName(\""+tag+"\");$(\"#tagsubsInput\").val(JSON.stringify(tagsubsArray));$(this).parent().remove();'></i> "+tag+"</div>");
+					$('#alert').val('').focus();
+					tagsubsArray.push(tag);
+					$("#tagsubsInput").val(JSON.stringify(tagsubsArray));
+					//clickSubmit(this);
+				}
+			});
 			//console.log(usersubsArray);
 			
 			//$('#usersubsInput').val(JSON.stringify(usersubsArray));
@@ -112,12 +122,12 @@ block content
 					onselect: function(obj) {
 						if(!usersubsArray.inArrayId(obj._id)){
 							
-							$("label[for='usersubs']").after("<div><i class='icon-remove icon-pointer'  onclick='usersubsArray.cleanArray(\""+obj._id+"\");$(\"#usersubsInput\").val(JSON.stringify(usersubsArray));$(this).parent().remove(); clickSubmit()'></i> "+obj.name+"</div>");
+							$("label[for='usersubs']").after("<div><i class='icon-remove icon-pointer'  onclick='usersubsArray.cleanArray(\""+obj._id+"\");$(\"#usersubsInput\").val(JSON.stringify(usersubsArray));$(this).parent().remove(); clickSubmit(this)'></i> "+obj.name+"</div>");
 							$('#usersubs').val('').focus();
 							delete obj.thumb; // NOTE : here the thumb should not be included because it might be updated by the user
 							usersubsArray.push(obj);
 							$("#usersubsInput").val(JSON.stringify(usersubsArray));
-							$("#submit").click();
+							clickSubmit($('#usersubs'));
 						}else{
 							$('#usersubs').val('').focus();
 						}
@@ -128,7 +138,7 @@ block content
 					minLength : 3,
 					source: function (typeahead, query) {
 						$.ajax({
-								url: "/api/feedsearch/"+query,				
+								url: "/api/usersearch/"+query,				
 								success: function( data ) {
 								console.log(data);
 									typeahead.process(data.users);
@@ -136,30 +146,23 @@ block content
 							})},
 					property: "userdetails",
 					onselect: function(obj) {
-						if(!usersubsArray.inArrayId(obj._id)){
+						if(!feedsubsArray.inArrayId(obj._id)){
 							
-							$("label[for='usersubs']").after("<div><i class='icon-remove icon-pointer'  onclick='usersubsArray.cleanArray(\""+obj._id+"\");$(\"#usersubsInput\").val(JSON.stringify(usersubsArray));$(this).parent().remove(); clickSubmit();'></i> "+obj.name+"</div>");
-							$('#usersubs').val('').focus();
+							$("label[for='userfeeds']").after("<div><i class='icon-remove icon-pointer'  onclick='feedsubsArray.cleanArray(\""+obj._id+"\");$(\"#feedsubsInput\").val(JSON.stringify(feedsubsArray));$(this).parent().remove(); clickSubmit(this);'></i> "+obj.name+"</div>");
+							$('#userfeeds').val('').focus();
 							delete obj.thumb; // NOTE : here the thumb should not be included because it might be updated by the user
-							usersubsArray.push(obj);
-							$("#usersubsInput").val(JSON.stringify(usersubsArray));
+							feedsubsArray.push(obj);
+							$("#feedsubsInput").val(JSON.stringify(feedsubsArray));
+							clickSubmit($('#userfeeds'));
 						}else{
-							$('#usersubs').val('').focus();
+							$('#userfeeds').val('').focus();
 						}
 					}
 				});
 
 			$('#tagsubsInput').val(JSON.stringify(tagsubsArray));
+			$('#feedsubsInput').val(JSON.stringify(feedsubsArray));
 
-			$("#alert").keyup(event)
-			{
-				alert(event.which);
-				if(event.which == 13)
-				{
-					alert("great");
-					return;
-				}
-			}
 
 			$('#btn-alert-adder').click(function(){
 				var tag = $('#alert').val();
@@ -167,11 +170,16 @@ block content
 				$('#alert').val('').focus();
 				tagsubsArray.push(tag);
 				$("#tagsubsInput").val(JSON.stringify(tagsubsArray));
-				clickSubmit();
+				clickSubmit(this);
 			});
 		}); // END READY
 
-		function clickSubmit() {
-			$("#submit").click();
+		function clickSubmit(el) {
+			var loading = '<img src="images/loader_big.gif" class="loadingMore" style="position: relative; top:18px;" />';
+			$(el).after(loading);
+			//$("#submit").click();
+			$.post('/alerts', {usersubsInput: $("#usersubsInput").val(), tagsubsInput: $("#tagsubsInput").val()}, function(data){
+				$(el).parent().find(".loadingMore").remove();
+			});
 		}
 
