@@ -1207,15 +1207,10 @@ exports.user_search = function (req, res) {
 };
 
 exports.feed_search = function (req, res) {
-	var User = db.model('Feed');	
-	User.search(req.params.string,req.query.limit,req.query.skip,req.query.sensitive,function (err, docs){
-		var usersFormated = docs.map(function(item){
-			var User = db.model('User');
-			return User.formatLight(item);
-		});
-
+	var Feed = db.model('Feed');	
+	Feed.findByName(req.params.string, function (err, docs){
 		res.json({
-			users: usersFormated
+			feeds: docs
 		  });
 	});
 };

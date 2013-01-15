@@ -69,7 +69,7 @@ block content
 								div.control-group
 									div.controls
 										div.input-append
-											label.control-label.label-xlarge(for="alert") Abonnez vous à une alerte sur un feed :
+											label.control-label.label-xlarge(for="userfeeds") Abonnez vous à une alerte sur un feed :
 											- each feed in feedsubs
 												p
 													div
@@ -138,19 +138,17 @@ block content
 					minLength : 3,
 					source: function (typeahead, query) {
 						$.ajax({
-								url: "/api/usersearch/"+query,				
+								url: "/api/feedsearch/"+query,				
 								success: function( data ) {
 								console.log(data);
-									typeahead.process(data.users);
+									typeahead.process(data.feeds);
 								}
 							})},
-					property: "userdetails",
+					property: "name",
 					onselect: function(obj) {
 						if(!feedsubsArray.inArrayId(obj._id)){
-							
 							$("label[for='userfeeds']").after("<div><i class='icon-remove icon-pointer'  onclick='feedsubsArray.cleanArray(\""+obj._id+"\");$(\"#feedsubsInput\").val(JSON.stringify(feedsubsArray));$(this).parent().remove(); clickSubmit(this);'></i> "+obj.name+"</div>");
 							$('#userfeeds').val('').focus();
-							delete obj.thumb; // NOTE : here the thumb should not be included because it might be updated by the user
 							feedsubsArray.push(obj);
 							$("#feedsubsInput").val(JSON.stringify(feedsubsArray));
 							clickSubmit($('#userfeeds'));
@@ -178,7 +176,7 @@ block content
 			var loading = '<img src="images/loader_big.gif" class="loadingMore" style="position: relative; top:18px;" />';
 			$(el).after(loading);
 			//$("#submit").click();
-			$.post('/alerts', {usersubsInput: $("#usersubsInput").val(), tagsubsInput: $("#tagsubsInput").val()}, function(data){
+			$.post('/alerts', {feedsubsInput: $("#feedsubsInput	").val(),usersubsInput: $("#usersubsInput").val(), tagsubsInput: $("#tagsubsInput").val()}, function(data){
 				$(el).parent().find(".loadingMore").remove();
 			});
 		}

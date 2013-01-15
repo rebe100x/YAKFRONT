@@ -679,9 +679,12 @@ var Feed = new Schema({
     name     : { type: String, index:true, required: true}
 }, { collection: 'feed' });
 
+Feed.statics.findByName = function (str,callback) {
+  searchStr = new RegExp(str,'i');
+  return this.find({'name': {$regex:searchStr}},{}, callback);
+}
 
-
-
+mongoose.model('Feed', Feed);
 /******************************YAKCAT*/
 var Yakcat = new Schema({
     title     : { type: String, index:true, required: true}

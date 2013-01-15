@@ -647,6 +647,7 @@ exports.alerts = function(req, res){
 	var user = new User();
 	var usersubsArray = Array();
 	var tagsubsArray = [];
+	var feedsubsArray = [];
 	// user subscribtions
 	
 	
@@ -667,9 +668,18 @@ exports.alerts = function(req, res){
 
 		
 	}
+
+	if(req.body.feedsubsInput.length > 0){
+		var feedsubs = eval('('+req.body.feedsubsInput+')');
+		for(i=0;i<feedsubs.length;i++){
+			feedsubsArray.push(feedsubs[i]);
+		}
+
+		
+	}
 				
 	if(req.session.user){
-		User.update({_id: req.session.user}, {$set:{usersubs : usersubsArray}, tagsubs : tagsubsArray}, {upsert: true}, function(err){
+		User.update({_id: req.session.user}, {$set:{usersubs : usersubsArray}, tagsubs : tagsubsArray, feedsubs: feedsubsArray}, {upsert: true}, function(err){
 			if (err) console.log(err);
 			else{
 				console.log('Vos alertes sont enregistrées ');
