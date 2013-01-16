@@ -321,12 +321,15 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,from,now,type,str,thecount,thesk
 	var cond = {
 				"print":1,
 				"status":1,
-				"location" : locationQuery,
 				"pubDate":{$lte:DPUB},
 				"dateEndPrint":{$gte:DEND},
 				"yakType" : {$in:type}
 			};
-			
+	
+	if (!isNaN(x1)) {
+		cond["location"] = locationQuery;
+	}
+
 	var qInfo = this.find(cond).sort({'pubDate':-1}).limit(limit).skip(skip);
 	
 	/*mode update*/

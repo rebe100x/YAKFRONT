@@ -68,6 +68,9 @@ mixin searchForm(page)
 				$('#searchPlaceStr').keyup(function(event){
 					if($(this).val()==''){
 						curPos.name = "";
+						curPos.x = null;
+						curPos.y = null;
+						curPos.z = null;
 						$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
 						$('#locationInput').val('');
 					}
