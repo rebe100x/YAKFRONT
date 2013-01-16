@@ -27,10 +27,15 @@ mixin menu(active)
 						- else
 							span 
 								a.btn(href="/user/login") Login
-					- if (active == 'map' || active == 'post' || active == 'feed')		
+					- if (active == 'map' || active == 'post' || active == 'feed')
 						div.btn-group.pull-right
 							&nbsp;&nbsp;&nbsp;
 							span
+							-if(active == 'feed')
+								span.btn#postOnMap(title="Post")
+										i.icon-pencil 
+										&nbsp;Post
+								&nbsp;&nbsp;&nbsp;			
 								span.btn#zoneLocButton(title="Mes favoris")
 									i.icon-star 
 									&nbsp;Mes endroits favoris

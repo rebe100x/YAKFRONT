@@ -85,6 +85,7 @@ block content
 
 		/*READY FUNCTIONS*/
 		$(document).ready(function() {
+			console.log(user);
 			zoom = rangeFromZ();
 			
 			$('#arroundme').click(function(){
@@ -190,7 +191,8 @@ block content
 			});
 			
 			$('#newsfeed').delegate(".mapHighlighter",'click', function (e) {
-				if (e.target.className != "yakComments" && e.target.className != "yakLikes")
+				//console.log(e.target);
+				if (e.target.className != "yakComments" && e.target.className != "yakLikes" && e.target.className != "yakTextarea" && e.target.className != "username")
 					getItemDetails(this);
 				unhighlightInfo($(this),highlightInfo);
 			});
@@ -945,11 +947,9 @@ block content
 				$(this).append('<img class="loadingMore" src="images/loader_big.gif">');
 				$.getJSON('/api/afeed', { id: $(this).attr("rel")} ,function(data) {
 						$.each(data.info[0].yakComments, function(key, val){
-							divComment.append(drawAComment(val));
+							divComment.append(drawAComment(val, 'map'));
 						});
-						divComment.append('<textarea placeholder="Ajouter un commentaire..."></textarea>');
-
-						
+						divComment.append('<textarea class="yakTextarea" placeholder="Ajouter un commentaire..."></textarea>');
 
 						divComment.find("textarea").keypress(function(event){
 							if (event.keyCode == 13) {
@@ -961,6 +961,7 @@ block content
 								newComment.username = user.login;
 								newComment.userid = user._id;
 								newComment.comment = comment;
+								newComment.userthumb = user.thumb;
 								newComment.date = new Date();
 								$.post('/setComment', {infoId : currEleComment.attr("rel"), username: user.login, userthumb: user.thumb, comment: comment} , function(res){
 									if (res == 'updated')

@@ -902,18 +902,27 @@ function changePlaceRange(id, lat, lng, pointname, range)
 	return newid;
 }
 
-function drawAComment(val)
+function drawAComment(val, from)
 {
+	
 	var username = val.username;
 	var userid = val.userid;
-	var comment = val.comment;
+	var comment = val.comment.toString().linkify();
 	var thumb	 = val.userthumb;
 	date = "";
 	if (typeof(val.date) != 'undefined' ) {
 		var date	 = $.timeago(val.date);
 	}
-			
-	return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><span class='username'>" + username + "</span><div class='comment'>" + comment + "</div><span class='timeago'>" + date + "</span></div>";
+
+	if (typeof(from) === 'undefined' ) {
+			return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><span class='username'>" + username + "</span><div class='comment'>" + comment + "</div><span class='timeago'>" + date + "</span></div>";
+	}
+	else
+	{
+		var urlsearch = conf.fronturl + '/news/map/search/@' + username;
+		return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username' href='" + urlsearch + "'>" + username + "</a><div class='comment'>" + comment + "</div><span class='timeago'>" + date + "</span></div>";	
+	}
+
 }
 
 function setLikeSystem()

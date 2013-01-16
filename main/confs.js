@@ -29,7 +29,7 @@ exports.confs = {
 		"validationUrl":"localhost:3000/user/validate/",
 		"batchurl":"localhost:3000/BACKEND/",
 		"backurl":"http://localhost:8080/YAKREP/BACKEND/",
-		"fronturl":"localhost:3000",
+		"fronturl":"http://localhost:3000",
 		"apiurl":"localhost:3000",
 		"backdns":"localhost",
 		"frontdns":"localhost",
