@@ -769,6 +769,57 @@ block content
 										tr
 											td Non RESTfull method in POST : /api/user/delfeed/<code>userid</code>
 					
+					
+					h4#endpoint_infocomments Manage Info Comments
+					table.table.table-bordered
+						tr
+							th METHODS
+							th URL
+							th DESCRIPTION
+			
+						tr	
+							td POST
+							td /setComment</code>
+							td Manage Info Comments
+						tr
+							td(colspan=3)
+								table.table.table-bordered
+									tr
+										td POST : create a new info comment
+									tr
+										td Parameters :
+											ul
+												li <b>infoId :</b> id of the related info
+												li <b>username</b>: user.login
+												li <b>userthumb</b>: user.thumb
+												li <b>comment</b>: the comment text
+										td Response
+											div returns 'updated' if operation succeeded
+
+					h4#endpoint_infolikes Manage Info likes
+					table.table.table-bordered
+						tr
+							th METHODS
+							th URL
+							th DESCRIPTION
+			
+						tr	
+							td POST
+							td /setLikes</code>
+							td Manage Info Likes
+						tr
+							td(colspan=3)
+								table.table.table-bordered
+									tr
+										td POST : create a new info like or dislike
+									tr
+										td Parameters :
+											ul
+												li <b>infoId :</b> id of the related info
+												li <b>islike</b>: 'like' or 'dislike'
+										td Response
+											div returns 'updated' if operation succeeded
+										
 
 					
 					h3#endpoint_search Search
