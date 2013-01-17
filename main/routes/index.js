@@ -56,12 +56,9 @@ exports.requiresLogin = function(req,res,next){
 		var User = db.model('User');
 		User.findById(req.session.user,function (err, theuser){
 			if(theuser != undefined && theuser != null ){
-				
-				res.locals.user = theuser;
-				res.locals.user.token ='xxx';
-				res.locals.user.salt = 'xxx';
-				res.locals.user.hash='xxx';
-				res.locals.user.apiData=[];
+				res.locals.user = User.format(theuser);
+				console.log(res.locals.user);
+				console.log(theuser);
 				console.log('LOGGED IN');
 				next();
 			}else{
