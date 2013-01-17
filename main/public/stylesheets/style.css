@@ -56,7 +56,7 @@ abbr[title] {
 #feedContent #liveupdate { text-align: center; color: #D71921; padding-top: 12px; padding-bottom: 12px; font-size: 14px; font-weight: bold; cursor: pointer;}
 #feedContent #liveupdate:hover { text-decoration: underline;}
 #feedContent .hidden { display: none;}
-#feedContent{ clear: both; padding-top: 12px; background: white; border-radius: 5px 5px 5px 5px; box-shadow: 0 1px 0 #DDDDDD; margin-top: 20px; padding-right: 12px; margin-left: 12px;}
+#feedContent{ clear: both; padding-top: 12px; background: white; border-radius: 5px 5px 5px 5px; box-shadow: 0 1px 0 #DDDDDD; margin-top: 20px; padding-right: 12px; margin-left: 12px; float: left;}
 #feedContent .item{margin:5px;}
 #feedContent .title{font-size:0.85em;font-weight:bold;cursor:default;}
 #feedContent .title a { color: #4A4A4A;}
@@ -76,7 +76,7 @@ abbr[title] {
 #feedContent .shareMe { text-align: right; margin-top: -27px; position: relative; right: 10px; width: 100%;} 
 #feedContent .shareMe i {cursor: pointer; position: relative; right: 95px;}
 #feedContent .img { float: left; margin-right: 12px;}
-#feedContent .myitem { margin: 10px 10px 10px 10px; color: #4A4A4A; width: 99%; border-bottom: 1px dotted #000000; min-height: 200px; }
+#feedContent .myitem { margin: 10px 10px 10px 10px; color: #4A4A4A; width: 99%; border-bottom: 0px dotted #000000; min-height: 200px;}
 #feedContent .myitem .title { font-size: 14px; font-weight: bold; padding-bottom: 10px;}
 #feedContent .myitem .title .postedby { font-size: 12px; font-style: italic; font-weight: normal; color: #87888B; margin-top: 5px;}
 #feedContent .myitem .title .postedat { font-size: 11px; }
@@ -93,6 +93,7 @@ abbr[title] {
 #feedContent .myitem .phoneNumbers { clear: both; position: relative; margin-top: 12px; left: 0px;}
 #feedContent .myitem .phoneNumbers a { color: #3CB413; font-size: 12px; margin-right: 10px; position: relative; top: -4px; left: -9px;}
 #feedContent .myitem .loadingMore { height: 18px; position: absolute; left: 101px;}  
+#feedContent .myitem hr { border-bottom:  1px solid dotted; height: 1px; width: 100%; float: left;}
 #feedContent .silentUpdates { text-align: center; background: #D71921; margin-left: 9px; color: white; padding-bottom: 6px; padding-top: 6px; font-weight: bold; cursor: pointer;}
 .expand { z-index: 1111};
 #search #heatModule { text-align: center;}
