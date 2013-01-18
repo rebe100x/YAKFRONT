@@ -29,60 +29,89 @@ mixin searchForm(page)
 		
 	script
 		var user =!{JSON.stringify(user)};
+
 		var mainConf = !{mainConf};	
-		//var yakType = [!{type}];
+
+		
 		var yakType = ($.isEmptyObject($.cookie("yaktype")))?mainConf.typeDefault.split(','):$.cookie("yaktype").split(',');
+
 		if(yakType == 0)
 			yakType = [];
+
 		var curPos = ($.isEmptyObject($.cookie("geoloc")))?{'x':user.location.lat,'y':user.location.lng,'z':mainConf.rangeDefault,'name':user.formatted_address}:JSON.parse($.cookie("geoloc"));
+
 		var dateFrom = ($.isEmptyObject($.cookie("dateFrom")))?mainConf.dateFromDefault:$.cookie("dateFrom");
 		
 		var searchString = "!{str}".toString();
+
 		if(searchString=='')
 			searchString = ($.isEmptyObject($.cookie("searchString")))?null:$.cookie("searchString");
 		
 		$('#searchPlaceStr').val(curPos.name);
-		$('#locationInput').val(JSON.stringify({lat:curPos.x,lng:curPos.y}));						
 
-		//console.log($.cookie("searchString"));
+		$('#locationInput').val(JSON.stringify({lat:curPos.x,lng:curPos.y}));						
 
 		$(document).ready(function() {
 
-				console.log(curPos.name);
 				setTimeSliderText(dateFrom);
+
 				setLocalnessSliderText(curPos.z);
 		
 				/*search info and place*/
 				$('#searchStr').val(searchString);
+
 				// reset
 				$('#searchStr').keyup(function(event){
+
 					if($(this).val()==''){
 						searchString = null;
-						$.cookie("searchString",searchString,{ expires: 10000, path : '/' });
-						getAndPrintInfo();
+						$('#searchBtn').trigger('click');
 					}
+					else
+					{
+						searchString = encodeURIComponent($('#searchStr').val());
+					}
+					$('#searchBtn').trigger('click');
+				});
+
+				$('#searchPlaceStr').keyup(function(event){
 					if (event.which == 13) {
+
+						if($(this).val()==''){
+							curPos.name = user.formatted_address;
+							curPos.x = user.location.lat;
+							curPos.y = user.location.lng;
+							//curPos.z = mainConf.rangeDefault;
+							$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
+							$('#searchPlaceStr').val(curPos.name);								
+						}
 						$('#searchBtn').trigger('click');
 					}
 				});
-				$('#searchPlaceStr').keyup(function(event){
+
+				$('#searchStr').blur(function(event){
+					$("#searchBtn").click();
+				});
+
+				$('#searchPlaceStr').blur(function(event){
 					if($(this).val()==''){
-						curPos.name = "";
-						curPos.x = null;
-						curPos.y = null;
-						curPos.z = null;
+						curPos.name = user.formatted_address;
+						curPos.x = user.location.lat;
+						curPos.y = user.location.lng;
+						//curPos.z = mainConf.rangeDefault;
 						$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
-						$('#locationInput').val('');
+						$('#searchPlaceStr').val(curPos.name);
+						
 					}
-					if (event.which == 13) {
-						$('#searchBtn').trigger('click');
-					}
+					$("#searchBtn").click();
 				});
 				
 				
 				
 				// search button
 				$('#searchBtn').click(function(){
+					$.cookie("searchString",searchString,{ expires: 10000, path : '/' });
+
 					var str = encodeURIComponent($('#searchStr').val());
 					var placeName = $('#searchPlaceStr').val();
 					var location = JSON.stringify({lat:curPos.x,lng:curPos.y});				
@@ -124,7 +153,7 @@ mixin searchForm(page)
 								map.panTo(latLng);*/
 								//console.log(results);
 								var placeGmap = getPlaceFromGmapResult((results[0]));
-								changeLocation(JSON.stringify(placeGmap));
+								//changeLocation(JSON.stringify(placeGmap));
 
 							}else{
 								var salt = new Date().getTime();
@@ -132,7 +161,7 @@ mixin searchForm(page)
 								setTimeout(function() {
 									$("#alert"+salt).fadeOut();
 								}, 3000);
-								$('#searchPlaceStr').select();
+								
 							} 
 							});
 						}
@@ -145,9 +174,8 @@ mixin searchForm(page)
 					{
 						searchString = null;
 					}
-					$.cookie("searchString",searchString,{ expires: 10000, path : '/' });
-					//sgetAndPrintInfo();
-					$('#searchStr').focus();
+					
+					getAndPrintInfo();
 				});
 
 
@@ -245,6 +273,7 @@ mixin searchForm(page)
 					curPos.y = placeGmap.location.lng;
 					curPos.name = placeGmap.formatted_address;
 					$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
+					$("#searchBtn").click();
 				}
 			});
 			
