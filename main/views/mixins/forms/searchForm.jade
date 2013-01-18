@@ -142,9 +142,10 @@ mixin searchForm(page)
 					if(str != 'Quoi ?' && str != ''){
 						searchString = str;
 					}else
+					{
 						searchString = null;
-
-					$.cookie("searchString",searchString,{ expires: 10000, path : '/' });	
+					}
+					$.cookie("searchString",searchString,{ expires: 10000, path : '/' });
 					//sgetAndPrintInfo();
 					$('#searchStr').focus();
 				});

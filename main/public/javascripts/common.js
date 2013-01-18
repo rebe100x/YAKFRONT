@@ -937,8 +937,9 @@ function setLikeSystem()
 					if (res == 'updated')
 					{
 						thumbs.html(currentLikes + 1);
-						currEl.parent().find("i").eq(0).before("déjà aimé");
+						//currEl.parent().find("i").eq(0).before("déjà aimé");
 						currEl.parent().find("i").remove();
+						
 					}
 
 				});
@@ -952,8 +953,9 @@ function setLikeSystem()
 					if (res == 'updated')
 					{
 						thumbs.html(currentLikes + 1);
-						currEl.parent().find("i").eq(0).before("déjà détesté");
+						//currEl.parent().find("i").eq(0).before("déjà détesté");
 						currEl.parent().find("i").remove();
+						
 					}
 				});
 			});

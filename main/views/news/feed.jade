@@ -561,7 +561,7 @@ block content
 
 		function getAndPrintInfo (next, silentUpdate)
 		{
-		
+			//alert(searchString + " - " + $.cookie("searchString"));
 			if (next == 1)
 			{	
 				skip = skip + limit;
@@ -590,7 +590,7 @@ block content
 			urltouse += limit + "/"  // limit;
 			urltouse += skip + "/" // skip;
 			
-			//console.log(urltouse);
+			console.log(curPos);
 			$.getJSON(urltouse ,function(data) {
 		
 				if((typeof(data.data) == 'undefined' ||  data.data.info.length == 0) && next != 1){

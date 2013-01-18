@@ -122,6 +122,7 @@ abbr[title] {
 #topsFeed .myitem .freetags a { color: #D81A21; font-size: 11px; margin-right: 10px;}
 
 .localnessPrinter {position: relative; top: -13px; left: 209px;}
+#alreadyVoted { color: green;}
 /* THE MAP
 -------------------------------------------------- */
 	/*MAP TOOLS CONTROLLERS*/
@@ -189,7 +190,7 @@ ul#newsfeed{display:block;list-style-type:none;width:100%;margin:0px auto;paddin
 ul#newsfeed li{width:100%;}
 ul#newsfeed li.highlighted .mapHighlighter{background-color:#F0F0F0;}
 
-ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: both;}
+ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: both; padding-left: 3px; padding-right: 3px;}
 .infowindow .myitem {clear: both; position: relative; top: 12px; text-align: justify;}
 .infowindow .myitem .shareMe { width: auto; float: right; clear: both; top: -17px; position: relative; right: 69px;}
 .infowindow .myitem .ftgIcon { height: 14px; position: absolute; top: 4px; float: left; clear: both;}
@@ -205,20 +206,13 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 .infowindow .myitem .commentBox .userthumb { height: 50px; width: 50px; float: left; }
 .infowindow .myitem .commentBox .comment { color: black; margin-bottom: 12px;}
 .infowindow .myitem .commentBox textarea { width: 97%; height: 100px; margin-top: 2px; margin-left: 0px;}
+.infowindow .myitem i.icon-chevron-up { }
 
 
 .infowindow{
 	width:95%;margin:5px 5px;font-size:0.95em;
 	
-	-webkit-transition: .1s border-color;
-	-moz-transition: .1s border-color;
-	transition: .1s border-color;
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
-	border: 1px solid #DDD;
-	-webkit-box-shadow: 0 1px 0 #DDD;
-	-moz-box-shadow: 0 1px 0 #ddd;
+	
 	box-shadow: 0 1px 0 #DDD;
 	background: white;
 	border-color: #BBB;
@@ -238,13 +232,28 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 .infowindow .date{color: #87888B;margin-right:5px;}
 .infowindow .date .timeago { margin-top: -28px; margin-right: 8px;}
 .infowindow .links{float:right;margin-right:3px;text-align:right;font-style:italic;font-size:0.8em;line-height: 1.5em;}
-.infowindow .tags{float:left;margin-left:3px;text-align:left;font-style:italic;font-size:0.8em;line-height: 1.5em;}
-.infowindow .yakTypeImg{width:15px;height:22px;}
+
+.infowindow .yakTypeImg{width:15px;height:22px; float: right;}
+.infowindow .titleLeft { float: left; width: 50%;}
+.infowindow .titleRight { float: right; width: 50%;}
 .infowindow .infofooter{float:left:width:100%;margin:5px 0px 5px 0px;}
-.infowindow .infodetail{float:left;width:100%;font-style:italic;font-size:0.8em;line-height: 1.5em;}
-.infowindow .infodetail a{color:#0C0C0C;}
-.infowindow img {float: left;margin: 0 5px 0px 0;width:80px;height:60px;}
+
 		/*POST*/
+
+.infowindow .yakTypeImage { float: left; width:15px;height:22px; z-index: 111;}
+.infowindow .yakTypeImage img { float: left; width:15px;height:22px;}
+
+.infowindow .thumbImage { float: left; width:80px;height:80px; margin-left: -15px;}
+.infowindow .thumbImage img { float: left; width:80px;height:80px;}
+
+.infowindow .itemTitle { font-size: 13px; font-weight: bold; color: #5D5D5D; left: 12px; padding-right: 12px; position: relative; text-align: justify; color: black;}
+
+.infowindow .postedBy { position: relative; left: 12px; padding-right: 12px; font-size: 11px;}
+
+.infowindow .tags{float:left;margin-left:3px;text-align:left;font-style:italic;font-size:0.8em;line-height: 1.5em; clear: both; margin-top: 6px; margin-bottom: 3px;}
+
+.infowindow .infodetail{float:left;width:100%;font-style:italic;font-size:0.8em;line-height: 1.5em; clear: both;}
+.infowindow .infodetail a{color:#0C0C0C;}
 
 /*#newsPostContainer{overflow:auto;height:auto;}
 #newsPostContainer #newsPostForm{margin:0px auto;padding:10px;text-align:left;opacity:0.95;background:#FFFFFF;}*/

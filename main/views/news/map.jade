@@ -191,8 +191,9 @@ block content
 			});
 			
 			$('#newsfeed').delegate(".mapHighlighter",'click', function (e) {
+
 				//console.log(e.target);
-				if (e.target.className != "yakComments" && e.target.className != "yakLikes" && e.target.className != "yakTextarea" && e.target.className != "username")
+				if (e.target.className != "yakComments" && e.target.className != "yakLikes" && e.target.className != "yakTextarea" && e.target.className != "username" && e.target.className != "yakLikes" && e.target.className != "icon-thumbs-down" && e.target.className != "icon-thumbs-up")
 					getItemDetails(this);
 				unhighlightInfo($(this),highlightInfo);
 			});
@@ -801,6 +802,112 @@ block content
 			var dateTmp2 = new Date(item.dateEndPrint);
 			var dateEndPrint = dateTmp2.getDate()+'/'+(dateTmp2.getMonth()+1)+'/'+dateTmp2.getFullYear();
 
+			infoContent = $("<div />");
+			infoContent.attr("class", "infowindow mapHighlighter");
+			infoContent.attr("infoId", item._id);
+
+			var yakTypeImage = $("<div />");
+			yakTypeImage.attr("class", "yakTypeImage");
+			yakTypeImage.html("<img src='/images/markers/type" + item.yakType + ".png' />");
+			infoContent.append(yakTypeImage);
+
+			if(!(typeof item.thumb === 'undefined') && item.thumb != '' && item.thumb != null)
+			{
+				var thumbImage = $("<div />");
+				thumbImage.attr("class", "thumbImage");
+				thumbImage.append("<img src=\'"+item.thumb+"\' />");
+				infoContent.append(thumbImage);
+			}
+
+			var itemTitle = $("<div />");
+			itemTitle.attr("class", "itemTitle");
+			itemTitle.html(item.title.linkify());
+			infoContent.append(itemTitle);
+
+			thedate = buildItemDate(item);
+			var postedBy = $("<div />");
+			postedBy.attr("class", "postedBy");
+			if(item.origin.substring(0,1) == '@')
+				postedBy.html("Posté par <a href='/news/map/search/"+encodeURIComponent(item.origin)+"'>"+item.origin+"</a> " + "<span class=\'date\'>"+thedate+"</span>");
+			else
+				postedBy.html("Posté par <a target='_blank' href='"+item.outGoingLink+"'>"+item.origin+"</a> " + "<span class=\'date\'>"+thedate+"</span>");
+			infoContent.append(postedBy);
+			
+			var thetags = "<div class=\'tags\'>";					
+				
+			if(item.yakCatName.length > 0)
+				thetags += yakCatNameArray.join(', ');
+
+			if(tagNameArray.length > 0){
+				if(item.yakCatName.length > 0)
+					thetags += ', ';
+				thetags += tagNameArray.join(', ');
+			}
+			thetags += "</div>";
+
+			infoContent.append(thetags);
+
+			if(typeof(item.address) != 'undefined' && item.address != 'null' && item.address != '')
+				var theaddress = "<div class=\'infodetail\'>"+item.address+"</div>";
+					if(user.login == 'renaud.bessieres' || user.login == 'dany.srour') /// this is debug
+						theaddress += "<div class=\'infodetail\'>"+pubDate+" >> "+dateEndPrint+"</div>";
+
+			/*PRINT ON THE FEED*/
+			//$('#newsfeed').append('<li class=\'mapHighlighter\' infoId=\''+item._id+'\'><i class=\'icon-eye-open\' ></i> '+item.title+'</li>')
+			if(top==1)
+			{
+				var li = $("<li />");
+				li.attr("class", "mapHighlighterDetails");
+				li.attr("infoId", item._id);
+				li.append(infoContent);
+				$('#newsfeed').prepend(li);
+			}
+			else
+			{
+				var li = $("<li />");
+				li.attr("class", "mapHighlighterDetails");
+				li.attr("infoId", item._id);
+				li.append(infoContent);
+				$('#newsfeed').append(li);
+			}
+			
+			
+
+			if (scrollTo==1) {  
+				$('#newsfeedContent').mCustomScrollbar("update");
+				$('#newsfeedContent').mCustomScrollbar("scrollTo","ul#newsfeed");
+
+			}  
+		}
+
+		function printFeedItemold(item,top,scrollTo){
+			
+			if(item.yakCatName.length > 0){
+				var yakCatNameArray = item.yakCatName.map(function(item){
+					if(item.substr(0,1)!="#")
+						item = "#"+item;
+					return item.linkify();
+				});	
+				yakCatNameArray = yakCatNameArray.slice(0,3);
+			}else
+				var yakCatNameArray = new Array();
+		
+			if(typeof(item.freeTag[0]) != 'undefined' && item.freeTag[0].length > 0){
+				var tagNameArray = item.freeTag.map(function(item){
+					if(item.substr(0,1)!="#")
+						item = "#"+item;
+					return item.linkify();
+				});
+				tagNameArray = tagNameArray.slice(0,3);
+			}else
+				var tagNameArray = new Array();
+				
+			var dateTmp = new Date(item.pubDate);
+			var pubDate = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
+			dateTmp = new Date(item.dateEndPrint);
+			var dateTmp2 = new Date(item.dateEndPrint);
+			var dateEndPrint = dateTmp2.getDate()+'/'+(dateTmp2.getMonth()+1)+'/'+dateTmp2.getFullYear();
+
 			infoContent = "<div class=\'infowindow mapHighlighter\' infoId='"+item._id+"'>";					
 			
 			if(!(typeof item.thumb === 'undefined') && item.thumb != '' && item.thumb != null)
@@ -837,7 +944,7 @@ block content
 				}
 			if(typeof(item.address) != 'undefined' && item.address != 'null' && item.address != '')
 					infoContent += "<div class=\'infodetail\'>"+item.address+"</div>";
-					if(user.login == 'renaud.bessieres') /// this is debug
+					if(user.login == 'renaud.bessieres' || user.login == 'dany.srour') /// this is debug
 						infoContent += "<div class=\'infodetail\'>"+pubDate+" >> "+dateEndPrint+"</div>";
 			infoContent += "</div>";	
 			//infoContent += "<div class=\'content\'>"+item.content.substring(0,250).linkify()+"...</div>";
@@ -885,13 +992,13 @@ block content
 		}
 
 		function getItemDetails(el){
-
-			$("#newsfeed").find(".myitem").hide();
+			
 			var currentItem = $(el);
 			var infoid = currentItem.attr("infoid")
 			if (currentItem.find(".loadingMore").length > 0 || currentItem.find(".myitem").length > 0)
 			{
-				currentItem.find(".myitem").slideToggle();				
+				currentItem.find(".myitem").append("<i class='icon-chevron-up' title='close' style='float: right; clear: both; position: relative; bottom: 21px;' onclick='$(this).parent().hide(); $(this).remove();'></i>");
+				currentItem.find(".myitem").show();				
 				return;
 			}
 
@@ -904,9 +1011,19 @@ block content
 				var item = createFeedPageItem(val);
 				currentItem.find(".loadingMore").remove();
 				currentItem.append(item);
+				currentItem.find(".myitem").append("<i class='icon-chevron-up' title='close' style='float: right; clear: both; position: relative; bottom: 21px;' onclick='$(this).parent().hide(); $(this).remove();'></i>");
 				setshortUrl();
 				setLikeSystem();
 			});
+
+			if ($(el).find(".myitem").css("display") == "none") {
+				$("#newsfeed").find(".myitem").hide();
+				$(el).find(".myitem").show();
+			}
+			else
+			{
+				$(el).find(".myitem").hide();
+			}
 			
 		}
 
@@ -994,12 +1111,20 @@ block content
 
 			if($.inArray(user._id, val.yaklikeUsersIds) > -1 && $.inArray(user._id, val.yakunlikeUsersIds) == -1)
 			{
-				yakLikes.append("déjà aimé " + "<span class='theUps'>" + val.likes + "</span> likes- " + "" + "<span class='theDowns'>" + val.unlikes +"</span> dislikes");			
+				yakLikes.append("<span class='theUps'>" + val.likes + "</span> likes- " + "" + "<span class='theDowns'>" + val.unlikes +"</span> dislikes");			
+				yakLikes.click(function(){
+					$(this).append("<span id='alreadyVoted'> vous avez déjà voté un like!</span>");
+					setTimeout('$("#alreadyVoted").remove()', 3000);
+				});
 
 			}
 			else if($.inArray(user._id, val.yaklikeUsersIds) == -1 && $.inArray(user._id, val.yakunlikeUsersIds) > -1)
 			{
-				yakLikes.append("déjà détesté " + "<span class='theUps'>" + val.likes + "</span> likes- " + "" + "<span class='theDowns'>" + val.unlikes +"</span> dislikes");							
+				yakLikes.append("<span class='theUps'>" + val.likes + "</span> likes- " + "" + "<span class='theDowns'>" + val.unlikes +"</span> dislikes");							
+				yakLikes.click(function(){
+					$(this).append("<span id='alreadyVoted'> vous avez déjà voté un dislike!</span>");
+					setTimeout('$("#alreadyVoted").remove()', 3000);
+				});
 			}
 			else
 			{
