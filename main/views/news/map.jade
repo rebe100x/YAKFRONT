@@ -81,7 +81,6 @@ block content
 
 		/*READY FUNCTIONS*/
 		$(document).ready(function() {
-			console.log(user);
 			zoom = rangeFromZ();
 			
 			$('#arroundme').click(function(){
@@ -474,36 +473,41 @@ block content
 		*/
 		function getMyBounds(){
 			thebounds = map.getBounds();
-			
+			/*console.log('ca.f:lat max'+thebounds.ca.f);
+			console.log('ca.b: lat min'+thebounds.ca.b);
+			console.log('ea.f: lng max'+thebounds.ea.f);
+			console.log('ea.b:lng min'+thebounds.ea.b);*/
 			var width = $(window).width();
 			var height = $(window).height();
 			var pos = $("#newsfeedContainer").position();
+			var scaleW = (parseFloat(thebounds.ea.f) - parseFloat(thebounds.ea.b)) / width ;
+			var scaleH = (parseFloat(thebounds.ca.f) - parseFloat(thebounds.ca.b)) / height ;
+			var feedOffsetW = pos.left * scaleW;
+			var feedOffsetH = pos.top * scaleH;
+			var borderOffsetW = 15 * scaleW;
+			var borderOffsetHTop = 70 * scaleH;
+			var borderOffsetHBottom = 0 * scaleH;
+			
 			if(width>768){
-				var borderOffset = 0.01; // to avoid printing news at the hedge of the screen	
-				var offsetPercent = pos.left/width;
-				var offsetDegree = (parseFloat(thebounds.ea.f) - parseFloat(thebounds.ea.b))*offsetPercent;
 				var myBounds = {
 					ca:{
-						f: thebounds.ca.f-1.5*borderOffset,
-						b: thebounds.ca.b+borderOffset/2,	
+						f: thebounds.ca.f-borderOffsetHTop,
+						b: thebounds.ca.b+borderOffsetHBottom,	
 					},
 					ea:{
-						f: thebounds.ea.b+offsetDegree-borderOffset,
-						b: thebounds.ea.b+borderOffset,
+						f: thebounds.ea.b+feedOffsetW-borderOffsetW,
+						b: thebounds.ea.b+borderOffsetW,
 					}
 				};
 			}else{
-				var borderOffset = 0.0001; // to avoid printing news at the hedge of the screen	
-				var offsetPercent = pos.top/height;
-				var offsetDegree = (parseFloat(thebounds.ca.f) - parseFloat(thebounds.ca.b))*offsetPercent;
 				var myBounds = {
 					ca:{
-						f: thebounds.ca.f-borderOffset,
-						b: thebounds.ca.f-offsetDegree+borderOffset,	
+						f: thebounds.ca.f-borderOffsetHTop,
+						b: thebounds.ca.f-feedOffsetH+borderOffsetHBottom,	
 					},
 					ea:{
-						f: thebounds.ea.f-borderOffset,
-						b: thebounds.ea.b+borderOffset,
+						f: thebounds.ea.f-borderOffsetW,
+						b: thebounds.ea.b+borderOffsetW,
 					}
 				};
 			}
@@ -702,6 +706,7 @@ block content
 		function getAndPrintInfo(){
 			infoArray = [];
 			bounds = getMyBounds();
+			//console.log(curPos.z);
 			drawNewsFeed();
 			
 			cleanMarkers();
