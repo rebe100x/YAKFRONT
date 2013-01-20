@@ -400,3 +400,30 @@ width: 270px;
  	background-color: #F7F7F9;
  	font-weight:bold;
  }
+
+ /* Header Yakwala */
+
+.headerYakwala { background-color: white; }
+.headerYakwala .leftlink img { float: left; padding: 6px;}
+.headerYakwala .dropdown-toggle { float: right; margin-top: 19px;}
+.headerYakwala .pull-right { margin-top: 15px;}
+.headerYakwala .rightlink .caret { top: 7px; left: 2px; position: relative;}
+.headerYakwala .logolink { margin: 0 auto; width: auto; text-align: center;}
+
+.searchYakwala { background-color: #d8d8d8; height: 40px; float: left;}  
+.searchYakwala #searchBtn {background-image:url('../images/new/go.png'); width: 27px; height: 27px; border: 0px; margin: 7px; float: left;}
+.searchYakwala .customInput{ width: 100px; margin-top: 6px; float: left; margin-left: 6px;}
+.searchYakwala .myi { position: relative; top: 12px; float: left;}
+.searchYakwala .verticalSplitter { width: 1px; height: 43px; background-color: #cecece; margin-left: 12px;}
+.searchYakwala .filterText { position: relative; top: 11px; float: left; margin-left: 12px; font-size: 14px;}
+.searchYakwala #filterTypes { cursor: pointer;}
+.searchYakwala #newsfeedMenu { width: auto; background-color: transparent;}
+.searchYakwala #typeContainer { display: none;}
+.searchYakwala #typeContainer img { height: 20px;}
+.searchYakwala #typeContainer .btn { margin: 1px 1px 1px 1px}
+.searchYakwala #heatModule { display: none; position: absolute; top: 42px; left: 24px; width: 100%;}
+.searchYakwala #rangeSelector { display: none; position: absolute; top: 42px; left: 24px; width: 100%;}
+.searchYakwala #dropdownTimeSelector { width: 100%; height: 300px; overflow: auto;}
+.searchYakwala #btnMesalertes { float: right;}
+.searchYakwala #btnMesalertes img {height: 20px;}
+.typeahead { position: absolute; z-index:  111111; display: none;}

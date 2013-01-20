@@ -248,10 +248,11 @@ function setLocalnessSliderText(x, elid){
 	{
 		$(elid).html(sliderText);
 	}
+	return sliderText;
 	
 }
 
-function setTimeSliderText(x){
+function setTimeSliderText(x, text){
 	var y = 0;
 	if(x==0){
 		y= 0;
@@ -308,8 +309,10 @@ function setTimeSliderText(x){
 		yText = "Dans "+yText;
 	
 	$( "#dayPrinter" ).html(yText);
-	
-	return y*24*60*60;
+	if (typeof(text) === 'undefined')
+		return y*24*60*60;
+	else	
+		return yText;
 }
 
 
