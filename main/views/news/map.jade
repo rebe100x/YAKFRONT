@@ -1094,11 +1094,17 @@ block content
 						$.each(data.info[0].yakComments, function(key, val){
 							divComment.append(drawAComment(val, 'map'));
 						});
-						divComment.append('<textarea class="yakTextarea" placeholder="Ajouter un commentaire..."></textarea>');
+						divComment.append('<textarea maxlength="250" class="yakTextarea" placeholder="Ajouter un commentaire..."></textarea>');
 
 						divComment.find("textarea").keypress(function(event){
 							if (event.keyCode == 13) {
+
 								var comment = $(this).val();
+								if(comment.length > 250)
+								{
+									alert("Comments only 250...");
+									return;
+								}
 								var theArea = $(this);
 								$(this).val("posting...Please wait");
 								$(this).attr("disabled", "disabled");
@@ -1108,7 +1114,7 @@ block content
 								newComment.comment = comment;
 								newComment.userthumb = user.thumb;
 								newComment.date = new Date();
-								$.post('/setComment', {infoId : currEleComment.attr("rel"), username: user.login, userthumb: user.thumb, comment: comment} , function(res){
+								$.post('/setComment', {infoId : currEleComment.attr("rel"), username: user.login, userthumb: user.thumb, comment: comment.substring(0, 249)} , function(res){
 									if (res == 'updated')
 									{
 										theArea.val("");

@@ -910,7 +910,7 @@ function drawAComment(val, from)
 	
 	var username = val.username;
 	var userid = val.userid;
-	var comment = val.comment.toString().linkify();
+	var comment =  wordFilter(val.comment.toString()).linkify();
 	var thumb	 = val.userthumb;
 	date = "";
 	if (typeof(val.date) != 'undefined' ) {
@@ -963,5 +963,15 @@ function setLikeSystem()
 				});
 			});
 		}
+
+
+		var filterWords = ["fool", "dumb", "couch potato", "fuck"];
+        // "i" is to ignore case
+        var rgx = new RegExp(filterWords.join("|"), "gi");
+
+        function wordFilter(str) {           
+                return str.replace(rgx, "****");            
+        }
+
 
 		
