@@ -42,6 +42,7 @@ mixin menu(active)
 								a.btn(href="/user/login") Login
 			div.row-fluid.searchYakwala
 				div.span12
-					mixin searchFormUnified('map')
+					if(active == 'map' || active == 'feed')
+						mixin searchFormUnified('map')
 				
 	

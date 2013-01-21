@@ -73,6 +73,7 @@ block content
 		var map = new google.maps.Map(document.getElementById('mymap'), {
 				mapTypeId: google.maps.MapTypeId.ROADMAP,
 				disableDefaultUI: true,
+				scrollwheel: false,
 			});
 
 		setInterval(function() {
@@ -104,7 +105,9 @@ block content
 
 
 			/*map tools*/
-			$('#zoomplus').click(function () {	  
+			$('#zoomplus').click(function () {	
+				if(curPos.z == 100)
+					return
 				zoom = map.getZoom();
 				zoom++;
 				map.setZoom(zoom);	
@@ -113,6 +116,8 @@ block content
 			});
 
 			$('#zoomminus').click(function () {
+				if(curPos.z == 70)
+					return
 				zoom = map.getZoom();
 				zoom--;
 				map.setZoom(zoom);
@@ -710,7 +715,7 @@ block content
 			drawNewsFeed();
 			
 			cleanMarkers();
-			searchString = encodeURIComponent(searchString);
+			//searchString = encodeURIComponent(searchString);
 			
 			if(typeof(yakType) == 'undefined' || yakType.length == 0){
 				printEmptyFeedItem();
@@ -831,10 +836,9 @@ block content
 			thedate = buildItemDate(item);
 			var postedBy = $("<div />");
 			postedBy.attr("class", "postedBy");
-			if(item.origin.substring(0,1) == '@')
-				postedBy.html("Posté par <a href='/news/map/search/"+encodeURIComponent(item.origin)+"'>"+item.origin+"</a> " + "<span class=\'date\'>"+thedate+"</span>");
-			else
-				postedBy.html("Posté par <a target='_blank' href='"+item.outGoingLink+"'>"+item.origin+"</a> " + "<span class=\'date\'>"+thedate+"</span>");
+			
+			postedBy.html("Posté par <a onclick='setSearchFor(this)'>@"+item.origin+"</a> " + "<span class=\'date\'>"+thedate+"</span>");
+
 			infoContent.append(postedBy);
 			
 			var thetags = "<div class=\'tags\'>";					
@@ -1019,6 +1023,7 @@ block content
 			var infoid = currentItem.attr("infoid")
 			if (currentItem.find(".loadingMore").length > 0 || currentItem.find(".myitem").length > 0)
 			{
+				currentItem.find(".myitem").find(".icon-chevron-up").remove();
 				currentItem.find(".myitem").append("<i class='icon-chevron-up' title='close' style='float: right; clear: both; position: relative; bottom: 21px;' onclick='$(this).parent().hide(); $(this).remove();'></i>");
 				currentItem.find(".myitem").show();				
 				return;

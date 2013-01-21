@@ -1,6 +1,6 @@
 mixin searchFormUnified(page)
 	div.row-fluid
-		input.search-query.customInput#searchStr(type="text",placeholder="Quoi ?",autocomplete="off", )
+		input.search-query.customInput#searchStr(type="search",placeholder="Quoi ?",autocomplete="off", )
 		input.search-query.customInput#searchPlaceStr(type="search",placeholder="Où ?",autocomplete="off", data-provide="typeahead")
 		button#searchBtn(type="submit")
 		i.icon-time.myi
@@ -39,6 +39,8 @@ mixin searchFormUnified(page)
 
 
 	script
+		var psClick = 0;
+
 		var user =!{JSON.stringify(user)};
 
 		var mainConf = !{mainConf};	
@@ -63,16 +65,26 @@ mixin searchFormUnified(page)
 		$('#locationInput').val(JSON.stringify({lat:curPos.x,lng:curPos.y}));						
 
 		$(document).ready(function(){
-
-							setTimeSliderText(dateFrom);
+				
+				setTimeSliderText(dateFrom);
 
 				setLocalnessSliderText(curPos.z);
 		
 				/*search info and place*/
-				$('#searchStr').val(searchString);
+				if(searchString != null)
+					$('#searchStr').val(searchString.replace('%2520', ' '));
 
 				// reset
 				$('#searchStr').keyup(function(event){
+
+					if($(this).val().length >= 3)
+					{
+						$(this).addClass('searching');
+					}
+					else
+					{
+						$(this).removeClass('searching');
+					}
 
 					if($(this).val()==''){
 						searchString = null;
@@ -86,15 +98,56 @@ mixin searchFormUnified(page)
 				});
 
 				$('#searchPlaceStr').keyup(function(event){
+					var query = $("#searchPlaceStr").val();
+					if(query.length < 3)
+					{
+						$("#searchPlaceStr").removeClass('searching');
+					}
+					psClick = 0;
 					if (event.which == 13) {
-
-						if($(this).val()==''){
+						
+						if(query==''){
 							curPos.name = user.formatted_address;
 							curPos.x = user.location.lat;
 							curPos.y = user.location.lng;
 							//curPos.z = mainConf.rangeDefault;
 							$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
-							$('#searchPlaceStr').val(curPos.name);								
+							$('#searchPlaceStr').val(curPos.name);	
+
+						}
+						else
+						{
+							
+							if(query.length >= 3){
+								encodeURIComponent(query);
+								$("#searchPlaceStr").addClass('searching');
+								var addressQuery = {"address": query ,"region":"fr","language":"fr"};
+								var geocoder = new google.maps.Geocoder();
+								geocoder.geocode( addressQuery, function(results, status) {						
+								if (status == google.maps.GeocoderStatus.OK) {
+									if(results.length > 0)
+									{
+										$("#searchPlaceStr").removeClass('searching');
+										curPos.x = results[0].geometry.location.Ya;
+										curPos.y = results[0].geometry.location.Za;
+										curPos.name = results[0].formatted_address;
+										$("#searchPlaceStr").val(curPos.name);
+										$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
+										$("#searchBtn").click();
+									}
+									else
+									{
+										$("#searchPlaceStr").removeClass('searching');
+										alert("No Places Found...");
+									}
+								} 
+								else
+								{
+									$("#searchPlaceStr").removeClass('searching');
+									alert("No Places Found...");
+								}
+								});
+							}
 						}
 						$('#searchBtn').trigger('click');
 					}
@@ -277,6 +330,7 @@ mixin searchFormUnified(page)
 				},
 				property: "formatted_address",
 				onselect: function(obj) { 
+					psClick = 1;
 					$("#searchPlaceStr").removeClass('searching');
 					var placeGmap = getPlaceFromGmapResult(obj);
 					$('#locationInput').val(JSON.stringify(placeGmap.location));
@@ -297,14 +351,15 @@ mixin searchFormUnified(page)
 							$.ajax({
 									url: "/api/catsandtags",				
 									success: function( ajax ) {
+										console.log(ajax);
 										typeahead.process(ajax.data.catsandtags);
+										$("#searchStr").removeClass('searching');
 									}
 								})}
 					},
 					property: "title",
 					onselect: function(obj) { 
-						$("#searchPlaceStr").removeClass('searching');
-						
+						$("#searchStr").removeClass('searching');
 					}
 				});
 			
