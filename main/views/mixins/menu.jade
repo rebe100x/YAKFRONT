@@ -41,7 +41,7 @@ mixin menu(active)
 							span 
 								a.btn(href="/user/login") Login
 			div.row-fluid.searchYakwala
-				div.span12
+				div.span12(style="height: 40px;")
 					if(active == 'map' || active == 'feed')
 						mixin searchFormUnified('map')
 				

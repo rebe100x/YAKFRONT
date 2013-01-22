@@ -1,5 +1,5 @@
 mixin searchFormUnified(page)
-	div.row-fluid
+	div.row-fluid(style="height: 40px")
 		input.search-query.customInput#searchStr(type="search",placeholder="Quoi ?",autocomplete="off", )
 		input.search-query.customInput#searchPlaceStr(type="search",placeholder="Où ?",autocomplete="off", data-provide="typeahead")
 		button#searchBtn(type="submit")
@@ -45,6 +45,7 @@ mixin searchFormUnified(page)
 
 		var mainConf = !{mainConf};	
 
+		var propertyname = 'title';
 		
 		var yakType = ($.isEmptyObject($.cookie("yaktype")))?mainConf.typeDefault.split(','):$.cookie("yaktype").split(',');
 
@@ -65,7 +66,7 @@ mixin searchFormUnified(page)
 		$('#locationInput').val(JSON.stringify({lat:curPos.x,lng:curPos.y}));						
 
 		$(document).ready(function(){
-				
+
 				setTimeSliderText(dateFrom);
 
 				setLocalnessSliderText(curPos.z);
@@ -94,6 +95,8 @@ mixin searchFormUnified(page)
 					{
 						searchString = encodeURIComponent($('#searchStr').val());
 					}
+
+					
 					$('#searchBtn').trigger('click');
 				});
 
@@ -346,24 +349,42 @@ mixin searchFormUnified(page)
 			$('#searchStr').typeahead({
 					minLength : 3,
 					source: function (typeahead, query) {
+					if(query.indexOf('@') == 0)
+					{
+						var currenturl = '/api/feedsearch/' + query.substring(1, query.length);
+					}
+					else
+					{
+						var currenturl = '/api/catsandtags';						
+					}
+
 					encodeURIComponent(query);
 						if(query.length >= 3){
 							$.ajax({
-									url: "/api/catsandtags",				
+									url: currenturl,				
 									success: function( ajax ) {
-										console.log(ajax);
-										typeahead.process(ajax.data.catsandtags);
+										//console.log(ajax);
+										if(typeof(ajax.data) === 'undefined')
+											{
+												$("#searchStr").val(query.substring(1, query.length));
+												typeahead.process(changeDataTitleForFeeds(ajax.feeds));
+												//console.log(ajax.feeds);
+												$("#searchStr").val('@' + query.substring(1, query.length));
+											}
+											
+										else
+											typeahead.process(ajax.data.catsandtags);
 										$("#searchStr").removeClass('searching');
 									}
 								})}
 					},
-					property: "title",
+					property: propertyname,
 					onselect: function(obj) { 
 						$("#searchStr").removeClass('searching');
 					}
 				});
 			
-
+				//console.log($('#searchStr')["__proto__"]["typeahead"]);
 
 			$("#filterTypes").click(function(){
 				if($("#typeContainer").css("display") == "none")

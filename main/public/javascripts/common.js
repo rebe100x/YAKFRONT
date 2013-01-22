@@ -973,5 +973,15 @@ function setLikeSystem()
                 return str.replace(rgx, "****");            
         }
 
+function changeDataTitle(data){
+	for(var i = 0; i < data.length; i++){
+        if(data[i].hasOwnProperty("humanName")){
+            data[i]["title"] = data[i]["humanName"];
+            delete data[i]["humanName"];
+        }
+    }
+    console.log(data);
+    return data;
 
+}
 		

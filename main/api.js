@@ -80,6 +80,8 @@ app.get('/api/infos', api.infos);
 app.get('/api/feeds', api.feeds);
 app.get('/api/afeed', api.afeed);
 
+app.get('/api/searchfeed/', api.feed_search);
+
 app.get('/api/geoinfos/:x1/:y1/:x2/:y2/:ago/:now/:type/:str', api.geoinfos);
 app.get('/api/geoinfos/:x1/:y1/:x2/:y2/:ago/:now/:type/:str/:limit', api.geoinfos);
 app.get('/api/geoinfos/:x1/:y1/:x2/:y2/:ago/:now/:type/:str/:limit/:skip', api.geoinfos);
