@@ -733,6 +733,14 @@ exports.profile = function(req, res){
 		if(req.body.formatted_address){
 			cond.formatted_address = req.body.formatted_address;
 		}
+
+		if(req.body.defaultCityZoom){
+			cond.addressZoom = req.body.defaultCityZoom;
+		}
+
+		if(req.body.defaultCityZoomText){
+			cond.addressZoomText = req.body.defaultCityZoomText;
+		}
 			
 		//req.session.user.location = location;
 		

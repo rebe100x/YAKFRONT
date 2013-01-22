@@ -38,6 +38,7 @@ block content
 			$(document).ready(function() {
 			
 				// init form
+				console.log(user);
 				$('#username').val(user.name);
 				
 				$('#bio').val(user.bio);
@@ -47,6 +48,8 @@ block content
 				
 				if(user.formatted_address)
 					$('#cityTarget').html(user.formatted_address);
+				if(user.addressZoom)
+					$('#addressZoom').html(user.addressZoomText);
 				
 				$('#avatarPreview img').attr('src',user.thumb);
 				
@@ -128,5 +131,22 @@ block content
 					}
 				});
 				
+				$("#ddlAddressZoom option").each(function(){
+					if($(this).attr("value") == user.addressZoom)
+						$(this).attr("selected", "selected");
+					else
+						$(this).removeAttr("selected");
+				});
+
 				
 			}); // END READY	
+
+			function changeZoom()
+			{
+				$("#defaultCityZoom").val($("#ddlAddressZoom").val());
+				$("#ddlAddressZoom option").each(function(){
+					if($(this).attr("value") == $("#ddlAddressZoom").val())
+						$("#defaultCityZoomText").val($(this).text());
+				});
+				$("#submit").click();
+			}

@@ -21,6 +21,8 @@ mixin profileForm(type)
 						label.control-label(for="name") Votre ville: 
 							span#cityTarget
 						input#city.searchInput(type='text', name='city', placeholder='Chercher...', autocomplete="off",)
+				
+
 				div.control-group
 					div.controls
 						label.control-label(for="name") Votre site web:  
@@ -45,6 +47,8 @@ mixin profileForm(type)
 			input#location(type='hidden', name='location', value='')
 			input#address(type='hidden', name='address', value='')
 			input#formatted_address(type='hidden', name='formatted_address', value='')
+			input#defaultCityZoom(type='hidden', name='defaultCityZoom', value='')
+			input#defaultCityZoomText(type='hidden', name='defaultCityZoomText', value='')
 			div.span4
 				div.control-group
 					div.controls
@@ -61,6 +65,15 @@ mixin profileForm(type)
 						label.control-label(for="name") Votre ville: 
 							span#cityTarget
 						input#city.searchInput(type='text', name='city', placeholder='Chercher...', autocomplete="off",)
+				div.control-group
+					div.controls
+						label.control-label(for="name") Default Zoom: 
+							span#addressZoom
+						select#ddlAddressZoom(onchange="changeZoom()")
+							option(value="70") Local
+							option(value="80") Très Local
+							option(value="90") Super Local
+							option(value="100") Hyper local
 				div.control-group
 					div.controls
 						label.control-label(for="name") Votre site web:  

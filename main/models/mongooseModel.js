@@ -29,7 +29,7 @@ mongoose.model('Address', Address);
 var Point = new Schema({
 	  name : String
 	, location	: { type : { lat: Number, lng: Number }}	
-	, range : { type: Number, default:20}
+	, range : { type: Number, default:80}
 });
 mongoose.model('Point', Point);
 
@@ -519,6 +519,8 @@ var User = new Schema({
 	, placesubs	: { type: [Schema.Types.ObjectId], index: true}
 	, location	: { type : { lat: Number, lng: Number }, index : '2d'}	
 	, formatted_address : { type: String }
+	, addressZoom: { type: Number, default:80}
+	, addressZoomText: { type: String, default:'Très Local'}
 	, address	: { type : { 
 								street_number: String,
 								street: String,
@@ -566,6 +568,8 @@ User.statics.format = function (theuser) {
 		location:theuser.location,
 		address:theuser.address,
 		formatted_address:theuser.formatted_address,
+		addressZoom: theuser.addressZoom,
+		addressZoomText: theuser.addressZoomText,
 		favplace:theuser.favplace,
 		usersubs:theuser.usersubs,
 		feedsubs:theuser.feedsubs,
@@ -686,7 +690,7 @@ var Feed = new Schema({
 
 Feed.statics.findByName = function (str,callback) {
   searchStr = new RegExp(str,'i');
-  return this.find({'humanName': {$regex:searchStr}},{}, callback);
+  return this.find({'humanName': {$regex:searchStr}},{humanName:1}, callback);
 }
 
 mongoose.model('Feed', Feed);

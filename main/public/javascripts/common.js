@@ -973,7 +973,7 @@ function setLikeSystem()
                 return str.replace(rgx, "****");            
         }
 
-function changeDataTitle(data){
+function changeDataTitleForFeeds(data){
 	for(var i = 0; i < data.length; i++){
         if(data[i].hasOwnProperty("humanName")){
             data[i]["title"] = data[i]["humanName"];
