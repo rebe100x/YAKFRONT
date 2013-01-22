@@ -91,11 +91,11 @@ block content
 					curPos.name = user.formatted_address;
 					curPos.x =  user.location.lat;
 					curPos.y =  user.location.lng;
-					curPos.z = mainConf.searchParams.sliderDefault;
+					curPos.z = user.addressZoom;
 					$("#searchPlaceStr").val(curPos.name);
-					$("#rangeSelector").find("a.ui-slider-handle").css("left", curPos.z + "%");
-					$("#rangeSelector").find("div.ui-slider-range").css("width", curPos.z + "%");
 					setLocalnessSliderText(curPos.z);
+					$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
+					changeRange();
 					moveMap();
 					//map.setCenter(latLng);
 				}else{
