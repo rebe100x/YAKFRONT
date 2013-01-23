@@ -299,6 +299,8 @@ mixin searchFormUnified(page)
 										if(typeof(ajax.data) === 'undefined')
 											{
 												$("#searchStr").val(query.substring(1, query.length));
+												var names = [];
+												
 												typeahead.process(changeDataTitleForFeeds(ajax.feeds));
 												//console.log(ajax.feeds);
 												$("#searchStr").val('@' + query.substring(1, query.length));

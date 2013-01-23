@@ -690,7 +690,7 @@ var Feed = new Schema({
 
 Feed.statics.findByName = function (str,callback) {
   searchStr = new RegExp(str,'i');
-  return this.find({'humanName': {$regex:searchStr}},{humanName:1}, callback);
+  return this.find({'humanName': {$regex:searchStr}},{humanName:1, _id: 0}, callback);
 }
 
 mongoose.model('Feed', Feed);

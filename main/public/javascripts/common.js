@@ -980,7 +980,18 @@ function changeDataTitleForFeeds(data){
             delete data[i]["humanName"];
         }
     }
-    console.log(data);
+    var currValue = ''
+    for(var i = 0; i < data.length; i++){
+        if(data[i]["humanName"] == currValue){
+            delete data[i];
+        }
+        else
+        {
+        	currValue = data[i]["humanName"];
+        }
+    }
+
+    //console.log(data);
     return data;
 
 }
