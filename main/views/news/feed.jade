@@ -1,235 +1,407 @@
-
 extends ../layout
 block content
 	include ../mixins/menu.jade
-	include ../mixins/searchPanel.jade
-	include ../mixins/newsLoader.jade
-	include ../mixins/paging.jade
-	include ../mixins/popup.jade
 	include ../mixins/locationChooser.jade
+	include ../mixins/forms/postForm.jade
+	include ../mixins/forms/loginForm.jade
 	include ../mixins/forms/searchForm.jade
+	mixin menu('map')
+	mixin locationChooser('map')
 
-	mixin menu('feed')
-	mixin locationChooser('feed')
 
 	div.container-fluid
-		div.row-fluid#mainFeedWrapper
+		div.row-fluid
 			div.span8
-				div#feedContent
-				div
-					mixin paging()
+				div#newsfeedContainer
+					span#newsfeedContent.tabContent			
+						ul#newsfeed
 			div.span4
 				div.columnTitle TOPS
 				div#topsFeed
-		
-	
+					
+	style
+		#newsfeedContent{position:relative;display:block;overflow:auto;height:auto;z-index:2000;}				
 	link(rel='stylesheet', href='/javascripts/lib/jquery/css/share.css')
 	script(src="/javascripts/lib/jquery/js/timeago.js")	
 	script(src="/javascripts/lib/jquery/js/share.js")	
 	script(src="/javascripts/lib/jquery/js/jquery.livequery.js")
 	script(src="/javascripts/json2.js")	
-	
 	script
+	
+	
+
+		/*INIT*/
 		var conf = !{conf};
 		var mainConf = !{mainConf};	
-		var user =!{JSON.stringify(user)};
+		
+		
+		var geolocalized = 0;
+		var infowindow = null;
+		var bounds = new Array();
+		var markers = [];
 		var infoArray = [];
-		var currentDate = new Date();
-		var currentPage = 1;
-		var range = 75;
+		var markerLocation = null;
+		var yakcatArray = [];
+		var placeArray = [];
+		var hashtag = [];
+		var hashtagTmp = [];
+			
+		var markerClustererOptions = {gridSize:30,maxZoom: 17,styles: [{height: 28,width: 28,url: "/images/markers/m1.png"},{height: 38,width: 38,url: "/images/markers/m2.png"},{height: 55,width:55,url: "/images/markers/m3.png"},{height: 85,width: 85,url: "/images/markers/m4.png"},{height: 85,width: 85,url: "/images/markers/m5.png"}]};
+		var markerCluster = null;
+		var pinkParksStyles = [{featureType: "Water",stylers: [{ hue: "#006eff" },{ saturation:1 },{ lightness: -13 }]},{featureType: "Road",stylers: [{ hue: "#ff0000" },{ saturation: -100 },{ lightness: 31 }]},{featureType: "Landscape",stylers: [{ hue: "#ff0008" },{saturation: -90 },{ lightness: 66 }]}];
+		var pinkParksStyles =[{}];
+		
 		var skip = 0;
-		var limit = mainConf.searchParams.limit;
-		var subSize = mainConf.searchParams.subSize;
-		var loading = $("<div />");
-		var timer;
-		var timestamp = Math.round(+new Date()/1000); 
-		loading.attr("class", "loading");
-		loading.css("textAlign", "center")
-		loading.html("<img src='images/loader_big.gif' />");
+		var zoom = 1;
+		var infoContent = '';
+		var rule = new RegExp('#([^\\s]*)','g');
+		var rule2 = new RegExp('[#]','g');
+		var postFlag = 0;
+		var listenerHandle = null;
+		
+		
 
-		function setLiveUpdateTrigger()
-		{
-			if ($("#feedContent #liveupdate").length > 0)
-				return;
+		setInterval(function() {
+				silentUpdater();			
+			}, 10000);
 
-			var urltosearch = '/api/geoinfos/48.851875/2.356374/5/null/0/0/1,2,3,4/null/5/0';
+		/*READY FUNCTIONS*/
+		$(document).ready(function() {
+			/*control opener*/
+			$('#searchBtn').click(function(){
 
-			$("#feedContent .hidden").remove();
+					$.cookie("searchString",searchString,{ expires: 10000, path : '/' });
 
-			var liveupdate = $("<div />");
+					var str = encodeURIComponent($('#searchStr').val());
+					var placeName = $('#searchPlaceStr').val();
+					var location = JSON.stringify({lat:curPos.x,lng:curPos.y});	
 
-			var itemsCount = 0;
-
-			liveupdate.attr("id", "liveupdate");
-
-			liveupdate.click(function(){
-				$("#feedContent .hidden").removeClass("hidden");
-				$("#feedContent #liveupdate").remove();
-			});
-
-			$.getJSON(urltosearch ,function(data) {
-
-				itemsCount = data.data.info.length;
-
-				$.each(data.data.info, function(key,val) {
-					var item = createFeedPageItem(val);
-					item.addClass("hidden");
-					
-					$("#liveupdate").after(item);
+					if(str != 'Quoi ?' && str != ''){
+						searchString = str;
+					}else
+					{
+						searchString = null;
+					}
+					//console.log(curPos);
+					getAndPrintInfo();
 				});
 
-				liveupdate.html(itemsCount + " more news, click here to load");
+			
+
+			//$('#newsfeedContent').mCustomScrollbar({mouseWheel:true,callbacks:{onTotalScroll:printArrayFeedItem},scrollButtons:{enable:true,scrollType:"continuous",},advanced:{autoExpandHorizontalScroll:true,updateOnContentResize: true,updateOnBrowserResize:true}});
+			//$('#newspostContent').mCustomScrollbar({mouseWheel:true,scrollButtons:{enable:true,scrollType:"continuous",},advanced:{autoExpandHorizontalScroll:true,updateOnContentResize: true,updateOnBrowserResize:true}});
+			
+			
+			$('#newsfeed').delegate(".mapHighlighter",'click', function (e) {
+
+				//console.log(e.target);
+				if (e.target.className != "yakComments" && e.target.className != "yakLikes" && e.target.className != "yakTextarea" && e.target.className != "username" && e.target.className != "yakLikes" && e.target.className != "icon-thumbs-down" && e.target.className != "icon-thumbs-up")
+					getItemDetails(this);
+				
 			});
 
+			getAndPrintInfo();
+		});
+		
+		function unhighlightInfo(obj,callback){
+			markerHL.setAnimation(null);
+			markerHL.setVisible(false);
 			
-			$("#feedContent").prepend(liveupdate);
+			if (callback && typeof(callback) === "function") {  
+				callback(obj);  
+			} 
 		}
+		
+		
+		
+		function silentUpdater(){
+			
+			searchString = encodeURIComponent(searchString).replace(/%2520/g, ' ');		
+			
+			//bounds = map.getBounds();
+			
+			var apiUrl = '';
+			if(yakType.toString() == 5)
+				apiUrl = '/api/geoalerts/'+curPos.x+'/'+curPos.y+'/'+rangeFromZ()+'/'+'null'+'/'+dateFrom+'/0/'+searchString+'/500';
+			else	
+				apiUrl = '/api/geoinfos/'+curPos.x+'/'+curPos.y+'/'+rangeFromZ()+'/'+'null'+'/'+dateFrom+'/0/'+yakType.toString()+'/'+searchString+'/500';
+			
+
+			$.getJSON(apiUrl,function(ajax) {	
+				$.each(ajax.data.info, function(key,val) {
+					
+					
+
+					var flagExists = 0;
+					
+					$.each(infoArray,function(key2,val2){
+						if(val2._id == val._id){
+							flagExists = 1;
+						}
+					});
+					
+					if(flagExists == 0){
+
+						printFeedItem(val,1,0);	
+					
+						
+						infoArray.push(val);	
+						
+						
+						
+					}
+				});
+			});
+		}
+		
+		function getAndPrintInfo(){
+			infoArray = [];
+			
+			
+			
+			if(typeof(yakType) == 'undefined' || yakType.length == 0){
+				printEmptyFeedItem();
+				return;
+			}
+
+			var apiUrl = '';
+			if(yakType.toString() == 5)
+				apiUrl = '/api/geoalerts/'+curPos.x+'/'+curPos.y+'/'+rangeFromZ()+'/'+'null'+'/'+dateFrom+'/0/'+searchString+'/500';
+			else	
+				apiUrl = '/api/geoinfos/'+curPos.x+'/'+curPos.y+'/'+rangeFromZ()+'/'+'null'+'/'+dateFrom+'/0/'+yakType.toString()+'/'+searchString+'/500';
+			
+			
+			$.getJSON(apiUrl,function(ajax) {	
+			
+				// empty the news feed
+				$('#newsfeed').html('');
+
+				if(typeof(ajax.data.info) == 'undefined' || ajax.data.info.length == 0){
+					//$('#newsfeed').html('Aucune info !');
+					printEmptyFeedItem();
+				}else{
+					
+					$.each(ajax.data.info, function(key,val) {
+						
+						infoArray.push(val);					
+						
+						if(key<10)
+							printFeedItem(val,0,0);	
+					});
+				printLoadingFeedItem();	
+				//markerCluster.addMarkers(markers);
+				}
+				$("abbr.timeago").timeago();
+				$('#newsfeedContent').mCustomScrollbar("update");
+			});
+
+		}
+
+		function printFeedItem(item,top,scrollTo){
+			
+			/*if(item.yakCatName.length > 0){
+				var yakCatNameArray = item.yakCatName.map(function(item){
+					if(item.substr(0,1)!="#")
+						item = "#"+item;
+					return item.linkify();
+					
+				});	
+				yakCatNameArray = yakCatNameArray.slice(0,3);
+
+			}else
+				var yakCatNameArray = new Array();
+		
+			if(typeof(item.freeTag[0]) != 'undefined' && item.freeTag[0].length > 0){
+				var tagNameArray = item.freeTag.map(function(item){
+					if(item.substr(0,1)!="#")
+						item = "#"+item;
+					return item.linkify();
+				});
+				tagNameArray = tagNameArray.slice(0,3);
+			}else
+				var tagNameArray = new Array();
+			*/
+
+			var dateTmp = new Date(item.pubDate);
+			var pubDate = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
+			dateTmp = new Date(item.dateEndPrint);
+			var dateTmp2 = new Date(item.dateEndPrint);
+			var dateEndPrint = dateTmp2.getDate()+'/'+(dateTmp2.getMonth()+1)+'/'+dateTmp2.getFullYear();
+
+			infoContent = $("<div />");
+			infoContent.attr("class", "infowindow mapHighlighter");
+			infoContent.attr("infoId", item._id);
+
+			var yakTypeImage = $("<div />");
+			yakTypeImage.attr("class", "yakTypeImage");
+			yakTypeImage.html("<img src='/images/markers/type" + item.yakType + ".png' />");
+			infoContent.append(yakTypeImage);
+
+			if(!(typeof item.thumb === 'undefined') && item.thumb != '' && item.thumb != null)
+			{
+				var thumbImage = $("<div />");
+				thumbImage.attr("class", "thumbImage");
+				thumbImage.append("<img src=\'"+item.thumb+"\' />");
+				infoContent.append(thumbImage);
+			}
+
+			var itemTitle = $("<div />");
+			itemTitle.attr("class", "itemTitle");
+			itemTitle.html(item.title.linkify());
+			infoContent.append(itemTitle);
+
+			thedate = buildItemDate(item);
+			var postedBy = $("<div />");
+			postedBy.attr("class", "postedBy");
+			
+			postedBy.html("Posté par <a onclick='setSearchFor(this)'>@"+item.origin+"</a> " + "<span class=\'date\'>"+thedate+"</span>");
+
+			infoContent.append(postedBy);
+			
+			var thetags = "<div class=\'tags\'>";					
+
+			/*if(item.yakCatName.length > 0)
+				thetags += yakCatNameArray.join(', ');
+
+			if(tagNameArray.length > 0){
+				if(item.yakCatName.length > 0)
+					thetags += ', ';
+				thetags += tagNameArray.join(', ');
+			}*/
+			//console.log(item.yakCatName);
+			if(item.yakCatName.length > 0)
+			{
+				for (var i = 0; i < item.yakCatName.length; i++) {
+					thetags += '<a class="tagHashLink" onclick="setSearchFor(this)">#' + item.yakCatName[i] +'</a> ';	
+				}
+			}
+
+			if (typeof(item.freeTag) != 'undefined') {
+				if(item.freeTag.length > 0){
+					if(item.freeTag.length > 0)
+						thetags += ', ';
+					for (var i = 0; i < item.freeTag.length; i++) {
+						thetags += '<a class="tagHashLink" onclick="setSearchFor(this)">#' + item.freeTag[i] +'</a> ';	
+					}
+				}
+			}
+			thetags += "</div>";
+
+			
+			infoContent.append(thetags);
+
+			if(typeof(item.address) != 'undefined' && item.address != 'null' && item.address != '')
+				var theaddress = "<div class=\'infodetail\'>"+item.address+"</div>";
+					if(user.login == 'renaud.bessieres' || user.login == 'dany.srour') /// this is debug
+						theaddress += "<div class=\'infodetail\'>"+pubDate+" >> "+dateEndPrint+"</div>";
+
+			/*PRINT ON THE FEED*/
+			//$('#newsfeed').append('<li class=\'mapHighlighter\' infoId=\''+item._id+'\'><i class=\'icon-eye-open\' ></i> '+item.title+'</li>')
+			if(top==1)
+			{
+				var li = $("<li />");
+				li.attr("class", "mapHighlighterDetails");
+				li.attr("infoId", item._id);
+				li.append(infoContent);
+				$('#newsfeed').prepend(li);
+			}
+			else
+			{
+				var li = $("<li />");
+				li.attr("class", "mapHighlighterDetails");
+				li.attr("infoId", item._id);
+				li.append(infoContent);
+				$('#newsfeed').append(li);
+			}
+			
+			
+
+			if (scrollTo==1) {  
+				$('#newsfeedContent').mCustomScrollbar("update");
+				$('#newsfeedContent').mCustomScrollbar("scrollTo","ul#newsfeed");
+
+			}  
+		}
+
+		
+
+		function printLoadingFeedItem(){
+			$('.loadingfeeditem').hide();
+			if(skip < infoArray.length - 10){
+				infoContent = "<div class=\'infowindow loadingfeeditem\'></div>";					
+				$('#newsfeed').append('<li class=\'mapHighlighterDetails\'>'+infoContent+'</li>');
+			}
+			
+		}
+
+		function printEmptyFeedItem(){
+			$('.emptyfeeditem').hide();
+			infoContent = "<div class=\'infowindow emptyfeeditem\'>Aucune info !</div>";					
+			$('#newsfeed').append('<li class=\'mapHighlighterDetails\'>'+infoContent+'</li>');
+		}
+
+		function printArrayFeedItem(){
+			skip = skip + 10;
+			var itemArray = infoArray.slice(skip,skip+10);
+			$.each(itemArray,function(key,val){
+				printFeedItem(val,0,0);
+			});
+			printLoadingFeedItem();
+			$('#newsfeedContent').mCustomScrollbar("update");
+		}
+
+		function getItemDetails(el){
+			
+			var currentItem = $(el);
+			var infoid = currentItem.attr("infoid")
+			if (currentItem.find(".loadingMore").length > 0 || currentItem.find(".myitem").length > 0)
+			{
+				currentItem.find(".myitem").find(".icon-chevron-up").remove();
+				currentItem.find(".myitem").append("<i class='icon-chevron-up' title='close' style='float: right; clear: both; position: relative; bottom: 21px;' onclick='$(this).parent().hide(); $(this).remove();'></i>");
+				currentItem.find(".myitem").show();				
+				return;
+			}
+
+
+			
+			currentItem.append('<img src="images/loader_big.gif" class="loadingMore">');
+			$.getJSON('/api/afeed', { id: infoid } ,function(data) {
+
+				var val = data.info[0];
+				var item = createFeedPageItem(val);
+				currentItem.find(".loadingMore").remove();
+				currentItem.append(item);
+				currentItem.find(".myitem").append("<i class='icon-chevron-up' title='close' style='float: right; clear: both; position: relative; bottom: 21px;' onclick='$(this).parent().hide(); $(this).remove();'></i>");
+				setshortUrl();
+				setLikeSystem();
+			});
+
+			if ($(el).find(".myitem").css("display") == "none") {
+				$("#newsfeed").find(".myitem").hide();
+				$(el).find(".myitem").show();
+			}
+			else
+			{
+				$(el).find(".myitem").hide();
+			}
+			
+		}
+
 
 		function createFeedPageItem(val)
 		{
 			item = $("<div />");
 			item.attr("class", "myitem");
 
-			/*define title element*/
-			title = $("<div />");
-			title.attr("class", "title");
-			title.html("<img class='PersonImg' src='" + "/images/yakfav.png"+ "' />");
-
-			/*create more linked element for title*/
-			/*more = $("<a />");
-			more.attr("class", "more");
-			more.attr("href", val.outGoingLink);
-			more.attr("target", "_blank");
-			more.attr("rel", val._id);
-			more.attr("data-toggle", "data-toggle");*/
-			more = $("<span />");
-			more.html(val.title);
-
-			/*create posted by element*/
-			postedby = $("<div />");
-			postedby.attr("class", "postedby");
-			/*convert date to french date*/
-			date = new Date(val.pubDate).toLongFrenchFormat();
-
-			if(val.origin != null)
-				postedby.html("Posté par @" + val.origin + " le " + date);
-			else
-				postedby.html("Posté by @ananomys le " + date);
-
-			//postedby.html(postedby.html().replace(/@(\S*)/g,'<a href="news/map/search/@$1">@$1</a>'))
-			postedby.html(postedby.html().replace(/@(\S*)/g,'<a onclick="setSearchFor(this)">@$1</a>'));
-
-			postedby.find("a").mouseenter(function(){
-				changeTitle(postedby.find("a"));	
-			});
 			
-			setToolTip(postedby.find("a"));
-			/*create hot level element*/
-			hot = $("<div />");
-			hot.attr("class", "hot");
-			hot.append("<div class='hotLevel' style='width: " + val.heat + "%'></div>");
-			
-			/*create time ago element*/
-			
-			
-			/*create the yak image element*/
-			yakimage = $("<span />");
-			yakimage.html("<img class='yakImg' src='" + yakImages[val.yakType] + "' />");
-
-			
-			
-			/*create info image*/
-			img = $("<img />");
-			img.attr("class", "img");
-			//img.attr("src", conf.backurl + val.thumb);
-			img.attr("src", val.thumb);
-			
-			/*create the read from source link*/
-			outlink = $("<div />");
-			outlink.html("<a></a>");
-			outlink.find("a").attr("href", val.outGoingLink);
-			outlink.find("a").attr("target", "_blank");
-			outlink.find("a").html("read from source");
-
-			/*create the expand button the +*/
-			readmore = $("<a />");
-			readmore.attr("class", "expand");
-			readmore.css("cursor", "pointer");
-			readmore.css("marginLeft", "12px");
-			readmore.click(function(){
-
-				var loading = $("<span />");
-
-				loading.html("loading...");
-
-				var readmore1 = $(this);
-
-				readmore1.after(loading);
-
-				readmore1.css("visibility", "hidden");
-
-				$.getJSON('/api/afeed', { id: val._id} ,function(data) {
-
-					var youtubes = findUrls(data.info[0].content);
-
-					/*if (youtubes.length > 0) {
-
-						for (var i = 0; i< youtubes.length; i++) {
-							readmore1.parent().after('<a href="' + youtubes[i] +'" target="_blank" style="margin-right: 12px"><img src="http://img.youtube.com/vi/' + getVcode("v", youtubes[i])  + '/1.jpg" style="border: 0px;"></a>');	
-						};
-					};*/
-					//var phones = phoniphy(data.info[0].content);
-					//readmore1.parent().parent().parent().append(phones);
-					readmore1.parent().html(data.info[0].content.linkify());
-					
-				});	
-			});
-			readmore.html("+");
 
 			/*create the content element*/
 			content = $("<div />");
 			content.attr("class", "content");
-			content.html("<div class='theContent'>" + val.content.substring(0, subSize) + "</div>");
+			content.html("<div class='theContent'>" + val.content + "</div>");
 			
-			/*place image in content*/
-			content.prepend(img);
-			/*append the read more*/
-			content.find(".theContent").append(readmore);
-
 			content.append("<br />");
 			
-			/*create the types elements*/
-			type = $("<div />");
-			type.attr("class", "type");
-			type.html("Type: " + val.yakType);
-
-			/*create the cats elements*/
-			cat = $("<div />");
-			cat.attr("class", "cat");
-			var yakCatNames = "";
-			$.each(val.yakCatName, function(key, val){
-				yakCatNames += "#" + val + " "
-			});
-			//yakCatNames = yakCatNames.replace(/#(\S*)/g,'<a href="news/map/search/%23$1">#$1</a>');
-			cat.html(yakCatNames.linkify("/news/map/search/%23", 1));
-
-			/*create the address element*/
-			address = $("<span />");
-			address.attr("class", "address");
-			address.html(val.address);
-
-
-			/*create the freetags element*/
-			freetags = $("<div />");
-			freetags.attr("class", "freetags");
-			var freetagNames = "";
-			$.each(val.freeTag, function(key, val){
-				freetagNames += "#" + val.replace(" ", "&nbsp;") + " "
-			});
-			//freetagNames = freetagNames.replace(/#(\S*)/g,'<a href="news/map/search/%23$1">#$1</a>');
-			freetags.html(cat.html() +freetagNames.linkify("/news/map/search/%23", 1));
-			
-
 			/* create the likes system */ 
 			var yakLikes = $("<span />");
 			yakLikes.attr("class", "yakLikes");
@@ -253,13 +425,19 @@ block content
 				$(this).append('<img class="loadingMore" src="images/loader_big.gif">');
 				$.getJSON('/api/afeed', { id: $(this).attr("rel")} ,function(data) {
 						$.each(data.info[0].yakComments, function(key, val){
-							divComment.append(drawAComment(val));
+							divComment.append(drawAComment(val, 'map'));
 						});
-						divComment.append('<textarea placeholder="Ajouter un commentaire..."></textarea>');
+						divComment.append('<textarea maxlength="250" class="yakTextarea" placeholder="Ajouter un commentaire..."></textarea>');
 
 						divComment.find("textarea").keypress(function(event){
 							if (event.keyCode == 13) {
+
 								var comment = $(this).val();
+								if(comment.length > 250)
+								{
+									alert("Comments only 250...");
+									return;
+								}
 								var theArea = $(this);
 								$(this).val("posting...Please wait");
 								$(this).attr("disabled", "disabled");
@@ -267,14 +445,14 @@ block content
 								newComment.username = user.login;
 								newComment.userid = user._id;
 								newComment.comment = comment;
+								newComment.userthumb = user.thumb;
 								newComment.date = new Date();
-								$.post('/setComment', {infoId : currEleComment.attr("rel"), username: user.login, userthumb: user.thumb, comment: comment} , function(res){
+								$.post('/setComment', {infoId : currEleComment.attr("rel"), username: user.login, userthumb: user.thumb, comment: comment.substring(0, 249)} , function(res){
 									if (res == 'updated')
 									{
 										theArea.val("");
 										theArea.removeAttr("disabled");
 										theArea.before(drawAComment(newComment));
-										
 									}
 
 				});
@@ -299,12 +477,20 @@ block content
 
 			if($.inArray(user._id, val.yaklikeUsersIds) > -1 && $.inArray(user._id, val.yakunlikeUsersIds) == -1)
 			{
-				yakLikes.append("déjà aimé " + "<span class='theUps'>" + val.likes + "</span> likes- " + "" + "<span class='theDowns'>" + val.unlikes +"</span> dislikes");			
+				yakLikes.append("<span class='theUps'>" + val.likes + "</span> likes- " + "" + "<span class='theDowns'>" + val.unlikes +"</span> dislikes");			
+				yakLikes.click(function(){
+					$(this).append("<span id='alreadyVoted'> vous avez déjà voté un like!</span>");
+					setTimeout('$("#alreadyVoted").remove()', 3000);
+				});
 
 			}
 			else if($.inArray(user._id, val.yaklikeUsersIds) == -1 && $.inArray(user._id, val.yakunlikeUsersIds) > -1)
 			{
-				yakLikes.append("déjà détesté " + "<span class='theUps'>" + val.likes + "</span> likes- " + "" + "<span class='theDowns'>" + val.unlikes +"</span> dislikes");							
+				yakLikes.append("<span class='theUps'>" + val.likes + "</span> likes- " + "" + "<span class='theDowns'>" + val.unlikes +"</span> dislikes");							
+				yakLikes.click(function(){
+					$(this).append("<span id='alreadyVoted'> vous avez déjà voté un dislike!</span>");
+					setTimeout('$("#alreadyVoted").remove()', 3000);
+				});
 			}
 			else
 			{
@@ -314,400 +500,23 @@ block content
 			}
 
 
-			/*append the more yakimage ago and posted by to title*/
-			title.append(more);
-			title.append(yakimage);
-			title.append(buildItemDate(val));
-			title.append(postedby);
-
-			/*append title to item*/
-			item.append(title);
-			//content.append(address);
-			//content.append("<div class='shareMe'>Partager <i class='icon-share' title='Share Me'></i></div>");
+			more = $("<a />");
+			more.attr("class", "more");
+			more.attr("href", val.outGoingLink);
+			more.attr("target", "_blank");
+			more.attr("rel", val._id);
+			more.attr("data-toggle", "data-toggle");
+			more.html("read from source");
+			
 			content.append("<div class='shareMe'><i style='background: none' class='icon-share' title='Share Me'><img src='images/ftg.png' class='ftgIcon' /> </i></div>");
+			content.find(".theContent").append(more);
 			item.append(content);
-			item.append(freetags);
-			item.append(address);
 			item.append(yakLikes);
 			item.append(yakComments);
-			item.append("<hr />");
+			item.append()
 			return item;	
 		}
 
-		function createTopsItem(val)
-		{
-			item = $("<div />");
-			item.attr("class", "myitem");
-
-			/*define title element*/
-			title = $("<div />");
-			title.attr("class", "title");
-			title.html("<img class='PersonImg' src='" + "/images/yakfav.png"+ "' />");
-
-			/*create more linked element for title*/
-			more = $("<a />");
-			more.attr("class", "more");
-			more.attr("href", "/news/feed?id=" + val._id);
-			more.attr("rel", val._id);
-			more.attr("data-toggle", "data-toggle");
-			more.html(val.title);
-
-			/*create posted by element*/
-			postedby = $("<div />");
-			postedby.attr("class", "postedby");
-			/*convert date to french date*/
-			date = new Date(val.pubDate).toLongFrenchFormat();
-
-			if(val.origin != null)
-				postedby.html("Posté par @" + val.origin + " le " + date);
-			else
-				postedby.html("Posté by @ananomys le " + date);
-
-			//postedby.html(postedby.html().replace(/@(\S*)/g,'<a href="news/map/search/@$1">@$1</a>'))
-			postedby.html(postedby.html().replace(/@(\S*)/g,'<a onclick="setSearchFor(this)">@$1</a>'));
-
-			
-			/*create time ago element*/
-			ago = $("<abbr />");
-			ago.attr("class", "timeago");
-			ago.css("float", "right");
-			ago.css("marginRight", "8px");
-			ago.css("fontSize", "11px")
-			ago.attr("title", val.pubDate);
-
-			/*create the yak image element*/
-			yakimage = $("<span />");
-			yakimage.html("<img class='yakImg' src='" + yakImages[val.yakType] + "' />");
-
-			
-			
-			/*create info image*/
-			img = $("<img />");
-			img.attr("class", "img");
-			//img.attr("src", conf.backurl + val.thumb);
-			img.attr("src", val.thumb);
-			
-			
-			/*create the expand button the +*/
-			readmore = $("<a />");
-			readmore.attr("class", "expand");
-			readmore.css("cursor", "pointer");
-			readmore.css("marginLeft", "12px");
-			readmore.click(function(){
-
-				var loading = $("<span />");
-
-				loading.html("loading...");
-
-				var readmore1 = $(this);
-
-				readmore1.after(loading);
-
-				readmore1.css("visibility", "hidden");
-
-				$.getJSON('/api/afeed', { id: val._id} ,function(data) {
-
-					var youtubes = findUrls(data.info[0].content);
-
-					if (youtubes.length > 0) {
-
-						for (var i = 0; i< youtubes.length; i++) {
-							readmore1.parent().after('<a href="' + youtubes[i] +'" target="_blank" style="margin-right: 12px"><img src="http://img.youtube.com/vi/' + getVcode("v", youtubes[i])  + '/1.jpg" style="border: 0px;"></a>');	
-						};
-					};
-					var phones = phoniphy(data.info[0].content);
-					//alert(phones.html());
-					readmore1.parent().parent().parent().append(phones);
-					readmore1.parent().html(data.info[0].content.linkify());
-					
-				});	
-			});
-
-			//readmore.html("+");
-
-			/*create the content element*/
-			content = $("<div />");
-			content.attr("class", "content");
-			//content.html("<div class='theContent'>" + val.content.substring(0, subSize) + "...</div>");
-			
-			/*place image in content*/
-			//content.prepend(img);
-			/*append the read more*/
-			content.find(".theContent").append(readmore);
-
-			//content.append("<br /><br />");
-			
-			/*create the types elements*/
-			type = $("<div />");
-			type.attr("class", "type");
-			type.html("Type: " + val.yakType);
-
-			/*create the cats elements*/
-			cat = $("<div />");
-			cat.attr("class", "cat");
-			var yakCatNames = "";
-			$.each(val.yakCatName, function(key, val){
-				yakCatNames += "#" + val + " "
-			});
-			//yakCatNames = yakCatNames.replace(/#(\S*)/g,'<a href="news/map/search/%23$1">#$1</a>');
-			cat.html(yakCatNames.linkify("/news/map/search/%23", 1));
-
-			/*create the freetags element*/
-			freetags = $("<div />");
-			freetags.attr("class", "freetags");
-			var freetagNames = "";
-			$.each(val.freeTag, function(key, val){
-				freetagNames += "#" + val.replace(" ", "&nbsp;") + " "
-			});
-			//freetagNames = freetagNames.replace(/#(\S*)/g,'<a href="news/map/search/%23$1">#$1</a>');
-			freetags.html(cat.html() +freetagNames.linkify("/news/map/search/%23", 1));
-
-			/*create the address element*/
-			address = $("<div />");
-			address.attr("class", "address");
-			address.html(val.address);
-
-			/*append the more yakimage ago and posted by to title*/
-			title.append(more);
-			//title.append(yakimage);
-			//title.append(ago);
-			//title.append(postedby);
-
-			/*append title to item*/
-			item.append(title);
-			//content.append(address);
-			content.append(postedby);
-			//content.append("<div class='shareMe'>Partager <i class='icon-share' title='Share Me'></i></div>");
-			item.append(content);
-			//item.append(freetags);
-
-			return item;
-		}
-
-		$(document).ready(function() {
-			console.log(user);
-			/*init position from cookie or db*/
-			
-			range = rangeFromZ();
-			
-			$('#arroundme').click(function(){
-
-				if(user.location){
-					var latLng = new google.maps.LatLng(user.location['lat'],user.location['lng']);
-					curPos.name = user.formatted_address;
-					curPos.x =  user.location.lat;
-					curPos.y =  user.location.lng;
-					curPos.z = mainConf.searchParams.sliderDefault;
-					$("#searchPlaceStr").val(curPos.name);
-					$("#rangeSelector").find("a.ui-slider-handle").css("left", curPos.z + "%");
-					$("#rangeSelector").find("div.ui-slider-range").css("width", curPos.z + "%");
-					setLocalnessSliderText(curPos.z);
-					changeRange();
-					//map.setCenter(latLng);
-				}else{
-					window.location = '/settings/profile';
-				}
-			});
-
-			$('.typeahead').typeahead();
-			$('.btn-group1').button();
-			getAndPrintInfo(0);
-			//triggerSearch(currentPage, 0);
-
-			//for testing
-			loadTops();
-
-			/* Controlling the more flow */
-			$(window).scroll(function(){
-				if (isScrolledIntoView($(".next"))) {
-						getAndPrintInfo(1);
-					}
-			});
-
-			/* Controlling the silent Updater */
-			timer = setInterval( getSilentUpdate, 30000);
-		});
-
 		function rangeFromZ(){
 			return (-1)*0.0099/1*(curPos.z)+1;
-		}
-
-		/*function zFromRange(){
-			return (-1)/0.0099*(range-1);
-		}*/
-
-		function changeRange(){
-			range = rangeFromZ();
-			$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
-
-			getAndPrintInfo(0);
-			
-		};
-
-		function changeLocation(location){
-			var locationObj = JSON.parse(location);
-			curPos.x = locationObj.lat;
-			curPos.y=locationObj.lng;
-			getAndPrintInfo(0);	
-		}		
-		
-		
-
-		function getAndPrintInfo (next, silentUpdate)
-		{
-			//alert(searchString + " - " + $.cookie("searchString"));
-			if (next == 1)
-			{	
-				skip = skip + limit;
-				$("#feedContent").append(loading)
-			}else
-			{
-
-				$("#feedContent").html("");
-			}
-			range = rangeFromZ();
-			
-			if(typeof(yakType) == 'undefined' ||  yakType.length == 0){
-				$("#feedContent").html("Choisissez un type d'info.");
-				return;
-			}
-			// searching throuhg cirle 
-			var urltouse = 'api/geoinfos/';
-			urltouse += curPos.x + "/"
-			urltouse += curPos.y	 + "/" 
-			urltouse += range + "/" 
-			urltouse +=  "null/" 
-			urltouse += dateFrom + "/" 
-			urltouse += "0/" 
-			urltouse += yakType + "/" // type;
-			urltouse += searchString + "/" // str;
-			urltouse += limit + "/"  // limit;
-			urltouse += skip + "/" // skip;
-			
-			console.log(curPos);
-			$.getJSON(urltouse ,function(data) {
-		
-				if((typeof(data.data) == 'undefined' ||  data.data.info.length == 0) && next != 1){
-					$("#feedContent").html("Aucune infos");
-					return;
-				}
-
-
-				var len = data.data.info.length;
-
-				$.getJSON('/api/afeed', { id: getVcode("id", window.location)} ,function(data1) {
-				
-				data = mergeDeep(data, data1);
-				
-				$.each(data.data.info, function(key,val) {
-					/*define item element*/
-					
-					var item = createFeedPageItem(val);
-					$("#feedContent").append(item);
-
-					$("#resultSet").html(currentPage);
-					$(".next").show();
-					$("#loading").html("");
-					
-				});
-				setClickableArea();
-				setshortUrl();
-				setLikeSystem();
-				//setInterval("setLiveUpdateTrigger()", 30000);
-				$("#feedContent .loading").remove();
-
-				$("abbr.timeago").timeago();
-				if(typeof(data1.info) === 'undefined')
-				{
-					
-				}
-				else
-				{
-					if(data1.info.length == 1)
-							colorFirstRecord();
-				}
-				});
-			});
-		
-		}
-
-		
-
-
-		function getSilentUpdate(){
-
-			$("#feedContent .hidden").remove();
-
-			if ($("#feedContent .silentUpdates").length == 0) {
-				var silentUpdates = $("<div />");
-				silentUpdates.attr("class", "silentUpdates");
-				silentUpdates.hide();
-				$("#feedContent").prepend(silentUpdates);
-			}
-
-			
-
-			var urltouse = 'api/geoinfos/';
-			urltouse += curPos.x + "/"
-			urltouse += curPos.y	 + "/" 
-			urltouse += range + "/" 
-			urltouse +=  "null/" 
-			urltouse += dateFrom + "/" 
-			urltouse += timestamp + "/" 
-			urltouse += yakType + "/" // type;
-			urltouse += searchString + "/" // str;
-			urltouse += limit + "/"  // limit;
-			urltouse += skip + "/" // skip;	
-			//console.log(timestamp);
-			$.getJSON(urltouse ,function(data) {
-
-				var len = data.data.info.length;
-
-				$.each(data.data.info, function(key,val) {
-					var item = createFeedPageItem(val);
-					item.addClass("hidden");
-					$("#feedContent .silentUpdates").after(item);
-				});
-
-				setClickableArea();
-				setshortUrl();
-
-				if (len > 0) {
-					$("#feedContent .silentUpdates").show();
-					$("#feedContent .silentUpdates").html("Il y'en a " + len + " nouvelles infos");
-					$("#feedContent .silentUpdates").click(function(){
-						$("#feedContent .hidden").removeClass("hidden");
-						$("#feedContent .silentUpdates").remove();
-						clearInterval(timer);
-						timer = setInterval( getSilentUpdate, 30000);
-					});
-				}
-				else
-				{
-					$("#feedContent .silentUpdates").hide();
-				}
-			});
-		}
-
-		//for testing
-		function loadTops()
-		{
-			var urltouse = '/api/geoinfos/48.851875/2.356374/5/0/null/0/0/1,2,3,4/null/5/0';
-			/*urltouse += x1 + "/" // x1;
-			urltouse += y1	 + "/" // y1;
-			urltouse += x2 + "/" // x2;
-			urltouse += y2 + "/" // y2;
-			urltouse += heat + "/" // heat;
-			urltouse += type + "/" // type;
-			urltouse += str + "/" // str;
-			urltouse += skip + "/" // skip;
-			urltouse += limit // limit; */
-
-			$.getJSON(urltouse ,function(data) {
-				$.each(data.data.info, function(key,val) {
-					var item = createTopsItem(val);
-					$("#topsFeed").prepend(item);
-				});
-			});
-
 		}

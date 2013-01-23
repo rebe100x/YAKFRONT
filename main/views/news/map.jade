@@ -82,6 +82,77 @@ block content
 
 		/*READY FUNCTIONS*/
 		$(document).ready(function() {
+
+			$('#searchBtn').click(function(){
+					$.cookie("searchString",searchString,{ expires: 10000, path : '/' });
+
+					var str = encodeURIComponent($('#searchStr').val());
+					var placeName = $('#searchPlaceStr').val();
+					var location = JSON.stringify({lat:curPos.x,lng:curPos.y});				
+					if(location != ''){
+						changeLocation(location);
+					}else{
+						if(placeName != ''){
+							
+							/* our db is not ready for this ! => use google !
+							$.ajax({
+								url: "/api/search/place/"+placeName,				
+								success: function( ajax ) {
+									if(ajax.data.places.length > 0 && ajax.data.places[0] != "undefined"){
+										var latLng = new google.maps.LatLng(ajax.data.places[0].location.lat,ajax.data.places[0].location.lng);
+										map.panTo(latLng);
+									}else{
+										var salt = new Date().getTime();
+										$('#searchStr').before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide</div>");
+										setTimeout(function() {
+											$("#alert"+salt).fadeOut();
+										}, 3000);
+									$('#searchPlaceStr').select();
+									}
+								}
+							});*/
+							var addressQuery = {"address": placeName ,"region":"fr","language":"fr"};
+							var geocoder = new google.maps.Geocoder();
+							geocoder.geocode( addressQuery, function(results, status) {						
+							if (status == google.maps.GeocoderStatus.OK) {
+								/*var latLng = new google.maps.LatLng(results[0].geometry.location.Ya,results[0].geometry.location.Za);
+								markerHL.setPosition(latLng);
+								markerHL.setVisible(true);
+								markerHL.setMap(map);
+								markerHL.setOptions({icon:"/images/markers/target3.png"});
+								
+								setTimeout(function() {
+									markerHL.setMap(null);
+								}, 3000);
+								map.panTo(latLng);*/
+								//console.log(results);
+								var placeGmap = getPlaceFromGmapResult((results[0]));
+								//changeLocation(JSON.stringify(placeGmap));
+
+							}else{
+								var salt = new Date().getTime();
+								$('#searchStr').before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide</div>");
+								setTimeout(function() {
+									$("#alert"+salt).fadeOut();
+								}, 3000);
+								
+							} 
+							});
+						}
+					}
+					
+					
+					if(str != 'Quoi ?' && str != ''){
+						searchString = str;
+					}else
+					{
+						searchString = null;
+					}
+					
+					getAndPrintInfo();
+				});
+
+
 			zoom = rangeFromZ();
 			
 			$('#arroundme').click(function(){
@@ -670,7 +741,8 @@ block content
 		
 		function silentUpdater(){
 			
-			searchString = encodeURIComponent(searchString);		
+			searchString = encodeURIComponent(searchString).replace(/%2520/g, ' ');		
+			
 			//bounds = map.getBounds();
 			bounds = getMyBounds();
 			var apiUrl = '';
