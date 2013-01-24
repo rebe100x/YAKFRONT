@@ -73,7 +73,7 @@ mixin searchFormUnified(page)
 		
 				/*search info and place*/
 				if(searchString != null)
-					$('#searchStr').val(searchString.replace('%2520', ' '));
+					$('#searchStr').val(decodeURIComponent(searchString.replace('%2520', ' ')));
 
 				// reset
 				$('#searchStr').keyup(function(event){
@@ -314,6 +314,7 @@ mixin searchFormUnified(page)
 					},
 					property: propertyname,
 					onselect: function(obj) { 
+						$("#searchBtn").click();
 						$("#searchStr").removeClass('searching');
 					}
 				});
@@ -399,8 +400,10 @@ mixin searchFormUnified(page)
 		{
 			var lasttext = '';
 			var currtext = '';
-			for(i=70; i<=100; i=i+10)
+			for(i=70; i<=120; i=i+10)
 			{
+				if(i == 90 || i == 110)
+					i = i + 10;
 				lasttext = setLocalnessSliderText(i);
 				if(currtext != lasttext)
 				{

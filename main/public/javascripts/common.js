@@ -235,6 +235,9 @@ function setLocalnessSliderText(x, elid){
 			sliderText = "Super Local";
 		break;	
 		case 100:
+			sliderText = "Super local";
+			break;
+		case 120:
 			sliderText = "Hyper local";
 			break;
 		default:

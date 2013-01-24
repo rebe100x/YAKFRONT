@@ -177,13 +177,15 @@ block content
 
 			/*map tools*/
 			$('#zoomplus').click(function () {	
-				if(curPos.z == 100)
+				if(curPos.z == 120)
 					return
 				zoom = map.getZoom();
 				zoom++;
 				map.setZoom(zoom);	
 				changeZoom();
-				
+				if(curPos.z == 90 || curPos.z == 110)
+					$('#zoomplus').click();
+
 			});
 
 			$('#zoomminus').click(function () {
@@ -193,6 +195,8 @@ block content
 				zoom--;
 				map.setZoom(zoom);
 				changeZoom();
+				if(curPos.z == 90 || curPos.z == 110)
+					$('#zoomminus').click();
 				
 			});
 

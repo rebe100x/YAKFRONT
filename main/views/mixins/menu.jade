@@ -3,9 +3,9 @@ mixin menu(active)
 	div.navbar.navbar-fixed-top
 			div.row-fluid.headerYakwala
 				div.span2
-					a.leftlink(href="/news/map")
+					a.leftlink#maplink(href="/news/map")
 						img(src="/images/new/lacarte.png")
-					a.leftlink(href="/news/feed")
+					a.leftlink#feedlink(href="/news/feed")
 						img(src="/images/new/filinfo.png")
 				div.span8
 					div.logolink
@@ -44,5 +44,30 @@ mixin menu(active)
 				div.span12(style="height: 40px;")
 					if(active == 'map' || active == 'feed')
 						mixin searchFormUnified('map')
-				
+	if(active == 'map')
+		script
+			$(document).ready(function(){
+				$("#maplink img").attr("src", "/images/new/lacarte-hover.png");
+			});
+	if(active == 'feed')
+		script
+			$(document).ready(function(){
+				$("#feedlink img").attr("src", "/images/new/filinfo-hover.png");
+			});
+
+	script
+			$(document).ready(function(){
+				$("#maplink img").mouseenter(function(){
+					$(this).attr("src", "/images/new/lacarte-hover.png");
+				});
+				$("#maplink img").mouseleave(function(){
+					$(this).attr("src", "/images/new/lacarte.png");
+				});
+				$("#feedlink img").mouseenter(function(){
+					$(this).attr("src", "/images/new/filinfo-hover.png");
+				});
+				$("#feedlink img").mouseleave(function(){
+					$(this).attr("src", "/images/new/filinfo.png");
+				});
+			});
 	
