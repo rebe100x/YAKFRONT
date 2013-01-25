@@ -32,7 +32,7 @@ app.configure(function(){
   // Session management
   app.use(express.session({
     "secret": "bb352fece6f80a5cff2d6088a376eddf",
-    "store":  new express.session.MemoryStore({ reapInterval: 60000 * 10 })
+    "stringifyore":  new express.session.MemoryStore({ reapInterval: 60000 * 10 })
   }));
   app.use(function(req, res, next){
     res.locals.session = req.session.user;
@@ -52,6 +52,8 @@ app.configure('development', function(){
 	app.locals.conf = JSON.stringify(config.confs.devrenaud);
 	mainConf = config.confs.main;
 	app.locals.mainConf = JSON.stringify(config.confs.main);
+	var pjson = require('./package.json');
+	app.locals.version = pjson.version;
 
 	
 	app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
