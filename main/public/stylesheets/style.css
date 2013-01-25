@@ -66,7 +66,8 @@ abbr[title] {
 #feedContent .yakLikes{font-size:11px;font-style:italic; position: relative; clear: both; width: auto; float: left; left: 12px; top: 12px; color: #D71920;}
 #feedContent .yakComments{font-size:11px;font-style:italic; position: relative; clear: both; width: auto; float: left; left: 12px; top: 12px; color: #D71920; cursor: pointer;}
 #feedContent .commentBox .aComment { clear:  both;}
-#feedContent .commentBox {font-style:italic; position: relative; clear: both; width: auto; float: left; left: 12px; top: 12px; color: #D71920; cursor: pointer; background: #F1F2F6; width: 98%; margin-bottom: 30px;}
+#feedContent .commentBox .aComment .timeago{margin-left:5px;}
+#feedContent .commentBox {font-style:italic; position: relative; clear: both; width: auto; float: left; left: 12px; top: 12px; color: #D71920; cursor: pointer; background: #F1F2F6; width: 98%; margin-bottom: 10px;}
 #feedContent .commentBox .username { color: #3B5998; cursor: pointer;}
 #feedContent .commentBox .username:hover { text-decoration: underline;}
 #feedContent .commentBox .userthumb { height: 100px; width: 100px; float: left; }
@@ -122,7 +123,7 @@ abbr[title] {
 #topsFeed .myitem .freetags a { color: #D81A21; font-size: 11px; margin-right: 10px;}
 
 .localnessPrinter {position: relative; top: -13px; left: 209px;}
-#alreadyVoted { color: green;}
+.alreadyVoted { color: green;}
 /* THE MAP
 -------------------------------------------------- */
 	/*MAP TOOLS CONTROLLERS*/
@@ -200,12 +201,13 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 .infowindow .myitem .yakLikes{font-size:11px;font-style:italic; position: relative; clear: both; width: auto; float: left; color: #D71920;}
 .infowindow .myitem .yakComments{font-size:11px;font-style:italic; position: relative; clear: both; width: auto; float: left; left: 0px; top: -33px; color: #D71920; cursor: pointer;}
 .infowindow .myitem .commentBox .aComment { clear:  both; padding-bottom: 12px;}
-.infowindow .myitem .commentBox {font-style:italic; position: relative; clear: both; width: auto; float: left; left: 0px; top: 0px; color: #D71920; cursor: pointer; background: #F1F2F6; width: 100%; margin-bottom: 30px;}
+.infowindow .myitem .commentBox .timeago{ margin-left:5px;}
+.infowindow .myitem .commentBox {font-style:italic; position: relative; clear: both; width: auto; float: left; left: 0px; top: -30px; color: #D71920; cursor: pointer; background: #F1F2F6; width: 100%; margin-bottom: 10px;}
 .infowindow .myitem .commentBox .username { color: #3B5998; }
 .infowindow .myitem .commentBox .username:hover { text-decoration: underline;}
 .infowindow .myitem .commentBox .userthumb { height: 50px; width: 50px; float: left; }
 .infowindow .myitem .commentBox .comment { color: black; margin-bottom: 12px;}
-.infowindow .myitem .commentBox textarea { width: 97%; height: 100px; margin-top: 2px; margin-left: 0px;}
+.infowindow .myitem .commentBox textarea { width: 97%; height: 50px; margin-top: 2px; margin-left: 0px;}
 .infowindow .myitem i.icon-chevron-up { }
 
 

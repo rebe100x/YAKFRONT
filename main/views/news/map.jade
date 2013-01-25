@@ -936,13 +936,14 @@ block content
 			}
 
 			if (typeof(item.freeTag) != 'undefined') {
-				if(item.freeTag.length > 0){
-					if(item.freeTag.length > 0)
-						thetags += ', ';
+					
 					for (var i = 0; i < item.freeTag.length; i++) {
-						thetags += '<a class="tagHashLink" onclick="setSearchFor(this)">#' + item.freeTag[i] +'</a> ';	
+						if(item.freeTag[i] != ""){
+							thetags += '<a class="tagHashLink" onclick="setSearchFor(this)">#' + item.freeTag[i] +'</a> ';	
+							if( i < item.freeTag.length -1)
+								thetags += ', ';
+						}
 					}
-				}
 			}
 			thetags += "</div>";
 
@@ -1154,7 +1155,8 @@ block content
 			yakComments.attr("class", "yakComments");
 			yakComments.attr("rel", val._id);
 			//console.log(val.yakComments);
-			yakComments.html("Il y en a " + val.yakComments.length + " comments");
+			setCommentText(val.yakComments.length,yakComments);
+			
 
 			yakComments.click(function(){
 				if ($(this).parent().find(".commentBox").length > 0)
@@ -1170,7 +1172,7 @@ block content
 						$.each(data.info[0].yakComments, function(key, val){
 							divComment.append(drawAComment(val, 'map'));
 						});
-						divComment.append('<textarea maxlength="250" class="yakTextarea" placeholder="Ajouter un commentaire..."></textarea>');
+						divComment.append('<textarea maxlength="250" rows="3" class="yakTextarea" placeholder="Ajouter un commentaire..."></textarea>');
 
 						divComment.find("textarea").keypress(function(event){
 							if (event.keyCode == 13) {
@@ -1206,39 +1208,44 @@ block content
 				});	
 			});
 
-			var thumbsUp = "<i class='icon-thumbs-up'></i>";
+			var thumbsUp = "<i class='icon-thumbs-up'></i>&nbsp;";
 			var thumbsDown = "<i class='icon-thumbs-down'></i>";
 			if($.inArray(user._id, val.yaklikeUsersIds) > -1)
 			{
-				thumbsUp = "you like this";
+				thumbsUp = "Vous avez aimé cette info !";
 			}
 
 			if($.inArray(user._id, val.yakunlikeUsersIds) > -1)
 			{
-				thumbsDown = "you dislike this";
+				thumbsDown = "Vous n'avez pas aimé cette info.";
 			}
 
 			if($.inArray(user._id, val.yaklikeUsersIds) > -1 && $.inArray(user._id, val.yakunlikeUsersIds) == -1)
 			{
-				yakLikes.append("<span class='theUps'>" + val.likes + "</span> likes- " + "" + "<span class='theDowns'>" + val.unlikes +"</span> dislikes");			
+				//yakLikes.append("<span class='theUps'>" + val.likes + "</span> likes- " + "" + "<span class='theDowns'>" + val.unlikes +"</span> dislikes");			
+				yakLikes.append("<span class='theUps'>" + val.likes + "</span> likes");			
 				yakLikes.click(function(){
-					$(this).append("<span id='alreadyVoted'> vous avez déjà voté un like!</span>");
-					setTimeout('$("#alreadyVoted").remove()', 3000);
+					$('.alreadyVoted').hide();	
+					$(this).append("<span class='alreadyVoted'> Vous avez déjà donnée votre avis !</span>");
+					setTimeout('$(".alreadyVoted").remove()', 3000);
 				});
 
 			}
 			else if($.inArray(user._id, val.yaklikeUsersIds) == -1 && $.inArray(user._id, val.yakunlikeUsersIds) > -1)
 			{
-				yakLikes.append("<span class='theUps'>" + val.likes + "</span> likes- " + "" + "<span class='theDowns'>" + val.unlikes +"</span> dislikes");							
+				//yakLikes.append("<span class='theUps'>" + val.likes + "</span> likes- " + "" + "<span class='theDowns'>" + val.unlikes +"</span> dislikes");							
+				yakLikes.append("<span class='theUps'>" + val.likes + "</span> likes");							
 				yakLikes.click(function(){
-					$(this).append("<span id='alreadyVoted'> vous avez déjà voté un dislike!</span>");
-					setTimeout('$("#alreadyVoted").remove()', 3000);
+					$('.alreadyVoted').hide();
+					$(this).append("<span class='alreadyVoted'> Vous avez déjà donnée votre avis !</span>");
+					setTimeout('$(".alreadyVoted").remove()', 3000);
 				});
 			}
 			else
 			{
 
-			yakLikes.append(thumbsUp + "<span class='theUps'>" + val.likes + "</span> likes- " + thumbsDown + "<span class='theDowns'>" + val.unlikes +"</span> dislikes");			
+			//yakLikes.append(thumbsUp + "<span class='theUps'>" + val.likes + "</span> likes- " + thumbsDown + "<span class='theDowns'>" + val.unlikes +"</span> dislikes");			
+			yakLikes.append(thumbsUp + "<span class='theUps'>" + val.likes + "</span> likes ");			
 
 			}
 
@@ -1249,10 +1256,11 @@ block content
 			more.attr("target", "_blank");
 			more.attr("rel", val._id);
 			more.attr("data-toggle", "data-toggle");
-			more.html("read from source");
+			more.html(" plus de détails...");
 			
 			content.append("<div class='shareMe'><i style='background: none' class='icon-share' title='Share Me'><img src='images/ftg.png' class='ftgIcon' /> </i></div>");
-			content.find(".theContent").append(more);
+			if(typeof(val.outGoingLink) != 'undefined')
+				content.find(".theContent").append(more);
 			item.append(content);
 			item.append(yakLikes);
 			item.append(yakComments);

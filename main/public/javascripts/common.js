@@ -788,7 +788,7 @@ function setShare(el){
 	},
 
 	twitter: {
-		text: "J'ai vu ca dans #Yakwala..." + el.parent().parent().find(".freetags").text(),
+		text: "J'ai vu ça dans #Yakwala..." + el.parent().parent().find(".freetags").text(),
 		count: 'horizontal',
 		url: el.parent().parent().find(".title").find(".more").attr("title")
 	}					
@@ -903,8 +903,6 @@ function changePlaceRange(id, lat, lng, pointname, range)
 		$.post("/favplace", {'place':point}, function(){});
 	});
 
-	
-
 	return newid;
 }
 
@@ -921,16 +919,25 @@ function drawAComment(val, from)
 	}
 
 	if (typeof(from) === 'undefined' ) {
-			return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><span class='username'>" + username + "</span><div class='comment'>" + comment + "</div><span class='timeago'>" + date + "</span></div>";
+			return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><span class='username'>" + username + "</span><span class='timeago'>" + date + "</span><div class='comment'>" + comment + "</div></div>";
 	}
 	else
 	{
 		var urlsearch = conf.fronturl + '/news/map/search/@' + username;
-		return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username' href='" + urlsearch + "'>" + username + "</a><div class='comment'>" + comment + "</div><span class='timeago'>" + date + "</span></div>";	
+		return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username' href='" + urlsearch + "'>" + username + "</a><span class='timeago'>" + date + "</span><div class='comment'>" + comment + "</div></div>";	
 	}
 
 }
 
+function setCommentText(len,item){
+	if( len== 0)
+		item.html("Poster un commentaire");
+	else if(len == 1)
+		item.html("Il y a 1 commentaire");
+	else
+		item.html("Il y a " + len + " commentaires");
+
+}
 function setLikeSystem()
 		{
 			$(".icon-thumbs-up").click(function(){
@@ -968,7 +975,9 @@ function setLikeSystem()
 		}
 
 
-		var filterWords = ["fool", "dumb", "couch potato", "fuck"];
+		var filterWords = ["con", "connard", "connasse", "salope"];
+
+
         // "i" is to ignore case
         var rgx = new RegExp(filterWords.join("|"), "gi");
 
