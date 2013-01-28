@@ -897,7 +897,7 @@ block content
 			yakTypeImage.html("<img src='/images/markers/type" + item.yakType + ".png' />");
 			infoContent.append(yakTypeImage);
 
-			if(!(typeof item.thumb === 'undefined') && item.thumb != '' && item.thumb != null)
+			if(!(typeof item.thumb === 'undefined') && item.thumb != conf.batchurl && item.thumb != null) 
 			{
 				var thumbImage = $("<div />");
 				thumbImage.attr("class", "thumbImage");
@@ -955,6 +955,7 @@ block content
 				var theaddress = "<div class=\'infodetail\'>"+item.address+"</div>";
 					if(user.login == 'renaud.bessieres' || user.login == 'dany.srour') /// this is debug
 						theaddress += "<div class=\'infodetail\'>"+pubDate+" >> "+dateEndPrint+"</div>";
+			infoContent.append(theaddress);
 
 			/*PRINT ON THE FEED*/
 			//$('#newsfeed').append('<li class=\'mapHighlighter\' infoId=\''+item._id+'\'><i class=\'icon-eye-open\' ></i> '+item.title+'</li>')
