@@ -412,7 +412,7 @@ width: 270px;
 .headerYakwala .rightlink .caret { top: 7px; left: 2px; position: relative;}
 .headerYakwala .logolink { margin: 0 auto; width: auto; text-align: center;}
 
-.searchYakwala { background-color: #d8d8d8; height: 40px; float: left;}  
+.searchYakwala { background-color: #f6f6f6; height: 40px; float: left;}  
 .searchYakwala #searchBtn {background-image:url('../images/new/go.png'); width: 27px; height: 27px; border: 0px; margin: 7px; float: left;}
 .searchYakwala .customInput{ width: 100px; margin-top: 6px; float: left; margin-left: 6px;}
 .searchYakwala .myi { position: relative; top: 12px; float: left;}
@@ -422,10 +422,13 @@ width: 270px;
 .searchYakwala #newsfeedMenu { width: auto; background-color: transparent;}
 .searchYakwala #typeContainer { display: block;}
 .searchYakwala #typeContainer img { height: 20px;}
-.searchYakwala #typeContainer .btn { margin: 1px 1px 1px 1px}
+.searchYakwala #typeContainer .btn { margin: 1px 1px 1px 1px; line-height: 8px; margin-right: 8px;}
 .searchYakwala #heatModule { display: none; position: absolute; top: 42px; left: 24px; width: 100%;}
 .searchYakwala #rangeSelector { display: none; position: absolute; top: 42px; left: 24px; width: 100%;}
 .searchYakwala #dropdownTimeSelector { width: 100%; height: 300px; overflow: auto;}
 .searchYakwala #btnMesalertes { float: right;}
+.searchYakwala #zoneLocButton { float: right;}
 .searchYakwala #btnMesalertes img {height: 20px;}
+.searchYakwala #rangeSelectorTrigger { background: transparent; border: 0px;}
+.searchYakwala #rangeSelectorTrigger:hover { background: #f5f5f5; border: 1px;}
 .typeahead { position: absolute; z-index:  111111; display: none;}

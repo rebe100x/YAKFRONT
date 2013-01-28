@@ -1,14 +1,21 @@
 mixin searchFormUnified(page)
+	style
+		.ui-slider-horizontal { height: 5px;}
+		.ui-slider .ui-slider-handle { height: 11px;}
+
 	div.row-fluid(style="height: 40px")
 		input.search-query.customInput#searchStr(type="search",placeholder="Quoi ?",autocomplete="off", )
 		input.search-query.customInput#searchPlaceStr(type="search",placeholder="Où ?",autocomplete="off", data-provide="typeahead")
 		button#searchBtn(type="submit")
 		i.icon-time.myi
 		div.pull-left.dropdown
-			a#heatModuleTrigger.btn
-				span#dayPrinter.sliderText Aujourd hui	
-				span.caret
-				ul#dropdownTimeSelector.dropdown-menu
+			div#dayPrinter.sliderText(style="width: 200px; position: relative; top: -1px; text-align: center") Aujourd hui	
+			div#heatSelector(style="width: 200px; ")
+			//
+				a#heatModuleTrigger.btn
+					span#dayPrinter.sliderText Aujourd hui	
+					span.caret
+					ul#dropdownTimeSelector.dropdown-menu
 
 				
 		i.icon-search.myi
@@ -20,10 +27,6 @@ mixin searchFormUnified(page)
 
 		div.verticalSplitter.pull-left
 		div.pull-left#filterTypes
-			span.filterText.pull-left
-				|Filter
-			i.icon-chevron-right.myi
-			i.icon-chevron-left.myi(style="display:none")
 		div#newsfeedMenu
 			div#typeContainer.row
 				span.btn(title="Actu", type=1) 
@@ -35,7 +38,12 @@ mixin searchFormUnified(page)
 				span.btn(title="Infos Pratiques", type=3) 
 					img(src="/images/markers/type3.png")
 		span.btn#btnMesalertes(title="Mes alertes", type=5, onclick='setyakttype(this)')
-					img(src="/images/markers/type5.png")		
+				i.icon-off
+					//
+						img(src="/images/markers/type5.png")		
+		span#zoneLocButton.btn
+				i.icon-star
+
 
 
 	script
@@ -192,6 +200,7 @@ mixin searchFormUnified(page)
 				change:function(event, ui){
 					getAndPrintInfo();
 					$.cookie("dateFrom", ui.value,{ expires: 10000, path : '/' });
+					
 				}
 			});
 			
@@ -413,7 +422,7 @@ mixin searchFormUnified(page)
 
 			$.cookie("yaktype", $(x).attr("type"),{ expires: 10000, path : '/' });
 			getAndPrintInfo();
-			
+
 		}
 		function setRangeSelectorDropDown()
 		{
