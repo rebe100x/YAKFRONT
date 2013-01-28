@@ -30,10 +30,6 @@ mixin menu(active)
 										a#zoneLocButton(title="Mes favoris")
 											|Mes favoris
 											i.icon-star		
-									li
-										a#arroundme(title="Autour de moi")
-											|Autour de moi
-											i.icon-home
 									li.divider
 									li
 										a(href="/user/logout") Quitter
@@ -56,7 +52,7 @@ mixin menu(active)
 			});
 
 	script
-			$(document).ready(function(){
+			/*$(document).ready(function(){
 				$("#maplink img").mouseenter(function(){
 					$(this).attr("src", "/images/new/lacarte-hover.png");
 				});
@@ -69,5 +65,5 @@ mixin menu(active)
 				$("#feedlink img").mouseleave(function(){
 					$(this).attr("src", "/images/new/filinfo.png");
 				});
-			});
+			});*/
 	

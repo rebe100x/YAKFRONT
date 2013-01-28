@@ -420,7 +420,7 @@ width: 270px;
 .searchYakwala .filterText { position: relative; top: 11px; float: left; margin-left: 12px; font-size: 14px;}
 .searchYakwala #filterTypes { cursor: pointer;}
 .searchYakwala #newsfeedMenu { width: auto; background-color: transparent;}
-.searchYakwala #typeContainer { display: none;}
+.searchYakwala #typeContainer { display: block;}
 .searchYakwala #typeContainer img { height: 20px;}
 .searchYakwala #typeContainer .btn { margin: 1px 1px 1px 1px}
 .searchYakwala #heatModule { display: none; position: absolute; top: 42px; left: 24px; width: 100%;}

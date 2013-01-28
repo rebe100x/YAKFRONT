@@ -255,6 +255,44 @@ function setLocalnessSliderText(x, elid){
 	
 }
 
+
+function setLocalnessSliderTextMinified(x, elid){	
+	
+	var sliderText = 'Localness';
+	switch(x){
+		case 11:
+			sliderText = "Local";
+		break;
+		case 12:
+			sliderText = "Très Local";
+		break;	
+		case 13:
+			sliderText = "Super Local";
+		break;	
+		case 14:
+			sliderText = "Super Local";
+		break;
+		case 15:
+			sliderText = "Hyper local";
+			break;
+		case 16:
+			sliderText = "Hyper local";
+			break;
+		default:
+			sliderText = "";
+		break;			
+	}
+	if (typeof(elid) === 'undefined') {
+		$("#localnessPrinter").html(sliderText);
+	}
+	else
+	{
+		$(elid).html(sliderText);
+	}
+	return sliderText;
+	
+}
+
 function setTimeSliderText(x, text){
 	var y = 0;
 	if(x==0){

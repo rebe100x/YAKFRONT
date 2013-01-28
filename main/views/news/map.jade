@@ -73,7 +73,13 @@ block content
 		var map = new google.maps.Map(document.getElementById('mymap'), {
 				mapTypeId: google.maps.MapTypeId.ROADMAP,
 				disableDefaultUI: true,
-				scrollwheel: false,
+				scrollwheel: true,
+				zoom_changed: function(){
+					setLocalnessSliderTextMinified(map.getZoom());
+				},
+				maxZoom: 16,
+				minZoom: 11,
+				disableDoubleClickZoom: true
 			});
 
 		setInterval(function() {
@@ -177,9 +183,9 @@ block content
 
 			/*map tools*/
 			$('#zoomplus').click(function () {	
-				/*
+				
 				if(curPos.z == 120)
-					return*/
+					return
 				zoom = map.getZoom();
 				zoom++;
 				map.setZoom(zoom);	
@@ -190,8 +196,8 @@ block content
 			});
 
 			$('#zoomminus').click(function () {
-				/*if(curPos.z == 70)
-					return*/
+				if(curPos.z == 70)
+					return
 				zoom = map.getZoom();
 				zoom--;
 				map.setZoom(zoom);

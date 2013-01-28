@@ -34,7 +34,7 @@ mixin searchFormUnified(page)
 					img(src="/images/markers/type2.png")
 				span.btn(title="Infos Pratiques", type=3) 
 					img(src="/images/markers/type3.png")
-		span.btn#btnMesalertes(title="Mes alertes", type=5, onclick='setyakttype(5)')
+		span.btn#btnMesalertes(title="Mes alertes", type=5, onclick='setyakttype(this)')
 					img(src="/images/markers/type5.png")		
 
 
@@ -322,7 +322,7 @@ mixin searchFormUnified(page)
 				//console.log($('#searchStr')["__proto__"]["typeahead"]);
 
 			$("#filterTypes").click(function(){
-				if($("#typeContainer").css("display") == "none")
+				/*if($("#typeContainer").css("display") == "none")
 				{
 					$(this).find("span").html("Fermer");
 					$(this).find(".icon-chevron-right").hide();
@@ -335,7 +335,7 @@ mixin searchFormUnified(page)
 					$(this).find(".icon-chevron-left").hide();
 					$(this).find(".icon-chevron-right").show();
 					$("#typeContainer").hide();
-				}
+				}*/
 					
 			});
 
@@ -392,9 +392,28 @@ mixin searchFormUnified(page)
 		}
 		function setyakttype(x)
 		{
-			$("#newsfeedMenu .active").click();
-			$.cookie("yaktype", "5",{ expires: 10000, path : '/' });
+			//$("#newsfeedMenu .active").click();
+
+			if($("#newsfeedMenu .oldActive").length == 0)
+			{
+				$("#newsfeedMenu .active").each(function(){
+					$(this).click();
+					$(this).addClass("oldActive");
+					$(this).removeClass("active");
+				});
+			}
+			else
+			{
+				$("#newsfeedMenu .oldActive").each(function(){
+					$(this).click();
+					$(this).removeClass("oldActive");
+					$(this).addClass("active");
+				});
+			}
+
+			$.cookie("yaktype", $(x).attr("type"),{ expires: 10000, path : '/' });
 			getAndPrintInfo();
+			
 		}
 		function setRangeSelectorDropDown()
 		{
