@@ -294,9 +294,7 @@ exports.news = function(req, res){
 
 exports.user_login = function(req, res){
 	delete req.session.message;
-	
-	
-	res.render('user/login',{locals:{redir:req.query.redir}});
+	res.render('user/login',{redir:req.query.redir});
 };
 
 

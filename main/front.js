@@ -39,6 +39,8 @@ app.configure(function(){
 	res.locals.redir = req.query.redir;
 	res.locals.message = req.session.message;
 	res.locals.type = req.session.type;
+	var pjson = require('./package.json');
+	app.locals.version = pjson.version;
 	next();
   });
   
@@ -52,10 +54,6 @@ app.configure('development', function(){
 	app.locals.conf = JSON.stringify(config.confs.devrenaud);
 	mainConf = config.confs.main;
 	app.locals.mainConf = JSON.stringify(config.confs.main);
-	var pjson = require('./package.json');
-	app.locals.version = pjson.version;
-
-	
 	app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
 
