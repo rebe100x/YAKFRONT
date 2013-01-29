@@ -1,3 +1,4 @@
+include ../blocks/range.jade
 mixin searchFormUnified(page)
 	style
 		.ui-slider-horizontal { height: 5px;}
@@ -23,7 +24,7 @@ mixin searchFormUnified(page)
 			a.btn#rangeSelectorTrigger
 				span#localnessPrinter.sliderText Localness
 				span.caret
-				ul#dropdownRangeSelector.dropdown-menu
+				mixin range
 
 		div.verticalSplitter.pull-left
 		div.pull-left#filterTypes
@@ -74,6 +75,14 @@ mixin searchFormUnified(page)
 		$('#locationInput').val(JSON.stringify({lat:curPos.x,lng:curPos.y}));						
 
 		$(document).ready(function(){
+				$("#typeContainer .btn[type!=3]").click(function(){
+					$("#typeContainer .btn[type=3]").removeClass("active");
+				});
+				$("#typeContainer .btn[type=3]").click(function(){
+					$("#typeContainer .btn").removeClass("active");
+					$.cookie("yaktype", $(this).attr("type"),{ expires: 10000, path : '/' });
+					getAndPrintInfo();
+				});
 
 				setTimeSliderText(dateFrom);
 
@@ -198,6 +207,7 @@ mixin searchFormUnified(page)
 					dateFrom = setTimeSliderText(x);
 				},
 				change:function(event, ui){
+					
 					getAndPrintInfo();
 					$.cookie("dateFrom", ui.value,{ expires: 10000, path : '/' });
 					
@@ -428,22 +438,15 @@ mixin searchFormUnified(page)
 		{
 			var lasttext = '';
 			var currtext = '';
-			for(i=70; i<=120; i=i+10)
-			{
-				if(i == 90 || i == 110)
-					i = i + 10;
-				lasttext = setLocalnessSliderText(i);
-				if(currtext != lasttext)
-				{
-					$("#dropdownRangeSelector").append("<li value='" + i + "'><a>" + lasttext + "</a></li>");
-					currtext = lasttext;
-				}
-			}
+			
 			$("#localnessPrinter").html(setLocalnessSliderText(curPos.z));
 			$("#dropdownRangeSelector li").click(function(){
 				$("#localnessPrinter").html($(this).find("a").html());
 				curPos.z = $(this).attr("value");
 				changeRange();
 				$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
+
+				$("#dropdownRangeSelector li").css("color", "#333333");
+				$(this).css("color", "#d3171f");
 			});
 		}

@@ -713,7 +713,7 @@ exports.profile = function(req, res){
 				web:req.body.web,
 //				thumb:infoThumb.name,
 				bio:req.body.bio,
-				tag:req.body.tag.split(','),
+				tagsubs:req.body.tag.split(','),
 //				location :{lng:parseFloat(location.lng),lat:parseFloat(location.lat)},
 //				address :JSON.parse(req.body.address),								
 				};
@@ -739,6 +739,8 @@ exports.profile = function(req, res){
 		if(req.body.defaultCityZoomText){
 			cond.addressZoomText = req.body.defaultCityZoomText;
 		}
+
+
 			
 		//req.session.user.location = location;
 		

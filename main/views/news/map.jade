@@ -906,7 +906,7 @@ block content
 			if(!(typeof item.thumb === 'undefined') && item.thumb != conf.batchurl && item.thumb != null) 
 			{
 				var thumbImage = $("<div />");
-				thumbImage.attr("class", "thumbImage");
+				thumbImage.attr("class", "thumbImage span4");
 				thumbImage.append("<img src=\'"+item.thumb+"\' />");
 				infoContent.append(thumbImage);
 			}

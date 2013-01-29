@@ -42,9 +42,8 @@ block content
 				$('#username').val(user.name);
 				
 				$('#bio').val(user.bio);
-				$('#tag').val(user.tag);
+				$('#tag').val(user.tagsubs);
 				$('#web').val(user.web);
-				$('#taginit').val(user.tag);
 				
 				if(user.formatted_address)
 					$('#cityTarget').html(user.formatted_address);
@@ -55,16 +54,15 @@ block content
 				
 				
 				// hashtag creation from title field
-				$("#bio").keyup(function(event) {
+				$("#tag").keyup(function(event) {
+
 					hashtagTmp = [];
-					var inputStrArray = ($(this).val()).split(' ');
+					var inputStrArray = ($(this).val()).split(',');
 					for(i = 0; i< inputStrArray.length;i++){
-						if(inputStrArray[i].match(rule)){
 							hashtagTmp.push(inputStrArray[i]);
-							hashtagTmp.push($('#taginit').val());
-							$('#tag').val(hashtagTmp.toString().replace(rule2,''));
-						}
 					}
+					$('#tag').val(hashtagTmp);
+					//alert($('#taginit').val());
 				});
 				
 				$('#avatar').live('change', function () {

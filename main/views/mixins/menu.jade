@@ -2,37 +2,38 @@ include ../mixins/forms/searchFormUnified.jade
 mixin menu(active)
 	div.navbar.navbar-fixed-top
 			div.row-fluid.headerYakwala
-				div.span2
-					a.leftlink#maplink(href="/news/map")
-						img(src="/images/new/lacarte.png")
-					a.leftlink#feedlink(href="/news/feed")
-						img(src="/images/new/filinfo.png")
-				div.span8
-					div.logolink
-						a(href="/news/map")
-							img(src="/images/new/logo.png")
-				div.span2
-					- if (locals.user)
-							div.btn-group.pull-right
-								a.btn.dropdown-toggle(href="#",data-toggle="dropdown")
-									i.icon-user
-									span= ' '+locals.user.login+' ';
-									span.caret
-								ul.dropdown-menu
-									li
-										a(href="/settings/profile") Mon profil
-									li
-										a(href="/settings/alerts") Mes alertes
-									li
-										a(href="/settings/password") Mot de Passe
-									li.divider
-									
-									li.divider
-									li
-										a(href="/user/logout") Quitter
-						- else
-							span 
-								a.btn(href="/user/login") Login
+				if(active != "login")
+					div.span2
+						a.leftlink#maplink(href="/news/map")
+							img(src="/images/new/lacarte.png")
+						a.leftlink#feedlink(href="/news/feed")
+							img(src="/images/new/filinfo.png")
+					div.span8
+						div.logolink
+							a(href="/news/map")
+								img(src="/images/new/logo.png")
+					div.span2
+						- if (locals.user)
+								div.btn-group.pull-right
+									a.btn.dropdown-toggle(href="#",data-toggle="dropdown")
+										i.icon-user
+										span= ' '+locals.user.login+' ';
+										span.caret
+									ul.dropdown-menu
+										li
+											a(href="/settings/profile") Mon profil
+										li
+											a(href="/settings/alerts") Mes alertes
+										li
+											a(href="/settings/password") Mot de Passe
+										li.divider
+										
+										li.divider
+										li
+											a(href="/user/logout") Quitter
+							- else
+								span 
+									a.btn(href="/user/login") Login
 			div.row-fluid.searchYakwala
 				div.span12(style="height: 40px;")
 					if(active == 'map' || active == 'feed')

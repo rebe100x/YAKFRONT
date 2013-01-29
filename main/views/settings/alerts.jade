@@ -37,7 +37,7 @@ block content
 							div.span12
 								div.control-group
 									div.controls
-										label.control-label.label-xlarge(for="usersubs") Abonnez vous au flux d'un utilisateur : 										
+										label.control-label.label-xlarge(for="usersubs") Abonnez vous au flux d'un utilisateur ou d'un feed : 										
 										- each user in usersubs
 											p
 												div
@@ -74,7 +74,7 @@ block content
 												p
 													div
 														i.icon-remove.icon-pointer(onclick="feedsubsArray.cleanArrayByName(\""+feed+"\");$(\"#feedsubsInput\").val(JSON.stringify(feedsubsArray));$(this).parent().remove();clickSubmit(this);") 
-														= feed.name
+														= feed.humanName
 											input.input-xlarge#userfeeds(type="text",data-provide="typeahead", name="alert", autocomplete="off", placeholder="Entrer un nom d'un feed")
 						br
 						br
@@ -144,10 +144,10 @@ block content
 									typeahead.process(data.feeds);
 								}
 							})},
-					property: "name",
+					property: "humanName",
 					onselect: function(obj) {
 						if(!feedsubsArray.inArrayId(obj._id)){
-							$("label[for='userfeeds']").after("<div><i class='icon-remove icon-pointer'  onclick='feedsubsArray.cleanArray(\""+obj._id+"\");$(\"#feedsubsInput\").val(JSON.stringify(feedsubsArray));$(this).parent().remove(); clickSubmit(this);'></i> "+obj.name+"</div>");
+							$("label[for='userfeeds']").after("<div><i class='icon-remove icon-pointer'  onclick='feedsubsArray.cleanArray(\""+obj._id+"\");$(\"#feedsubsInput\").val(JSON.stringify(feedsubsArray));$(this).parent().remove(); clickSubmit(this);'></i> "+obj.humanName+"</div>");
 							$('#userfeeds').val('').focus();
 							feedsubsArray.push(obj);
 							$("#feedsubsInput").val(JSON.stringify(feedsubsArray));
