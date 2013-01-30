@@ -169,8 +169,8 @@ abbr[title] {
 	/*MAP TAB MENU*/
 #newsNav{width:100%;margin:10px auto 0px;padding:0px;float:left;opacity:0.95;background:#FFFFFF;}
 #newsNav ul.nav {margin-bottom:5px;}
-.nav-tabs li{width:50%;text-align:center;background-color:#F2F2F2;}
-.nav-tabs li:hover{background-color:##B2B2B2;}
+.nav-tabs li{width:50%;text-align:center;background-color:#c81119;}
+.nav-tabs li:hover{background-color: c81119;}
 .nav-tabs li a{color:#333333;}
 
 
@@ -222,6 +222,7 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 	box-shadow: 0 1px 0 #DDD;
 	background: white;
 	border-color: #BBB;
+	color: #505050;
 }
 .infowindow.loadingfeeditem{
 	padding:30px 0px;
@@ -250,9 +251,9 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 .infowindow .yakTypeImage img { float: left; width:15px;height:22px;}
 
 .infowindow .thumbImage { float: left;  margin-left: -15px;}
-.infowindow .thumbImage img { float: left; width:100%;height:auto;}
+.infowindow .thumbImage img { float: left; width:auto;height:75;}
 
-.infowindow .itemTitle { font-size: 13px; font-weight: bold; color: #5D5D5D; left: 12px; padding-right: 12px; position: relative; text-align: justify; color: black;}
+.infowindow .itemTitle { font-size: 13px; font-weight: bold; color: #5D5D5D; left: 12px; padding-right: 12px; position: relative; text-align: justify;}
 
 .infowindow .postedBy { position: relative; left: 12px; padding-right: 12px; font-size: 11px;}
 
@@ -260,6 +261,82 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 
 .infowindow .infodetail{float:left;width:100%;font-style:italic;font-size:0.8em;line-height: 1.5em; clear: both;}
 .infowindow .infodetail a{color:#0C0C0C;}
+
+
+
+
+
+/*currentDetails*/
+.currentDetails .myitem {clear: both; position: relative; top: 12px; text-align: justify;}
+.currentDetails .myitem .shareMe { width: auto; float: right; clear: both; top: -17px; position: relative; right: 85px;}
+.currentDetails .myitem .ftgIcon { height: 14px; position: absolute; top: 4px; float: left; clear: both;}
+.currentDetails .myitem .yakLikes {top: -33px; position: relative; float: left; clear: both; }
+.currentDetails .myitem .buttons { z-index:  11;}
+
+.currentDetails .myitem .yakLikes{font-size:11px;font-style:italic; position: relative; clear: both; width: auto; float: left; color: #D71920;}
+.currentDetails .myitem .yakComments{font-size:11px;font-style:italic; position: relative; clear: both; width: auto; float: left; left: 0px; top: -33px; color: #D71920; cursor: pointer;}
+.currentDetails .myitem .commentBox .aComment { clear:  both; padding-bottom: 12px;}
+.currentDetails .myitem .commentBox .timeago{ margin-left:5px;}
+.currentDetails .myitem .commentBox {font-style:italic; position: relative; clear: both; width: auto; float: left; left: 0px; top: -30px; color: #D71920; cursor: pointer; background: #F1F2F6; width: 100%; margin-bottom: 10px;}
+.currentDetails .myitem .commentBox .username { color: #3B5998; }
+.currentDetails .myitem .commentBox .username:hover { text-decoration: underline;}
+.currentDetails .myitem .commentBox .userthumb { height: 50px; width: 50px; float: left; }
+.currentDetails .myitem .commentBox .comment { color: black; margin-bottom: 12px;}
+.currentDetails .myitem .commentBox textarea { width: 97%; height: 50px; margin-top: 2px; margin-left: 0px;}
+.currentDetails .myitem i.icon-chevron-up { }
+
+
+.currentDetails{
+	width:95%;
+	margin:5px 5px;
+	font-size:13px;
+	float: left;
+	
+	box-shadow: 0 1px 0 #DDD;
+	background: white;
+	border-color: #BBB;
+	color: #505050;
+}
+.currentDetails.loadingfeeditem{
+	padding:30px 0px;
+	text-align: center;
+	background-image: url(../images/loader_big.gif);
+	background-position: center center;
+	background-repeat: no-repeat;
+}
+.currentDetails.emptyfeeditem{
+	padding:20px 0px;
+	text-align: center;	
+	font-weight:bold;
+}
+.currentDetails .date{color: #87888B;margin-right:5px;}
+.currentDetails .date .timeago { margin-top: -28px; margin-right: 8px;}
+.currentDetails .links{float:right;margin-right:3px;text-align:right;font-style:italic;font-size:0.8em;line-height: 1.5em;}
+
+.currentDetails .yakTypeImg{width:15px;height:22px; float: none;}
+.currentDetails .titleLeft { float: left; width: 50%;}
+.currentDetails .titleRight { float: right; width: 50%;}
+.currentDetails .infofooter{float:left:width:100%;margin:5px 0px 5px 0px;}
+
+		/*POST*/
+
+.currentDetails .yakTypeImage { float: none; width:15px;height:22px; z-index: 111;}
+.currentDetails .yakTypeImage img { float: left; width:15px;height:22px;}
+
+.currentDetails .thumbImage { float: left;  width: 100%; padding-top: 6px;}
+.currentDetails .thumbImage img { float: left; width:99%;height:auto; border: 1px solid #cecece;}
+
+.currentDetails .itemTitle { font-size: 16px; font-weight: bold; color: #5D5D5D; left: 0px; padding-right: 12px; position: relative; text-align: justify; float: none; width: 100%; padding-top: 6px}
+
+.currentDetails .postedBy { position: relative; left: 0px; padding-right: 12px; font-size: 12px; float: none; padding-top: 6px;}
+
+.currentDetails .tags{float:none;margin-left:3px;text-align:left;font-style:italic;font-size:0.8em;line-height: 1.5em; clear: both; margin-top: 6px; margin-bottom: 3px; width: 100%; padding-top: 6px; padding-bottom: 6px;}
+
+.currentDetails .infodetail{float:left;width:100%;font-style:italic;font-size:11px;line-height: 1.5em; clear: both;}
+.currentDetails .infodetail a{color:#0C0C0C;}
+
+/*end current Details */
+
 
 /*#newsPostContainer{overflow:auto;height:auto;}
 #newsPostContainer #newsPostForm{margin:0px auto;padding:10px;text-align:left;opacity:0.95;background:#FFFFFF;}*/

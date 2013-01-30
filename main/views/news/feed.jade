@@ -170,7 +170,7 @@ block content
 			else	
 				apiUrl = '/api/geoinfos/'+curPos.x+'/'+curPos.y+'/'+rangeFromZ()+'/'+'null'+'/'+dateFrom+'/0/'+yakType.toString()+'/'+searchString+'/500';
 			
-			
+			console.log(apiUrl);
 			$.getJSON(apiUrl,function(ajax) {	
 			
 				// empty the news feed
@@ -352,13 +352,22 @@ block content
 
 		function getItemDetails(el){
 			
+			
+
 			var currentItem = $(el);
-			var infoid = currentItem.attr("infoid")
+
+
+
+			var infoid = currentItem.attr("infoid");
+
+			currentItem.addClass("currentDetails");
+			currentItem.removeClass("infowindow");
+
 			if (currentItem.find(".loadingMore").length > 0 || currentItem.find(".myitem").length > 0)
 			{
-				currentItem.find(".myitem").find(".icon-chevron-up").remove();
-				currentItem.find(".myitem").append("<i class='icon-chevron-up' title='close' style='float: right; clear: both; position: relative; bottom: 21px;' onclick='$(this).parent().hide(); $(this).remove();'></i>");
-				currentItem.find(".myitem").show();				
+				currentItem.find(".myitem").find(".icon-remove").remove();
+				currentItem.find(".yakTypeImage").append("<i class='icon-remove' title='close' style='float: right; clear: both;  position: absolute; right: 0px;' onclick='closemyitem(this); $(this).remove();'></i>");
+				currentItem.find(".myitem").show();
 				return;
 			}
 
@@ -371,9 +380,18 @@ block content
 				var item = createFeedPageItem(val);
 				currentItem.find(".loadingMore").remove();
 				currentItem.append(item);
-				currentItem.find(".myitem").append("<i class='icon-chevron-up' title='close' style='float: right; clear: both; position: relative; bottom: 21px;' onclick='$(this).parent().hide(); $(this).remove();'></i>");
+				currentItem.find(".myitem").append("<i class='icon-remove' title='close' style='float: right; clear: both; position: absolute; right: 0px;' onclick='closemyitem(this); $(this).remove();'></i>");
 				setshortUrl();
 				setLikeSystem();
+
+				currentItem.find(".thumbImage").insertAfter(currentItem.find(".tags"));
+				currentItem.find(".infodetail").insertAfter(currentItem.find(".postedBy"));
+				currentItem.find(".icon-remove").appendTo(currentItem.find(".yakTypeImage"));
+				$("ul#newsfeed li").css("width", "100%");
+				$("ul#newsfeed").css("width", "96%");
+				$("#newsfeed li").removeClass('highlighted');
+			currentItem.parent().addClass('highlighted');
+			$('#newsfeedContent').mCustomScrollbar("scrollTo",".mapHighlighter[infoId=\""+currentItem.parent().attr("infoid")+"\"]");
 			});
 
 			if ($(el).find(".myitem").css("display") == "none") {
@@ -384,8 +402,23 @@ block content
 			{
 				$(el).find(".myitem").hide();
 			}
+
+
 			
 		}
+
+		function closemyitem(el)
+		{
+			var currentItem = $(el).parent().parent();
+			currentItem.find(".thumbImage").insertAfter(currentItem.find(".yakTypeImage"));
+			currentItem.find(".infodetail").insertAfter(currentItem.find(".tags"));
+			currentItem.removeClass("currentDetails");
+			currentItem.addClass("infowindow");
+			$("ul#newsfeed li").removeAttr("style");
+			$("ul#newsfeed").removeAttr("style");
+			currentItem.find('.myitem').hide();
+		}
+
 
 
 		function createFeedPageItem(val)
@@ -525,4 +558,15 @@ block content
 
 		function rangeFromZ(){
 			return (-1)*0.0099/1*(curPos.z)+1;
+		}
+
+		function changeRange(){
+			curPos.z  = zFromRange();
+			$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
+			getAndPrintInfo();
+		}
+
+		
+		function zFromRange(){
+			return Math.floor((zoom-4)*10);
 		}
