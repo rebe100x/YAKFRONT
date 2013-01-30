@@ -594,6 +594,16 @@ User.statics.formatLight = function (theuser) {
   return formattedUser;
 }
 
+User.statics.formatLight2 = function (theuser) {
+	
+	var formattedUser = {
+		_id:theuser._id,
+		title:theuser.name+'(@'+theuser.login+')',
+		name: theuser.name,
+	};
+  return formattedUser;
+}
+
 User.statics.findByLogin = function (login,callback) {
   return this.find({login:login,status:1}, callback);
 }
@@ -685,13 +695,23 @@ mongoose.model('Zone', Zone);
 /****************************************Feeds*/
 
 var Feed = new Schema({
-    name     : { type: String, index:true, required: true}
+    name     : { type: String, index:true, required: true},
+    humanName     : { type: String }
 }, { collection: 'feed' });
 
 Feed.statics.findByName = function (str,callback) {
   searchStr = new RegExp(str,'i');
-  return this.find({'humanName': {$regex:searchStr}},{humanName:1, _id: 1}, callback);
+  return this.find({'humanName': {$regex:searchStr}},{humanName:1, _id: 1, name: 1}, callback);
 }
+
+Feed.statics.formatLight2 = function (thefeed) {
+	var formattedFeed = {
+		_id:thefeed._id,
+		title: thefeed.humanName+'(@'+thefeed.name+')',
+		name: thefeed.humanName,
+	};
+  return formattedFeed;
+}  
 
 mongoose.model('Feed', Feed);
 /******************************YAKCAT*/

@@ -42,7 +42,7 @@ exports.confs = {
 		"dbname":"yakwala",
 		"env":"DEV",
 		"uploadsDir":__dirname+"\\public\\uploads\\",
-		"ga":"console.log('preprod mode: no analytics);"
+		"ga":"console.log('preprod mode: no analytics');"
 	},
 	
 	"preprod" : {

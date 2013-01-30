@@ -143,6 +143,7 @@ app.get('/api/catsandtags', api.catsandtags);
 app.get('/api/places', api.places);
 app.get('/api/searchplaces/:str', api.searchplaces);
 app.get('/api/usersearch/:string', api.user_search);
+app.get('/api/feedusersearch/:string', api.feeduser_search);
 app.get('/api/feedsearch/:string', api.feed_search);
 app.get('/api/getUsers', api.getUsers);
 app.get('/api/getContentTitles', api.getContentTitles);
