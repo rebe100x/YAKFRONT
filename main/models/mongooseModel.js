@@ -308,9 +308,22 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,from,now,type,str,thecount,thesk
 
 	if(y2 == 'null'){		
 		var locationQuery = {$near:[parseFloat(x1),parseFloat(y1)],$maxDistance:parseFloat(x2)};
+		var cond = {
+				"status":1,
+				"pubDate":{$lte:DPUB},
+				"dateEndPrint":{$gte:DEND},
+				"yakType" : {$in:type}
+			};
 	}else{
 		var box = [[parseFloat(x1),parseFloat(y1)],[parseFloat(x2),parseFloat(y2)]];
 		var locationQuery = {$within:{"$box":box}};
+		var cond = {
+				"print":1,
+				"status":1,
+				"pubDate":{$lte:DPUB},
+				"dateEndPrint":{$gte:DEND},
+				"yakType" : {$in:type}
+			};
 	}
 	
 	var Yakcat = db.model('Yakcat');
@@ -318,13 +331,7 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,from,now,type,str,thecount,thesk
 	var Tag = db.model('Tag');
 	var res = null;
 
-	var cond = {
-				"print":1,
-				"status":1,
-				"pubDate":{$lte:DPUB},
-				"dateEndPrint":{$gte:DEND},
-				"yakType" : {$in:type}
-			};
+	
 	
 	if (!isNaN(x1)) {
 		cond["location"] = locationQuery;
