@@ -20,11 +20,13 @@ block content
 				div#newsfeedContainer
 					span#newsNav				
 						ul.nav.nav-tabs
-							li.active(contentToLoad="newsfeedContent")
-								a.newsNavItem#newsFeed(href="#") Le fil
+							li.active(contentToLoad="newsfeedContent", style="width: 70%")
+								a.newsNavItem#newsFeed(href="#")
+									img(src="/images/new/lefil.png")
 							- if(session)	
-								li(contentToLoad="newspostContent")
-									a.newsNavItem#newsPost(href="#") Poster
+								li(contentToLoad="newspostContent", style="width: 30%; background: #c81119")
+									a.newsNavItem#newsPost(href="#") 
+										img(src="/images/new/poster.png")
 									
 					span#newsfeedContent.tabContent			
 						ul#newsfeed
@@ -364,6 +366,8 @@ block content
 						$('#yakcat').val('').focus();
 						yakcatArray.push(obj);
 						$("#yakcatInput").val(JSON.stringify(yakcatArray));
+						
+						console.log(yakcatArray);
 					}
 				});
 				
@@ -792,6 +796,7 @@ block content
 		}
 		
 		function getAndPrintInfo(){
+
 			infoArray = [];
 			bounds = getMyBounds();
 			//console.log(curPos.z);
@@ -811,7 +816,7 @@ block content
 			else	
 				apiUrl = '/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/0/'+yakType.toString()+'/'+searchString+'/500';
 			
-			
+			console.log(apiUrl);
 			$.getJSON(apiUrl,function(ajax) {	
 			
 				// empty the news feed
@@ -906,7 +911,7 @@ block content
 			if(!(typeof item.thumb === 'undefined') && item.thumb != conf.batchurl && item.thumb != null) 
 			{
 				var thumbImage = $("<div />");
-				thumbImage.attr("class", "thumbImage span4");
+				thumbImage.attr("class", "thumbImage");
 				thumbImage.append("<img src=\'"+item.thumb+"\' />");
 				infoContent.append(thumbImage);
 			}
@@ -1104,13 +1109,22 @@ block content
 
 		function getItemDetails(el){
 			
+			
+
 			var currentItem = $(el);
-			var infoid = currentItem.attr("infoid")
+
+
+
+			var infoid = currentItem.attr("infoid");
+
+			currentItem.addClass("currentDetails");
+			currentItem.removeClass("infowindow");
+
 			if (currentItem.find(".loadingMore").length > 0 || currentItem.find(".myitem").length > 0)
 			{
-				currentItem.find(".myitem").find(".icon-chevron-up").remove();
-				currentItem.find(".myitem").append("<i class='icon-chevron-up' title='close' style='float: right; clear: both; position: relative; bottom: 21px;' onclick='$(this).parent().hide(); $(this).remove();'></i>");
-				currentItem.find(".myitem").show();				
+				currentItem.find(".myitem").find(".icon-remove").remove();
+				currentItem.find(".yakTypeImage").append("<i class='icon-remove' title='close' style='float: right; clear: both;  position: absolute; right: 0px;' onclick='closemyitem(this); $(this).remove();'></i>");
+				currentItem.find(".myitem").show();
 				return;
 			}
 
@@ -1123,9 +1137,18 @@ block content
 				var item = createFeedPageItem(val);
 				currentItem.find(".loadingMore").remove();
 				currentItem.append(item);
-				currentItem.find(".myitem").append("<i class='icon-chevron-up' title='close' style='float: right; clear: both; position: relative; bottom: 21px;' onclick='$(this).parent().hide(); $(this).remove();'></i>");
+				currentItem.find(".myitem").append("<i class='icon-remove' title='close' style='float: right; clear: both; position: absolute; right: 0px;' onclick='closemyitem(this); $(this).remove();'></i>");
 				setshortUrl();
 				setLikeSystem();
+
+				currentItem.find(".thumbImage").insertAfter(currentItem.find(".tags"));
+				currentItem.find(".infodetail").insertAfter(currentItem.find(".postedBy"));
+				currentItem.find(".icon-remove").appendTo(currentItem.find(".yakTypeImage"));
+				$("ul#newsfeed li").css("width", "100%");
+				$("ul#newsfeed").css("width", "96%");
+				$("#newsfeed li").removeClass('highlighted');
+			currentItem.parent().addClass('highlighted');
+			$('#newsfeedContent').mCustomScrollbar("scrollTo",".mapHighlighter[infoId=\""+currentItem.parent().attr("infoid")+"\"]");
 			});
 
 			if ($(el).find(".myitem").css("display") == "none") {
@@ -1136,9 +1159,22 @@ block content
 			{
 				$(el).find(".myitem").hide();
 			}
+
+
 			
 		}
 
+		function closemyitem(el)
+		{
+			var currentItem = $(el).parent().parent();
+			currentItem.find(".thumbImage").insertAfter(currentItem.find(".yakTypeImage"));
+			currentItem.find(".infodetail").insertAfter(currentItem.find(".tags"));
+			currentItem.removeClass("currentDetails");
+			currentItem.addClass("infowindow");
+			$("ul#newsfeed li").removeAttr("style");
+			$("ul#newsfeed").removeAttr("style");
+			currentItem.find('.myitem').hide();
+		}
 
 		function createFeedPageItem(val)
 		{

@@ -114,8 +114,9 @@ block content
 						$.ajax({
 								url: "/api/usersearch/"+query,				
 								success: function( data ) {
+								data = mergeDeep(data, data);
 								console.log(data);
-									typeahead.process(data.users);
+								typeahead.process(data.users);
 								}
 							})},
 					property: "userdetails",

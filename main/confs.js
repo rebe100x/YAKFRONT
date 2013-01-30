@@ -29,7 +29,7 @@ exports.confs = {
 	
 	"devdany" : {
 		"validationUrl":"localhost:3000/user/validate/",
-		"batchurl":"localhost:3000/BACKEND/",
+		"batchurl":"http://localhost:8080/YAKREP/BACKEND/",
 		"backurl":"http://localhost:8080/YAKREP/BACKEND/",
 		"fronturl":"http://localhost:3000",
 		"apiurl":"localhost:3000",
