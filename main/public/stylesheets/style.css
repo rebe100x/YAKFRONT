@@ -247,10 +247,10 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 
 		/*POST*/
 
-.infowindow .yakTypeImage { float: left; width:15px;height:22px; z-index: 111;}
+.infowindow .yakTypeImage { float: left; width:15px;height:22px; z-index: 111; position: absolute;}
 .infowindow .yakTypeImage img { float: left; width:15px;height:22px;}
 
-.infowindow .thumbImage { float: left;  margin-left: -15px;}
+.infowindow .thumbImage { float: left;  margin-left: 0px;}
 .infowindow .thumbImage img { float: left; width:auto;height:75;}
 
 .infowindow .itemTitle { font-size: 13px; font-weight: bold; color: #5D5D5D; left: 12px; padding-right: 12px; position: relative; text-align: justify;}
