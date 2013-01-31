@@ -1206,12 +1206,36 @@ exports.user_search = function (req, res) {
 	});
 };
 
+exports.feeduser_search = function (req, res) {
+	var results = new Array();
+	var User = db.model('User');	
+	User.search(req.params.string,req.query.limit,req.query.skip,req.query.sensitive,function (err, docs){
+		var usersFormated = docs.map(function(item){
+			var User = db.model('User');
+			return User.formatLight2(item);
+		});
+		var Feed = db.model('Feed');	
+			Feed.findByName(req.params.string, function (err, docs){
+				var feedFormated = docs.map(function(item){
+					var Feed = db.model('Feed');
+					return Feed.formatLight2(item);
+				});
+			results = feedFormated.concat(usersFormated);		
+			 if(!err)
+	  			res.json({meta:{code:200},data:{catsandtags:results}});
+	  		else
+	  			res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+		});
+		
+	});
+};
+
 exports.feed_search = function (req, res) {
 	var Feed = db.model('Feed');	
 	Feed.findByName(req.params.string, function (err, docs){
 		res.json({
-			feeds: docs
-		  });
+				feeduser: docs
+		  	});
 	});
 };
 
