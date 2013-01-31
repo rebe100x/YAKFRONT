@@ -93,10 +93,10 @@ block content
 			
 			
 			$('#newsfeed').delegate(".mapHighlighter",'click', function (e) {
-
-				//console.log(e.target);
-				if (e.target.className != "yakComments" && e.target.className != "yakLikes" && e.target.className != "yakTextarea" && e.target.className != "username" && e.target.className != "yakLikes" && e.target.className != "icon-thumbs-down" && e.target.className != "icon-thumbs-up")
+				if(!$.contains($(this), e.target))
+					{
 					getItemDetails(this);
+					}
 				
 			});
 
