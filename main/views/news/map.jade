@@ -805,7 +805,7 @@ block content
 			cleanMarkers();
 			//searchString = encodeURIComponent(searchString);
 			
-			if(typeof(yakType) == 'undefined' || yakType.length == 0){
+			if(typeof(yakType) == 'undefined' || yakType.length == 0){;
 				printEmptyFeedItem();
 				return;
 			}
@@ -817,12 +817,12 @@ block content
 				apiUrl = '/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/0/'+yakType.toString()+'/'+searchString+'/500';
 			
 			console.log(apiUrl);
-			$.getJSON(apiUrl,function(ajax) {	
-			
+			$.getJSON(apiUrl,function(ajax) {
 				// empty the news feed
 				$('#newsfeed').html('');
 
 				if(typeof(ajax.data.info) == 'undefined' || ajax.data.info.length == 0){
+
 					//$('#newsfeed').html('Aucune info !');
 					printEmptyFeedItem();
 				}else{
@@ -839,6 +839,8 @@ block content
 				}
 				$("abbr.timeago").timeago();
 				$('#newsfeedContent').mCustomScrollbar("update");
+
+
 			});
 
 		}
@@ -1093,7 +1095,14 @@ block content
 
 		function printEmptyFeedItem(){
 			$('.emptyfeeditem').hide();
+			if($("#typeContainer .active").length > 0)
+			{
 			infoContent = "<div class=\'infowindow emptyfeeditem\'>Aucune info !</div>";					
+			}
+			else
+			{
+			infoContent = "<div class=\'infowindow emptyfeeditem\'>Choisissez un type d'info !!!</div>";					
+			}
 			$('#newsfeed').append('<li class=\'mapHighlighterDetails\'>'+infoContent+'</li>');
 		}
 
