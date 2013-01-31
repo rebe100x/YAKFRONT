@@ -561,12 +561,12 @@ block content
 		}
 
 		function changeRange(){
-			curPos.z  = zFromRange();
-			$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
+			//curPos.z  = zFromRange();
+			//$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
 			getAndPrintInfo();
 		}
 
 		
 		function zFromRange(){
-			return Math.floor((zoom-4)*10);
+			//return (1-)/0.0099;
 		}

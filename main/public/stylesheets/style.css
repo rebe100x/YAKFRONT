@@ -37,6 +37,17 @@ abbr[title] {
 	top: 55%;
 	z-index:2001;
 }
+.searchYakwala .ui-widget-header {
+	background:transparent;
+
+}
+.searchYakwala .ui-slider .ui-slider-handle {
+	width:3px;
+}
+
+.searchYakwala .btn .caret{
+	margin-left:6px;
+}
 /* THE FEED PAGE
 ---------------------------------------------------*/
 #mainFeedWrapper {border: 0px solid #292929; background: #E8E8E8; font-family: helvetica,arial,sans-serif;}
@@ -171,8 +182,8 @@ abbr[title] {
 #newsNav ul.nav {margin-bottom:5px;}
 .nav-tabs li{width:50%;text-align:center;background-color:#c81119;}
 .nav-tabs li:hover{background-color: c81119;}
-.nav-tabs li a{color:#333333;}
-
+.nav-tabs li a{color:#333333;text-decoration:none;}
+.nav-tabs li a:hover{background:#c81119;border:1px solid #c81119;text-decoration:none;}
 
 
 	/*MAP TAB CONTENT*/

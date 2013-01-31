@@ -300,10 +300,10 @@ function setTimeSliderText(x, text){
 		yText = "Aujourd'hui";
 	}else{
 		if(x > 0){
-			y = Math.floor(Math.pow(x,2)/25); 
+			y = Math.floor(Math.pow(x,2)/64); 
 			//y = Math.floor(x/2);
 		}else{
-			y = (-1)*Math.floor(Math.pow(x,2)/25); 
+			y = (-1)*Math.floor(Math.pow(x,2)/64); 
 			//y = (-1)*Math.floor(x/2);
 			//y = Math.floor(-7.222723628*Math.pow(10,-7)*Math.pow(x,5) + 2.123355095*Math.pow(10,-4)*Math.pow(x,4) - 2.178300623*Math.pow(10,-2)*Math.pow(x,3) + 0.906040198*Math.pow(x,2) - 16.47223075*x + 360.0000001);
 		}
