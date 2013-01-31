@@ -250,6 +250,7 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 	font-size: 14px;
 	color: white;
 }
+
 .infowindow .date{color: #87888B;margin-right:5px;}
 .infowindow .date .timeago { margin-top: -28px; margin-right: 8px;}
 .infowindow .links{float:right;margin-right:3px;text-align:right;font-style:italic;font-size:0.8em;line-height: 1.5em;}
