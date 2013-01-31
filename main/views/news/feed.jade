@@ -373,7 +373,7 @@ block content
 			if (currentItem.find(".loadingMore").length > 0 || currentItem.find(".myitem").length > 0)
 			{
 				currentItem.find(".myitem").find(".icon-remove").remove();
-				currentItem.find(".yakTypeImage").append("<i class='icon-remove' title='close' style='float: right; clear: both;  position: absolute; right: 0px;' onclick='closemyitem(this); $(this).remove();'></i>");
+				currentItem.find(".yakTypeImage").append("<i class='icon-remove' title='close' style='float: right; clear: both;  position: absolute; right: 5%;' onclick='closemyitem(this); $(this).remove();'></i>");
 				currentItem.find(".myitem").show();
 				return;
 			}
@@ -387,7 +387,7 @@ block content
 				var item = createFeedPageItem(val);
 				currentItem.find(".loadingMore").remove();
 				currentItem.append(item);
-				currentItem.find(".myitem").append("<i class='icon-remove' title='close' style='float: right; clear: both; position: absolute; right: 0px;' onclick='closemyitem(this); $(this).remove();'></i>");
+				currentItem.find(".myitem").append("<i class='icon-remove' title='close' style='float: right; clear: both; position: absolute; right: 5%;' onclick='closemyitem(this); $(this).remove();'></i>");
 				setshortUrl();
 				setLikeSystem();
 
