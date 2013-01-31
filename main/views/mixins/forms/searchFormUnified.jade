@@ -323,7 +323,7 @@ mixin searchFormUnified(page)
 					property: 'title',
 					onselect: function(obj) { 
 						if(typeof(obj.name) != 'undefined')
-							$("#searchStr").val(obj.name);
+							$("#searchStr").val("@" + obj.name);
 						$("#searchBtn").click();
 						$("#searchStr").removeClass('searching');
 

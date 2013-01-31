@@ -277,10 +277,14 @@ block content
 			$('#newsfeed').delegate(".mapHighlighter",'click', function (e) {
 
 				//console.log(e.target);
-				if(!($.contains(this, e.target)))
-					{
+				if($(this).find(".myitem").length == 0)
+				{
 					getItemDetails(this);
-					}
+				}
+				else if(!($.contains(this, e.target)) || $(this).find(".myitem").css("display") == "none")
+				{
+					getItemDetails(this);
+				}
 				unhighlightInfo($(this),highlightInfo);
 			});
 
