@@ -94,9 +94,12 @@ mixin searchFormUnified(page)
 					$('#searchStr').val(decodeURIComponent(searchString.replace('%2520', ' ')));
 
 				// reset
+				$('#searchStr').click(function(){
+					$(this).select();
+				});
 				$('#searchStr').keyup(function(event){
 
-					if($(this).val().length >= 3)
+					if($(this).val().length >= 2)
 					{
 						$(this).addClass('searching');
 					}
@@ -114,10 +117,14 @@ mixin searchFormUnified(page)
 						searchString = encodeURIComponent($('#searchStr').val());
 					}
 
-					
-					$('#searchBtn').trigger('click');
+					if($(this).val().length >= 2)
+					{
+						$('#searchBtn').trigger('click');
+					}
 				});
-
+				$('#searchPlaceStr').click(function(){
+					$(this).select();
+				});
 				$('#searchPlaceStr').keyup(function(event){
 					var query = $("#searchPlaceStr").val();
 					if(query.length < 3)
@@ -324,6 +331,8 @@ mixin searchFormUnified(page)
 					onselect: function(obj) { 
 						if(typeof(obj.name) != 'undefined')
 							$("#searchStr").val("@" + obj.name);
+						else
+							$("#searchStr").val("#" + obj.title);	
 						$("#searchBtn").click();
 						$("#searchStr").removeClass('searching');
 

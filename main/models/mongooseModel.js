@@ -107,6 +107,7 @@ Info.statics.format = function (theinfo) {
 		title:theinfo.title,
 		content:theinfo.content,
 		thumb:thethumb,
+		thumbFlag: theinfo.thumbFlag,
 		yakType:theinfo.yakType,
 		print:theinfo.print,
 		dateEndPrint:theinfo.dateEndPrint,
@@ -357,7 +358,9 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,from,now,type,str,thecount,thesk
 		var thirdChar = str.substr(0,3);
 		var strClean = str.replace(/@/g,'').replace(/#/g,'').replace(/%23/g,'').replace(/%40/g,'');
 		var searchStr = new RegExp(strClean,'gi');
-		var searchExactStr = new RegExp("^"+strClean+"$",'gi');
+		//var searchExactStr = new RegExp("^"+strClean+"$",'gi');
+		var searchExactStr = new RegExp("(?:^| )(" + strClean + ")(?:$| )",'gi');
+
 		if(firstChar=='#' || thirdChar == '%23'){
 			Yakcat.findOne({'title': {$regex:searchStr}}).exec(function(err,theyakcat){
 				if(theyakcat == null){
@@ -379,14 +382,14 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,from,now,type,str,thecount,thesk
 				if(theyakcat == null){
 					User.findOne({'login':{$regex:searchExactStr}}).exec(function(err,theuser){
 						if(theuser == null){ // NO TAG, NO YAKCAT, NO USER
-							qInfo.or([ {'title': {$regex:searchStr}}, {'content': {$regex:searchStr}} , {"freeTag": {$regex:searchExactStr}} , {"yakTag": {$regex:searchExactStr}}]);
+							qInfo.or([ {'title': {$regex:searchExactStr}}, {'content': {$regex:searchExactStr}} , {"freeTag": {$regex:searchExactStr}} , {"yakTag": {$regex:searchExactStr}}]);
 						}else{
-							qInfo.or([ {'title': {$regex:searchStr}}, {'content': {$regex:searchStr}} , {"freeTag": {$regex:searchExactStr}} , {"yakTag": {$regex:searchExactStr}}, {'user':theuser._id}]);
+							qInfo.or([ {'title': {$regex:searchExactStr}}, {'content': {$regex:searchExactStr}} , {"freeTag": {$regex:searchExactStr}} , {"yakTag": {$regex:searchExactStr}}, {'user':theuser._id}]);
 						}
 						res = qInfo.exec(callback);
 					});
 				}else{
-					qInfo.or([ {'title': {$regex:searchStr}}, {'content': {$regex:searchStr}} , {"freeTag": {$regex:searchExactStr}} , {"yakTag": {$regex:searchExactStr}},{"yakCat": {$in:[theyakcat._id]}}]);
+					qInfo.or([ {'title': {$regex:searchExactStr}}, {'content': {$regex:searchExactStr}} , {"freeTag": {$regex:searchExactStr}} , {"yakTag": {$regex:searchExactStr}},{"yakCat": {$in:[theyakcat._id]}}]);
 					res = qInfo.exec(callback);
 				}
 			});

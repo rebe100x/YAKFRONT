@@ -102,5 +102,31 @@ mixin postForm()
 				stepMinute: 10,
 			});
 
+			$('#postForm').submit(function() {
+				var currType = $("input:radio[name='yakType']:checked").val();
+				$.cookie("yaktype", currType,{ expires: 10000, path : '/' });
+			});
+
 		});
+
+	- if(locals.user.type > 1)
+		script
+			$(document).ready(function() {
+				$('#postForm').submit(function() {
+					var currType = $("input:radio[name='yakType']:checked").val();
+					$.cookie("yaktype", currType,{ expires: 10000, path : '/' });
+				});
+
+			});
+
+	- if(locals.user.type == 1)
+		script
+			$(document).ready(function() {
+				$('#postForm').submit(function() {
+					var currType = 4;
+					$.cookie("yaktype", currType,{ expires: 10000, path : '/' });
+				});
+
+			});
+	
 	
