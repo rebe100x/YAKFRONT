@@ -501,7 +501,8 @@ width: 270px;
  }
 
  /* Header Yakwala */
-
+.dropdownRangeSelector {width: 136px; background: #f6f6f6; border: 0px; float: right; position: relative; right: 169px; clear: both;}
+.favplacelist li { padding-bottom: 23px;}
 .headerYakwala { background-color: white; }
 .headerYakwala .leftlink img { float: left; padding: 6px;}
 .headerYakwala .dropdown-toggle { float: right; margin-top: 19px;}
