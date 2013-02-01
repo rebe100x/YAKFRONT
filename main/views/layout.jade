@@ -1,3 +1,4 @@
+include mixins/footer.jade
 !!!
 html
 	head
@@ -32,9 +33,10 @@ html
 									
 		block head
 	body
+		mixin footer()	
 		block content
 		script
 			#{JSON.parse(conf).ga}
-			
+		
 			
 			

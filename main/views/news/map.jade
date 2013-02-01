@@ -277,8 +277,14 @@ block content
 			$('#newsfeed').delegate(".mapHighlighter",'click', function (e) {
 
 				//console.log(e.target);
-				if (e.target.className != "yakComments" && e.target.className != "yakLikes" && e.target.className != "yakTextarea" && e.target.className != "username" && e.target.className != "yakLikes" && e.target.className != "icon-thumbs-down" && e.target.className != "icon-thumbs-up")
+				if($(this).find(".myitem").length == 0)
+				{
 					getItemDetails(this);
+				}
+				else if(!($.contains(this, e.target)) || $(this).find(".myitem").css("display") == "none")
+				{
+					getItemDetails(this);
+				}
 				unhighlightInfo($(this),highlightInfo);
 			});
 
@@ -805,7 +811,7 @@ block content
 			cleanMarkers();
 			//searchString = encodeURIComponent(searchString);
 			
-			if(typeof(yakType) == 'undefined' || yakType.length == 0){
+			if(typeof(yakType) == 'undefined' || yakType.length == 0){;
 				printEmptyFeedItem();
 				return;
 			}
@@ -817,12 +823,12 @@ block content
 				apiUrl = '/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/0/'+yakType.toString()+'/'+searchString+'/500';
 			
 			console.log(apiUrl);
-			$.getJSON(apiUrl,function(ajax) {	
-			
+			$.getJSON(apiUrl,function(ajax) {
 				// empty the news feed
 				$('#newsfeed').html('');
 
 				if(typeof(ajax.data.info) == 'undefined' || ajax.data.info.length == 0){
+
 					//$('#newsfeed').html('Aucune info !');
 					printEmptyFeedItem();
 				}else{
@@ -839,6 +845,8 @@ block content
 				}
 				$("abbr.timeago").timeago();
 				$('#newsfeedContent').mCustomScrollbar("update");
+
+
 			});
 
 		}
@@ -1093,7 +1101,14 @@ block content
 
 		function printEmptyFeedItem(){
 			$('.emptyfeeditem').hide();
+			if($("#typeContainer .active").length > 0)
+			{
 			infoContent = "<div class=\'infowindow emptyfeeditem\'>Aucune info !</div>";					
+			}
+			else
+			{
+			infoContent = "<div class=\'infowindow emptyfeeditem\'>Choisissez un type d'info !!!</div>";					
+			}
 			$('#newsfeed').append('<li class=\'mapHighlighterDetails\'>'+infoContent+'</li>');
 		}
 
@@ -1123,7 +1138,7 @@ block content
 			if (currentItem.find(".loadingMore").length > 0 || currentItem.find(".myitem").length > 0)
 			{
 				currentItem.find(".myitem").find(".icon-remove").remove();
-				currentItem.find(".yakTypeImage").append("<i class='icon-remove' title='close' style='float: right; clear: both;  position: absolute; right: 0px;' onclick='closemyitem(this); $(this).remove();'></i>");
+				currentItem.find(".yakTypeImage").append("<i class='icon-remove' title='close' style='float: right; clear: both;  position: absolute; right: 5%;' onclick='closemyitem(this);'></i>");
 				currentItem.find(".myitem").show();
 				return;
 			}
@@ -1132,12 +1147,14 @@ block content
 			
 			currentItem.append('<img src="images/loader_big.gif" class="loadingMore">');
 			$.getJSON('/api/afeed', { id: infoid } ,function(data) {
-
+				//console.log(data.info[0]);
+				
 				var val = data.info[0];
+				
 				var item = createFeedPageItem(val);
 				currentItem.find(".loadingMore").remove();
 				currentItem.append(item);
-				currentItem.find(".myitem").append("<i class='icon-remove' title='close' style='float: right; clear: both; position: absolute; right: 0px;' onclick='closemyitem(this); $(this).remove();'></i>");
+				currentItem.find(".myitem").append("<i class='icon-remove' title='close' style='float: right; clear: both; position: absolute; right: 5%;' onclick='closemyitem(this);'></i>");
 				setshortUrl();
 				setLikeSystem();
 
@@ -1174,6 +1191,7 @@ block content
 			$("ul#newsfeed li").removeAttr("style");
 			$("ul#newsfeed").removeAttr("style");
 			currentItem.find('.myitem').hide();
+			currentItem.find(".icon-remove").remove();
 		}
 
 		function createFeedPageItem(val)

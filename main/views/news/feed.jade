@@ -93,10 +93,10 @@ block content
 			
 			
 			$('#newsfeed').delegate(".mapHighlighter",'click', function (e) {
-
-				//console.log(e.target);
-				if (e.target.className != "yakComments" && e.target.className != "yakLikes" && e.target.className != "yakTextarea" && e.target.className != "username" && e.target.className != "yakLikes" && e.target.className != "icon-thumbs-down" && e.target.className != "icon-thumbs-up")
+				if(!$.contains($(this), e.target))
+					{
 					getItemDetails(this);
+					}
 				
 			});
 
@@ -336,7 +336,14 @@ block content
 
 		function printEmptyFeedItem(){
 			$('.emptyfeeditem').hide();
+			if($("#typeContainer .active").length > 0)
+			{
 			infoContent = "<div class=\'infowindow emptyfeeditem\'>Aucune info !</div>";					
+			}
+			else
+			{
+			infoContent = "<div class=\'infowindow emptyfeeditem\'>Choisissez un type d'info !!!</div>";					
+			}
 			$('#newsfeed').append('<li class=\'mapHighlighterDetails\'>'+infoContent+'</li>');
 		}
 
@@ -366,7 +373,7 @@ block content
 			if (currentItem.find(".loadingMore").length > 0 || currentItem.find(".myitem").length > 0)
 			{
 				currentItem.find(".myitem").find(".icon-remove").remove();
-				currentItem.find(".yakTypeImage").append("<i class='icon-remove' title='close' style='float: right; clear: both;  position: absolute; right: 0px;' onclick='closemyitem(this); $(this).remove();'></i>");
+				currentItem.find(".yakTypeImage").append("<i class='icon-remove' title='close' style='float: right; clear: both;  position: absolute; right: 5%;' onclick='closemyitem(this); '></i>");
 				currentItem.find(".myitem").show();
 				return;
 			}
@@ -380,7 +387,7 @@ block content
 				var item = createFeedPageItem(val);
 				currentItem.find(".loadingMore").remove();
 				currentItem.append(item);
-				currentItem.find(".myitem").append("<i class='icon-remove' title='close' style='float: right; clear: both; position: absolute; right: 0px;' onclick='closemyitem(this); $(this).remove();'></i>");
+				currentItem.find(".myitem").append("<i class='icon-remove' title='close' style='float: right; clear: both; position: absolute; right: 5%;' onclick='closemyitem(this);'></i>");
 				setshortUrl();
 				setLikeSystem();
 
@@ -417,6 +424,7 @@ block content
 			$("ul#newsfeed li").removeAttr("style");
 			$("ul#newsfeed").removeAttr("style");
 			currentItem.find('.myitem').hide();
+			currentItem.find(".icon-remove").remove();
 		}
 
 

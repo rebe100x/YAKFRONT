@@ -949,7 +949,8 @@ function drawAComment(val, from)
 	
 	var username = val.username;
 	var userid = val.userid;
-	var comment =  wordFilter(val.comment.toString()).linkify();
+	//var comment =  wordFilter(val.comment.toString()).linkify();
+	var comment =  wordFilter(val.comment.toString());
 	var thumb	 = val.userthumb;
 	date = "";
 	if (typeof(val.date) != 'undefined' ) {
