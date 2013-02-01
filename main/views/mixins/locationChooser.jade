@@ -17,7 +17,8 @@ mixin locationChooser(page)
 									//
 										div.theslider(title=favplace.range, alt=favplace._id)
 										span.localnessPrinter Local
-									select.dropdownRangeSelector(alt=favplace._id)
+									span.mylocalnessPrinter(style="display: none")
+									select.dropdownRangeSelector(alt=favplace._id, range=favplace.range)
 										option(value="70", rangeText="Local")
 											|Local
 										option(value="80", rangeText="Très Local")
@@ -75,31 +76,30 @@ mixin locationChooser(page)
 		script
 			/*endroits favoris*/
 			$('ul.favplacelist').delegate("li.zoneLoc span",'click', function () {
-				var currentSliderValue = $(this).parent().find('.theslider').attr('alt');
+				
 				curPos.name = $(this).parent().find("span").eq(0).html();
 				curPos.x =  $(this).parent().attr("lat");
 				curPos.y =  $(this).parent().attr("lng");
-				curPos.z =  currentSliderValue;
+				curPos.z =  $(this).parent().find(".dropdownRangeSelector").val();
 				$("#searchPlaceStr").val(curPos.name);
-				$("#rangeSelector").find("a.ui-slider-handle").css("left", currentSliderValue + "%");
-				$("#rangeSelector").find("div.ui-slider-range").css("width", currentSliderValue + "%");
-				$("#rangeSelector").parent().find("#localnessPrinter").html($(this).parent().find(".localnessPrinter").html());
+				$("#localnessPrinter").html($(this).parent().find(".dropdownRangeSelector option:selected").text());
+				
+				changeRange();
 				moveMap();
+
 
 			});	
 	- if(page == 'feed')
 		script
 			/*endroits favoris*/
 			$('ul.favplacelist').delegate("li.zoneLoc span",'click', function () {
-				var currentSliderValue = $(this).parent().find('.theslider').attr('title');
+				
 				curPos.name = $(this).parent().find("span").eq(0).html();
 				curPos.x =  $(this).parent().attr("lat");
 				curPos.y =  $(this).parent().attr("lng");
-				curPos.z =  currentSliderValue;
+				curPos.z =  $(this).parent().find(".dropdownRangeSelector").val();
 				$("#searchPlaceStr").val(curPos.name);
-				$("#rangeSelector").find("a.ui-slider-handle").css("left", currentSliderValue + "%");
-				$("#rangeSelector").find("div.ui-slider-range").css("width", currentSliderValue + "%");
-				$("#rangeSelector").parent().find("#localnessPrinter").html($(this).parent().find(".localnessPrinter").html());
+				$("#localnessPrinter").html($(this).parent().find(".dropdownRangeSelector option:selected").text());
 				changeRange();
 			});	
 		
@@ -107,11 +107,12 @@ mixin locationChooser(page)
 	script
 			$(document).ready(function(){
 				var uldropdownRangeSelector = $("<select />");
+				uldropdownRangeSelector.attr("class", "dropdownRangeSelector")
 				uldropdownRangeSelector.append('<option value="70">Local</li>');
 				uldropdownRangeSelector.append('<option value="80">Très Local</li>');
 				uldropdownRangeSelector.append('<option value="100">Super local</li>');
 				uldropdownRangeSelector.append('<option value="120">Hyper local</li>');
-
+				uldropdownRangeSelector.hide();
 				uldropdownRangeSelector.find("option").each(function(){
 					if($(this).attr("value") == user.addressZoom)
 						$(this).attr("selected", "selected");
@@ -131,15 +132,24 @@ mixin locationChooser(page)
 
 				$(".dropdownRangeSelector").change(function(){
 					var favPlaceId = changePlaceRange($(this).attr("alt"), $(this).parent().attr("lat"), $(this).parent().attr("lng"), $(this).parent().attr("pointname"), $(this).val());
+
 					$(this).attr("alt", favPlaceId);
 				});
 
 				$(".dropdownRangeSelector").find("option").each(function(){
-					if($(this).attr("value") == user.addressZoom)
+					if($(this).attr("value") == $(this).parent().attr("range"))
 						$(this).attr("selected", "selected");
 					else
 						$(this).removeAttr("selected");
 				});
 
 			});
+
+			function changemyrange(el)
+			{
+				var favPlaceId = changePlaceRange($(el).attr("alt"), $(el).parent().attr("lat"), $(el).parent().attr("lng"), $(el).parent().attr("pointname"), $(el).val());
+
+				$(el).attr("alt", favPlaceId);
+			}
+
 		
