@@ -118,7 +118,7 @@ block content
 		
 		function silentUpdater(){
 			
-			searchString = encodeURIComponent(searchString).replace(/%2520/g, ' ');		
+			//searchString = encodeURIComponent(searchString).replace(/%2520/g, ' ');		
 			
 			//bounds = map.getBounds();
 			
@@ -172,7 +172,7 @@ block content
 			else	
 				apiUrl = '/api/geoinfos/'+curPos.x+'/'+curPos.y+'/'+rangeFromZ()+'/'+'null'+'/'+dateFrom+'/0/'+yakType.toString()+'/'+searchString+'/500';
 			
-			console.log(apiUrl);
+			//console.log(apiUrl);
 			$.getJSON(apiUrl,function(ajax) {	
 			
 				// empty the news feed
@@ -387,10 +387,13 @@ block content
 				
 				var val = data.info[0];
 
-				thumbImage = conf.batchurl + val.thumb;
-
-				mediumImage = thumbImage.replace("thumb", "medium");
-				
+				if(val.user != undefined){
+					thumbImage = 	conf.fronturl+'/pictures/120_90/'+val.thumb;
+					mediumImage = 	conf.fronturl+'/pictures/512_0/'+val.thumb;
+				}else{
+					thumbImage = 	conf.batchurl+val.thumb;
+					mediumImage = 	thumbImage.replace('thumb', 'medium');
+				}
 
 				var item = createFeedPageItem(val);
 				currentItem.find(".loadingMore").remove();

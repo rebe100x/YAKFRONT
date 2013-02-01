@@ -12,6 +12,7 @@ a {
   position:relative;
   z-index:2000;
 }
+img{border:0px;}
 
 /* GENERAL
 -------------------------------------------------- */
@@ -268,7 +269,7 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 .infowindow .thumbImage { float: left;  margin-left: 0px;}
 .infowindow .thumbImage img { float: left; width:auto;height:75;}
 
-.infowindow .itemTitle { font-size: 13px; font-weight: bold; color: #5D5D5D; left: 3px; padding-right: 20px; position: relative; text-align: justify;}
+.infowindow .itemTitle { font-size: 13px; font-weight: bold; color: #5D5D5D; left: 20px; padding-right: 20px; position: relative; text-align: justify;}
 
 .infowindow .postedBy { position: relative; left: 12px; padding-right: 12px; font-size: 11px;}
 
@@ -512,7 +513,7 @@ width: 270px;
 
 .searchYakwala { background-color: #f6f6f6; height: 40px; float: left;}  
 .searchYakwala #searchBtn {background-image:url('../images/new/go.png'); width: 27px; height: 27px; border: 0px; margin: 7px; float: left;}
-.searchYakwala .customInput{ width: 100px; margin-top: 6px; float: left; margin-left: 6px;}
+.searchYakwala .customInput{ width: 150px; margin-top: 6px; float: left; margin-left: 6px;}
 .searchYakwala .myi { position: relative; top: 12px; float: left;}
 .searchYakwala .verticalSplitter { width: 1px; height: 43px; background-color: #cecece; margin-left: 12px;}
 .searchYakwala .filterText { position: relative; top: 11px; float: left; margin-left: 12px; font-size: 14px;}

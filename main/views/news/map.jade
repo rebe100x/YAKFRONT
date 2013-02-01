@@ -375,7 +375,7 @@ block content
 						yakcatArray.push(obj);
 						$("#yakcatInput").val(JSON.stringify(yakcatArray));
 						
-						console.log(yakcatArray);
+						
 					}
 				});
 				
@@ -763,7 +763,7 @@ block content
 		
 		function silentUpdater(){
 			
-			searchString = encodeURIComponent(searchString).replace(/%2520/g, ' ');		
+			//searchString = encodeURIComponent(searchString).replace(/%2520/g, ' ');		
 			
 			//bounds = map.getBounds();
 			bounds = getMyBounds();
@@ -822,7 +822,7 @@ block content
 			else	
 				apiUrl = '/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/0/'+yakType.toString()+'/'+searchString+'/500';
 			
-			console.log(apiUrl);
+			//console.log(apiUrl);
 			$.getJSON(apiUrl,function(ajax) {
 				// empty the news feed
 				$('#newsfeed').html('');
@@ -854,7 +854,7 @@ block content
 				success: function( ajax ) {
 					//console.log(ajax);
 					var placeGmap = getPlaceFromGmapResult(ajax.results[0]);
-					console.log(placeGmap);
+					//console.log(placeGmap);
 					$("#searchPlaceStr").val(placeGmap.address.city + ", " + placeGmap.address.country);
 				}
 			});
@@ -1157,10 +1157,17 @@ block content
 				//console.log(data.info[0]);
 				
 				var val = data.info[0];
+				
+				if(val.user != undefined){
+					thumbImage = 	conf.fronturl+'/pictures/120_90/'+val.thumb;
+					mediumImage = 	conf.fronturl+'/pictures/512_0/'+val.thumb;
+				}else{
+					thumbImage = 	conf.batchurl+val.thumb;
+					mediumImage = 	thumbImage.replace('thumb', 'medium');
+				}
 
-				thumbImage = conf.batchurl + val.thumb;
 
-				mediumImage = thumbImage.replace("thumb", "medium");
+				
 				
 
 				var item = createFeedPageItem(val);

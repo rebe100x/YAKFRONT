@@ -1,7 +1,7 @@
 exports.confs = {
 	"main": {
 		"imgSizeAvatar": [{"width":128,"height":128},{"width":48,"height":48},{"width":24,"height":24}],
-		"imgSizeInfo": [{"width":120,"height":90},{"width":320,"height":240},{"width":512,"height":0}],
+		"imgSizeInfo": [{"width":120,"height":90},{"width":256,"height":0},{"width":512,"height":0}],
 		"imgSizePlace": [{"width":120,"height":90},{"width":320,"height":240},{"width":512,"height":0}],
 		"searchParams": {"subSize": 200,"limit": 10, "sliderMin" : 1, "sliderMax" : 10, "sliderDefault": 20},
 		"rangeDefault":80,
@@ -24,7 +24,7 @@ exports.confs = {
 		"dbname":"yakwala",
 		"env":"DEV",
 		"uploadsDir":__dirname+"\\public\\uploads\\",
-		"ga":"console.log('dev mode: no analytics');"
+		"ga":""
 	},
 	
 	"devdany" : {
@@ -42,7 +42,7 @@ exports.confs = {
 		"dbname":"yakwala",
 		"env":"DEV",
 		"uploadsDir":__dirname+"\\public\\uploads\\",
-		"ga":"console.log('preprod mode: no analytics');"
+		"ga":""
 	},
 	
 	"preprod" : {
