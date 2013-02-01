@@ -28,7 +28,9 @@ block content
 					h4#auth_1 Do you need to authenticate?
 					p For the most part, Yakwala's API only requires the use of a client_id. A client_id simply associates your server, script, or program with a specific application. However, some requests require authentication - specifically requests made on behalf of a user. 
 					p Authenticated requests require an access_token.  These tokens are unique to a user and should be stored securely. Access tokens may expire at any time in the future.
-					p To authenticate, you need a validated user account. See <a class='insideLink' href="/#endpoint_usercreate">this section </a>to know how to create and validate an account with the api.
+					p To authenticate, you need a validated user account that you can create from the front end or from the api ( see this <a class='insideLink' href="#endpoint_user">section</a>)
+					
+
 					br
 					h4#auth_2 Receiving an access_token
 					p In order to receive an access_token, you must do the following:
@@ -442,7 +444,7 @@ block content
 									tr
 										td Parameters:
 											ul
-												li <b>access_token :</b> see the <a class='insideLink' href="/#authentification">authentification doc</a> to get a valid token.
+												li <b>access_token :</b> see the <a class='insideLink' href="#authentification">authentification doc</a> to get a valid token.
 												li <b>user :</b> JSON object {
 												div &nbsp;&nbsp;&nbsp;&nbsp;<b>name</b>: string,
 												div &nbsp;&nbsp;&nbsp;&nbsp;<b>mail</b>: string,
@@ -502,14 +504,14 @@ block content
 												li v=1 - the version of the api
 												li local=  'fr' - response language
 										td Response
-											div Array of <a class='insideLink' href="/#format_lightUser">lightUser</a> objects
+											div Array of <a class='insideLink' href="#format_lightUser">lightUser</a> objects
 								table.table.table-bordered
 									tr
 										td POST : create a subscribtion to a user feed
 									tr
 										td Parameters :
 											ul
-												li <b>access_token :</b> see the <a class='insideLink' href="/#authentification">authentification doc</a> to get a valid token.
+												li <b>access_token :</b> see the <a class='insideLink' href="#authentification">authentification doc</a> to get a valid token.
 												li <b>usersubs</b>: [string] Array of user ids
 										td Response
 											div returns the code 200 if operation succeeded
@@ -520,7 +522,7 @@ block content
 									tr
 										td Parameters :
 											ul
-												li <b>access_token :</b> see the <a class='insideLink' href="/#authentification">authentification doc</a> to get a valid token.
+												li <b>access_token :</b> see the <a class='insideLink' href="#authentification">authentification doc</a> to get a valid token.
 												li <b>usersubs</b>: [string] Array of user ids
 										td Response
 											li returns the code 200 if operation succeeded
@@ -531,7 +533,7 @@ block content
 									tr
 										td Parameters :
 											ul
-												li <b>access_token :</b> see the <a class='insideLink' href="/#authentification">authentification doc</a> to get a valid token.
+												li <b>access_token :</b> see the <a class='insideLink' href="#authentification">authentification doc</a> to get a valid token.
 												li <b>usersubs</b>: string - the user id to delete
 										td Response
 											li returns the code 200 if operation succeeded
@@ -567,7 +569,7 @@ block content
 									tr
 										td Parameters :
 											ul
-												li <b>access_token :</b> see the <a class='insideLink' href="/#authentification">authentification doc</a> to get a valid token.
+												li <b>access_token :</b> see the <a class='insideLink' href="#authentification">authentification doc</a> to get a valid token.
 												li <b>tagsubs</b>: Array of strings : ["tag1","tag2","tag3"]
 										td Response
 											div returns the code 200 if operation succeeded
@@ -578,7 +580,7 @@ block content
 									tr
 										td Parameters :
 											ul
-												li <b>access_token :</b> see the <a class='insideLink' href="/#authentification">authentification doc</a> to get a valid token.
+												li <b>access_token :</b> see the <a class='insideLink' href="#authentification">authentification doc</a> to get a valid token.
 												li <b>tagsubs</b>: Array of strings : ["tag1","tag2","tag3"]
 										td Response
 											li returns the code 200 if operation succeeded
@@ -589,7 +591,7 @@ block content
 									tr
 										td Parameters :
 											ul
-												li <b>access_token :</b> see the <a class='insideLink' href="/#authentification">authentification doc</a> to get a valid token.
+												li <b>access_token :</b> see the <a class='insideLink' href="#authentification">authentification doc</a> to get a valid token.
 												li <b>usersubs</b>: string ( the name of the tag)
 										td Response
 											li returns the code 200 if operation succeeded
@@ -618,15 +620,15 @@ block content
 												li v=1 - the version of the api
 												li local=  'fr' - response language
 										td Response
-											div Array of <a class='insideLink' href="/#format_lightPlace">lightPlace</a> objects
+											div Array of <a class='insideLink' href="#format_lightPlace">lightPlace</a> objects
 								table.table.table-bordered
 									tr
 										td POST : create a favorite place
 									tr
 										td Parameters :
 											ul
-												li <b>access_token :</b> see the <a class='insideLink' href="/#authentification">authentification doc</a> to get a valid token.
-												li <b>favplace</b>: Array of JSON objects <a class='insideLink' href="/#format_lightPlace">lightPlace</a> objects
+												li <b>access_token :</b> see the <a class='insideLink' href="#authentification">authentification doc</a> to get a valid token.
+												li <b>favplace</b>: Array of JSON objects <a class='insideLink' href="#format_lightPlace">lightPlace</a> objects
 										td Response
 											div returns the code 200 if operation succeeded
 										
@@ -636,7 +638,7 @@ block content
 									tr
 										td Parameters :
 											ul
-												li <b>access_token :</b> see the <a class='insideLink' href="/#authentification">authentification doc</a> to get a valid token.
+												li <b>access_token :</b> see the <a class='insideLink' href="#authentification">authentification doc</a> to get a valid token.
 												li <b>favplace</b>: Array of JSON lightPlace objects.
 										td Response
 											li returns the code 200 if operation succeeded
@@ -647,7 +649,7 @@ block content
 									tr
 										td Parameters :
 											ul
-												li <b>access_token :</b> see the <a class='insideLink' href="/#authentification">authentification doc</a> to get a valid token.
+												li <b>access_token :</b> see the <a class='insideLink' href="#authentification">authentification doc</a> to get a valid token.
 												li <b>favplace</b>: string - id of the favplace to delete
 										td Response
 											li returns the code 200 if operation succeeded
@@ -682,14 +684,14 @@ block content
 									tr
 										td Response :
 											ul
-												li Array of <a class='insideLink' href="/#format_info">info</a> objects
+												li Array of <a class='insideLink' href="#format_info">info</a> objects
 								table.table.table-bordered
 									tr
 										td POST/PUT : 
 									tr
 										td Paramaters:
 											ul
-												li <b>access_token :</b> see the <a class='insideLink' href="/#authentification">authentification doc</a> to get a valid token
+												li <b>access_token :</b> see the <a class='insideLink' href="#authentification">authentification doc</a> to get a valid token
 												li <b>info</b> : JSON object 
 													div {
 													div &nbsp;&nbsp;<b>_id</b> : string, 
@@ -742,7 +744,7 @@ block content
 													div &nbsp;&nbsp;<b>freetag</b> : [string,string], 
 														i.muted array of string tags 
 													div &nbsp;&nbsp;<b>yakCat</b> : ['id1xxxx','id2xxxx'], 
-														i.muted array of Yakwala categories <a class='insideLink' href="/#endpoint_yakcatsearch"> see here to search in Yakcats</a>
+														i.muted array of Yakwala categories <a class='insideLink' href="#endpoint_yakcatsearch"> see here to search in Yakcats</a>
 													}
 												li <b>picture</b> : posted image 
 													i.muted The photo should be uploaded as a jpeg and the Content-Type should be set to "image/jpeg". Images may not exceed 5MB in size.
@@ -751,7 +753,7 @@ block content
 									tr
 										td Response:
 											ul
-												li returns the code 200 if operation succeeded or a <a class='insideLink' href="/#format_response">standard error</a> object if failed
+												li returns the code 200 if operation succeeded or a <a class='insideLink' href="#format_response">standard error</a> object if failed
 									tr
 										td Non RESTfull method in POST : /api/user/updatefeed/<code>userid</code>
 									
@@ -761,7 +763,7 @@ block content
 										tr
 											td Paramaters:
 												ul
-													li <b>access_token :</b> see the <a class='insideLink' href="/#authentification">authentification doc</a> to get a valid token.
+													li <b>access_token :</b> see the <a class='insideLink' href="#authentification">authentification doc</a> to get a valid token.
 													li <b>info :</b> string - the info id to delete
 										tr
 											td Response:
@@ -851,7 +853,7 @@ block content
 												li local=  'fr' - response language
 										tr
 											td Response:
-												div Array of <a class='insideLink' href="/#format_lightUser">lightUser</a> objects
+												div Array of <a class='insideLink' href="#format_lightUser">lightUser</a> objects
 
 
 					h4#endpoint_infosearch Search in infos
@@ -894,7 +896,7 @@ block content
 												li searchString : string to search for in title and descriptions of infos. Send 'null' to get all news.
 									tr			
 										td Response
-											div Array of <a class='insideLink' href="/#format_info">Info</a> objects
+											div Array of <a class='insideLink' href="#format_info">Info</a> objects
 					
 
 					h4#endpoint_placesearch Search in places
@@ -958,7 +960,7 @@ block content
 												li local:string - response language - <b>default:</b>  'fr'
 									tr			
 										td Response
-											div Array of <a class='insideLink' href="/#format_yakcat">Yakcat</a> objects
+											div Array of <a class='insideLink' href="#format_yakcat">Yakcat</a> objects
 						
 
 					h4#endpoint_tagsearch Search in tags
@@ -992,7 +994,7 @@ block content
 
 									tr			
 										td Response
-											div Array of <a class='insideLink' href="/#format_yakcat">Yakcat</a> objects						
+											div Array of <a class='insideLink' href="#format_yakcat">Yakcat</a> objects						
 					
 
 
@@ -1023,7 +1025,7 @@ block content
 									tr
 										td Response :
 											ul
-												li Array of <a class='insideLink' href="/#format_place">place</a> objects
+												li Array of <a class='insideLink' href="#format_place">place</a> objects
 								table.table.table-bordered
 									tr
 										td POST/PUT : 
@@ -1034,7 +1036,7 @@ block content
 									tr
 										td Paramaters:
 											ul
-												li <b>access_token :</b> see the <a class='insideLink' href="/#authentification">authentification doc</a> to get a valid token.
+												li <b>access_token :</b> see the <a class='insideLink' href="#authentification">authentification doc</a> to get a valid token.
 												li <b>place</b> : JSON object 
 												{
 												div &nbsp;&nbsp;<b>_id</b> : string, 
@@ -1083,7 +1085,7 @@ block content
 									tr
 										td Response:
 											ul
-												li returns the code 200 if operation succeeded or a <a class='insideLink' href="/#format_response">standard error</a> object if failed
+												li returns the code 200 if operation succeeded or a <a class='insideLink' href="#format_response">standard error</a> object if failed
 									tr
 										td Non RESTfull method in POST : /api/updateplace/<code>userid</code>
 									
@@ -1093,7 +1095,7 @@ block content
 										tr
 											td Paramaters:
 												ul
-													li <b>access_token :</b> see the <a class='insideLink' href="/#authentification">authentification doc</a> to get a valid token.
+													li <b>access_token :</b> see the <a class='insideLink' href="#authentification">authentification doc</a> to get a valid token.
 													li <b>place :</b> placeid
 										tr
 											td Response:

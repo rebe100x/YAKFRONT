@@ -57,7 +57,8 @@ mongoose.model('infoTitles', infoTitles);
 var Info = new Schema({
     title     : { type: String,required: true,}
   , content	: {type: String}		
-  , thumb	: {type: String}		
+  , thumb	: {type: String}
+  , thumbFlag :{type:Number,default:0}		
   , origin	: {type: String}		
   , access	: {type: Number}
   , licence	: {type: String}		

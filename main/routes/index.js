@@ -147,12 +147,14 @@ exports.news = function(req, res){
 				theYakType = 4;			
 		}
 
+		var thumbFlag = 0;
 		var infoThumb = new Object();
 		if(req.files.picture.size && req.files.picture.size > 0 && req.files.picture.size < 1048576*5){
 			var drawTool = require('../mylib/drawlib.js');
 			var size = mainConf.imgSizeInfo;
 			infoThumb = drawTool.StoreImg(req.files.picture,size,conf);
-			formMessage.push(infoThumb.msg);	
+			formMessage.push(infoThumb.msg);
+			thumbFlag = 2;	
 		}
 		else
 			infoThumb.err = 0;
@@ -236,6 +238,7 @@ exports.news = function(req, res){
 				info.status = 1;
 				info.yakType = Math.floor(theYakType);
 				info.thumb = infoThumb.name;
+				info.thumbFlag = thumbFlag;
 				info.licence = 'Yakwala';
 				info.heat = 80;
 				var freeTags = req.body.freetag.split(',');
