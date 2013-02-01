@@ -331,6 +331,8 @@ mixin searchFormUnified(page)
 					onselect: function(obj) { 
 						if(typeof(obj.name) != 'undefined')
 							$("#searchStr").val("@" + obj.name);
+						else
+							$("#searchStr").val("#" + obj.title);	
 						$("#searchBtn").click();
 						$("#searchStr").removeClass('searching');
 

@@ -58,6 +58,7 @@ var Info = new Schema({
     title     : { type: String,required: true,}
   , content	: {type: String}		
   , thumb	: {type: String}		
+  , thumbFlag: {type: Number, default: 0}
   , origin	: {type: String}		
   , access	: {type: Number}
   , licence	: {type: String}		
@@ -106,6 +107,7 @@ Info.statics.format = function (theinfo) {
 		title:theinfo.title,
 		content:theinfo.content,
 		thumb:thethumb,
+		thumbFlag: theinfo.thumbFlag,
 		yakType:theinfo.yakType,
 		print:theinfo.print,
 		dateEndPrint:theinfo.dateEndPrint,
@@ -358,7 +360,7 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,from,now,type,str,thecount,thesk
 		var searchStr = new RegExp(strClean,'gi');
 		//var searchExactStr = new RegExp("^"+strClean+"$",'gi');
 		var searchExactStr = new RegExp("(?:^| )(" + strClean + ")(?:$| )",'gi');
-		
+
 		if(firstChar=='#' || thirdChar == '%23'){
 			Yakcat.findOne({'title': {$regex:searchStr}}).exec(function(err,theyakcat){
 				if(theyakcat == null){

@@ -149,7 +149,7 @@ abbr[title] {
 
 /*MAP TOP CONTROLLER*/
 #newsfeedContainer #boxOpener{position: relative;text-align: center; font-weight:bold;line-height:18px;color:white;background-color:#D8242B;cursor:pointer} 
-#newsfeedContainer{position:relative;overflow:auto;height:auto;margin: 10px 5px 0 0;opacity:0.95;}
+#newsfeedContainer{position:relative;overflow:auto;height:auto;margin: 10px 5px 0 0;opacity:0.95; overflow-x: hidden;}
 
 #newsfeedMenu #searchBox { position: relative;text-align: center; height: 28px;}
 
@@ -198,7 +198,7 @@ abbr[title] {
 .mCSB_scrollTools .mCSB_buttonDown {background-position: -80px -20px;}
 .mCSB_container {margin-right: 5px;}
 		/*NEWS FEED*/
-#newsfeedContent{position:relative;display:block;overflow:auto;height:0px;z-index:2000;}
+#newsfeedContent{position:relative;display:block;overflow:auto;height:0px;z-index:2000; overflow-x: hidden}
 .mapHighlighter{cursor:pointer;-webkit-border-radius: 2px;border-radius: 2px;}
 .mapHighlighter:hover{background-color:#F0F0F0;}
 .mapHighlighterDetails{display:block;}
@@ -262,13 +262,13 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 
 		/*POST*/
 
-.infowindow .yakTypeImage { float: left; width:15px;height:22px; z-index: 111; position: absolute;}
+.infowindow .yakTypeImage { float: left; width:100%;height:22px; z-index: 111; position: absolute;}
 .infowindow .yakTypeImage img { float: left; width:15px;height:22px;}
 
 .infowindow .thumbImage { float: left;  margin-left: 0px;}
 .infowindow .thumbImage img { float: left; width:auto;height:75;}
 
-.infowindow .itemTitle { font-size: 13px; font-weight: bold; color: #5D5D5D; left: 12px; padding-right: 12px; position: relative; text-align: justify;}
+.infowindow .itemTitle { font-size: 13px; font-weight: bold; color: #5D5D5D; left: 3px; padding-right: 20px; position: relative; text-align: justify;}
 
 .infowindow .postedBy { position: relative; left: 12px; padding-right: 12px; font-size: 11px;}
 
@@ -276,7 +276,7 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 
 .infowindow .infodetail{float:left;width:100%;font-style:italic;font-size:0.8em;line-height: 1.5em; clear: both;}
 .infowindow .infodetail a{color:#0C0C0C;}
-
+.infowindow .icon-remove { float: right; clear: both;  position: absolute; right: 5%;}
 
 
 
@@ -299,6 +299,7 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 .currentDetails .myitem .commentBox .comment { color: black; margin-bottom: 12px;}
 .currentDetails .myitem .commentBox textarea { width: 97%; height: 50px; margin-top: 2px; margin-left: 0px;}
 .currentDetails .myitem i.icon-chevron-up { }
+.currentDetails .icon-remove { float: right; clear: both;  position: absolute; right: 5%;}
 
 
 .currentDetails{

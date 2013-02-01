@@ -20,7 +20,7 @@ block content
 				div#topsFeed
 					
 	style
-		#newsfeedContent{position:relative;display:block;overflow:auto;height:auto;z-index:2000;}				
+		#newsfeedContent{position:relative;display:block;overflow:auto;height:auto;z-index:2000; overflow-x: hidden;}				
 	link(rel='stylesheet', href='/javascripts/lib/jquery/css/share.css')
 	script(src="/javascripts/lib/jquery/js/timeago.js")	
 	script(src="/javascripts/lib/jquery/js/share.js")	
@@ -45,6 +45,8 @@ block content
 		var placeArray = [];
 		var hashtag = [];
 		var hashtagTmp = [];
+		var mediumImage;
+		var thumbImage;
 			
 		var markerClustererOptions = {gridSize:30,maxZoom: 17,styles: [{height: 28,width: 28,url: "/images/markers/m1.png"},{height: 38,width: 38,url: "/images/markers/m2.png"},{height: 55,width:55,url: "/images/markers/m3.png"},{height: 85,width: 85,url: "/images/markers/m4.png"},{height: 85,width: 85,url: "/images/markers/m5.png"}]};
 		var markerCluster = null;
@@ -357,7 +359,8 @@ block content
 			$('#newsfeedContent').mCustomScrollbar("update");
 		}
 
-		function getItemDetails(el){
+
+			function getItemDetails(el){
 			
 			
 
@@ -367,13 +370,11 @@ block content
 
 			var infoid = currentItem.attr("infoid");
 
-			currentItem.addClass("currentDetails");
-			currentItem.removeClass("infowindow");
-
+			
 			if (currentItem.find(".loadingMore").length > 0 || currentItem.find(".myitem").length > 0)
 			{
 				currentItem.find(".myitem").find(".icon-remove").remove();
-				currentItem.find(".yakTypeImage").append("<i class='icon-remove' title='close' style='float: right; clear: both;  position: absolute; right: 5%;' onclick='closemyitem(this); '></i>");
+				currentItem.find(".yakTypeImage").append("<i class='icon-remove' title='close' onclick='closemyitem(this);'></i>");
 				currentItem.find(".myitem").show();
 				return;
 			}
@@ -382,16 +383,43 @@ block content
 			
 			currentItem.append('<img src="images/loader_big.gif" class="loadingMore">');
 			$.getJSON('/api/afeed', { id: infoid } ,function(data) {
-
+				//console.log(data.info[0]);
+				
 				var val = data.info[0];
+
+				thumbImage = conf.batchurl + val.thumb;
+
+				mediumImage = thumbImage.replace("thumb", "medium");
+				
+
 				var item = createFeedPageItem(val);
 				currentItem.find(".loadingMore").remove();
 				currentItem.append(item);
-				currentItem.find(".myitem").append("<i class='icon-remove' title='close' style='float: right; clear: both; position: absolute; right: 5%;' onclick='closemyitem(this);'></i>");
+				currentItem.find(".myitem").append("<i class='icon-remove' title='close' onclick='closemyitem(this);'></i>");
 				setshortUrl();
 				setLikeSystem();
 
-				currentItem.find(".thumbImage").insertAfter(currentItem.find(".tags"));
+				
+				if(val.thumbFlag == 2)
+				{
+					currentItem.find(".thumbImage").insertAfter(currentItem.find(".tags"));	
+					currentItem.find(".thumbImage img").attr("src", mediumImage);
+					currentItem.addClass("currentDetails");
+					currentItem.removeClass("infowindow");
+
+				}
+				else
+				{
+					//currentItem.find(".thumbImage").remove();
+					currentItem.find(".thumbImage img").show();
+					currentItem.find(".thumbImage").insertAfter(currentItem.find(".yakTypeImage"));
+					currentItem.find(".infodetail").insertAfter(currentItem.find(".tags"));
+					
+					$("ul#newsfeed li").removeAttr("style");
+					$("ul#newsfeed").removeAttr("style");
+				}
+				
+				
 				currentItem.find(".infodetail").insertAfter(currentItem.find(".postedBy"));
 				currentItem.find(".icon-remove").appendTo(currentItem.find(".yakTypeImage"));
 				$("ul#newsfeed li").css("width", "100%");
@@ -417,15 +445,18 @@ block content
 		function closemyitem(el)
 		{
 			var currentItem = $(el).parent().parent();
+			currentItem.find(".thumbImage img").show();
+			currentItem.find(".thumbImage img").attr("src", thumbImage);
 			currentItem.find(".thumbImage").insertAfter(currentItem.find(".yakTypeImage"));
 			currentItem.find(".infodetail").insertAfter(currentItem.find(".tags"));
 			currentItem.removeClass("currentDetails");
 			currentItem.addClass("infowindow");
 			$("ul#newsfeed li").removeAttr("style");
 			$("ul#newsfeed").removeAttr("style");
-			currentItem.find('.myitem').hide();
+			currentItem.find('.myitem').remove();
 			currentItem.find(".icon-remove").remove();
 		}
+
 
 
 
