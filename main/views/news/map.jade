@@ -81,7 +81,7 @@ block content
 				},
 				maxZoom: 16,
 				minZoom: 11,
-				disableDoubleClickZoom: true
+				disableDoubleClickZoom: true,
 			});
 
 		setInterval(function() {
@@ -610,7 +610,6 @@ block content
 			}
 			
 			
-			
 			return myBounds;
 		}
 
@@ -802,7 +801,6 @@ block content
 		}
 		
 		function getAndPrintInfo(){
-
 			infoArray = [];
 			bounds = getMyBounds();
 			//console.log(curPos.z);
@@ -849,6 +847,15 @@ block content
 
 			});
 
+			$.ajax({
+				url: "http://maps.googleapis.com/maps/api/geocode/json?latlng=" + curPos.x +"," + curPos.y + "&sensor=false",				
+				success: function( ajax ) {
+					//console.log(ajax);
+					var placeGmap = getPlaceFromGmapResult(ajax.results[0]);
+					console.log(placeGmap);
+					$("#searchPlaceStr").val(placeGmap.address.city + ", " + placeGmap.address.country);
+				}
+			});
 		}
 
 		function printMapItem(item,key,bounce){
@@ -1150,7 +1157,9 @@ block content
 				//console.log(data.info[0]);
 				
 				var val = data.info[0];
-				
+
+				var mediumImage = conf.batchurl + val.thumb.replace("thumb", "medium");
+
 				var item = createFeedPageItem(val);
 				currentItem.find(".loadingMore").remove();
 				currentItem.append(item);
@@ -1159,6 +1168,18 @@ block content
 				setLikeSystem();
 
 				currentItem.find(".thumbImage").insertAfter(currentItem.find(".tags"));
+
+				var imgTemp = $("<img />");
+				imgTemp.attr("src", mediumImage);
+
+				imgTemp.load(function(){
+					currentItem.find(".thumbImage img").attr("src", mediumImage);
+					imgTemp.remove();
+				}).error(function() {
+					currentItem.find(".thumbImage img").hide();
+					imgTemp.remove();
+				});
+				
 				currentItem.find(".infodetail").insertAfter(currentItem.find(".postedBy"));
 				currentItem.find(".icon-remove").appendTo(currentItem.find(".yakTypeImage"));
 				$("ul#newsfeed li").css("width", "100%");
@@ -1184,13 +1205,14 @@ block content
 		function closemyitem(el)
 		{
 			var currentItem = $(el).parent().parent();
+			currentItem.find(".thumbImage img").show();
 			currentItem.find(".thumbImage").insertAfter(currentItem.find(".yakTypeImage"));
 			currentItem.find(".infodetail").insertAfter(currentItem.find(".tags"));
 			currentItem.removeClass("currentDetails");
 			currentItem.addClass("infowindow");
 			$("ul#newsfeed li").removeAttr("style");
 			$("ul#newsfeed").removeAttr("style");
-			currentItem.find('.myitem').hide();
+			currentItem.find('.myitem').remove();
 			currentItem.find(".icon-remove").remove();
 		}
 
