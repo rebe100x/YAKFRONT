@@ -848,7 +848,18 @@ DOCS
 exports.docs_api = function(req, res){
 	res.render('docs/api');
 }
-
+exports.docs_faq = function(req, res){
+	res.render('docs/faq');
+}
+exports.docs_cgu = function(req, res){
+	res.render('docs/cgu');
+}
+exports.docs_opendata = function(req, res){
+	res.render('docs/opendata');
+}
+exports.docs_log = function(req, res){
+	res.render('docs/log');
+}
 /* Like System */
 
 exports.setLikes = function(req, res){

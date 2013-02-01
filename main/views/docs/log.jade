@@ -1,0 +1,47 @@
+extends ../layout
+
+block content
+
+	include ../mixins/docsMenu.jade
+	
+	mixin docsMenu('log')
+	
+
+	div.container-fluid
+		div.row-fluid
+			div.span2
+
+						
+			div.span8
+				div.row-fluid
+					div.content-header
+						div.header-inner
+							br
+							h2 Release log
+							p.subheader 
+				hr
+				div.row-fluid
+					h3 v1.0.1
+					h4 1st feb 2013
+					p.subheader
+						ul
+							li Ajout de données opendata en PACA ( <a target="_blank" href="http://data.visitprovence.com"> data.visitprovence.com </a>)  : restaurants, hôtels, loueurs de vélos
+							li Ajout des données infos de Varmatin
+							li Ajout de données infos sur la Belgique : RTBF et Sud Info
+							li Ajout de données infos sur Paris : Le Parisien.
+							li Ajout de données infos sur Paris de Twitter sur des comptes d'agence immobilières.
+							li Amélioration design
+							li Améliorations recherche
+
+					h3 v1.0.0
+					h4 15st Jan 2013
+					p.subheader Première mise en ligne avec :
+						ul 
+							li Côté infos: jeu de données sur Marseille et la région Niçoise ( laprovence.fr et nicematin.fr )
+							li Côté opendata:  un jeu opendata des commercants ayant signé la charte CCIMP et le programme Marseille Provence 2013
+
+	script
+		$(document).ready(function() {
+		
+		}); // END READY
+

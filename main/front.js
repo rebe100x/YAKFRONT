@@ -150,6 +150,10 @@ app.get('/api/getContentTitles', api.getContentTitles);
 
 // DOCS
 app.get('/docs/api', routes.docs_api);
+app.get('/docs/opendata', routes.docs_opendata);
+app.get('/docs/cgu', routes.docs_cgu);
+app.get('/docs/faq', routes.docs_faq);
+app.get('/docs/log', routes.docs_log);
 
 
 // redirect all others to the index (HTML5 history)
