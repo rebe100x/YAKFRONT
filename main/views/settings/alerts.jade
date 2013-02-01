@@ -141,8 +141,8 @@ block content
 						$.ajax({
 								url: "/api/feedsearch/"+query,				
 								success: function( data ) {
-								console.log(data);
-									typeahead.process(data.feeds);
+								//console.log(data);
+									typeahead.process(data.feeduser);
 								}
 							})},
 					property: "humanName",
