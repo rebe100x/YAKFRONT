@@ -852,7 +852,8 @@ block content
 			$.ajax({
 				url: "http://maps.googleapis.com/maps/api/geocode/json?latlng=" + curPos.x +"," + curPos.y + "&sensor=false",				
 				success: function( ajax ) {
-					//console.log(ajax);
+
+					console.log(ajax);
 					var placeGmap = getPlaceFromGmapResult(ajax.results[0]);
 					//console.log(placeGmap);
 					$("#searchPlaceStr").val(placeGmap.address.city + ", " + placeGmap.address.country);
@@ -1273,7 +1274,7 @@ block content
 				$(this).append('<img class="loadingMore" src="images/loader_big.gif">');
 				$.getJSON('/api/afeed', { id: $(this).attr("rel")} ,function(data) {
 						$.each(data.info[0].yakComments, function(key, val){
-							divComment.append(drawAComment(val, 'map'));
+							divComment.append(drawAComment(val, currEleComment.attr("rel"), 'map'));
 						});
 						divComment.append('<textarea maxlength="250" rows="3" class="yakTextarea" placeholder="Ajouter un commentaire..."></textarea>');
 
@@ -1290,12 +1291,13 @@ block content
 								$(this).val("posting...Please wait");
 								$(this).attr("disabled", "disabled");
 								var newComment = new Array();
+								newComment.infoid = currEleComment.attr("rel");
 								newComment.username = user.login;
 								newComment.userid = user._id;
 								newComment.comment = comment;
 								newComment.userthumb = user.thumb;
 								newComment.date = new Date();
-								$.post('/setComment', {infoId : currEleComment.attr("rel"), username: user.login, userthumb: user.thumb, comment: comment.substring(0, 249)} , function(res){
+								$.post('/api/setComment', {infoId : currEleComment.attr("rel"), username: user.login, userthumb: user.thumb, comment: comment.substring(0, 249)} , function(res){
 									if (res == 'updated')
 									{
 										theArea.val("");
@@ -1303,7 +1305,7 @@ block content
 										theArea.before(drawAComment(newComment));
 									}
 
-				});
+								});
 							};
 						});
 						currEleComment.find(".loadingMore").remove();

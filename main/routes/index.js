@@ -893,28 +893,3 @@ exports.setLikes = function(req, res){
 };
 
 
-exports.setComment = function(req, res){
-	//console.log(req.session.user);
-	var Info = db.model('Info');
-	
-	if(req.session.user){
-			var infoId = req.body.infoId;
-			var username = req.body.username;
-			var acomment = {
-            "userid": req.session.user,
-            "username": req.body.username,
-            "userthumb": req.body.userthumb,
-            "comment": req.body.comment,
-           	"date": new Date()
-          };
-
-			Info.update({_id:infoId},{$push:{yakComments: acomment}, new:true}, function(err, result){
-				res.json("updated")
-			})	
-		
-	}else{
-		req.session.message = "Erreur : vous devez être connecté pour sauver vos favoris";
-		res.redirect('/user/login');
-	}
-	
-};

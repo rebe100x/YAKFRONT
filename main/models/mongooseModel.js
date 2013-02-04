@@ -86,7 +86,7 @@ var Info = new Schema({
   , unlikes	: {type: Number, default: 0}
   , yaklikeUsersIds : {type: [String]}
   , yakunlikeUsersIds : {type: [String]}
-  , yakComments : {type : [Schema.Types.Mixed]}
+  , yakComments : {type : [Schema.Types.Comment]}
 }, { collection: 'info' });
 
 //Info.index({location : '2d',pubDate:-1,yakType:1,print:1,status:1});
@@ -809,7 +809,16 @@ Tag.statics.search = function(string,count,from,sensitive,order,callback){
 }
 mongoose.model('Tag', Tag);
 
+/*****************************Comments *******///
 
+var Comment = new Schema({
+		userid : {type: Schema.ObjectId}
+	,	username : {type: String}
+	,	userthumb : {type: String}
+	,	comment : {type: String}
+	, 	date : {type: Date}
+},{ collection: 'comment' });
+mongoose.model('Comment', Comment);
 
 /******************************PLACE*/
 var Place = new Schema({

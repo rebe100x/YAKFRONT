@@ -1461,3 +1461,48 @@ exports.oauth_access_token = function(req, res){
 	}
 }
 /*****END OAUTH*****/
+
+/*Comments*/
+exports.setComment = function(req, res){
+	//console.log(req.session.user);
+	var Info = db.model('Info');
+	
+	if(req.session.user){
+			var infoId = req.body.infoId;
+			var username = req.body.username;
+			var Comment = db.model('Comment');
+			var acomment = new Comment();
+			acomment.userid = req.session.user;
+			acomment.username = req.body.username;
+			acomment.userthumb = req.body.userthumb;
+			acomment.comment = req.body.comment;
+			acomment.date = new Date();
+			
+
+			Info.update({_id:infoId},{$push:{yakComments: acomment}, new:true}, function(err, result){
+				res.json("updated")
+			})	
+		
+	}else{
+		req.session.message = "Erreur : vous devez être connecté pour sauver vos favoris";
+		res.redirect('/user/login');
+	}
+	
+};
+
+exports.del_comment = function (req, res) {
+	var Info = db.model('Info');
+	if(typeof(req.body.commentId) != 'undefined') {
+		var commentId = req.body.commentId;
+		var infoId = req.body.infoId;
+
+		Info.update({_id:mongoose.Types.ObjectId(infoId)},{$pull:{yakComments:{_id: mongoose.Types.ObjectId(commentId)}}}, function(err,docs){
+			if(!err)
+				res.json({meta:{code:200}});
+			else
+				res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+		});
+	}else{
+		res.json({meta:{code:404,error_type:'missing parameter',error_description:'Comment not set'}});
+	}		
+};

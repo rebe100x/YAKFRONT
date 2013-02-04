@@ -50,8 +50,8 @@ app.configure(function(){
 });
 
 app.configure('development', function(){
-	conf = config.confs.devrenaud;
-	app.locals.conf = JSON.stringify(config.confs.devrenaud);
+	conf = config.confs.devdany;
+	app.locals.conf = JSON.stringify(config.confs.devdany);
 	mainConf = config.confs.main;
 	app.locals.mainConf = JSON.stringify(config.confs.main);
 	app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
@@ -122,7 +122,8 @@ app.post('/delfavplace', routes.requiresLogin, routes.delfavplace);
 app.post('/favplacerange', routes.requiresLogin, routes.updatefavplacerange);
 
 app.post('/setLikes', routes.requiresLogin, routes.setLikes);
-app.post('/setComment', routes.requiresLogin, routes.setComment);
+app.post('/api/setComment', routes.requiresLogin, api.setComment);
+app.post('/api/del_Comment', routes.requiresLogin, api.del_comment);
 
 // OPEN ACCESS API
 app.get('/api/infos', api.infos);

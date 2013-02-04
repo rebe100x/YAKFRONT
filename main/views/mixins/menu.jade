@@ -3,16 +3,16 @@ mixin menu(active)
 	div.navbar.navbar-fixed-top
 			div.row-fluid.headerYakwala
 				if(active != "login")
-					div.span2
+					div.span4.pull-left
 						a.leftlink#maplink(href="/news/map")
 							img(src="/images/new/lacarte.png")
 						a.leftlink#feedlink(href="/news/feed")
 							img(src="/images/new/filinfo.png")
-					div.span8
+					div.span4.pull-left
 						div.logolink
 							a(href="/news/map")
 								img(src="/images/new/logo.png")
-					div.span2
+					div.span4.pull-leftpull-left
 						- if (locals.user)
 								div.btn-group.pull-right
 									a.btn.dropdown-toggle(href="#",data-toggle="dropdown")

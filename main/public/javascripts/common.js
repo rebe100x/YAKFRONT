@@ -361,7 +361,12 @@ function setTimeSliderText(x, text){
 /*READY FUNCTIONS*/	
 $(document).ready(function() {
 
-	
+
+	checkByWidth();
+		$(window).resize(function(){
+			checkByWidth()
+	});
+
 	$.timeago.settings.strings = {
 		// environ ~= about, it's optional
 		prefixAgo: "il y a",
@@ -948,7 +953,7 @@ function changePlaceRange(id, lat, lng, pointname, range)
 	
 }
 
-function drawAComment(val, from)
+function drawAComment(val,infoId, from)
 {
 	
 	var username = val.username;
@@ -962,14 +967,41 @@ function drawAComment(val, from)
 	}
 
 	if (typeof(from) === 'undefined' ) {
-			return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><span class='username'>" + username + "</span><span class='timeago'>" + date + "</span><div class='comment'>" + comment + "</div></div>";
+			if(user._id	!= userid)
+				return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><span class='username'>" + username + "</span><span class='timeago'>" + date + "</span><div class='comment'>" + comment + "</div></div>";
+			else
+				return 	"<div class='aComment'><img class='userthumb' src='" + thumb + "' /><span class='username'>" + username + "</span><span class='timeago'>" + date + "</span><a class='delComment' onclick='deleteComment(this)' id='" + val._id +"' infoid='" + infoId + "'>X</a><div class='comment'>" + comment + "</div></div>";
 	}
 	else
 	{
 		var urlsearch = conf.fronturl + '/news/map/search/@' + username;
-		return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username' href='" + urlsearch + "'>" + username + "</a><span class='timeago'>" + date + "</span><div class='comment'>" + comment + "</div></div>";	
+		if(user._id	!= userid)
+			return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username' href='" + urlsearch + "'>" + username + "</a><span class='timeago'>" + date + "</span><div class='comment'>" + comment + "</div></div>";	
+		else
+			return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username' href='" + urlsearch + "'>" + username + "</a><span class='timeago'>" + date + "</span><a class='delComment' onclick='deleteComment(this)' id='" + val._id +"' infoid='" + infoId + "'>X</a><div class='comment'>" + comment + "</div></div>";		
 	}
 
+	
+
+}
+
+function deleteComment(el)
+{
+	var commentId = $(el).attr("id");
+	var infoId = $(el).attr("infoid");
+	
+	$.post('/api/del_Comment', {commentId : commentId, infoId: infoId} , function(res){
+	console.log(res);
+	if (res.meta.code == '200')
+	{
+		$(el).parent().remove();
+	}
+	else
+	{
+		alert("Erreur");
+	}
+
+});
 }
 
 function setCommentText(len,item){
@@ -1050,4 +1082,70 @@ function changeDataTitleForFeeds(data){
     return data;
 
 }
+
+function checkByWidth()
+		{
+			var windowWidth = $(window).width();
+			console.log(windowWidth);
+
+			// /$(".leftlink img").css("width", windowWidth/20 + "px");
+
+			if(windowWidth >= 1200)
+			{
+				$(".searchYakwala").css("height", "40px");
+				$(".searchYakwala input[type=search]").css("width", "150px");
+				$("#heatSelector").css("width", "200px");
+				$("#dayPrinter").css("width", "200px");
+
+				$("#newsfeedMenu").removeAttr("style");
+				$(".searchYakwala #typeContainer img").css("height", "20px");
+				$(".searchYakwala #zoneLocButton").css("padding", "6px");
+				$(".searchYakwala #btnMesalertes").css("padding", "6px");
+
+				return;
+			}
+
+			if( windowWidth >= 980 )
+			{
+				$(".searchYakwala").css("height", "40px");
+				$(".searchYakwala input[type=search]").css("width", "100px");
+				$("#heatSelector").css("width", "170px");
+				$("#dayPrinter").css("width", "170px");
+
+				$("#newsfeedMenu").removeAttr("style");
+				$(".searchYakwala #typeContainer img").css("height", "20px");
+				$(".searchYakwala #zoneLocButton").css("padding", "6px");
+				$(".searchYakwala #btnMesalertes").css("padding", "6px");
+				return;
+			}
+
+			if(windowWidth >= 771)
+			{
+				$(".searchYakwala").css("height", "40px");
+				$(".searchYakwala input[type=search]").css("width", "90px");
+				$("#heatSelector").css("width", "110px");
+				$("#dayPrinter").css("width", "110px");
+
+				$("#newsfeedMenu").css("position", "absolute");
+				$("#newsfeedMenu").css("right", "41px");
+				$("#newsfeedMenu").css("left", "auto");
+				$("#newsfeedMenu").css("margin-top", "3px");
+				$(".searchYakwala #typeContainer img").css("height", "15px");
+				$(".searchYakwala #zoneLocButton").css("padding", "4px");
+				$(".searchYakwala #btnMesalertes").css("padding", "4px");
+				return;
+			}
+
+			if(windowWidth < 771)
+			{
+				$(".searchYakwala").css("height", "100px");
+				$("#newsfeedMenu").css("position", "relative");
+				$("#newsfeedMenu").css("clear", "both");
+				$("#newsfeedMenu").css("float", "left");
+				$("#newsfeedMenu").css("left", "100px");
+				return;
+			}
+
+			
+		}
 		

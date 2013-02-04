@@ -6,7 +6,7 @@ mixin locationChooser(page)
 			h3 Y a quoi là ?
 		div.modal-body
 			p.alertText 
-				ul.favplacelist.unstyled
+				ul#myPlaces.favplacelist.unstyled
 					li
 					- if(locals.user.favplace)
 							- each favplace in locals.user.favplace
@@ -105,6 +105,28 @@ mixin locationChooser(page)
 		
 
 	script
+			function sortUnorderedList(ul, sortDescending) {
+				if(typeof ul == "string")
+					ul = document.getElementById(ul);
+
+				var lis = ul.getElementsByTagName("LI");
+				var vals = [];
+
+				// Populate the array
+				for(var i = 0, l = lis.length; i < l; i++)
+				vals.push(lis[i].innerHTML);
+
+				// Sort it
+				vals.sort();
+
+				// Sometimes you gotta DESC
+				if(sortDescending)
+				vals.reverse();
+
+				// Change the list on the page
+				for(var i = 0, l = lis.length; i < l; i++)
+				lis[i].innerHTML = vals[i];
+			}
 			$(document).ready(function(){
 				var uldropdownRangeSelector = $("<select />");
 				uldropdownRangeSelector.attr("class", "dropdownRangeSelector")
@@ -119,6 +141,13 @@ mixin locationChooser(page)
 					else
 						$(this).removeAttr("selected");
 				});
+
+				var mylist = $('#myPlaces');
+				var listitems = mylist.children('li').get();
+				listitems.sort(function(a, b) {
+				return $(a).text().toUpperCase().localeCompare($(b).text().toUpperCase());
+				})
+				$.each(listitems, function(idx, itm) { mylist.append(itm); });
 
 				var li = $("<li />");
 				li.attr("class", "zoneLoc");
