@@ -3,15 +3,15 @@ mixin locationChooser(page)
 	div.modal.hide.fade#locationChooser
 		div.modal-header
 			button.close(type="button", data-dismiss="modal") x
-			h3 Y a quoi là ?
+			h2 Endroit favoris
 		div.modal-body
 			p.alertText 
 				ul#myPlaces.favplacelist.unstyled
-					li
+					
 					- if(locals.user.favplace)
 							- each favplace in locals.user.favplace
 								li.zoneLoc(pointId=favplace._id, lat=favplace.location.lat, lng=favplace.location.lng, pointname=favplace.name)
-									i.icon-map-marker
+									img.redstar(src="/images/markers/latestV1/redstar.png")
 									span(data-dismiss="modal")= favplace.name
 									i.icon-remove.icon-pointer(onclick='removefavPlace($(this));')
 									//
@@ -33,8 +33,9 @@ mixin locationChooser(page)
 				- if(session)
 					div.control-group
 						div.controls
-							label(for='favplace') Ajouter des endroits favoris : 
-							input#favplace.searchInput(type="text",data-provide="typeahead", name="favplace", autocomplete="off", placeholder='Rechercher...') 
+							label(for='favplace') 
+								img.plussign.pull-left(src="/images/markers/latestV1/plussign.png")
+							input#favplace.searchInput.pull-left(type="text",data-provide="typeahead", name="favplace", autocomplete="off", placeholder='Ajouter des endroits favoris') 
 								
 		div.modal-footer
 			span.btn(data-dismiss="modal") Fermer

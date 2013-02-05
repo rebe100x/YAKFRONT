@@ -1084,7 +1084,7 @@ function changeDataTitleForFeeds(data){
 }
 
 function checkByWidth()
-		{
+		{/*
 			var windowWidth = $(window).width();
 			console.log(windowWidth);
 
@@ -1146,6 +1146,6 @@ function checkByWidth()
 				return;
 			}
 
-			
+			*/
 		}
 		
