@@ -5,12 +5,12 @@ mixin searchFormUnified(page)
 		.ui-slider .ui-slider-handle { height: 11px;}
 
 	div.row-fluid(style="height: 40px")
-		input.search-query.customInput#searchStr(type="search",placeholder="Quoi ?",autocomplete="off", )
-		input.search-query.customInput#searchPlaceStr(type="search",placeholder="Où ?",autocomplete="off", data-provide="typeahead")
+		input.search-query.customInput.tour_1#searchStr(type="search",placeholder="Quoi ?",autocomplete="off", )
+		input.search-query.customInput#searchPlaceStr.tour_2(type="search",placeholder="Où ?",autocomplete="off", data-provide="typeahead")
 		button#searchBtn(type="submit")
 		i.icon-time.myi
 		div.pull-left.dropdown
-			div#dayPrinter.sliderText(style="width: 200px; position: relative; top: -1px; text-align: center") Aujourd hui	
+			div#dayPrinter.sliderText.tour_3(style="width: 200px; position: relative; top: -1px; text-align: center") Aujourd hui	
 			div#heatSelector(style="width: 200px; margin-left: 7px; margin-right: 7px;")
 			//
 				a#heatModuleTrigger.btn
@@ -22,7 +22,7 @@ mixin searchFormUnified(page)
 		i.icon-search.myi
 		div.btn-group.pull-left
 			a.btn#rangeSelectorTrigger
-				span#localnessPrinter.sliderText Localness
+				span#localnessPrinter.sliderText.tour_4 Localness
 				span.caret
 				mixin range
 
