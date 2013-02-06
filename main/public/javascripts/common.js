@@ -361,6 +361,13 @@ function setTimeSliderText(x, text){
 /*READY FUNCTIONS*/	
 $(document).ready(function() {
 
+	$("textarea").blur(function(){;
+		$(this).val(checkifSafeVideo($(this).val()));
+	});
+
+	$("input").blur(function(){;
+		$(this).val(checkandremoveTags($(this).val()));
+	});
 
 	checkByWidth();
 		$(window).resize(function(){
@@ -1147,5 +1154,61 @@ function checkByWidth()
 			}
 
 			*/
+		}
+
+		function ytVidId(url) {
+		    var p = /^(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?(?=.*v=((\w|-){11}))(?:\S+)?$/;
+		    return (url.match(p)) ? RegExp.$1 : false;
+		}
+
+		function vimeoVidId(url) {
+		    var p = /^(?:https?:\/\/)?(?:www\.)?vimeo\.com\/(.*)?$/;
+		    return (url.match(p)) ? RegExp.$1 : false;
+		}
+
+		function dailymotionVidId(url) {
+		    var p = /^(?:https?:\/\/)?(?:www\.)?dailymotion\.com\/video\/(.*)?$/;
+		    return (url.match(p)) ? RegExp.$1 : false;
+		}
+
+		function checkandremoveTags(str)
+		{
+			return str.replace(/<\/?[^>]+>/gi, '');
+		}
+		function checkifSafeVideo(str)
+		{
+			
+			var div = $("<div />");
+			div.html(str);
+
+			// check for an iframe
+			$.each(div.find("iframe"), function(){
+				var checker = false;
+
+				if (ytVidId($(this).attr("src"))) {
+					checker = true;
+					
+				}
+				else if (vimeoVidId($(this).attr("src"))) {
+					checker = true;
+					
+				}
+				else if(dailymotionVidId($(this).attr("src")))
+				{
+					checker = true;
+					
+				}
+				else
+				{
+					checker = false;
+				}
+				if (!checker) {
+
+					alert("actuellement nous permettonsdes vidéos venant de youtube, vimeo ou dailymotion... votre iframe sera automatiquement supprimé");
+					$(this).remove();
+				}
+			});	
+			
+			return div.html();
 		}
 		
