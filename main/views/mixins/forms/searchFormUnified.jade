@@ -5,13 +5,13 @@ mixin searchFormUnified(page)
 		.ui-slider .ui-slider-handle { height: 11px;}
 
 	div.row-fluid(style="height: 40px")
-		input.search-query.customInput.tour_1#searchStr(type="search",placeholder="Quoi ?",autocomplete="off", )
-		input.search-query.customInput#searchPlaceStr.tour_2(type="search",placeholder="Où ?",autocomplete="off", data-provide="typeahead")
+		input.search-query.customInput.tour_1#searchStr(type="search",placeholder="Quoi ?",autocomplete="off", style="width: 13%")
+		input.search-query.customInput#searchPlaceStr.tour_2(type="search",placeholder="Où ?",autocomplete="off", data-provide="typeahead", style="width: 13%")
 		button#searchBtn(type="submit")
 		i.icon-time.myi
-		div.pull-left.dropdown
-			div#dayPrinter.sliderText.tour_3(style="width: 200px; position: relative; top: -1px; text-align: center") Aujourd hui	
-			div#heatSelector(style="width: 200px; margin-left: 7px; margin-right: 7px;")
+		div.pull-left.dropdown(style="width: 13%")
+			div#dayPrinter.sliderText.tour_3(style="width: 100%; position: relative; top: -1px; text-align: center") Aujourd hui	
+			div#heatSelector(style="width: 100%; margin-left: 7px; margin-right: 7px;")
 			//
 				a#heatModuleTrigger.btn
 					span#dayPrinter.sliderText Aujourd hui	
