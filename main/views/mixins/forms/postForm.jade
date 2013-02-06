@@ -82,6 +82,8 @@ mixin postForm()
 	script(src='/javascripts/lib/plugin/jquery-ui-timepicker-addon.js')
 	script
 		$(document).ready(function() {
+			
+
 			$('#yakTypeController').live('change', function() { 
 				if($("input[name='yakType']:checked").val()==2)
 					$('#eventDateController').slideDown();
@@ -102,10 +104,7 @@ mixin postForm()
 				stepMinute: 10,
 			});
 
-			$('#postForm').submit(function() {
-				var currType = $("input:radio[name='yakType']:checked").val();
-				$.cookie("yaktype", currType,{ expires: 10000, path : '/' });
-			});
+
 
 		});
 
@@ -114,7 +113,12 @@ mixin postForm()
 			$(document).ready(function() {
 				$('#postForm').submit(function() {
 					var currType = $("input:radio[name='yakType']:checked").val();
-					$.cookie("yaktype", currType,{ expires: 10000, path : '/' });
+					
+					if ($.inArray(currType, yakType) == -1) {
+						yakType[yakType.length] = currType;
+					}
+
+					$.cookie("yaktype", yakType,{ expires: 10000, path : '/' });
 				});
 
 			});
@@ -124,7 +128,11 @@ mixin postForm()
 			$(document).ready(function() {
 				$('#postForm').submit(function() {
 					var currType = 4;
-					$.cookie("yaktype", currType,{ expires: 10000, path : '/' });
+					if ($.inArray(currType, yakType) == -1) {
+						yakType[yakType.length] = currType;
+					}
+
+				$.cookie("yaktype", yakType,{ expires: 10000, path : '/' });
 				});
 
 			});
