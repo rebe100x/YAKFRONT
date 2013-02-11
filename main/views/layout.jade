@@ -32,11 +32,12 @@ html
 		script(src="/javascripts/lib/jquery/js/timeago.js")	
 									
 		block head
-	body
-		mixin footer()	
+	body	
 		block content
+		mixin footer()
 		script
 			#{JSON.parse(conf).ga}
+
 		
 			
 			

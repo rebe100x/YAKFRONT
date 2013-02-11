@@ -442,7 +442,9 @@ mixin searchFormUnified(page)
 			}
 			yakType = [5];
 			$.cookie("yaktype", 5,{ expires: 10000, path : '/' });
+			cleanMarkers();
 			getAndPrintInfo();
+
 			
 		}
 		function setRangeSelectorDropDown()
