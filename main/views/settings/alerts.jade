@@ -92,6 +92,7 @@ block content
 		var tagsubsArray = user.tagsubs; 
 		var feedsubsArray = user.feedsubs; 
 		var placesubscArray = [];
+		var usertoSearch = "";
 		$(document).ready(function() {
 			
 			$("#alert").keyup(function(event){
@@ -115,12 +116,14 @@ block content
 								url: "/api/usersearch/"+query,				
 								success: function( data ) {
 								data = mergeDeep(data, data);
-								console.log(data);
+								//console.log(data);
 								typeahead.process(data.users);
 								}
 							})},
 					property: "userdetails",
 					onselect: function(obj) {
+						//console.log(obj);
+						
 						if(!usersubsArray.inArrayId(obj._id)){
 							
 							$("label[for='usersubs']").after("<div><i class='icon-remove icon-pointer'  onclick='usersubsArray.cleanArray(\""+obj._id+"\");$(\"#usersubsInput\").val(JSON.stringify(usersubsArray));$(this).parent().remove(); clickSubmit(this)'></i> "+obj.name+"</div>");
@@ -128,6 +131,7 @@ block content
 							delete obj.thumb; // NOTE : here the thumb should not be included because it might be updated by the user
 							usersubsArray.push(obj);
 							$("#usersubsInput").val(JSON.stringify(usersubsArray));
+
 							clickSubmit($('#usersubs'));
 						}else{
 							$('#usersubs').val('').focus();
@@ -147,6 +151,7 @@ block content
 							})},
 					property: "humanName",
 					onselect: function(obj) {
+						usertoSearch = obj.humanName;
 						if(!feedsubsArray.inArrayId(obj._id)){
 							$("label[for='userfeeds']").after("<div><i class='icon-remove icon-pointer'  onclick='feedsubsArray.cleanArray(\""+obj._id+"\");$(\"#feedsubsInput\").val(JSON.stringify(feedsubsArray));$(this).parent().remove(); clickSubmit(this);'></i> "+obj.humanName+"</div>");
 							$('#userfeeds').val('').focus();
@@ -179,6 +184,37 @@ block content
 			//$("#submit").click();
 			$.post('/alerts', {feedsubsInput: $("#feedsubsInput	").val(),usersubsInput: $("#usersubsInput").val(), tagsubsInput: $("#tagsubsInput").val()}, function(data){
 				$(el).parent().find(".loadingMore").remove();
+			});
+			//alert(usertoSearch);
+			$.get('/api/usersearch/' + usertoSearch, function(data){
+				//console.log(data.users[0]["_id"]);
+
+				if(typeof(data.users[0]) === 'undefined')
+					return;
+				
+
+				var obj = new Object();
+				obj["_id"] = data.users[0]["_id"];
+				obj["login"] = data.users[0]["login"];
+				obj["name"] = data.users[0]["name"];
+				obj["userdetails"] = data.users[0]["userdetails"];
+
+				if(feedsubsArray.inArrayId(obj["_id"])){
+					return;
+				}
+				usersubsArray.push(obj);
+				$("#usersubsInput").val(JSON.stringify(usersubsArray));
+
+				$.post('/alerts', {feedsubsInput: $("#feedsubsInput	").val(),usersubsInput: $("#usersubsInput").val(), tagsubsInput: $("#tagsubsInput").val()}, function(data){
+					$("#usersubs").parent().find(".loadingMore").remove();
+					$("#usersubsInput").val(JSON.stringify(usersubsArray));
+					window.location = window.location;
+				});
+				
+				
+				
+
+
 			});
 		}
 
