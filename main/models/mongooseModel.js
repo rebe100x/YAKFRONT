@@ -712,7 +712,10 @@ var Feed = new Schema({
 
 Feed.statics.findByName = function (str,callback) {
   searchStr = new RegExp(str,'i');
-  return this.find({'humanName': {$regex:searchStr}},{humanName:1, _id: 1, name: 1}, callback);
+  var cond = {
+	$or:[ {'humanName': {$regex:searchStr}}, {'name': {$regex:searchStr}} ]
+};
+  return this.find( cond,{humanName:1, _id: 1, name: 1}, callback );
 }
 
 Feed.statics.formatLight2 = function (thefeed) {
