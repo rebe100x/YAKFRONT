@@ -156,6 +156,7 @@ function setshortUrl()
 {
 
 	$(".icon-share").mouseenter(function(){
+
 		if($(this).find(".box").length > 0)
 		{
 			return;
@@ -172,6 +173,7 @@ function setshortUrl()
 	            "login": "o_5ko6l8pajb",
 	            "longUrl": conf.fronturl + "/news/feed/?id=" + more.parent().parent().parent().find(".more").attr("rel")
 	        }, function(data){
+	        	
 	        	more.parent().parent().parent().find(".more").attr("title", data.data.url);
 	        	setShare(more);
 	        }
@@ -360,6 +362,8 @@ function setTimeSliderText(x, text){
 		
 /*READY FUNCTIONS*/	
 $(document).ready(function() {
+
+			
 	//ie fix for placeholder
 	/*$("[placeholder]").focus(function() {
 		  var input = $(this);
@@ -862,9 +866,8 @@ function setShare(el){
 	},
 
 	twitter: {
-		text: "J'ai vu ça dans #Yakwala..." + el.parent().parent().find(".freetags").text(),
-		count: 'horizontal',
-		url: el.parent().parent().find(".title").find(".more").attr("title")
+		text: "J'ai vu ça dans #Yakwala " + el.parent().parent().parent().find(".more").attr("title") + " " + el.parent().parent().parent().parent().find(".tags").text(),
+		count: 'horizontal'
 	}					
 	},
 	hover: function(api, options){
@@ -1235,3 +1238,15 @@ function checkByWidth()
 			return div.html();
 		}
 		
+
+		function gup( name )
+		{
+		name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+		var regexS = "[\\?&]"+name+"=([^&#]*)";
+		var regex = new RegExp( regexS );
+		var results = regex.exec( window.location.href );
+		if( results == null )
+		return "";
+		else
+		return results[1];
+		}

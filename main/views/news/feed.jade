@@ -175,6 +175,7 @@ block content
 			//console.log(apiUrl);
 			$.getJSON(apiUrl,function(ajax) {	
 			
+
 				// empty the news feed
 				$('#newsfeed').html('');
 
@@ -191,6 +192,13 @@ block content
 							printFeedItem(val,0,0);	
 					});
 				printLoadingFeedItem();	
+				if(gup("id") != null && gup("id") != "")
+					{
+						$.getJSON('/api/afeed', { id: gup("id") } ,function(data) {
+							infoArray.push(data.info[0]);
+							printFeedItem(data.info[0],1,0);	
+						});
+					}
 				//markerCluster.addMarkers(markers);
 				}
 				$("abbr.timeago").timeago();
