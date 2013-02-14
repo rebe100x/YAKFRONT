@@ -559,3 +559,6 @@ width: 270px;
 #locationChooser .icon-home { position: relative; top: 3px; margin-right: 12px; }
 #locationChooser .icon-pointer { float: right;}
 #locationChooser .searchInput { position: relative; top: 10px}
+
+/* calendar custom date*/
+.customDates { position: relative;; left: 10px; top: -2px; cursor: pointer;}

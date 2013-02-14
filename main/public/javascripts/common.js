@@ -93,9 +93,26 @@ function buildItemDate(item){
 			if (m<10) {m = "0" + m}
 
 			if(item.eventDate.length == 1)	
-				thedate = 'Le '+dateTmpFrom.getDate()+'/'+(dateTmpFrom.getMonth()+1)+'/'+dateTmpFrom.getFullYear()+' à '+dateTmpFrom.getHours()+':'+m;
-			else
-				thedate = 'Du '+dateTmpFrom.getDate()+'/'+(dateTmpFrom.getMonth()+1)+'/'+dateTmpFrom.getFullYear()+' au '+dateTmpEnd.getDate()+'/'+(dateTmpEnd.getMonth()+1)+'/'+dateTmpEnd.getFullYear();
+			{
+				//thedate = 'Le '+dateTmpFrom.getDate()+'/'+(dateTmpFrom.getMonth()+1)+'/'+dateTmpFrom.getFullYear()+' à '+dateTmpFrom.getHours()+':'+m;
+				thedate = 'Du '+dateTmpFrom.getDate()+'/'+(dateTmpFrom.getMonth()+1)+'/'+dateTmpFrom.getFullYear() + ' ' + dateTmpFrom.getHours()+':'+m+' au '+dateTmpEnd.getDate()+'/'+(dateTmpEnd.getMonth()+1)+'/'+dateTmpEnd.getFullYear() + ' ' + dateTmpEnd.getHours()+':'+m;
+			}
+			//else if more than one event date in array
+			else 
+			{
+				//thedate = 'Du '+dateTmpFrom.getDate()+'/'+(dateTmpFrom.getMonth()+1)+'/'+dateTmpFrom.getFullYear()+' au '+dateTmpEnd.getDate()+'/'+(dateTmpEnd.getMonth()+1)+'/'+dateTmpEnd.getFullYear();
+				var dates = "";
+				for (var i = item.eventDate.length - 1; i >= 0; i--) {
+					var dateTmpFrom = new Date(item.eventDate[i].dateTimeFrom);
+					var dateTmpEnd = new Date(item.eventDate[i].dateTimeEnd);
+					var m1 = dateTmpFrom.getMinutes();
+					var m2 = dateTmpEnd.getMinutes();
+					if (m1<10) {m1 = "0" + m1};
+					if (m2<10) {m2 = "0" + m2};
+					dates += 'Du '+dateTmpFrom.getDate()+'/'+(dateTmpFrom.getMonth()+1)+'/'+dateTmpFrom.getFullYear() + ' ' + dateTmpFrom.getHours()+':'+m+' au '+dateTmpEnd.getDate()+'/'+(dateTmpEnd.getMonth()+1)+'/'+dateTmpEnd.getFullYear() + ' ' + dateTmpEnd.getHours()+':'+m2 + "\n";
+				};
+				thedate = "<i class='icon-calendar customDates' title='" + dates + "'></i>";
+			}
 		}else{
 			var dateTmp = new Date(item.pubDate);
 			thedate = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
