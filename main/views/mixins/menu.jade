@@ -8,16 +8,18 @@ mixin menu(active)
 							img(src="/images/new/lacarte.png")
 						a.leftlink#feedlink(href="/news/feed")
 							img(src="/images/new/filinfo.png")
-					
+
 						a(href="/news/map")
 							img(src="/images/new/logo.png")
 				
 						- if (locals.user)
-								a.btn.dropdown-toggle(href="#",data-toggle="dropdown")
-									i.icon-user
-									span= ' '+locals.user.login+' ';
-									span.caret
-								ul.dropdown-menu(style="right:0; top: 70%;")
+								a.customprofile.dropdown-toggle(href="#",data-toggle="dropdown")
+									img(src="/images/new/profile.png")
+									//
+										i.icon-user
+										span= ' '+locals.user.login+' ';
+										span.caret
+								ul.dropdown-menu.pull-right(style="right:0; top: 30px;")
 									li
 										a(href="/settings/profile") Mon profil
 									li

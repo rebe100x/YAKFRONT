@@ -562,3 +562,4 @@ width: 270px;
 
 /* calendar custom date*/
 .customDates { position: relative;; left: 10px; top: -2px; cursor: pointer;}
+.customprofile { margin-right: 12px; cursor: pointer; margin-top: -6px; padding: 3px;}
