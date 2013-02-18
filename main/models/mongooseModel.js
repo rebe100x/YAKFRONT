@@ -359,7 +359,7 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,from,now,type,str,thecount,thesk
 		var strClean = str.replace(/@/g,'').replace(/#/g,'').replace(/%23/g,'').replace(/%40/g,'');
 		var searchStr = new RegExp(strClean,'gi');
 		//var searchExactStr = new RegExp("^"+strClean+"$",'gi');
-		var searchExactStr = new RegExp("(?:^| )(" + strClean + ")(?:$| )",'gi');
+		var searchExactStr = new RegExp("(?:^| )(" + strClean + ")",'gi');
 
 		if(firstChar=='#' || thirdChar == '%23'){
 			Yakcat.findOne({'title': {$regex:searchStr}}).exec(function(err,theyakcat){

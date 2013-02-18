@@ -2,10 +2,8 @@ extends ../layout
 block content
 
 	include ../mixins/menu.jade
-	include ../mixins/locationChooser.jade
 	include ../mixins/forms/profileForm.jade
-	mixin menu('profile')
-	mixin locationChooser()
+	mixin menu('firstvisit')
 
 	div.container-fluid
 		div.row-fluid
@@ -64,7 +62,7 @@ block content
 			var user =!{JSON.stringify(user)};
 			
 			$(document).ready(function() {
-			
+				console.log("dsfsdfsdf");
 				$('#firstvisitForm').isHappy({
 					fields: {
 						'#password': {

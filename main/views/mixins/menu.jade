@@ -12,7 +12,7 @@ mixin menu(active)
 						a(href="/news/map")
 							img(src="/images/new/logo.png")
 				
-						- if (locals.user)
+						- if (locals.user && active != "firstvisit")
 								a.customprofile.dropdown-toggle(href="#",data-toggle="dropdown")
 									img(src="/images/new/profile.png")
 									//
@@ -32,8 +32,9 @@ mixin menu(active)
 									li
 										a(href="/user/logout") Quitter
 						- else
-							span 
-								a.btn(href="/user/login") Login
+							//
+								span 
+									a.btn.pull-right(href="/user/login") Login
 			div.row-fluid.searchYakwala
 				div.span12(style="height: 40px;")
 					if(active == 'map' || active == 'feed')
@@ -47,7 +48,15 @@ mixin menu(active)
 		script
 			$(document).ready(function(){
 				$("#feedlink img").attr("src", "/images/new/filinfo-hover.png");
+
 			});
+	if(active == 'firstvisit')
+		script
+			$(document).ready(function(){
+				$("#feedlink").removeAttr("href");
+				$("#maplink").removeAttr("href");
+			});
+	
 
 	script
 			/*$(document).ready(function(){
