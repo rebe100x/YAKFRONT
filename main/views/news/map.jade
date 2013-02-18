@@ -594,8 +594,8 @@ block content
 			var feedOffsetW = pos.left * scaleW;
 			var feedOffsetH = pos.top * scaleH;
 			var borderOffsetW = 15 * scaleW;
-			var borderOffsetHTop = 70 * scaleH;
-			var borderOffsetHBottom = 0 * scaleH;
+			var borderOffsetHTop = 140 * scaleH;
+			var borderOffsetHBottom = 10 * scaleH;
 			
 			if(width>768){
 				var myBounds = {
@@ -626,18 +626,19 @@ block content
 		}
 
 		function drawNewsFeed(){	
-			var newsfeedContainerHeight = window.innerHeight-$('#newsfeedContainer').offset().top-0+'px';
+			var newsfeedContainerHeight = window.innerHeight-$('#newsfeedContainer').offset().top-25+'px';
 			$('#newsfeedContainer').css('height',newsfeedContainerHeight);
 			var width = $(window).width();
 			if(width < 767)
 				$('#newsfeedContainer').css('top','300px');
 			else
-				$('#newsfeedContainer').css('top','10px');
-			var newsfeedContentHeight = window.innerHeight-$('#newsfeedContent').offset().top-0+'px';
+				$('#newsfeedContainer').css('top','-15px');
+			
+			var newsfeedContentHeight = window.innerHeight-$('#newsfeedContent').offset().top-25+'px';
 			$('#newsfeedContent').css('height',newsfeedContentHeight);
 			$('#newsfeedContent').mCustomScrollbar("update");
 
-			var newspostContentHeight = window.innerHeight-$('#newspostContent').offset().top-0+'px';
+			var newspostContentHeight = window.innerHeight-$('#newspostContent').offset().top-25+'px';
 			$('#newspostContent').css('height',newspostContentHeight);
 
 			$('#newspostContent').mCustomScrollbar("update");
@@ -859,16 +860,16 @@ block content
 
 			});
 
-			$.ajax({
-				url: "http://maps.googleapis.com/maps/api/geocode/json?latlng=" + curPos.x +"," + curPos.y + "&sensor=false",				
-				success: function( ajax ) {
 
-					console.log(ajax);
-					var placeGmap = getPlaceFromGmapResult(ajax.results[0]);
-					//console.log(placeGmap);
+			var geocoder = new google.maps.Geocoder();
+			var curLatLng = new google.maps.LatLng(curPos.x, curPos.y);
+			geocoder.geocode( {'latLng': curLatLng}, function(results, status) {						
+				if (status == google.maps.GeocoderStatus.OK) {
+					var placeGmap = getPlaceFromGmapResult((results[0]));
 					$("#searchPlaceStr").val(placeGmap.address.city + ", " + placeGmap.address.country);
 				}
-			});
+			});		
+			
 		}
 
 		function printMapItem(item,key,bounce){
@@ -1001,12 +1002,14 @@ block content
 			
 			infoContent.append(thetags);
 
-			if(typeof(item.address) != 'undefined' && item.address != 'null' && item.address != '')
-				var theaddress = "<div class=\'infodetail\'>"+item.address+"</div>";
-					if(user.login == 'renaud.bessieres' || user.login == 'dany.srour') /// this is debug
-						theaddress += "<div class=\'infodetail\'>"+pubDate+" >> "+dateEndPrint+"</div>";
-			infoContent.append(theaddress);
 
+			if(typeof(item.address) != 'undefined' && item.address != 'null' && item.address != ''){
+				var theaddress = "<div class=\'infodetail\'>"+item.address+"</div>";
+				if(user.login == 'renaud.bessieres' || user.login == 'dany.srour') /// this is debug
+					theaddress += "<div class=\'infodetail\'>"+pubDate+" >> "+dateEndPrint+"</div>";
+				infoContent.append(theaddress);
+			}
+				
 			/*PRINT ON THE FEED*/
 			//$('#newsfeed').append('<li class=\'mapHighlighter\' infoId=\''+item._id+'\'><i class=\'icon-eye-open\' ></i> '+item.title+'</li>')
 			if(top==1)
