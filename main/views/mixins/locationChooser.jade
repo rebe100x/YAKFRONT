@@ -57,13 +57,6 @@ mixin locationChooser(page)
 			change:function(event, ui){
 				var favPlaceId = changePlaceRange($(this).attr("alt"), $(this).parent().attr("lat"), $(this).parent().attr("lng"), $(this).parent().attr("pointname"), ui.value);
 				$(this).attr("alt", favPlaceId);
-				//changeRange();
-				//$("#rangeSelector").find("a.ui-slider-handle").css("left", ui.value + "%");
-				//$("#rangeSelector").find("div.ui-slider-range").css("width", ui.value + "%");
-				//$("#rangeSelector").parent().find("#localnessPrinter").eq(1).html(curPos.name);
-				//$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
-				
-
 			},
 			create:function(event, ui){
 				setLocalnessSliderText(parseInt($(this).attr("title")), $(this).parent().find(".localnessPrinter"));

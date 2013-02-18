@@ -510,10 +510,7 @@ $(document).ready(function() {
 					setLocalnessSliderText(ui.value, $(this).parent().find(".localnessPrinter"));
 				},
 				change:function(event, ui){
-					//changePlaceRange($(this).parent().attr("alt"), $(this).parent().attr("lat"), $(this).parent().attr("lng"), $(this).parent().attr("pointname"), ui.value);
-					// curPos.z =  ui.value;
-					//changeRange();
-					//$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
+					
 				},
 				create:function(event, ui){
 					setLocalnessSliderText(parseInt($(this).attr("title")), $(this).parent().find(".localnessPrinter"));
