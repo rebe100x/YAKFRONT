@@ -1219,6 +1219,11 @@ function checkByWidth()
 		    return (url.match(p)) ? RegExp.$1 : false;
 		}
 
+		function ytVidId2(url) {
+		    var p = /^(?:https?:\/\/)?(?:www\.)?youtube\.com\/embed\/(.*)?$/;
+		    return (url.match(p)) ? RegExp.$1 : false;
+		}
+
 		function vimeoVidId(url) {
 		    var p = /^(?:https?:\/\/)?(?:www\.)?vimeo\.com\/(.*)?$/;
 		    return (url.match(p)) ? RegExp.$1 : false;
@@ -1231,11 +1236,10 @@ function checkByWidth()
 
 		function checkandremoveTags(str)
 		{
-			return str.replace(/<\/?[^>]+>/gi, '');
+			return str.replace(/<script\/?[^>]+script>/gi, '');
 		}
 		function checkifSafeVideo(str)
 		{
-			
 			var div = $("<div />");
 			div.html(str);
 
@@ -1244,6 +1248,9 @@ function checkByWidth()
 				var checker = false;
 
 				if (ytVidId($(this).attr("src"))) {
+					checker = true;
+				}
+				else if (ytVidId2($(this).attr("src"))) {
 					checker = true;
 					
 				}
