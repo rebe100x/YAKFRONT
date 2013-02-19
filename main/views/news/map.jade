@@ -1254,7 +1254,10 @@ block content
 			currentItem.find('.myitem').remove();
 			currentItem.find(".icon-remove").remove();
 		}
-
+		function stopScroll()
+		{
+			return	false;
+		}
 		function createFeedPageItem(val)
 		{
 			item = $("<div />");
@@ -1295,7 +1298,7 @@ block content
 						$.each(data.info[0].yakComments, function(key, val){
 							divComment.append(drawAComment(val, currEleComment.attr("rel"), 'map'));
 						});
-						divComment.append('<textarea maxlength="250" rows="3" class="yakTextarea" placeholder="Ajouter un commentaire..."></textarea>');
+						divComment.append('<textarea maxlength="250" rows="3" style="z-index: 1111111111111; display: block" class="yakTextarea" placeholder="Ajouter un commentaire..." onclick="return stopScroll()"></textarea>');
 
 						divComment.find("textarea").keypress(function(event){
 							if (event.keyCode == 13) {

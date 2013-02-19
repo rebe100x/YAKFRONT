@@ -229,7 +229,7 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 .infowindow .myitem .commentBox .username:hover { text-decoration: underline;}
 .infowindow .myitem .commentBox .userthumb { height: 50px; width: 50px; float: left; }
 .infowindow .myitem .commentBox .comment { color: black; margin-bottom: 12px;}
-.infowindow .myitem .commentBox textarea { width: 97%; height: 50px; margin-top: 2px; margin-left: 0px;}
+.infowindow .myitem .commentBox textarea { width: 97%; height: 50px; margin-top: 2px; margin-left: 0px; } /*z-index for stop scroll*/
 .infowindow .myitem i.icon-chevron-up { }
 
 
