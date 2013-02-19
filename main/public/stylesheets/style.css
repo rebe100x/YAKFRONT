@@ -47,6 +47,9 @@ abbr[title] {
 .searchYakwala .ui-slider .ui-slider-handle {
 	width:3px;
 }
+.searchYakwala .ui-slider-horizontal .ui-slider-handle{
+	margin-left:0px;
+}
 
 .searchYakwala .btn .caret{
 	margin-left:6px;
@@ -528,7 +531,7 @@ width: 270px;
 .searchYakwala { background-color: #f6f6f6; height: 40px; float: left;}  
 .searchYakwala #searchBtn {background-image:url('../images/new/go.png'); width: 27px; height: 27px; border: 0px; margin: 7px; float: left;}
 .searchYakwala .customInput{ width: 150px; margin-top: 6px; float: left; margin-left: 6px;}
-.searchYakwala .myi { position: relative; top: 12px; float: left;}
+.searchYakwala .myi { position: relative; top: 12px; float: left;margin:0 2px;}
 .searchYakwala .verticalSplitter { width: 1px; height: 43px; background-color: #cecece; margin-left: 12px;}
 .searchYakwala .filterText { position: relative; top: 11px; float: left; margin-left: 12px; font-size: 14px;}
 .searchYakwala #filterTypes { cursor: pointer;}
