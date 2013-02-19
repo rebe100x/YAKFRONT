@@ -197,6 +197,19 @@ block content
 						$.getJSON('/api/afeed', { id: gup("id") } ,function(data) {
 							infoArray.push(data.info[0]);
 							printFeedItem(data.info[0],1,0);	
+							for(i=1; i<$(".mapHighlighterDetails[infoid=" + gup("id") +"]").length; i++)
+							{
+								$(".mapHighlighterDetails[infoid=" + gup("id") +"]").eq(i).remove();
+							}
+							if(data.info[0].user != undefined){
+								var thumbsource = conf.fronturl+'/pictures/120_90/' + $(".mapHighlighterDetails[infoid=" + gup("id") +"]").eq(0).attr("src");
+								$(".mapHighlighterDetails[infoid=" + gup("id") +"]").eq(0).attr("src", thumbsource);
+
+							}else{
+								var thumbsource = conf.batchurl + $(".mapHighlighterDetails[infoid=" + gup("id") +"]").eq(0).find(".thumbImage img").attr("src");
+								$(".mapHighlighterDetails[infoid=" + gup("id") +"]").eq(0).find(".thumbImage img").attr("src", thumbsource);
+							}
+
 						});
 					}
 				//markerCluster.addMarkers(markers);
