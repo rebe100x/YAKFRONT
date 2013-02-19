@@ -521,7 +521,8 @@ width: 270px;
 
  /* Header Yakwala */
 .dropdownRangeSelector {width: 136px; background: #f6f6f6; border: 0px; float: right; position: relative; right: 169px; }
-.favplacelist li { padding-bottom: 10px; padding-top: 10px; border-bottom: 1px solid #cecece; float: left; width: 100%}
+.favplacelist li { padding-bottom: 10px; padding-top: 10px; border-bottom: 1px solid #cecece; float: left; width: 100%; cursor: default;}
+.favplacelist li span { cursor: pointer;}
 .headerYakwala { background-color: white; }
 .headerYakwala .leftlink img { float: left; padding: 6px;}
 .headerYakwala .dropdown-toggle { float: right; margin-top: 19px;}

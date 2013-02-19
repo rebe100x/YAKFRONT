@@ -21,11 +21,11 @@ block content
 					span#newsNav				
 						ul.nav.nav-tabs
 							li.active(contentToLoad="newsfeedContent", style="width: 70%")
-								a.newsNavItem#newsFeed(href="#")
+								a.newsNavItem#newsFeed(href="#", title="Fil d'info")
 									img(src="/images/new/lefil.png")
 							- if(session)	
 								li(contentToLoad="newspostContent", style="width: 30%; background: #c81119")
-									a.newsNavItem#newsPost(href="#") 
+									a.newsNavItem#newsPost(href="#", title="Poster une info") 
 										img(src="/images/new/poster.png")
 									
 					span#newsfeedContent.tabContent			
