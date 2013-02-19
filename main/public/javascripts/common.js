@@ -39,7 +39,7 @@ function setSearchFor(el)
 {
 	$("html, body").animate({ scrollTop: 0 }, "slow");
 	$("#searchStr").val($(el).text().substring(1, $(el).text().length));
-	getAndPrintInfo(0);
+	$("#searchBtn").click();
 }
 
 function colorFirstRecord()
