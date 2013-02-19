@@ -420,7 +420,7 @@ $(document).ready(function() {
 	});*/
 
 	$("textarea").blur(function(){;
-		$(this).val(checkifSafeVideo($(this).val()));
+		$(this).val(checkifSafeVideo(checkandremoveTags($(this).val())));
 	});
 
 	$("input").blur(function(){;
@@ -1022,7 +1022,7 @@ function drawAComment(val,infoId, from)
 	var username = val.username;
 	var userid = val.userid;
 	//var comment =  wordFilter(val.comment.toString()).linkify();
-	var comment =  wordFilter(val.comment.toString());
+	var comment =  checkandremoveTags(wordFilter(val.comment.toString()));
 	var thumb	 = val.userthumb;
 	if(typeof(infoId) === 'undefined')
 		infoId = val.infoid;
