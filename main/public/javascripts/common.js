@@ -82,20 +82,34 @@ function mergeDeep(o1, o2) {
 
 
 function buildItemDate(item){
+	var months = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
 	var thedate = '';
 	if(item.yakType == 2){
 		if(typeof(item.eventDate) != 'undefined' && typeof(item.eventDate[0]) != 'undefined' ){
 			var dateTmpFrom = new Date(item.eventDate[0].dateTimeFrom);
 			//console.log('TEST'+item.eventDate[0].dateTimeFrom);
 			// TODO this does not work on SAFARI
-			var dateTmpEnd = new Date(item.eventDate[item.eventDate.length-1].dateTimeFrom);
+			var dateTmpEnd = new Date(item.eventDate[item.eventDate.length-1].dateTimeEnd);
 			var m = dateTmpFrom.getMinutes();
 			if (m<10) {m = "0" + m}
 
+			var DaysDiff = Math.floor((dateTmpEnd.getTime() - dateTmpFrom.getTime())/(1000*60*60*24));
+			var HoursDiff = Math.floor(dateTmpEnd.getHours() - dateTmpFrom.getHours());
+			if(DaysDiff == 0){
+				if(HoursDiff == 0)
+					thedate = 'Le '+dateTmpFrom.getDate()+' '+months[dateTmpFrom.getMonth()];
+				else
+					thedate = 'Le '+dateTmpFrom.getDate()+' '+months[dateTmpFrom.getMonth()]+' à '+dateTmpFrom.getHours()+':'+m;
+			}else{
+				if(HoursDiff == 0)
+					thedate = 'Du '+dateTmpFrom.getDate()+' '+months[dateTmpFrom.getMonth()] + ' au '+dateTmpEnd.getDate()+' '+months[dateTmpEnd.getMonth()];
+				else
+					thedate = 'Du '+dateTmpFrom.getDate()+' '+months[dateTmpFrom.getMonth()]+' ' + dateTmpFrom.getHours()+':'+m+' au '+dateTmpEnd.getDate()+' '+months[dateTmpEnd.getMonth()]+ ' ' + dateTmpEnd.getHours()+':'+m;
+			} 
+
 			if(item.eventDate.length == 1)	
 			{
-				//thedate = 'Le '+dateTmpFrom.getDate()+'/'+(dateTmpFrom.getMonth()+1)+'/'+dateTmpFrom.getFullYear()+' à '+dateTmpFrom.getHours()+':'+m;
-				thedate = 'Du '+dateTmpFrom.getDate()+'/'+(dateTmpFrom.getMonth()+1)+'/'+dateTmpFrom.getFullYear() + ' ' + dateTmpFrom.getHours()+':'+m+' au '+dateTmpEnd.getDate()+'/'+(dateTmpEnd.getMonth()+1)+'/'+dateTmpEnd.getFullYear() + ' ' + dateTmpEnd.getHours()+':'+m;
+				thedate = thedate;
 			}
 			//else if more than one event date in array
 			else 
@@ -103,15 +117,15 @@ function buildItemDate(item){
 				//thedate = 'Du '+dateTmpFrom.getDate()+'/'+(dateTmpFrom.getMonth()+1)+'/'+dateTmpFrom.getFullYear()+' au '+dateTmpEnd.getDate()+'/'+(dateTmpEnd.getMonth()+1)+'/'+dateTmpEnd.getFullYear();
 				var dates = "";
 				for (var i = item.eventDate.length - 1; i >= 0; i--) {
-					var dateTmpFrom = new Date(item.eventDate[i].dateTimeFrom);
-					var dateTmpEnd = new Date(item.eventDate[i].dateTimeEnd);
-					var m1 = dateTmpFrom.getMinutes();
-					var m2 = dateTmpEnd.getMinutes();
+					var dateTmpFromArray = new Date(item.eventDate[i].dateTimeFrom);
+					var dateTmpEndArray = new Date(item.eventDate[i].dateTimeEnd);
+					var m1 = dateTmpFromArray.getMinutes();
+					var m2 = dateTmpEndArray.getMinutes();
 					if (m1<10) {m1 = "0" + m1};
 					if (m2<10) {m2 = "0" + m2};
-					dates += 'Du '+dateTmpFrom.getDate()+'/'+(dateTmpFrom.getMonth()+1)+'/'+dateTmpFrom.getFullYear() + ' ' + dateTmpFrom.getHours()+':'+m+' au '+dateTmpEnd.getDate()+'/'+(dateTmpEnd.getMonth()+1)+'/'+dateTmpEnd.getFullYear() + ' ' + dateTmpEnd.getHours()+':'+m2 + "\n";
+					dates += 'Du '+dateTmpFromArray.getDate()+'/'+(dateTmpFromArray.getMonth()+1)+'/'+dateTmpFromArray.getFullYear() + ' ' + dateTmpFromArray.getHours()+':'+m+' au '+dateTmpEndArray.getDate()+'/'+(dateTmpEndArray.getMonth()+1)+'/'+dateTmpEndArray.getFullYear() + ' ' + dateTmpEndArray.getHours()+':'+m2 + "\n";
 				};
-				thedate = "<i class='icon-calendar customDates' title='" + dates + "'></i>";
+				thedate = thedate + " <i class='icon-calendar customDates' title='" + dates + "'></i>";
 			}
 		}else{
 			var dateTmp = new Date(item.pubDate);
@@ -858,6 +872,8 @@ Date.prototype.toLongFrenchFormat = function ()
 	var output = date + " " + months[this.getMonth()] + " " + this.getFullYear();
 	return output;
 }
+
+
 
 function setShare(el){
 	//el.prepend('<span>&nbsp;&nbsp;&nbsp;&nbsp;Loading</span>');
