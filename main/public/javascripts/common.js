@@ -1024,6 +1024,8 @@ function drawAComment(val,infoId, from)
 	//var comment =  wordFilter(val.comment.toString()).linkify();
 	var comment =  wordFilter(val.comment.toString());
 	var thumb	 = val.userthumb;
+	if(typeof(infoId) === 'undefined')
+		infoId = val.infoid;
 	date = "";
 	if (typeof(val.date) != 'undefined' ) {
 		var date	 = $.timeago(val.date);
