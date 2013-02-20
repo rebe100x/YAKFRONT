@@ -1,6 +1,7 @@
 exports.StoreImg = function(file,size,conf){
 	
 	var message = [];
+	var thumbFlag = 0;
 	var flagError = 0;
 	var srcPath = '';
 	var srcName = '';
@@ -26,13 +27,21 @@ exports.StoreImg = function(file,size,conf){
 		im.convert([srcPathTmp,srcPath],function(err,stdout){
 			// if convertion ok, we begin to build the small images
 			if(!err){
-				for(i=0;i<size.length;i++){
-					var w = size[i].width;
-					var h = size[i].height;
+				
+					var w = size.w;
+					var h = size.h;
 					
 					console.log(w+' x '+h);
 					
+					im.identify(['-format', '%w', srcPath], function(err, output){
+						if(output>320)
+							thumbFlag = 2;
+						else
+							thumbFlag = 1;	
+					});
+					
 					if(w > 0 && h > 0){
+						console.log("1="+conf.uploadsDir+'pictures/'+w+'_'+h+'/'+destName);
 						im.resize({
 							srcPath: srcPath,
 							dstPath: conf.uploadsDir+'pictures/'+w+'_'+h+'/'+destName,
@@ -49,13 +58,18 @@ exports.StoreImg = function(file,size,conf){
 								console.log('error creating thumbnail');
 								flagError = 1;
 								message.push("L'image n'est pas reconnue, essayer avec une autre image !");
-							}else
+							}else{
+								console.log(w+" "+h);
 								console.log('thumbnail created successfully');
+								console.log("11="+conf.uploadsDir+'pictures/'+w+'_'+h+'/'+destName);
+								StoreImgOnS3(w+'_'+h+'/'+destName,conf);
+							}
+								
 						});
 					}
 					
 					if(h == 0){
-					
+						console.log("2="+conf.uploadsDir+'pictures/'+w+'_'+h+'/'+destName);
 						im.identify(['-format', '%w', srcPath], function(err, output){
 							if (!err){
 								if(output > w){
@@ -70,8 +84,11 @@ exports.StoreImg = function(file,size,conf){
 											flagError = 1;
 											message.push("L'image n'est pas reconnue, essayer avec une autre image !");
 											throw err;
-										}else
+										}else{
 											console.log('resize > 512 ok');
+											StoreImgOnS3(w+'_'+h+'/'+destName,conf);
+										}
+											
 									});
 								}else{
 									im.resize({
@@ -85,8 +102,10 @@ exports.StoreImg = function(file,size,conf){
 											console.log('im.resize to same size failed');
 											flagError = 1;
 											message.push("L'image n'est pas reconnue, essayer avec une autre image !");
-										}else
+										}else{
 											console.log('resize < 512 ok');
+											StoreImgOnS3(w+'_'+h+'/'+destName,conf);
+										}
 											
 									});
 								}
@@ -98,7 +117,7 @@ exports.StoreImg = function(file,size,conf){
 							}
 						});
 					} // END H==0
-				} // END FOR
+				
 			} // END NO ERR IN CONVERT TO JPG
 			else{
 				console.log('convert to jpeg failed');
@@ -116,6 +135,21 @@ exports.StoreImg = function(file,size,conf){
 		}
 		
 		
-		var fileThumb = {"name":destName,"err":flagError,"msg":message};
+		var fileThumb = {"name":destName,"err":flagError,"msg":message,"thumbFlag":thumbFlag};
 		return fileThumb;
+}
+
+
+function StoreImgOnS3(imgPath,conf){
+	var AWS = require('aws-sdk');
+	var fs = require('fs');
+	AWS.config.update({ "accessKeyId": "AKIAJ6EBI6LCECLYVM5Q", "secretAccessKey": "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", "region": "eu-west-1" });
+	var s3 = new AWS.S3();
+	fs.readFile(conf.uploadsDir+'pictures/'+imgPath, function (err, data) {
+	  if (err) { throw err; }
+	  var data2send = {Bucket: conf.bucket, Key: imgPath, Body: data, ACL:'public-read',ContentType:'image/jpeg'};
+	  s3.client.putObject(data2send, function() {
+	    console.log("Successfully uploaded data to "+conf.bucket+"/"+imgPath);
+	  });
+	});
 }

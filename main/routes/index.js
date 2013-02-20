@@ -57,8 +57,8 @@ exports.requiresLogin = function(req,res,next){
 		User.findById(req.session.user,function (err, theuser){
 			if(theuser != undefined && theuser != null ){
 				res.locals.user = User.format(theuser);
-				console.log(res.locals.user);
-				console.log(theuser);
+				//console.log(res.locals.user);
+				//console.log(theuser);
 				console.log('LOGGED IN');
 				next();
 			}else{
@@ -152,9 +152,12 @@ exports.news = function(req, res){
 		if(req.files.picture.size && req.files.picture.size > 0 && req.files.picture.size < 1048576*5){
 			var drawTool = require('../mylib/drawlib.js');
 			var size = mainConf.imgSizeInfo;
-			infoThumb = drawTool.StoreImg(req.files.picture,size,conf);
-			formMessage.push(infoThumb.msg);
-			thumbFlag = 2;	
+			for(i=0;i<size.length;i++){
+				infoThumb = drawTool.StoreImg(req.files.picture,{w:size[i].width,h:size[i].height},conf);		
+			}
+			
+			//formMessage.push(infoThumb.msg);
+			//thumbFlag = infoThumb.thumbFlag;	
 		}
 		else
 			infoThumb.err = 0;
@@ -181,11 +184,14 @@ exports.news = function(req, res){
 					yakCatName.push('InfosPratiques');
 				}
 				
-				var yaccatstemp = JSON.parse(req.body.yakcatInput);
-				yaccatstemp.forEach(function(item) {
-					yakCat.push(mongoose.Types.ObjectId(item._id)); 
-					yakCatName.push(item.title);
-				})
+				if(!(req.body.yakcatInput == "" || typeof req.body.yakcatInput === "undefined")){					
+					var yaccatstemp = JSON.parse(req.body.yakcatInput);
+					yaccatstemp.forEach(function(item) {
+						yakCat.push(mongoose.Types.ObjectId(item._id)); 
+						yakCatName.push(item.title);
+					})
+		
+				}
 				
 				
 				info.yakCatName = yakCatName;
@@ -686,7 +692,7 @@ exports.alerts = function(req, res){
 		User.update({_id: req.session.user}, {$set:{usersubs : usersubsArray}, tagsubs : tagsubsArray, feedsubs: feedsubsArray}, {upsert: true}, function(err){
 			if (err) console.log(err);
 			else{
-				console.log('Vos alertes sont enregistrées ');
+				//console.log('Vos alertes sont enregistrées ');
 				formMessage.push("Vos alertes sont enregistrées");
 				res.json("1");
 			}
@@ -756,10 +762,8 @@ exports.profile = function(req, res){
 		User.update({_id: req.session.user}, 
 		cond
 		, {upsert: true}, function(err){
-			if (!err){
-				console.log('Success!');
-			}
-			else console.log(err);
+			if (err)
+				console.log(err);
 		});
 		formMessage.push("Votre profil est enregistré");
 	}else
@@ -782,10 +786,8 @@ exports.privateprofile = function(req, res){
 		User.update({_id: req.session.user}, 
 		{mail:req.body.mail}
 		, {upsert: true}, function(err){
-			if (!err){
-				console.log('Success!');
-			}
-			else console.log(err);
+			if (err)
+				console.log(err);
 		});
 		formMessage.push("Votre profil privé est enregistré");
 	}else

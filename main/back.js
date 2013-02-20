@@ -40,7 +40,6 @@ app.configure(function(){
 	res.locals.redir = req.query.redir;
 	res.locals.message = req.session.message;
 	res.locals.type = req.session.type;
-	res.locals.mainConf = config.confs.main;
     next();
   });
   
@@ -50,8 +49,10 @@ app.configure(function(){
 });
 
 app.configure('development', function(){
-	conf = config.confs.dev;
-	app.locals.conf = JSON.stringify(config.confs.dev);
+	conf = config.confs.devrenaud;
+	app.locals.conf = JSON.stringify(conf);
+	mainConf = config.confs.main;
+	app.locals.mainConf = JSON.stringify(mainConf);
 	
 	app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
@@ -60,6 +61,8 @@ app.configure('development', function(){
 app.configure('production', function(){
 	conf = config.confs.prod;
 	app.locals.conf = JSON.stringify(config.confs.prod);
+	mainConf = config.confs.main;
+	app.locals.mainConf = JSON.stringify(config.confs.main);
 	app.use(express.errorHandler());
 });
 
@@ -73,46 +76,21 @@ var db = routes.db(conf);
 // OPEN ACCES ROUTES :
 app.get('/user/login', routes.user_login);
 app.get('/user/logout', routes.user_logout);
-app.get('/user/new', routes.user_new);
-app.get('/user/validate/:token/:password', routes.user_validate);
 app.get('/pictures/:size/:picture', routes.picture);
 app.get('/static/images/:name', routes.static_image);
 
-app.post('/user',routes.user);
-//app.post('/validate',routes.validate);
 app.post('/session',routes.session);
 
 // SECURED BY LOGIN ROUTES:
+app.get('/place/list', routes.requiresLogin, routes.place_map);
+app.post('/place', routes.requiresLogin, routes.place);
+app.post('/user', routes.requiresLogin, routes.user);
+app.post('/news', routes.requiresLogin, routes.news);
+app.post('/alerts', routes.requiresLogin, routes.alerts);
+app.post('/profile', routes.requiresLogin, routes.profile);
 
-//map
+
 app.get('/', routes.requiresLogin, routes.index);
-app.get('/news/map', routes.requiresLogin, routes.news_map);
-app.get('/news/map/search/:str', routes.requiresLogin, routes.news_map_search);
-app.get('/news/feed', routes.requiresLogin, routes.news_feed);
-app.get('/news/afeed', routes.requiresLogin, routes.news_afeed);
-app.post('/news',routes.requiresLogin, routes.news);
-
-// settings
-app.get('/settings', routes.requiresLogin, routes.settings_profil);
-
-app.get('/settings/profile', routes.requiresLogin, routes.settings_profile);
-app.post('/profile',routes.requiresLogin, routes.profile);
-
-app.get('/settings/privateprofile', routes.requiresLogin, routes.settings_privateprofile);
-app.post('/privateprofile',routes.requiresLogin, routes.privateprofile);
-
-app.get('/settings/alerts', routes.requiresLogin, routes.settings_alerts);
-app.post('/alerts',routes.requiresLogin,routes.alerts);
-
-app.get('/settings/password', routes.requiresLogin, routes.settings_password);
-app.post('/password',routes.requiresLogin, routes.password);
-
-app.get('/settings/firstvisit', routes.requiresLogin, routes.settings_firstvisit);
-app.post('/firstvisit',routes.requiresLogin, routes.firstvisit);
-
-app.post('/favplace', routes.requiresLogin, routes.addfavplace); 
-app.post('/delfavplace', routes.requiresLogin, routes.delfavplace); 
-
 
 
 // OPEN ACCESS API
@@ -203,14 +181,6 @@ app.put('/api/user/:userid',api.requiresToken, api.put_user_details);
 app.get('/api/user/search/:string', api.user_search);
 app.get('/api/place/search/:string', api.place_search);
 
-
- 
-
-
-
-
-// DOCS
-app.get('/docs/api', routes.docs_api);
 
 
 // redirect all others to the index (HTML5 history)
