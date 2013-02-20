@@ -76,6 +76,9 @@ mixin postForm()
 							button.btn#btn-place-adder(type="button") Add
 							span.help-inline.small Ajoutez plusieurs adresses <br>et faites apparaître votre info <br>à plusieurs endroits !
 				br
+				div.controls#yakTypeController(style="display: none;")
+					label.radio.inline Actu
+						input#option1(type="radio", name="yakType", value="4" , checked) 
 				button.btn.btn-large.btn-block.btn-inverse(style='width:100%',type='submit', name='submit', id='submit', value='Envoyer') Envoyer
 	- else
 		mixin loginForm() 

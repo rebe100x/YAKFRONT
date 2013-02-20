@@ -21,11 +21,11 @@ block content
 					span#newsNav				
 						ul.nav.nav-tabs
 							li.active(contentToLoad="newsfeedContent", style="width: 70%")
-								a.newsNavItem#newsFeed(href="#")
+								a.newsNavItem#newsFeed(href="#", title="Fil d'info")
 									img(src="/images/new/lefil.png")
 							- if(session)	
 								li(contentToLoad="newspostContent", style="width: 30%; background: #c81119")
-									a.newsNavItem#newsPost(href="#") 
+									a.newsNavItem#newsPost(href="#", title="Poster une info") 
 										img(src="/images/new/poster.png")
 									
 					span#newsfeedContent.tabContent			
@@ -39,7 +39,7 @@ block content
 	script(src="/javascripts/lib/jquery/js/share.js")	
 	script(src="/javascripts/lib/jquery/js/jquery.livequery.js")
 	script(src="/javascripts/json2.js")	
-	
+
 	script
 	
 	
@@ -660,7 +660,7 @@ block content
 					markerHL.setVisible(true);
 					markerHL.setMap(map);
 					markerHL.setAnimation(google.maps.Animation.BOUNCE);
-					markerHL.setOptions({icon:"/images/markers/type"+val.yakType+".png"});
+					markerHL.setOptions({icon:"/images/markers/new/type"+val.yakType+".png"});
 					
 					//$("ul#newsfeed li.mapHighlighterDetails").fadeOut().html('');
 					//$("ul#newsfeed li.mapHighlighterDetails[infoid="+id+"]").fadeIn();
@@ -1193,7 +1193,7 @@ block content
 				var item = createFeedPageItem(val);
 				currentItem.find(".loadingMore").remove();
 				currentItem.append(item);
-				currentItem.find(".myitem").append("<i class='icon-remove' title='close' onclick='closemyitem(this);'></i>");
+				currentItem.find(".myitem").append("<i class='icon-remove' title='close' onclick='closemyitem(this);'></i><span style='display: none' id='toShowFixImage'>" + thumbImage +"</span>");
 				setshortUrl();
 				setLikeSystem();
 
@@ -1244,7 +1244,7 @@ block content
 		{
 			var currentItem = $(el).parent().parent();
 			currentItem.find(".thumbImage img").show();
-			currentItem.find(".thumbImage img").attr("src", thumbImage);
+			currentItem.find(".thumbImage img").attr("src", $(el).parent().find("#toShowFixImage").html());
 			currentItem.find(".thumbImage").insertAfter(currentItem.find(".yakTypeImage"));
 			currentItem.find(".infodetail").insertAfter(currentItem.find(".tags"));
 			currentItem.removeClass("currentDetails");
@@ -1317,8 +1317,9 @@ block content
 								newComment.userthumb = user.thumb;
 								newComment.date = new Date();
 								$.post('/api/setComment', {infoId : currEleComment.attr("rel"), username: user.login, userthumb: user.thumb, comment: comment.substring(0, 249)} , function(res){
-									if (res == 'updated')
+									if (res.meta.code == '200')
 									{
+										newComment._id = res.meta.cid;
 										theArea.val("");
 										theArea.removeAttr("disabled");
 										theArea.before(drawAComment(newComment));

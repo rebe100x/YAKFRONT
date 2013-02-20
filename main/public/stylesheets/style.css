@@ -176,13 +176,14 @@ abbr[title] {
 #newsfeedMenu #typeContainer{}
 #newsfeedMenu span.btn{}
 #newsfeedMenu span.btn.active{
-	background-color: #C9C9C9;
 	background-image: none;
 	outline: 0;
 	-webkit-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
 	-moz-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
 	box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
 }	
+
+#newsfeedMenu span.btn.active img { opacity: 1;}
 	/*MAP TAB MENU*/
 #newsNav{width:100%;margin:10px auto 0px;padding:0px;float:left;opacity:0.95;background:#FFFFFF;}
 #newsNav ul.nav {margin-bottom:5px;}
@@ -520,7 +521,8 @@ width: 270px;
 
  /* Header Yakwala */
 .dropdownRangeSelector {width: 136px; background: #f6f6f6; border: 0px; float: right; position: relative; right: 169px; }
-.favplacelist li { padding-bottom: 10px; padding-top: 10px; border-bottom: 1px solid #cecece; float: left; width: 100%}
+.favplacelist li { padding-bottom: 10px; padding-top: 10px; border-bottom: 1px solid #cecece; float: left; width: 100%; cursor: default;}
+.favplacelist li span { cursor: pointer;}
 .headerYakwala { background-color: white; }
 .headerYakwala .leftlink img { float: left; padding: 6px;}
 .headerYakwala .dropdown-toggle { float: right; margin-top: 19px;}
@@ -537,7 +539,7 @@ width: 270px;
 .searchYakwala #filterTypes { cursor: pointer;}
 .searchYakwala #newsfeedMenu { width: auto; background-color: transparent;}
 .searchYakwala #typeContainer { display: block;}
-.searchYakwala #typeContainer img { height: 24px;}
+.searchYakwala #typeContainer img { height: 24px; opacity: 0.3}
 .searchYakwala #typeContainer .btn { padding: 0px; background-color: transparent; margin-bottom: 3px; background-image: none; border: 0px}
 .searchYakwala #heatModule { display: none; position: absolute; top: 42px; left: 24px; width: 100%;}
 .searchYakwala #rangeSelector { display: none; position: absolute; top: 42px; left: 24px; width: 100%;}
@@ -566,3 +568,4 @@ width: 270px;
 /* calendar custom date*/
 .customDates { position: relative;; left: 10px; top: -2px; cursor: pointer;}
 .customprofile { margin-right: 12px; cursor: pointer; margin-top: -6px; padding: 3px;}
+.delComment { float: right; position: relative; right: 12px;}

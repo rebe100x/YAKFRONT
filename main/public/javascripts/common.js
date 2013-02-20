@@ -39,7 +39,7 @@ function setSearchFor(el)
 {
 	$("html, body").animate({ scrollTop: 0 }, "slow");
 	$("#searchStr").val($(el).text().substring(1, $(el).text().length));
-	getAndPrintInfo(0);
+	$("#searchBtn").click();
 }
 
 function colorFirstRecord()
@@ -420,7 +420,7 @@ $(document).ready(function() {
 	});*/
 
 	$("textarea").blur(function(){;
-		$(this).val(checkifSafeVideo($(this).val()));
+		$(this).val(checkifSafeVideo(checkandremoveTags($(this).val())));
 	});
 
 	$("input").blur(function(){;
@@ -1022,8 +1022,10 @@ function drawAComment(val,infoId, from)
 	var username = val.username;
 	var userid = val.userid;
 	//var comment =  wordFilter(val.comment.toString()).linkify();
-	var comment =  wordFilter(val.comment.toString());
+	var comment =  checkandremoveTags(wordFilter(val.comment.toString()));
 	var thumb	 = val.userthumb;
+	if(typeof(infoId) === 'undefined')
+		infoId = val.infoid;
 	date = "";
 	if (typeof(val.date) != 'undefined' ) {
 		var date	 = $.timeago(val.date);
@@ -1039,9 +1041,9 @@ function drawAComment(val,infoId, from)
 	{
 		var urlsearch = conf.fronturl + '/news/map/search/@' + username;
 		if(user._id	!= userid)
-			return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username' href='" + urlsearch + "'>" + username + "</a><span class='timeago'>" + date + "</span><div class='comment'>" + comment + "</div></div>";	
+			return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username' onclick='setSearchFor(this)'>@" + username + "</a><span class='timeago'>" + date + "</span><div class='comment'>" + comment + "</div></div>";	
 		else
-			return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username' href='" + urlsearch + "'>" + username + "</a><span class='timeago'>" + date + "</span><a class='delComment' onclick='deleteComment(this)' id='" + val._id +"' infoid='" + infoId + "'>X</a><div class='comment'>" + comment + "</div></div>";		
+			return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username' onclick='setSearchFor(this)'>@" + username + "</a><span class='timeago'>" + date + "</span><a class='delComment' onclick='deleteComment(this)' id='" + val._id +"' infoid='" + infoId + "'>X</a><div class='comment'>" + comment + "</div></div>";		
 	}
 
 	
@@ -1217,6 +1219,11 @@ function checkByWidth()
 		    return (url.match(p)) ? RegExp.$1 : false;
 		}
 
+		function ytVidId2(url) {
+		    var p = /^(?:https?:\/\/)?(?:www\.)?youtube\.com\/embed\/(.*)?$/;
+		    return (url.match(p)) ? RegExp.$1 : false;
+		}
+
 		function vimeoVidId(url) {
 		    var p = /^(?:https?:\/\/)?(?:www\.)?vimeo\.com\/(.*)?$/;
 		    return (url.match(p)) ? RegExp.$1 : false;
@@ -1229,11 +1236,10 @@ function checkByWidth()
 
 		function checkandremoveTags(str)
 		{
-			return str.replace(/<\/?[^>]+>/gi, '');
+			return str.replace(/<script\/?[^>]+script>/gi, '');
 		}
 		function checkifSafeVideo(str)
 		{
-			
 			var div = $("<div />");
 			div.html(str);
 
@@ -1242,6 +1248,9 @@ function checkByWidth()
 				var checker = false;
 
 				if (ytVidId($(this).attr("src"))) {
+					checker = true;
+				}
+				else if (ytVidId2($(this).attr("src"))) {
 					checker = true;
 					
 				}

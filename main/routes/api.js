@@ -1480,7 +1480,7 @@ exports.setComment = function(req, res){
 			
 
 			Info.update({_id:infoId},{$push:{yakComments: acomment}, new:true}, function(err, result){
-				res.json("updated")
+				res.json({meta:{code:200, cid: acomment._id}});
 			})	
 		
 	}else{

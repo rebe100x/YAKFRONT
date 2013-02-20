@@ -184,14 +184,14 @@ exports.news = function(req, res){
 					yakCatName.push('InfosPratiques');
 				}
 				
+
 				if(!(req.body.yakcatInput == "" || typeof req.body.yakcatInput === "undefined")){					
 					var yaccatstemp = JSON.parse(req.body.yakcatInput);
 					yaccatstemp.forEach(function(item) {
 						yakCat.push(mongoose.Types.ObjectId(item._id)); 
 						yakCatName.push(item.title);
 					})
-		
-				}
+				}	
 				
 				
 				info.yakCatName = yakCatName;
