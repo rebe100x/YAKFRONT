@@ -394,7 +394,7 @@ function setTimeSliderText(x, text){
 /*READY FUNCTIONS*/	
 $(document).ready(function() {
 
-			
+	checkforDevice();
 	//ie fix for placeholder
 	/*$("[placeholder]").focus(function() {
 		  var input = $(this);
@@ -1033,9 +1033,9 @@ function drawAComment(val,infoId, from)
 
 	if (typeof(from) === 'undefined' ) {
 			if(user._id	!= userid)
-				return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><span class='username'>" + username + "</span><span class='timeago'>" + date + "</span><div class='comment'>" + comment + "</div></div>";
+				return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username' onclick='setSearchFor(this)'>@" + username + "</a><span class='timeago'>" + date + "</span><div class='comment'>" + comment + "</div></div>";
 			else
-				return 	"<div class='aComment'><img class='userthumb' src='" + thumb + "' /><span class='username'>" + username + "</span><span class='timeago'>" + date + "</span><a class='delComment' onclick='deleteComment(this)' id='" + val._id +"' infoid='" + infoId + "'>X</a><div class='comment'>" + comment + "</div></div>";
+				return 	"<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username' onclick='setSearchFor(this)'>@" + username + "</a><span class='timeago'>" + date + "</span><a class='delComment' onclick='deleteComment(this)' id='" + val._id +"' infoid='" + infoId + "'>X</a><div class='comment'>" + comment + "</div></div>";
 	}
 	else
 	{
@@ -1236,7 +1236,7 @@ function checkByWidth()
 
 		function checkandremoveTags(str)
 		{
-			return str.replace(/<script\/?[^>]+script>/gi, '');
+			return str.replace(/<script.*?>.*?<\/script>/gi, '');
 		}
 		function checkifSafeVideo(str)
 		{
@@ -1288,4 +1288,23 @@ function checkByWidth()
 		return "";
 		else
 		return results[1];
+		}
+
+		function isTouchDevice() {
+			var el = document.createElement('div');
+			el.setAttribute('ongesturestart', 'return;');
+			return typeof el.ongesturestart === "function";
+		}
+
+		function checkforDevice()
+		{
+			var ua = navigator.userAgent;
+			var checker = {
+				iphone: ua.match(/(iPhone|iPod|iPad)/),
+				blackberry: ua.match(/BlackBerry/),
+				android: ua.match(/Android/)
+			};
+
+			if (checker.android || checker.iphone || checker.blackberry)
+				$("#zoomnavigation").remove();
 		}

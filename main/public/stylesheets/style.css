@@ -229,7 +229,7 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 .infowindow .myitem .commentBox .username:hover { text-decoration: underline;}
 .infowindow .myitem .commentBox .userthumb { height: 50px; width: 50px; float: left; }
 .infowindow .myitem .commentBox .comment { color: black; margin-bottom: 12px;}
-.infowindow .myitem .commentBox textarea { width: 97%; height: 50px; margin-top: 2px; margin-left: 0px;}
+.infowindow .myitem .commentBox textarea { width: 97%; height: 50px; margin-top: 2px; margin-left: 0px; } /*z-index for stop scroll*/
 .infowindow .myitem i.icon-chevron-up { }
 
 
@@ -275,7 +275,7 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 .infowindow .thumbImage { float: left;  margin-left: 0px;}
 .infowindow .thumbImage img { float: left; width:auto;height:75;}
 
-.infowindow .itemTitle { font-size: 13px; font-weight: bold; color: #5D5D5D; left: 20px; padding-right: 20px; position: relative; text-align: justify;}
+.infowindow .itemTitle { font-size: 13px; font-weight: bold; color: #5D5D5D; left: 12px; padding-right: 29px; position: relative; text-align: justify;}
 
 .infowindow .postedBy { position: relative; left: 12px; padding-right: 12px; font-size: 11px;}
 

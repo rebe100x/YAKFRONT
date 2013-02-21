@@ -1197,7 +1197,7 @@ block content
 				var item = createFeedPageItem(val);
 				currentItem.find(".loadingMore").remove();
 				currentItem.append(item);
-				currentItem.find(".myitem").append("<i class='icon-remove' title='close' onclick='closemyitem(this);'></i><span style='display: none' id='toShowFixImage'>" + thumbImage +"</span>");
+				currentItem.find(".myitem").append("<i class='icon-remove' title='close' rel='" + thumbImage + "' onclick='closemyitem(this);'></i>");
 				setshortUrl();
 				setLikeSystem();
 
@@ -1248,7 +1248,7 @@ block content
 		{
 			var currentItem = $(el).parent().parent();
 			currentItem.find(".thumbImage img").show();
-			currentItem.find(".thumbImage img").attr("src", $(el).parent().find("#toShowFixImage").html());
+			currentItem.find(".thumbImage img").attr("src", $(el).attr("rel"));
 			currentItem.find(".thumbImage").insertAfter(currentItem.find(".yakTypeImage"));
 			currentItem.find(".infodetail").insertAfter(currentItem.find(".tags"));
 			currentItem.removeClass("currentDetails");
@@ -1258,7 +1258,10 @@ block content
 			currentItem.find('.myitem').remove();
 			currentItem.find(".icon-remove").remove();
 		}
-
+		function stopScroll()
+		{
+			return	false;
+		}
 		function createFeedPageItem(val)
 		{
 			item = $("<div />");
@@ -1299,7 +1302,7 @@ block content
 						$.each(data.info[0].yakComments, function(key, val){
 							divComment.append(drawAComment(val, currEleComment.attr("rel"), 'map'));
 						});
-						divComment.append('<textarea maxlength="250" rows="3" class="yakTextarea" placeholder="Ajouter un commentaire..."></textarea>');
+						divComment.append('<textarea maxlength="250" rows="3" style="z-index: 1111111111111; display: block" class="yakTextarea" placeholder="Ajouter un commentaire..." onclick="return stopScroll()"></textarea>');
 
 						divComment.find("textarea").keypress(function(event){
 							if (event.keyCode == 13) {
