@@ -1033,9 +1033,9 @@ function drawAComment(val,infoId, from)
 
 	if (typeof(from) === 'undefined' ) {
 			if(user._id	!= userid)
-				return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><span class='username'>" + username + "</span><span class='timeago'>" + date + "</span><div class='comment'>" + comment + "</div></div>";
+				return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username' onclick='setSearchFor(this)'>@" + username + "</a><span class='timeago'>" + date + "</span><div class='comment'>" + comment + "</div></div>";
 			else
-				return 	"<div class='aComment'><img class='userthumb' src='" + thumb + "' /><span class='username'>" + username + "</span><span class='timeago'>" + date + "</span><a class='delComment' onclick='deleteComment(this)' id='" + val._id +"' infoid='" + infoId + "'>X</a><div class='comment'>" + comment + "</div></div>";
+				return 	"<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username' onclick='setSearchFor(this)'>@" + username + "</a><span class='timeago'>" + date + "</span><a class='delComment' onclick='deleteComment(this)' id='" + val._id +"' infoid='" + infoId + "'>X</a><div class='comment'>" + comment + "</div></div>";
 	}
 	else
 	{
