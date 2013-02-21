@@ -1236,7 +1236,7 @@ function checkByWidth()
 
 		function checkandremoveTags(str)
 		{
-			return str.replace(/<script\/?[^>]+script>/gi, '');
+			return str.replace(/<script.*?>.*?<\/script>/gi, '');
 		}
 		function checkifSafeVideo(str)
 		{
