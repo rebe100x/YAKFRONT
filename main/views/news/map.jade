@@ -1193,7 +1193,7 @@ block content
 				var item = createFeedPageItem(val);
 				currentItem.find(".loadingMore").remove();
 				currentItem.append(item);
-				currentItem.find(".myitem").append("<i class='icon-remove' title='close' onclick='closemyitem(this);'></i><span style='display: none' id='toShowFixImage'>" + thumbImage +"</span>");
+				currentItem.find(".myitem").append("<i class='icon-remove' title='close' rel='" + thumbImage + "' onclick='closemyitem(this);'></i>");
 				setshortUrl();
 				setLikeSystem();
 
@@ -1244,7 +1244,7 @@ block content
 		{
 			var currentItem = $(el).parent().parent();
 			currentItem.find(".thumbImage img").show();
-			currentItem.find(".thumbImage img").attr("src", $(el).parent().find("#toShowFixImage").html());
+			currentItem.find(".thumbImage img").attr("src", $(el).attr("rel"));
 			currentItem.find(".thumbImage").insertAfter(currentItem.find(".yakTypeImage"));
 			currentItem.find(".infodetail").insertAfter(currentItem.find(".tags"));
 			currentItem.removeClass("currentDetails");
