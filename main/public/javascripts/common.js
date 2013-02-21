@@ -394,7 +394,7 @@ function setTimeSliderText(x, text){
 /*READY FUNCTIONS*/	
 $(document).ready(function() {
 
-			
+	checkforDevice();
 	//ie fix for placeholder
 	/*$("[placeholder]").focus(function() {
 		  var input = $(this);
@@ -1288,4 +1288,23 @@ function checkByWidth()
 		return "";
 		else
 		return results[1];
+		}
+
+		function isTouchDevice() {
+			var el = document.createElement('div');
+			el.setAttribute('ongesturestart', 'return;');
+			return typeof el.ongesturestart === "function";
+		}
+
+		function checkforDevice()
+		{
+			var ua = navigator.userAgent;
+			var checker = {
+				iphone: ua.match(/(iPhone|iPod|iPad)/),
+				blackberry: ua.match(/BlackBerry/),
+				android: ua.match(/Android/)
+			};
+
+			if (checker.android || checker.iphone || checker.blackberry)
+				$("#zoomnavigation").remove();
 		}
