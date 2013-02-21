@@ -94,6 +94,7 @@ var Info = new Schema({
 
 Info.statics.format = function (theinfo) {
 	if(theinfo.thumb != undefined)
+		//var thethumb = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/120_90/'+theinfo.thumb;
 		if(theinfo.user != undefined)
 			var thethumb = 	conf.fronturl+'/pictures/120_90/'+theinfo.thumb;
 		else

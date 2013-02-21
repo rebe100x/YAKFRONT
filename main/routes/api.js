@@ -67,8 +67,12 @@ exports.feeds = function (req, res) {
 exports.afeed = function (req, res) {
 	var Info = db.model('Info');
 	Info.findAllByID(function (err, docs){
+	  var infosFormated = docs.map(function(item){
+				var Info = db.model('Info');
+				return Info.format(item);
+			});
 	  res.json({
-		info: docs
+		info: infosFormated
 	  });
 	}, req.query["id"]); 
 };

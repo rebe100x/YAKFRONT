@@ -147,17 +147,21 @@ exports.news = function(req, res){
 				theYakType = 4;			
 		}
 
-		var thumbFlag = 0;
+		var thumbFlag = 2;
+		var msg = '';
 		var infoThumb = new Object();
 		if(req.files.picture.size && req.files.picture.size > 0 && req.files.picture.size < 1048576*5){
 			var drawTool = require('../mylib/drawlib.js');
 			var size = mainConf.imgSizeInfo;
+			
 			for(i=0;i<size.length;i++){
-				infoThumb = drawTool.StoreImg(req.files.picture,{w:size[i].width,h:size[i].height},conf);		
+				infoThumb = drawTool.StoreImg(req.files.picture,{w:size[i].width,h:size[i].height},conf);
+				//thumbFlag = drawTool.SetThumbFlag(req.files.picture.name,conf);
+
 			}
 			
-			//formMessage.push(infoThumb.msg);
-			//thumbFlag = infoThumb.thumbFlag;	
+			formMessage.push(msg);
+		
 		}
 		else
 			infoThumb.err = 0;
