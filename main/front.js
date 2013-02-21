@@ -12,11 +12,15 @@ var express = require('express'),
   fs = require('fs'),
   S = require('string'),
   crypto = require('crypto'),
-  nodemailer = require("nodemailer")
+  nodemailer = require("nodemailer"),
+  AWS = require('aws-sdk')
   ;
   
   
 var app = express();
+
+
+
 
 // Configuration
 
@@ -39,8 +43,6 @@ app.configure(function(){
 	res.locals.redir = req.query.redir;
 	res.locals.message = req.session.message;
 	res.locals.type = req.session.type;
-	//var pjson = require('./package.json');
-	//app.locals.version = pjson.version;
 	next();
   });
   

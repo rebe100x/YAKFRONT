@@ -25,7 +25,8 @@ exports.confs = {
 		"env":"DEV",
 		"uploadsDir":__dirname+"\\public\\uploads\\",
 		"ga":"",
-		"gmapKey":"AIzaSyAbYNYyPVWQ78bvZIHHR_djLt-FMEfy2wY"
+		"gmapKey":"AIzaSyAbYNYyPVWQ78bvZIHHR_djLt-FMEfy2wY",
+		"bucket":"yak1"
 	},
 	
 	"devdany" : {
@@ -44,7 +45,8 @@ exports.confs = {
 		"env":"DEV",
 		"uploadsDir":__dirname+"\\public\\uploads\\",
 		"ga":"",
-		"gmapKey":"AIzaSyAbYNYyPVWQ78bvZIHHR_djLt-FMEfy2wY"
+		"gmapKey":"AIzaSyAbYNYyPVWQ78bvZIHHR_djLt-FMEfy2wY",
+		"bucket":"yak1"
 	},
 	
 	"preprod" : {
@@ -63,7 +65,8 @@ exports.confs = {
 		"env":"PREPROD",
 		"uploadsDir":__dirname+'/public/uploads/',
 		"ga":"",
-		"gmapKey":"AIzaSyCkiITHKxG6BwVBj2rCCkgaxe5M9aoRrPo"
+		"gmapKey":"AIzaSyCkiITHKxG6BwVBj2rCCkgaxe5M9aoRrPo",
+		"bucket":"yak2"
 	},
 	"prod" : {
 		"validationUrl":"http://labs.yakwala.fr/user/validate/",
@@ -81,7 +84,8 @@ exports.confs = {
 		"env":"Labs",
 		"uploadsDir":__dirname+'/public/uploads/',
 		"ga":"var _gaq = _gaq || [];_gaq.push(['_setAccount', 'UA-31211954-2']);_gaq.push(['_trackPageview']);(function() {var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);})();",
-		"gmapKey":"AIzaSyCkiITHKxG6BwVBj2rCCkgaxe5M9aoRrPo"
+		"gmapKey":"AIzaSyCkiITHKxG6BwVBj2rCCkgaxe5M9aoRrPo",
+		"bucket":"yak3"
 	},
 };
 

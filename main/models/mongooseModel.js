@@ -10,7 +10,7 @@ var mongoose = require('mongoose')
   ObjectId = Schema.ObjectId;
   
 
-mongoose.set('debug', true);
+mongoose.set('debug', false);
 
 /*
 var Address = new Schema({
