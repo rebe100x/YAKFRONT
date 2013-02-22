@@ -51,7 +51,7 @@ exports.static_image = function(req,res){
 }
 
 exports.requiresLogin = function(req,res,next){
-
+	
 	if(req.session.user){
 		var User = db.model('User');
 		User.findById(req.session.user,function (err, theuser){
@@ -261,10 +261,11 @@ exports.news = function(req, res){
 				
 				if(req.body.freetag.length > 0){
 					freeTags.forEach(function(freeTag){
-						Tag.findOne({'title':freeTag},function(err,thetag){
+						Tag.findOne({'title':freeTag,"location" : {  "$near" : [parseFloat(info.location.lat),parseFloat(info.location.lng)], $maxDistance : parseFloat(0.5) }},function(err,thetag){
 							if(thetag == null){
 								tag.title=freeTag;
 								tag.numUsed = 1;
+								tag.location = info.location;
 								tag.save();
 							}
 							else{

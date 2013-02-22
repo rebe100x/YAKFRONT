@@ -130,33 +130,36 @@ block content
 			
 
 			$.getJSON(apiUrl,function(ajax) {	
-				$.each(ajax.data.info, function(key,val) {
-					
-					
+				if(typeof ajax.data != 'undefined'){
+					$.each(ajax.data.info, function(key,val) {
+						
+						
 
-					var flagExists = 0;
-					
-					$.each(infoArray,function(key2,val2){
-						if(val2._id == val._id){
-							flagExists = 1;
+						var flagExists = 0;
+						
+						$.each(infoArray,function(key2,val2){
+							if(val2._id == val._id){
+								flagExists = 1;
+							}
+						});
+						
+						if(flagExists == 0){
+
+							printFeedItem(val,1,0);	
+						
+							
+							infoArray.push(val);	
+							
+							
+							
 						}
 					});
-					
-					if(flagExists == 0){
-
-						printFeedItem(val,1,0);	
-					
-						
-						infoArray.push(val);	
-						
-						
-						
-					}
-				});
+				}	
 			});
 		}
 		
 		function getAndPrintInfo(){
+			getHotTags(curPos,dateFrom);
 			infoArray = [];
 			
 			
@@ -179,11 +182,10 @@ block content
 				// empty the news feed
 				$('#newsfeed').html('');
 
-				if(typeof(ajax.data.info) == 'undefined' || ajax.data.info.length == 0){
+				if(typeof(ajax.data) == 'undefined' || typeof(ajax.data.info) == 'undefined' || ajax.data.info.length == 0){
 					//$('#newsfeed').html('Aucune info !');
 					printEmptyFeedItem();
 				}else{
-					
 					$.each(ajax.data.info, function(key,val) {
 						
 						infoArray.push(val);					
@@ -191,6 +193,7 @@ block content
 						if(key<10)
 							printFeedItem(val,0,0);	
 					});
+				
 				printLoadingFeedItem();	
 				if(gup("id") != null && gup("id") != "")
 					{
@@ -410,12 +413,16 @@ block content
 				var val = data.info[0];
 
 				if(val.user != undefined){
-					thumbImage = 	conf.fronturl+'/pictures/120_90/'+val.thumb;
-					mediumImage = 	conf.fronturl+'/pictures/512_0/'+val.thumb;
+					thumbImage = 	val.thumb;
+					mediumImage = 	thumbImage.replace('120_90', '512_0');
 				}else{
-					thumbImage = 	conf.batchurl+val.thumb;
+					thumbImage = 	val.thumb;
 					mediumImage = 	thumbImage.replace('thumb', 'medium');
 				}
+
+				//thumbImage = val.thumb;
+				//mediumImage = 	thumbImage.replace('120_90', '512_0');
+				
 
 				var item = createFeedPageItem(val);
 				currentItem.find(".loadingMore").remove();

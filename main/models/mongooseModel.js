@@ -10,7 +10,7 @@ var mongoose = require('mongoose')
   ObjectId = Schema.ObjectId;
   
 
-mongoose.set('debug', false);
+mongoose.set('debug', true);
 
 /*
 var Address = new Schema({
@@ -128,7 +128,8 @@ Info.statics.format = function (theinfo) {
 		unlikes:theinfo.unlikes,
 		yaklikeUsersIds:theinfo.yaklikeUsersIds,
 		yakunlikeUsersIds:theinfo.yakunlikeUsersIds,
-		yakComments:theinfo.yakComments
+		yakComments:theinfo.yakComments,
+		outGoingLink:theinfo.outGoingLink
 	};
   return formattedInfo;
 }
@@ -161,54 +162,6 @@ Info.statics.findAll = function (callback) {
 
 }
 
-/*Info.statics.findAllByPage = function (callback, skip, limit, yakType, _id, what, where, dateInterval, yakCat, next) {
-	
-	var mydateUtils = require('../mylib/dateUtils.js');
-
-	var now = mydateUtils.substractDays(new Date(), parseInt(0));
-	var from = mydateUtils.substractDays(new Date(), parseInt(dateInterval.split(',')[1]));
-	var till = mydateUtils.substractDays(new Date(), parseInt(dateInterval.split(',')[0]));
-
-	var daterange = dateInterval.split(',');
-
-	var cond = new Object();
-
-	 var types = new Array();
-	 types = yakType.split(',');
-
-     var location = new Array();
-     location = where.split(',');
-
-	cond["status"] = 1;
-
-	if (dateInterval.split(',')[1] == dateInterval.split(',')[0]){
-		cond["pubDate"] = {$gte: from, $lte: now};
-	}
-	else
-	{
-		cond["pubDate"] = {$gte: from, $lte: till};
-	}
-
-	if (yakType != ""){
-		cond["yakType"] =  {$in:types};
-	};
-
-	if (what != "") {
-			//cond["$or"] = { 'content': {$regex:what}, 'title': {$regex:what} };
-			cond["content"] = {$regex:what};
-	};
-
-
-	if (where != "") {
-		 cond["location"] = {$near : [parseFloat(location[0]),parseFloat(location[1])], $maxDistance: 1};
-	};
-	
-	var infos = this.find(cond).sort({'pubDate':1}).skip(skip).limit(limit);
-
-	res = infos.exec(callback)
-
-}
-*/
 
 Info.statics.findAllByPage = function (callback, skip, limit, yakType, _id, what, where, dateInterval, yakCat, next, dimension) {
 	
@@ -781,12 +734,24 @@ var Tag = new Schema({
     title     : { type: String, required: true, index:true}
   , lastUsageDate       : { type:Date , default: Date.now, index:true}
   , numUsed :{type:Number}
+  , location	: { type : { lat: Number, lng: Number }, index : '2d'}	
   
 }, { collection: 'tag' });
 
 Tag.statics.findAll = function (callback) {
   return this.find({},{},{sort:{lastUsageDate:1}}, callback);
 }
+
+Tag.statics.getHotTags = function (x,y,z,d,callback) {
+	var DUSED = new Date();
+	var offset = 24*60*60*1000;
+	
+	DUSED.setTime(DUSED.getTime()+d*1000-offset);
+	console.log("DUSED"+DUSED);
+	return this.find({lastUsageDate:{$gte:DUSED}, location:{$near:[parseFloat(x),parseFloat(y)],$maxDistance:parseFloat(z)}},{},{sort:{numUsed:1,lastUsageDate:1},limit:10}, callback);
+}
+
+
 Tag.statics.searchOne = function (str,callback) {
 	searchStr = new RegExp(str,'i');
 	return this.find({'title': {$regex:searchStr}},{},{limit:1}, callback);

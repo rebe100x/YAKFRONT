@@ -223,7 +223,19 @@ exports.getContentTitles = function (req, res) {
 };
 
 
-
+/********************************************
+* TAGS
+***********************************************/
+exports.getHotTags = function(req,res){
+	var Tag = db.model('Tag');
+	
+	Tag.getHotTags(req.params.x,req.params.y,req.params.z,req.params.d,function (err, docs){
+		if(!err)
+			res.json({meta:{code:200},data:{tag:docs}});
+		else
+			res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+	}); 
+}
 
 
 /*********************************************
