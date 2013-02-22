@@ -442,9 +442,8 @@ mixin searchFormUnified(page)
 		});
 
 		function getHotTags(curPos,dateFrom){
-			console.log(curPos);
-			$.getJSON('/api/getHotTags/'+curPos.x+'/'+curPos.y+'/'+curPos.z/100+'/'+dateFrom+'/',function(ajax) {
-				console.log(ajax);
+
+			$.getJSON('/api/getHotTags/'+curPos.x+'/'+curPos.y+'/'+((-1)*0.0099/1*(curPos.z)+1)+'/'+dateFrom+'/',function(ajax) {
 				$('#dropdownTagSelector').html('');
 				$.each(ajax.data.tag,function(key,val){
 					$('#dropdownTagSelector').append('<li>'+val.title+'</li>');
