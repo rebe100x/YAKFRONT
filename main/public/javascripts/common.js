@@ -393,7 +393,7 @@ function setTimeSliderText(x, text){
 		
 /*READY FUNCTIONS*/	
 $(document).ready(function() {
-
+	
 	checkforDevice();
 	//ie fix for placeholder
 	/*$("[placeholder]").focus(function() {
