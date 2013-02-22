@@ -36,7 +36,7 @@ block content
 	//script(src='http://maps.google.com/maps/api/js?v=3.9&sensor=false&libraries=drawing')		
 	link(rel='stylesheet', href='/javascripts/lib/jquery/css/share.css')
 	//script(src="/javascripts/lib/jquery/js/timeago.js")	
-	script(src="/javascripts/lib/jquery/js/share.js")	
+	script(src="/javascripts/lib/jquery/js/share.js?v="+JSON.parse(mainConf).version)	
 	script(src="/javascripts/lib/jquery/js/jquery.livequery.js")
 	script(src="/javascripts/json2.js")	
 
@@ -93,7 +93,7 @@ block content
 
 		/*READY FUNCTIONS*/
 		$(document).ready(function() {
-			console.log(document.cookie);
+			
 			$('#searchBtn').click(function(){
 					$.cookie("searchString",searchString,{ expires: 10000, path : '/' });
 
@@ -803,6 +803,7 @@ block content
 		}
 		
 		function getAndPrintInfo(){
+			getHotTags(curPos,dateFrom);
 			infoArray = [];
 			bounds = getMyBounds();
 			//console.log(curPos.z);
@@ -926,12 +927,12 @@ block content
 			yakTypeImage.html("<img src='/images/markers/new/type" + item.yakType + ".png' />");
 			infoContent.append(yakTypeImage);
 
-			if(!(typeof item.thumb === 'undefined') && item.thumb != conf.batchurl && item.thumb != null) 
-			{
+			if(!(typeof item.thumb === 'undefined') && item.thumb != conf.batchurl && item.thumb != null) {
 				var thumbImage = $("<div />");
 				thumbImage.attr("class", "thumbImage");
 				thumbImage.append("<img src=\'"+item.thumb+"\' />");
 				infoContent.append(thumbImage);
+			
 			}
 
 			var itemTitle = $("<div />");
@@ -1177,13 +1178,16 @@ block content
 				var val = data.info[0];
 				
 				if(val.user != undefined){
-					thumbImage = 	conf.fronturl+'/pictures/120_90/'+val.thumb;
-					mediumImage = 	conf.fronturl+'/pictures/512_0/'+val.thumb;
+					thumbImage = 	val.thumb;
+					mediumImage = 	thumbImage.replace('120_90', '512_0');
 				}else{
-					thumbImage = 	conf.batchurl+val.thumb;
+					thumbImage = 	val.thumb;
 					mediumImage = 	thumbImage.replace('thumb', 'medium');
 				}
 
+				//thumbImage = val.thumb;
+				//mediumImage = 	thumbImage.replace('120_90', '512_0');
+				
 
 				
 				
@@ -1386,6 +1390,7 @@ block content
 			more.html(" plus de détails...");
 			
 			content.append("<div class='shareMe'><i style='background: none' class='icon-share' title='Share Me'><img src='images/ftg.png' class='ftgIcon' /> </i></div>");
+			
 			if(typeof(val.outGoingLink) != 'undefined')
 				content.find(".theContent").append(more);
 			item.append(content);

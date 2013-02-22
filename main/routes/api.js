@@ -67,8 +67,12 @@ exports.feeds = function (req, res) {
 exports.afeed = function (req, res) {
 	var Info = db.model('Info');
 	Info.findAllByID(function (err, docs){
+	  var infosFormated = docs.map(function(item){
+				var Info = db.model('Info');
+				return Info.format(item);
+			});
 	  res.json({
-		info: docs
+		info: infosFormated
 	  });
 	}, req.query["id"]); 
 };
@@ -219,7 +223,19 @@ exports.getContentTitles = function (req, res) {
 };
 
 
-
+/********************************************
+* TAGS
+***********************************************/
+exports.getHotTags = function(req,res){
+	var Tag = db.model('Tag');
+	
+	Tag.getHotTags(req.params.x,req.params.y,req.params.z,req.params.d,function (err, docs){
+		if(!err)
+			res.json({meta:{code:200},data:{tag:docs}});
+		else
+			res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+	}); 
+}
 
 
 /*********************************************

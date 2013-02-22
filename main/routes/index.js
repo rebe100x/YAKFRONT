@@ -51,7 +51,7 @@ exports.static_image = function(req,res){
 }
 
 exports.requiresLogin = function(req,res,next){
-
+	
 	if(req.session.user){
 		var User = db.model('User');
 		User.findById(req.session.user,function (err, theuser){
@@ -147,17 +147,21 @@ exports.news = function(req, res){
 				theYakType = 4;			
 		}
 
-		var thumbFlag = 0;
+		var thumbFlag = 2;
+		var msg = '';
 		var infoThumb = new Object();
 		if(req.files.picture.size && req.files.picture.size > 0 && req.files.picture.size < 1048576*5){
 			var drawTool = require('../mylib/drawlib.js');
 			var size = mainConf.imgSizeInfo;
+			
 			for(i=0;i<size.length;i++){
-				infoThumb = drawTool.StoreImg(req.files.picture,{w:size[i].width,h:size[i].height},conf);		
+				infoThumb = drawTool.StoreImg(req.files.picture,{w:size[i].width,h:size[i].height},conf);
+				//thumbFlag = drawTool.SetThumbFlag(req.files.picture.name,conf);
+
 			}
 			
-			//formMessage.push(infoThumb.msg);
-			//thumbFlag = infoThumb.thumbFlag;	
+			formMessage.push(msg);
+		
 		}
 		else
 			infoThumb.err = 0;
@@ -257,10 +261,11 @@ exports.news = function(req, res){
 				
 				if(req.body.freetag.length > 0){
 					freeTags.forEach(function(freeTag){
-						Tag.findOne({'title':freeTag},function(err,thetag){
+						Tag.findOne({'title':freeTag,"location" : {  "$near" : [parseFloat(info.location.lat),parseFloat(info.location.lng)], $maxDistance : parseFloat(0.5) }},function(err,thetag){
 							if(thetag == null){
 								tag.title=freeTag;
 								tag.numUsed = 1;
+								tag.location = info.location;
 								tag.save();
 							}
 							else{
