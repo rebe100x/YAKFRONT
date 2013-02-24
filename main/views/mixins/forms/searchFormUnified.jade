@@ -98,6 +98,7 @@ mixin searchFormUnified(page)
 
 		$(document).ready(function(){
 				
+				
 				/*
 
 				$("#typeContainer .btn[type=3]").click(function(){
@@ -238,7 +239,7 @@ mixin searchFormUnified(page)
 				range: "min",
 				min: -24,
 				max: 100,
-				value: dateFrom,
+				value: dateFrom/86400,
 				slide: function( event, ui ) {
 					var x = ui.value;
 					dateFrom = setTimeSliderText(x);
