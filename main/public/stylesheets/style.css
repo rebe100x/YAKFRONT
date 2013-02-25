@@ -520,6 +520,8 @@ width: 270px;
 .favplacelist li { padding:10px 0px; border-bottom: 1px solid #cecece; float: left; width: 100%;height:25px; cursor: default;}
 .favplacelist li span { cursor: pointer;}
 .headerYakwala { background-color: white; }
+.headerYakwala #userThumb { height: 40px; width: auto;}
+.headerYakwala #bgthumb { position: relative; bottom: 15px;}
 .headerYakwala .leftlink img { float: left; padding: 6px;}
 .headerYakwala .dropdown-toggle { float: right; margin-top: 19px;}
 .headerYakwala .pull-right { margin-top: 15px;}
