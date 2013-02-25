@@ -37,9 +37,19 @@ function setToolTip(el)
 
 function setSearchFor(el)
 {
-	$("html, body").animate({ scrollTop: 0 }, "slow");
-	$("#searchStr").val($(el).text().substring(1, $(el).text().length));
-	$("#searchBtn").click();
+	//done this way for later on dan
+	if($(el).text().indexOf('@') == 0)
+	{
+		$("html, body").animate({ scrollTop: 0 }, "slow");
+		$("#searchStr").val('@' + $(el).text().substring(1, $(el).text().length));
+		$("#searchBtn").click();
+	}	
+	else
+	{
+		$("html, body").animate({ scrollTop: 0 }, "slow");
+		$("#searchStr").val('@' + $(el).text());
+		$("#searchBtn").click();
+	}
 }
 
 function colorFirstRecord()
