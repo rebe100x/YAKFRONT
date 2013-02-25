@@ -734,7 +734,8 @@ var Tag = new Schema({
     title     : { type: String, required: true, index:true}
   , lastUsageDate       : { type:Date , default: Date.now, index:true}
   , numUsed :{type:Number}
-  , location	: { type : { lat: Number, lng: Number }, index : '2d'}	
+  , location	: { type : { lat: Number, lng: Number }, index : '2d'}
+  , print :{type:Number,require: true, index: true, default: 0}	
   
 }, { collection: 'tag' });
 
@@ -742,7 +743,7 @@ Tag.statics.findAll = function (callback) {
   return this.find({},{},{sort:{lastUsageDate:1}}, callback);
 }
 
-Tag.statics.getHotTags = function (x,y,z,d,callback) {
+Tag.statics.getHotTags = function (x,y,z,d,print,callback) {
 	var DUSED = new Date();
 	var DUSEDMAX = new Date();
 	var offset = 24*60*60*1000;
@@ -750,7 +751,7 @@ Tag.statics.getHotTags = function (x,y,z,d,callback) {
 	DUSED.setTime(DUSED.getTime()+d*1000-offset);
 	DUSEDMAX.setTime(DUSEDMAX.getTime()+d*1000);
 	
-	return this.find({lastUsageDate:{$gte:DUSED},lastUsageDate:{$lte:DUSEDMAX}, location:{$near:[parseFloat(x),parseFloat(y)],$maxDistance:parseFloat(z)}},{},{sort:{numUsed:1,lastUsageDate:1},limit:10}, callback);
+	return this.find({lastUsageDate:{$gte:DUSED},lastUsageDate:{$lte:DUSEDMAX}, location:{$near:[parseFloat(x),parseFloat(y)],$maxDistance:parseFloat(z)},print:print},{},{sort:{numUsed:1,lastUsageDate:1},limit:10}, callback);
 }
 
 

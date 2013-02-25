@@ -1,4 +1,4 @@
-﻿/*
+/*
  * GET home page.
  */
 
@@ -26,7 +26,6 @@ exports.picture = function(req,res){
 		res.writeHead(200, {'Content-Type': 'image/jpeg' });
 		res.end(img, 'binary');
 	}else if(path.existsSync(defaultpath)){
-		var img = fs.readFileSync(defaultpath);
 		res.writeHead(200, {'Content-Type': 'image/jpeg' });
 		res.end(img, 'binary');
 	}else
@@ -266,6 +265,7 @@ exports.news = function(req, res){
 								tag.title=freeTag;
 								tag.numUsed = 1;
 								tag.location = info.location;
+								tag.print = 1;
 								tag.save();
 							}
 							else{

@@ -229,7 +229,7 @@ exports.getContentTitles = function (req, res) {
 exports.getHotTags = function(req,res){
 	var Tag = db.model('Tag');
 	
-	Tag.getHotTags(req.params.x,req.params.y,req.params.z,req.params.d,function (err, docs){
+	Tag.getHotTags(req.params.x,req.params.y,req.params.z,req.params.d,req.params.print,function (err, docs){
 		if(!err)
 			res.json({meta:{code:200},data:{tag:docs}});
 		else

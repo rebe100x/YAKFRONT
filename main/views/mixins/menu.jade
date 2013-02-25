@@ -1,44 +1,39 @@
-include ../mixins/forms/searchFormUnified.jade
 mixin menu(active)
 	div.navbar.navbar-fixed-top
-			div.row-fluid.headerYakwala
-				if(active != "login")
-					div.span12.pull-left(style="text-align: center")
-						a.leftlink#maplink(href="/news/map")
-							img(src="/images/new/lacarte.png")
-						a.leftlink#feedlink(href="/news/feed")
-							img(src="/images/new/filinfo.png")
+		div.row-fluid.headerYakwala
+			if(active != "login")
+				div.span12.pull-left(style="text-align: center")
+					a.leftlink#maplink(href="/news/map")
+						img(src="/images/new/lacarte.png")
+					a.leftlink#feedlink(href="/news/feed")
+						img(src="/images/new/filinfo.png")
 
-						a(href="/news/map")
-							img(src="/images/new/logo.png")
-				
-						- if (locals.user && active != "firstvisit")
-								a.customprofile.dropdown-toggle(href="#",data-toggle="dropdown")
-									img(src="/images/new/profile.png")
-									//
-										i.icon-user
-										span= ' '+locals.user.login+' ';
-										span.caret
-								ul.dropdown-menu.pull-right(style="right:0; top: 30px;")
-									li
-										a(href="/settings/profile") Mon profil
-									li
-										a(href="/settings/alerts") Mes alertes
-									li
-										a(href="/settings/password") Mot de Passe
-									li.divider
-									
-									li.divider
-									li
-										a(href="/user/logout") Quitter
-						- else
-							//
-								span 
-									a.btn.pull-right(href="/user/login") Login
-			div.row-fluid.searchYakwala
-				div.span12(style="height: 40px;")
-					if(active == 'map' || active == 'feed')
-						mixin searchFormUnified('map')
+					a(href="/news/map")
+						img(src="/images/new/logo.png")
+			
+					- if (locals.user && active != "firstvisit")
+							a.customprofile.dropdown-toggle(href="#",data-toggle="dropdown")
+								img(src="/images/new/profile.png")
+								//
+									i.icon-user
+									span= ' '+locals.user.login+' ';
+									span.caret
+							ul.dropdown-menu.pull-right(style="right:0; top: 30px;")
+								li
+									a(href="/settings/profile") Mon profil
+								li
+									a(href="/settings/alerts") Mes alertes
+								li
+									a(href="/settings/password") Mot de Passe
+								li.divider
+								
+								li.divider
+								li
+									a(href="/user/logout") Quitter
+					- else
+						//
+							span 
+								a.btn.pull-right(href="/user/login") Login
 	if(active == 'map')
 		script
 			$(document).ready(function(){
