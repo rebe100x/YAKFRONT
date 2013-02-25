@@ -1066,7 +1066,7 @@ function deleteComment(el)
 	var infoId = $(el).attr("infoid");
 	
 	$.post('/api/del_Comment', {commentId : commentId, infoId: infoId} , function(res){
-	console.log(res);
+	//console.log(res);
 	if (res.meta.code == '200')
 	{
 		$(el).parent().remove();
