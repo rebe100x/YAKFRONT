@@ -159,7 +159,7 @@ abbr[title] {
 .searchYakwala .ui-widget-header {background:transparent;}
 .searchYakwala .ui-slider .ui-slider-handle {width:3px;}
 .searchYakwala .ui-slider-horizontal { height: 2px;}
-.searchYakwala .ui-slider .ui-slider-handle { height: 8px;cursor:pointer;}
+.searchYakwala .ui-slider .ui-slider-handle { height: 8px;cursor:pointer; margin-left: -3px}
 .searchYakwala .btn .caret{margin-left:6px;}
 
 		/*search module*/
