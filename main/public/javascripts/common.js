@@ -203,7 +203,7 @@ function setshortUrl()
 			return;
 		}
 		if ($(this).find(".loadingMore").length == 0) {
-			$(this).prepend('<img src="images/loader_big.gif" class="loadingMore" />');
+			$(this).prepend('<img src="/images/loader_big.gif" class="loadingMore" />');
 		}
 		if ($(this).find(".buttons").length == 0) {
 			var more = $(this);
@@ -402,7 +402,35 @@ function setTimeSliderText(x, text){
 
 		
 /*READY FUNCTIONS*/	
+function correctPlaceholder()
+{
+	 $("input").each(function(){
+      if($(this).val()=="" && $(this).attr("placeholder")!=""){
+        $(this).val($(this).attr("placeholder"));
+        $(this).focus(function(){
+          if($(this).val()==$(this).attr("placeholder")) $(this).val("");
+        });
+        $(this).blur(function(){
+          if($(this).val()=="") $(this).val($(this).attr("placeholder"));
+        });
+      }
+    });
+	$("textarea").each(function(){
+      if($(this).val()=="" && $(this).attr("placeholder")!=""){
+        $(this).val($(this).attr("placeholder"));
+        $(this).focus(function(){
+          if($(this).val()==$(this).attr("placeholder")) $(this).val("");
+        });
+        $(this).blur(function(){
+          if($(this).val()=="") $(this).val($(this).attr("placeholder"));
+        });
+      }
+    });
+}
 $(document).ready(function() {
+	if (navigator.appVersion.indexOf("MSIE") != -1){
+   	correctPlaceholder();
+   }
 	
 	checkforDevice();
 	//ie fix for placeholder

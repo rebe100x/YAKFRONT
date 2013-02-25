@@ -33,7 +33,7 @@ exports.confs = {
 		"validationUrl":"localhost:3000/user/validate/",
 		"batchurl":"http://localhost:8080/YAKREP/BACKEND/",
 		"backurl":"http://localhost:8080/YAKREP/BACKEND/",
-		"fronturl":"localhost:3000",
+		"fronturl":"http://dev.labs.yakwala.fr:3000",
 		"apiurl":"localhost:3000",
 		"backdns":"localhost",
 		"frontdns":"localhost",
