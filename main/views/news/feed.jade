@@ -225,29 +225,6 @@ block content
 
 		function printFeedItem(item,top,scrollTo){
 			
-			/*if(item.yakCatName.length > 0){
-				var yakCatNameArray = item.yakCatName.map(function(item){
-					if(item.substr(0,1)!="#")
-						item = "#"+item;
-					return item.linkify();
-					
-				});	
-				yakCatNameArray = yakCatNameArray.slice(0,3);
-
-			}else
-				var yakCatNameArray = new Array();
-		
-			if(typeof(item.freeTag[0]) != 'undefined' && item.freeTag[0].length > 0){
-				var tagNameArray = item.freeTag.map(function(item){
-					if(item.substr(0,1)!="#")
-						item = "#"+item;
-					return item.linkify();
-				});
-				tagNameArray = tagNameArray.slice(0,3);
-			}else
-				var tagNameArray = new Array();
-			*/
-
 			var dateTmp = new Date(item.pubDate);
 			var pubDate = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
 			dateTmp = new Date(item.dateEndPrint);
@@ -273,14 +250,17 @@ block content
 			var itemTitle = $("<div />");
 			itemTitle.attr("class", "itemTitle");
 			itemTitle.html(item.title.linkify());
-			infoContent.append(itemTitle);
-
 			thedate = buildItemDate(item);
 			var postedBy = $("<div />");
 			postedBy.attr("class", "postedBy");
-			
-			postedBy.html("Posté par <a onclick='setSearchFor(this)'>@"+item.origin+"</a> " + "<span class=\'date\'>"+thedate+"</span>");
-
+			if(item.yakType !=2 )
+				postedBy.html("Posté par <a onclick='setSearchFor(this)'>"+item.origin+"</a> " + "<span class=\'date\'> - "+thedate+"</span>");
+			else{
+				postedBy.html("Posté par <a onclick='setSearchFor(this)'>"+item.origin+"</a>");
+				itemTitle.append(" - <span class=\'dateAgenda\'>"+thedate+"</span>");			
+			}
+				
+			infoContent.append(itemTitle);
 			infoContent.append(postedBy);
 			
 			var thetags = "<div class=\'tags\'>";					
