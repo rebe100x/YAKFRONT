@@ -303,32 +303,10 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 .currentDetails .myitem .commentBox .comment { color: black; margin-bottom: 12px;}
 .currentDetails .myitem .commentBox textarea { width: 97%; height: 50px; margin-top: 2px; margin-left: 0px;}
 .currentDetails .myitem i.icon-chevron-up { }
-.currentDetails .icon-remove { float: right; clear: both;  position: absolute; right: 5%;}
-
-
-.currentDetails{
-	width:95%;
-	margin:5px 5px;
-	font-size:13px;
-	float: left;
-	
-	box-shadow: 0 1px 0 #DDD;
-	background: white;
-	border-color: #BBB;
-	color: #505050;
-}
-.currentDetails.loadingfeeditem{
-	padding:30px 0px;
-	text-align: center;
-	background-image: url(../images/loader_big.gif);
-	background-position: center center;
-	background-repeat: no-repeat;
-}
-.currentDetails.emptyfeeditem{
-	padding:20px 0px;
-	text-align: center;	
-	font-weight:bold;
-}
+.currentDetails .icon-remove { float: right; clear: both;  position: absolute; right: 2%;}
+.currentDetails{margin:5px 5px;font-size:13px;float: left;box-shadow: 0 1px 0 #DDD;background: white;border-color: #BBB;color: #505050;}
+.currentDetails.loadingfeeditem{padding:30px 0px;text-align: center;background-image: url(../images/loader_big.gif);background-position: center center;background-repeat: no-repeat;}
+.currentDetails.emptyfeeditem{padding:20px 0px;text-align: center;	font-weight:bold;}
 .currentDetails .date{color: #87888B;margin-right:5px;}
 .currentDetails .date .timeago { margin-top: -28px; margin-right: 8px;}
 .currentDetails .links{float:right;margin-right:3px;text-align:right;font-style:italic;font-size:0.8em;line-height: 1.5em;}
