@@ -263,8 +263,7 @@ block content
 			yakTypeImage.html("<img src='/images/markers/type" + item.yakType + ".png' />");
 			infoContent.append(yakTypeImage);
 
-			if(!(typeof item.thumb === 'undefined') && item.thumb != '' && item.thumb != null)
-			{
+			if(!(typeof item.thumb === 'undefined') && item.thumb != conf.batchurl && item.thumb != null){
 				var thumbImage = $("<div />");
 				thumbImage.attr("class", "thumbImage");
 				thumbImage.append("<img src=\'"+item.thumb+"\' />");
@@ -454,7 +453,7 @@ block content
 				currentItem.find(".infodetail").insertAfter(currentItem.find(".postedBy"));
 				currentItem.find(".icon-remove").appendTo(currentItem.find(".yakTypeImage"));
 				$("ul#newsfeed li").css("width", "100%");
-				$("ul#newsfeed").css("width", "96%");
+				$("ul#newsfeed").css("width", "100%");
 				$("#newsfeed li").removeClass('highlighted');
 			currentItem.parent().addClass('highlighted');
 			$('#newsfeedContent').mCustomScrollbar("scrollTo",".mapHighlighter[infoId=\""+currentItem.parent().attr("infoid")+"\"]");
