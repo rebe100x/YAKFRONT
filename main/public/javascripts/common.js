@@ -37,9 +37,19 @@ function setToolTip(el)
 
 function setSearchFor(el)
 {
-	$("html, body").animate({ scrollTop: 0 }, "slow");
-	$("#searchStr").val($(el).text().substring(1, $(el).text().length));
-	$("#searchBtn").click();
+	//done this way for later on dan
+	if($(el).text().indexOf('@') == 0)
+	{
+		$("html, body").animate({ scrollTop: 0 }, "slow");
+		$("#searchStr").val('@' + $(el).text().substring(1, $(el).text().length));
+		$("#searchBtn").click();
+	}	
+	else
+	{
+		$("html, body").animate({ scrollTop: 0 }, "slow");
+		$("#searchStr").val('@' + $(el).text());
+		$("#searchBtn").click();
+	}
 }
 
 function colorFirstRecord()
@@ -193,7 +203,7 @@ function setshortUrl()
 			return;
 		}
 		if ($(this).find(".loadingMore").length == 0) {
-			$(this).prepend('<img src="images/loader_big.gif" class="loadingMore" />');
+			$(this).prepend('<img src="/images/loader_big.gif" class="loadingMore" />');
 		}
 		if ($(this).find(".buttons").length == 0) {
 			var more = $(this);
@@ -392,7 +402,35 @@ function setTimeSliderText(x, text){
 
 		
 /*READY FUNCTIONS*/	
+function correctPlaceholder()
+{
+	 $("input").each(function(){
+      if($(this).val()=="" && $(this).attr("placeholder")!=""){
+        $(this).val($(this).attr("placeholder"));
+        $(this).focus(function(){
+          if($(this).val()==$(this).attr("placeholder")) $(this).val("");
+        });
+        $(this).blur(function(){
+          if($(this).val()=="") $(this).val($(this).attr("placeholder"));
+        });
+      }
+    });
+	$("textarea").each(function(){
+      if($(this).val()=="" && $(this).attr("placeholder")!=""){
+        $(this).val($(this).attr("placeholder"));
+        $(this).focus(function(){
+          if($(this).val()==$(this).attr("placeholder")) $(this).val("");
+        });
+        $(this).blur(function(){
+          if($(this).val()=="") $(this).val($(this).attr("placeholder"));
+        });
+      }
+    });
+}
 $(document).ready(function() {
+	if (navigator.appVersion.indexOf("MSIE") != -1){
+   	correctPlaceholder();
+   }
 	
 	checkforDevice();
 	//ie fix for placeholder
@@ -1056,7 +1094,7 @@ function deleteComment(el)
 	var infoId = $(el).attr("infoid");
 	
 	$.post('/api/del_Comment', {commentId : commentId, infoId: infoId} , function(res){
-	console.log(res);
+	//console.log(res);
 	if (res.meta.code == '200')
 	{
 		$(el).parent().remove();

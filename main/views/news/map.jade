@@ -1149,11 +1149,14 @@ block content
 			printLoadingFeedItem();
 			$('#newsfeedContent').mCustomScrollbar("update");
 		}
-
+		function closeAllItems()
+		{
+			$("#newsfeed .icon-remove").click();
+		}
 		function getItemDetails(el){
 			
 			
-
+			closeAllItems();
 			var currentItem = $(el);
 
 
@@ -1262,7 +1265,7 @@ block content
 		}
 		function createFeedPageItem(val)
 		{
-			item = $("<div />");
+			var item = $("<div />");
 			item.attr("class", "myitem");
 
 			
@@ -1302,8 +1305,23 @@ block content
 						});
 						divComment.append('<textarea maxlength="250" rows="3" style="z-index: 1111111111111; display: block" class="yakTextarea" placeholder="Ajouter un commentaire..." onclick="return stopScroll()"></textarea>');
 
+						divComment.find("textarea").mouseenter(function(){
 
+							divComment.find("textarea").focus();
+							divComment.find("textarea").focus(function(){
+								return false;
+							});
+
+							divComment.find("textarea").click(function(){
+								return false;
+							});
+						});
+
+						divComment.find("textarea").mouseleave(function(){
+							
+						});
 						divComment.find("textarea").keypress(function(event){
+
 							if (event.keyCode == 13) {
 
 								var comment = $(this).val();
@@ -1389,7 +1407,7 @@ block content
 			more.attr("data-toggle", "data-toggle");
 			more.html(" plus de détails...");
 			
-			content.append("<div class='shareMe'><i style='background: none' class='icon-share' title='Share Me'><img src='images/ftg.png' class='ftgIcon' /> </i></div>");
+			content.append("<div class='shareMe'><i style='background: none' class='icon-share' title='Share Me'><img src='/images/ftg.png' class='ftgIcon' /> </i></div>");
 			
 			if(typeof(val.outGoingLink) != 'undefined')
 				content.find(".theContent").append(more);

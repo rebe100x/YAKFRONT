@@ -13,7 +13,7 @@ mixin menu(active)
 			
 					- if (locals.user && active != "firstvisit")
 							a.customprofile.dropdown-toggle(href="#",data-toggle="dropdown")
-								img(src="/images/new/profile.png")
+								img(id="userThumb", src="/images/new/profile.png")
 								//
 									i.icon-user
 									span= ' '+locals.user.login+' ';
@@ -52,8 +52,21 @@ mixin menu(active)
 				$("#maplink").removeAttr("href");
 			});
 	
+	if(active != "login")		
+		script
+			$(document).ready(function(){
 
-	script
+				if(user.thumb.indexOf("http") == "-1")
+				{
+					$("#userThumb").attr("src", "http://" + user.thumb);	
+				}
+				else
+				{
+					$("#userThumb").attr("src", user.thumb);		
+				}
+				$("#userThumb").after("<img src='/images/new/bgthumb.png' id='bgthumb' />");
+
+			});
 			/*$(document).ready(function(){
 				$("#maplink img").mouseenter(function(){
 					$(this).attr("src", "/images/new/lacarte-hover.png");
@@ -68,4 +81,5 @@ mixin menu(active)
 					$(this).attr("src", "/images/new/filinfo.png");
 				});
 			});*/
+
 	

@@ -1,5 +1,5 @@
 body {
-  padding:0px;
+ 
   font: 13px "Lucida Grande", Helvetica, Arial, sans-serif;
   
 }
@@ -159,7 +159,7 @@ abbr[title] {
 .searchYakwala .ui-widget-header {background:transparent;}
 .searchYakwala .ui-slider .ui-slider-handle {width:3px;}
 .searchYakwala .ui-slider-horizontal { height: 2px;}
-.searchYakwala .ui-slider .ui-slider-handle { height: 8px;cursor:pointer;}
+.searchYakwala .ui-slider .ui-slider-handle { height: 8px;cursor:pointer; margin-left: -3px}
 .searchYakwala .btn .caret{margin-left:6px;}
 
 		/*search module*/
@@ -192,7 +192,8 @@ abbr[title] {
 	/*MAP TAB CONTENT*/
 .tabContent{width:100%;display: none;background: white;float: left;padding: 0px 0px;}
 .mCSB_scrollTools .mCSB_draggerRail {width: 7px;}
-.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar {width: 6px;background-color:#D71921;}
+.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar {width: 8px;background-color:#D71921; }
+.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar:hover { background-color: blue;}
 .mCSB_scrollTools .mCSB_dragger:hover .mCSB_dragger_bar{
 	background:rgba(215,25,33,0.85);
 	filter:"alpha(opacity=85)"; -ms-filter:"alpha(opacity=85)"; /* old ie */
@@ -230,7 +231,7 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 
 
 .infowindow{
-	width:96%;margin:5px 5px;font-size:0.95em;
+	width:95%;margin:5px 5px;font-size:0.95em;
 	
 	
 	box-shadow: 0 1px 0 #DDD;
@@ -520,6 +521,8 @@ width: 270px;
 .favplacelist li { padding:10px 0px; border-bottom: 1px solid #cecece; float: left; width: 100%;height:25px; cursor: default;}
 .favplacelist li span { cursor: pointer;}
 .headerYakwala { background-color: white; }
+.headerYakwala #userThumb { height: 40px; width: auto;}
+.headerYakwala #bgthumb { position: relative; bottom: 15px;}
 .headerYakwala .leftlink img { float: left; padding: 6px;}
 .headerYakwala .dropdown-toggle { float: right; margin-top: 19px;}
 .headerYakwala .pull-right { margin-top: 15px;}
