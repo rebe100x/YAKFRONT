@@ -499,6 +499,8 @@ width: 270px;
  	font-weight:bold;
  }
 
+.rememberme { color:#c3c3c3; font-size: 12px;  }
+.rememberme span { margin-left: 6px; margin-top: 3px;}
  /* Header Yakwala */
 .dropdownRangeSelector {width: 136px; background: #f6f6f6; border: 0px; float: right; position: relative; right: 169px; }
 .favplacelist li { padding:10px 0px; border-bottom: 1px solid #cecece; float: left; width: 100%;height:25px; cursor: default;}
