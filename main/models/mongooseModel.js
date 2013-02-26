@@ -354,7 +354,7 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,from,now,type,str,thecount,thesk
 	return res;
 }
 
-Info.statics.findAllGeoAlert = function (x1,y1,x2,y2,from,now,str,usersubs,tagsubs,count,skip,callback) {
+Info.statics.findAllGeoAlert = function (x1,y1,x2,y2,from,now,str,usersubs,tagsubs,feedsubs,count,skip,callback) {
 	var limit = (typeof(count) != 'undefined' && count > 0) ? count : 100;		
 	var skip = (typeof(skip) != 'undefined' && skip > 0) ? skip : 0;	
 	
@@ -397,10 +397,14 @@ Info.statics.findAllGeoAlert = function (x1,y1,x2,y2,from,now,str,usersubs,tagsu
 		qInfo.where('creationDate').gt(DCRE);
 	}
 	
-	if( (typeof(usersubs) != 'undefined' && usersubs != 'null') || (typeof(tagsubs) != 'undefined' && tagsubs != 'null' ) ){
+	if( (typeof(usersubs) != 'undefined' && usersubs != 'null') || (typeof(tagsubs) != 'undefined' && tagsubs != 'null' ) || (typeof(feedsubs) != 'undefined' && feedsubs != 'null' )){
 		if(typeof(usersubs) != 'undefined' && usersubs != 'null' ){
 			var usersubsId =  usersubs.map(function(item){return item._id});
 			qInfo.or([ {"user":{$in:usersubsId}}]);
+		}
+		if(typeof(feedsubs) != 'undefined' && feedsubs != 'null' ){
+			var feedName =  feedsubs.map(function(item){return item.humanName});
+			qInfo.or([ {"origin":{$in:feedName}}]);
 		}
 		if(typeof(tagsubs) != 'undefined' && tagsubs != 'null' )
 			qInfo.or([{"freeTag": {$in:tagsubs}}]);

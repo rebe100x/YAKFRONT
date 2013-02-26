@@ -82,8 +82,9 @@ exports.geoalerts = function (req, res) {
 	var Info = db.model('Info');
 	var usersubs= res.locals.user.usersubs;
 	var tagsubs= res.locals.user.tagsubs;
-	
-	Info.findAllGeoAlert(req.params.x1,req.params.y1,req.params.x2,req.params.y2,req.params.ago,req.params.now,req.params.str,usersubs,tagsubs,req.params.limit,req.params.skip,function (err, docs){
+	var feedsubs = res.locals.user.feedsubs;
+
+	Info.findAllGeoAlert(req.params.x1,req.params.y1,req.params.x2,req.params.y2,req.params.ago,req.params.now,req.params.str,usersubs,tagsubs,feedsubs,req.params.limit,req.params.skip,function (err, docs){
 		if(!err)
 			res.json({meta:{code:200},data:{info:docs}});
 		else
