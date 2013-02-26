@@ -344,16 +344,16 @@ mixin searchFormUnified(page)
 			$('#searchStr').typeahead({
 					minLength : 2,
 					source: function (typeahead, query) {
-					if(query.indexOf('@') == 0)
-					{
-						var currenturl = '/api/feedusersearch/' + query.substring(1, query.length);				
-					}
-					else
-					{
-						var currenturl = '/api/catsandtags';						
-					}
-
-					encodeURIComponent(query);
+						if(query.indexOf('@') == 0){
+							var currenturl = '/api/feedusersearch/' + query.substring(1, query.length);				
+						}
+						else{
+							var	print = 0
+							if('#{page}' == 'map')
+								print = 1;	
+							var currenturl = '/api/catsandtags/'+curPos.x+'/'+curPos.y+'/'+((-1)*0.0099/1*(curPos.z)+1)+'/'+dateFrom+'/'+print;						
+						}
+						encodeURIComponent(query);
 						if(query.length >= 2){
 							$.ajax({
 									url: currenturl,				

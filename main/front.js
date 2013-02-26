@@ -142,7 +142,7 @@ app.get('/api/geoalerts/:x1/:y1/:x2/:y2/:ago/:now/:str/:limit/:skip', routes.req
 
 app.get('/api/zones/:x/:y', api.zones);
 app.get('/api/cats', api.cats);
-app.get('/api/catsandtags', api.catsandtags);
+app.get('/api/catsandtags/:x/:y/:z/:d/:print', api.catsandtags);
 app.get('/api/places', api.places);
 app.get('/api/searchplaces/:str', api.searchplaces);
 app.get('/api/usersearch/:string', api.user_search);

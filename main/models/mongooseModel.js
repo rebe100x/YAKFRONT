@@ -750,8 +750,8 @@ Tag.statics.getHotTags = function (x,y,z,d,print,callback) {
 	
 	DUSED.setTime(DUSED.getTime()+d*1000-offset);
 	DUSEDMAX.setTime(DUSEDMAX.getTime()+d*1000);
-	
-	return this.find({lastUsageDate:{$gte:DUSED},lastUsageDate:{$lte:DUSEDMAX}, location:{$near:[parseFloat(x),parseFloat(y)],$maxDistance:parseFloat(z)},print:print},{},{sort:{numUsed:1,lastUsageDate:1},limit:10}, callback);
+	console.log(DUSED+'<'+DUSEDMAX);
+	return this.find({lastUsageDate:{$gte:DUSED,$lte:DUSEDMAX}, location:{$near:[parseFloat(x),parseFloat(y)],$maxDistance:parseFloat(z)},print:print},{},{sort:{numUsed:1,lastUsageDate:1},limit:10}, callback);
 }
 
 
