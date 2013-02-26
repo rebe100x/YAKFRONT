@@ -192,7 +192,7 @@ abbr[title] {
 	/*MAP TAB CONTENT*/
 .tabContent{width:100%;display: none;background: white;float: left;padding: 0px 0px;}
 .mCSB_scrollTools .mCSB_draggerRail {width: 7px;}
-.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar {width: 8px;background-color:#D71921; }
+.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar {width: 9px;background-color:#D71921; }
 .mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar:hover { background-color: blue;}
 .mCSB_scrollTools .mCSB_dragger:hover .mCSB_dragger_bar{
 	background:rgba(215,25,33,0.85);
@@ -231,7 +231,7 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 
 
 .infowindow{
-	width:95%;margin:5px 5px;font-size:0.95em;
+	width:95%;margin:5px 0px 5px 5px;font-size:0.95em;
 	
 	
 	box-shadow: 0 1px 0 #DDD;
@@ -272,7 +272,7 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 .infowindow .thumbImage { float: left;  margin-left: 0px;}
 .infowindow .thumbImage img { float: left; width:auto;height:75;}
 
-.infowindow .itemTitle { font-size: 13px; font-weight: bold; color: #5D5D5D; left: 12px; padding-right: 29px; position: relative; text-align: justify;}
+.infowindow .itemTitle { font-size: 13px; font-weight: bold; color: #5D5D5D; left: 0px; padding-right: 2px; position: relative; text-align: justify;}
 
 .infowindow .postedBy { position: relative; left: 12px; padding-right: 12px; font-size: 11px;}
 
@@ -304,7 +304,7 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 .currentDetails .myitem .commentBox textarea { width: 97%; height: 50px; margin-top: 2px; margin-left: 0px;}
 .currentDetails .myitem i.icon-chevron-up { }
 .currentDetails .icon-remove { float: right; clear: both;  position: absolute; right: 2%;}
-.currentDetails{margin:5px 5px;font-size:13px;float: left;box-shadow: 0 1px 0 #DDD;background: white;border-color: #BBB;color: #505050;}
+.currentDetails{margin:5px 7px 5px 0px;padding:3px;font-size:13px;float: left;box-shadow: 0 1px 0 #DDD;background: white;border-color: #BBB;color: #505050;}
 .currentDetails.loadingfeeditem{padding:30px 0px;text-align: center;background-image: url(../images/loader_big.gif);background-position: center center;background-repeat: no-repeat;}
 .currentDetails.emptyfeeditem{padding:20px 0px;text-align: center;	font-weight:bold;}
 .currentDetails .date{color: #87888B;margin-right:5px;}
@@ -324,7 +324,7 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 .currentDetails .thumbImage { float: left;  width: 100%; padding-top: 6px;}
 .currentDetails .thumbImage img { float: left; width:99%;height:auto; border: 1px solid #cecece;}
 
-.currentDetails .itemTitle { font-size: 16px; font-weight: bold; color: #5D5D5D; left: 0px; padding-right: 12px; position: relative; text-align: justify; float: none; width: 100%; padding-top: 6px}
+.currentDetails .itemTitle { font-size: 16px; font-weight: bold; color: #5D5D5D; left: 0px; padding-right: 0px; position: relative; text-align: justify; float: none; width: 100%; padding-top: 6px}
 
 .currentDetails .postedBy { position: relative; left: 0px; padding-right: 12px; font-size: 12px; float: none; padding-top: 6px;}
 
