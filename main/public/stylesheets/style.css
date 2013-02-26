@@ -10,7 +10,7 @@ a {
 
 .navbar-fixed-top {
   position:relative;
-  z-index:2000;
+  z-index:1;
 }
 img{border:0px;}
 
@@ -272,7 +272,7 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 .infowindow .thumbImage { float: left;  margin-left: 0px;}
 .infowindow .thumbImage img { float: left; width:auto;height:75;}
 
-.infowindow .itemTitle { font-size: 13px; font-weight: bold; color: #5D5D5D; left: 0px; padding-right: 2px; position: relative; text-align: justify;}
+.infowindow .itemTitle { font-size: 13px; font-weight: bold; color: #5D5D5D; left: 0px;margin-left:20px; padding-right: 2px; position: relative; text-align: justify;}
 
 .infowindow .postedBy { position: relative; left: 12px; padding-right: 12px; font-size: 11px;}
 
