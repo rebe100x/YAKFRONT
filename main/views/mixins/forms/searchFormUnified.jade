@@ -12,13 +12,13 @@ mixin searchFormUnified(page)
 				div#heatSelector(style="width: 80%; margin: 0 auto;")
 
 			div.span6.myfilter
-				a.btn#rangeSelectorTrigger.pull-left
+				a.btn#rangeSelectorTrigger.pull-left(style="position:relative")
 					//
 						i.icon-search.myi
 					span#localnessPrinter.sliderText.tour_4 Localness
 					span.caret
 					mixin range
-				a.btn#tagSelectorTrigger.pull-left
+				a.btn#tagSelectorTrigger.pull-left(style="position:relative")
 					span#localnessPrinter.sliderText.tour_4 Hot Tags
 					span.caret
 					ul#dropdownTagSelector.dropdown-menu
