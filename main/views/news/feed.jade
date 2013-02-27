@@ -94,10 +94,10 @@ block content
 			
 			
 			$('#newsfeed').delegate(".mapHighlighter",'click', function (e) {
-				if(!$.contains($(this), e.target))
-					{
+				
+				if(!$.contains($(this), e.target) && e.target.className != 'prevent-default'){
 					getItemDetails(this);
-					}
+				}
 				
 			});
 
@@ -253,10 +253,13 @@ block content
 			thedate = buildItemDate(item);
 			var postedBy = $("<div />");
 			postedBy.attr("class", "postedBy");
+			if(item.origin.indexOf('@') != 0)
+				item.origin ="@"+item.origin;
+
 			if(item.yakType !=2 )
-				postedBy.html("Posté par <a onclick='setSearchFor(this)'>"+item.origin+"</a> " + "<span class=\'date\'> - "+thedate+"</span>");
+				postedBy.html("Posté par <a class='prevent-default' onclick='setSearchFor(this)'>"+item.origin+"</a> " + "<span class=\'date\'> - "+thedate+"</span>");
 			else{
-				postedBy.html("Posté par <a onclick='setSearchFor(this)'>"+item.origin+"</a>");
+				postedBy.html("Posté par <a class='prevent-default' onclick='setSearchFor(this)'>"+item.origin+"</a>");
 				itemTitle.append(" - <span class=\'dateAgenda\'>"+thedate+"</span>");			
 			}
 				
@@ -274,21 +277,34 @@ block content
 				thetags += tagNameArray.join(', ');
 			}*/
 			//console.log(item.yakCatName);
+
 			if(item.yakCatName.length > 0)
 			{
 				for (var i = 0; i < item.yakCatName.length; i++) {
-					thetags += '<a class="tagHashLink" onclick="setSearchFor(this)">#' + item.yakCatName[i] +'</a> ';	
+					thetags += '<a class="tagHashLink prevent-default" onclick="setSearchFor(this)">#' + item.yakCatName[i] +'</a> ';	
 				}
 			}
 
-			if (typeof(item.freeTag) != 'undefined') {
-				if(item.freeTag.length > 0){
-					if(item.freeTag.length > 0)
-						thetags += ', ';
-					for (var i = 0; i < item.freeTag.length; i++) {
-						thetags += '<a class="tagHashLink" onclick="setSearchFor(this)">#' + item.freeTag[i] +'</a> ';	
+			if (typeof(item.yakTag) != 'undefined') {
+					
+					for (var i = 0; i < item.yakTag.length; i++) {
+						if(item.yakTag[i] != ""){
+							thetags += '<a class="tagHashLink prevent-default" onclick="setSearchFor(this)">#' + item.yakTag[i] +'</a> ';	
+							if( i < item.yakTag.length -1)
+								thetags += ', ';
+						}
 					}
-				}
+			}
+
+			if (typeof(item.freeTag) != 'undefined') {
+					
+					for (var i = 0; i < item.freeTag.length; i++) {
+						if(item.freeTag[i] != ""){
+							thetags += '<a class="tagHashLink prevent-default" onclick="setSearchFor(this)">#' + item.freeTag[i] +'</a> ';	
+							if( i < item.freeTag.length -1)
+								thetags += ', ';
+						}
+					}
 			}
 			thetags += "</div>";
 
@@ -363,17 +379,12 @@ block content
 		}
 
 
-			function getItemDetails(el){
-			
-			
+		function getItemDetails(el){
 
 			var currentItem = $(el);
 
-
-
 			var infoid = currentItem.attr("infoid");
 
-			
 			if (currentItem.find(".loadingMore").length > 0 || currentItem.find(".myitem").length > 0)
 			{
 				currentItem.find(".myitem").find(".icon-remove").remove();
@@ -382,9 +393,8 @@ block content
 				return;
 			}
 
-
-			
 			currentItem.append('<img src="images/loader_big.gif" class="loadingMore">');
+			
 			$.getJSON('/api/afeed', { id: infoid } ,function(data) {
 				//console.log(data.info[0]);
 				
@@ -435,8 +445,9 @@ block content
 				$("ul#newsfeed li").css("width", "100%");
 				$("ul#newsfeed").css("width", "100%");
 				$("#newsfeed li").removeClass('highlighted');
-			currentItem.parent().addClass('highlighted');
-			$('#newsfeedContent').mCustomScrollbar("scrollTo",".mapHighlighter[infoId=\""+currentItem.parent().attr("infoid")+"\"]");
+				currentItem.parent().addClass('highlighted');
+				$("body").animate({ scrollTop: $(".mapHighlighter[infoId=\""+currentItem.parent().attr("infoid")+"\"]").offset().top  }, "slow");
+				
 			});
 
 			if ($(el).find(".myitem").css("display") == "none") {

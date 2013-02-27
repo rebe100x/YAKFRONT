@@ -276,15 +276,18 @@ block content
 			});
 			
 			$('#newsfeed').delegate(".mapHighlighter",'click', function (e) {
-				if($(this).find(".myitem").length == 0)
-				{
-					getItemDetails(this);
+				if(e.target.className != 'prevent-default'){
+					if($(this).find(".myitem").length == 0)
+					{
+						getItemDetails(this);
+					}
+					else if(!($.contains(this, e.target)) || $(this).find(".myitem").css("display") == "none")
+					{
+						getItemDetails(this);
+					}
+					unhighlightInfo($(this),highlightInfo);	
 				}
-				else if(!($.contains(this, e.target)) || $(this).find(".myitem").css("display") == "none")
-				{
-					getItemDetails(this);
-				}
-				unhighlightInfo($(this),highlightInfo);
+				
 			});
 
 			
@@ -917,10 +920,15 @@ block content
 			thedate = buildItemDate(item);
 			var postedBy = $("<div />");
 			postedBy.attr("class", "postedBy");
+
+			
+			if(item.origin.indexOf('@') != 0)
+				item.origin ="@"+item.origin;
+
 			if(item.yakType !=2 )
-				postedBy.html("Posté par <a onclick='setSearchFor(this)'>"+item.origin+"</a> " + "<span class=\'date\'> - "+thedate+"</span>");
+				postedBy.html("Posté par <a class='prevent-default' onclick='setSearchFor(this)'>"+item.origin+"</a> " + "<span class=\'date\'> - "+thedate+"</span>");
 			else{
-				postedBy.html("Posté par <a onclick='setSearchFor(this)'>"+item.origin+"</a>");
+				postedBy.html("Posté par <a class='prevent-default' onclick='setSearchFor(this)'>"+item.origin+"</a>");
 				itemTitle.append(" - <span class=\'dateAgenda\'>"+thedate+"</span>");			
 			}
 				
@@ -929,19 +937,11 @@ block content
 			
 			var thetags = "<div class=\'tags\'>";					
 
-			/*if(item.yakCatName.length > 0)
-				thetags += yakCatNameArray.join(', ');
-
-			if(tagNameArray.length > 0){
-				if(item.yakCatName.length > 0)
-					thetags += ', ';
-				thetags += tagNameArray.join(', ');
-			}*/
-			//console.log(item.yakCatName);
+			
 			if(item.yakCatName.length > 0)
 			{
 				for (var i = 0; i < item.yakCatName.length; i++) {
-					thetags += '<a class="tagHashLink" onclick="setSearchFor(this)">#' + item.yakCatName[i] +'</a> ';	
+					thetags += '<a class="tagHashLink prevent-default" onclick="setSearchFor(this)">#' + item.yakCatName[i] +'</a> ';	
 				}
 			}
 
@@ -949,7 +949,7 @@ block content
 					
 					for (var i = 0; i < item.yakTag.length; i++) {
 						if(item.yakTag[i] != ""){
-							thetags += '<a class="tagHashLink" onclick="setSearchFor(this)">#' + item.yakTag[i] +'</a> ';	
+							thetags += '<a class="tagHashLink prevent-default" onclick="setSearchFor(this)">#' + item.yakTag[i] +'</a> ';	
 							if( i < item.yakTag.length -1)
 								thetags += ', ';
 						}
@@ -960,7 +960,7 @@ block content
 					
 					for (var i = 0; i < item.freeTag.length; i++) {
 						if(item.freeTag[i] != ""){
-							thetags += '<a class="tagHashLink" onclick="setSearchFor(this)">#' + item.freeTag[i] +'</a> ';	
+							thetags += '<a class="tagHashLink prevent-default" onclick="setSearchFor(this)">#' + item.freeTag[i] +'</a> ';	
 							if( i < item.freeTag.length -1)
 								thetags += ', ';
 						}
@@ -1207,8 +1207,9 @@ block content
 				$("ul#newsfeed li").css("width", "100%");
 				$("ul#newsfeed").css("width", "100%");
 				$("#newsfeed li").removeClass('highlighted');
-			currentItem.parent().addClass('highlighted');
-			$('#newsfeedContent').mCustomScrollbar("scrollTo",".mapHighlighter[infoId=\""+currentItem.parent().attr("infoid")+"\"]");
+				currentItem.parent().addClass('highlighted');
+				$('#newsfeedContent').mCustomScrollbar("update");
+				$('#newsfeedContent').mCustomScrollbar("scrollTo",".mapHighlighter[infoId=\""+currentItem.parent().attr("infoid")+"\"]");
 			});
 
 			if ($(el).find(".myitem").css("display") == "none") {
