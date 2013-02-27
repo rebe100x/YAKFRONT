@@ -607,7 +607,6 @@ User.statics.findByToken = function (token,callback) {
 User.statics.findAll = function (callback) {
   return this.find({},{},{sort:{name:1}}, callback);
 }
-	
 User.statics.search = function(string,count,from,sensitive,callback){
 	var limit = (typeof(count) != 'undefined' && count > 0) ? count : 100;		
 	var skip = (typeof(from) != 'undefined' && from > 0) ? from : 0;	
@@ -766,7 +765,6 @@ Tag.statics.getHotTags = function (x,y,z,d,print,callback) {
 	
 	DUSED.setTime(DUSED.getTime()+d*1000-offset);
 	DUSEDMAX.setTime(DUSEDMAX.getTime()+d*1000);
-	console.log(DUSED+'<'+DUSEDMAX);
 	return this.find({lastUsageDate:{$gte:DUSED,$lte:DUSEDMAX}, location:{$near:[parseFloat(x),parseFloat(y)],$maxDistance:parseFloat(z)},print:print},{},{sort:{numUsed:1,lastUsageDate:1},limit:10}, callback);
 }
 
