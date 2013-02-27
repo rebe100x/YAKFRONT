@@ -37,19 +37,10 @@ function setToolTip(el)
 
 function setSearchFor(el)
 {
-	//done this way for later on dan
-	if($(el).text().indexOf('@') == 0)
-	{
-		$("html, body").animate({ scrollTop: 0 }, "slow");
-		$("#searchStr").val('@' + $(el).text().substring(1, $(el).text().length));
-		$("#searchBtn").click();
-	}	
-	else
-	{
-		$("html, body").animate({ scrollTop: 0 }, "slow");
-		$("#searchStr").val('@' + $(el).text());
-		$("#searchBtn").click();
-	}
+	//$("html, body").animate({ scrollTop: 0 }, "slow");
+	$("#searchStr").val($(el).text());
+	$("#searchBtn").click();
+	
 }
 
 function colorFirstRecord()
@@ -428,6 +419,7 @@ function correctPlaceholder()
     });
 }
 $(document).ready(function() {
+
 	if (navigator.appVersion.indexOf("MSIE") != -1){
    	correctPlaceholder();
    }
@@ -617,11 +609,11 @@ String.prototype.linkify = function(myurl, ajaxified) {
 	if(typeof(ajaxified)==='undefined') ajaxified = 0;
 	if(typeof(myurl)==='undefined') myurl = "/news/map/search/%23";
 	var res = this;
-	var hash = res.replace(/(^|\s)@([A-Za-z0-9àáâãäåçèéêëìíîïðòóôõöùúûüýÿ\.]+)/gi, "$1<a class=\"userHashLink\" href=\"$2\">@$2</a>");
+	var hash = res.replace(/(^|\s)@([A-Za-z0-9àáâãäåçèéêëìíîïðòóôõöùúûüýÿ\.]+)/gi, "$1<a class=\"userHashLink prevent-default\" href=\"$2\">@$2</a>");
 	if (ajaxified == 0)
-    	res = hash.replace(/(^|\s)#([A-Za-z0-9àáâãäåçèéêëìíîïðòóôõöùúûüýÿ]+)/gi, "$1<a class=\"tagHashLink\" href=\"" + myurl +"$2\">#$2</a>");
+    	res = hash.replace(/(^|\s)#([A-Za-z0-9àáâãäåçèéêëìíîïðòóôõöùúûüýÿ]+)/gi, "$1<a class=\"tagHashLink prevent-default\" href=\"" + myurl +"$2\">#$2</a>");
    	else
-   		res = hash.replace(/(^|\s)#([A-Za-z0-9àáâãäåçèéêëìíîïðòóôõöùúûüýÿ]+)/gi, "$1<a class=\"tagHashLink\" onclick=\"setSearchFor(this)\">#$2</a>");
+   		res = hash.replace(/(^|\s)#([A-Za-z0-9àáâãäåçèéêëìíîïðòóôõöùúûüýÿ]+)/gi, "$1<a class=\"tagHashLink prevent-default\" onclick=\"setSearchFor(this)\">#$2</a>");
 	res = res.replace(/(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/, "<a target=\"_blank\" class=\"externalLink\" href=\"http://$3\">$3</a>");
 	return res;
  }
@@ -1071,17 +1063,17 @@ function drawAComment(val,infoId, from)
 
 	if (typeof(from) === 'undefined' ) {
 			if(user._id	!= userid)
-				return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username' onclick='setSearchFor(this)'>@" + username + "</a><span class='timeago'>" + date + "</span><div class='comment'>" + comment + "</div></div>";
+				return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username prevent-default' onclick='setSearchFor(this)'>@" + username + "</a><span class='timeago'>" + date + "</span><div class='comment'>" + comment + "</div></div>";
 			else
-				return 	"<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username' onclick='setSearchFor(this)'>@" + username + "</a><span class='timeago'>" + date + "</span><a class='delComment' onclick='deleteComment(this)' id='" + val._id +"' infoid='" + infoId + "'>X</a><div class='comment'>" + comment + "</div></div>";
+				return 	"<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username prevent-default' onclick='setSearchFor(this)'>@" + username + "</a><span class='timeago'>" + date + "</span><a class='delComment' onclick='deleteComment(this)' id='" + val._id +"' infoid='" + infoId + "'>X</a><div class='comment'>" + comment + "</div></div>";
 	}
 	else
 	{
 		var urlsearch = conf.fronturl + '/news/map/search/@' + username;
 		if(user._id	!= userid)
-			return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username' onclick='setSearchFor(this)'>@" + username + "</a><span class='timeago'>" + date + "</span><div class='comment'>" + comment + "</div></div>";	
+			return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username prevent-default' onclick='setSearchFor(this)'>@" + username + "</a><span class='timeago'>" + date + "</span><div class='comment'>" + comment + "</div></div>";	
 		else
-			return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username' onclick='setSearchFor(this)'>@" + username + "</a><span class='timeago'>" + date + "</span><a class='delComment' onclick='deleteComment(this)' id='" + val._id +"' infoid='" + infoId + "'>X</a><div class='comment'>" + comment + "</div></div>";		
+			return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username prevent-default' onclick='setSearchFor(this)'>@" + username + "</a><span class='timeago'>" + date + "</span><a class='delComment' onclick='deleteComment(this)' id='" + val._id +"' infoid='" + infoId + "'>X</a><div class='comment'>" + comment + "</div></div>";		
 	}
 
 	
