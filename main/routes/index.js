@@ -349,6 +349,7 @@ exports.session = function(req, res){
 		if(!(typeof(user) == 'undefined' || user === null || user === '')){
 			if(user.status == 1){
 				req.session.user = user._id;
+				User.update({"_id":user._id},{$set:{"lastLoginDate":new Date()}}, function(err){if (err) console.log(err);});
 				res.redirect(req.body.redir || '/news/map');
 			}else if(user.status == 2){
 				req.session.message = 'Compte non validé.';
