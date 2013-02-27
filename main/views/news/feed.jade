@@ -274,6 +274,7 @@ block content
 				thetags += tagNameArray.join(', ');
 			}*/
 			//console.log(item.yakCatName);
+			
 			if(item.yakCatName.length > 0)
 			{
 				for (var i = 0; i < item.yakCatName.length; i++) {
@@ -281,14 +282,26 @@ block content
 				}
 			}
 
-			if (typeof(item.freeTag) != 'undefined') {
-				if(item.freeTag.length > 0){
-					if(item.freeTag.length > 0)
-						thetags += ', ';
-					for (var i = 0; i < item.freeTag.length; i++) {
-						thetags += '<a class="tagHashLink" onclick="setSearchFor(this)">#' + item.freeTag[i] +'</a> ';	
+			if (typeof(item.yakTag) != 'undefined') {
+					
+					for (var i = 0; i < item.yakTag.length; i++) {
+						if(item.yakTag[i] != ""){
+							thetags += '<a class="tagHashLink" onclick="setSearchFor(this)">#' + item.yakTag[i] +'</a> ';	
+							if( i < item.yakTag.length -1)
+								thetags += ', ';
+						}
 					}
-				}
+			}
+
+			if (typeof(item.freeTag) != 'undefined') {
+					
+					for (var i = 0; i < item.freeTag.length; i++) {
+						if(item.freeTag[i] != ""){
+							thetags += '<a class="tagHashLink" onclick="setSearchFor(this)">#' + item.freeTag[i] +'</a> ';	
+							if( i < item.freeTag.length -1)
+								thetags += ', ';
+						}
+					}
 			}
 			thetags += "</div>";
 
