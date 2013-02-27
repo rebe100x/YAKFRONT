@@ -276,7 +276,7 @@ block content
 			});
 			
 			$('#newsfeed').delegate(".mapHighlighter",'click', function (e) {
-				if(&& e.target.className != 'prevent-default'){
+				if(e.target.className != 'prevent-default'){
 					if($(this).find(".myitem").length == 0)
 					{
 						getItemDetails(this);
