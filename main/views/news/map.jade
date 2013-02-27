@@ -1158,7 +1158,6 @@ block content
 				//console.log(data.info[0]);
 				
 				var val = data.info[0];
-				
 				if(val.user != undefined){
 					thumbImage = 	val.thumb;
 					mediumImage = 	thumbImage.replace('120_90', '512_0');
@@ -1265,7 +1264,6 @@ block content
 			var yakComments = $("<span />");
 			yakComments.attr("class", "yakComments");
 			yakComments.attr("rel", val._id);
-			//console.log(val.yakComments);
 			setCommentText(val.yakComments.length,yakComments);
 			
 
@@ -1303,7 +1301,6 @@ block content
 						divComment.find("textarea").keypress(function(event){
 
 							if (event.keyCode == 13) {
-
 								var comment = $(this).val();
 								if(comment.length > 250)
 								{
@@ -1320,9 +1317,11 @@ block content
 								newComment.comment = comment;
 								newComment.userthumb = user.thumb;
 								newComment.date = new Date();
+
 								$.post('/api/setComment', {infoId : currEleComment.attr("rel"), username: user.login, userthumb: user.thumb, comment: comment.substring(0, 249)} , function(res){
 									if (res.meta.code == '200')
 									{
+										alert("great");
 										newComment._id = res.meta.cid;
 										theArea.val("");
 										theArea.removeAttr("disabled");
