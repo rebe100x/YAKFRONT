@@ -2,56 +2,44 @@ include ../blocks/range.jade
 mixin searchFormUnified(page)
 	div.navbar.navbar-fixed-top	
 		div.row-fluid.searchYakwala
-			input.search-query.customInput.tour_1#searchStr(type="search",placeholder="Quoi ?",autocomplete="off", style="width: 13%")
-			input.search-query.customInput#searchPlaceStr.tour_2(type="search",placeholder="Où ?",autocomplete="off", data-provide="typeahead", style="width: 13%")
-			button#searchBtn(type="submit")
+			div.span4
+				input.search-query.customInput.tour_1#searchStr(type="search",placeholder="Quoi ?",autocomplete="off", style="width: 40%")
+				input.search-query.customInput#searchPlaceStr.tour_2(type="search",placeholder="Où ?",autocomplete="off", data-provide="typeahead", style="width: 40%")
+				button#searchBtn(type="submit", style="width: 7%; background-repeat: no-repeat; position: absolute; background-color: transparent")
 			
-			div.btn-group.pull-left(style="width:200px;")
-				div.pull-left(style="width: 100%")
-					i.icon-time.myi(style="top:8px;")
-					div#dayPrinter.sliderText.tour_3(style="width: 100%; position: relative; top: -1px; text-align: center;") Aujourd hui	
-					div#heatSelector(style="margin-left:20px;")
-					//
-						a#heatModuleTrigger.btn
-							span#dayPrinter.sliderText Aujourd hui	
-							span.caret
-							ul#dropdownTimeSelector.dropdown-menu
+			div.span2.mytime
+				div#dayPrinter.sliderText(style="width: 80%; margin: 0 auto; text-align: center; float: none; clear: both") Aujourd hui	
+				div#heatSelector(style="width: 80%; margin: 0 auto;")
 
-					
-			
-			div.btn-group.pull-left
-				a.btn#rangeSelectorTrigger
-					i.icon-search.myi
+			div.span6.myfilter
+				a.btn#rangeSelectorTrigger.pull-left
+					//
+						i.icon-search.myi
 					span#localnessPrinter.sliderText.tour_4 Localness
 					span.caret
 					mixin range
-
-			
-			div.btn-group.pull-left
-				a.btn#tagSelectorTrigger
+				a.btn#tagSelectorTrigger.pull-left
 					span#localnessPrinter.sliderText.tour_4 Hot Tags
 					span.caret
 					ul#dropdownTagSelector.dropdown-menu
-					
 
-			div.verticalSplitter.pull-left
-			
-			div#newsfeedMenu
-				div#typeContainer.row
-					//span.btn(title="Actu", type=1) 
-					//	img(src="/images/markers/latestV1/type1.png")
-					span.btn(title="Voir les Yassalas", type=4) 
-						img(src="/images/markers/latestV1/type4.png")
-					//span.btn(title="Agenda", type=2) 
-					//	img(src="/images/markers/latestV1/type2.png")
-					//span.btn(title="Infos Pratiques", type=3) 
-					//	img(src="/images/markers/latestV1/type3.png")
-			span.btn#btnMesalertes(title="Mes alertes", type=5, onclick='setAlert()')
+				div.verticalSplitter.pull-left
+				div#newsfeedMenu.pull-left
+					div#typeContainer.row
+						//span.btn(title="Actu", type=1) 
+						//	img(src="/images/markers/latestV1/type1.png")
+						span.btn(title="Voir les Yassalas", type=4) 
+							img(src="/images/markers/latestV1/type4.png")
+						//span.btn(title="Agenda", type=2) 
+						//	img(src="/images/markers/latestV1/type2.png")
+						//span.btn(title="Infos Pratiques", type=3) 
+						//	img(src="/images/markers/latestV1/type3.png")	
+				span.btn#btnMesalertes(title="Mes alertes", type=5, onclick='setAlert()')
 					i.icon-exclamation-sign
 						//
 							img(src="/images/markers/type5.png")		
-			span#zoneLocButton.btn
-					i.icon-star(title="Mes endroits Favoris")
+				span#zoneLocButton.btn
+					i.icon-star(title="Mes endroits Favoris")	
 
 
 
