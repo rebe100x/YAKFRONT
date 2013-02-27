@@ -419,6 +419,23 @@ function correctPlaceholder()
     });
 }
 $(document).ready(function() {
+	$(window).resize(function(){
+			if ($(document).width() > $(window).width()) { 
+		    	if ($(window).width() < 700) {
+				$(".searchYakwala").css({
+					'width' : '94%',
+					'margin-left' : '3%'
+				})
+			}
+		}
+		else
+		{
+			$(".searchYakwala").removeAttr("style");
+		} 	
+	});
+	
+
+	
 
 	if (navigator.appVersion.indexOf("MSIE") != -1){
    	correctPlaceholder();
