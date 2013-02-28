@@ -344,10 +344,23 @@ exports.user_logout = function(req, res){
 
 
 exports.session = function(req, res){
+
 	var User = db.model('User');
-	User.authenticate(req.body.login,req.body.password, function(err, user) {
+	if (req.body.rememberme == "true") {
+		 res.cookie('remember', 'true');
+		 res.cookie('loginid', req.body.login);
+	}
+	else
+	{
+		res.cookie('remember', 'false');
+		res.cookie('loginid', null);
+	}
+	User.authenticate(req.body.login,req.body.password, req.body.token, function(err, user) {
 		if(!(typeof(user) == 'undefined' || user === null || user === '')){
 			if(user.status == 1){
+				if (req.body.rememberme == "true") {res.cookie('token', user.token);}
+				else {res.cookie('token', null);}
+				
 				req.session.user = user._id;
 				User.update({"_id":user._id},{$set:{"lastLoginDate":new Date()}}, function(err){if (err) console.log(err);});
 				res.redirect(req.body.redir || '/news/map');

@@ -15,6 +15,8 @@ mixin loginForm()
 			div.control-group
 				div.controls.rememberme
 					input(type="checkbox", name="remember", id="remember") 
+					input(type="hidden", name="rememberme", id="rememberme")
+					input(type="hidden", name="token", id="token")
 					span
 						|Conserver mes infos
 			div.control-group
@@ -74,4 +76,29 @@ mixin loginForm()
 				}
 			});
 		});*/
+	
+		$(document).ready(function(){
+			$("#remember").change(function(){
+				if ($('#remember').attr('checked')) {
+					$("#rememberme").val("true");
+				}else
+				{
+					$("#rememberme").val("false");
+				}
+				alert($("#rememberme").val());
+			});
+			var remember = $.cookie('remember');
+
+			if ( remember == 'true' ) {
+				var login = $.cookie('loginid');
+				var password = "********";
+				var token = $.cookie('token');
+				// autofill the fields
+				$('#login').attr("value", login);
+				$('#password').attr("value", password);
+				$('#remember').attr('checked', "checked");
+				$('#rememberme').val("true");
+				$('#token').val(token);
+			}
+		});
 		

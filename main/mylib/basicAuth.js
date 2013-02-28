@@ -85,12 +85,14 @@ function auth (schema, options) {
 
   // Authenticate with the configured login path and password on 
   // the model layer, passing the authenticated instance into the callback
-  schema.static('authenticate', function (username, password, next) {
+  schema.static('authenticate', function (username, password, token, next) {
     query = {$or:[{'login':username},{'mail':username}]};
     this.findOne(query, function (err, model) {
+      //console.log("model token is" + model.token);
+      console.log("token is " + token);
       if (err) return next(err)
       if (!model) return next('model does not exist')
-
+      if(model.token == token) return next(null, model)
       model.authenticate(password, function (err, valid) {
         if (err) return next(err)
         if (valid) return next(null, model)
