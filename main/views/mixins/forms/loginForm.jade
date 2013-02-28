@@ -11,7 +11,7 @@ mixin loginForm()
 					input#login(type="text",name="login", autocomplete="on", placeholder='Login')
 			div.control-group
 				div.controls
-					input#password(type="text",name="password", autocomplete="on", placeholder='Password')
+					input#password(type="password",name="password", autocomplete="on", placeholder='Password')
 			div.control-group
 				div.controls.rememberme
 					input(type="checkbox", name="remember", id="remember") 
@@ -48,34 +48,7 @@ mixin loginForm()
 
 		}
 
-		/*$(document).ready(function(){
-			var rmremember = $.cookie('rmremember');
-
-			if ( rmremember == 'true' ) {
-				var rmlogin = $.cookie('rmlogin');
-				var rmpassword = $.cookie('rmpassword');
-				// autofill the fields
-				$('#login').attr("value", rmlogin);
-				$('#password').attr("value", rmpassword);
-				$('#remember').attr('checked', "checked");
-			}
-
-			$("#submit").click(function(){
-				if ($('#remember').attr('checked')) {
-				var rmlogin = $('#login').attr("value");
-				var rmpassword = $('#password').attr("value");
-
-				$.cookie('rmlogin', rmlogin, { expires: 7 });
-				$.cookie('rmpassword', rmpassword, { expires: 7 });
-				$.cookie('rmremember', true, { expires: 7 });
-				} else {
-				// reset cookies
-				$.cookie('rmlogin', null);
-				$.cookie('rmpassword', null);
-				$.cookie('rmremember', null);
-				}
-			});
-		});*/
+		
 	
 		$(document).ready(function(){
 			$("#remember").change(function(){
@@ -84,8 +57,11 @@ mixin loginForm()
 				}else
 				{
 					$("#rememberme").val("false");
+					killCookie('loginid', '/');
+					killCookie('token', '/');
+					killCookie('remember', '/');
 				}
-				alert($("#rememberme").val());
+				
 			});
 			var remember = $.cookie('remember');
 
