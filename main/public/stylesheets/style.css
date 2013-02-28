@@ -378,7 +378,7 @@ width: 270px;
 -------------------------------------------------- */
 .size100{
 	width:100px;
-	height:100px;
+	padding:5px;
 }
 
 /* bootsrap override
@@ -392,7 +392,7 @@ width: 270px;
 #formProfile input[type=text] { width: 30%; }
 #formProfile select { width: 30%; }
 #formProfile textarea { width: 30%; height: 100px;}
-#formProfile #avatarPreview { margin-top: -90px; position: relative; top: 50px;}
+#formProfile #avatarPreview { margin-top: -100px; position: relative; top: 50px;}
 
 /* Sidenav
 -------------------------------------------------- */
