@@ -574,7 +574,7 @@ exports.firstvisit = function(req,res){
 					else{
 						formMessage = "Votre nouveau mot de passe est enregistré";
 						//delete req.session.user;
-						User.authenticate(login,req.body.password, function(err, user) {
+						User.authenticate(login,req.body.password, "", function(err, user) {
 							if(!(typeof(user) == 'undefined' || user === null || user === '') && user.status == 1){
 									req.session.user = user._id;
 									res.locals.user = user;
