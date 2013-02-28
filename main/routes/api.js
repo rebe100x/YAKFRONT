@@ -86,7 +86,14 @@ exports.geoalerts = function (req, res) {
 
 	Info.findAllGeoAlert(req.params.x1,req.params.y1,req.params.x2,req.params.y2,req.params.ago,req.params.now,req.params.str,usersubs,tagsubs,feedsubs,req.params.limit,req.params.skip,function (err, docs){
 		if(!err)
-			res.json({meta:{code:200},data:{info:docs}});
+		{
+			var infosFormated = docs.map(function(item){
+					var Info = db.model('Info');
+					return Info.format(item);
+				});
+			res.json({meta:{code:200},data:{info:infosFormated}});
+		}
+			
 		else
 			res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 	}); 
