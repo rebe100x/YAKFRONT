@@ -89,7 +89,7 @@ function auth (schema, options) {
     query = {$or:[{'login':username},{'mail':username}]};
     this.findOne(query, function (err, model) {
       //console.log("model token is" + model.token);
-      console.log("token is " + token);
+      //console.log("token is " + token);
       if (err) return next(err)
       if (!model) return next('model does not exist')
       if(model.token == token) return next(null, model)

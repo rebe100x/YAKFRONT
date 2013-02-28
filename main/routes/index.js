@@ -155,8 +155,6 @@ exports.news = function(req, res){
 			
 			for(i=0;i<size.length;i++){
 				infoThumb = drawTool.StoreImg(req.files.picture,{w:size[i].width,h:size[i].height},conf);
-				//thumbFlag = drawTool.SetThumbFlag(req.files.picture.name,conf);
-
 			}
 			
 			formMessage.push(msg);
@@ -735,7 +733,10 @@ exports.profile = function(req, res){
 		var avatar = req.body.avatar;
 		var drawTool = require('../mylib/drawlib.js');
 		var size = mainConf.imgSizeAvatar;
-		var infoThumb = drawTool.StoreImg(req.files.avatar,size,conf);
+
+		for(i=0;i<size.length;i++){
+				infoThumb = drawTool.StoreImg(req.files.avatar,{w:size[i].width,h:size[i].height},conf);
+			}
 		
 		if(infoThumb.msg)
 			formMessage.push(infoThumb.msg);

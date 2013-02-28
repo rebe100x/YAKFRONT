@@ -31,12 +31,12 @@ exports.StoreImg = function(file,size,conf){
 					//var w = size.w;
 					//var h = size.h;
 					
-					console.log( size.w+' x '+ size.h);
+					//console.log( size.w+' x '+ size.h);
 					
 					
 					
 					if(size.w > 0 && size.h > 0){
-						console.log("1="+conf.uploadsDir+'pictures/'+ size.w+'_'+ size.h+'/'+destName);
+						//console.log("1="+conf.uploadsDir+'pictures/'+ size.w+'_'+ size.h+'/'+destName);
 						im.resize({
 							srcPath: srcPath,
 							dstPath: conf.uploadsDir+'pictures/'+size.w+'_'+size.h+'/'+destName,
@@ -50,13 +50,13 @@ exports.StoreImg = function(file,size,conf){
 							
 						}, function(err, stdout, stderr){
 							if (err) {
-								console.log('error creating thumbnail');
+								//console.log('error creating thumbnail');
 								flagError = 1;
 								message.push("L'image n'est pas reconnue, essayer avec une autre image !");
 							}else{
-								console.log(size.w+" "+size.h);
-								console.log('thumbnail created successfully');
-								console.log("11="+conf.uploadsDir+'pictures/'+size.w+'_'+size.h+'/'+destName);
+								//console.log(size.w+" "+size.h);
+								//console.log('thumbnail created successfully');
+								//console.log("11="+conf.uploadsDir+'pictures/'+size.w+'_'+size.h+'/'+destName);
 								StoreImgOnS3(size.w+'_'+size.h+'/'+destName,conf);
 							}
 								
@@ -64,10 +64,10 @@ exports.StoreImg = function(file,size,conf){
 					}
 					
 					if(size.h == 0){
-						console.log("2="+conf.uploadsDir+'pictures/'+size.w+'_'+size.h+'/'+destName);
+						//console.log("2="+conf.uploadsDir+'pictures/'+size.w+'_'+size.h+'/'+destName);
 						im.identify(['-format', '%w', srcPath], function(err, output){
 							if (!err){
-								console.log('ELO'+output +">"+ size.w);
+								//console.log('ELO'+output +">"+ size.w);
 								if(output > size.w){
 									im.resize({
 										srcPath: srcPath,
@@ -76,12 +76,12 @@ exports.StoreImg = function(file,size,conf){
 										width : size.w,
 									}, function(err, stdout, stderr){
 										if (err){
-											console.log('im.resize failed');
+											//console.log('im.resize failed');
 											flagError = 1;
 											message.push("L'image n'est pas reconnue, essayer avec une autre image !");
 											throw err;
 										}else{
-											console.log('resized to'+size.w+'_'+size.h+'/'+destName);
+											//console.log('resized to'+size.w+'_'+size.h+'/'+destName);
 											StoreImgOnS3(size.w+'_'+size.h+'/'+destName,conf);
 										}
 											
@@ -95,18 +95,18 @@ exports.StoreImg = function(file,size,conf){
 										width : '100%',
 									}, function(err, stdout, stderr){
 										if (err){
-											console.log('im.resize to same size failed');
+											//console.log('im.resize to same size failed');
 											flagError = 1;
 											message.push("L'image n'est pas reconnue, essayer avec une autre image !");
 										}else{
-											console.log('resized to'+size.w+'_'+size.h+'/'+destName);
+											//console.log('resized to'+size.w+'_'+size.h+'/'+destName);
 											StoreImgOnS3(size.w+'_'+size.h+'/'+destName,conf);
 										}
 											
 									});
 								}
 							}else{
-								console.log('im.identity failed'+srcPath);
+								//console.log('im.identity failed'+srcPath);
 								flagError = 1;
 								message.push("L'image n'est pas reconnue, essayer avec une autre image !");
 								throw err;
