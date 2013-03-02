@@ -1324,7 +1324,7 @@ block content
 								$.post('/api/setComment', {infoId : currEleComment.attr("rel"), username: user.login, userthumb: user.thumb, comment: comment.substring(0, 249)} , function(res){
 									if (res.meta.code == '200')
 									{
-										alert("great");
+										//alert("great");
 										newComment._id = res.meta.cid;
 										theArea.val("");
 										theArea.removeAttr("disabled");
