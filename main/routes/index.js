@@ -345,18 +345,18 @@ exports.session = function(req, res){
 
 	var User = db.model('User');
 	if (req.body.rememberme == "true") {
-		 res.cookie('remember', 'true');
-		 res.cookie('loginid', req.body.login);
+		 res.cookie('remember', 'true', { expires: new Date(Date.now() + 90000000000), httpOnly: false, path: '/'});
+		 res.cookie('loginid', req.body.login, { expires: new Date(Date.now() + 90000000000) , httpOnly: false, path: '/'});
 	}
 	else
 	{
-		res.cookie('remember', 'false');
-		res.cookie('loginid', null);
+		res.cookie('remember', 'false', { expires: new Date(Date.now() + 90000000000) , httpOnly: false, path: '/'});
+		res.cookie('loginid', null, { expires: new Date(Date.now() + 90000000000) , httpOnly: false, path: '/'});
 	}
 	User.authenticate(req.body.login,req.body.password, req.body.token, function(err, user) {
 		if(!(typeof(user) == 'undefined' || user === null || user === '')){
 			if(user.status == 1){
-				if (req.body.rememberme == "true") {res.cookie('token', user.token);}
+				if (req.body.rememberme == "true") {res.cookie('token', user.token, { expires: new Date(Date.now() + 90000000000) , httpOnly: false, path: '/'});}
 				else {res.cookie('token', null);}
 				
 				req.session.user = user._id;
