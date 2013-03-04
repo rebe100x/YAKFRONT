@@ -3,33 +3,42 @@ mixin menu(active)
 	div.navbar.navbar-fixed-top
 		div.row-fluid.headerYakwala
 			if(active != "login")
-				div.span12.pull-left(style="text-align: center")
-					a.leftlink#maplink(href="/news/map")
+				
+				div.span5			
+					a.leftlink#maplink.yak-mainMenuImage-hide(href="/news/map")
 						img(src="/images/new/lacarte.png")
-					a.leftlink#feedlink(href="/news/feed")
+					a.leftlink#feedlink.yak-mainMenuImage-hide(href="/news/feed")
 						img(src="/images/new/filinfo.png")
 
-					a(href="/news/map")
-						img(src="/images/new/logo.png")
-			
-					- if (locals.user && active != "firstvisit")
-						a.customprofile.dropdown-toggle(href="#",data-toggle="dropdown")
-							img(id="userThumb", src=locals.user.thumbsmall)
-							span.caret(style="margin:22px 22px 22px 5px;")
-						ul.dropdown-menu.pull-right(style="right:21px; top: 40px;")
-							li
-								a(href="/settings/profile") Mon profil
-							li
-								a(href="/settings/alerts") Mes alertes
-							li
-								a(href="/settings/password") Mot de Passe
-							li.divider
-							li
-								a(href="/user/logout") Quitter
-					- else
-						//
-							span 
-								a.btn.pull-right(href="/user/login") Login
+				a(href="/news/map")
+					img(src="/images/new/logo.png")
+		
+				- if (locals.user && active != "firstvisit")
+					a.customprofile.dropdown-toggle(href="#",data-toggle="dropdown")
+						span.yak-mainMenu-hide(style="position: relative; top: 14px;")
+							| Click for Menu
+						img.yak-mainMenuImage-hide(id="userThumb", src=locals.user.thumbsmall)
+						span.caret(style="margin:22px 22px 22px 5px;")
+					ul.dropdown-menu.pull-right(style="right:21px; top: 40px;")
+						li.yak-mainMenu-hide
+							a(href="/news/map") Map
+						li.yak-mainMenu-hide
+							a(href="/news/feed") Feed
+						li.divider.yak-mainMenu-hide
+						li
+							a(href="/settings/password") Mot de Passe
+						
+						li
+							a(href="/settings/profile") Mon profil
+						li
+							a(href="/settings/profile") Mon profil
+						li.divider
+						li
+							a(href="/user/logout") Quitter
+				- else
+					//
+						span 
+							a.btn.pull-right(href="/user/login") Login
 			if(active == 'map' || active == 'feed')
 				mixin searchFormUnified(active)
 

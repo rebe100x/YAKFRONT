@@ -494,6 +494,22 @@ width: 270px;
      }
  }
 
+  @media (min-width: 767px) {
+     .yak-mainMenu-hide {
+        display: none; !important
+
+     }
+ }
+
+  @media (max-width: 767px) {
+     .yak-mainMenuImage-hide {
+        display: none; !important
+
+     }
+ }
+
+ 
+
  @media (max-width: 979px) {
      .yak-sidenav-fixed {
          margin-top:100px;
