@@ -85,8 +85,10 @@ function mergeDeep(o1, o2) {
 function buildItemDate(item){
 	var months = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
 	var thedate = '';
+	var now = new Date();
 	if(item.yakType == 2){
 		if(typeof(item.eventDate) != 'undefined' && typeof(item.eventDate[0]) != 'undefined' ){
+
 			var dateTmpFrom = new Date(item.eventDate[0].dateTimeFrom);
 			//console.log('TEST'+item.eventDate[0].dateTimeFrom);
 			// TODO this does not work on SAFARI
@@ -100,12 +102,12 @@ function buildItemDate(item){
 				if(HoursDiff == 0)
 					thedate = 'Le '+dateTmpFrom.getDate()+' '+months[dateTmpFrom.getMonth()];
 				else
-					thedate = 'Le '+dateTmpFrom.getDate()+' '+months[dateTmpFrom.getMonth()]+' à '+dateTmpFrom.getHours()+':'+m;
+					thedate = 'Le '+dateTmpFrom.getDate()+' '+months[dateTmpFrom.getMonth()]+' à '+(dateTmpFrom.getHours()-1)+':'+m;
 			}else{
 				if(HoursDiff == 0)
 					thedate = 'Du '+dateTmpFrom.getDate()+' '+months[dateTmpFrom.getMonth()] + ' au '+dateTmpEnd.getDate()+' '+months[dateTmpEnd.getMonth()];
 				else
-					thedate = 'Du '+dateTmpFrom.getDate()+' '+months[dateTmpFrom.getMonth()]+' ' + dateTmpFrom.getHours()+':'+m+' au '+dateTmpEnd.getDate()+' '+months[dateTmpEnd.getMonth()]+ ' ' + dateTmpEnd.getHours()+':'+m;
+					thedate = 'Du '+dateTmpFrom.getDate()+' '+months[dateTmpFrom.getMonth()]+' au '+dateTmpEnd.getDate()+' '+months[dateTmpEnd.getMonth()]+ ' à ' + (dateTmpFrom.getHours()-1)+':'+m;
 			} 
 
 			if(item.eventDate.length == 1)	

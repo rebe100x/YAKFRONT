@@ -26,6 +26,7 @@ exports.picture = function(req,res){
 		res.writeHead(200, {'Content-Type': 'image/jpeg' });
 		res.end(img, 'binary');
 	}else if(path.existsSync(defaultpath)){
+		var img = fs.readFileSync(defaultpath);
 		res.writeHead(200, {'Content-Type': 'image/jpeg' });
 		res.end(img, 'binary');
 	}else

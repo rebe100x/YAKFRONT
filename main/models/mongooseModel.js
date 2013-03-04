@@ -531,16 +531,21 @@ var User = new Schema({
 
 
 User.statics.format = function (theuser) {
-	if(theuser.thumb)
+	if(theuser.thumb){
 		var thethumb = 	conf.fronturl+'/pictures/128_128/'+theuser.thumb;
-	else
+		var thethumbsmall = 	conf.fronturl+'/pictures/48_48/'+theuser.thumb;
+	}
+	else{
 		var thethumb = 	'';
+	}
+		
 
 	var formattedUser = {
 		_id:theuser._id,
 		name:theuser.name,
 		bio:theuser.bio,
 		thumb:thethumb,
+		thumbsmall:thethumbsmall,
 		web:theuser.web,
 		login:theuser.login,
 		type:theuser.type,

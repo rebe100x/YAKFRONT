@@ -7,7 +7,7 @@ exports.confs = {
 		"rangeDefault":80,
 		"typeDefault":'1,2,4',
 		"dateFromDefault":0,
-		"version":'1.1.0',
+		"version":'1.1.1',
 	},
 	"devrenaud" : {
 		"validationUrl":"http://dev.labs.yakwala.fr:3000/user/validate/",
