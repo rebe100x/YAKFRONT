@@ -241,10 +241,12 @@ block content
 			infoContent.append(yakTypeImage);
 
 			if(!(typeof item.thumb === 'undefined') && item.thumb != conf.batchurl && item.thumb != null){
-				var thumbImage = $("<div />");
-				thumbImage.attr("class", "thumbImage");
-				thumbImage.append("<img src=\'"+item.thumb+"\' />");
-				infoContent.append(thumbImage);
+				thumbImage = item.thumb.replace('thumb/','');
+				thumbImage = thumbImage.replace('//','/');
+				var thumbImageCode = $("<div />");
+				thumbImageCode.attr("class", "thumbImage");
+				thumbImageCode.append("<img src=\'"+thumbImage+"\' />");
+				infoContent.append(thumbImageCode);
 			}
 
 			var itemTitle = $("<div />");
@@ -399,18 +401,19 @@ block content
 				//console.log(data.info[0]);
 				
 				var val = data.info[0];
-
+				/*
 				if(val.user != undefined){
 					thumbImage = 	val.thumb;
 					mediumImage = 	thumbImage.replace('120_90', '512_0');
 				}else{
 					thumbImage = 	val.thumb;
 					mediumImage = 	thumbImage.replace('thumb', 'medium');
-				}
+				}*/
 
-				//thumbImage = val.thumb;
-				//mediumImage = 	thumbImage.replace('120_90', '512_0');
-				
+				thumbImage = val.thumb.replace('thumb/','');
+				thumbImage = thumbImage.replace('//','/');
+				mediumImage = 	thumbImage.replace('120_90', '512_0');
+			
 
 				var item = createFeedPageItem(val);
 				currentItem.find(".loadingMore").remove();

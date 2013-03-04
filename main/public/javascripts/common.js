@@ -102,12 +102,12 @@ function buildItemDate(item){
 				if(HoursDiff == 0)
 					thedate = 'Le '+dateTmpFrom.getDate()+' '+months[dateTmpFrom.getMonth()];
 				else
-					thedate = 'Le '+dateTmpFrom.getDate()+' '+months[dateTmpFrom.getMonth()]+' à '+(dateTmpFrom.getHours()-1)+':'+m;
+					thedate = 'Le '+dateTmpFrom.getDate()+' '+months[dateTmpFrom.getMonth()]+' à '+(dateTmpFrom.getHours())+':'+m;
 			}else{
 				if(HoursDiff == 0)
 					thedate = 'Du '+dateTmpFrom.getDate()+' '+months[dateTmpFrom.getMonth()] + ' au '+dateTmpEnd.getDate()+' '+months[dateTmpEnd.getMonth()];
 				else
-					thedate = 'Du '+dateTmpFrom.getDate()+' '+months[dateTmpFrom.getMonth()]+' au '+dateTmpEnd.getDate()+' '+months[dateTmpEnd.getMonth()]+ ' à ' + (dateTmpFrom.getHours()-1)+':'+m;
+					thedate = 'Du '+dateTmpFrom.getDate()+' '+months[dateTmpFrom.getMonth()]+' au '+dateTmpEnd.getDate()+' '+months[dateTmpEnd.getMonth()]+ ' à ' + (dateTmpFrom.getHours())+':'+m;
 			} 
 
 			if(item.eventDate.length == 1)	

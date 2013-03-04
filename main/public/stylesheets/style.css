@@ -203,13 +203,13 @@ abbr[title] {
 .mCSB_scrollTools .mCSB_buttonDown {background-position: -80px -20px;}
 .mCSB_container {margin-right: 5px;}
 		/*NEWS FEED*/
-#newsfeedContent{position:relative;display:block;overflow:auto;height:0px;z-index:2000; overflow-x: hidden}
+#newsfeedContent{position:relative;display:block;overflow:auto;height:0px;z-index:2000; overflow-x: hidden;}
 .mapHighlighter{cursor:pointer;-webkit-border-radius: 2px;border-radius: 2px;}
-.mapHighlighter:hover{background-color:#F0F0F0;}
+.mapHighlighter:hover{background-color:#F6F6F6;}
 .mapHighlighterDetails{display:block;}
 ul#newsfeed{display:block;list-style-type:none;width:100%;margin:0px auto;padding:0px 0px;position:relative;opacity:1;z-index:2000;background:#FFFFFF;}
 ul#newsfeed li{width:100%;}
-ul#newsfeed li.highlighted .mapHighlighter{background-color:#F0F0F0; width: 94%; margin-left: 1%;}
+ul#newsfeed li.highlighted .mapHighlighter{background-color:#F6F6F6; width: 94%; margin-left: 1%;}
 
 ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: both; padding-left: 3px; padding-right: 3px;}
 .infowindow .myitem {clear: both; position: relative; top: 12px; text-align: justify;}
@@ -231,8 +231,12 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 .infowindow .myitem i.icon-chevron-up { }
 
 
+.infowindow:firstChild{
+	margin-top:10px;
+}
 .infowindow{
-	width:95%;margin:1%;
+	width:95%;
+	margin:1%;
 	font-size:0.95em;
 	box-shadow: 0 1px 0 #DDD;
 	background: white;
@@ -301,7 +305,7 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 .currentDetails .myitem .commentBox {font-style:italic; position: relative; clear: both; width: auto; float: left; left: 0px; top: -30px; color: #D71920; cursor: pointer; background: #F1F2F6; width: 100%; margin-bottom: 10px;}
 .currentDetails .myitem .commentBox .username { color: #3B5998; }
 .currentDetails .myitem .commentBox .username:hover { text-decoration: underline;}
-.currentDetails .myitem .commentBox .userthumb { height: 50px; width: 50px; float: left; }
+.currentDetails .myitem .commentBox .userthumb { height: 50px; width: 50px; float: left;margin:3px; }
 .currentDetails .myitem .commentBox .comment { color: black; margin-bottom: 12px;}
 .currentDetails .myitem .commentBox textarea { width: 97%; height: 50px; margin-top: 2px; margin-left: 0px;}
 .currentDetails .myitem i.icon-chevron-up { }
@@ -344,6 +348,8 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 #postForm {position:relative;opacity:1;z-index:2000;background:#FFFFFF;display: block;height:auto;width: 93%;padding: 0px;margin: 0px 0px 1% 2%;}
 #postForm legend{font-size: 18px;line-height: 28px;color: #333333;border: 0;border-bottom: 1px solid #e5e5e5;}
 #postForm #eventDateController{display: none;}
+#postForm span#picturePreview{float:left;margin:3px;}
+#postForm input#picture{float:left;}
 #ui-datepicker-div{font-size:0.9em;}
 #newspostContent{display:none;position:relative;height:0px;width:100%;}
 
