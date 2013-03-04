@@ -14,12 +14,9 @@ mixin menu(active)
 			
 					- if (locals.user && active != "firstvisit")
 						a.customprofile.dropdown-toggle(href="#",data-toggle="dropdown")
-							img(id="userThumb", src="/images/new/profile.png")
-							//
-								i.icon-user
-								span= ' '+locals.user.login+' ';
-								span.caret
-						ul.dropdown-menu.pull-right(style="right:0; top: 30px;")
+							img(id="userThumb", src=locals.user.thumbsmall)
+							span.caret(style="margin:22px 22px 22px 5px;")
+						ul.dropdown-menu.pull-right(style="right:21px; top: 40px;")
 							li
 								a(href="/settings/profile") Mon profil
 							li
@@ -57,7 +54,7 @@ mixin menu(active)
 	if(active != "login")		
 		script
 			$(document).ready(function(){
-
+				/*
 				if(user.thumb.indexOf("http") == "-1")
 				{
 					$("#userThumb").attr("src", "http://" + user.thumb);	
@@ -66,7 +63,7 @@ mixin menu(active)
 				{
 					$("#userThumb").attr("src", user.thumb);		
 				}
-				$("#userThumb").after("<img src='/images/new/bgthumb.png' id='bgthumb' />");
+				$("#userThumb").after("<img src='/images/new/bgthumb.png' id='bgthumb' />");*/
 
 			});
 			

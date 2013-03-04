@@ -7,9 +7,10 @@ exports.confs = {
 		"rangeDefault":80,
 		"typeDefault":'1,2,4',
 		"dateFromDefault":0,
-		"version":'1.1.0',
+		"version":'1.1.1',
 	},
 	"devrenaud" : {
+		"resetpassUrl":"http://dev.labs.yakwala.fr:3000/user/resetpassword/",
 		"validationUrl":"http://dev.labs.yakwala.fr:3000/user/validate/",
 		"batchurl":"http://dev.batch.yakwala.fr/BACKEND/",
 		"backurl":"http://dev.backend.yakwala.fr:3001",
@@ -26,10 +27,12 @@ exports.confs = {
 		"uploadsDir":__dirname+"\\public\\uploads\\",
 		"ga":"",
 		"gmapKey":"AIzaSyAbYNYyPVWQ78bvZIHHR_djLt-FMEfy2wY",
-		"bucket":"yak1"
+		"bucket":"yak1",
+		"bucketstatic":"yakstatic"
 	},
 	
 	"devdany" : {
+		"resetpassUrl":"http://dev.labs.yakwala.fr:3000/user/resetpassword/",
 		"validationUrl":"localhost:3000/user/validate/",
 		"batchurl":"http://localhost:8080/YAKREP/BACKEND/",
 		"backurl":"http://localhost:8080/YAKREP/BACKEND/",
@@ -46,7 +49,8 @@ exports.confs = {
 		"uploadsDir":__dirname+"\\public\\uploads\\",
 		"ga":"",
 		"gmapKey":"AIzaSyAbYNYyPVWQ78bvZIHHR_djLt-FMEfy2wY",
-		"bucket":"yak1"
+		"bucket":"yak1",
+		"bucketstatic":"yakstatic"
 	},
 	
 	"preprod" : {
@@ -66,7 +70,8 @@ exports.confs = {
 		"uploadsDir":__dirname+'/public/uploads/',
 		"ga":"",
 		"gmapKey":"AIzaSyAbYNYyPVWQ78bvZIHHR_djLt-FMEfy2wY",
-		"bucket":"yak2"
+		"bucket":"yak2",
+		"bucketstatic":"yakstatic"
 	},
 	"prod" : {
 		"validationUrl":"http://labs.yakwala.fr/user/validate/",
@@ -85,7 +90,8 @@ exports.confs = {
 		"uploadsDir":__dirname+'/public/uploads/',
 		"ga":"var _gaq = _gaq || [];_gaq.push(['_setAccount', 'UA-31211954-2']);_gaq.push(['_trackPageview']);(function() {var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);})();",
 		"gmapKey":"AIzaSyAbYNYyPVWQ78bvZIHHR_djLt-FMEfy2wY",
-		"bucket":"yak3"
+		"bucket":"yak3",
+		"bucketstatic":"yakstatic"
 	},
 };
 

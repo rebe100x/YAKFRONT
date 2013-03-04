@@ -68,7 +68,7 @@ app.configure(function(){
 });
 
 app.configure('development', function(){
-	conf = config.confs.devdany;
+	conf = config.confs.devrenaud;
 	app.locals.conf = JSON.stringify(conf);
 	mainConf = config.confs.main;
 	app.locals.mainConf = JSON.stringify(mainConf);
@@ -95,11 +95,14 @@ var db = routes.db(conf);
 app.get('/user/login', routes.user_login);
 app.get('/user/logout', routes.user_logout);
 app.get('/user/new', routes.user_new);
+app.get('/user/forgotpassword', routes.user_forgotpassword);
 app.get('/user/validate/:token/:password', routes.user_validate);
+app.get('/user/resetpassword/:token/:password', routes.user_resetpassword);
 app.get('/pictures/:size/:picture', routes.picture);
 app.get('/static/images/:name', routes.static_image);
 
 app.post('/user',routes.user);
+app.post('/forgotpassword',routes.forgotpassword);
 //app.post('/validate',routes.validate);
 app.post('/session',routes.session);
 
@@ -130,6 +133,10 @@ app.post('/alerts',routes.requiresLogin,routes.alerts);
 
 app.get('/settings/password', routes.requiresLogin, routes.settings_password);
 app.post('/password',routes.requiresLogin, routes.password);
+
+
+app.get('/settings/resetpassword', routes.requiresLogin, routes.settings_resetpassword);
+app.post('/resetpassword',routes.requiresLogin, routes.resetpassword);
 
 app.get('/settings/firstvisit', routes.requiresLogin, routes.settings_firstvisit);
 app.post('/firstvisit',routes.requiresLogin, routes.firstvisit);

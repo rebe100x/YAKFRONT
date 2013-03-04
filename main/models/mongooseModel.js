@@ -94,11 +94,13 @@ var Info = new Schema({
 
 Info.statics.format = function (theinfo) {
 	if(theinfo.thumb != undefined)
-		//var thethumb = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/120_90/'+theinfo.thumb;
+		var thethumb = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/120_90/'+theinfo.thumb;
+		/*
 		if(theinfo.user != undefined)
 			var thethumb = 	conf.fronturl+'/pictures/120_90/'+theinfo.thumb;
 		else
 			var thethumb = 	conf.batchurl+theinfo.thumb;
+		*/
 	else
 		var thethumb = 	'';
 
@@ -531,16 +533,25 @@ var User = new Schema({
 
 
 User.statics.format = function (theuser) {
-	if(theuser.thumb)
-		var thethumb = 	conf.fronturl+'/pictures/128_128/'+theuser.thumb;
-	else
-		var thethumb = 	'';
+	if(theuser.thumb && theuser.thumb!= 'no-user.png'){
+		var thethumb = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/128_128/'+theuser.thumb;
+		var thethumbsmall = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/48_48/'+theuser.thumb;
+		//var thethumb = 	conf.fronturl+'/pictures/128_128/'+theuser.thumb;
+		//var thethumbsmall = 	conf.fronturl+'/pictures/48_48/'+theuser.thumb;
+	}
+	else{
+		var thethumb = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucketstatic+'/128_128/no-user.png';
+		var thethumbsmall = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucketstatic+'/48_48/no-user.png';
+		
+	}
+		
 
 	var formattedUser = {
 		_id:theuser._id,
 		name:theuser.name,
 		bio:theuser.bio,
 		thumb:thethumb,
+		thumbsmall:thethumbsmall,
 		web:theuser.web,
 		login:theuser.login,
 		type:theuser.type,

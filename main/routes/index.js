@@ -26,6 +26,7 @@ exports.picture = function(req,res){
 		res.writeHead(200, {'Content-Type': 'image/jpeg' });
 		res.end(img, 'binary');
 	}else if(path.existsSync(defaultpath)){
+		var img = fs.readFileSync(defaultpath);
 		res.writeHead(200, {'Content-Type': 'image/jpeg' });
 		res.end(img, 'binary');
 	}else
@@ -334,6 +335,23 @@ exports.user_validate = function(req, res){
 	
 };
 
+exports.user_resetpassword = function(req, res){
+	var User = db.model('User');	
+	
+	User.authenticateByToken(req.params.token,req.params.password, function(err, model) {
+	if(!(typeof(model) == 'undefined' || model === null || model === '')){
+			req.session.user = model._id;
+			User.update({_id: model._id}, {status:1}, {upsert: false}, function(err){if (err) console.log(err);});						
+			res.render('settings/resetpassword',{user:model});
+		}else{
+			req.session.message = "Votre clé d'activation est incorrecte.";
+			res.redirect('/user/forgotpassword');
+		}
+	
+	});
+	
+};
+
 exports.user_logout = function(req, res){
 	delete req.session.user;
 	res.redirect('/news/map');
@@ -458,9 +476,56 @@ exports.user = function(req, res){
 	
 };
 
+exports.forgotpassword = function(req, res){
+
+	var crypto = require('crypto')
+	var themail = req.body.mail;
+	var User = db.model('User');
+	var Point = db.model('Point');
+	var user = new User();
+	
+	/*check if the mail is valid*/
+	
+	
+	/*check if user exists*/
+	User.findOne({'mail': themail},{_ids:1,status:1,mail:1}, function(err,theuser){
+		if(theuser){
+			//console.log(theuser);
+				var salt = Math.round(new Date().valueOf() * Math.random());
+				var token = crypto.createHash('sha1').update("yakwala@secure"+salt).digest("hex");
+				var password = user.generatePassword(5);
+				var link = conf.resetpassUrl+token+"/"+password;
+				var hash = crypto.createHash('sha1').update(password+"yakwala@secure"+salt).digest("hex");
+				var logo = conf.fronturl+"/static/images/yakwala-logo_petit.png";
+				var templateMail = "link";
+				User.update({_id: theuser._id}, {hash : hash,token:token,salt:salt,password:password, status: 2}, {upsert: false}, function(err){
+					
+				
+					User.sendValidationMail(link,themail,templateMail,logo,function(err){
+						if(!err)
+							console.log(err);				
+					});
+				
+					
+				});
+				req.session.message = "Un nouveau mail a été renvoyé avec une nouvelle clé d'activation. Veuillez vérifier qu'il n'est pas dans les spams.";
+				res.redirect('user/forgotpassword');
+			}
+	});
+	
+	
+};
+
 exports.user_new = function(req, res){
 	delete req.session.message;
 	res.render('user/new');
+	
+};
+
+
+exports.user_forgotpassword = function(req, res){
+	delete req.session.message;
+	res.render('user/forgotpassword');
 	
 };
 
@@ -479,6 +544,12 @@ exports.user_new = function(req, res){
 exports.settings_password = function(req,res){
 	delete req.session.message;
 	res.render('settings/password');
+
+}
+
+exports.settings_password = function(req,res){
+	delete req.session.message;
+	res.render('settings/resetpassword');
 
 }	
 
@@ -567,6 +638,59 @@ exports.firstvisit = function(req,res){
 				
 				
 				User.update({_id: req.session.user}, {hash : newcryptedPass,location:location, address: address, formatted_address: formatted_address}, {upsert: false}, function(err){
+				
+					if (err) console.log(err);
+					else{
+						formMessage = "Votre nouveau mot de passe est enregistré";
+						//delete req.session.user;
+						User.authenticate(login,req.body.password, "", function(err, user) {
+							if(!(typeof(user) == 'undefined' || user === null || user === '') && user.status == 1){
+									req.session.user = user._id;
+									res.locals.user = user;
+									req.session.message = formMessage;
+									res.redirect('news/map');
+								}else{
+									if(user.status == 2)
+										req.session.message = 'Compte non validé.';
+									else
+										req.session.message = 'Identifiants incorrects.';
+									res.redirect('user/login?redir='+req.body.redir);
+								}
+						});
+					}
+				});
+			}
+			else
+				formMessage = "Votre mot de passe doit au moins 8 caractères";
+				
+			
+		});
+		
+		
+	}else{
+		formMessage= "Erreur : vous n'êtes pas connecté !";
+		req.session.message = formMessage;
+		res.redirect('/user/login?redir=settings/firstvisit');
+	}
+	
+	
+
+}	
+
+
+
+exports.resetpassword = function(req,res){
+	
+	formMessage = "";
+	var User = db.model('User');
+	if(req.session.user){	
+		User.findById(req.session.user,function (err, docs){
+			var crypto = require('crypto');
+			var newcryptedPass = crypto.createHash('sha1').update(req.body.password+"yakwala@secure"+docs.salt).digest("hex");	
+			var login = docs.login;
+			if(req.body.password.length >= 8){
+				
+				User.update({_id: req.session.user}, {hash : newcryptedPass}, {upsert: false}, function(err){
 				
 					if (err) console.log(err);
 					else{

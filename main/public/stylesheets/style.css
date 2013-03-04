@@ -205,13 +205,13 @@ abbr[title] {
 .mCSB_scrollTools .mCSB_buttonDown {background-position: -80px -20px;}
 .mCSB_container {margin-right: 5px;}
 		/*NEWS FEED*/
-#newsfeedContent{position:relative;display:block;overflow:auto;height:0px;z-index:2000; overflow-x: hidden}
+#newsfeedContent{position:relative;display:block;overflow:auto;height:0px;z-index:2000; overflow-x: hidden;}
 .mapHighlighter{cursor:pointer;-webkit-border-radius: 2px;border-radius: 2px;}
-.mapHighlighter:hover{background-color:#F0F0F0;}
+.mapHighlighter:hover{background-color:#F6F6F6;}
 .mapHighlighterDetails{display:block;}
 ul#newsfeed{display:block;list-style-type:none;width:100%;margin:0px auto;padding:0px 0px;position:relative;opacity:1;z-index:2000;background:#FFFFFF;}
 ul#newsfeed li{width:100%;}
-ul#newsfeed li.highlighted .mapHighlighter{background-color:#F0F0F0; width: 94%; margin-left: 1%;}
+ul#newsfeed li.highlighted .mapHighlighter{background-color:#F6F6F6; width: 94%; margin-left: 1%;}
 
 ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: both; padding-left: 3px; padding-right: 3px;}
 .infowindow .myitem {clear: both; position: relative; top: 12px; text-align: justify;}
@@ -233,14 +233,18 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 .infowindow .myitem i.icon-chevron-up { }
 
 
+.infowindow:firstChild{
+	margin-top:10px;
+}
 .infowindow{
-	width:95%;margin:5px 0px 5px 5px;
+	width:95%;
+	margin:1%;
 	font-size:0.95em;
 	box-shadow: 0 1px 0 #DDD;
 	background: white;
 	border-color: #BBB;
 	color: #505050;
-	padding:3px;
+	padding:0px;
 }
 .infowindow.loadingfeeditem{
 	padding:30px 0px;
@@ -269,7 +273,7 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 
 		/*POST*/
 
-.infowindow .yakTypeImage { float: left; width:100%;height:22px; z-index: 111; position: absolute;}
+.infowindow .yakTypeImage { float: left; width:95%;height:22px; z-index: 111; position: absolute;}
 .infowindow .yakTypeImage img { float: left; width:15px;height:22px;}
 
 .infowindow .thumbImage { float: left;  margin-left: 0px;}
@@ -284,7 +288,7 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 
 .infowindow .infodetail{float:left;width:100%;font-style:italic;font-size:0.8em;line-height: 1.5em; clear: both;}
 .infowindow .infodetail a{color:#0C0C0C;}
-.infowindow .icon-remove { float: right; clear: both;  position: absolute; right: 5%;}
+.infowindow .icon-remove { float: right; clear: both;  position: absolute; right: -2px;top:-10px;}
 
 
 
@@ -303,7 +307,7 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 .currentDetails .myitem .commentBox {font-style:italic; position: relative; clear: both; width: auto; float: left; left: 0px; top: -30px; color: #D71920; cursor: pointer; background: #F1F2F6; width: 100%; margin-bottom: 10px;}
 .currentDetails .myitem .commentBox .username { color: #3B5998; }
 .currentDetails .myitem .commentBox .username:hover { text-decoration: underline;}
-.currentDetails .myitem .commentBox .userthumb { height: 50px; width: 50px; float: left; }
+.currentDetails .myitem .commentBox .userthumb { height: 50px; width: 50px; float: left;margin:3px; }
 .currentDetails .myitem .commentBox .comment { color: black; margin-bottom: 12px;}
 .currentDetails .myitem .commentBox textarea { width: 97%; height: 50px; margin-top: 2px; margin-left: 0px;}
 .currentDetails .myitem i.icon-chevron-up { }
@@ -346,6 +350,8 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 #postForm {position:relative;opacity:1;z-index:2000;background:#FFFFFF;display: block;height:auto;width: 93%;padding: 0px;margin: 0px 0px 1% 2%;}
 #postForm legend{font-size: 18px;line-height: 28px;color: #333333;border: 0;border-bottom: 1px solid #e5e5e5;}
 #postForm #eventDateController{display: none;}
+#postForm span#picturePreview{float:left;margin:3px;}
+#postForm input#picture{float:left;}
 #ui-datepicker-div{font-size:0.9em;}
 #newspostContent{display:none;position:relative;height:0px;width:100%;}
 
@@ -394,7 +400,7 @@ width: 270px;
 #formProfile input[type=text] { width: 30%; }
 #formProfile select { width: 30%; }
 #formProfile textarea { width: 30%; height: 100px;}
-#formProfile #avatarPreview { margin-top: -100px; position: relative; top: 50px;}
+#formProfile #avatarPreview {}
 
 /* Sidenav
 -------------------------------------------------- */
@@ -506,7 +512,11 @@ width: 270px;
 .favplacelist li { padding:10px 0px; border-bottom: 1px solid #cecece; float: left; width: 100%;height:25px; cursor: default;}
 .favplacelist li span { cursor: pointer;}
 .headerYakwala { background-color: white; }
+<<<<<<< HEAD
 .headerYakwala #userThumb { height: 50px; width: auto;}
+=======
+.headerYakwala #userThumb { height: 48px; width: auto;}
+>>>>>>> b8b11776a6baba989fa9bcd165834a53935a8203
 .headerYakwala #bgthumb { position: relative; bottom: 15px;}
 .headerYakwala .leftlink img { float: left; padding: 6px;}
 .headerYakwala .dropdown-toggle { float: right; margin-top: 19px;}
