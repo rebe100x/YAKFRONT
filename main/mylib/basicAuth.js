@@ -250,10 +250,12 @@ function auth (schema, options) {
       data = data.replace("*|CURRENT_YEAR|*",new Date().getFullYear());
       
       
-      
+      var config_secret = require('../confs_secret.js');
+      var secretConf = config_secret.confs_secret;
+
       var smtpTransport = nodemailer.createTransport("SES", {
-        AWSAccessKeyID: "AKIAJ6EBI6LCECLYVM5Q",
-        AWSSecretKey: "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",
+        AWSAccessKeyID: secretConf.S3.accessKeyId,
+        AWSSecretKey: secretConf.S3.secretAccessKey,
         //ServiceUrl: "https://email.us-east-1.amazonaws.com" // optional
       });
     
