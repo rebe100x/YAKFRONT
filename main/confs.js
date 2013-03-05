@@ -26,7 +26,7 @@ exports.confs = {
 		"env":"DEV",
 		"uploadsDir":__dirname+"\\public\\uploads\\",
 		"ga":"",
-		"gmapKey":"AIzaSyAbYNYyPVWQ78bvZIHHR_djLt-FMEfy2wY",
+		"gmapKey":"AIzaSyBBjGZqkyZuTHuSuaZ_aHP9gyf4rCW1qe4",
 		"bucket":"yak1",
 		"bucketstatic":"yakstatic"
 	},
@@ -48,7 +48,7 @@ exports.confs = {
 		"env":"DEV",
 		"uploadsDir":__dirname+"\\public\\uploads\\",
 		"ga":"",
-		"gmapKey":"AIzaSyAbYNYyPVWQ78bvZIHHR_djLt-FMEfy2wY",
+		"gmapKey":"AIzaSyBBjGZqkyZuTHuSuaZ_aHP9gyf4rCW1qe4",
 		"bucket":"yak1",
 		"bucketstatic":"yakstatic"
 	},
@@ -69,7 +69,7 @@ exports.confs = {
 		"env":"PREPROD",
 		"uploadsDir":__dirname+'/public/uploads/',
 		"ga":"",
-		"gmapKey":"AIzaSyAbYNYyPVWQ78bvZIHHR_djLt-FMEfy2wY",
+		"gmapKey":"AIzaSyBBjGZqkyZuTHuSuaZ_aHP9gyf4rCW1qe4",
 		"bucket":"yak2",
 		"bucketstatic":"yakstatic"
 	},
@@ -89,7 +89,7 @@ exports.confs = {
 		"env":"Labs",
 		"uploadsDir":__dirname+'/public/uploads/',
 		"ga":"var _gaq = _gaq || [];_gaq.push(['_setAccount', 'UA-31211954-2']);_gaq.push(['_trackPageview']);(function() {var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);})();",
-		"gmapKey":"AIzaSyAbYNYyPVWQ78bvZIHHR_djLt-FMEfy2wY",
+		"gmapKey":"AIzaSyBBjGZqkyZuTHuSuaZ_aHP9gyf4rCW1qe4",
 		"bucket":"yak3",
 		"bucketstatic":"yakstatic"
 	},

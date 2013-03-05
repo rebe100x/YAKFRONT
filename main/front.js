@@ -25,6 +25,7 @@ var express = require('express'),
   auth = require('./mylib/basicAuth'),
   db = require('./models/mongooseModel'),
   config = require('./confs.js'),
+  //config_secret = require('./confs_secret.js'),
   fs = require('fs'),
   S = require('string'),
   crypto = require('crypto'),
@@ -72,6 +73,7 @@ app.configure('development', function(){
 	app.locals.conf = JSON.stringify(conf);
 	mainConf = config.confs.main;
 	app.locals.mainConf = JSON.stringify(mainConf);
+	//app.locals.secretConf = JSON.stringify(config_secret.confs_secret);
 	app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
 
@@ -81,6 +83,7 @@ app.configure('production', function(){
 	app.locals.conf = JSON.stringify(config.confs.prod);
 	mainConf = config.confs.main;
 	app.locals.mainConf = JSON.stringify(config.confs.main);
+	app.locals.secretConf = JSON.stringify(config_secret);
 	app.use(express.errorHandler());
 });
 
@@ -182,6 +185,7 @@ app.get('/docs/cgu', routes.docs_cgu);
 app.get('/docs/faq', routes.docs_faq);
 app.get('/docs/log', routes.docs_log);
 
+
 /**
 * routes / call to twitter
 */
@@ -205,6 +209,8 @@ app.get('/auth/twitter', function(req, res){
 	}
 	});
 });
+
+
 /**
 * routes / the call back after validation
 */

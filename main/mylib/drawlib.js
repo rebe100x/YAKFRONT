@@ -161,7 +161,12 @@ exports.SetThumbFlag = function(imgName,conf){
 function StoreImgOnS3(imgPath,conf){
 	var AWS = require('aws-sdk');
 	var fs = require('fs');
-	AWS.config.update({ "accessKeyId": "AKIAJ6EBI6LCECLYVM5Q", "secretAccessKey": "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", "region": "eu-west-1" });
+	console.log(__filename);
+	var config_secret = require('../confs_secret.js');
+	var secretConf = config_secret.confs_secret;
+	console.log(secretConf);
+	console.log(secretConf.S3.accessKeyId);
+	AWS.config.update({ "accessKeyId": secretConf.S3.accessKeyId, "secretAccessKey": secretConf.S3.secretAccessKey, "region": "eu-west-1" });
 	var s3 = new AWS.S3();
 	fs.readFile(conf.uploadsDir+'pictures/'+imgPath, function (err, data) {
 	  if (err) { throw err; }

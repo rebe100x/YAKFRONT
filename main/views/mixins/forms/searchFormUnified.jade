@@ -66,8 +66,8 @@ mixin searchFormUnified(page)
 
 		var curPos = ($.isEmptyObject($.cookie("geoloc")))?{'x':user.location.lat,'y':user.location.lng,'z':mainConf.rangeDefault,'name':user.formatted_address}:JSON.parse($.cookie("geoloc"));
 
-		var dateFrom = ($.isEmptyObject($.cookie("dateFrom")))?mainConf.dateFromDefault:setTimeSliderText($.cookie("dateFrom"));
-		
+		var dateFrom = ($.isEmptyObject($.cookie("dateFrom")))?mainConf.dateFromDefault:$.cookie("dateFrom");
+		console.log('dateFrom:'+dateFrom);
 		var searchString = "!{str}".toString();
 
 		if(searchString=='')
@@ -94,7 +94,7 @@ mixin searchFormUnified(page)
 
 				getHotTags(curPos,dateFrom);
 
-				$('#dropdownTagSelector').delegate('li','click', function (e) {
+				$('#dropdownTagSelector').on('click','li', function (e) {
 					searchString = "#"+$(this).html();
 					$('#searchStr').val(decodeURIComponent(searchString.replace('%2520', ' ')));
 					$('#searchBtn').trigger('click');
@@ -215,25 +215,21 @@ mixin searchFormUnified(page)
 				
 				
 				
-				// search button
-				
-
-
 			/*slider time selector*/
 			$( "#heatSelector" ).slider({
 				range: "min",
 				min: -24,
 				max: 100,
-				value: dateFrom/86400,
+				value: invGetDaysFrom(dateFrom),
 				slide: function( event, ui ) {
 					var x = ui.value;
-					dateFrom = setTimeSliderText(x);
+					dateFrom = getDaysFrom(x);
+					setTimeSliderText(dateFrom);
 				},
 				change:function(event, ui){
-					
+					dateFrom = getDaysFrom(x);
 					getAndPrintInfo();
-					$.cookie("dateFrom", ui.value,{ expires: 10000, path : '/' });
-					
+					$.cookie("dateFrom", dateFrom,{ expires: 10000, path : '/' });
 				}
 			});
 			
@@ -365,8 +361,9 @@ mixin searchFormUnified(page)
 			
 				//console.log($('#searchStr')["__proto__"]["typeahead"]);
 
-			$("#filterTypes").click(function(){
-				/*if($("#typeContainer").css("display") == "none")
+			/*
+			$("#filterTypes").on('click',function(){
+				if($("#typeContainer").css("display") == "none")
 				{
 					$(this).find("span").html("Fermer");
 					$(this).find(".icon-chevron-right").hide();
@@ -379,11 +376,13 @@ mixin searchFormUnified(page)
 					$(this).find(".icon-chevron-left").hide();
 					$(this).find(".icon-chevron-right").show();
 					$("#typeContainer").hide();
-				}*/
+				}
 					
 			});
+			*/
 
-			$("#heatModuleTrigger").click(function(){
+			/*
+			$("#heatModuleTrigger").on('click',function(){
 				if($("#dropdownTimeSelector").css("display") == "none")
 				{
 					$("#dropdownTimeSelector").show();
@@ -394,8 +393,9 @@ mixin searchFormUnified(page)
 				}
 					
 			});
+			*/
 
-			$("#rangeSelectorTrigger").click(function(){
+			$("#rangeSelectorTrigger").on('click',function(){
 				$("#dropdownTagSelector").hide();
 				if($("#dropdownRangeSelector").css("display") == "none")
 				{
@@ -408,7 +408,7 @@ mixin searchFormUnified(page)
 					
 			});
 
-			$("#tagSelectorTrigger").click(function(){
+			$("#tagSelectorTrigger").on('click',function(){
 				$("#dropdownRangeSelector").hide();
 				if($("#dropdownTagSelector").css("display") == "none")
 				{
@@ -421,8 +421,8 @@ mixin searchFormUnified(page)
 					
 			});
 
-			setTimeSelectorDropDown();
-			setRangeSelectorDropDown();
+			//setTimeSelectorDropDown();
+			//setRangeSelectorDropDown();
 			if($("#searchStr").val() == 'null')
 				$("#searchStr").val("");
 		});
@@ -446,6 +446,7 @@ mixin searchFormUnified(page)
 			});
 		}
 
+		/*
 		function setTimeSelectorDropDown()
 		{
 			var lasttext = '';
@@ -460,13 +461,15 @@ mixin searchFormUnified(page)
 				}
 			}
 			$("#dayPrinter").html(setTimeSliderText($.cookie("dateFrom"), 1));
-			$("#dropdownTimeSelector li").click(function(){
+			
+			/*$("#dropdownTimeSelector li").click(function(){
 				$("#dayPrinter").html($(this).find("a").html());
 				dateFrom = setTimeSliderText($(this).attr("value"));
 				getAndPrintInfo();
 				$.cookie("dateFrom", $(this).attr("value"),{ expires: 10000, path : '/' });
 			});
 		}
+		*/
 		function setAlert()
 		{
 			if($("#newsfeedMenu .oldActive").length == 0)
@@ -492,6 +495,7 @@ mixin searchFormUnified(page)
 
 			
 		}
+		/*
 		function setRangeSelectorDropDown()
 		{
 			var lasttext = '';
@@ -508,4 +512,4 @@ mixin searchFormUnified(page)
 				$("#dropdownRangeSelector li").css("color", "#333333");
 				$(this).css("color", "#d3171f");
 			});
-		}
+		}*/
