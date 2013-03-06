@@ -1,0 +1,112 @@
+mixin menu(active)
+	div.navbar.navbar-fixed-top
+		div.navbar-inner
+			.container-fluid
+				a.btn.btn-navbar(data-toggle="collapse",data-target=".nav-collapse")
+					span.icon-bar
+					span.icon-bar
+					span.icon-bar
+					a.brand(href="") YAKWALA
+
+					div.btn-group.pull-right
+						- if (locals.user)
+							a.btn.dropdown-toggle(href="#",data-toggle="dropdown")
+								i.icon-user
+								span= ' '+locals.user.login+' ';
+								span.caret
+							ul.dropdown-menu
+								li
+									a(href="/settings/profile") Mon profil
+								li
+									a(href="/settings/alerts") Mes alertes
+								li.divider
+								li
+									a(href="/user/logout") Quitter
+						- else
+							span
+								a.btn(href="/user/login") Login
+					- if (active == 'dashboard' || active == 'post')
+						div.btn-group.pull-right
+							&nbsp;&nbsp;&nbsp;
+							span
+								span.btn#zoneLocButton(title="Mes favoris")
+									i.icon-star
+									&nbsp;Mes endroits favoris
+							&nbsp;&nbsp;&nbsp;
+							span
+								span.btn#arroundme(title="Autour de moi")
+									i.icon-home
+							&nbsp;&nbsp;&nbsp;
+
+					div.nav-collapse
+						ul.nav
+							- if (active == 'dashboard')
+								li.active
+									a(href="/") Dashboard
+							- else
+								li
+									a(href="/") Dashboard
+							- if(active == 'place')
+								li.active
+									a(href="/place/list") Lieux
+										span1#placenumber
+							- else
+								li
+									a(href="/place/list") Lieux
+										span1#placenumber
+							- if (active == 'info')
+								li.active
+									a(href="") Infos
+										span1#infonumber
+							- else
+								li
+									a(href="") Infos
+										span1#infonumber
+							- if (active == 'comment')
+								li.active
+									a(href="") Commentaires
+										span1#commentnumber
+							- else
+								li
+									a(href="") Commentaires
+										span1#commentnumber
+							- if (active == 'yakcat')
+								li.active
+									a(href="") Catégories
+										span1#catnumber
+							- else
+								li
+									a(href="") Catégories
+										span1#catnumber
+							- if (active == 'user')
+								li.active
+									a(href="") Utilisateurs
+										span1#usernumber
+							- else
+								li
+									a(href="") Utilisateurs
+										span1#usernumber
+
+	script
+
+		$(document).ready(function() {
+			$.getJSON('/api/validinfos', function(data) {
+				if (data.info != 0)
+					$('#infonumber').addClass('badge badge-important').html(data.info);
+			});
+
+			$.getJSON('/api/validusers', function(data) {
+				if (data.info != 0)
+					$('#usernumber').addClass('badge badge-important').html(data.info);
+			});
+
+			$.getJSON('/api/validcats', function(data) {
+				if (data.info != 0)
+					$('#catnumber').addClass('badge badge-important').html(data.info);
+			});
+
+			$.getJSON('/api/validplaces', function(data) {
+				if (data.info != 0)
+					$('#placenumber').addClass('badge badge-important').html(data.info);
+			});
+		});

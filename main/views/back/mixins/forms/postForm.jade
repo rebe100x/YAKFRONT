@@ -1,0 +1,74 @@
+mixin postForm()
+	- if(session)
+		- if(session.type > 1)
+			form#postForm(action='/news', method='POST', enctype='multipart/form-data')
+				input#yakcatInput(type='hidden', name='yakcatInput', value='')
+				input#placeInput(type='hidden', name='placeInput', value='')
+				input#latitude(type="hidden",data-provide="typeahead", name="latitude")
+				input#longitude(type="hidden",data-provide="typeahead", name="longitude")
+				legend Poster une info:
+				div.control-group
+					div.controls
+						input.span12.hashtagMaker(type='text', name='title', id='title', placeholder='Titre: vous pouvez utiliser des hashtags dans votre texte ( #Halloween )')
+						textarea#content.span12.hashtagMaker(name='content', placeholder='Texte: vous pouvez utiliser des hashtags dans votre texte ( #Halloween )',rows='3')
+				div.control-group
+					label(for='category') Choisissez la rubrique danslaquelle votre info apparaitra:
+					div.controls
+						label.radio.inline Actu
+							input#option1(type="radio", name="yakType", value="1" , checked) 
+						- if(type != 2)
+							label.radio.inline Discussion
+								input#option4(type="radio", name="yakType", value="4")
+						label.radio.inline Agenda
+							input#option2(type="radio", name="yakType", value="2")
+						label.radio.inline Infos&nbsp;pratiques
+							input#options3(type="radio", name="yakType", value="3")
+				div.control-group
+					label(for='category') Choisissez une ou plusieurs thèmes:
+					div.controls
+						input#yakcat.span12(type="text",data-provide="typeahead", name="category", autocomplete="off", placeholder='Rechercher...')
+					div.controls	
+						input#freetag.span12(type="text",data-provide="typeahead", name="freetag",placeholder='Ajouter des mots clés : halloween, déguisements')
+					div.controls
+						span#picturePreview
+						input.span6#picture(type="file",style="display:block",name="picture")
+				legend A quel endroit ?
+				div.control-group
+					label(for='Place') Cliquer sur la carte ou bien entrer une adresse:<br /> 
+					div.controls
+						div.input-append
+							input#place(type="text",data-provide="typeahead", name="place", autocomplete="off", placeholder='Rechercher...') 
+							button.btn#btn-place-adder(type="button") Add
+							span.help-inline(style='font-size:0.95em;font-style:italic;') Ajoutez plusieurs adresses <br>et faites apparaître votre info <br>à plusieurs endroits !
+				br
+				button.btn.btn-large.btn-block.btn-inverse(style='width:100%',type='submit', name='submit', id='submit', value='Envoyer') Envoyer
+			
+		- if(session.type == 1)
+			form#postForm(action='/news', method='POST', enctype='multipart/form-data')
+				input#yakcatInput(type='hidden', name='yakcatInput', value='')
+				input#placeInput(type='hidden', name='placeInput', value='')
+				input#latitude(type="hidden",data-provide="typeahead", name="latitude")
+				input#longitude(type="hidden",data-provide="typeahead", name="longitude")
+				legend Poster une info:
+				div.control-group
+					div.controls
+						input.span12.hashtagMaker(type='text', name='title', id='title', placeholder='Titre: vous pouvez utiliser des hashtags dans votre texte ( #Halloween )')
+						textarea#content.span12.hashtagMaker(name='content', placeholder='Texte: vous pouvez utiliser des hashtags dans votre texte ( #Halloween )',rows='3')
+				div.control-group
+					div.controls
+						input#freetag.span12(type="text",data-provide="typeahead", name="freetag",placeholder='Ajouter des mots clés : halloween, déguisements')
+					div.controls
+						span#picturePreview
+						input.span6#picture(type="file",style="display:block",name="picture")
+				legend A quel endroit ?
+				div.control-group
+					label(for='Place') Cliquer sur la carte ou bien entrer une adresse:<br>
+					div.controls
+						div.input-append
+							input#place(type="text",data-provide="typeahead", name="place", autocomplete="off", placeholder='Rechercher...') 
+							button.btn#btn-place-adder(type="button") Add
+							span.help-inline.small Ajoutez plusieurs adresses <br>et faites apparaître votre info <br>à plusieurs endroits !
+				br
+				button.btn.btn-large.btn-block.btn-inverse(style='width:100%',type='submit', name='submit', id='submit', value='Envoyer') Envoyer
+	- else
+		mixin loginForm() 

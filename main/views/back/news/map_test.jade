@@ -1,0 +1,418 @@
+extends ../layout
+block content
+	include ../mixins/menu.jade
+	include ../mixins/locationChooser.jade
+	include ../mixins/forms/postForm.jade
+	
+	mixin menu('map')
+	mixin locationChooser()
+	
+
+	div.container-fluid
+		div.row-fluid
+			div.span8
+				div#mymap
+			div.span4
+				div#newsfeedContainer
+					
+							
+					span#newsfeedMenu
+						span.btn.btn-info.active(title="Actu", type=1)
+							i.icon-asterisk
+						span.btn.btn-success(title="Discussion", type=4)
+							i.icon-leaf
+						span.btn.btn-warning(title="Agenda", type=2)
+							i.icon-signal 
+						span.btn.btn-danger(title="Infos Pratiques", type=3)
+							i.icon-fire
+						span.btn.btn-inverse(title="Mes alertes", type=5)
+							i.icon-star
+						span.btn.btn-link(title="testfeed", type=10)
+							i.icon-fire
+						div#heatModule
+							div#dayPrinter Depuis 3 jours	
+							div#heatSelector
+					span#newsNav				
+						ul.nav.nav-tabs
+							li.active(contentToLoad="newsfeedContent")
+								a.newsNavItem#newsFeed(href="#") Le fil
+							li(contentToLoad="newspostContent")
+								a.newsNavItem#newsPost(href="#") Poster
+							
+					span#newsfeedContent			
+						ul#newsfeed.tabContent
+					span#newspostContent
+						mixin postForm(session.type)
+				//p!= partial('./partials/newsfeed.jade', {test:infos})
+				//div elo #{title}
+				//div #{infos}
+				
+	script
+		
+		/*INIT*/
+		var conf = !{conf};
+		var curPos = {'x':0,'y':0,'z':0};
+		var geolocalized = 0;
+		var infowindow = null;
+		var bounds = new Array();
+		var markers = [];
+		var infoArray = [];
+		var markerClustererOptions = {gridSize:30,maxZoom: 17};
+		var markerCluster = null;
+		var heat = 3;
+		var type = 1;
+		var bounds = null;
+		
+		
+		$(document).ready(function() {
+		
+			
+
+			$('#newsNav li').click(function(){
+				event.preventDefault();
+				if(!$(this).hasClass('active')){
+					$('#newsNav li').removeClass('active');	
+					$(this).addClass('active');
+					var contentToLoad = $(this).attr('contentToLoad');
+					
+					$('.tabContent').fadeOut(function(){
+						console.log(contentToLoad);
+							$('#'+contentToLoad).fadeIn();	
+					});
+					
+				}
+					
+			});
+			$( "#heatSelector" ).slider({
+				range: "min",
+				min: 1,
+				max: 100,
+				value: 90,
+				slide: function( event, ui ) {
+					var x = ui.value;
+					var y = Math.ceil(-7.222723628*Math.pow(10,-7)*Math.pow(x,5) + 2.123355095*Math.pow(10,-4)*Math.pow(x,4) - 2.178300623*Math.pow(10,-2)*Math.pow(x,3) + 0.906040198*Math.pow(x,2) - 16.47223075*x + 360.0000001);
+					var yText = "";
+					if(y <= 1)
+						yText = "Depuis "+y+" jour";
+					else
+						yText = "Depuis "+y+" jours";
+					$( "#dayPrinter" ).html(yText);
+					heat = y;
+					
+				},
+				change:function(event, ui){
+					getAndPrintInfo();
+					
+				}
+			});
+		
+			$('#newsfeedMenu span.btn').click(function(){
+				type = $(this).attr('type');
+				$('#newsfeedMenu span.btn').removeClass('active');
+				$(this).addClass('active');
+				getAndPrintInfo();
+			});
+			
+			// init news feed
+			drawNewsFeed();
+			$('#newsfeedContainer').mCustomScrollbar({mouseWheel:true,scrollButtons:{enable:true},advanced:{updateOnContentResize: true}});
+			$(window).resize(function(){drawNewsFeed();});
+			/*
+			$('#newsfeed').delegate(".mapHighlighter","toggle",function(){
+				highlightInfo($(this).attr('infoId'));
+				$(this).addClass('highlighted');
+			},function(){
+				unhighlightInfo($(this).attr('infoId'));
+				$(this).removeClass('highlighted');
+			});
+			*/
+			$('#newsfeed').delegate(".mapHighlighter",'click', function () {
+				var id = $(this).attr('infoId');
+				unhighlightInfo(id,function(){highlightInfo(id);});
+				
+				$(this).addClass('highlighted');
+			});
+
+			setInterval(function() {
+				silentMarkerAdder();
+			}, 7000);
+			
+			if($.cookie("geoloc")){
+				curPos = JSON.parse($.cookie("geoloc"));
+				google.maps.event.addDomListener(window, 'load', initialize(curPos.x,curPos.y,curPos.z));
+			}else{
+				if(navigator.geolocation) {
+					navigator.geolocation.getCurrentPosition(getHTML5Pos,getErrHTML5Pos);
+				}else {
+					x = 48.851875;
+					y = 2.356374;
+					z = 13;
+					curPos = {'x':x,'y':y,'z':z};
+					google.maps.event.addDomListener(window, 'load', initialize(curPos.x,curPos.y,curPos.z));
+				}
+			}	
+		});
+
+		function drawNewsFeed(){	
+			
+			var newsfeedContainerHeight = window.innerHeight-$('#newsfeedContainer').offset().top-50+'px';
+			$('#newsfeedContainer').css('height',newsfeedContainerHeight);
+		}
+		
+		function unhighlightInfo(id,callback){
+			$('ul#newsfeed li.highlighted').removeClass('highlighted');
+			$("ul#newsfeed li.mapHighlighterDetails").fadeOut().html('');
+			markerHL.setAnimation(null);
+			markerHL.setVisible(false);
+			
+			if (callback && typeof(callback) === "function") {  
+				callback();  
+			} 
+		}
+		
+		function highlightInfo(id){
+			$.each(infoArray,function(key,val){
+				//console.log(val2._id+' == '+val._id);
+					if(val._id == id){
+						// hide all markers
+						//hideMarkers(7000);
+						
+						// clean if a marker is already highlighted
+							
+						var latLng = new google.maps.LatLng(val.location['lat'],val.location['lng']);
+						markerHL.setPosition(latLng);
+						markerHL.setVisible(true);
+						markerHL.setAnimation(google.maps.Animation.BOUNCE);
+						// add info window
+						var dateTmp = new Date(val.pubDate);
+						var dateCreation = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
+						var infoContent = "<div class=\'infowindow\' >";
+						if(!(typeof val.thumb === 'undefined')){
+							if(val.yakType == 1)
+								infoContent += "<img src=\'"+conf.backurl+val.thumb+"\' />";
+							else
+								infoContent += "<img src=\'/uploads/pictures/120_90/"+val.thumb+"\' />";
+						}		
+							
+						//infoContent += "<div class=\'title\'> "+val.title+" ("+dateCreation+")</div>";
+						infoContent += "<div class=\'content\'>"+val.content.substring(0,250)+"...</div>";
+						if(!(typeof val.outGoingLink === 'undefined'))
+							infoContent += "<div class=\'readmore\'><a target=\'_blank\' href=\'"+val.outGoingLink+"\'> Read more</a></div>";
+						infoContent += "</div>";
+						//infowindow.setContent(infoContent);
+						//infowindow.open(map,markerHL);
+						
+						$("ul#newsfeed li.mapHighlighterDetails").fadeOut().html('');
+						$("ul#newsfeed li.mapHighlighterDetails[infoid="+id+"]").html(infoContent).fadeIn();
+						// center map
+						map.setCenter(latLng);
+						
+						
+						// clear marker ( and infowindow )
+						setTimeout(function() {
+							
+							markerHL.setAnimation(null);
+							markerHL.setVisible(false);
+							$('ul#newsfeed li.highlighted').removeClass('highlighted');
+							toggleFlag = 1;
+							//console.log('UNHLTMP'+toggleFlag);
+						}, 10000);
+					}
+				});
+		}
+
+		function initialize(x,y,z){
+
+			// set user cookies
+			$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000 });
+			//console.log(JSON.parse($.cookie("geoloc")));
+			
+			var center = new google.maps.LatLng(x,y);
+			infowindow = new google.maps.InfoWindow({content: ".",maxWidth : 300});
+			map = new google.maps.Map(document.getElementById('mymap'), {
+				zoom: z,
+				center: center,
+				mapTypeId: google.maps.MapTypeId.ROADMAP
+			});
+			
+			markerClustererOptions = {gridSize:30,maxZoom: 17};
+			markerCluster = new MarkerClusterer(map, markers,markerClustererOptions);
+				
+			markerHL = new google.maps.Marker({position: center,map:map,visible:false});
+			
+			google.maps.event.addListenerOnce(map, 'idle', function(){
+				bounds = this.getBounds();
+				getAndPrintInfo();
+				
+			});
+			
+			
+			google.maps.event.addListener(map, 'dragend', function() {
+				bounds = this.getBounds();
+				center = this.getCenter();
+				curPos.x = center.lat();
+				curPos.y = center.lng();
+				$.cookie("geoloc", JSON.stringify(curPos));
+				getAndPrintInfo();
+			});
+			
+			google.maps.event.addListener(map, 'zoom_changed', function() {
+				bounds = this.getBounds();	
+				curPos.z = this.getZoom();
+				$.cookie("geoloc", JSON.stringify(curPos));
+				getAndPrintInfo();
+			});
+			
+			
+			
+		}
+		
+		function cleanMarkers(){
+		// clean existing markers
+			$.each(markers,function(key,val){
+					val.setMap(null);
+			});
+			
+			markers = [];
+			markerCluster.clearMarkers();
+		}
+		
+		function hideMarkers(ms){
+		//console.log('hide');
+		// hide existing markers for ms milisec
+			markerCluster.clearMarkers();
+			$.each(markers,function(key,val){
+					val.setVisible(false);
+			});
+			setInterval(function() {
+				$.each(markers,function(key,val){
+					val.setVisible(true);
+				});
+				markerCluster.addMarkers(markers);
+			}, ms);
+			
+		}
+		
+		function silentMarkerAdder(){
+			//console.log('silentMarkerAdder');
+			$.getJSON('/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+heat+'/'+type,function(data) {
+				
+				$.each(data.info, function(key,val) {
+					
+					
+					
+					var flagExists = 0;
+					
+					$.each(infoArray,function(key2,val2){
+						//console.log(val2._id+' == '+val._id);
+						if(val2._id == val._id){
+							flagExists = 1;
+							//console.log('EQ');
+						}
+					});
+					
+					//console.log(infoArray.length+' '+data.info.length);
+					//console.log('exisits'+flagExists);
+					if(flagExists == 0){
+						//console.log('PRINT NEW MARKER');
+						
+						/*PRINT ON THE FEED*/
+						var uniqueHL = new Date().getTime();
+						$('#newsfeed').prepend('<li class=\'mapHighlighter highlighted '+uniqueHL+'\' infoId=\''+val._id+'\' ><i class=\'icon-eye-open\'></i> '+val.title+'</li>');
+					
+						/*PRINT ON THE MAP*/
+						var latLng = new google.maps.LatLng(val.location['lat'],val.location['lng']);
+						var marker = new google.maps.Marker({position: latLng,map:map,visible:true});
+						
+						marker.setAnimation(google.maps.Animation.BOUNCE);
+						
+						setTimeout(function() {
+							marker.setAnimation(null);
+							markerCluster.addMarker(marker);
+							$('#newsfeed .'+uniqueHL+'.highlighted').removeClass('highlighted');
+						}, 7000);
+						
+						google.maps.event.addListener(marker, 'click', function() {
+								var dateTmp = new Date(val.pubDate);
+								var dateCreation = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
+								var infoContent = "<div class=\'infowindow\' >";
+								if(!(typeof val.thumb === 'undefined')){
+									if(val.yakType == 1)
+										infoContent += "<img src=\'"+conf.backurl+val.thumb+"\' />";
+									else
+										infoContent += "<img src=\'/uploads/pictures/120_90/"+val.thumb+"\' />";
+								}
+								infoContent += "<div class=\'title\'> "+val.title+" ("+dateCreation+")</div>";
+								infoContent += "<div class=\'content\'>"+val.content.substring(0,250)+"...</div>";
+								if(!(typeof val.outGoingLink === 'undefined'))
+									infoContent += "<div class=\'readmore\'><a target=\'_blank\' href=\'"+val.outGoingLink+"\'> Read more</a></div>";
+								infoContent += "</div>";
+								infowindow.setContent(infoContent);
+								infowindow.open(map, this);
+							});	
+						infoArray.push(val);	
+					}
+				});
+			});
+		}
+		
+		function getAndPrintInfo(){
+			
+			
+			drawNewsFeed();
+			
+			cleanMarkers();
+			
+
+			$.getJSON('/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+heat+'/'+type,function(data) {
+				
+				// empty the news feed
+				if(data.info.length == 0)
+					$('#newsfeed').html('Aucune info !');
+				else
+					$('#newsfeed').html('');
+				
+				
+				$.each(data.info, function(key,val) {
+				
+					/*PRINT ON THE FEED*/
+					
+					$('#newsfeed').append('<li class=\'mapHighlighter\' infoId=\''+val._id+'\'><i class=\'icon-eye-open\' ></i> '+val.title+'</li>')
+					.append('<li class=\'mapHighlighterDetails\' infoId=\''+val._id+'\'></li>');
+					
+					/*PRINT ON THE MAP*/	
+					
+					//console.log(val.location);
+					infoArray.push(val);
+					var latLng = new google.maps.LatLng(val.location['lat'],val.location['lng']);
+					var marker = new google.maps.Marker({position: latLng});
+					markers.push(marker);
+					//console.log(markers);
+					
+					google.maps.event.addListener(marker, 'click', function() {
+						var dateTmp = new Date(val.pubDate);
+						var dateCreation = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
+						var infoContent = "<div class=\'infowindow\' >";
+						if(!(typeof val.thumb === 'undefined')){
+							if(val.yakType == 1)
+								infoContent += "<img src=\'"+conf.backurl+val.thumb+"\' />";
+							else
+								infoContent += "<img src=\'/uploads/pictures/120_90/"+val.thumb+"\' />";
+						}
+						infoContent += "<div class=\'title\'> "+val.title+" ("+dateCreation+")</div>";
+						infoContent += "<div class=\'content\'>"+val.content.substring(0,250)+"...</div>";
+						if(!(typeof val.outGoingLink === 'undefined'))
+							infoContent += "<div class=\'readmore\'><a target=\'_blank\' href=\'"+val.outGoingLink+"\'> Read more</a></div>";
+						infoContent += "</div>";
+						infowindow.setContent(infoContent);
+						infowindow.open(map, this);
+					});	
+					
+				});
+				
+				markerCluster.clearMarkers();
+				markerCluster.addMarkers(markers);
+				
+			});
+		
+		}

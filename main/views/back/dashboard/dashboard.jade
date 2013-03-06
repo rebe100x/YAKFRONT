@@ -1,0 +1,29 @@
+extends ../layout
+block content
+    include ../mixins/menu.jade
+    include ../mixins/locationChooser.jade
+
+    mixin menu('dashboard')
+    mixin locationChooser()
+
+
+    div.container-fluid
+        div.row-fluid
+            div.span8
+                div#dashBoardContainer
+                    p hello
+
+    script
+        /*READY FUNCTIONS*/
+        $(document).ready(function() {
+
+            setTimeout(function() {
+                $("#alert").fadeOut();
+            }, 3000);
+
+            /* Detect browser */
+            $.browser.chrome = /chrom(e|ium)/.test(navigator.userAgent.toLowerCase());
+            if(!$.browser.chrome){
+                alert("Cette interface est omptimisée pour Chrome.")
+            }
+        });/*END READY*/

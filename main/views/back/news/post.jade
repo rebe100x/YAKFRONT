@@ -1,0 +1,347 @@
+extends ../layout
+block content
+
+	include ../mixins/menu.jade
+	include ../mixins/locationChooser.jade
+	include ../mixins/forms/postForm.jade
+
+
+	mixin menu('post')
+	mixin locationChooser()
+
+				
+	div.container-fluid
+		div.row-fluid
+				div.span8
+					div#mymap
+				div.span4
+					div#newsPostContainer
+						div#newsPostForm
+							- if (message)
+								each msg in message
+									div.alert.fade.in
+										button.close(type="button",data-dismiss="alert") x
+										strong= msg
+							
+							mixin postForm(session.type)
+								
+				
+		script
+			/*INIT*/	
+			var conf = !{conf};
+			var user = [!{user}];
+			var logged = 0;
+			var curPos = {'x':0,'y':0,'z':13};
+			var geolocalized = 0;
+			var infowindow = null;
+			var markerLocation = null;
+			var yakcatArray = [];
+			var placeArray = [];
+			var hashtag = [];
+			var hashtagTmp = [];
+			var rule = new RegExp('#([^\\s]*)','g');
+			var rule2 = new RegExp('[#]','g');
+					
+			var map = new google.maps.Map(document.getElementById('mymap'), {
+					mapTypeId:google.maps.MapTypeId.ROADMAP
+				});
+			var heat = 3; // 3 days
+			var type = 4; // UGC only
+			var bounds = null;
+			$(document).ready(function() {
+			
+				/*if(navigator.geolocation) {
+					navigator.geolocation.getCurrentPosition(getHTML5Pos,getErrHTML5Pos);
+				}else {
+					$('#locationChooser').modal('show');
+					x = 48.851875;
+					y = 2.356374;
+					z = 13;
+					curPos = {'x':x,'y':y,'z':z};
+					google.maps.event.addDomListener(window, 'load', initialize(curPos.x,curPos.y,curPos.z)); 
+				}*/
+				
+				if(user.length){
+					user = JSON.parse(JSON.stringify(!{user}));
+					logged = 1;
+				}
+				
+				if(logged){
+					$.each(user.favplace,function(key,val){
+						$('ul#favplacelist').append("<li pointId='"+val._id+"' lat='"+val.location.lat+"' lng='"+val.location.lng+"' class='zoneLoc'><i class='icon-map-marker'></i><span> "+val.name+"</span><i class='icon-remove icon-pointer'  onclick='removefavPlace($(this));'></i></li>");
+					});
+				}else{
+					$('ul#favplacelist').append("<li lat='48.851875' lng='2.356374' class='zoneLoc'><i class='icon-map-marker'></i><span> Paris, France</span></li>");
+					$('ul#favplacelist').append("<li lat='43.610787' lng='3.876715' class='zoneLoc'><i class='icon-map-marker'></i><span> Montpellier, France</span></li>");
+					$('ul#favplacelist').append("<li lat='50.583346' lng='4.900031' class='zoneLoc'><i class='icon-map-marker'></i><span> Eghézée, Belgique</span></li>");
+				}
+					
+				$('ul#favplacelist').delegate("li.zoneLoc span",'click', function () {
+							var lat = parseFloat($(this).parent().attr('lat'));
+							var lng = parseFloat($(this).parent().attr('lng'));	
+							moveMap(lat,lng);
+						});
+
+				$('#arroundme').click(function(){
+					if(logged){
+						if(user.location){
+							var latLng = new google.maps.LatLng(user.location['lat'],user.location['lng']);
+							map.setCenter(latLng);
+						}else{
+							window.location = '/settings/profile';
+						}
+					}else
+						window.location = '/user/login';
+				});
+				
+				// hashtag creation from title field
+				$(".hashtagMaker").keyup(function(event) {
+					hashtagTmp = [];
+					var inputStrArray = ($('#content').val()+' '+$('#title').val()).split(' ');
+					for(i = 0; i< inputStrArray.length;i++){
+						if(inputStrArray[i].match(rule)){
+							//console.log('PUSH');
+							hashtagTmp.push(inputStrArray[i]);
+							//console.log(hashtagTmp);
+							$('#freetag').val(hashtagTmp.toString().replace(rule2,''));
+						}
+					}
+				});
+				
+				
+				
+				$('#picture').live('change', function () {
+
+					if ( window.FileReader ) {
+						var fileList = this.files;
+						var file = fileList[0];
+						//console.log(file.type);
+						//if ( window.FileReader ) {
+						var r = new FileReader();
+						r.onload = function () {
+							var binimage = r.result;
+							//console.log(binimage);
+							
+							binimage1 = binimage.replace('data:'+file.type+';base64,', '');
+							var imag = "<img class='img-rounded' " + "src='" + 
+							"data:"+file.type+";base64," + binimage1 + "' style='width:100px'/>";
+							$("#picturePreview").html(imag);
+						};
+						r.readAsDataURL(file);
+					
+					}
+					
+					//r.readAsBinaryString(file);
+
+					
+
+				});
+
+				// INIT MARKERLOCATION
+				google.maps.event.addListener(map, 'click', function(event) {
+					getformattedAddress(event.latLng);
+					placeMarker(event.latLng,markerLocation);
+					google.maps.event.addListener(markerLocation, 'dragend', function() {
+						var position = markerLocation.getPosition();
+						$('#latitude').val(position.lat());	
+						$('#longitude').val(position.lng());	
+						
+						getformattedAddress(position);
+						
+					});		
+				});
+						
+				
+				
+				if($.cookie("geoloc")){
+					curPos = JSON.parse($.cookie("geoloc"));
+					google.maps.event.addDomListener(window, 'load', initialize(curPos.x,curPos.y,curPos.z));
+				}else{
+					if(navigator.geolocation) {
+						navigator.geolocation.getCurrentPosition(getHTML5Pos,getErrHTML5Pos);
+					}else {
+						x = 48.851875;
+						y = 2.356374;
+						z = 13;
+						curPos = {'x':x,'y':y,'z':z};
+						google.maps.event.addDomListener(window, 'load', initialize(curPos.x,curPos.y,curPos.z));
+					}
+				}	
+				
+				
+				
+				$('#yakcat').typeahead({
+					minLength : 3,
+					source: function (typeahead, query) {
+						$.ajax({
+								url: "/api/cats",				
+								success: function( data ) {
+									typeahead.process(data.cats);
+								}
+							})},
+					property: "title",
+					onselect: function(obj) { 
+						$("label[for='category']").after("<div><i class='icon-remove icon-pointer'  onclick='yakcatArray.cleanArray(\""+obj._id+"\");$(\"#yakcatInput\").val(JSON.stringify(yakcatArray));$(this).parent().remove();'></i> "+obj.title+"</div>");
+						$('#yakcat').val('').focus();
+						yakcatArray.push(obj);
+						$("#yakcatInput").val(JSON.stringify(yakcatArray));
+					}
+				});
+				
+				
+				$('#place').typeahead({
+					minLength : 3,							
+					source: function (typeahead, query) {
+						$.ajax({
+								url: "/api/places",		
+								success: function( data ) {
+									typeahead.process(data.places);
+								}
+							})},
+					property: "title",
+					onselect: function(obj) { 
+						$('#btn-place-adder').parent().before("<div><i class='icon-remove icon-pointer'  onclick='placeArray.cleanArray(\""+obj._id+"\");$(\"#placeInput\").val(JSON.stringify(placeArray));$(this).parent().remove();'></i> "+obj.title+"</div>");
+						$('#place').val('').focus();
+						placeArray.push(obj);
+						$("#placeInput").val(JSON.stringify(placeArray));
+					}
+				});
+				
+				
+				$('#btn-place-adder').click(function(){
+					
+					var addressString = $('#place').val();
+					if(addressString != "Rechercher..." && addressString != "" && addressString.length > 1){
+						var addressQuery = {"address": addressString,"latLng":map.getCenter(),"bounds":map.getBounds()};
+						var geocoder = new google.maps.Geocoder();
+						geocoder.geocode( addressQuery, function(results, status) {
+							if (status == google.maps.GeocoderStatus.OK) {
+								map.setCenter(results[0].geometry.location);
+								markerLocation.setVisible(true);
+								markerLocation.setPosition(results[0].geometry.location);
+								placeMarker(results[0].geometry.location,markerLocation);
+								var placeGmap = getPlaceFromGmapResult(results[0]);
+								placeArray.push(placeGmap);
+								$("#placeInput").val(JSON.stringify(placeArray));
+								$('#btn-place-adder').parent().before("<div><i class='icon-remove icon-pointer' onclick='placeArray.cleanArrayByLocation("+results[0].geometry.location.Ya+","+results[0].geometry.location.Xa+");$(\"#placeInput\").val(JSON.stringify(placeArray));$(this).parent().remove();'></i> "+results[0].formatted_address+"</div>");
+								
+							} else {
+								var salt = new Date().getTime();
+								$('#btn-place-adder').parent().before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide ("+status+")</div>");
+								setTimeout(function() {
+									$("#alert"+salt).fadeOut();
+								}, 3000);
+								$('#place').select();
+							}
+						});
+					}
+					
+					
+				});
+				
+			
+				
+
+			
+			});
+
+			
+			/***END READY***/
+			
+			
+			function initialize(x,y,z) {
+			
+				// set user cookie ( when user comes back he is located where he stopped browsing )
+				$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000 });
+				
+				
+				var center = new google.maps.LatLng(x,y);
+				infowindow = new google.maps.InfoWindow({content: ".",maxWidth : 300});
+				map.setZoom(z);
+				map.setCenter(center);
+
+				
+				markerLocation = new google.maps.Marker({
+					visible:false,
+					map:map,
+					draggable:true,
+					icon:'/images/beachflag.png',
+					position:center
+				});
+				
+				
+				google.maps.event.addListenerOnce(map, 'idle', function(){
+					bounds = this.getBounds();
+					getAndPrintInfo();
+					
+				});
+				
+				
+				google.maps.event.addListener(map, 'dragend', function() {
+					bounds = this.getBounds();
+					center = this.getCenter();
+					curPos.x = center.lat();
+					curPos.y = center.lng();
+					$.cookie("geoloc", JSON.stringify(curPos));
+					getAndPrintInfo();
+				});
+				
+				google.maps.event.addListener(map, 'zoom_changed', function() {
+					bounds = this.getBounds();	
+					curPos.z = this.getZoom();
+					$.cookie("geoloc", JSON.stringify(curPos));
+					getAndPrintInfo();
+				});
+				
+			}
+			
+			
+			
+			function getAndPrintInfo(){
+			
+				var markers = [];
+				
+				$.getJSON('/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+heat+'/'+type,function(data) {
+				
+					var items = [];
+					
+					$.each(data.info, function(key,val) {
+					//console.log(val.location);
+						
+						var latLng = new google.maps.LatLng(val.location['lat'],val.location['lng']);
+						var marker = new google.maps.Marker({position: latLng});
+						markers.push(marker);
+						
+						google.maps.event.addListener(marker, 'click', function() {
+							//map.setZoom(8);
+							//map.setCenter(marker.getPosition());
+							var dateTmp = new Date(val.creationDate);
+							//console.log(val.creationDate);
+							var dateCreation = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
+							var infoContent = "<div class=\'infowindow\' >";
+							if(!(typeof val.thumb === 'undefined') && val.thumb != ''){
+								if(val.user == 0 || val.user === undefined)
+									infoContent += "<img src=\'"+conf.backurl+val.thumb+"\' />";
+								else
+									infoContent += "<img src=\'/uploads/pictures/120_90/"+val.thumb+"\' />";
+							}
+							infoContent += "<div class=\'title\'> "+val.title.replace(rule2,'')+" ("+dateCreation+")</div>";
+							infoContent += "<div class=\'content\'>"+val.content.substring(0,250).replace(rule2,'')+"...</div>";
+							if(!(typeof val.outGoingLink === 'undefined') && val.outGoingLink != '')
+								infoContent += "<div class=\'readmore\'><a target=\'_blank\' href=\'"+val.outGoingLink+"\'> Read more</a></div>";
+							infoContent += "</div>";
+							infowindow.setContent(infoContent);
+							infowindow.open(map, this);
+						});	
+						
+					});
+					
+					var markerClustererOptions = {gridSize:30,maxZoom: 17};
+					var markerCluster = new MarkerClusterer(map, markers,markerClustererOptions);
+					
+					
+					
+					
+				});	
+			
+			}

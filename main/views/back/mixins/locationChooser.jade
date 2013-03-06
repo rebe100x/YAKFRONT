@@ -1,0 +1,18 @@
+mixin locationChooser()
+	div.modal.hide.fade#locationChooser
+		div.modal-header
+			button.close(type="button", data-dismiss="modal") x
+			h3 Y a quoi là ?
+		div.modal-body
+			p.alertText 
+				ul#favplacelist.unstyled
+				br	
+				- if(session)
+					div.control-group
+						div.controls
+							label(for='favplace') Ajouter des lieux favoris : 
+							div.input-append
+								input#favplace.searchInput(type="text",data-provide="typeahead", name="favplace", autocomplete="off", placeholder='Rechercher...') 
+								button.btn#btn-favplace-adder(type="button") Add
+		div.modal-footer
+			span.btn(data-dismiss="modal") Laissez moi explorer tout seul !

@@ -1,0 +1,27 @@
+mixin searchForm()
+	- if (message)
+		div.alert.fade.in
+			button.close(type="button",data-dismiss="alert")
+			strong=message
+	form.form-search
+		div.input-append
+			input#searchInput(type="text",name="login", autocomplete="off", placeholder="Bois de Boulogne, Parc des expositions...", data-provide="typeahead")
+			button.btn(type='text', name='search', id='search', value='chercher') Chercher
+		div#placeList
+
+	script
+
+		$(document).ready(function() {
+
+			$('#searchInput').typeahead({
+					minLength : 3,
+					source: function (typeahead, query) {
+						$.ajax({
+								url: "/api/places",
+								success: function( data ) {
+									typeahead.process(data.places);
+								}
+							})},
+					property: "title"
+				});
+		});

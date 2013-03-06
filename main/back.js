@@ -6,6 +6,7 @@
 var express = require('express'),
   routes = require('./routes'),
   api = require('./routes/api'),
+  back = require('./routes/back'),
   auth = require('./mylib/basicAuth'),
   db = require('./models/mongooseModel'),
   config = require('./confs.js'),  
@@ -74,9 +75,6 @@ var db = routes.db(conf);
 
 app.get('/', routes.requiresLogin, routes.index);
 
-
-app.get('/partials/:name', routes.partials);
-//app.get('/news/map', requiresPosition, routes.news_map);
 app.get('/news/map', routes.news_map);
 app.get('/news/map_test', routes.news_map_test);
 app.get('/news/feed', routes.news_feed);
@@ -129,11 +127,6 @@ app.get('/api/places/wait/:ids', api.waitPlaces);
 app.post('/api/favplace', api.addfavplace);
 app.post('/api/delfavplace', api.delfavplace);
 
-app.get('/api/posts', api.posts);
-app.get('/api/post/:id', api.post);
-app.post('/api/post', api.addPost);
-app.put('/api/post/:id', api.editPost);
-app.delete('/api/post/:id', api.deletePost);
 
 // redirect all others to the index (HTML5 history)
 app.get('*', routes.index);

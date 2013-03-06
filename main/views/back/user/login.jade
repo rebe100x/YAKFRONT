@@ -1,0 +1,22 @@
+extends ../layout
+block content
+
+	include ../mixins/menu.jade
+	include ../mixins/forms/loginForm.jade
+	
+	mixin menu('login')
+	
+
+	div.container-fluid
+		div.row-fluid
+			div.span4
+			div.span4
+				mixin loginForm() 
+			div.span4
+				
+	script
+		$(document).ready(function() {
+			$('#login').focus();
+		
+		});
+
