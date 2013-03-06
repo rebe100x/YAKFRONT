@@ -20,9 +20,6 @@ exports.StoreImg = function(file,size,conf){
 		srcName = srcNameTmp.replace('.png', '.jpeg');
 		srcName = srcNameTmp.replace('.jpg', '.jpeg');
 		destName =  crypto.createHash('md5').update(srcName).digest("hex")+'.jpeg'; 
-		//destName =  md5.digest_s(srcName)+'.jpeg'; 
-		//console.log(destName);
-		//var destName =  srcPath.split('\');
 		// convert to jpeg
 		im.convert([srcPathTmp,srcPath],function(err,stdout){
 			// if convertion ok, we begin to build the small images
@@ -30,10 +27,7 @@ exports.StoreImg = function(file,size,conf){
 				
 					//var w = size.w;
 					//var h = size.h;
-					
 					//console.log( size.w+' x '+ size.h);
-					
-					
 					
 					if(size.w > 0 && size.h > 0){
 						//console.log("1="+conf.uploadsDir+'pictures/'+ size.w+'_'+ size.h+'/'+destName);

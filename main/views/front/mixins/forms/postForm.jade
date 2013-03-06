@@ -1,0 +1,143 @@
+mixin postForm()
+	- if(locals.user)
+		- if(locals.user.type > 1)
+			form#postForm(action='/news', method='POST', enctype='multipart/form-data')
+				input#yakcatInput(type='hidden', name='yakcatInput', value='')
+				input#placeInput(type='hidden', name='placeInput', value='')
+				input#latitude(type="hidden",name="latitude")
+				input#longitude(type="hidden",name="longitude")
+				input#username(type="hidden", name="username",value=locals.user.login)
+				legend Poster une info:
+				div.control-group
+					div.controls
+						input.span12.hashtagMaker(type='text', name='title', id='title', placeholder='Titre: vous pouvez utiliser des hashtags dans votre texte ( #maisonavendre )')
+						textarea#content.span12.hashtagMaker(name='content', placeholder='Texte: vous pouvez utiliser des hashtags dans votre texte ( #maisonavendre )',rows='3')
+				div.control-group
+					label(for='type') Choisissez la rubrique danslaquelle votre info apparaitra:
+					div.controls#yakTypeController
+						label.radio.inline Actu
+							input#option1(type="radio", name="yakType", value="1" , checked) 
+						- if(type != 2)
+							label.radio.inline Discussion
+								input#option4(type="radio", name="yakType", value="4")
+						label.radio.inline Agenda
+							input#option2(type="radio", name="yakType", value="2")
+						label.radio.inline Infos&nbsp;pratiques
+							input#options3(type="radio", name="yakType", value="3")
+				div.control-group#eventDateController
+					label(for='eventDate') Date de l événement :
+						div.controls
+							input#eventDateFrom.span6(style="float:left;margin-right:5px;	", type="text",name="eventDateFrom", autocomplete="off", placeholder='Du...')
+							input#eventDateEnd.span6(type="text",name="eventDateEnd", autocomplete="off", placeholder='Au...')
+				div.control-group
+					label(for='category') Choisissez une ou plusieurs thèmes:
+					div.controls
+						input#yakcat.span12(type="text",data-provide="typeahead", name="category", autocomplete="off", placeholder='Rechercher...')
+					div.controls	
+						input#freetag.span12(type="text",data-provide="typeahead", name="freetag",placeholder='Ajouter des mots clés : maison à vendre')
+					div.controls
+						span#picturePreview
+						input.span6#picture(type="file",style="display:block",name="picture")
+				legend A quel endroit ?
+				div.control-group
+					label(for='Place') Clicker sur la carte ou bien entrer une adresse:<br /> 
+					div.controls
+						div.input-append
+							input#place(type="text",data-provide="typeahead", name="place", autocomplete="off", placeholder='Rechercher...') 
+							button.btn#btn-place-adder(type="button") Add
+							span.help-inline(style='font-size:0.95em;font-style:italic;margin-left:20px;') Ajoutez plusieurs adresses <br>et faites apparaître votre info <br>à plusieurs endroits !
+				br
+				button.btn.btn-large.btn-block.btn-inverse(style='width:100%',type='submit', name='submit', id='submit', value='Envoyer') Envoyer
+			
+		- if(locals.user.type == 1)
+			form#postForm(action='/news', method='POST', enctype='multipart/form-data')
+				input#yakcatInput(type='hidden', name='yakcatInput', value='')
+				input#placeInput(type='hidden', name='placeInput', value='')
+				input#latitude(type="hidden",data-provide="typeahead", name="latitude")
+				input#longitude(type="hidden",data-provide="typeahead", name="longitude")
+				input#username(type="hidden", name="username",value=locals.user.login)
+				legend Poster une info:
+				div.control-group
+					div.controls
+						input.span12.hashtagMaker(type='text', name='title', id='title', placeholder='Titre: vous pouvez utiliser des hashtags dans votre texte ( #maisonavendre )')
+						textarea#content.span12.hashtagMaker(name='content', placeholder='Texte: vous pouvez utiliser des hashtags dans votre texte ( #maisonavendre )',rows='3')
+				div.control-group
+					div.controls
+						input#freetag.span12(type="text",data-provide="typeahead", name="freetag",placeholder='Ajouter des mots clés : maison à vendre')
+					div.controls
+						span#picturePreview
+						input.span6#picture(type="file",style="display:block",name="picture")
+				legend A quel endroit ?
+				div.control-group
+					label(for='Place') Clicker sur la carte ou bien entrer une adresse:<br>
+					div.controls
+						div.input-append
+							input#place(type="text",data-provide="typeahead", name="place", autocomplete="off", placeholder='Rechercher...') 
+							button.btn#btn-place-adder(type="button") Add
+							span.help-inline.small Ajoutez plusieurs adresses <br>et faites apparaître votre info <br>à plusieurs endroits !
+				br
+				div.controls#yakTypeController(style="display: none;")
+					label.radio.inline Actu
+						input#option1(type="radio", name="yakType", value="4" , checked) 
+				button.btn.btn-large.btn-block.btn-inverse(style='width:100%',type='submit', name='submit', id='submit', value='Envoyer') Envoyer
+	- else
+		mixin loginForm() 
+	script(src='/javascripts/lib/plugin/jquery-ui-timepicker-addon.js')
+	script
+		$(document).ready(function() {
+			
+
+			$('#yakTypeController').live('change', function() { 
+				if($("input[name='yakType']:checked").val()==2)
+					$('#eventDateController').slideDown();
+				else
+					$('#eventDateController').slideUp();
+			});
+
+			$( "#eventDateFrom" ).datetimepicker({
+				timeFormat: 'HH:mm',
+				stepHour: 1,
+				stepMinute: 10,
+				//defaultValue:new Date(),
+
+			});
+			$( "#eventDateEnd" ).datetimepicker({
+				timeFormat: 'HH:mm',
+				stepHour: 1,
+				stepMinute: 10,
+			});
+
+
+
+		});
+
+	- if(locals.user.type > 1)
+		script
+			$(document).ready(function() {
+				$('#postForm').submit(function() {
+					var currType = $("input:radio[name='yakType']:checked").val();
+					
+					if ($.inArray(currType, yakType) == -1) {
+						yakType[yakType.length] = currType;
+					}
+
+					$.cookie("yaktype", yakType,{ expires: 10000, path : '/' });
+				});
+
+			});
+
+	- if(locals.user.type == 1)
+		script
+			$(document).ready(function() {
+				$('#postForm').submit(function() {
+					var currType = 4;
+					if ($.inArray(currType, yakType) == -1) {
+						yakType[yakType.length] = currType;
+					}
+
+				$.cookie("yaktype", yakType,{ expires: 10000, path : '/' });
+				});
+
+			});
+	
+	

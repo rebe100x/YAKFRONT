@@ -1,0 +1,34 @@
+mixin settingsMenu(active)
+	ul.nav.nav-list.yak-sidenav.affix
+		- if (active == 'profile')		
+			li.active
+				a(href="/settings/profile",data-nav="profile") Mon profil public
+					i.icon-chevron-right
+		- else
+			li
+				a(href="/settings/profile",data-nav="profile") Mon profil public
+					i.icon-chevron-right
+		- if (active == 'privateprofile')		
+			li.active
+				a(href="/settings/profile",data-nav="privateprofile") Mon profil privé
+					i.icon-chevron-right
+		- else
+			li
+				a(href="/settings/privateprofile",data-nav="profile") Mon profil privé
+					i.icon-chevron-right
+		- if (active == 'alerts')		
+			li.active
+				a(href="/settings/alerts",data-nav="alerts") Abonnements et Alertes
+						i.icon-chevron-right 
+		- else
+			li
+				a(href="/settings/alerts",data-nav="alerts") Abonnements et Alertes
+					i.icon-chevron-right 		
+		- if (active == 'password')		
+			li.active
+				a(href="/settings/password",data-nav="password") Mot de passe
+					i.icon-chevron-right 	
+		- else
+			li
+				a(href="/settings/password",data-nav="password") Mot de passe
+					i.icon-chevron-right 	

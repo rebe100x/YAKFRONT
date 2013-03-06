@@ -44,7 +44,7 @@ abbr[title] {
 	z-index:2001;
 }
 #mymap {position: absolute;top: 0px;right: 0px;left: 0;height: 100%;z-index:0;}
-
+#yakLogo{height:58px;}
 
 
 /* THE FEED PAGE
@@ -511,14 +511,11 @@ width: 270px;
 .favplacelist li { padding:10px 0px; border-bottom: 1px solid #cecece; float: left; width: 100%;height:25px; cursor: default;}
 .favplacelist li span { cursor: pointer;}
 .headerYakwala { background-color: white; }
-<<<<<<< HEAD
-.headerYakwala #userThumb { height: 50px; width: auto;}
-=======
 .headerYakwala #userThumb { height: 48px; width: auto;}
->>>>>>> b8b11776a6baba989fa9bcd165834a53935a8203
+
 .headerYakwala #bgthumb { position: relative; bottom: 15px;}
 .headerYakwala .leftlink img { float: left; padding: 6px;}
-.headerYakwala .dropdown-toggle { float: right; margin-top: 19px;}
+.headerYakwala .dropdown-toggle { float: right; margin-top: 6px;}
 .headerYakwala .pull-right { margin-top: 0px;}
 .headerYakwala .rightlink .caret { top: 7px; left: 2px; position: relative;}
 .headerYakwala .logolink { margin: 0 auto; width: auto; text-align: center;}

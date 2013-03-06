@@ -1,0 +1,43 @@
+mixin docsMenu(active)
+	div.navbar.navbar-fixed-top
+		div.navbar-inner
+			.container-fluid
+				a.btn.btn-navbar(data-toggle="collapse",data-target=".nav-collapse") 
+					span.icon-bar
+					span.icon-bar
+					span.icon-bar
+					a.brand(href="#{JSON.parse(locals.conf).apiurl}") YAKWALA DOCS
+					
+
+					div.nav-collapse
+						ul.nav
+							- if (active == 'api')										
+								li.active
+									a(href="#{JSON.parse(locals.conf).fronturl}/docs/api") Doc de l'API
+							- else
+								li
+									a(href="#{JSON.parse(locals.conf).fronturl}/docs/api") Doc de l'API
+							- if (active == 'opendata')										
+								li.active
+									a(href="#{JSON.parse(locals.conf).fronturl}/docs/opendata") Ressources & opendata
+							- else
+								li
+									a(href="#{JSON.parse(locals.conf).fronturl}/docs/opendata") Ressources & opendata
+							- if (active == 'log')										
+								li.active
+									a(href="#{JSON.parse(locals.conf).fronturl}/docs/log") Release logs
+							- else
+								li
+									a(href="#{JSON.parse(locals.conf).fronturl}/docs/log") Release logs
+							- if (active == 'cgu')										
+								li.active
+									a(href="#{JSON.parse(locals.conf).fronturl}/docs/cgu") CGU
+							- else
+								li
+									a(href="#{JSON.parse(locals.conf).fronturl}/docs/cgu") CGU
+							- if (active == 'faq')										
+								li.active
+									a(href="#{JSON.parse(locals.conf).fronturl}/docs/faq") FAQ
+							- else
+								li
+									a(href="#{JSON.parse(locals.conf).fronturl}/docs/faq") FAQ

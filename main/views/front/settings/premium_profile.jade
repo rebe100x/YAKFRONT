@@ -1,0 +1,39 @@
+extends ../layout
+block content
+
+	include ../mixins/menu.jade
+	include ../mixins/locationChooser.jade
+	include ../mixins/settingsMenu.jade
+	
+	mixin menu('profile')
+	mixin locationChooser()
+
+	div.container-fluid
+		div.row-fluid
+			div.span4.yak-sidebar
+				mixin settingsMenu('profile')
+
+						
+			div.span8
+				- if (message)
+					div.alert.fade.in
+						button.close(type="button",data-dismiss="alert") x
+						strong=message
+				div.content-header
+					div.header-inner
+						h2 Mon profil
+						p.subheader Ces informations sont publiques
+				hr
+				form.form-horizontal(action='/profile', method='POST')
+					div.control-group
+						div.controls
+							label.control-label(for="name") Votre nom :  
+							input(type='text', name='name', id='name')
+					div.control-group
+						div.controls
+							label.control-label(for="bio") Votre biographie :  
+							textarea(name='bio', id='bio',rows='5')
+
+					button.btn.btn-large.btn-block.btn-inverse(type='submit', name='submit', id='submit', value='Envoyer') Envoyer
+				
+

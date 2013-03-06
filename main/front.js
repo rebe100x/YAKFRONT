@@ -29,9 +29,9 @@ var express = require('express'),
   crypto = require('crypto'),
   nodemailer = require("nodemailer"),
   AWS = require('aws-sdk')
+  config_secret = require('./confs_secret.js');
   ;
-  
-  
+    
 var app = express();
 
 
@@ -43,14 +43,13 @@ var app = express();
 
 
 app.configure(function(){
-  app.set('views', __dirname + '/views');
+  app.set('views', __dirname + '/views/front');
   app.set('view engine', 'jade');
   app.use(express.bodyParser({keepExtensions: true,uploadDir:__dirname + '/public/uploads/originals'}));
   app.use(express.static(__dirname + '/public'));
-  app.use(express.cookieParser('SAfuBUZ2'));
-  // Session management
+  app.use(express.cookieParser(config_secret.confs_secret.COOKIE.cookieParser));
   app.use(express.session({
-    "secret": "bb352fece6f80a5cff2d6088a376eddf",
+    "secret": config_secret.confs_secret.SESSION.secret,
     "stringifyore":  new express.session.MemoryStore({ reapInterval: 60000 * 10 })
   }));
   app.use(function(req, res, next){
@@ -71,17 +70,15 @@ app.configure('development', function(){
 	app.locals.conf = JSON.stringify(conf);
 	mainConf = config.confs.main;
 	app.locals.mainConf = JSON.stringify(mainConf);
-	//app.locals.secretConf = JSON.stringify(config_secret.confs_secret);
 	app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
 
 
 app.configure('production', function(){
 	conf = config.confs.prod;
-	app.locals.conf = JSON.stringify(config.confs.prod);
+	app.locals.conf = JSON.stringify(conf);
 	mainConf = config.confs.main;
-	app.locals.mainConf = JSON.stringify(config.confs.main);
-	app.locals.secretConf = JSON.stringify(config_secret);
+	app.locals.mainConf = JSON.stringify(mainConf);
 	app.use(express.errorHandler());
 });
 
