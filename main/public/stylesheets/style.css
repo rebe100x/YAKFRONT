@@ -43,7 +43,7 @@ abbr[title] {
 	top: 55%;
 	z-index:2001;
 }
-
+#mymap {position: absolute;top: 0px;right: 0px;left: 0;height: 100%;z-index:0;}
 
 
 
@@ -236,6 +236,8 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 .infowindow:firstChild{
 	margin-top:10px;
 }
+
+
 .infowindow{
 	width:95%;
 	margin:1%;
@@ -447,35 +449,16 @@ width: 270px;
   opacity: .25;
   display: none;
 }
-.yak-sidenav > .active > a, .nav-list > .active > a:hover
-{
-	background-color: #fafafa;
-	color: #bebebe;
-}
-.yak-sidenav > li > a:hover {
-  background-color: #fafafa;
-}
-.yak-sidenav a:hover .icon-chevron-right, .yak-sidenav a:hover .icon-chevron-down {
-  opacity: .5;
-}
+.yak-sidenav > .active > a, .nav-list > .active > a:hover{background-color: #fafafa;color: #bebebe;}
+.yak-sidenav > li > a:hover {background-color: #fafafa;}
+.yak-sidenav a:hover .icon-chevron-right, .yak-sidenav a:hover .icon-chevron-down {opacity: .5;}
 .yak-sidenav .active .icon-chevron-right,
 .yak-sidenav .active a:hover .icon-chevron-right,
 .yak-sidenav .active .icon-chevron-down,
-.yak-sidenav .active a:hover .icon-chevron-down {
-  background-image: url(../images/glyphicons-halflings-white.png);
-  opacity: 1;
-}
-.yak-sidenav.affix {
-	left: -35px;
-}
-.yak-sidenav.affix-bottom {
-  position: absolute;
-  top: auto;
-  bottom: 270px;
-}
-.yak-sidenav ul.nav-sublist{
-	display:none;
-}
+.yak-sidenav .active a:hover .icon-chevron-down {background-image: url('../images/glyphicons-halflings-white.png');opacity: 1;}
+.yak-sidenav.affix {left: -35px;}
+.yak-sidenav.affix-bottom {position: absolute;top: auto;bottom: 270px;}
+.yak-sidenav ul.nav-sublist{display:none;}
 
 /* DOC
 ----------------------------------------------------*/
@@ -576,6 +559,8 @@ width: 270px;
 #locationChooser .icon-home { position: relative; top: 3px; margin-right: 12px; }
 #locationChooser .icon-pointer { float: right;}
 #locationChooser .searchInput { position: relative; top: 10px}
+#locationChooser .zoneLoc{cursor:pointer;}
+#locationChooser .zoneLoc:hover{text-decoration : underline;}
 
 /* calendar custom date*/
 .customDates { position: relative;; left: 10px; top: -2px; cursor: pointer;}
