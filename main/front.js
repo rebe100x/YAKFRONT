@@ -82,6 +82,8 @@ app.configure('production', function(){
 	app.use(express.errorHandler());
 });
 
+var db = routes.db(conf);	
+
 
 	
 // Routes

@@ -20,7 +20,6 @@ var express = require('express'),
   
   
 var app = express();
-var db = routes.db(conf);	
 
 // Configuration
 
@@ -67,6 +66,7 @@ app.configure('production', function(){
 	app.use(express.errorHandler());
 });
 
+var db = routes.db(conf);	
 	
 // Routes
 
