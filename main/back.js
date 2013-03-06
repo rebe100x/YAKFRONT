@@ -20,6 +20,7 @@ var express = require('express'),
   
   
 var app = express();
+var db = routes.db(conf);	
 
 // Configuration
 
@@ -66,38 +67,35 @@ app.configure('production', function(){
 	app.use(express.errorHandler());
 });
 
-var db = routes.db(conf);	
-
-
 	
 // Routes
 
 
-app.get('/', routes.requiresLogin, routes.index);
+app.get('/', back.requiresLogin, back.back_default);
 
-app.get('/news/map', routes.news_map);
-app.get('/news/map_test', routes.news_map_test);
-app.get('/news/feed', routes.news_feed);
-app.get('/news/post', routes.news_post);
-//app.get('/news/post', requiresLogin, routes.news_post);
+app.get('/news/map', back.news_map);
+app.get('/news/map_test', back.news_map_test);
+app.get('/news/feed', back.news_feed);
+app.get('/news/post', back.news_post);
+//app.get('/news/post', requiresLogin, back.news_post);
 
-app.get('/user/login', routes.user_login);
-app.get('/user/logout', routes.user_logout);
-app.post('/session',routes.session);
+app.get('/user/login', back.user_login);
+app.get('/user/logout', back.user_logout);
+app.post('/session',back.session);
 
-app.get('/settings', routes.requiresLogin, routes.settings_profil);
-app.get('/settings/profile', routes.requiresLogin, routes.settings_profile);
-app.get('/settings/alerts', routes.requiresLogin, routes.settings_alerts);
-app.get('/settings/password', routes.requiresLogin, routes.settings_password);
+app.get('/settings', back.requiresLogin, back.settings_profil);
+app.get('/settings/profile', back.requiresLogin, back.settings_profile);
+app.get('/settings/alerts', back.requiresLogin, back.settings_alerts);
+app.get('/settings/password', back.requiresLogin, back.settings_password);
 
-app.get('/place/list', routes.requiresLogin, routes.place_map);
+app.get('/place/list', back.requiresLogin, back.place_map);
 
 
-app.post('/place', routes.requiresLogin, routes.place);
-app.post('/user', routes.requiresLogin, routes.user);
-app.post('/news', routes.requiresLogin, routes.news);
-app.post('/alerts', routes.requiresLogin, routes.alerts);
-app.post('/profile', routes.requiresLogin, routes.profile);
+app.post('/place', back.requiresLogin, back.place);
+app.post('/user', back.requiresLogin, back.user);
+app.post('/news', back.requiresLogin, back.news);
+app.post('/alerts', back.requiresLogin, back.alerts);
+app.post('/profile', back.requiresLogin, back.profile);
 // JSON API
 
 app.get('/api/infos', api.infos);
@@ -127,45 +125,10 @@ app.get('/api/places/wait/:ids', api.waitPlaces);
 app.post('/api/favplace', api.addfavplace);
 app.post('/api/delfavplace', api.delfavplace);
 
-
 // redirect all others to the index (HTML5 history)
-app.get('*', routes.index);
+app.get('*', back.index);
 
 
-
-//io = require('socket.io');
-//sio = io.listen(app);
-/*		
-function requiresLogin(req,res,next){
-	if(req.session.user){
-		next();
-	}else{
-		req.session.message = 'Please login to access this section:';
-		res.redirect('/user/login?redir='+req.url);
-	}
-}*/
-
-function requiresPosition(req,res,next){
-	delete req.session.position;
-	
-	if(!req.session.position){
-		sio.sockets.on('connection', function (socket) {
-		  //socket.emit('news', { hello: 'world' });
-		  socket.on('position', function (data) {
-			req.session.position = data.x;
-			//console.log(data);
-			next();
-		  });
-		});
-	}else{
-		next();
-	}
-		
-	next();
-	
-}
-
-//exports.app = app;
 
 
 // Start server

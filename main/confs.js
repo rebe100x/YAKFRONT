@@ -8,6 +8,7 @@ exports.confs = {
 		"typeDefault":'1,2,4',
 		"dateFromDefault":0,
 		"version":'1.1.1',
+		"versionback":'0.0.1',
 	},
 	"devrenaud" : {
 		"resetpassUrl":"http://dev.labs.yakwala.fr:3000/user/resetpassword/",
