@@ -1,52 +1,3 @@
-body {
-  font: 13px "Lucida Grande", Helvetica, Arial, sans-serif;
-}
-
-a {
-  color: #c3c3c3;
-}
-a:hover {
-  color: #c3c3c3;
-}
-
-.navbar-fixed-top {
-  position:relative;
-  z-index:1;
-}
-
-.navbar-inner { background-color: white;}
-img{border:0px;}
-
-/* GENERAL
--------------------------------------------------- */
-h4, h3, h2 , h1{margin-bottom:5px; color: #d51820; margin-top: 30px;}
-.icon-pointer{cursor:pointer;margin:2px;}
-.icon-pointer:hover{opacity:0.7;}
-
-//input[type="search"]{padding-left:13px;}
-input[type="search"].searching{background-image:url('../images/loader.gif');background-repeat:no-repeat;background-position: right; }
-.searchInput{background-repeat:no-repeat;background-position: 0px 5px;padding-left:0px;background-image: none;}
-
-.pillItem{display: inline-block;float: left;padding: 1px 4px 2px;margin: 2px;font-size: 11.844px;font-weight: bold;line-height: 15px;color: white;vertical-align: baseline;cursor: pointer;background-color: #d8242b;-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;}
-
-.timeago {color: #5D5D5D;cursor:default;font-weight:normal;margin-left:3px;}
-
-.columnTitle{font-weight: bold;margin:4px 5px 0px 0px;}
-
-.subheader { color: #aaaaaa;}
-
-abbr[title] {
-    border-bottom: 0px ;
-    cursor: default;
-}
-.modal.fade.in {
-	top: 55%;
-	z-index:2001;
-}
-#mymap {position: absolute;top: 0px;right: 0px;left: 0;height: 100%;z-index:0;}
-#yakLogo{height:58px;}
-
-
 /* THE FEED PAGE
 ---------------------------------------------------*/
 #mainFeedWrapper {border: 0px solid #292929; background: #E8E8E8; font-family: helvetica,arial,sans-serif;}
@@ -138,8 +89,16 @@ abbr[title] {
 
 .localnessPrinter {position: relative; top: -13px; left: 209px;}
 .alreadyVoted { color: green;}
+
+
+
+
+
+
 /* THE MAP
 -------------------------------------------------- */
+#mymap {position: absolute;top: 0px;right: 0px;left: 0;height: 100%;z-index:0;}
+	
 	/*MAP TOOLS CONTROLLERS*/
 
 #zoomnavigation {background-image: url(/images/styles.png);background-position: -112px -639px;bottom: 50px;height: 113px;margin-left: 0px;position: absolute;width: 65px;z-index: 200;}
@@ -219,7 +178,6 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 .infowindow .myitem .ftgIcon { height: 14px; position: absolute; top: 4px; float: left; clear: both;}
 .infowindow .myitem .yakLikes {top: -33px; position: relative; float: left; clear: both; }
 .infowindow .myitem .buttons { z-index:  11;}
-
 .infowindow .myitem .yakLikes{font-size:11px;font-style:italic; position: relative; clear: both; width: auto; float: left; color: #D71920;}
 .infowindow .myitem .yakComments{font-size:11px;font-style:italic; position: relative; clear: both; width: auto; float: left; left: 0px; top: -33px; color: #D71920; cursor: pointer;}
 .infowindow .myitem .commentBox .aComment { clear:  both; padding-bottom: 12px;}
@@ -231,43 +189,13 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 .infowindow .myitem .commentBox .comment { color: black; margin-bottom: 12px;}
 .infowindow .myitem .commentBox textarea { width: 97%; height: 50px; margin-top: 2px; margin-left: 0px; } /*z-index for stop scroll*/
 .infowindow .myitem i.icon-chevron-up { }
-
-
-.infowindow:firstChild{
-	margin-top:10px;
-}
-
-
-.infowindow{
-	width:95%;
-	margin:1%;
-	font-size:0.95em;
-	box-shadow: 0 1px 0 #DDD;
-	background: white;
-	border-color: #BBB;
-	color: #505050;
-	padding:0px;
-}
-.infowindow.loadingfeeditem{
-	padding:30px 0px;
-	text-align: center;
-	background-image: url(../images/loader_big.gif);
-	background-position: center center;
-	background-repeat: no-repeat;
-}
-.infowindow.emptyfeeditem{
-	padding:12px 3px;
-	text-align: center;	
-	font-weight:bold;
-	background-color: #ba0911;
-	font-size: 14px;
-	color: white;
-}
-
+.infowindow:firstChild{margin-top:10px;}
+.infowindow{width:95%;margin:1%;font-size:0.95em;box-shadow: 0 1px 0 #DDD;background: white;border-color: #BBB;color: #505050;padding:0px;}
+.infowindow.loadingfeeditem{padding:30px 0px;text-align: center;background-image: url(../images/loader_big.gif);background-position: center center;background-repeat: no-repeat;}
+.infowindow.emptyfeeditem{padding:12px 3px;text-align: center;	font-weight:bold;background-color: #ba0911;font-size: 14px;color: white;}
 .infowindow .date{color: #87888B;margin-right:5px;}
 .infowindow .date .timeago { margin-top: -28px; margin-right: 8px;}
 .infowindow .links{float:right;margin-right:3px;text-align:right;font-style:italic;font-size:0.8em;line-height: 1.5em;}
-
 .infowindow .yakTypeImg{width:15px;height:22px; float: right;}
 .infowindow .titleLeft { float: left; width: 50%;}
 .infowindow .titleRight { float: right; width: 50%;}
@@ -499,14 +427,19 @@ width: 270px;
         width: auto;
      }
  }
+
+
  td#highlight{
  	background-color: #F7F7F9;
  	font-weight:bold;
  }
 
-.rememberme { color:#c3c3c3; font-size: 12px;  }
-.rememberme span { margin-left: 6px; margin-top: 3px;}
- /* Header Yakwala */
+
+
+
+
+/* HEADER
+----------------------------------------------------*/
 .dropdownRangeSelector {width: 136px; background: #f6f6f6; border: 0px; float: right; position: relative; right: 169px; }
 .favplacelist li { padding:10px 0px; border-bottom: 1px solid #cecece; float: left; width: 100%;height:25px; cursor: default;}
 .favplacelist li span { cursor: pointer;}
@@ -519,6 +452,20 @@ width: 270px;
 .headerYakwala .pull-right { margin-top: 0px;}
 .headerYakwala .rightlink .caret { top: 7px; left: 2px; position: relative;}
 .headerYakwala .logolink { margin: 0 auto; width: auto; text-align: center;}
+
+
+/*location chooser */
+#locationChooser .redstar { position: relative; top: 3px; margin-right: 12px;}
+#locationChooser .plussign { position: relative; top: 17px; margin-right: 12px;}
+#locationChooser .icon-home { position: relative; top: 3px; margin-right: 12px; }
+#locationChooser .icon-pointer { float: right;}
+#locationChooser .searchInput { position: relative; top: 10px}
+#locationChooser .zoneLoc{cursor:pointer;}
+#locationChooser .zoneLoc:hover{text-decoration : underline;}
+
+
+/* SEARCH BAR
+----------------------------------------------------*/
 
 .searchYakwala { background-color: #f6f6f6; float: left;}  
 .searchYakwala #searchBtn {background-image:url('../images/new/go.png'); width: 27px; height: 27px; border: 0px; margin: 7px; float: left;}
@@ -545,19 +492,15 @@ width: 270px;
 .searchYakwala .mytime {padding-top: 6px; background: url('../images/time.png') no-repeat; background-position: -1px 9px; }
 .searchYakwala .myfilter {padding-left: 8px; background: url('../images/filter.png') no-repeat; background-position: -1px 9px }
 
+/* FOOTER
+----------------------------------------------------*/
 #footer { background-color: #ffffff; height: 20px; font-size: 12px; padding-top: 2px;}
 #footer .copyright { color: #b3b3b3; margin-left: 12px; padding-right:12px;  border-right: 1px solid #b3b3b3}
 #footer .alink { color: #505050; margin-left: 12px; padding-right: 12px; border-right: 1px solid #505050}
 
 
-/*location chooser */
-#locationChooser .redstar { position: relative; top: 3px; margin-right: 12px;}
-#locationChooser .plussign { position: relative; top: 17px; margin-right: 12px;}
-#locationChooser .icon-home { position: relative; top: 3px; margin-right: 12px; }
-#locationChooser .icon-pointer { float: right;}
-#locationChooser .searchInput { position: relative; top: 10px}
-#locationChooser .zoneLoc{cursor:pointer;}
-#locationChooser .zoneLoc:hover{text-decoration : underline;}
+/* OTHER
+----------------------------------------------------*/
 
 /* calendar custom date*/
 .customDates { position: relative;; left: 10px; top: -2px; cursor: pointer;}

@@ -13,7 +13,8 @@ html
 		link(rel='stylesheet', href='/javascripts/lib/jquery/css/jquery.mCustomScrollbar.css')
 		link(rel='stylesheet', href='/javascripts/lib/fuelux/css/fuelux.css')
 		link(rel='stylesheet', href='/javascripts/lib/toastr/toastr.css')
-		link(rel='stylesheet', href='/stylesheets/backstyle.css')
+		link(rel='stylesheet', href='/stylesheets/common.css?v='+JSON.parse(mainConf).versionback)
+		link(rel='stylesheet', href='/stylesheets/backstyle.css?v='+JSON.parse(mainConf).versionback)
 
 		script(src='/javascripts/lib/jquery/js/jquery-1.8.2.min.js')
 		script(src='/javascripts/lib/jquery/js/jquery-ui-1.8.24.custom.min.js')
@@ -28,9 +29,8 @@ html
 		script(src='/javascripts/lib/plugin/jquery.cookie.js')
 		script(src='/javascripts/lib/plugin/jquery.mousewheel.min.js')
 		script(src='/javascripts/lib/plugin/jquery.mCustomScrollbar.min.js')
-		script(src='/javascripts/myjavascript.js?v='+JSON.parse(mainConf).version))
-		//script(src='/socket.io/socket.io.js')
-		//script(src='/javascripts/markercluster.js')
+		script(src='/javascripts/common.js?v='+JSON.parse(mainConf).versionback)
+		script(src='/javascripts/back_common.js?v='+JSON.parse(mainConf).versionback))
 		
 		block head
 	body

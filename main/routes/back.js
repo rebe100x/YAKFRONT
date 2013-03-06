@@ -75,299 +75,188 @@ exports.requiresLogin = function(req,res,next){
 
 
 
-/**NEWS */
-exports.news_map = function(req, res){
+/******* PLACE ******/
+exports.place_add = function(req, res){
+	res.render('place/add');
+};
+
+exports.place_map = function(req, res){
 	delete req.session.message;
-	res.render('news/map',{str:null});  
-};
-exports.news_map_search = function(req, res){	
-	res.render('news/map',{str:req.params.str});  
+	res.render('place/list');
 };
 
-/*
-exports.news_map_test = function(req, res){
-	res.render('news/map_test');  
-};
-*/
-exports.news_post = function(req, res){
-	delete req.session.message;
-	if(req.session.user){
-		res.render('news/post');
-	}else{
-		res.redirect('/user/login?redir=news/post');
-	}
-  
-};
-exports.news_feed = function(req, res){
-	delete req.session.message;
-	res.render('news/feed',{str:null});  	
-	 
-};
-exports.news_feed_search = function(req, res){
-	res.render('news/feed',{str:req.params.str});  
-};
-
-exports.news_afeed = function(req, res){
-	var Info = db.model('Info');
-	Info.findAllByID(function (err, docs){
-		res.render('news/afeed',{infos:docs});
-	}); 
-};
-
-exports.loadingModal = function(req, res){
-		res.render('news/loadingModal');
-};
-
-exports.news = function(req, res){
+exports.place = function(req, res){
 
 	var formMessage = new Array();
 	delete req.session.message;
-	var Info = db.model('Info');
 	var Place = db.model('Place');
-	var Tag = db.model('Tag');
+	var Zone = db.model('Zone');
 	var Yakcat = db.model('Yakcat');
-	var theYakType = 4; // UGC
-	var place = new Place();
-	var tag = new Tag();
-	
 	//mongoose.set('debug', true);
+	var obj_id = req.body.objid;
+	var edit = false;
+	console.log(obj_id);
 
-	//console.log(req.files);
 	// we need a title, a location and a user
-	if(req.body.placeInput && req.body.title && req.session.user){
-		var userType = res.locals.user.type;
-		if(userType == 1){
-			theYakType = 4;
-		}else{
-			if(req.body.yakType > 0 && req.body.yakType < 5 )
-				theYakType = req.body.yakType; 
-			else
-				theYakType = 4;			
-		}
-
-		var thumbFlag = 2;
-		var msg = '';
-		var infoThumb = new Object();
-		if(req.files.picture.size && req.files.picture.size > 0 && req.files.picture.size < 1048576*5){
-			var drawTool = require('../mylib/drawlib.js');
-			var size = mainConf.imgSizeInfo;
-			
-			for(i=0;i<size.length;i++){
-				infoThumb = drawTool.StoreImg(req.files.picture,{w:size[i].width,h:size[i].height},conf);
+	if(req.body.placeInput && req.body.title && req.session.user)
+	{
+		Place.findById(obj_id, function (err, place)
+		{
+			if (err || place == null)
+			{
+				console.log("Place not found by id: creating a new place");
+				edit = false;
+				place = new Place();
 			}
-			
-			formMessage.push(msg);
-		
-		}
-		else
-			infoThumb.err = 0;
+			else
+			{
+				console.log("Place found by id: updating");
+				edit = true;
+			}
 
-		if(infoThumb.err == 0 ){
-			
-			var locTmp = JSON.parse(req.body.placeInput);
-			
-			locTmp.forEach(function(item) {
-				var info = new Info();
-				var yakCat = new Array();
-				var yakCatName = new Array();
-				// we introduce a redondancy between types and yakcat to be able to forget the type in the future
-				if(theYakType == 4){ // if type =4 ( discussion : by default push it in YAKCAT discussion )
-					yakCat.push(mongoose.Types.ObjectId("5092390bfa9a95f40c000000")); 
-					yakCatName.push('Discussion');
+			var placeThumb = new Object();
+			if (req.files.picture) {
+				if(req.files.picture.size && req.files.picture.size > 0 && req.files.picture.size < 1048576*5)
+				{
+					var drawTool = require('../mylib/drawlib.js');
+					var size = [{"width":120,"height":90},{"width":512,"height":0}];
+					placeThumb = drawTool.StoreImg(req.files.picture,size,conf);
+					place.thumb = placeThumb.name;
 				}
-				if(theYakType == 2){ // if type =2 ( agenda : by default push it in YAKCAT agenda )
-					yakCat.push(mongoose.Types.ObjectId("50923b9afa9a95d409000000")); 
-					yakCatName.push('Agenda');
-				}
-				if(theYakType == 3){ // if type =3 ( infos pratiques : by default push it in YAKCAT infos pratiques )
-					yakCat.push(mongoose.Types.ObjectId("50923b9afa9a95d409000001")); 
-					yakCatName.push('InfosPratiques');
-				}
-				
+			}
+			else
+				placeThumb.err = 0;
 
-				if(!(req.body.yakcatInput == "" || typeof req.body.yakcatInput === "undefined")){					
-					var yaccatstemp = JSON.parse(req.body.yakcatInput);
-					yaccatstemp.forEach(function(item) {
-						yakCat.push(mongoose.Types.ObjectId(item._id)); 
-						yakCatName.push(item.title);
-					})
-				}	
-				
-				
-				info.yakCatName = yakCatName;
-				info.yakCat = yakCat;
-				info.title = req.body.title;
-				info.content = req.body.content;
-				
+
+			if(placeThumb.err == 0)
+			{
+				if(req.body.yakcatInput.length > 0)
+				{
+					var yak = eval('('+req.body.yakcatInput+')');
+					var yakN = eval('('+req.body.yakcatNames+')');
+					place.yakCat = yak;
+					place.yakcatName = yakN;
+				}
+				place.title = req.body.title;
+				place.content = req.body.content;
+
 				// NOTE : in the query below, order is important : in DB we have lat, lng but need to insert in reverse order : lng,lat  (=> bug mongoose ???)
-				info.location = {lng:parseFloat(item.location.lng),lat:parseFloat(item.location.lat)};
-				//info.location = {lat:parseFloat(item.location.lat),lng:parseFloat(item.location.lng)};
-				info.address = item.title;
-				// if no id, it means the location comes from gmap => we store it
-				
-				
+				place.formatted_address = JSON.parse(req.body.placeInput).title;
+				place.location = {lng:parseFloat(req.body.longitude),lat:parseFloat(req.body.latitude)};
 
-				
-				if(item._id == "" || typeof item._id === "undefined"){
-					item.status=2;
-					place = new Place(item);
-					place.heat = 80;
-					place.user = mongoose.Types.ObjectId(req.session.user);
-					place.save();
-					//info.placeId = mongoose.Types.ObjectId(place._id);
-					info.placeId = place._id;
-				}else{
-					info.placeId = item._id;
-					//info.placeId = mongoose.Types.ObjectId(item._id);
-				}
-					
-				
-				var now = new Date();
-				info.creationDate = now;
-				info.lastModifDate = now;
-				info.pubDate = now;
-				
-				// event date for agenda
-				if(Math.floor(theYakType) == 2){
-					info.eventDate = {dateTimeFrom : new Date(req.body.eventDateFrom), dateTimeEnd : new Date(req.body.eventDateEnd)};
-					var dateEnd = new Date(req.body.eventDateEnd);
-					var D = new Date(dateEnd.getFullYear(), dateEnd.getMonth(), dateEnd.getDate());
-					var DTS = D.getTime() / 1000 + (1 * 60 * 60 * 24);
-					D.setTime(DTS*1000); 
-					info.dateEndPrint = D;
+				if (!edit)
+					place.creationDate = new Date();
+				place.lastModifDate = new Date();
+				place.origin = req.body.hiddenOrigin;
+				place.outGoingLink = req.body.outgoinglink;
 
-				}else{
-					var D = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-					var DTS = D.getTime() / 1000 + (1 * 60 * 60 * 24);
-					D.setTime(DTS*1000); 
-					info.dateEndPrint = D;
-				}
+				place.status = req.body.status;
 
-				
-				
-				info.print = 1;
-				info.status = 1;
-				info.yakType = Math.floor(theYakType);
-				info.thumb = infoThumb.name;
-				info.thumbFlag = thumbFlag;
-				info.licence = 'Yakwala';
-				info.heat = 80;
-				var freeTags = req.body.freetag.split(',');
-				info.freeTag = freeTags;
-				
-				if(req.body.freetag.length > 0){
-					freeTags.forEach(function(freeTag){
-						Tag.findOne({'title':freeTag,"location" : {  "$near" : [parseFloat(info.location.lat),parseFloat(info.location.lng)], $maxDistance : parseFloat(0.5) }},function(err,thetag){
-							if(thetag == null){
-								tag.title=freeTag;
-								tag.numUsed = 1;
-								tag.location = info.location;
-								tag.print = 1;
-								tag.save();
-							}
-							else{
-								Tag.update({_id: thetag._id}, {lastUsageDate:now,$inc:{numUsed:1}}, {upsert: false}, function(err){if (err) console.log(err);});						
-							}
-						});
-					});
-				}
-				
-				// security against unidentified users	
-				if(req.session.user){
-					//console.log(req.session.user);
-					info.user = mongoose.Types.ObjectId(req.session.user);
-					info.origin = "@"+req.body.username;
-					
-					info.save(function (err) {
-						if (!err) console.log('Success!');
-						else console.log(err);
-					});
-				}
-			});
-			
-			
-			formMessage.push("L'info a été postée !");
-			
-		}else{
-			formMessage.push("Erreur dans l'image uploadée: L'info n'est pas postée.");
-		}	
-		
-	}else{
-		if(!req.session.user)
-			formMessage.push("Veuillez vous identifier pour poster une info");
-		if(!req.body.title)
-			formMessage.push("Erreur: définissez le titre de l'info");
-		if(!req.body.placeInput)
-			formMessage.push("Erreur: définissez une géolocalisation de l'info");
-	}
-	
-	req.session.message = formMessage;
-	
-	res.redirect('news/map');
-};
-/******* USER ******/
+				place.access = 1;
+				place.licence = req.body.licence;
+				place.freeTag = req.body.freetag.split(',');
+
+				var contact = {
+						'tel' : req.body.tel,
+						'mobile' : req.body.mobile,
+						'mail' : req.body.mail,
+						'transportation' : req.body.transportation,
+						'web' : req.body.web,
+						'opening' : req.body.opening,
+						'closing' : req.body.closing,
+						'special_opening' : req.body.special
+					};
+
+				place.contact = contact;
+
+				Zone.findNear(place.location.lat, place.location.lng, function(err, zone)
+				{
+					if (!err)
+					{
+						//place.zone = zone[0]._id;
+						place.zone = zone[0].num;
+						// security against unidentified users
+						if(req.session.user)
+						{
+							if (!edit)
+								place.user = req.session.user._id;
+							place.save(function (err)
+							{
+								if (!err)
+								{
+									if (place.status == 1)
+										formMessage.push("Le lieu a été validé.");
+									else if (place.status == 3)
+										formMessage.push("Le lieu a été rejeté.");
+									else
+									{
+										if (edit)
+											formMessage.push("Le lieu a été modifié et est en attente de validation.");
+										else
+											formMessage.push("Le lieu a été ajouté et est en attente de validation.");
+									}
+									console.log('Success!');
+								}
+								else
+								{
+									formMessage.push("Une erreur est survenue lors de l'ajout du lieu (Doublon...etc).");
+									console.log(err);
+								}
+								req.session.message = formMessage;
 
 
-exports.user_login = function(req, res){
-	delete req.session.message;
-	res.render('user/login',{redir:req.query.redir});
-};
+								res.redirect('place/list');
 
-
-	
-
-exports.user_validate = function(req, res){
-	var User = db.model('User');	
-	
-	User.authenticateByToken(req.params.token,req.params.password, function(err, model) {
-	if(!(typeof(model) == 'undefined' || model === null || model === '')){
-			req.session.user = model._id;
-			User.update({_id: model._id}, {status:1}, {upsert: false}, function(err){if (err) console.log(err);});						
-			res.render('settings/firstvisit',{user:model});
-		}else{
-			req.session.message = "Votre clé d'activation est incorrecte.";
-			res.redirect('/user/validate');
-		}
-	
-	});
-	
-};
-
-exports.user_resetpassword = function(req, res){
-	var User = db.model('User');	
-	
-	User.authenticateByToken(req.params.token,req.params.password, function(err, model) {
-	if(!(typeof(model) == 'undefined' || model === null || model === '')){
-			req.session.user = model._id;
-			User.update({_id: model._id}, {status:1}, {upsert: false}, function(err){if (err) console.log(err);});						
-			res.render('settings/resetpassword',{user:model});
-		}else{
-			req.session.message = "Votre clé d'activation est incorrecte.";
-			res.redirect('/user/forgotpassword');
-		}
-	
-	});
-	
-};
-
-exports.user_logout = function(req, res){
-	delete req.session.user;
-	res.redirect('/news/map');
-};
-
-
-
-exports.session = function(req, res){
-
-	var User = db.model('User');
-	if (req.body.rememberme == "true") {
-		 res.cookie('remember', 'true', { expires: new Date(Date.now() + 90000000000), httpOnly: false, path: '/'});
-		 res.cookie('loginid', req.body.login, { expires: new Date(Date.now() + 90000000000) , httpOnly: false, path: '/'});
+							});
+						}
+					}
+					else
+					{
+						console.log(err);
+					}
+				});
+			}
+			else
+			{
+				formMessage.push("Erreur dans l'image uploadée: Le lieu n'est pas sauvegardé.");
+				console.log("Erreur dans l'image uploadée: Le lieu n'est pas sauvegardé.");
+				req.session.message = formMessage;
+				res.redirect('place/list');
+			}
+		});
 	}
 	else
 	{
-		res.cookie('remember', 'false', { expires: new Date(Date.now() + 90000000000) , httpOnly: false, path: '/'});
-		res.cookie('loginid', null, { expires: new Date(Date.now() + 90000000000) , httpOnly: false, path: '/'});
+		if(!req.session.user)
+			formMessage.push("Veuillez vous identifier pour ajouter un lieu");
+		if(!req.body.title)
+			formMessage.push("Erreur: définissez le titre du lieu");
+		if(!req.body.placeInput)
+			formMessage.push("Erreur: définissez une géolocalisation du lieu");
+		req.session.message = formMessage;
+		res.redirect('place/list');
+	}
+};
+
+
+
+
+/******* USER ******/
+exports.user_login = function(req, res){
+	delete req.session.message;
+	res.render('user/login',{locals:{redir:req.query.redir}});
+};
+exports.user_logout = function(req, res){
+	delete req.session.user;
+	res.redirect('/place/list');
+};
+
+exports.session = function(req, res){
+	var User = db.model('User');	
+	if (req.body.rememberme == "true") {
+		 res.cookie('loginid', req.body.login, { expires: new Date(Date.now() + 90000000000) , httpOnly: false, path: '/'});
+	}else{		
+		res.cookie('loginid', '', { expires: new Date(Date.now() + 90000000000) , httpOnly: false, path: '/'});
 	}
 	User.authenticate(req.body.login,req.body.password, req.body.token, function(err, user) {
 		if(!(typeof(user) == 'undefined' || user === null || user === '')){
@@ -388,657 +277,20 @@ exports.session = function(req, res){
 	});
 };
 
+
+
 exports.user = function(req, res){
 
-	var crypto = require('crypto')
-	var themail = req.body.mail;
 	var User = db.model('User');
-	var Point = db.model('Point');
-	var user = new User();
-	
-	/*check if the mail is valid*/
-	
-	
-	/*check if user exists*/
-	User.findOne({'mail': themail},{_ids:1,status:1,mail:1}, function(err,theuser){
-		if(theuser){
-			//console.log(theuser);
-			if(theuser.status == 1){
-				//console.log('STATUS1');
-				req.session.message = 'Cet utilisateur est déjà enregistré.';
-				res.redirect('user/new');
-			
-			}
-			if(theuser.status == 2){
-				//console.log('STATUS2');
-				
-				var salt = Math.round(new Date().valueOf() * Math.random());
-				var token = crypto.createHash('sha1').update("yakwala@secure"+salt).digest("hex");
-				var password = user.generatePassword(5);
-				var link = conf.validationUrl+token+"/"+password;
-				var hash = crypto.createHash('sha1').update(password+"yakwala@secure"+salt).digest("hex");
-				var logo = conf.fronturl+"/static/images/yakwala-logo_petit.png";
-				var templateMail = "link";
-				User.update({_id: theuser._id}, {hash : hash,token:token,salt:salt,password:password}, {upsert: false}, function(err){
-					
-				
-					User.sendValidationMail(link,themail,templateMail,logo,function(err){
-						if(!err)
-							console.log(err);				
-					});
-				
-					
-				});
-				req.session.message = "Cet utilisateur est en attente de validation. Un nouveau mail vient de lui être renvoyé avec une nouvelle clé d'activation. Veuillez vérifier qu'il n'est pas dans les spams.";
-				res.redirect('user/new');
-			}
-			
+
+
+	User.Authenticate(req.body.login, req.body.password, function(err,user){
+		if(!(typeof(user) == 'undefined' || user === null || user === '')){
+			req.session.user = user;
+			res.redirect(req.body.redir || '/place/list');
 		}else{
-				//console.log('NEW');
-				/*create user*/
-				var tmp = req.body.mail.split('@');
-				var login = tmp[0];
-				var salt = Math.round(new Date().valueOf() * Math.random());
-				var token = crypto.createHash('sha1').update("yakwala@secure"+salt).digest("hex");
-				var password = user.generatePassword(5);
-				var logo = conf.fronturl+"/static/images/yakwala-logo_petit.png";
-				var templateMail = "link";
-				user.name=login;
-				user.login=login;
-				user.mail=themail;
-				user.token=token;
-				user.status=2;
-				user.hash= password;
-				user.password= password;
-				user.salt="1";
-				user.type=1;
-				//user.favplace = [{'name':'Paris, France','location':{'lat':48.851875,'lng':2.356374}},{'name':'Eghézée, Belgique','location':{'lat':50.583346,'lng':4.900031}},{'name':'Montpellier, France','location':{'lat':43.610787,'lng':3.876715}}];
-				user.favplace = [{'name':'Nice, France','location':{'lat':43.681343,'lng':7.232094},'range':100},{'name':'Marseille, France','location':{'lat':43.298198,'lng':5.370255},'range':100},{'name':'Paris, France','location':{'lat':48.851875,'lng':2.356374},'range':100}];
-				var link = conf.validationUrl+token+"/"+password;
-				
-				user.save(function (err) {
-					if (!err){
-						User.sendValidationMail(link,themail,templateMail,logo,function(err){
-						if(!err)
-							console.log(err);
-					});
-					} 
-					else console.log(err);
-				});
-				
-				req.session.message = 'Un email vous a été envoyé contenant un lien et une clé de validation de votre compte.';
-				res.redirect('user/new');
+			req.session.message = 'Wrong login or password:';
+			res.redirect('user/login?redir='+req.body.redir);
 		}
 	});
-	
-	
 };
-
-exports.forgotpassword = function(req, res){
-
-	var crypto = require('crypto')
-	var themail = req.body.mail;
-	var User = db.model('User');
-	var Point = db.model('Point');
-	var user = new User();
-	
-	/*check if the mail is valid*/
-	
-	
-	/*check if user exists*/
-	User.findOne({'mail': themail},{_ids:1,status:1,mail:1}, function(err,theuser){
-		if(theuser){
-			//console.log(theuser);
-				var salt = Math.round(new Date().valueOf() * Math.random());
-				var token = crypto.createHash('sha1').update("yakwala@secure"+salt).digest("hex");
-				var password = user.generatePassword(5);
-				var link = conf.resetpassUrl+token+"/"+password;
-				var hash = crypto.createHash('sha1').update(password+"yakwala@secure"+salt).digest("hex");
-				var logo = conf.fronturl+"/static/images/yakwala-logo_petit.png";
-				var templateMail = "link";
-				User.update({_id: theuser._id}, {hash : hash,token:token,salt:salt,password:password, status: 2}, {upsert: false}, function(err){
-					
-				
-					User.sendValidationMail(link,themail,templateMail,logo,function(err){
-						if(!err)
-							console.log(err);				
-					});
-				
-					
-				});
-				req.session.message = "Un nouveau mail a été renvoyé avec une nouvelle clé d'activation. Veuillez vérifier qu'il n'est pas dans les spams.";
-				res.redirect('user/forgotpassword');
-			}
-	});
-	
-	
-};
-
-exports.user_new = function(req, res){
-	delete req.session.message;
-	res.render('user/new');
-	
-};
-
-
-exports.user_forgotpassword = function(req, res){
-	delete req.session.message;
-	res.render('user/forgotpassword');
-	
-};
-
-
-
-
-
-
-
-/******SETTINGS********/
-
-
-
-
-
-exports.settings_password = function(req,res){
-	delete req.session.message;
-	res.render('settings/password');
-
-}
-
-exports.settings_password = function(req,res){
-	delete req.session.message;
-	res.render('settings/resetpassword');
-
-}	
-
-exports.settings_firstvisit = function(req,res){
-	delete req.session.message;
-	res.render('settings/firstvisit');
-
-}	
-
-exports.settings_profile = function(req, res){
-	delete req.session.message;
-	//var User = db.model('User');
-	
-	if(req.session.user){
-		res.render('settings/profile');
-	}else{
-		req.session.message = "Erreur : vous devez être connecté pour voir votre profil";
-		res.redirect('/user/login?redir=settings/profile');
-	}
-};
-
-exports.settings_privateprofile = function(req, res){
-	delete req.session.message;
-	if(req.session.user){
-		res.render('settings/privateprofile');
-	}else{
-		req.session.message = "Erreur : vous devez être connecté pour voir votre profil";
-		res.redirect('/user/login?redir=settings/privateprofile');
-	}
-};
-
-exports.settings_alerts = function(req, res){
-	delete req.session.message;
-	var User = db.model('User');
-	
-	if(req.session.user){
-		
-		var usersubs = res.locals.user.usersubs;
-		usersubs.token="xxx";
-		usersubs.hash="xxx";
-		usersubs.salt="xxx";
-		usersubs.token="xxx";
-		usersubs.apiData=[];
-		res.render('settings/alerts',{usersubs:usersubs,tagsubs:res.locals.user.tagsubs, feedsubs: res.locals.user.feedsubs});
-		
-	}else{
-		req.session.message = "Erreur : vous devez être connecté pour gérer vos alertes";
-		res.redirect('/user/login?redir=settings/alerts');
-	}
-	
-	
-};
-
-
-
-exports.firstvisit = function(req,res){
-	
-	formMessage = "";
-	var User = db.model('User');
-	if(req.session.user){	
-		User.findById(req.session.user,function (err, docs){
-			var crypto = require('crypto');
-			var newcryptedPass = crypto.createHash('sha1').update(req.body.password+"yakwala@secure"+docs.salt).digest("hex");	
-			var login = docs.login;
-			if(req.body.password.length >= 8){
-				if(req.body.location){
-					var location = JSON.parse(req.body.location);
-					var address = JSON.parse(req.body.address);
-					var formatted_address = JSON.parse(req.body.formatted_address);
-					
-				}
-				else{
-					var formatted_address = "Paris, France";
-					var location = {'lat':48.856614,'lng':2.3522219000000177}; // PARIS BY DEFAULT*
-					var address = {
-						'street_number' : '', 
-						'street' : '',
-						'arr' : '',
-						'city' : 'Paris',
-						'state' : 'Paris',
-						'area' : 'Île-de-France',
-						'country' : 'France',
-						'zip' : '75000'
-					};
-				}
-				
-				
-				User.update({_id: req.session.user}, {hash : newcryptedPass,location:location, address: address, formatted_address: formatted_address}, {upsert: false}, function(err){
-				
-					if (err) console.log(err);
-					else{
-						formMessage = "Votre nouveau mot de passe est enregistré";
-						//delete req.session.user;
-						User.authenticate(login,req.body.password, "", function(err, user) {
-							if(!(typeof(user) == 'undefined' || user === null || user === '') && user.status == 1){
-									req.session.user = user._id;
-									res.locals.user = user;
-									req.session.message = formMessage;
-									res.redirect('news/map');
-								}else{
-									if(user.status == 2)
-										req.session.message = 'Compte non validé.';
-									else
-										req.session.message = 'Identifiants incorrects.';
-									res.redirect('user/login?redir='+req.body.redir);
-								}
-						});
-					}
-				});
-			}
-			else
-				formMessage = "Votre mot de passe doit au moins 8 caractères";
-				
-			
-		});
-		
-		
-	}else{
-		formMessage= "Erreur : vous n'êtes pas connecté !";
-		req.session.message = formMessage;
-		res.redirect('/user/login?redir=settings/firstvisit');
-	}
-	
-	
-
-}	
-
-
-
-exports.resetpassword = function(req,res){
-	
-	formMessage = "";
-	var User = db.model('User');
-	if(req.session.user){	
-		User.findById(req.session.user,function (err, docs){
-			var crypto = require('crypto');
-			var newcryptedPass = crypto.createHash('sha1').update(req.body.password+"yakwala@secure"+docs.salt).digest("hex");	
-			var login = docs.login;
-			if(req.body.password.length >= 8){
-				
-				User.update({_id: req.session.user}, {hash : newcryptedPass}, {upsert: false}, function(err){
-				
-					if (err) console.log(err);
-					else{
-						formMessage = "Votre nouveau mot de passe est enregistré";
-						//delete req.session.user;
-						User.authenticate(login,req.body.password, "", function(err, user) {
-							if(!(typeof(user) == 'undefined' || user === null || user === '') && user.status == 1){
-									req.session.user = user._id;
-									res.locals.user = user;
-									req.session.message = formMessage;
-									res.redirect('news/map');
-								}else{
-									if(user.status == 2)
-										req.session.message = 'Compte non validé.';
-									else
-										req.session.message = 'Identifiants incorrects.';
-									res.redirect('user/login?redir='+req.body.redir);
-								}
-						});
-					}
-				});
-			}
-			else
-				formMessage = "Votre mot de passe doit au moins 8 caractères";
-				
-			
-		});
-		
-		
-	}else{
-		formMessage= "Erreur : vous n'êtes pas connecté !";
-		req.session.message = formMessage;
-		res.redirect('/user/login?redir=settings/firstvisit');
-	}
-	
-	
-
-}	
-
-
-exports.password = function(req,res){
-	formMessage = "";
-	var User = db.model('User');
-	if(req.session.user){	
-		User.findById(req.session.user,function (err, docs){
-			var crypto = require('crypto');
-			var cryptedPass = crypto.createHash('sha1').update(req.body.oldpass+"yakwala@secure"+docs.salt).digest("hex");
-			var newcryptedPass = crypto.createHash('sha1').update(req.body.newpass1+"yakwala@secure"+docs.salt).digest("hex");	
-			var login = docs.login;
-			if( cryptedPass == docs.hash){
-					if(req.body.newpass1 != '' && req.body.newpass1 == req.body.newpass2 ){
-						if(req.body.newpass1.length >= 8){
-							User.update({_id: req.session.user}, {hash : newcryptedPass}, {upsert: false}, function(err){
-								if (err) console.log(err);
-								else{
-									formMessage = "Votre nouveau mot de passe est enregistré";
-									//delete req.session.user;
-									User.authenticate(login,req.body.newpass1, function(err, user) {
-										if(!(typeof(user) == 'undefined' || user === null || user === '') && user.status == 1 ){
-												req.session.user = user._id;
-												res.locals.user = user;
-												req.session.message = formMessage;
-												res.redirect('settings/password');
-										}else{
-											if(user.status == 2)
-												req.session.message = 'Compte non validé.';
-											else
-												req.session.message = 'Identifiants incorrects.';
-
-											res.redirect('user/login?redir=settings/password');
-										}
-									});
-								}
-							});
-						}
-						else{
-							formMessage = "Votre mot de passe doit au moins 8 caractères";
-							req.session.message = formMessage;
-							res.render('settings/password');
-						}
-				}else{
-					formMessage = "Attention, vos 2 nouveaux mots de passe ne sont pas identiques.";
-					req.session.message = formMessage;
-					res.render('settings/password');
-				}
-			}else{
-				formMessage = "Votre ancien mot de passe est incorrect";
-				req.session.message = formMessage;
-				res.render('settings/password');
-			}	
-		});
-	}else{
-		formMessage= "Erreur : vous n'êtes pas connecté !";
-		req.session.message = formMessage;
-		res.redirect('/user/login?redir=settings/password');
-	}
-	
-	
-}
-exports.alerts = function(req, res){
-
-	var formMessage = new Array();
-	//delete req.session.message;
-	var User = db.model('User');
-	var user = new User();
-	var usersubsArray = Array();
-	var tagsubsArray = [];
-	var feedsubsArray = [];
-	// user subscribtions
-	
-	
-	//console.log(req.body.usersubsInput.length);
-	if(req.body.usersubsInput.length > 0){
-		var usersubs = JSON.parse(req.body.usersubsInput);
-		for(i=0;i<usersubs.length;i++){
-			usersubsArray.push(usersubs[i]);
-		
-		}
-	}
-	// tag subscribtions
-	if(req.body.tagsubsInput.length > 0){
-		var tagsubs = eval('('+req.body.tagsubsInput+')');
-		for(i=0;i<tagsubs.length;i++){
-			tagsubsArray.push(tagsubs[i]);
-		}
-
-		
-	}
-
-	if(req.body.feedsubsInput.length > 0){
-		var feedsubs = eval('('+req.body.feedsubsInput+')');
-		for(i=0;i<feedsubs.length;i++){
-			feedsubsArray.push(feedsubs[i]);
-		}
-
-		
-	}
-				
-	if(req.session.user){
-		User.update({_id: req.session.user}, {$set:{usersubs : usersubsArray}, tagsubs : tagsubsArray, feedsubs: feedsubsArray}, {upsert: true}, function(err){
-			if (err) console.log(err);
-			else{
-				//console.log('Vos alertes sont enregistrées ');
-				formMessage.push("Vos alertes sont enregistrées");
-				res.json("1");
-			}
-				
-		});
-	}else
-		formMessage.push("Erreur : vous n'êtes pas connecté !");
-	
-	req.session.message = formMessage;
-	//res.redirect('settings/alerts');
-}
-
-exports.profile = function(req, res){
-		
-	var formMessage = new Array();
-	delete req.session.message;
-	var User = db.model('User');
-	var user = new User();
-				
-	if(req.session.user){
-		var avatar = req.body.avatar;
-		var drawTool = require('../mylib/drawlib.js');
-		var size = mainConf.imgSizeAvatar;
-
-		for(i=0;i<size.length;i++){
-				infoThumb = drawTool.StoreImg(req.files.avatar,{w:size[i].width,h:size[i].height},conf);
-			}
-		
-		if(infoThumb.msg)
-			formMessage.push(infoThumb.msg);
-		
-		
-		
-			var cond = {
-				name : req.body.username,
-				web:req.body.web,
-//				thumb:infoThumb.name,
-				bio:req.body.bio,
-				tagsubs:req.body.tag.split(','),
-//				location :{lng:parseFloat(location.lng),lat:parseFloat(location.lat)},
-//				address :JSON.parse(req.body.address),								
-				};
-		
-		if(infoThumb.name){
-			cond.thumb = infoThumb.name;
-		}
-		if(req.body.location){
-			var location = JSON.parse(req.body.location);
-			cond.location = location;
-		}
-		if(req.body.address){
-			cond.address = JSON.parse(req.body.address);
-		}
-		if(req.body.formatted_address){
-			cond.formatted_address = req.body.formatted_address;
-		}
-
-		if(req.body.defaultCityZoom){
-			cond.addressZoom = req.body.defaultCityZoom;
-		}
-
-		if(req.body.defaultCityZoomText){
-			cond.addressZoomText = req.body.defaultCityZoomText;
-		}
-
-
-			
-		//req.session.user.location = location;
-		
-		User.update({_id: req.session.user}, 
-		cond
-		, {upsert: true}, function(err){
-			if (err)
-				console.log(err);
-		});
-		formMessage.push("Votre profil est enregistré");
-	}else
-		formMessage.push("Erreur : vous n'êtes pas connecté !");
-	
-	req.session.message = formMessage;
-	
-	res.redirect('settings/profile');
-}
-
-exports.privateprofile = function(req, res){
-		
-	var formMessage = new Array();
-	delete req.session.message;
-	var User = db.model('User');
-	var user = new User();
-				
-	if(req.session.user){
-		
-		User.update({_id: req.session.user}, 
-		{mail:req.body.mail}
-		, {upsert: true}, function(err){
-			if (err)
-				console.log(err);
-		});
-		formMessage.push("Votre profil privé est enregistré");
-	}else
-		formMessage.push("Erreur : vous n'êtes pas connecté !");
-	
-	req.session.message = formMessage;
-	
-	res.redirect('settings/privateprofile');
-}
-
-
-exports.addfavplace = function (req, res) {
-	var User = db.model('User');
-	var Point = db.model('Point');
-	
-	if(req.session.user){
-		var point = new Point(req.body.place);	
-		User.update({_id:req.session.user},{$push:{"favplace":point}}, function(err,docs){			
-			res.json(point._id);
-		});
-	}else{
-		req.session.message = "Erreur : vous devez être connecté pour sauver vos favoris";
-		res.redirect('/user/login');
-	}
-	
-	
-};
-
-exports.delfavplace = function (req, res) {
-	var User = db.model('User');
-	
-	if(req.session.user){
-			var pointId = req.body.pointId;
-			User.update({_id:req.session.user},{$pull:{favplace:{_id:pointId}}}, function(err){
-				console.log(err);
-				res.json('del');
-				
-			});
-			
-			
-		
-	}else{
-		req.session.message = "Erreur : vous devez être connecté pour sauver vos favoris";
-		res.redirect('/user/login');x
-	}
-	
-	
-};
-
-
-exports.updatefavplacerange = function(req, res){
-
-	if(req.session.user){
-			var pointId = req.body.pointId;
-			res.json(pointId);
-	}else{
-		req.session.message = "Erreur : vous devez être connecté pour sauver vos favoris";
-		res.redirect('/user/login');
-	}
-}
-
-/**
-DOCS
-*/
-exports.docs_api = function(req, res){
-	res.render('docs/api');
-}
-exports.docs_faq = function(req, res){
-	res.render('docs/faq');
-}
-exports.docs_cgu = function(req, res){
-	res.render('docs/cgu');
-}
-exports.docs_opendata = function(req, res){
-	res.render('docs/opendata');
-}
-exports.docs_log = function(req, res){
-	res.render('docs/log');
-}
-/* Like System */
-
-exports.setLikes = function(req, res){
-	//console.log(req.session.user);
-	var Info = db.model('Info');
-	
-	if(req.session.user){
-			var infoId = req.body.infoId;
-			var islike = req.body.islike;
-			if (islike == 'like') { 
-				Info.update({_id:infoId},{$inc:{likes : 1}, $push:{yaklikeUsersIds: req.session.user}, new:true}, function(err, result){
-
-					res.json("updated");
-				})
-			}
-			else
-			{
-				Info.update({_id:infoId},{$inc:{unlikes : 1}, $push:{yakunlikeUsersIds: req.session.user}, new:true}, function(err, result){
-					res.json("updated")
-				})	
-			}
-
-			
-			
-		
-	}else{
-		req.session.message = "Erreur : vous devez être connecté pour sauver vos favoris";
-		res.redirect('/user/login');
-	}
-	
-};
-
-

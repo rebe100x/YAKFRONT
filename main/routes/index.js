@@ -341,7 +341,6 @@ exports.user_resetpassword = function(req, res){
 	User.authenticateByToken(req.params.token,req.params.password, function(err, model) {
 	if(!(typeof(model) == 'undefined' || model === null || model === '')){
 			req.session.user = model._id;
-			User.update({_id: model._id}, {status:1}, {upsert: false}, function(err){if (err) console.log(err);});						
 			res.render('settings/resetpassword',{user:model});
 		}else{
 			req.session.message = "Votre clé d'activation est incorrecte.";
@@ -363,13 +362,11 @@ exports.session = function(req, res){
 
 	var User = db.model('User');
 	if (req.body.rememberme == "true") {
-		 res.cookie('remember', 'true', { expires: new Date(Date.now() + 90000000000), httpOnly: false, path: '/'});
 		 res.cookie('loginid', req.body.login, { expires: new Date(Date.now() + 90000000000) , httpOnly: false, path: '/'});
 	}
 	else
 	{
-		res.cookie('remember', 'false', { expires: new Date(Date.now() + 90000000000) , httpOnly: false, path: '/'});
-		res.cookie('loginid', null, { expires: new Date(Date.now() + 90000000000) , httpOnly: false, path: '/'});
+		res.cookie('loginid', '', { expires: new Date(Date.now() + 90000000000) , httpOnly: false, path: '/'});
 	}
 	User.authenticate(req.body.login,req.body.password, req.body.token, function(err, user) {
 		if(!(typeof(user) == 'undefined' || user === null || user === '')){
@@ -748,7 +745,7 @@ exports.password = function(req,res){
 								else{
 									formMessage = "Votre nouveau mot de passe est enregistré";
 									//delete req.session.user;
-									User.authenticate(login,req.body.newpass1, function(err, user) {
+									User.authenticate(login,req.body.newpass1,  "",function(err, user) {
 										if(!(typeof(user) == 'undefined' || user === null || user === '') && user.status == 1 ){
 												req.session.user = user._id;
 												res.locals.user = user;

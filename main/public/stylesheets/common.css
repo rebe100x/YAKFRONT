@@ -1,0 +1,25 @@
+/* GENERAL
+-------------------------------------------------- */
+body {font: 13px "Lucida Grande", Helvetica, Arial, sans-serif;}
+a {color: #c3c3c3;}
+a:hover {color: #c3c3c3;}
+img{border:0px;}
+h4, h3, h2 , h1{margin-bottom:5px; color: #d51820; margin-top: 30px;}
+.icon-pointer{cursor:pointer;margin:2px;}
+.icon-pointer:hover{opacity:0.7;}
+.navbar-fixed-top {position:relative;z-index:1;}
+.navbar-inner { background-color: white;}
+input[type="search"].searching{background-image:url('../images/loader.gif');background-repeat:no-repeat;background-position: right; }
+.searchInput{background-repeat:no-repeat;background-position: 0px 5px;padding-left:0px;background-image: none;}
+.pillItem{display: inline-block;float: left;padding: 1px 4px 2px;margin: 2px;font-size: 11.844px;font-weight: bold;line-height: 15px;color: white;vertical-align: baseline;cursor: pointer;background-color: #d8242b;-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;}
+.timeago {color: #5D5D5D;cursor:default;font-weight:normal;margin-left:3px;}
+.columnTitle{font-weight: bold;margin:4px 5px 0px 0px;}
+.subheader { color: #aaaaaa;}
+abbr[title] {border-bottom: 0px ;cursor: default;}
+.modal.fade.in {top: 55%;z-index:2001;}
+#yakLogo{height:58px;}
+
+/* LOGIN
+----------------------------------------------------*/
+.rememberme { color:#c3c3c3; font-size: 12px;  }
+.rememberme span { margin-left: 6px; margin-top: 3px;}

@@ -62,14 +62,15 @@ mixin loginForm()
 					$("#rememberme").val("false");
 					killCookie('loginid', '/');
 					killCookie('token', '/');
-					killCookie('remember', '/');
+					
 				}
 				
 			});
-			var remember = $.cookie('remember');
+			
 
-			if ( remember == 'true' ) {
-				var login = $.cookie('loginid');
+			var login = $.cookie('loginid');
+			
+			if ( login != '' && login != null ) {
 				var password = "********";
 				var token = $.cookie('token');
 				// autofill the fields
@@ -77,7 +78,7 @@ mixin loginForm()
 				$('#password').attr("value", password);
 				$('#remember').attr('checked', "checked");
 				$('#rememberme').val("true");
-				$('#token').val(token);
+				$('#token').val(token);				
 			}
 		});
 		

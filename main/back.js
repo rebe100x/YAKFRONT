@@ -67,17 +67,11 @@ app.configure('production', function(){
 });
 
 var db = routes.db(conf);	
-	
+
 // Routes
 
 
 app.get('/', back.requiresLogin, back.back_default);
-
-app.get('/news/map', back.news_map);
-app.get('/news/map_test', back.news_map_test);
-app.get('/news/feed', back.news_feed);
-app.get('/news/post', back.news_post);
-//app.get('/news/post', requiresLogin, back.news_post);
 
 app.get('/user/login', back.user_login);
 app.get('/user/logout', back.user_logout);
