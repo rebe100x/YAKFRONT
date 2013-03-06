@@ -92,32 +92,32 @@ app.post('/alerts', back.requiresLogin, back.alerts);
 app.post('/profile', back.requiresLogin, back.profile);
 // JSON API
 
-app.get('/api/infos', api.infos);
-app.get('/api/validinfos', api.countUnvalidatedInfos);
-app.get('/api/geoinfos/:x1/:y1/:x2/:y2/:heat/:type', api.geoinfos);
-app.get('/api/zones/:x/:y', api.zones);
-app.get('/api/zones/:id', api.findZoneById);
-app.post('/api/users', api.users);
-app.get('/api/users', api.users);
-app.get('/api/cats', api.cats);
-app.get('/api/cats/:id', api.findCatById);
-app.get('/api/places', api.places);
-app.get('/api/places/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status', api.gridPlaces);
-app.get('/api/places/:id', api.findPlaceById);
-app.get('/api/usersearch/:string', api.usersearch);
-app.get('/api/findCatById', api.findCatById);
-app.get('/api/user/:id', api.findUserById);
+app.get('/api/infos', back.infos);
+app.get('/api/validinfos', back.countUnvalidatedInfos);
+app.get('/api/geoinfos/:x1/:y1/:x2/:y2/:heat/:type', back.geoinfos);
+app.get('/api/zones/:x/:y', back.zones);
+app.get('/api/zones/:id', back.findZoneById);
+app.post('/api/users', back.users);
+app.get('/api/users', back.users);
 
-app.get('/api/validusers', api.countUnvalidatedUsers);
-app.get('/api/validcats', api.countUnvalidatedCats);
-app.get('/api/validplaces', api.countUnvalidatedPlaces);
+app.get('/api/cats/:id', back.cats);
+app.get('/api/places', back.places);
+app.get('/api/places/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status', back.gridPlaces);
+app.get('/api/places/:id', back.findPlaceById);
+app.get('/api/usersearch/:string', back.usersearch);
+app.get('/api/findCatById', back.findCatById);
+app.get('/api/user/:id', back.findUserById);
 
-app.get('/api/places/validate/:ids', api.validatePlaces);
-app.get('/api/places/delete/:ids', api.deletePlaces);
-app.get('/api/places/wait/:ids', api.waitPlaces);
+app.get('/api/validusers', back.countUnvalidatedUsers);
+app.get('/api/validcats', back.countUnvalidatedCats);
+app.get('/api/validplaces', back.countUnvalidatedPlaces);
 
-app.post('/api/favplace', api.addfavplace);
-app.post('/api/delfavplace', api.delfavplace);
+app.get('/api/places/validate/:ids', back.validatePlaces);
+app.get('/api/places/delete/:ids', back.deletePlaces);
+app.get('/api/places/wait/:ids', back.waitPlaces);
+
+app.post('/api/favplace', back.addfavplace);
+app.post('/api/delfavplace', back.delfavplace);
 
 // redirect all others to the index (HTML5 history)
 app.get('*', back.index);

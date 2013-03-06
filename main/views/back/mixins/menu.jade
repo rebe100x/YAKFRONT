@@ -10,22 +10,8 @@ mixin menu(active)
 						a.brand(href="") YAKWALA
 
 						div.btn-group.pull-right
-							- if (locals.user)
-								a.btn.dropdown-toggle(href="#",data-toggle="dropdown")
-									i.icon-user
-									span= ' '+locals.user.login+' ';
-									span.caret
-								ul.dropdown-menu
-									li
-										a(href="/settings/profile") Mon profil
-									li
-										a(href="/settings/alerts") Mes alertes
-									li.divider
-									li
-										a(href="/user/logout") Quitter
-							- else
-								span
-									a.btn(href="/user/login") Login
+							a.customprofile(href="/user/logout",title=locals.user.login)
+								img.avatar(id="userThumb", src=locals.user.thumbsmall)
 						- if (active == 'dashboard' || active == 'post')
 							div.btn-group.pull-right
 								&nbsp;&nbsp;&nbsp;
@@ -87,7 +73,9 @@ mixin menu(active)
 									li
 										a(href="") Utilisateurs
 											span1#usernumber
-
+		div#alertInfo.alert.alert-info
+			button.close(type="button",data-dismiss="alert") x
+			span.alertText								
 	script
 
 		$(document).ready(function() {

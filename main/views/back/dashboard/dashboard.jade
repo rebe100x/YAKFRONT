@@ -13,17 +13,4 @@ block content
                 div#dashBoardContainer
                     p hello
 
-    script
-        /*READY FUNCTIONS*/
-        $(document).ready(function() {
-
-            setTimeout(function() {
-                $("#alert").fadeOut();
-            }, 3000);
-
-            /* Detect browser */
-            $.browser.chrome = /chrom(e|ium)/.test(navigator.userAgent.toLowerCase());
-            if(!$.browser.chrome){
-                alert("Cette interface est omptimisée pour Chrome.")
-            }
-        });/*END READY*/
+    

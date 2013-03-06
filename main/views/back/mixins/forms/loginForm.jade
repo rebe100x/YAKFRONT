@@ -1,4 +1,7 @@
 mixin loginForm()
+	div#alertInfo.alert.alert-info
+			button.close(type="button",data-dismiss="alert") x
+			span.alertText
 	- if (message)
 		div.alert.fade.in
 			button.close(type="button",data-dismiss="alert") x

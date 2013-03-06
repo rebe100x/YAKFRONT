@@ -136,6 +136,9 @@ Info.statics.format = function (theinfo) {
   return formattedInfo;
 }
 
+Info.statics.countUnvalidated = function (callback) {
+	return this.count( {'status': { $in: [2, 10]}}, callback );
+}
 
 Info.statics.findByTitle = function (title, callback) {
   return this.find({ title: title }, callback);
@@ -260,8 +263,8 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,from,now,type,str,thecount,thesk
 	var DPUB = new Date();
 	var DEND = new Date();
 	var offset = 1000;
-	DPUB.setTime(DPUB.getTime()+from*1000-offset);
-	DEND.setTime(DEND.getTime()+from*1000);
+	DPUB.setTime(DPUB.getTime()+from*24*60*60*1000-offset);
+	DEND.setTime(DEND.getTime()+from*24*60*60*1000);
 
 
 	if(y2 == 'null'){		
@@ -596,6 +599,10 @@ User.statics.formatLight2 = function (theuser) {
   return formattedUser;
 }
 
+User.statics.countUnvalidated = function (callback) {
+	return this.count( {'status': { $in: [2, 10]}}, callback );
+}
+
 User.statics.findByLogin = function (login,callback) {
   return this.find({login:login,status:1}, callback);
 }
@@ -722,6 +729,10 @@ var Yakcat = new Schema({
   
 }, { collection: 'yakcat' });
 
+Yakcat.statics.countUnvalidated = function (callback) {
+	return this.count( {'status': { $in: [2, 10]}}, callback );
+}
+
 Yakcat.statics.findAll = function (callback) {
   return this.find({},{},{sort:{title:1}}, callback);
 }
@@ -818,165 +829,6 @@ var Comment = new Schema({
 mongoose.model('Comment', Comment);
 
 /******************************PLACE*/
-var Place = new Schema({
-	title	: { type: String, required: true, index:true}
-,	content	: { type: String }
-,	thumb	: { type: String }
-,	origin	: { type: String }
-,	access	: { type:Number }
-,	licence	: { type: String }
-,	outGoingLink	: { type: String }
-,	creationDate	: {type: Date, required: true, default: Date.now}		
-,	lastModifDate	: {type: Date, required: true, default: Date.now}		
-,	location	: { type : { lat: Number, lng: Number }, index : '2d',required: true}
-,	formatted_address : { type: String }
-,	address		: { type : { 
-								street_number: String,
-								street: String,
-								arr: String,
-								city: String,
-								state: String,
-								area: String,
-								country: String,
-								zip: String
-							}
-					}
-,	heat : {type:Number}
-,	yakCat	: {type: [Schema.Types.ObjectId],index:1}
-,	yakTag	: {type: [String],index:1}
-,	freeTag	: {type: [String],index:1}		
-,	contact : {type : {
-						tel: String,
-						mobile:String,
-						mail:String,
-						transportation:String,
-						web:String,
-						opening:String,
-						closing :String,
-						specialopening: String
-				}
-			}
-,	status	: {type: Number}	
-,	user	: {type: Schema.ObjectId}		
-,	zone	: {type: Schema.ObjectId}
-},{ collection: 'place' });
-
-Place.statics.format = function (theplace) {
-	if(theplace.thumb != undefined)
-		if(theplace.user != 0 && theplace.user != undefined  )
-			var thethumb = 	conf.fronturl+'/pictures/120_90/'+theplace.thumb;
-		else
-			var thethumb = 	conf.batchurl+theplace.thumb;
-	else
-		var thethumb = 	'';
-
-	var formattedPlace = {
-		_id:theplace._id,
-		title: theplace.title,
-		content: theplace.content, 
-		thumb: theplace.thumb,
-		outGoingLink: theplace.outGoingLink,
-		yakCat: theplace.yakCat,
-		creationDate: theplace.creationDate,
-		lastModifDate: theplace.lastModifDate,
-		location: theplace.location,
-		address: theplace.address,
-		contact: theplace.contact,
-		formatted_address: theplace.formatted_address 
-	};
-  return formattedPlace;
-}  
-
-Place.statics.formatLight = function (theplace) {
-	var formattedPlace = {
-		_id:theplace._id,
-		title: theplace.title,
-		formatted_address: theplace.formatted_address 
-	};
-  return formattedPlace;
-}  
-  
-Place.statics.findAll = function (callback) {
-  return this.find({},{},{sort:{title:1}}, callback);
-}
-
-Place.statics.searchOne = function (str,exact,callback) {
-  if(!exact)
-	searchStr = new RegExp(str,'i');
-  else
-	searchStr = new RegExp('^'+str+'$','i');
-  
-  var cond = {
-	"status":1,
-	$or:[ {'title': {$regex:searchStr}}, {'content': {$regex:searchStr}} , {"freeTag": {$regex:searchStr}} , {"yakTag": {$regex:searchStr}}],	
-};
-  return this.find(cond,{},{limit:1}, callback);
-}
-
-/* Search for places :
-* call /api/search/string for basic search and refine with following params
-* params : 
-	- count : limit
-	- sensitive : 1 for case sensitive search 	
-	- location : {lat:float, lng:float}
-	- maxd : maxDistance to location // default : 1
-* string : the string to search
-*
-*/
-Place.statics.search = function(string,count,from,sensitive,lat,lng,maxd,callback){
-	var limit = (typeof(count) != 'undefined' && count > 0) ? count : 100;		
-	var case_sensitive = (typeof(sensitive) != 'undefined' && sensitive > 0) ? 'g' : 'gi';	
-	var maxDistance = (typeof(maxd) != 'undefined' && maxd > 0) ? maxd : 1;	
-	var skip = (typeof(from) != 'undefined' && from > 0) ? from : 0;		
-	var input = new RegExp(string,case_sensitive);
-	
-	if(typeof(lat) != 'undefined' && lat > 0 && typeof(lng) != 'undefined' && lng > 0 && typeof(maxDistance) != 'undefined' && maxDistance > 0)
-		var cond = {
-			"title": {$regex:input},	
-			"location" : {  "$near" : [parseFloat(lat),parseFloat(lng)], $maxDistance : parseFloat(maxDistance) },
-			"status":1,
-			"access":1
-		};
-	else
-		var cond = {
-			"title": {$regex:input},	
-			"status":1,
-			//"access":1
-		};
-	return this.find(
-	cond,
-	{
-		_id: 1, 
-		title: 1,
-		content: 1, 
-		thumb: 1,
-		outGoingLink: 1,
-		yakCat: 1,
-		creationDate: 1,
-		lastModifDate: 1,
-		location: 1,
-		address: 1 
-	},
-	{	
-		skip:skip, // Starting Row
-		limit:limit, // Ending Row
-		
-	},callback);
-}
-
-Place.statics.findById = function (id,callback) {
-  return this.findOne({'_id': id}, callback);
-}
-Place.statics.findByIds = function (ids,callback) {
-  return this.find({'_id': { $in: ids}}, callback);
-}
-Place.statics.findByName = function (title,callback) {
-  return this.findOne({'title': title}, callback);
-}
-Place.statics.findByNameNear = function (title,location,maxd,callback) {
-  return this.findOne({'title': title,'location' : {  "$near" : location, $maxDistance : maxd }}, callback);
-}
-mongoose.model('Place', Place);
 
 
 
@@ -997,3 +849,6 @@ Client.statics.findById = function(key,callback){
 
 
 mongoose.model('Client', Client);
+
+
+require('./place.js');

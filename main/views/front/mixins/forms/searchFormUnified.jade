@@ -67,7 +67,6 @@ mixin searchFormUnified(page)
 		var curPos = ($.isEmptyObject($.cookie("geoloc")))?{'x':user.location.lat,'y':user.location.lng,'z':mainConf.rangeDefault,'name':user.formatted_address}:JSON.parse($.cookie("geoloc"));
 
 		var dateFrom = ($.isEmptyObject($.cookie("dateFrom")))?mainConf.dateFromDefault:$.cookie("dateFrom");
-		console.log('dateFrom:'+dateFrom);
 		var searchString = "!{str}".toString();
 
 		if(searchString=='')
@@ -227,6 +226,7 @@ mixin searchFormUnified(page)
 					setTimeSliderText(dateFrom);
 				},
 				change:function(event, ui){
+					var x = ui.value;
 					dateFrom = getDaysFrom(x);
 					getAndPrintInfo();
 					$.cookie("dateFrom", dateFrom,{ expires: 10000, path : '/' });

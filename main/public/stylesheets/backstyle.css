@@ -1,10 +1,14 @@
 /* GENERAL
 -------------------------------------------------- */
+#alertInfo{display:none;}
 .icon-pointer{cursor:pointer;margin:2px;}
 .icon-pointer:hover{opacity:0.7;}
 
 .searching{background-image:url('images/loader.gif');padding-left:20px;}
 .searchInput{background-repeat:no-repeat;background-position: 0px 5px;padding-left:0px;background-image: none;}
+
+/*HEADER*/
+.customprofile img.avatar{height:24px;}
 
 /* Place */
 #placeForm .control-group { margin: 0;}
@@ -61,7 +65,7 @@
 
 
 	/*MAP TAB CONTENT*/
-#newsfeedContainer{height:auto;background-color:#FFF;opacity:1;}
+#newsfeedContainer{height:auto;background-color:#FFF;opacity:1;position:relative;margin-top:5px;}
 .tabContent{
 width:100%;
 display: none;

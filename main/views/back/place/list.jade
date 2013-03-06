@@ -2,8 +2,7 @@ extends ../layout
 block content
 	include ../mixins/menu.jade
 	include ../mixins/locationChooser.jade
-	include ../mixins/forms/placeForm.jade
-	include ../mixins/forms/loginForm.jade
+	include ../mixins/forms/placeForm.jade	
 	include ../mixins/datagrid.jade
 
 	mixin menu('place')
@@ -26,7 +25,6 @@ block content
 
 		/*INIT*/
 		var conf = !{conf};
-		//var user = !{JSON.stringify(user)};
 		var logged = 0;
 
 		var curPos = {'x':0,'y':0,'z':0};
@@ -37,8 +35,7 @@ block content
 		var infoArray = [];
 		var markerLocation = null;
 
-		var markerClustererOptions = {gridSize:30,maxZoom: 17};
-		var markerCluster = null;
+		
 		var heat = 3;
 		//var type = [1];
 		var type = [!{type}];
@@ -52,18 +49,7 @@ block content
 		/*READY FUNCTIONS*/
 		$(document).ready(function() {
 
-			setTimeout(function() {
-				$("#alert").fadeOut();
-			}, 3000);
-
-			/* Detect browser */
-			$.browser.chrome = /chrom(e|ium)/.test(navigator.userAgent.toLowerCase());
-			if(!$.browser.chrome){
-				$("#alert-nav #msg").html("Cette interface est omptimisée pour Chrome.");
-			}
-			else {
-				$("#alert-nav").hide();
-			}
+			
 
 
 
@@ -151,7 +137,7 @@ block content
 		});/*END READY*/
 
 		function drawNewsFeed(){
-			var newsfeedContainerHeight = window.innerHeight-$('#newsfeedContainer').offset().top-50+'px';
+			var newsfeedContainerHeight = window.innerHeight-$('#newsfeedContainer').offset().top-10+'px';
 			$('#newsfeedContainer').css('height',newsfeedContainerHeight);
 		}
 
@@ -169,9 +155,7 @@ block content
 				mapTypeId: google.maps.MapTypeId.ROADMAP
 			});
 
-			markerClustererOptions = {gridSize:30,maxZoom: 17};
-			markerCluster = new MarkerClusterer(map, markers,markerClustererOptions);
-
+			
 			markerHL = new google.maps.Marker({position: center,map:map,visible:false});
 
 			google.maps.event.addListenerOnce(map, 'idle', function(){

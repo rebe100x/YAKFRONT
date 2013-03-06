@@ -23,3 +23,7 @@ abbr[title] {border-bottom: 0px ;cursor: default;}
 ----------------------------------------------------*/
 .rememberme { color:#c3c3c3; font-size: 12px;  }
 .rememberme span { margin-left: 6px; margin-top: 3px;}
+
+/* MAP
+----------------------------------------------------*/
+#mymap {position: absolute;top: 0px;right: 0px;left: 0;height: 100%;z-index:0;}

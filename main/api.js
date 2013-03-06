@@ -90,7 +90,9 @@ app.get('/api/geoalerts/:x1/:y1/:x2/:y2/:ago/:now/:str/:limit', routes.requiresL
 app.get('/api/geoalerts/:x1/:y1/:x2/:y2/:ago/:now/:str/:limit/:skip', routes.requiresLogin, api.geoalerts);
 
 app.get('/api/zones/:x/:y', api.zones);
+app.get('/api/zones/:id', api.findZoneById);
 app.get('/api/cats', api.cats);
+app.get('/api/findCatById', api.findCatById);
 app.get('/api/catsandtags/:x/:y/:z/:d/:print', api.catsandtags);
 app.get('/api/places', api.places);
 app.get('/api/searchplaces/:str', api.searchplaces);

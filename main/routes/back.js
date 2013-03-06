@@ -74,8 +74,47 @@ exports.requiresLogin = function(req,res,next){
 
 
 
+exports.countUnvalidatedInfos = function (req, res) {
+	var Info = db.model('Info');
+	Info.countUnvalidated(function (err, docs){
+	  res.json({
+		info: docs
+	  });
+	});
+};
 
-/******* PLACE ******/
+exports.countUnvalidatedUsers = function (req, res) {
+	var User = db.model('User');
+	User.countUnvalidated(function (err, docs){
+	  res.json({
+		info: docs
+	  });
+	});
+};
+
+exports.countUnvalidatedPlaces = function (req, res) {
+	var Place = db.model('Place');
+	Place.countUnvalidated(function (err, docs){
+	  res.json({
+		info: docs
+	  });
+	});
+};
+exports.countUnvalidatedCats = function (req, res) {
+	var Yakcat = db.model('Yakcat');
+	Yakcat.countUnvalidated(function (err, docs){
+	  res.json({
+		info: docs
+	  });
+	});
+};
+
+
+
+
+/******* 
+#PLACE 
+******/
 exports.place_add = function(req, res){
 	res.render('place/add');
 };
@@ -238,10 +277,108 @@ exports.place = function(req, res){
 	}
 };
 
+exports.findPlaceById = function (req, res) {
+	var Place = db.model('Place');
+   	Place.findById(req.params.id, function (err, docs){
+  	  res.json({
+  		place: docs
+	  });
+	});
+};
+
+exports.validatePlaces = function (req, res) {
+	var Place = db.model('Place');
+	var ids = [];
+	ids = req.params.ids.split(',');
+
+	Place.validatePlaces(ids, function (err, numAffected){
+  	  res.json({
+  		result: numAffected
+	  });
+	});
+};
+
+exports.deletePlaces = function (req, res) {
+	var Place = db.model('Place');
+	var ids = [];
+	ids = req.params.ids.split(',');
+
+	Place.deletePlaces(ids, function (err, numAffected){
+  	  res.json({
+  		result: numAffected
+	  });
+	});
+};
+
+exports.waitPlaces = function (req, res) {
+	var Place = db.model('Place');
+	var ids = [];
+	ids = req.params.ids.split(',');
+
+	Place.waitPlaces(ids, function (err, numAffected){
+  	  res.json({
+  		result: numAffected
+	  });
+	});
+};
+
+exports.gridPlaces = function (req, res) {
+	var Place = db.model('Place');
+    var User = db.model('User');
+
+    var yakcats = [];
+    if (req.query.yakcats) {
+        yakcats = req.query.yakcats.split(',');
+    }
+
+    var users = [];
+    if (req.query.users) {
+        users = req.query.users.split(',');
+    }
+
+    var sortProperties = [];
+    if (req.params.sortBy) {
+        sortProperties = req.params.sortBy.split(',');
+    }
+
+    var sortDirections = [];
+    if (req.params.sortDirection) {
+        sortDirections = req.params.sortDirection.split(',');
+    }
+
+	Place.findGridPlaces(req.params.pageIndex,req.params.pageSize,
+		req.params.searchTerm,sortProperties,sortDirections,
+        req.params.status, yakcats, users, function (err, place){
+
+		var data = {};
+
+        data['place'] = place;
+		data['pageIndex'] = req.params.pageIndex;
+		data['pageSize'] = req.params.pageSize;
+
+		Place.countSearch(req.params.searchTerm, req.params.status, yakcats, users, function (err, count){
+			data['count'] = count;
+			res.json(data);
+		});
+	});
+};
 
 
+/********* 
+#CATS
+*********/
+exports.cats = function (req, res) {
+	var Yakcat = db.model('Yakcat');
+	Yakcat.findAll(function (err, docs){
+	  res.json({
+		cats: docs
+	  });
+	});
+};
 
-/******* USER ******/
+/******* 
+#USER 
+******/
 exports.user_login = function(req, res){
 	delete req.session.message;
 	res.render('user/login',{locals:{redir:req.query.redir}});
@@ -259,8 +396,8 @@ exports.session = function(req, res){
 		res.cookie('loginid', '', { expires: new Date(Date.now() + 90000000000) , httpOnly: false, path: '/'});
 	}
 	User.authenticate(req.body.login,req.body.password, req.body.token, function(err, user) {
-		if(!(typeof(user) == 'undefined' || user === null || user === '')){
-			if(user.status == 1){
+		if( (!(typeof(user) == 'undefined' || user === null || user === '') && user.type > 1)){
+			if(user.status == 1){ 
 				if (req.body.rememberme == "true") {res.cookie('token', user.token, { expires: new Date(Date.now() + 90000000000) , httpOnly: false, path: '/'});}
 				else {res.cookie('token', null);}
 				

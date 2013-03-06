@@ -181,6 +181,15 @@ exports.zones = function (req, res) {
 	}); 
 };
 
+exports.findZoneById = function (req, res) {
+    var Zone = db.model('Zone');
+    Zone.findById(req.params.id, function (err, docs){
+      res.json({
+        zone: docs
+      });
+    });
+};
+
 exports.cats = function (req, res) {
 	var Yakcat = db.model('Yakcat');
 	Yakcat.findAll(function (err, docs){
@@ -188,6 +197,15 @@ exports.cats = function (req, res) {
 	  	res.json({meta:{code:200},data:{cats:docs}});
 	  else
 	  	res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+	});
+};
+
+exports.findCatById = function (req, res) {
+	var Yakcat = db.model('Yakcat');
+   	Yakcat.findById(req.params.id, function (err, docs){
+  	  res.json({
+  		cat: docs
+	  });
 	});
 };
 
@@ -204,6 +222,20 @@ exports.catsandtags = function (req, res) {
 			else
 				res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 		});
+	});
+};
+
+
+
+/********************************************
+* TAGS
+***********************************************/
+exports.findUserById = function (req, res) {
+	var User = db.model('User');
+	User.findById(req.params.id, function (err, docs){
+  	  res.json({
+  		user: docs
+	  });
 	});
 };
 

@@ -97,7 +97,7 @@
 
 /* THE MAP
 -------------------------------------------------- */
-#mymap {position: absolute;top: 0px;right: 0px;left: 0;height: 100%;z-index:0;}
+
 	
 	/*MAP TOOLS CONTROLLERS*/
 
@@ -190,7 +190,7 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 .infowindow .myitem .commentBox textarea { width: 97%; height: 50px; margin-top: 2px; margin-left: 0px; } /*z-index for stop scroll*/
 .infowindow .myitem i.icon-chevron-up { }
 .infowindow:firstChild{margin-top:10px;}
-.infowindow{width:95%;margin:1%;font-size:0.95em;box-shadow: 0 1px 0 #DDD;background: white;border-color: #BBB;color: #505050;padding:0px;}
+.infowindow{float:left;width:95%;margin:1%;font-size:0.95em;box-shadow: 0 1px 0 #DDD;background: white;border-color: #BBB;color: #505050;padding:0px;}
 .infowindow.loadingfeeditem{padding:30px 0px;text-align: center;background-image: url(../images/loader_big.gif);background-position: center center;background-repeat: no-repeat;}
 .infowindow.emptyfeeditem{padding:12px 3px;text-align: center;	font-weight:bold;background-color: #ba0911;font-size: 14px;color: white;}
 .infowindow .date{color: #87888B;margin-right:5px;}
@@ -206,7 +206,7 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 .infowindow .yakTypeImage { float: left; width:95%;height:22px; z-index: 111; position: absolute;}
 .infowindow .yakTypeImage img { float: left; width:15px;height:22px;}
 
-.infowindow .thumbImage { float: left;  margin-left: 0px;}
+.infowindow .thumbImage { float: left;  margin: 0 3px 0 0;}
 .infowindow .thumbImage img { float: left; width:auto;height:75;}
 
 .infowindow .itemTitle { font-size: 1.3em; font-weight: bold; color: #5D5D5D; left: 0px;margin-left:20px; padding-right: 2px; position: relative; text-align: justify;line-height:1.3em;}

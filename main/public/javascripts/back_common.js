@@ -5,9 +5,18 @@
 /*READY FUNCTIONS*/	
 $(document).ready(function() {
 
-		
 	/*bootstrap alert plugin*/
-	$(".alert").alert();
+	$(".alert").alert('close');
+	
+	/* Detect browser */
+	$.browser.chrome = /chrom(e|ium)/.test(navigator.userAgent.toLowerCase());
+	if(!$.browser.chrome){
+		$("#alertInfo").show();
+		$("#alertInfo span.alertText").html("Cette interface est omptimisée pour <a target='_blank' href='https://www.google.com/intl/fr/chrome/browser/?hl=fr'>Chrome</a>.");
+	}
+
+
+		
 	
 	/*top locator button which pops up the locatorChooser popup*/
 	$('#zoneLocButton').click(function(){
