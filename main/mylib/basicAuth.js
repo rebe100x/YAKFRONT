@@ -236,10 +236,26 @@ function auth (schema, options) {
     var nodemailer = require("nodemailer");
     var fs = require('fs');
     var error = '';
+    var messageSubject = '';
+    var headerContent = ''
     if(template == 'code')
+    {
       var mailTemplate = __dirname+'/../views/mails/account_validationByCode.html';
-    else
+      messageSubject = 'Votre inscription à Yakwala'; 
+      headerContent = 'Votre inscription';
+    }
+    else if (template == 'link')
+    {
       var mailTemplate = __dirname+'/../views/mails/account_validationByLink.html';
+      messageSubject = 'Votre inscription à Yakwala'; 
+      headerContent = 'Votre inscription';
+    }
+    else
+    {
+      var mailTemplate = __dirname+'/../views/mails/resetPasswordLink.html';
+      messageSubject = 'Changement du mot de passe dans Yakwala'; 
+      headerContent = 'Votre mot de passe dans yakwala';
+    }
 
     fs.readFile(mailTemplate, 'utf8', function(err, data) {
       data = data.replace("*|MC:SUBJECT|*","Votre inscription");
@@ -260,7 +276,7 @@ function auth (schema, options) {
       var mailOptions = {
         from: "Labs Yakwala <labs.yakwala@gmail.com>", // sender address
         to: mail, // list of receivers
-        subject: "Votre inscription à Yakwala", // Subject line
+        subject: messageSubject, // Subject line
         text: "Bonjour, \r\n Votre clé de validation est : "+link, // plaintext bod
         html: data
       } 
