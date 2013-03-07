@@ -19,7 +19,7 @@ mixin searchFormUnified(page)
 					span.caret
 					mixin range
 				a.btn#tagSelectorTrigger.pull-left(style="position:relative")
-					span#localnessPrinter.sliderText.tour_4 Hot Tags
+					span#hotTagPrinter.sliderText.tour_4 Hot Tags
 					span.caret
 					ul#dropdownTagSelector.dropdown-menu
 
@@ -422,7 +422,7 @@ mixin searchFormUnified(page)
 			});
 
 			//setTimeSelectorDropDown();
-			//setRangeSelectorDropDown();
+			setRangeSelectorDropDown();
 			if($("#searchStr").val() == 'null')
 				$("#searchStr").val("");
 		});
@@ -495,7 +495,7 @@ mixin searchFormUnified(page)
 
 			
 		}
-		/*
+		
 		function setRangeSelectorDropDown()
 		{
 			var lasttext = '';
@@ -512,4 +512,4 @@ mixin searchFormUnified(page)
 				$("#dropdownRangeSelector li").css("color", "#333333");
 				$(this).css("color", "#d3171f");
 			});
-		}*/
+		}
