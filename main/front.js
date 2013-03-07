@@ -9,7 +9,7 @@ var oa = new OAuth(
 	"6sbCmvfByrXpLYnPKzQ5qg",
 	"8cgH1lUym2YR7dH9VAaVvXFqzov888LWdgmAnv4",
 	"1.0",
-	"http://localhost:3000",
+	"http://localhost:3000/auth/twitter/callback",
 	"HMAC-SHA1"
 );
 
@@ -200,7 +200,7 @@ app.get('/auth/twitter', function(req, res){
 			
 			res.redirect('https://twitter.com/oauth/authenticate?oauth_token='+oauth_token);
 			
-			console.log(results);
+			//console.log(results);
 	}
 	});
 });
@@ -222,12 +222,21 @@ app.get('/auth/twitter/callback', function(req, res, next){
 			} else {
 				req.session.oauth.access_token = oauth_access_token;
 				req.session.oauth.	access_token_secret = oauth_access_token_secret;
-				console.log(results);
+				oa.get("http://api.twitter.com/1/account/verify_credentials.json", oauth_access_token, oauth_access_token_secret, function(data){
+					console.log(data);
+					res.redirect("http://localhost:3000");
+
+				});
+				//console.log(results);
 			}
 		}
 		);
 	} else
+	{
 		res.send('youre not supposed to be here');
+	}
+		
+	//res.redirect("http://localhost:3000");
 });
 
 
