@@ -617,6 +617,7 @@ block content
 
 		function drawNewsFeed(){	
 			var newsfeedContainerHeight = window.innerHeight-$('#newsfeedContainer').offset().top-25+'px';
+			console.log('newsfeedContainerHeight'+newsfeedContainerHeight);
 			$('#newsfeedContainer').css('height',newsfeedContainerHeight);
 			var width = $(window).width();
 			if(width < 767)
@@ -625,12 +626,13 @@ block content
 				$('#newsfeedContainer').css('top','-15px');
 			
 			var newsfeedContentHeight = window.innerHeight-$('#newsfeedContent').offset().top-25+'px';
+			console.log('newsfeedContentHeight'+newsfeedContentHeight);
 			$('#newsfeedContent').css('height',newsfeedContentHeight);
 			$('#newsfeedContent').mCustomScrollbar("update");
 			var newspostContentHeight = window.innerHeight-$('#newspostContent').offset().top-25+'px';
 			$('#newspostContent').css('height',newspostContentHeight);
 
-			$('#newspostContent').mCustomScrollbar("update");
+			//$('#newspostContent').mCustomScrollbar("update");
 		}
 		
 		function unhighlightInfo(obj,callback){
@@ -848,7 +850,7 @@ block content
 				//markerCluster.addMarkers(markers);
 				}
 				$("abbr.timeago").timeago();
-				$('#newsfeedContent').mCustomScrollbar("update");
+				//$('#newsfeedContent').mCustomScrollbar("update");
 
 
 			});

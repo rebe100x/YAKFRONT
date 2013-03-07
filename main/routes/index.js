@@ -495,7 +495,7 @@ exports.forgotpassword = function(req, res){
 				var hash = crypto.createHash('sha1').update(password+"yakwala@secure"+salt).digest("hex");
 				var logo = conf.fronturl+"/static/images/yakwala-logo_petit.png";
 				var templateMail = "link";
-				User.update({_id: theuser._id}, {hash : hash,token:token,salt:salt,password:password, status: 2}, {upsert: false}, function(err){
+				User.update({_id: theuser._id}, {hash : hash,token:token,salt:salt,password:password}, {upsert: false}, function(err){
 					
 				
 					User.sendValidationMail(link,themail,templateMail,logo,function(err){
