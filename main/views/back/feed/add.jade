@@ -1,0 +1,160 @@
+extends ../layout
+block content
+
+	include ../mixins/menu.jade
+	include ../mixins/locationChooser.jade
+	include ../mixins/forms/loginForm.jade
+	include ../mixins/forms/feedForm.jade
+			
+	mixin menu('place')	
+	mixin locationChooser()
+			
+	div.container-fluid
+		div.row-fluid
+			div.span8
+				div#mymap
+			div.span4
+				div#addPlaceContainer
+					div#addPlaceForm
+						- if (message)
+							each msg in message
+								div.alert.fade.in
+									button.close(type="button",data-dismiss="alert") x
+									strong= msg
+							
+						mixin feedForm(session.type)
+			
+			
+	script
+		var conf = !{conf};
+		var user = [!{user}];
+		var logged = 0;
+		var curPos = {'x':0,'y':0,'z':13};
+		var geolocalized = 0;
+		var infowindow = null;
+		var markerLocation = null;
+		var yakcatArray = [];
+		var placeArray = [];
+		var hashtag = [];
+		var hashtagTmp = [];
+		var rule = new RegExp('#([^\\s]*)','g');
+		var rule2 = new RegExp('[#]','g');
+	
+		var map = new google.maps.Map(document.getElementById('mymap'), {
+					mapTypeId:google.maps.MapTypeId.ROADMAP
+				});
+				
+		$(document).ready(function() {
+		
+			// INIT MARKERLOCATION
+			google.maps.event.addListener(map, 'click', function(event) {
+				getformattedAddress(event.latLng);
+				placeMarker(event.latLng,markerLocation);
+				google.maps.event.addListener(markerLocation, 'dragend', function() {
+					var position = markerLocation.getPosition();
+					$('#latitude').val(position.lat());	
+					$('#longitude').val(position.lng());	
+						
+					getformattedAddress(position);
+						
+				});		
+			});
+			
+			if($.cookie("geoloc")){
+				curPos = JSON.parse($.cookie("geoloc"));
+				google.maps.event.addDomListener(window, 'load', initialize(curPos.x,curPos.y,curPos.z));
+			}else{
+				if(navigator.geolocation) {
+					navigator.geolocation.getCurrentPosition(getHTML5Pos,getErrHTML5Pos);
+				}else {
+					x = 48.851875;
+					y = 2.356374;
+					z = 13;
+					curPos = {'x':x,'y':y,'z':z};
+					google.maps.event.addDomListener(window, 'load', initialize(curPos.x,curPos.y,curPos.z));
+				}
+			}		
+				
+			$('#yakcat').typeahead({
+				minLength : 3,
+				source: function (typeahead, query) {
+					$.ajax({
+							url: "/api/cats",				
+							success: function( data ) {
+								typeahead.process(data.cats);
+							}
+						})},
+				property: "title",
+				onselect: function(obj) { 
+					$("label[for='category']").after("<div><i class='icon-remove icon-pointer'  onclick='yakcatArray.cleanArray(\""+obj._id+"\");$(\"#yakcatInput\").val(JSON.stringify(yakcatArray));$(this).parent().remove();'></i> "+obj.title+"</div>");
+					$('#yakcat').val('').focus();
+					yakcatArray.push(obj);
+					$("#yakcatInput").val(JSON.stringify(yakcatArray));
+				}
+			});	
+		
+			$('#place').typeahead({
+				minLength : 3,							
+				source: function (typeahead, query) {
+					$.ajax({
+							url: "/api/places",		
+							success: function( data ) {
+								typeahead.process(data.places);
+							}
+						})},
+				property: "title",
+				onselect: function(obj) { 
+					$('#btn-place-adder').parent().before("<div><i class='icon-remove icon-pointer'  onclick='placeArray.cleanArray(\""+obj._id+"\");$(\"#placeInput\").val(JSON.stringify(placeArray));$(this).parent().remove();'></i> "+obj.title+"</div>");
+					$('#place').val('').focus();
+					placeArray.push(obj);
+					$("#placeInput").val(JSON.stringify(placeArray));
+				}
+			});
+		});
+			
+			
+		function initialize(x,y,z) {
+			
+			// set user cookie ( when user comes back he is located where he stopped browsing )
+			$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000 });
+				
+				
+			var center = new google.maps.LatLng(x,y);
+			infowindow = new google.maps.InfoWindow({content: ".",maxWidth : 300});
+			map.setZoom(z);
+			map.setCenter(center);
+
+				
+			markerLocation = new google.maps.Marker({
+				visible:false,
+				map:map,
+				draggable:true,
+				icon:'/images/beachflag.png',
+				position:center
+			});
+				
+				
+			google.maps.event.addListenerOnce(map, 'idle', function(){
+				bounds = this.getBounds();
+				getAndPrintInfo();
+					
+			});
+				
+				
+			google.maps.event.addListener(map, 'dragend', function() {
+				bounds = this.getBounds();
+				center = this.getCenter();
+				curPos.x = center.lat();
+				curPos.y = center.lng();
+				$.cookie("geoloc", JSON.stringify(curPos));
+				getAndPrintInfo();
+			});
+				
+			google.maps.event.addListener(map, 'zoom_changed', function() {
+				bounds = this.getBounds();	
+				curPos.z = this.getZoom();
+				$.cookie("geoloc", JSON.stringify(curPos));
+				getAndPrintInfo();
+			});
+				
+		}

@@ -84,6 +84,7 @@ app.get('/settings/password', back.requiresLogin, back.settings_password);
 
 app.get('/place/list', back.requiresLogin, back.place_map);
 
+app.get('/feed/list', back.requiresLogin, back.feed_map);
 
 app.post('/place', back.requiresLogin, back.place);
 app.post('/user', back.requiresLogin, back.user);

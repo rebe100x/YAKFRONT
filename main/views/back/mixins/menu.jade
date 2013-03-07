@@ -49,6 +49,12 @@ mixin menu(active)
 									li
 										a(href="") Infos
 											span1#infonumber
+								- if (active == 'feed')
+									li.active
+										a(href="feed/list") Flux
+								- else
+									li
+										a(href="feed/list") Flux					
 								- if (active == 'comment')
 									li.active
 										a(href="") Commentaires

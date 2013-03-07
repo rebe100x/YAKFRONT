@@ -110,6 +110,17 @@ exports.countUnvalidatedCats = function (req, res) {
 };
 
 
+/******* 
+#FEED
+******/
+exports.feed_add = function(req, res){
+	res.render('feed/add');
+};
+
+exports.feed_map = function(req, res){
+	delete req.session.message;
+	res.render('feed/list');
+};
 
 
 /******* 
