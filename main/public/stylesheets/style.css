@@ -410,6 +410,10 @@ width: 270px;
         display: none; !important
 
      }
+
+     #heatSelector { width: 80%; margin: 0 auto; }
+     #dayPrinter {width: 80%; margin: 0 auto; text-align: center; float: none; clear: both}
+
  }
 
   @media (max-width: 767px) {
@@ -417,6 +421,16 @@ width: 270px;
         display: none; !important
 
      }
+
+     .searchYakwala 
+     {
+     	width: 95%;
+     	margin-left: 3%
+     }
+
+     #heatSelector { width: 40%; }
+     #dayPrinter {width: 40%; text-align: center; float: none; clear: both}
+     .searchYakwala .myfilter { position: relative; bottom: 20px; float: right; width: 58%}
  }
 
  
@@ -433,7 +447,6 @@ width: 270px;
  	background-color: #F7F7F9;
  	font-weight:bold;
  }
-
 
 
 
