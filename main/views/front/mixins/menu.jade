@@ -3,27 +3,25 @@ mixin menu(active)
 	if(active != "login")
 		div.navbar.navbar-fixed-top
 			div.row-fluid.headerYakwala
-				div.span5			
-					a.leftlink#maplink.yak-mainMenuImage-hide(href="/news/map")
-						img(src="/images/new/lacarte.png")
-					a.leftlink#feedlink.yak-mainMenuImage-hide(href="/news/feed")
-						img(src="/images/new/filinfo.png")
+				div		
+					a.leftlink#maplink.yak-mainMenu-hide(href="/news/map")
+						img.imgleft(src="/images/new/lacarte.png")
+					a.leftlink#feedlink.yak-mainMenu-hide(href="/news/feed")
+						img.imgleft(src="/images/new/filinfo.png")
 
 				a(href="/news/map")
 					img#yakLogo(src="/images/new/logo.png")
 		
 				- if (locals.user && active != "firstvisit")
 					a.customprofile.dropdown-toggle(href="#",data-toggle="dropdown")
-						span.yak-mainMenu-hide(style="position: relative; top: 14px;")
-							| Click for Menu
-						img.yak-mainMenuImage-hide(id="userThumb", src=locals.user.thumbsmall)
-						span.caret(style="margin:22px 22px 22px 5px;")
+						img.yak-mainMenu-hide(id="userThumb", src=locals.user.thumbsmall)
+						span.caret(style="margin:22px 0px 22px 5px;")
 					ul.dropdown-menu.pull-right(style="right:21px; top: 40px;")
-						li.yak-mainMenu-hide
+						li
 							a(href="/news/map") Map
-						li.yak-mainMenu-hide
+						li
 							a(href="/news/feed") Feed
-						li.divider.yak-mainMenu-hide
+						li.divider
 						li
 							a(href="/settings/password") Mot de Passe
 						

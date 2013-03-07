@@ -407,20 +407,24 @@ width: 270px;
 
   @media (min-width: 767px) {
      .yak-mainMenu-hide {
-        display: none; !important
+       
 
      }
 
      #heatSelector { width: 80%; margin: 0 auto; }
      #dayPrinter {width: 80%; margin: 0 auto; text-align: center; float: none; clear: both}
-
+     .headerYakwala #userThumb { height: 48px; width: auto;}
  }
 
   @media (max-width: 767px) {
-     .yak-mainMenuImage-hide {
-        display: none; !important
+     .yak-mainMenu-hide {
+       
 
      }
+
+     .headerYakwala .imgleft { width: 30px }
+     #yakLogo { width: 100px; height: 50px;}
+     .headerYakwala #userThumb { width: 30px }
 
      .searchYakwala 
      {
@@ -456,8 +460,8 @@ width: 270px;
 .dropdownRangeSelector {width: 136px; background: #f6f6f6; border: 0px; float: right; position: relative; right: 169px; }
 .favplacelist li { padding:10px 0px; border-bottom: 1px solid #cecece; float: left; width: 100%;height:25px; cursor: default;}
 .favplacelist li span { cursor: pointer;}
-.headerYakwala { background-color: white; }
-.headerYakwala #userThumb { height: 48px; width: auto;}
+.headerYakwala { background-color: white; text-align: center;}
+
 
 .headerYakwala #bgthumb { position: relative; bottom: 15px;}
 .headerYakwala .leftlink img { float: left; padding: 6px;}
