@@ -55,6 +55,7 @@ exports.infos = function (req, res) {
 	}); 
 };
 
+/*
 exports.feeds = function (req, res) {
 	var Info = db.model('Info');
 	Info.findAllByPage(function (err, docs){
@@ -62,8 +63,10 @@ exports.feeds = function (req, res) {
 		info: docs
 	  });
 	}, req.query["skip"], req.query["limit"], req.query["yaktype"], req.query["_id"], req.query["what"], req.query["where"], req.query["dateInterval"], req.query["cattype"], req.query["next"], req.query["dimension"]); 
-};
+};*/
 
+// this has nothing to do with a feed 
+// it only takes the info data, should be removed when front cleared
 exports.afeed = function (req, res) {
 	var Info = db.model('Info');
 	Info.findAllByID(function (err, docs){
@@ -1330,19 +1333,17 @@ exports.tag_search = function (req, res) {
 
 
 /*****************************
-LIST : users, infos, cats, places
+LIST
 ******************************/
 
 exports.places = function (req, res) {
 	var Place = db.model('Place');
-	
 	Place.findAll(function (err, docs){
 	  res.json({
 		places: docs
 	  });
 	});
 };
-
 
 
 /*****************************

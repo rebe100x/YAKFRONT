@@ -77,22 +77,19 @@ app.get('/user/login', back.user_login);
 app.get('/user/logout', back.user_logout);
 app.post('/session',back.session);
 
-app.get('/settings', back.requiresLogin, back.settings_profil);
-app.get('/settings/profile', back.requiresLogin, back.settings_profile);
-app.get('/settings/alerts', back.requiresLogin, back.settings_alerts);
-app.get('/settings/password', back.requiresLogin, back.settings_password);
-
 app.get('/place/list', back.requiresLogin, back.place_map);
 
-app.get('/feed/list', back.requiresLogin, back.feed_map);
+app.get('/feed', back.requiresLogin, back.feed);
+
+app.get('/api/feeds/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status', back.gridFeeds);
 
 app.post('/place', back.requiresLogin, back.place);
 app.post('/user', back.requiresLogin, back.user);
 app.post('/news', back.requiresLogin, back.news);
 app.post('/alerts', back.requiresLogin, back.alerts);
 app.post('/profile', back.requiresLogin, back.profile);
-// JSON API
 
+// api
 app.get('/api/infos', back.infos);
 app.get('/api/validinfos', back.countUnvalidatedInfos);
 app.get('/api/geoinfos/:x1/:y1/:x2/:y2/:heat/:type', back.geoinfos);
