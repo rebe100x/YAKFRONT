@@ -414,6 +414,7 @@ width: 270px;
      #heatSelector { width: 80%; margin: 0 auto; }
      #dayPrinter {width: 80%; margin: 0 auto; text-align: center; float: none; clear: both}
      .headerYakwala #userThumb { height: 48px; width: auto;}
+     .searchYakwala { width: 100%}
  }
 
   @media (max-width: 767px) {

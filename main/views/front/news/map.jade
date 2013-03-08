@@ -26,7 +26,7 @@ block content
 									a.newsNavItem#newsPost(href="#", title="Poster une info") 
 										img(src="/images/new/poster.png")
 									
-					span#newsfeedContent.tabContent			
+					span#newsfeedContent.tabContent
 						ul#newsfeed
 					span#newspostContent.tabContent
 						mixin postForm()
@@ -267,8 +267,8 @@ block content
 			// init news feed
 			drawNewsFeed();
 
-			$('#newsfeedContent').mCustomScrollbar({mouseWheel:true,callbacks:{onTotalScroll:printArrayFeedItem},scrollButtons:{enable:true,scrollType:"continuous",},advanced:{autoExpandHorizontalScroll:true,updateOnContentResize: true,updateOnBrowserResize:true}});
-			$('#newspostContent').mCustomScrollbar({mouseWheel:true,scrollButtons:{enable:true,scrollType:"continuous",},advanced:{autoExpandHorizontalScroll:true,updateOnContentResize: true,updateOnBrowserResize:true}});
+			//$('#newsfeedContent').mCustomScrollbar({mouseWheel:true,callbacks:{onTotalScroll:printArrayFeedItem},scrollButtons:{enable:true,scrollType:"continuous",},advanced:{autoExpandHorizontalScroll:true,updateOnContentResize: true,updateOnBrowserResize:true}});
+			//$('#newspostContent').mCustomScrollbar({mouseWheel:true,scrollButtons:{enable:true,scrollType:"continuous",},advanced:{autoExpandHorizontalScroll:true,updateOnContentResize: true,updateOnBrowserResize:true}});
 			$(window).resize(function(){
 				drawNewsFeed();
 				bounds = getMyBounds();
@@ -628,7 +628,7 @@ block content
 			var newsfeedContentHeight = window.innerHeight-$('#newsfeedContent').offset().top-25+'px';
 			console.log('newsfeedContentHeight'+newsfeedContentHeight);
 			$('#newsfeedContent').css('height',newsfeedContentHeight);
-			$('#newsfeedContent').mCustomScrollbar("update");
+			//$('#newsfeedContent').mCustomScrollbar("update");
 			var newspostContentHeight = window.innerHeight-$('#newspostContent').offset().top-25+'px';
 			$('#newspostContent').css('height',newspostContentHeight);
 
@@ -877,7 +877,9 @@ block content
 				$("#newsfeed li").removeClass('highlighted');
 				$("#newsfeed li[infoId=\""+item._id+"\"]").addClass('highlighted');
 				if(typeof($(".mapHighlighter[infoId=\""+item._id+"\"]").html()) != 'undefined')
-					$('#newsfeedContent').mCustomScrollbar("scrollTo",".mapHighlighter[infoId=\""+item._id+"\"]");
+				{
+					//$('#newsfeedContent').mCustomScrollbar("scrollTo",".mapHighlighter[infoId=\""+item._id+"\"]");
+				}
 				else{
 					printFeedItem(infoArray[key],1,1);
 				}
@@ -1012,8 +1014,8 @@ block content
 			
 
 			if (scrollTo==1) {  
-				$('#newsfeedContent').mCustomScrollbar("update");
-				$('#newsfeedContent').mCustomScrollbar("scrollTo","ul#newsfeed");
+				//$('#newsfeedContent').mCustomScrollbar("update");
+				//$('#newsfeedContent').mCustomScrollbar("scrollTo","ul#newsfeed");
 
 			}  
 
@@ -1102,8 +1104,8 @@ block content
 			
 
 			if (scrollTo==1) {  
-				$('#newsfeedContent').mCustomScrollbar("update");
-				$('#newsfeedContent').mCustomScrollbar("scrollTo","ul#newsfeed");
+				//$('#newsfeedContent').mCustomScrollbar("update");
+				//$('#newsfeedContent').mCustomScrollbar("scrollTo","ul#newsfeed");
 
 			}  
 		}
@@ -1137,7 +1139,7 @@ block content
 				printFeedItem(val,0,0);
 			});
 			printLoadingFeedItem();
-			$('#newsfeedContent').mCustomScrollbar("update");
+			//$('#newsfeedContent').mCustomScrollbar("update");
 		}
 		function closeAllItems()
 		{
@@ -1221,8 +1223,8 @@ block content
 				$("ul#newsfeed").css("width", "100%");
 				$("#newsfeed li").removeClass('highlighted');
 				currentItem.parent().addClass('highlighted');
-				$('#newsfeedContent').mCustomScrollbar("update");
-				$('#newsfeedContent').mCustomScrollbar("scrollTo",".mapHighlighter[infoId=\""+currentItem.parent().attr("infoid")+"\"]");
+				//$('#newsfeedContent').mCustomScrollbar("update");
+				//$('#newsfeedContent').mCustomScrollbar("scrollTo",".mapHighlighter[infoId=\""+currentItem.parent().attr("infoid")+"\"]");
 			});
 
 			if ($(el).find(".myitem").css("display") == "none") {

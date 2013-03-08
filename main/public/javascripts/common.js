@@ -66,3 +66,4 @@ Date.prototype.toLongFrenchFormat = function ()
 function killCookie(name, path){
 	$.cookie(name, null, { path: path, expires: -5 });
 }
+
