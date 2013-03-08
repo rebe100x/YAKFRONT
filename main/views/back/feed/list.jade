@@ -1,0 +1,500 @@
+mixin list()
+	table#MyGrid.table.table-bordered.datagrid
+		thead
+			tr.headerControle
+				th
+					.datagrid-header-left
+						.input-append.search
+							input#search.input-medium(type='text', placeholder='Recherche', data-provide="typeahead", autocomplete="off")
+							button.btn
+								i.icon-search
+					.datagrid-header-right
+						button.btn#btnAdd
+							i.icon-plus
+							span Ajouter
+			tr.headerControle
+				td(colspan=5)
+					select#filterStatus
+						option(value="1") Actifs
+						option(value="0") Inactifs
+					.dateSort.datagrid-header-right
+						.input-prepend
+							span.add-on Ordonner par
+							select#sortPlaces
+								option(value="creationDate")	Date de création
+								option(value="lastModifDate")	Date de modification
+		tfoot
+			tr
+				th
+					.datagrid-footer-left(style='display: none;')
+						.grid-controls
+							span
+								span.grid-start
+								| -
+								span.grid-end
+								| de
+								span.grid-count
+							select.grid-pagesize
+								option 10
+								option 20
+								option 50
+								option 100
+							span Par Page
+					.datagrid-footer-right(style='display: none;')
+						.grid-pager
+							button.btn.grid-prevpage
+								i.icon-chevron-left
+							span Page
+							.input-append.dropdown.combobox.dropup
+								input.span1(type='text')
+								button.btn(data-toggle='dropdown')
+									i.caret
+								ul.dropdown-menu
+							span
+								| de
+								span.grid-pages
+							button.btn.grid-nextpage
+								i.icon-chevron-right
+
+	script
+		var ApiDataSource = function (options) {
+			this._formatter = options.formatter;
+			this._columns = options.columns;
+		};
+
+		ApiDataSource.prototype = {
+
+			columns: function () {
+				return this._columns;
+			},
+
+			data: function (options, callback) {
+
+				var url = '/api/feeds';
+				var self = this;
+
+				if (!options.search) {
+					options.search = "^";
+				}
+
+				url += '/' + (options.pageIndex + 1);
+				url += '/' + options.pageSize;
+				url += '/' + options.search;
+
+				var sortPropertyArray = [];
+				var sortDirectionArray = [];
+
+				// Add currently selected datagrid column to sort properties
+				if (options.sortProperty) {
+					sortPropertyArray.push(options.sortProperty);
+					sortDirectionArray.push(options.sortDirection);
+				}
+
+				// Also sort by the selected date
+				sortPropertyArray.push( $('#sortPlaces :selected').val() );
+				// Always newest first
+				sortDirectionArray.push("desc");
+
+				// Would be easier if we could pass dictionaries, needs testing
+				url += '/' + sortPropertyArray.join() + '/' + sortDirectionArray.join();
+
+				// Filter by status
+				var status = $('#filterStatus :selected').val();
+				url += '/' + status;
+
+				
+
+				
+				$.ajax(url, {
+					type: 'GET'
+				}).done(function (response) {
+
+					if (firstLoad) {
+						$("#search").focus();
+						$('th[data-property="creationDate"]').addClass('sorted');
+						$('th[data-property="creationDate"]').append('<i class="icon-chevron-down"></i>');
+						firstLoad = false;
+					}
+
+					// Prepare data to return to Datagrid
+					var data = response.feed;
+					var count = response.count;
+					var startIndex = (response.pageIndex - 1) * response.pageSize;
+					var endIndex = parseInt(startIndex) + parseInt(response.pageSize);
+					var end = (endIndex > count) ? count : endIndex;
+					var page = parseInt(response.pageIndex);
+					var pages = Math.ceil(response.count / response.pageSize);
+					var start = startIndex + 1;
+
+					if (self._formatter) self._formatter(data);
+
+					callback({ data: data, start: start, end: end, count: count, pages: pages, page: page });
+
+				});
+			}
+		};
+
+		$('#MyGrid').datagrid({
+			dataSource: new ApiDataSource({
+				columns: [{
+					property: 'checked',
+					label: '<input id="selectAllPlaces" type="checkbox" />',
+					sortable: false
+				},
+				{
+					property: 'name',
+					label: 'Lieux',
+					sortable: true
+				},
+				{
+					property: 'licence',
+					label: 'Origine',
+					sortable: true
+				},
+				{
+					property: 'creationDate',
+					label: 'Création',
+					sortable: true
+				}],
+				formatter: function (items) {
+					$.each(items, function (index, item) {
+						item.checked = makeCheckBox(item);
+						item.name = fillContent(item);
+						item.licence = formatOrigin(item);
+						item.creationDate = formatDate(item.creationDate);
+					});
+				}
+			})
+		});
+
+
+		$('#filterStatus').live('change', function() {
+			var currentSelection = $('#filterStatus :selected').val();
+			refreshDatagridAndMenu();
+		});
+
+		function formatOrigin(item) {
+			if (item.origin)
+				return item.origin
+			return "Origine inconnue";
+		}
+
+		function makeCheckBox(item) {
+			return '<input type="checkbox" class="selectYakPlace" value="' + item._id + '"/>';
+		}
+
+		function fillContent(item) {
+			var res = "";
+			var icon = "icon-time";
+			var title_icon = "En attente";
+			var title_title = "";
+
+			res += '<div class="liens">';
+			if (item.outGoingLink)
+				res += '<a href=\''+ item.outGoingLink + '\' target="_blank" title="Lien externe"><i class="icon-share-alt "></i></a>';
+
+			res += '<a class="centerMap" id="' + item._id + '" href="/place/list/#">';
+			res += '<i class = "icon-map-marker" title="Localiser"></i>';
+			res += '</a>';
+
+			res += "</div>";
+
+			res += '<a class="editPlace" id="' + item._id + '" href="#">';
+
+			if (item.status == 1) {
+				icon = 'icon-ok-sign';
+				title_icon = "Validée";
+			}
+			else if (item.status == 3) {
+				icon = 'icon-ban-circle';
+				title_icon = "Rejetée";
+			}
+			else if (item.status == 10) {
+				icon = 'icon-warning-sign';
+				title_icon = "Erreur de localisation";
+			}
+
+			if(item.title.length > 50) {
+				title_title = "title = '" + item.title + "'";
+				item.title = item.title.slice(0, 50) + "...";
+			}
+
+			res += '<div class="text-info" '+ title_title + '><i class="' + icon + ' status" title="' + title_icon + '" ></i>' + item.title + '</div>';
+
+			res += "<small>";
+
+			if (item.formatted_address)
+				res += "<div>" + item.formatted_address + "</div>";
+
+			if (item.yakCat) {
+				res += "<div>";
+				for(i = 0; i<  item.yakCat.length;i++){
+					res += formatYakcat(item.yakCat[i]);
+					res += ', ';
+				}
+				if (item.freeTag)
+					res += displayFreeTags(item.freeTag);
+				res = res.slice(0,-2);
+				res += "</div>";
+			}
+			else if(item.freeTag) {
+				res += displayFreeTags(item.freeTag);
+				result = result.slice(0,-2);
+			}
+			res += '</small></a>';
+			return res;
+		}
+
+		function formatDate(creationDate) {
+			var dateTmp = new Date(creationDate);
+			return dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
+
+		}
+
+		$('a.centerMap').live('click', function() {
+			var url = '/api/places/'+this.id;
+
+			// We search for the place in mongo and we fill the form with the place's values
+			$.ajax({
+				url: url,
+				type: 'GET',
+				async: false,
+				success: function (response)
+				{
+					var place = response.place;
+
+					var latlng = new google.maps.LatLng(place.location.lat, place.location.lng);
+					getformattedAddress(latlng);
+					placeMarker(latlng,markerLocation);
+					map.setCenter(markerLocation.getPosition());
+				}
+			});
+		});
+
+		// Toggle searchPanel
+		$('a.showSearchPanel').live('click', function() {
+			$("#iconSearchPanel").toggleClass("icon-chevron-down");
+			$("td.searchPanel").toggle("fast");
+			return false;
+		});
+
+		// Searchpanel yakcat input
+		$('input#yakCat').typeahead({
+			source: function (typeahead, query) {
+				$.ajax({
+					url: "/api/cats",
+					success: function(data) {
+						typeahead.process(data.cats);
+					}
+				})
+			},
+			property: "title",
+			onselect: function(obj) {
+				$(".pillbox#yakCatFilter").show();
+				$(".pillbox#yakCatFilter ul").append("<li class='yakcat-value' data-value="+obj._id+">"+obj.title+"</li>");
+
+				$('input#yakCat').val('').focus();
+				refreshDatagridAndMenu();
+			}
+		});
+
+		// Searchpanel yakcat input
+		$('input#userFilter').typeahead({
+			source: function (typeahead, query) {
+				$.ajax({
+					url: "/api/users",
+					success: function(data) {
+						typeahead.process(data.users);
+					}
+				})
+			},
+			property: "name",
+			onselect: function(obj) {
+				$(".pillbox#userFilter").show();
+				$(".pillbox#userFilter ul").append("<li class='user-value' data-value="+obj._id+">"+obj.name+"</li>");
+
+				$('input#userFilter').val('').focus();
+				refreshDatagridAndMenu();
+			}
+		});
+
+		// Refresh on sort selection
+		$('#sortPlaces').live('change', function() {
+			refreshDatagridAndMenu();
+		});
+		
+
+	
+
+	
+		
+		
+
+
+		function refreshDatagridAndMenu () {
+			// Temporary refresh method for datagrid
+			var $gridsearch = jQuery('#MyGrid').find('.search');
+			var search = $gridsearch.find('input').val();
+			$gridsearch.trigger('searched', search);
+			$.getJSON('/api/validplaces', function(data) {
+				$('#placenumber').removeClass('badge badge-important');
+				if (data.info != 0)
+					$('#placenumber').addClass('badge badge-important').html(data.info);
+			});
+		}
+
+		
+
+
+		// Edit Place function
+		$(".editPlace").live('click', function()
+		{
+			event.preventDefault();
+
+			listenerHandle = google.maps.event.addListener(map, 'click', function(event) {
+				getformattedAddress(event.latLng);
+				placeMarker(event.latLng,markerLocation);
+			});
+			listenerHandleDrag = google.maps.event.addListener(markerLocation, 'dragend', function() {
+				var position = markerLocation.getPosition();
+				$('#placeForm #latitude').val(position.lat());
+				$('#placeForm #longitude').val(position.lng());
+
+				getformattedAddress(position);
+			});
+
+
+			$("#MyGrid").hide();
+			// We remove the error class when we open a form for editing a place
+			$('#placeForm #titleGroup').removeClass("error");
+			$('#placeForm #contentGroup').removeClass("error");
+			$('#placeForm #licenceGroup').removeClass("error");
+			$('#placeForm #origineGroup').removeClass("error");
+			$('#placeForm #adresseGroup').removeClass("error");
+			$("#btnBack").fadeIn();
+			$("#placeForm").fadeIn();
+			$(".catLabel").remove();
+			$("#pillYakcat ul").empty();
+			$('#err').hide();
+			yakcatArray = new Array();
+			yakcatNames = new Array();
+
+			$("#placeForm legend").html("Editer un lieu");
+			$("#placeForm #objid").val(this.id);
+
+			var url = '/api/places/'+this.id;
+
+			// We search for the place in mongo and we fill the form with the place's values
+			$.ajax({
+				url: url,
+				type: 'GET',
+				async: false,
+				success: function (response)
+				{
+					var place = response.place;
+
+					var latlng = new google.maps.LatLng(place.location.lat, place.location.lng);
+					getformattedAddress(latlng);
+					placeMarker(latlng,markerLocation);
+					map.setCenter(markerLocation.getPosition());
+					$("#placeForm #licence").val(place.licence);
+					$("#placeForm #origine").val(place.origin);
+					$("#placeForm #hiddenOrigin").val(place.origin);
+					$("#placeForm #origine").prop('disabled', true);
+					$("#placeForm #outgoinglink").val(place.outGoingLink);
+					$("#placeForm #title").val(place.title);
+					$("#placeForm #content").val(place.content);
+					$("#placeForm #freetag").val(place.freeTag);
+
+					for (var i = 0; i < place.yakCat.length; i++)
+					{
+						var url = '/api/cats/'+place.yakCat[i];
+						$.ajax({
+							url: url,
+							type: 'GET',
+							async: false,
+							success: function (response)
+							{
+								var yakcat = response.cat;
+								$("#pillYakcat").show();
+								$("#pillYakcat ul").append("<li class='yakcat-val' data-value="+yakcat._id+">"+yakcat.title+"</li>");
+								$('#placeForm #yakcat').val('').focus();
+							}
+						});
+					}
+
+					$('input:radio[name=status][value='+place.status+']').click();
+					$("#placeForm #title").focus();
+					$("#placeForm #place").val('');
+
+					// loading the thumb
+					var imag = "<img class='img-rounded' " + "src=\'/uploads/pictures/512_0/" + place.thumb +"\' style='width:100px'/>";
+					$("#placeForm #picturePreview").html(imag);
+
+					$("#placeForm #freetag").val(place.freeTag.join(","));
+
+					if (place.contact)
+					{
+						$("#placeForm #tel").val(place.contact.tel);
+						$("#placeForm #mobile").val(place.contact.mobile);
+						$("#placeForm #mail").val(place.contact.mail);
+						$("#placeForm #transportation").val(place.contact.transportation);
+						$("#placeForm #web").val(place.contact.web);
+						$("#placeForm #opening").val(place.contact.opening);
+						$("#placeForm #closing").val(place.contact.closing);
+						$("#placeForm #special").val(place.contact.special_opening);
+					}
+				}
+			});
+		});
+
+		// Add Place function
+		$("#btnAdd").click(function()
+		{
+
+			var user = !{JSON.stringify(user)};
+			console.log(user);
+			event.preventDefault();
+			listenerHandle = google.maps.event.addListener(map, 'click', function(event) {
+				getformattedAddress(event.latLng);
+				placeMarker(event.latLng,markerLocation);
+			});
+			listenerHandleDrag = google.maps.event.addListener(markerLocation, 'dragend', function() {
+				var position = markerLocation.getPosition();
+				$('#placeForm #latitude').val(position.lat());
+				$('#placeForm #longitude').val(position.lng());
+
+				getformattedAddress(position);
+			});
+
+			$("#MyGrid").hide();
+			$("#placeForm")[0].reset();
+			// We remove the error class when we open a form for creating a new place
+			$('#placeForm #titleGroup').removeClass("error");
+			$('#placeForm #contentGroup').removeClass("error");
+			$('#placeForm #licenceGroup').removeClass("error");
+			$('#placeForm #origineGroup').removeClass("error");
+			$('#placeForm #adresseGroup').removeClass("error");
+			$('#placeForm #content').val("");
+			$('#placeLabel').first().remove();
+			$("#btnBack").fadeIn();
+			$("#placeForm").fadeIn();
+			$("#placeForm legend").html("Ajouter un lieu");
+			$("#placeForm #objid").val("");
+			$(".catLabel").remove();
+			$("#pillYakcat ul").empty();
+			$('#err').hide();
+			$("#placeForm #title").focus();
+			$("#placeForm #hiddenOrigin").val(user.login);
+			$("#placeForm #origine").val(user.login);
+			$("#placeForm #origine").prop('disabled', true);
+			yakcatArray = new Array();
+			yakcatNames = new Array();
+		});
+
+
+		
+
+
+
+	

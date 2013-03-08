@@ -26,6 +26,8 @@ var Address = new Schema({
 mongoose.model('Address', Address);	
 */
 
+
+
 var Point = new Schema({
 	  name : String
 	, location	: { type : { lat: Number, lng: Number }}	
@@ -690,31 +692,6 @@ Zone.statics.findAll = function (callback) {
 }
 mongoose.model('Zone', Zone);
 
-/****************************************Feeds*/
-
-var Feed = new Schema({
-    name     : { type: String, index:true, required: true},
-    humanName     : { type: String }
-}, { collection: 'feed' });
-
-Feed.statics.findByName = function (str,callback) {
-  searchStr = new RegExp(str,'i');
-  var cond = {
-	$or:[ {'humanName': {$regex:searchStr}}, {'name': {$regex:searchStr}} ]
-};
-  return this.find( cond,{humanName:1, _id: 1, name: 1}, callback );
-}
-
-Feed.statics.formatLight2 = function (thefeed) {
-	var formattedFeed = {
-		_id:thefeed._id,
-		title: thefeed.humanName+'(@'+thefeed.name+')',
-		name: thefeed.humanName,
-	};
-  return formattedFeed;
-}  
-
-mongoose.model('Feed', Feed);
 /******************************YAKCAT*/
 var Yakcat = new Schema({
     title     : { type: String, index:true, required: true}
@@ -846,9 +823,8 @@ Client.statics.identify = function(key,secret,callback){
 Client.statics.findById = function(key,callback){
 	return this.findOne({'_id': key,'status':1}, callback);
 }
-
-
 mongoose.model('Client', Client);
 
 
 require('./place.js');
+require('./feed.js');

@@ -110,11 +110,54 @@ exports.countUnvalidatedCats = function (req, res) {
 };
 
 
+/******* 
+#FEED
+*******/
+exports.feed = function(req, res){
+	delete req.session.message;
+	res.render('feed/index');
+};
+
+exports.feed_add = function(req, res){
+	res.render('feed/add');
+};
+
+exports.gridFeeds = function (req, res) {
+	var Feed = db.model('Feed');
+    
+    
+    var sortProperties = [];
+    if (req.params.sortBy) {
+        sortProperties = req.params.sortBy.split(',');
+    }
+
+    var sortDirections = [];
+    if (req.params.sortDirection) {
+        sortDirections = req.params.sortDirection.split(',');
+    }
+
+	Feed.findGridFeeds(req.params.pageIndex,req.params.pageSize,
+		req.params.searchTerm,sortProperties,sortDirections,
+        req.params.status, function (err, feed){
+
+		var data = {};
+
+        data['feed'] = feed;
+		data['pageIndex'] = req.params.pageIndex;
+		data['pageSize'] = req.params.pageSize;
+
+		Feed.countSearch(req.params.searchTerm, req.params.status, function (err, count){
+			data['count'] = count;
+			res.json(data);
+		});
+	});
+};
+
 
 
 /******* 
 #PLACE 
-******/
+*******/
 exports.place_add = function(req, res){
 	res.render('place/add');
 };
@@ -375,6 +418,7 @@ exports.cats = function (req, res) {
 	  });
 	});
 };
+
 
 /******* 
 #USER 
