@@ -1,47 +1,37 @@
 include ../blocks/range.jade
 mixin searchFormUnified(page)
-	div.navbar.navbar-fixed-top	
-		div.row-fluid.searchYakwala
-			div.span4
-				input.search-query.customInput.tour_1#searchStr(type="search",placeholder="Quoi ?",autocomplete="off", style="width: 40%")
-				input.search-query.customInput#searchPlaceStr.tour_2(type="search",placeholder="Où ?",autocomplete="off", data-provide="typeahead", style="width: 40%")
-				button#searchBtn(type="submit", style="width: 7%; background-repeat: no-repeat; position: absolute; background-color: transparent")
+	div.navbar.navbar-fixed-top.searchYakwala(style="width: 100%; float: left")
+		ul.nav
+			li
+				input.search-query.customInput.tour_1#searchStr(type="search",placeholder="Quoi ?",autocomplete="off")
 			
-			div.span2.mytime
+				input.search-query.customInput#searchPlaceStr.tour_2(type="search",placeholder="Où ?",autocomplete="off", data-provide="typeahead")
+			
+				button#searchBtn(type="submit")	
+			li
 				div#dayPrinter.sliderText Aujourd hui	
 				div#heatSelector
 
-			div.span6.myfilter
+			li
 				a.btn#rangeSelectorTrigger.pull-left(style="position:relative")
-					//
-						i.icon-search.myi
-					span#localnessPrinter.sliderText.tour_4 Localness
+					span#localnessPrinter.sliderText Localness
 					span.caret
 					mixin range
+			li
 				a.btn#tagSelectorTrigger.pull-left(style="position:relative")
-					span#hotTagPrinter.sliderText.tour_4 Hot Tags
+					span#hotTagPrinter.sliderText Hot Tags
 					span.caret
 					ul#dropdownTagSelector.dropdown-menu
-
-				div.verticalSplitter.pull-left
+			li
 				div#newsfeedMenu.pull-left
 					div#typeContainer.row
-						//span.btn(title="Actu", type=1) 
-						//	img(src="/images/markers/latestV1/type1.png")
 						span.btn(title="Voir les Yassalas", type=4) 
 							img(src="/images/markers/latestV1/type4.png")
-						//span.btn(title="Agenda", type=2) 
-						//	img(src="/images/markers/latestV1/type2.png")
-						//span.btn(title="Infos Pratiques", type=3) 
-						//	img(src="/images/markers/latestV1/type3.png")	
+			li
 				span.btn#btnMesalertes(title="Mes alertes", type=5, onclick='setAlert()')
 					i.icon-exclamation-sign
-						//
-							img(src="/images/markers/type5.png")		
 				span#zoneLocButton.btn
-					i.icon-star(title="Mes endroits Favoris")	
-
-
+					i.icon-star(title="Mes endroits Favoris")							
 
 	script
 		var psClick = 0;

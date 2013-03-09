@@ -616,17 +616,19 @@ block content
 		}
 
 		function drawNewsFeed(){	
-			var newsfeedContainerHeight = window.innerHeight-$('#newsfeedContainer').offset().top-25+'px';
-			console.log('newsfeedContainerHeight'+newsfeedContainerHeight);
+			
+			var newsfeedContainerHeight = window.innerHeight-$('#newsfeedContainer').offset().top +'px';
+			
+			//console.log('newsfeedContainerHeight'+newsfeedContainerHeight);
 			$('#newsfeedContainer').css('height',newsfeedContainerHeight);
 			var width = $(window).width();
 			if(width < 767)
-				$('#newsfeedContainer').css('top','300px');
+				$('#newsfeedContainer').css('top','200px');
 			else
 				$('#newsfeedContainer').css('top','-15px');
 			
 			var newsfeedContentHeight = window.innerHeight-$('#newsfeedContent').offset().top-25+'px';
-			console.log('newsfeedContentHeight'+newsfeedContentHeight);
+			//console.log('newsfeedContentHeight'+newsfeedContentHeight);
 			$('#newsfeedContent').css('height',newsfeedContentHeight);
 			//$('#newsfeedContent').mCustomScrollbar("update");
 			var newspostContentHeight = window.innerHeight-$('#newspostContent').offset().top-25+'px';

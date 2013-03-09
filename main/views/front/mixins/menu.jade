@@ -8,6 +8,8 @@ mixin menu(active)
 						img.imgleft(src="/images/new/lacarte.png")
 					a.leftlink#feedlink.yak-mainMenu-hide(href="/news/feed")
 						img.imgleft(src="/images/new/filinfo.png")
+					a.leftlink(onclick="$('.searchYakwala').slideToggle('slow', function(){drawNewsFeed(); });")
+						img.imgleft(src="/images/search.png")
 
 				a(href="/news/map")
 					img#yakLogo(src="/images/new/logo.png")

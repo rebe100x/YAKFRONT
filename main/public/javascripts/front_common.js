@@ -459,18 +459,7 @@ $(document).ready(function() {
 		theme:"dark-thick" /*"light", "dark", "light-2", "dark-2", "light-thick", "dark-thick", "light-thin", "dark-thin"*/
 	});
 	$(window).resize(function(){
-			if ($(document).width() > $(window).width()) { 
-		    	if ($(window).width() < 700) {
-				$(".searchYakwala").css({
-					'width' : '94%',
-					'margin-left' : '3%'
-				})
-			}
-		}
-		else
-		{
-			$(".searchYakwala").removeAttr("style");
-		} 	
+		console.log($(window).width());
 	});
 	
 
