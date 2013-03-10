@@ -9,10 +9,13 @@ mixin searchFormUnified(page)
 			
 				button#searchBtn(type="submit")	
 			li
+				
 				div#dayPrinter.sliderText Aujourd hui	
+				img.pull-left.timeIcon(src="images/time.png")
 				div#heatSelector
 
 			li
+				img.pull-left.filterIcon(src="images/filter.png")
 				a.btn#rangeSelectorTrigger.pull-left(style="position:relative")
 					span#localnessPrinter.sliderText Localness
 					span.caret
@@ -27,7 +30,7 @@ mixin searchFormUnified(page)
 					div#typeContainer.row
 						span.btn(title="Voir les Yassalas", type=4) 
 							img(src="/images/markers/latestV1/type4.png")
-			li
+			li.rightPull
 				span.btn#btnMesalertes(title="Mes alertes", type=5, onclick='setAlert()')
 					i.icon-exclamation-sign
 				span#zoneLocButton.btn

@@ -405,6 +405,11 @@ width: 270px;
    #dayPrinter { width: 300px; margin-top: 10px; color: black; font-size: 14px; }
    .headerYakwala .navbar .nav > li > a { line-height: 19px; color: black; text-shadow: 0 0 0 rgba(0, 0, 0, 0.25); font-size: 14px }
    .searchYakwala .customInput{ width: 150px; margin-top: 6px; float: left; margin-left: 6px;}
+   .rightPull { position: fixed; right: 0px}
+   .timeIcon { position: relative; top: -14px; }
+   .filterIcon { position: relative; top: 15px}
+   #heatSelector { position:  relative; left: 23px; bottom: 6px; margin-right: 45px;}
+   #dayPrinter { position: relative; bottom: 9px; }
  }
 
  /*large screens*/
@@ -412,6 +417,11 @@ width: 270px;
    #dayPrinter { width: 300px; margin-top: 10px; color: black; font-size: 14px; }
    .headerYakwala .navbar .nav > li > a { line-height: 19px; color: black; text-shadow: 0 0 0 rgba(0, 0, 0, 0.25); font-size: 14px}
    .searchYakwala .customInput{ width: 150px; margin-top: 6px; float: left; margin-left: 6px;}
+   .rightPull { position: fixed; right: 0px}
+   .timeIcon { position: relative; top: -14px; }
+   .filterIcon { position: relative; top: 15px}
+   #heatSelector { position:  relative; left: 23px; bottom: 6px; margin-right: 45px;}
+   #dayPrinter { position: relative; bottom: 9px; }
  }
 
  /*ipads portrail*/
@@ -419,6 +429,11 @@ width: 270px;
    #dayPrinter { width: 200px; margin-top: 10px; color: black; font-size: 12px; }
    .headerYakwala .navbar .nav > li > a { line-height: 19px; color: black; text-shadow: 0 0 0 rgba(0, 0, 0, 0.25); font-size: 12px}
    .searchYakwala .customInput{ width: 111px; margin-top: 6px; float: left; margin-left: 6px;}
+    .rightPull { position: fixed; right: 0px}
+   .timeIcon { position: relative; top: -14px; }
+   .filterIcon { position: relative; top: 15px}
+   #heatSelector { position:  relative; left: 23px; bottom: 6px; margin-right: 45px;}
+   #dayPrinter { position: relative; bottom: 9px; }
  }
 
   /*ipads portrail*/
@@ -434,6 +449,11 @@ width: 270px;
  .searchYakwala #tagSelectorTrigger, .searchYakwala #rangeSelectorTrigger { margin-top: 10px;}
  .searchYakwala #zoneLocButton { margin-top: 18px;}
  .searchYakwala #btnMesalertes { margin-top: 18px;}
+
+   .timeIcon { position: relative; top: -14px; }
+   .filterIcon { position: relative; top: 15px}
+   #heatSelector { position:  relative; left: 23px; bottom: 6px; margin-right: 45px;}
+   #dayPrinter { position: relative; bottom: 9px; }
  }
 
  /*ipads portrail*/
@@ -449,6 +469,10 @@ width: 270px;
  .searchYakwala #tagSelectorTrigger, .searchYakwala #rangeSelectorTrigger { margin-top: 10px;}
  .searchYakwala #zoneLocButton { margin-top: 18px;}
  .searchYakwala #btnMesalertes { margin-top: 18px;}
+   .timeIcon { position: relative; top: -14px; }
+   .filterIcon { position: relative; top: 15px}
+   #heatSelector { position:  relative; left: 23px; bottom: 6px; margin-right: 45px;}
+   #dayPrinter { position: relative; bottom: 9px; }
  }
 
 
@@ -466,6 +490,10 @@ width: 270px;
  .searchYakwala #tagSelectorTrigger, .searchYakwala #rangeSelectorTrigger { margin-top: 10px;}
  .searchYakwala #zoneLocButton { margin-top: 18px;}
  .searchYakwala #btnMesalertes { margin-top: 18px;}
+   .timeIcon { position: relative; top: -14px; }
+   .filterIcon { position: relative; top: 15px}
+   #heatSelector { position:  relative; left: 23px; bottom: 6px; margin-right: 45px;}
+   #dayPrinter { position: relative; bottom: 9px; }
  
 }
 
@@ -482,6 +510,10 @@ width: 270px;
  .searchYakwala #tagSelectorTrigger, .searchYakwala #rangeSelectorTrigger { margin-top: 10px;}
  .searchYakwala #zoneLocButton { margin-top: 18px;}
  .searchYakwala #btnMesalertes { margin-top: 18px;}
+   .timeIcon { position: relative; top: -14px; }
+   .filterIcon { position: relative; top: 15px}
+   #heatSelector { position:  relative; left: 23px; bottom: 6px; margin-right: 45px;}
+   #dayPrinter { position: relative; bottom: 9px; }
 }
 
 @media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
@@ -496,6 +528,10 @@ width: 270px;
  .searchYakwala #tagSelectorTrigger, .searchYakwala #rangeSelectorTrigger { margin-top: 10px;}
  .searchYakwala #zoneLocButton { margin-top: 18px;}
  .searchYakwala #btnMesalertes { margin-top: 18px;}
+   .timeIcon { position: relative; top: -14px; }
+   .filterIcon { position: relative; top: 15px}
+   #heatSelector { position:  relative; left: 23px; bottom: 6px; margin-right: 45px;}
+   #dayPrinter { position: relative; bottom: 9px; }
 
 }
 
