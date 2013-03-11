@@ -2,6 +2,20 @@
  * GET home page.
  */
 
+/**
+* OAuth dependencies
+*/
+var OAuth= require('oauth').OAuth;
+var oa = new OAuth(
+	"https://api.twitter.com/oauth/request_token",
+	"https://api.twitter.com/oauth/access_token",
+	"6sbCmvfByrXpLYnPKzQ5qg",
+	"8cgH1lUym2YR7dH9VAaVvXFqzov888LWdgmAnv4",
+	"1.0",
+	"http://localhost:3000/auth/twitter/callback",
+	"HMAC-SHA1"
+);
+
 exports.db = function(conf){
 	mongoose = require('mongoose'), Schema = mongoose.Schema;
 	//mongoose.set('debug', true);
@@ -1041,4 +1055,61 @@ exports.setLikes = function(req, res){
 	
 };
 
+
+exports.auth_twitter = function(req, res){
+	oa.getOAuthRequestToken(function(error, oauth_token, oauth_token_secret, results){
+			if (error) {
+				console.log(error);
+				res.send(error)
+			}
+			else {
+
+				req.session.oauth = {};
+				req.session.oauth.token = oauth_token;
+				console.log('oauth.token: ' + req.session.oauth.token);
+				req.session.oauth.token_secret = oauth_token_secret;
+				console.log('oauth.token_secret: ' + req.session.oauth.token_secret);
+				
+				res.redirect('https://twitter.com/oauth/authenticate?oauth_token='+oauth_token);
+
+	}
+	});
+};
+
+exports.auth_twitter_callback = function(req, res){
+	if (req.session.oauth) {
+
+		req.session.oauth.verifier = req.query.oauth_verifier;
+		var oauth = req.session.oauth;
+
+		oa.getOAuthAccessToken(oauth.token,oauth.token_secret,oauth.verifier, 
+		function(error, oauth_access_token, oauth_access_token_secret, results){
+			if (error){
+				console.log(error);
+				res.send("Authentication Failure!");
+			} else {
+				req.session.oauth.access_token = oauth_access_token;
+				req.session.oauth.access_token_secret = oauth_access_token_secret;
+				//console.log(results, req.session.oauth);
+				oa.get("https://api.twitter.com/1/account/verify_credentials.json", req.session.oauth.access_token, req.session.oauth.access_token_secret, function (error, data, response) {
+		        if (error) {
+		          console.log(error);
+		          res.send("Error getting twitter screen name : " + error, 500);
+		        } else {
+		       	  data = JSON.parse(data);
+		          console.log(data);
+		          console.log(results)
+		          req.session.twitterScreenName = data.id;    
+		          res.send('You are signed in: ' +  data.id);
+		        }  
+		      });
+
+			}
+		}
+		);
+	} else
+	{
+		res.send('youre not supposed to be here');
+	}
+};
 

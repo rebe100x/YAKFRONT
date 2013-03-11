@@ -1,17 +1,4 @@
 
-/**
-* OAuth dependencies
-*/
-var OAuth= require('oauth').OAuth;
-var oa = new OAuth(
-	"https://api.twitter.com/oauth/request_token",
-	"https://api.twitter.com/oauth/access_token",
-	"6sbCmvfByrXpLYnPKzQ5qg",
-	"8cgH1lUym2YR7dH9VAaVvXFqzov888LWdgmAnv4",
-	"1.0",
-	"http://localhost:3000/auth/twitter/callback",
-	"HMAC-SHA1"
-);
 
 /**
  * Module dependencies.
@@ -185,60 +172,11 @@ app.get('/docs/log', routes.docs_log);
 /**
 * routes / call to twitter
 */
-app.get('/auth/twitter', function(req, res){
-	oa.getOAuthRequestToken(function(error, oauth_token, oauth_token_secret, results){
-		if (error) {
-			console.log(error);
-			res.send(error)
-		}
-		else {
-
-			req.session.oauth = {};
-			req.session.oauth.token = oauth_token;
-			console.log('oauth.token: ' + req.session.oauth.token);
-			req.session.oauth.token_secret = oauth_token_secret;
-			console.log('oauth.token_secret: ' + req.session.oauth.token_secret);
-			
-			res.redirect('https://twitter.com/oauth/authenticate?oauth_token='+oauth_token);
-			
-			//console.log(results);
-	}
-	});
-});
-
-
+app.get('/auth/twitter', routes.auth_twitter);
 /**
 * routes / the call back after validation
 */
-app.get('/auth/twitter/callback', function(req, res, next){
-	if (req.session.oauth) {
-
-		req.session.oauth.verifier = req.query.oauth_verifier;
-		var oauth = req.session.oauth;
-
-		oa.getOAuthAccessToken(oauth.token,oauth.token_secret,oauth.verifier, 
-		function(error, oauth_access_token, oauth_access_token_secret, results){
-			if (error){
-				console.log(error);
-			} else {
-				req.session.oauth.access_token = oauth_access_token;
-				req.session.oauth.	access_token_secret = oauth_access_token_secret;
-				oa.get("http://api.twitter.com/1/account/verify_credentials.json", oauth_access_token, oauth_access_token_secret, function(data){
-					console.log(data);
-					res.redirect("http://localhost:3000");
-
-				});
-				//console.log(results);
-			}
-		}
-		);
-	} else
-	{
-		res.send('youre not supposed to be here');
-	}
-		
-	//res.redirect("http://localhost:3000");
-});
+app.get('/auth/twitter/callback', routes.auth_twitter_callback);
 
 
 // redirect all others to the index (HTML5 history)
