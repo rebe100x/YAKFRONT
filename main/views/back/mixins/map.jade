@@ -30,7 +30,7 @@ mixin map()
 
 			
 
-
+			$('#mymap').css('width',($(window).width() - $('#newsfeedContainer').width())-20);
 
 			// init news feed (Setting the scroll bar)
 			drawNewsFeed();
@@ -116,6 +116,7 @@ mixin map()
 		});/*END READY*/
 
 		function drawNewsFeed(){
+			$('#mymap').css('width',($(window).width() - $('#newsfeedContainer').width())-20);
 			var newsfeedContainerHeight = window.innerHeight-$('#newsfeedContainer').offset().top-10+'px';
 			$('#newsfeedContainer').css('height',newsfeedContainerHeight);
 		}
