@@ -1265,6 +1265,20 @@ exports.user_search = function (req, res) {
 		  });
 	});
 };
+exports.user_findbylogin = function (req, res) {
+	var User = db.model('User');	
+	User.findByLogin(req.params.string,function (err, docs){
+		var usersFormated = docs.map(function(item){
+			var User = db.model('User');
+			return User.formatLight(item);
+		});
+
+		res.json({
+			users: usersFormated
+		  });
+	});
+};
+
 
 exports.feeduser_search = function (req, res) {
 	var results = new Array();
