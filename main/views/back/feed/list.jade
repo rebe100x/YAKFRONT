@@ -57,6 +57,8 @@ mixin list()
 								i.icon-chevron-right
 
 	script
+		var firstLoad = true;
+
 		var ApiDataSource = function (options) {
 			this._formatter = options.formatter;
 			this._columns = options.columns;
@@ -137,18 +139,18 @@ mixin list()
 		$('#MyGrid').datagrid({
 			dataSource: new ApiDataSource({
 				columns: [{
-					property: 'checked',
-					label: '<input id="selectAllPlaces" type="checkbox" />',
-					sortable: false
-				},
-				{
-					property: 'name',
-					label: 'Lieux',
+					property: 'feedType',
+					label: 'Type',
 					sortable: true
 				},
 				{
-					property: 'licence',
-					label: 'Origine',
+					property: 'name',
+					label: 'Flux',
+					sortable: true
+				},
+				{
+					property: 'defaultPlaceSearchName',
+					label: 'Zone',
 					sortable: true
 				},
 				{
@@ -158,9 +160,7 @@ mixin list()
 				}],
 				formatter: function (items) {
 					$.each(items, function (index, item) {
-						item.checked = makeCheckBox(item);
 						item.name = fillContent(item);
-						item.licence = formatOrigin(item);
 						item.creationDate = formatDate(item.creationDate);
 					});
 				}
@@ -173,16 +173,7 @@ mixin list()
 			refreshDatagridAndMenu();
 		});
 
-		function formatOrigin(item) {
-			if (item.origin)
-				return item.origin
-			return "Origine inconnue";
-		}
-
-		function makeCheckBox(item) {
-			return '<input type="checkbox" class="selectYakPlace" value="' + item._id + '"/>';
-		}
-
+		
 		function fillContent(item) {
 			var res = "";
 			var icon = "icon-time";
@@ -190,13 +181,18 @@ mixin list()
 			var title_title = "";
 
 			res += '<div class="liens">';
-			if (item.outGoingLink)
-				res += '<a href=\''+ item.outGoingLink + '\' target="_blank" title="Lien externe"><i class="icon-share-alt "></i></a>';
+			if (item.link)
+				res += '<a href=\''+ item.link + '\' target="_blank" title="Lien externe"><i class="icon-share-alt "></i></a>';	
 
-			res += '<a class="centerMap" id="' + item._id + '" href="/place/list/#">';
+			if (typeof item.defaultPlaceLocation != 'undefined'
+				&& typeof item.defaultPlaceLocation.lat != 'undefined'
+				&& typeof item.defaultPlaceLocation.lng != 'undefined' ){
+				res += '<a class="centerMap" id="' + item._id + '" lat="' + item.defaultPlaceLocation.lat + '" lng="' + item.defaultPlaceLocation.lng + '"   href="#">';
 			res += '<i class = "icon-map-marker" title="Localiser"></i>';
 			res += '</a>';
 
+				}	
+			
 			res += "</div>";
 
 			res += '<a class="editPlace" id="' + item._id + '" href="#">';
@@ -205,31 +201,22 @@ mixin list()
 				icon = 'icon-ok-sign';
 				title_icon = "Validée";
 			}
-			else if (item.status == 3) {
+			else {
 				icon = 'icon-ban-circle';
 				title_icon = "Rejetée";
 			}
-			else if (item.status == 10) {
-				icon = 'icon-warning-sign';
-				title_icon = "Erreur de localisation";
-			}
 
-			if(item.title.length > 50) {
-				title_title = "title = '" + item.title + "'";
-				item.title = item.title.slice(0, 50) + "...";
-			}
-
-			res += '<div class="text-info" '+ title_title + '><i class="' + icon + ' status" title="' + title_icon + '" ></i>' + item.title + '</div>';
+			res += '<div class="text-info" '+ item.humanName + '><i class="' + icon + ' status" title="' + title_icon + '" ></i>' + item.humanName + '</div>';
 
 			res += "<small>";
 
-			if (item.formatted_address)
-				res += "<div>" + item.formatted_address + "</div>";
+			if (item.persistDays)
+				res += "<div>" + item.persistDays + "</div>";
 
-			if (item.yakCat) {
+			if (item.yakCatNameArray) {
 				res += "<div>";
-				for(i = 0; i<  item.yakCat.length;i++){
-					res += formatYakcat(item.yakCat[i]);
+				for(i = 0; i<  item.yakCatNameArray.length;i++){
+					res += formatYakcat(item.yakCatNameArray[i]);
 					res += ', ';
 				}
 				if (item.freeTag)
@@ -245,30 +232,45 @@ mixin list()
 			return res;
 		}
 
+		function displayFreeTags(freeTag) {
+			var result = "";
+
+			for(i = 0; i<  freeTag.length;i++){
+				if (freeTag[i] != "") {
+					result += freeTag[i];
+					result += ', ';
+				}
+			}
+			return result;
+		}
+		function formatYakcat(yakcatId) {
+			var res;
+			$.ajax({
+				url: '/api/cats/'+ yakcatId,
+				dataType: 'json',
+				async: false,
+				success: function(data) {
+					if (data['cat'])
+						res = data['cat'].title;
+				}
+			});
+			return res;
+		}
+
 		function formatDate(creationDate) {
 			var dateTmp = new Date(creationDate);
 			return dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
 
 		}
 
-		$('a.centerMap').live('click', function() {
-			var url = '/api/places/'+this.id;
 
-			// We search for the place in mongo and we fill the form with the place's values
-			$.ajax({
-				url: url,
-				type: 'GET',
-				async: false,
-				success: function (response)
-				{
-					var place = response.place;
 
-					var latlng = new google.maps.LatLng(place.location.lat, place.location.lng);
-					getformattedAddress(latlng);
-					placeMarker(latlng,markerLocation);
-					map.setCenter(markerLocation.getPosition());
-				}
-			});
+		$('a.centerMap').live('click', function(event) {
+			event.preventDefault();
+			var latlng = new google.maps.LatLng($(this).attr('lat'), $(this).attr('lng'));
+			getformattedAddress(latlng);
+			placeMarker(latlng,markerLocation);
+			map.setCenter(markerLocation.getPosition());
 		});
 
 		// Toggle searchPanel

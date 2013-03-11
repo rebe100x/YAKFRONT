@@ -97,7 +97,9 @@
 
 /* THE MAP
 -------------------------------------------------- */
-
+/* MAP
+----------------------------------------------------*/
+#mymap {position: absolute;top: 0px;right: 0px;left: 0;height: 100%;z-index:0;}
 	
 	/*MAP TOOLS CONTROLLERS*/
 
