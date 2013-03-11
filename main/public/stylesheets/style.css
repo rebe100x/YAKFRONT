@@ -611,7 +611,8 @@ width: 270px;
 .searchYakwala #btnMesalertes { float: right;}
 .searchYakwala #zoneLocButton { float: right;}
 .searchYakwala #btnMesalertes img {height: 20px;}
-.searchYakwala #tagSelectorTrigger, .searchYakwala #rangeSelectorTrigger { background: transparent; border: 0px;}
+.searchYakwala #tagSelectorTrigger { background: transparent; border: 0px; position: relative;}
+.searchYakwala #rangeSelectorTrigger { background: transparent; border: 0px;, position:  relative;}
 .searchYakwala #tagSelectorTrigger ul#dropdownTagSelector li:hover,.searchYakwala #rangeSelectorTrigger ul#dropdownRangeSelector li:hover{ background: #F6F6F6;}
 .searchYakwala #rangeSelectorTrigger:hover { background: #f5f5f5; border: 1px;}
 .typeahead { position: absolute; z-index:  111111; display: none;}
