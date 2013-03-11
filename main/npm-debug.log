@@ -1,0 +1,2214 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'C:\\Program Files\\nodejs\\\\node.exe',
+1 verbose cli   'C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'install' ]
+2 info using npm@1.1.65
+3 info using node@v0.8.14
+4 verbose node symlink C:\Program Files\nodejs\\node.exe
+5 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\package.json
+6 warn package.json Yakxala@1.0.0 No README.md file found!
+7 verbose readDependencies using package.json deps
+8 verbose install where, deps [ 'c:\\Users\\srourd\\Documents\\GitHub\\YAKFRONT\\main',
+8 verbose install   [ 'express', 'jade', 'mongoose', 'session', 'socket.io' ] ]
+9 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\package.json
+10 info preinstall Yakxala@1.0.0
+11 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\aws-sdk\package.json
+12 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\crypto\package.json
+13 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\environ\package.json
+14 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\fs\package.json
+15 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\imagemagick\package.json
+16 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\jade\package.json
+17 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\md5\package.json
+18 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\mongoose\package.json
+19 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\mongoose-troop\package.json
+20 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\mongoose_old\package.json
+21 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\multipart\package.json
+22 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\nodemailer\package.json
+23 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\oauth\package.json
+24 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\session\package.json
+25 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\sessions\package.json
+26 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\socket.io\package.json
+27 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\string\package.json
+28 warn package.json multipart@0.1.5 No README.md file found!
+29 warn package.json md5@1.0.0 No README.md file found!
+30 warn package.json jade@0.26.3 No README.md file found!
+31 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\package.json
+32 verbose readDependencies using package.json deps
+33 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\.bin\package.json
+34 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\aws-sdk\package.json
+35 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\crypto\package.json
+36 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\environ\package.json
+37 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\fs\package.json
+38 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\imagemagick\package.json
+39 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\jade\package.json
+40 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\md5\package.json
+41 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\mongoose\package.json
+42 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\mongoose-troop\package.json
+43 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\mongoose_old\package.json
+44 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\multipart\package.json
+45 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\nodemailer\package.json
+46 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\oauth\package.json
+47 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\session\package.json
+48 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\sessions\package.json
+49 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\socket.io\package.json
+50 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\string\package.json
+51 verbose cache add [ 'express@3.0.0rc4', null ]
+52 silly cache add name=undefined spec="express@3.0.0rc4" args=["express@3.0.0rc4",null]
+53 verbose parsed url { pathname: 'express@3.0.0rc4',
+53 verbose parsed url   path: 'express@3.0.0rc4',
+53 verbose parsed url   href: 'express@3.0.0rc4' }
+54 silly cache add name="express" spec="3.0.0rc4" args=["express","3.0.0rc4"]
+55 verbose parsed url { pathname: '3.0.0rc4', path: '3.0.0rc4', href: '3.0.0rc4' }
+56 verbose addNamed [ 'express', '3.0.0rc4' ]
+57 verbose addNamed [ '3.0.0rc4', '3.0.0rc4' ]
+58 verbose already installed skipping jade@>= 0.0.1 c:\Users\srourd\Documents\GitHub\YAKFRONT\main
+59 verbose already installed skipping mongoose@>= 2.7.1 c:\Users\srourd\Documents\GitHub\YAKFRONT\main
+60 verbose already installed skipping session@>= 0.0.2-4 c:\Users\srourd\Documents\GitHub\YAKFRONT\main
+61 verbose already installed skipping socket.io@>= 0.9.8 c:\Users\srourd\Documents\GitHub\YAKFRONT\main
+62 silly lockFile b950aa27-express-3-0-0rc4 express@3.0.0rc4
+63 verbose lock express@3.0.0rc4 C:\Users\srourd\AppData\Roaming\npm-cache\b950aa27-express-3-0-0rc4.lock
+64 verbose url raw express/3.0.0rc4
+65 verbose url resolving [ 'https://registry.npmjs.org/', './express/3.0.0rc4' ]
+66 verbose url resolved https://registry.npmjs.org/express/3.0.0rc4
+67 info trying registry request attempt 1 at 08:45:47
+68 verbose etag "3FBJUPPF8MFK93UDSW2J5PJSE"
+69 http GET https://registry.npmjs.org/express/3.0.0rc4
+70 http 200 https://registry.npmjs.org/express/3.0.0rc4
+71 silly registry.get cb [ 200,
+71 silly registry.get   { vary: 'Accept',
+71 silly registry.get     server: 'CouchDB/1.2.1 (Erlang OTP/R15B03)',
+71 silly registry.get     etag: '"72FP04ODFO5KD9P8CM5A3ZHLG"',
+71 silly registry.get     date: 'Mon, 11 Mar 2013 06:48:33 GMT',
+71 silly registry.get     'content-type': 'application/json',
+71 silly registry.get     'content-length': '7391' } ]
+72 silly lockFile 5dfa949f-org-express-express-3-0-0rc4-tgz https://registry.npmjs.org/express/-/express-3.0.0rc4.tgz
+73 verbose lock https://registry.npmjs.org/express/-/express-3.0.0rc4.tgz C:\Users\srourd\AppData\Roaming\npm-cache\5dfa949f-org-express-express-3-0-0rc4-tgz.lock
+74 verbose addRemoteTarball [ 'https://registry.npmjs.org/express/-/express-3.0.0rc4.tgz',
+74 verbose addRemoteTarball   'f07490f3578a87e06d4244d58c18d6f6e2c5fc33' ]
+75 info retry fetch attempt 1 at 08:45:50
+76 verbose fetch to= C:\Users\srourd\AppData\Local\Temp\npm-5004\1362984350689-0.08970134449191391\tmp.tgz
+77 http GET https://registry.npmjs.org/express/-/express-3.0.0rc4.tgz
+78 http 200 https://registry.npmjs.org/express/-/express-3.0.0rc4.tgz
+79 silly shasum updated bytes 34116
+80 info shasum f07490f3578a87e06d4244d58c18d6f6e2c5fc33
+80 info shasum C:\Users\srourd\AppData\Local\Temp\npm-5004\1362984350689-0.08970134449191391\tmp.tgz
+81 verbose tar unpack C:\Users\srourd\AppData\Local\Temp\npm-5004\1362984350689-0.08970134449191391\tmp.tgz
+82 silly lockFile ec047ed2-0689-0-08970134449191391-package C:\Users\srourd\AppData\Local\Temp\npm-5004\1362984350689-0.08970134449191391\package
+83 verbose lock C:\Users\srourd\AppData\Local\Temp\npm-5004\1362984350689-0.08970134449191391\package C:\Users\srourd\AppData\Roaming\npm-cache\ec047ed2-0689-0-08970134449191391-package.lock
+84 silly gunzTarPerm modes [ '755', '644' ]
+85 silly gunzTarPerm extractEntry package.json
+86 silly gunzTarPerm extractEntry .npmignore
+87 silly gunzTarPerm extractEntry LICENSE
+88 silly gunzTarPerm extractEntry client.js
+89 silly gunzTarPerm extractEntry index.js
+90 silly gunzTarPerm extractEntry .travis.yml
+91 silly gunzTarPerm extractEntry lib/application.js
+92 silly gunzTarPerm extractEntry lib/express.js
+93 silly gunzTarPerm extractEntry lib/middleware.js
+94 silly gunzTarPerm extractEntry lib/request.js
+95 silly gunzTarPerm extractEntry lib/response.js
+96 silly gunzTarPerm extractEntry lib/utils.js
+97 silly gunzTarPerm extractEntry lib/view.js
+98 silly gunzTarPerm extractEntry lib/router/index.js
+99 silly gunzTarPerm extractEntry lib/router/route.js
+100 silly gunzTarPerm extractEntry History.md
+101 silly gunzTarPerm extractEntry Makefile
+102 silly gunzTarPerm extractEntry bin/express
+103 silly gunzTarPerm extractEntry Readme.md
+104 verbose read json C:\Users\srourd\AppData\Local\Temp\npm-5004\1362984350689-0.08970134449191391\package\package.json
+105 silly lockFile ec047ed2-0689-0-08970134449191391-package C:\Users\srourd\AppData\Local\Temp\npm-5004\1362984350689-0.08970134449191391\package
+106 verbose from cache C:\Users\srourd\AppData\Local\Temp\npm-5004\1362984350689-0.08970134449191391\package\package.json
+107 verbose tar pack [ 'C:\\Users\\srourd\\AppData\\Roaming\\npm-cache\\express\\3.0.0rc4\\package.tgz',
+107 verbose tar pack   'C:\\Users\\srourd\\AppData\\Local\\Temp\\npm-5004\\1362984350689-0.08970134449191391\\package' ]
+108 verbose tarball C:\Users\srourd\AppData\Roaming\npm-cache\express\3.0.0rc4\package.tgz
+109 verbose folder C:\Users\srourd\AppData\Local\Temp\npm-5004\1362984350689-0.08970134449191391\package
+110 silly lockFile 13ce4d5b-che-express-3-0-0rc4-package-tgz C:\Users\srourd\AppData\Roaming\npm-cache\express\3.0.0rc4\package.tgz
+111 verbose lock C:\Users\srourd\AppData\Roaming\npm-cache\express\3.0.0rc4\package.tgz C:\Users\srourd\AppData\Roaming\npm-cache\13ce4d5b-che-express-3-0-0rc4-package-tgz.lock
+112 silly lockFile 13ce4d5b-che-express-3-0-0rc4-package-tgz C:\Users\srourd\AppData\Roaming\npm-cache\express\3.0.0rc4\package.tgz
+113 silly lockFile cd272f75-m-cache-express-3-0-0rc4-package C:\Users\srourd\AppData\Roaming\npm-cache\express\3.0.0rc4\package
+114 verbose lock C:\Users\srourd\AppData\Roaming\npm-cache\express\3.0.0rc4\package C:\Users\srourd\AppData\Roaming\npm-cache\cd272f75-m-cache-express-3-0-0rc4-package.lock
+115 silly lockFile cd272f75-m-cache-express-3-0-0rc4-package C:\Users\srourd\AppData\Roaming\npm-cache\express\3.0.0rc4\package
+116 verbose tar unpack C:\Users\srourd\AppData\Roaming\npm-cache\express\3.0.0rc4\package.tgz
+117 silly lockFile cd272f75-m-cache-express-3-0-0rc4-package C:\Users\srourd\AppData\Roaming\npm-cache\express\3.0.0rc4\package
+118 verbose lock C:\Users\srourd\AppData\Roaming\npm-cache\express\3.0.0rc4\package C:\Users\srourd\AppData\Roaming\npm-cache\cd272f75-m-cache-express-3-0-0rc4-package.lock
+119 silly gunzTarPerm modes [ '755', '644' ]
+120 silly gunzTarPerm extractEntry package.json
+121 silly gunzTarPerm modified mode [ 'package.json', 438, 420 ]
+122 silly gunzTarPerm extractEntry .npmignore
+123 silly gunzTarPerm modified mode [ '.npmignore', 438, 420 ]
+124 silly gunzTarPerm extractEntry LICENSE
+125 silly gunzTarPerm modified mode [ 'LICENSE', 438, 420 ]
+126 silly gunzTarPerm extractEntry client.js
+127 silly gunzTarPerm modified mode [ 'client.js', 438, 420 ]
+128 silly gunzTarPerm extractEntry index.js
+129 silly gunzTarPerm modified mode [ 'index.js', 438, 420 ]
+130 silly gunzTarPerm extractEntry .travis.yml
+131 silly gunzTarPerm modified mode [ '.travis.yml', 438, 420 ]
+132 silly gunzTarPerm extractEntry lib/application.js
+133 silly gunzTarPerm modified mode [ 'lib/application.js', 438, 420 ]
+134 silly gunzTarPerm extractEntry lib/express.js
+135 silly gunzTarPerm modified mode [ 'lib/express.js', 438, 420 ]
+136 silly gunzTarPerm extractEntry lib/middleware.js
+137 silly gunzTarPerm modified mode [ 'lib/middleware.js', 438, 420 ]
+138 silly gunzTarPerm extractEntry lib/request.js
+139 silly gunzTarPerm modified mode [ 'lib/request.js', 438, 420 ]
+140 silly gunzTarPerm extractEntry lib/response.js
+141 silly gunzTarPerm modified mode [ 'lib/response.js', 438, 420 ]
+142 silly gunzTarPerm extractEntry lib/utils.js
+143 silly gunzTarPerm modified mode [ 'lib/utils.js', 438, 420 ]
+144 silly gunzTarPerm extractEntry lib/view.js
+145 silly gunzTarPerm modified mode [ 'lib/view.js', 438, 420 ]
+146 silly gunzTarPerm extractEntry lib/router/index.js
+147 silly gunzTarPerm modified mode [ 'lib/router/index.js', 438, 420 ]
+148 silly gunzTarPerm extractEntry lib/router/route.js
+149 silly gunzTarPerm modified mode [ 'lib/router/route.js', 438, 420 ]
+150 silly gunzTarPerm extractEntry History.md
+151 silly gunzTarPerm modified mode [ 'History.md', 438, 420 ]
+152 silly gunzTarPerm extractEntry Makefile
+153 silly gunzTarPerm modified mode [ 'Makefile', 438, 420 ]
+154 silly gunzTarPerm extractEntry bin/express
+155 silly gunzTarPerm modified mode [ 'bin/express', 438, 420 ]
+156 silly gunzTarPerm extractEntry Readme.md
+157 silly gunzTarPerm modified mode [ 'Readme.md', 438, 420 ]
+158 verbose read json C:\Users\srourd\AppData\Roaming\npm-cache\express\3.0.0rc4\package\package.json
+159 silly lockFile cd272f75-m-cache-express-3-0-0rc4-package C:\Users\srourd\AppData\Roaming\npm-cache\express\3.0.0rc4\package
+160 silly shasum updated bytes 34000
+161 info shasum c2f0937add0a838f7782aa5dace1d8622fb977ca
+161 info shasum C:\Users\srourd\AppData\Roaming\npm-cache\express\3.0.0rc4\package.tgz
+162 verbose from cache C:\Users\srourd\AppData\Roaming\npm-cache\express\3.0.0rc4\package\package.json
+163 verbose chmod C:\Users\srourd\AppData\Roaming\npm-cache\express\3.0.0rc4\package.tgz 644
+164 silly chown skipping for windows C:\Users\srourd\AppData\Roaming\npm-cache\express\3.0.0rc4\package.tgz
+165 silly lockFile 5dfa949f-org-express-express-3-0-0rc4-tgz https://registry.npmjs.org/express/-/express-3.0.0rc4.tgz
+166 silly lockFile b950aa27-express-3-0-0rc4 express@3.0.0rc4
+167 silly resolved [ { name: 'express',
+167 silly resolved     description: 'Sinatra inspired web development framework',
+167 silly resolved     version: '3.0.0rc4',
+167 silly resolved     author: { name: 'TJ Holowaychuk', email: 'tj@vision-media.ca' },
+167 silly resolved     contributors: [ [Object], [Object], [Object], [Object] ],
+167 silly resolved     dependencies:
+167 silly resolved      { connect: '2.4.4',
+167 silly resolved        commander: '0.6.1',
+167 silly resolved        'range-parser': '0.0.4',
+167 silly resolved        mkdirp: '0.3.3',
+167 silly resolved        cookie: '0.0.4',
+167 silly resolved        crc: '0.2.0',
+167 silly resolved        fresh: '0.1.0',
+167 silly resolved        methods: '0.0.1',
+167 silly resolved        send: '0.0.4',
+167 silly resolved        debug: '*' },
+167 silly resolved     devDependencies:
+167 silly resolved      { ejs: '*',
+167 silly resolved        mocha: '*',
+167 silly resolved        jade: '*',
+167 silly resolved        hjs: '*',
+167 silly resolved        stylus: '*',
+167 silly resolved        should: '*',
+167 silly resolved        'connect-redis': '*',
+167 silly resolved        'github-flavored-markdown': '*',
+167 silly resolved        supertest: '0.0.1' },
+167 silly resolved     keywords:
+167 silly resolved      [ 'express',
+167 silly resolved        'framework',
+167 silly resolved        'sinatra',
+167 silly resolved        'web',
+167 silly resolved        'rest',
+167 silly resolved        'restful',
+167 silly resolved        'router',
+167 silly resolved        'app',
+167 silly resolved        'api' ],
+167 silly resolved     publishConfig: { tag: '3.0' },
+167 silly resolved     repository: { type: 'git', url: 'git://github.com/visionmedia/express' },
+167 silly resolved     main: 'index',
+167 silly resolved     bin: { express: './bin/express' },
+167 silly resolved     scripts: { prepublish: 'npm prune', test: 'make test' },
+167 silly resolved     engines: { node: '*' },
+167 silly resolved     readme: '\n![express logo](http://f.cl.ly/items/0V2S1n0K1i3y1c122g04/Screen%20Shot%202012-04-11%20at%209.59.42%20AM.png)\n\n  Fast, unopinionated, minimalist web framework for [node](http://nodejs.org). [![Build Status](https://secure.travis-ci.org/visionmedia/express.png)](http://travis-ci.org/visionmedia/express)\n\n```js\nvar express = require(\'express\');\nvar app = express();\n\napp.get(\'/\', function(req, res){\n  res.send(\'Hello World\');\n});\n\napp.listen(3000);\n```\n\n## Installation\n\n    $ npm install -g express\n\n To install the 3.0 alpha:\n \n    $ npm install -g express@3.0\n\n## Quick Start\n\n The quickest way to get started with express is to utilize the executable `express(1)` to generate an application as shown below:\n\n Create the app:\n\n    $ npm install -g express\n    $ express /tmp/foo && cd /tmp/foo\n\n Install dependencies:\n\n    $ npm install\n\n Start the server:\n\n    $ node app\n\n## Features\n\n  * Built on [Connect](http://github.com/senchalabs/connect)\n  * Robust routing\n  * HTTP helpers (redirection, caching, etc)\n  * View system supporting 14+ template engines\n  * Content negotiation\n  * Focus on high performance\n  * Environment based configuration\n  * Executable for generating applications quickly\n  * High test coverage\n\n## Philosophy\n\n  The Express philosophy is to provide small, robust tooling for HTTP servers. Making\n  it a great solution for single page applications, web sites, hybrids, or public\n  HTTP APIs.\n  \n  Built on Connect you can use _only_ what you need, and nothing more, applications\n  can be as big or as small as you like, even a single file. Express does\n  not force you to use any specific ORM or template engine. With support for over\n  14 template engines via [Consolidate.js](http://github.com/visionmedia/consolidate.js)\n  you can quickly craft your perfect framework.\n\n## More Information\n\n  * Join #express on freenode\n  * [Google Group](http://groups.google.com/group/express-js) for discussion\n  * Follow [tjholowaychuk](http://twitter.com/tjholowaychuk) on twitter for updates\n  * Visit the [Wiki](http://github.com/visionmedia/express/wiki)\n  * [日本語ドキュメンテーション](http://hideyukisaito.com/doc/expressjs/) by [hideyukisaito](https://github.com/hideyukisaito)\n  * [Русскоязычная документация](http://express-js.ru/)\n\n## Viewing Examples\n\nFirst install the dev dependencies to install all the example / test suite deps:\n\n    $ cd express\n    $ npm install\n\nthen run whichever tests you want:\n\n    $ node examples/content-negotiation\n\n## Running Tests\n\nTo run the test suite first invoke the following command within the repo, installing the development dependencies:\n\n    $ npm install\n\nthen run the tests:\n\n    $ make test\n\n## Contributors\n\n```\nproject: express\ncommits: 3559\nactive : 468 days\nfiles  : 237\nauthors: \n 1891\tTj Holowaychuk          53.1%\n 1285\tvisionmedia             36.1%\n  182\tTJ Holowaychuk          5.1%\n   54\tAaron Heckmann          1.5%\n   34\tcsausdev                1.0%\n   26\tciaranj                 0.7%\n   21\tRobert Sköld          0.6%\n    6\tGuillermo Rauch         0.2%\n    3\tDav Glass               0.1%\n    3\tNick Poulden            0.1%\n    2\tRandy Merrill           0.1%\n    2\tBenny Wong              0.1%\n    2\tHunter Loftis           0.1%\n    2\tJake Gordon             0.1%\n    2\tBrian McKinney          0.1%\n    2\tRoman Shtylman          0.1%\n    2\tBen Weaver              0.1%\n    2\tDave Hoover             0.1%\n    2\tEivind Fjeldstad        0.1%\n    2\tDaniel Shaw             0.1%\n    1\tMatt Colyer             0.0%\n    1\tPau Ramon               0.0%\n    1\tPero Pejovic            0.0%\n    1\tPeter Rekdal Sunde      0.0%\n    1\tRaynos                  0.0%\n    1\tTeng Siong Ong          0.0%\n    1\tViktor Kelemen          0.0%\n    1\tctide                   0.0%\n    1\t8bitDesigner            0.0%\n    1\tisaacs                  0.0%\n    1\tmgutz                   0.0%\n    1\tpikeas                  0.0%\n    1\tshuwatto                0.0%\n    1\ttstrimple               0.0%\n    1\tewoudj                  0.0%\n    1\tAdam Sanderson          0.0%\n    1\tAndrii Kostenko         0.0%\n    1\tAndy Hiew               0.0%\n    1\tArpad Borsos            0.0%\n    1\tAshwin Purohit          0.0%\n    1\tBenjen                  0.0%\n    1\tDarren Torpey           0.0%\n    1\tGreg Ritter             0.0%\n    1\tGregory Ritter          0.0%\n    1\tJames Herdman           0.0%\n    1\tJim Snodgrass           0.0%\n    1\tJoe McCann              0.0%\n    1\tJonathan Dumaine        0.0%\n    1\tJonathan Palardy        0.0%\n    1\tJonathan Zacsh          0.0%\n    1\tJustin Lilly            0.0%\n    1\tKen Sato                0.0%\n    1\tMaciej Małecki         0.0%\n    1\tMasahiro Hayashi        0.0%\n```\n\n## License \n\n(The MIT License)\n\nCopyright (c) 2009-2012 TJ Holowaychuk &lt;tj@vision-media.ca&gt;\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\'Software\'), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \'AS IS\', WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.\nIN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY\nCLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,\nTORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE\nSOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n',
+167 silly resolved     readmeFilename: 'Readme.md',
+167 silly resolved     _id: 'express@3.0.0rc4',
+167 silly resolved     dist: { shasum: 'c2f0937add0a838f7782aa5dace1d8622fb977ca' },
+167 silly resolved     _from: 'express@3.0.0rc4' } ]
+168 info install express@3.0.0rc4 into c:\Users\srourd\Documents\GitHub\YAKFRONT\main
+169 info installOne express@3.0.0rc4
+170 verbose from cache C:\Users\srourd\AppData\Roaming\npm-cache\express\3.0.0rc4\package\package.json
+171 info c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express unbuild
+172 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\package.json
+173 verbose tar unpack C:\Users\srourd\AppData\Roaming\npm-cache\express\3.0.0rc4\package.tgz
+174 silly lockFile 2543cad9-KFRONT-main-node-modules-express c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express
+175 verbose lock c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express C:\Users\srourd\AppData\Roaming\npm-cache\2543cad9-KFRONT-main-node-modules-express.lock
+176 silly gunzTarPerm modes [ '755', '644' ]
+177 silly gunzTarPerm extractEntry package.json
+178 silly gunzTarPerm modified mode [ 'package.json', 438, 420 ]
+179 silly gunzTarPerm extractEntry .npmignore
+180 silly gunzTarPerm modified mode [ '.npmignore', 438, 420 ]
+181 silly gunzTarPerm extractEntry LICENSE
+182 silly gunzTarPerm modified mode [ 'LICENSE', 438, 420 ]
+183 silly gunzTarPerm extractEntry client.js
+184 silly gunzTarPerm modified mode [ 'client.js', 438, 420 ]
+185 silly gunzTarPerm extractEntry index.js
+186 silly gunzTarPerm modified mode [ 'index.js', 438, 420 ]
+187 silly gunzTarPerm extractEntry .travis.yml
+188 silly gunzTarPerm modified mode [ '.travis.yml', 438, 420 ]
+189 silly gunzTarPerm extractEntry lib/application.js
+190 silly gunzTarPerm modified mode [ 'lib/application.js', 438, 420 ]
+191 silly gunzTarPerm extractEntry lib/express.js
+192 silly gunzTarPerm modified mode [ 'lib/express.js', 438, 420 ]
+193 silly gunzTarPerm extractEntry lib/middleware.js
+194 silly gunzTarPerm modified mode [ 'lib/middleware.js', 438, 420 ]
+195 silly gunzTarPerm extractEntry lib/request.js
+196 silly gunzTarPerm modified mode [ 'lib/request.js', 438, 420 ]
+197 silly gunzTarPerm extractEntry lib/response.js
+198 silly gunzTarPerm modified mode [ 'lib/response.js', 438, 420 ]
+199 silly gunzTarPerm extractEntry lib/utils.js
+200 silly gunzTarPerm modified mode [ 'lib/utils.js', 438, 420 ]
+201 silly gunzTarPerm extractEntry lib/view.js
+202 silly gunzTarPerm modified mode [ 'lib/view.js', 438, 420 ]
+203 silly gunzTarPerm extractEntry lib/router/index.js
+204 silly gunzTarPerm modified mode [ 'lib/router/index.js', 438, 420 ]
+205 silly gunzTarPerm extractEntry lib/router/route.js
+206 silly gunzTarPerm modified mode [ 'lib/router/route.js', 438, 420 ]
+207 silly gunzTarPerm extractEntry History.md
+208 silly gunzTarPerm modified mode [ 'History.md', 438, 420 ]
+209 silly gunzTarPerm extractEntry Makefile
+210 silly gunzTarPerm modified mode [ 'Makefile', 438, 420 ]
+211 silly gunzTarPerm extractEntry bin/express
+212 silly gunzTarPerm modified mode [ 'bin/express', 438, 420 ]
+213 silly gunzTarPerm extractEntry Readme.md
+214 silly gunzTarPerm modified mode [ 'Readme.md', 438, 420 ]
+215 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\package.json
+216 silly lockFile 2543cad9-KFRONT-main-node-modules-express c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express
+217 info preinstall express@3.0.0rc4
+218 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\package.json
+219 verbose readDependencies using package.json deps
+220 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\package.json
+221 verbose readDependencies using package.json deps
+222 verbose cache add [ 'connect@2.4.4', null ]
+223 silly cache add name=undefined spec="connect@2.4.4" args=["connect@2.4.4",null]
+224 verbose parsed url { pathname: 'connect@2.4.4',
+224 verbose parsed url   path: 'connect@2.4.4',
+224 verbose parsed url   href: 'connect@2.4.4' }
+225 silly cache add name="connect" spec="2.4.4" args=["connect","2.4.4"]
+226 verbose parsed url { pathname: '2.4.4', path: '2.4.4', href: '2.4.4' }
+227 verbose addNamed [ 'connect', '2.4.4' ]
+228 verbose addNamed [ '2.4.4', '2.4.4' ]
+229 silly lockFile c3f4df6e-connect-2-4-4 connect@2.4.4
+230 verbose lock connect@2.4.4 C:\Users\srourd\AppData\Roaming\npm-cache\c3f4df6e-connect-2-4-4.lock
+231 verbose cache add [ 'commander@0.6.1', null ]
+232 silly cache add name=undefined spec="commander@0.6.1" args=["commander@0.6.1",null]
+233 verbose parsed url { pathname: 'commander@0.6.1',
+233 verbose parsed url   path: 'commander@0.6.1',
+233 verbose parsed url   href: 'commander@0.6.1' }
+234 silly cache add name="commander" spec="0.6.1" args=["commander","0.6.1"]
+235 verbose parsed url { pathname: '0.6.1', path: '0.6.1', href: '0.6.1' }
+236 verbose addNamed [ 'commander', '0.6.1' ]
+237 verbose addNamed [ '0.6.1', '0.6.1' ]
+238 silly lockFile fa16a2ce-commander-0-6-1 commander@0.6.1
+239 verbose lock commander@0.6.1 C:\Users\srourd\AppData\Roaming\npm-cache\fa16a2ce-commander-0-6-1.lock
+240 verbose cache add [ 'range-parser@0.0.4', null ]
+241 silly cache add name=undefined spec="range-parser@0.0.4" args=["range-parser@0.0.4",null]
+242 verbose parsed url { pathname: 'range-parser@0.0.4',
+242 verbose parsed url   path: 'range-parser@0.0.4',
+242 verbose parsed url   href: 'range-parser@0.0.4' }
+243 silly cache add name="range-parser" spec="0.0.4" args=["range-parser","0.0.4"]
+244 verbose parsed url { pathname: '0.0.4', path: '0.0.4', href: '0.0.4' }
+245 verbose addNamed [ 'range-parser', '0.0.4' ]
+246 verbose addNamed [ '0.0.4', '0.0.4' ]
+247 silly lockFile 0760c556-range-parser-0-0-4 range-parser@0.0.4
+248 verbose lock range-parser@0.0.4 C:\Users\srourd\AppData\Roaming\npm-cache\0760c556-range-parser-0-0-4.lock
+249 verbose cache add [ 'mkdirp@0.3.3', null ]
+250 silly cache add name=undefined spec="mkdirp@0.3.3" args=["mkdirp@0.3.3",null]
+251 verbose parsed url { pathname: 'mkdirp@0.3.3',
+251 verbose parsed url   path: 'mkdirp@0.3.3',
+251 verbose parsed url   href: 'mkdirp@0.3.3' }
+252 silly cache add name="mkdirp" spec="0.3.3" args=["mkdirp","0.3.3"]
+253 verbose parsed url { pathname: '0.3.3', path: '0.3.3', href: '0.3.3' }
+254 verbose addNamed [ 'mkdirp', '0.3.3' ]
+255 verbose addNamed [ '0.3.3', '0.3.3' ]
+256 silly lockFile 453bb99b-mkdirp-0-3-3 mkdirp@0.3.3
+257 verbose lock mkdirp@0.3.3 C:\Users\srourd\AppData\Roaming\npm-cache\453bb99b-mkdirp-0-3-3.lock
+258 verbose cache add [ 'cookie@0.0.4', null ]
+259 silly cache add name=undefined spec="cookie@0.0.4" args=["cookie@0.0.4",null]
+260 verbose parsed url { pathname: 'cookie@0.0.4',
+260 verbose parsed url   path: 'cookie@0.0.4',
+260 verbose parsed url   href: 'cookie@0.0.4' }
+261 silly cache add name="cookie" spec="0.0.4" args=["cookie","0.0.4"]
+262 verbose parsed url { pathname: '0.0.4', path: '0.0.4', href: '0.0.4' }
+263 verbose addNamed [ 'cookie', '0.0.4' ]
+264 verbose addNamed [ '0.0.4', '0.0.4' ]
+265 silly lockFile c11bcebd-cookie-0-0-4 cookie@0.0.4
+266 verbose lock cookie@0.0.4 C:\Users\srourd\AppData\Roaming\npm-cache\c11bcebd-cookie-0-0-4.lock
+267 verbose cache add [ 'crc@0.2.0', null ]
+268 silly cache add name=undefined spec="crc@0.2.0" args=["crc@0.2.0",null]
+269 verbose parsed url { pathname: 'crc@0.2.0', path: 'crc@0.2.0', href: 'crc@0.2.0' }
+270 silly cache add name="crc" spec="0.2.0" args=["crc","0.2.0"]
+271 verbose parsed url { pathname: '0.2.0', path: '0.2.0', href: '0.2.0' }
+272 verbose addNamed [ 'crc', '0.2.0' ]
+273 verbose addNamed [ '0.2.0', '0.2.0' ]
+274 silly lockFile 3e4de13a-crc-0-2-0 crc@0.2.0
+275 verbose lock crc@0.2.0 C:\Users\srourd\AppData\Roaming\npm-cache\3e4de13a-crc-0-2-0.lock
+276 verbose cache add [ 'fresh@0.1.0', null ]
+277 silly cache add name=undefined spec="fresh@0.1.0" args=["fresh@0.1.0",null]
+278 verbose parsed url { pathname: 'fresh@0.1.0',
+278 verbose parsed url   path: 'fresh@0.1.0',
+278 verbose parsed url   href: 'fresh@0.1.0' }
+279 silly cache add name="fresh" spec="0.1.0" args=["fresh","0.1.0"]
+280 verbose parsed url { pathname: '0.1.0', path: '0.1.0', href: '0.1.0' }
+281 verbose addNamed [ 'fresh', '0.1.0' ]
+282 verbose addNamed [ '0.1.0', '0.1.0' ]
+283 silly lockFile 3dea7da8-fresh-0-1-0 fresh@0.1.0
+284 verbose lock fresh@0.1.0 C:\Users\srourd\AppData\Roaming\npm-cache\3dea7da8-fresh-0-1-0.lock
+285 verbose cache add [ 'methods@0.0.1', null ]
+286 silly cache add name=undefined spec="methods@0.0.1" args=["methods@0.0.1",null]
+287 verbose parsed url { pathname: 'methods@0.0.1',
+287 verbose parsed url   path: 'methods@0.0.1',
+287 verbose parsed url   href: 'methods@0.0.1' }
+288 silly cache add name="methods" spec="0.0.1" args=["methods","0.0.1"]
+289 verbose parsed url { pathname: '0.0.1', path: '0.0.1', href: '0.0.1' }
+290 verbose addNamed [ 'methods', '0.0.1' ]
+291 verbose addNamed [ '0.0.1', '0.0.1' ]
+292 silly lockFile 209c2920-methods-0-0-1 methods@0.0.1
+293 verbose lock methods@0.0.1 C:\Users\srourd\AppData\Roaming\npm-cache\209c2920-methods-0-0-1.lock
+294 verbose cache add [ 'send@0.0.4', null ]
+295 silly cache add name=undefined spec="send@0.0.4" args=["send@0.0.4",null]
+296 verbose parsed url { pathname: 'send@0.0.4',
+296 verbose parsed url   path: 'send@0.0.4',
+296 verbose parsed url   href: 'send@0.0.4' }
+297 silly cache add name="send" spec="0.0.4" args=["send","0.0.4"]
+298 verbose parsed url { pathname: '0.0.4', path: '0.0.4', href: '0.0.4' }
+299 verbose addNamed [ 'send', '0.0.4' ]
+300 verbose addNamed [ '0.0.4', '0.0.4' ]
+301 silly lockFile dc770d3b-send-0-0-4 send@0.0.4
+302 verbose lock send@0.0.4 C:\Users\srourd\AppData\Roaming\npm-cache\dc770d3b-send-0-0-4.lock
+303 verbose cache add [ 'debug@*', null ]
+304 silly cache add name=undefined spec="debug@*" args=["debug@*",null]
+305 verbose parsed url { pathname: 'debug@*', path: 'debug@*', href: 'debug@*' }
+306 silly cache add name="debug" spec="*" args=["debug","*"]
+307 verbose parsed url { pathname: '*', path: '*', href: '*' }
+308 verbose addNamed [ 'debug', '*' ]
+309 verbose addNamed [ null, '' ]
+310 silly lockFile 3ac45eff-debug debug@*
+311 verbose lock debug@* C:\Users\srourd\AppData\Roaming\npm-cache\3ac45eff-debug.lock
+312 silly addNameRange { name: 'debug', range: '', hasData: false }
+313 verbose url raw range-parser/0.0.4
+314 verbose url resolving [ 'https://registry.npmjs.org/', './range-parser/0.0.4' ]
+315 verbose url resolved https://registry.npmjs.org/range-parser/0.0.4
+316 info trying registry request attempt 1 at 08:45:55
+317 verbose etag "5RN4EIM0NZGES8DY735B75LHK"
+318 http GET https://registry.npmjs.org/range-parser/0.0.4
+319 verbose url raw fresh/0.1.0
+320 verbose url resolving [ 'https://registry.npmjs.org/', './fresh/0.1.0' ]
+321 verbose url resolved https://registry.npmjs.org/fresh/0.1.0
+322 info trying registry request attempt 1 at 08:45:55
+323 verbose etag "6V7GPM0KNNBYXQ2K6E533OC3"
+324 http GET https://registry.npmjs.org/fresh/0.1.0
+325 verbose url raw connect/2.4.4
+326 verbose url resolving [ 'https://registry.npmjs.org/', './connect/2.4.4' ]
+327 verbose url resolved https://registry.npmjs.org/connect/2.4.4
+328 info trying registry request attempt 1 at 08:45:55
+329 verbose etag "55WYZJ1T1MV15LY76RB291HZT"
+330 http GET https://registry.npmjs.org/connect/2.4.4
+331 verbose url raw cookie/0.0.4
+332 verbose url resolving [ 'https://registry.npmjs.org/', './cookie/0.0.4' ]
+333 verbose url resolved https://registry.npmjs.org/cookie/0.0.4
+334 info trying registry request attempt 1 at 08:45:55
+335 verbose etag "8VX6XV8E1NMD2MFJR6YOFGL66"
+336 http GET https://registry.npmjs.org/cookie/0.0.4
+337 verbose url raw send/0.0.4
+338 verbose url resolving [ 'https://registry.npmjs.org/', './send/0.0.4' ]
+339 verbose url resolved https://registry.npmjs.org/send/0.0.4
+340 info trying registry request attempt 1 at 08:45:55
+341 verbose etag "WNVOE2VWFBLQIC3A2M4IKBPP"
+342 http GET https://registry.npmjs.org/send/0.0.4
+343 verbose url raw commander/0.6.1
+344 verbose url resolving [ 'https://registry.npmjs.org/', './commander/0.6.1' ]
+345 verbose url resolved https://registry.npmjs.org/commander/0.6.1
+346 info trying registry request attempt 1 at 08:45:55
+347 verbose etag "5SF248BPY91HWDXG9SJSICOGK"
+348 http GET https://registry.npmjs.org/commander/0.6.1
+349 verbose url raw debug
+350 verbose url resolving [ 'https://registry.npmjs.org/', './debug' ]
+351 verbose url resolved https://registry.npmjs.org/debug
+352 info trying registry request attempt 1 at 08:45:55
+353 verbose etag "CMAEPV679STO9P6YSF2XK3DDG"
+354 http GET https://registry.npmjs.org/debug
+355 verbose url raw mkdirp/0.3.3
+356 verbose url resolving [ 'https://registry.npmjs.org/', './mkdirp/0.3.3' ]
+357 verbose url resolved https://registry.npmjs.org/mkdirp/0.3.3
+358 info trying registry request attempt 1 at 08:45:55
+359 verbose etag "3BPHUFB4MV7RLWD3JDZF1SQVU"
+360 http GET https://registry.npmjs.org/mkdirp/0.3.3
+361 verbose url raw crc/0.2.0
+362 verbose url resolving [ 'https://registry.npmjs.org/', './crc/0.2.0' ]
+363 verbose url resolved https://registry.npmjs.org/crc/0.2.0
+364 info trying registry request attempt 1 at 08:45:55
+365 verbose etag "6DJOJ8C5VU7FA9W67MXRW9LC2"
+366 http GET https://registry.npmjs.org/crc/0.2.0
+367 verbose url raw methods/0.0.1
+368 verbose url resolving [ 'https://registry.npmjs.org/', './methods/0.0.1' ]
+369 verbose url resolved https://registry.npmjs.org/methods/0.0.1
+370 info trying registry request attempt 1 at 08:45:55
+371 verbose etag "5HC8O8WYLW5NWB76BLD8A2VD5"
+372 http GET https://registry.npmjs.org/methods/0.0.1
+373 http 304 https://registry.npmjs.org/range-parser/0.0.4
+374 silly registry.get cb [ 304,
+374 silly registry.get   { server: 'CouchDB/1.2.1 (Erlang OTP/R15B03)',
+374 silly registry.get     etag: '"5RN4EIM0NZGES8DY735B75LHK"',
+374 silly registry.get     date: 'Mon, 11 Mar 2013 06:48:39 GMT',
+374 silly registry.get     'content-length': '0' } ]
+375 verbose etag range-parser/0.0.4 from cache
+376 verbose read json C:\Users\srourd\AppData\Roaming\npm-cache\range-parser\0.0.4\package\package.json
+377 http 304 https://registry.npmjs.org/fresh/0.1.0
+378 silly registry.get cb [ 304,
+378 silly registry.get   { server: 'CouchDB/1.2.1 (Erlang OTP/R15B03)',
+378 silly registry.get     etag: '"6V7GPM0KNNBYXQ2K6E533OC3"',
+378 silly registry.get     date: 'Mon, 11 Mar 2013 06:48:40 GMT',
+378 silly registry.get     'content-length': '0' } ]
+379 verbose etag fresh/0.1.0 from cache
+380 http 304 https://registry.npmjs.org/connect/2.4.4
+381 silly registry.get cb [ 304,
+381 silly registry.get   { server: 'CouchDB/1.2.1 (Erlang OTP/R15B03)',
+381 silly registry.get     etag: '"55WYZJ1T1MV15LY76RB291HZT"',
+381 silly registry.get     date: 'Mon, 11 Mar 2013 06:48:40 GMT',
+381 silly registry.get     'content-length': '0' } ]
+382 verbose etag connect/2.4.4 from cache
+383 http 304 https://registry.npmjs.org/cookie/0.0.4
+384 silly registry.get cb [ 304,
+384 silly registry.get   { server: 'CouchDB/1.2.1 (Erlang OTP/R15B03)',
+384 silly registry.get     etag: '"8VX6XV8E1NMD2MFJR6YOFGL66"',
+384 silly registry.get     date: 'Mon, 11 Mar 2013 06:48:40 GMT',
+384 silly registry.get     'content-length': '0' } ]
+385 verbose etag cookie/0.0.4 from cache
+386 http 304 https://registry.npmjs.org/send/0.0.4
+387 silly registry.get cb [ 304,
+387 silly registry.get   { server: 'CouchDB/1.2.1 (Erlang OTP/R15B03)',
+387 silly registry.get     etag: '"WNVOE2VWFBLQIC3A2M4IKBPP"',
+387 silly registry.get     date: 'Mon, 11 Mar 2013 06:48:40 GMT',
+387 silly registry.get     'content-length': '0' } ]
+388 verbose etag send/0.0.4 from cache
+389 verbose read json C:\Users\srourd\AppData\Roaming\npm-cache\fresh\0.1.0\package\package.json
+390 verbose read json C:\Users\srourd\AppData\Roaming\npm-cache\cookie\0.0.4\package\package.json
+391 verbose read json C:\Users\srourd\AppData\Roaming\npm-cache\send\0.0.4\package\package.json
+392 verbose read json C:\Users\srourd\AppData\Roaming\npm-cache\connect\2.4.4\package\package.json
+393 silly lockFile 0760c556-range-parser-0-0-4 range-parser@0.0.4
+394 http 304 https://registry.npmjs.org/debug
+395 silly registry.get cb [ 304,
+395 silly registry.get   { server: 'CouchDB/1.2.1 (Erlang OTP/R15B03)',
+395 silly registry.get     etag: '"CMAEPV679STO9P6YSF2XK3DDG"',
+395 silly registry.get     date: 'Mon, 11 Mar 2013 06:48:40 GMT',
+395 silly registry.get     'content-length': '0' } ]
+396 verbose etag debug from cache
+397 http 304 https://registry.npmjs.org/mkdirp/0.3.3
+398 silly registry.get cb [ 304,
+398 silly registry.get   { server: 'CouchDB/1.2.1 (Erlang OTP/R15B03)',
+398 silly registry.get     etag: '"3BPHUFB4MV7RLWD3JDZF1SQVU"',
+398 silly registry.get     date: 'Mon, 11 Mar 2013 06:48:40 GMT',
+398 silly registry.get     'content-length': '0' } ]
+399 verbose etag mkdirp/0.3.3 from cache
+400 http 304 https://registry.npmjs.org/crc/0.2.0
+401 silly registry.get cb [ 304,
+401 silly registry.get   { server: 'CouchDB/1.2.1 (Erlang OTP/R15B03)',
+401 silly registry.get     etag: '"6DJOJ8C5VU7FA9W67MXRW9LC2"',
+401 silly registry.get     date: 'Mon, 11 Mar 2013 06:48:40 GMT',
+401 silly registry.get     'content-length': '0' } ]
+402 verbose etag crc/0.2.0 from cache
+403 silly addNameRange number 2 { name: 'debug', range: '', hasData: true }
+404 silly addNameRange versions [ 'debug',
+404 silly addNameRange   [ '0.0.1',
+404 silly addNameRange     '0.1.0',
+404 silly addNameRange     '0.2.0',
+404 silly addNameRange     '0.3.0',
+404 silly addNameRange     '0.4.0',
+404 silly addNameRange     '0.4.1',
+404 silly addNameRange     '0.5.0',
+404 silly addNameRange     '0.6.0',
+404 silly addNameRange     '0.7.0',
+404 silly addNameRange     '0.7.1',
+404 silly addNameRange     '0.7.2' ] ]
+405 verbose addNamed [ 'debug', '0.7.2' ]
+406 verbose addNamed [ '0.7.2', '0.7.2' ]
+407 silly lockFile 432e5064-debug-0-7-2 debug@0.7.2
+408 verbose lock debug@0.7.2 C:\Users\srourd\AppData\Roaming\npm-cache\432e5064-debug-0-7-2.lock
+409 verbose read json C:\Users\srourd\AppData\Roaming\npm-cache\debug\0.7.2\package\package.json
+410 verbose read json C:\Users\srourd\AppData\Roaming\npm-cache\crc\0.2.0\package\package.json
+411 verbose read json C:\Users\srourd\AppData\Roaming\npm-cache\mkdirp\0.3.3\package\package.json
+412 http 200 https://registry.npmjs.org/commander/0.6.1
+413 silly registry.get cb [ 200,
+413 silly registry.get   { vary: 'Accept',
+413 silly registry.get     server: 'CouchDB/1.2.1 (Erlang OTP/R15B03)',
+413 silly registry.get     etag: '"4CPQDKBY4I0G4U29GBRDT2I26"',
+413 silly registry.get     date: 'Mon, 11 Mar 2013 06:48:40 GMT',
+413 silly registry.get     'content-type': 'application/json',
+413 silly registry.get     'content-length': '7887' } ]
+414 silly lockFile 378c912a-rg-commander-commander-0-6-1-tgz https://registry.npmjs.org/commander/-/commander-0.6.1.tgz
+415 verbose lock https://registry.npmjs.org/commander/-/commander-0.6.1.tgz C:\Users\srourd\AppData\Roaming\npm-cache\378c912a-rg-commander-commander-0-6-1-tgz.lock
+416 silly lockFile c3f4df6e-connect-2-4-4 connect@2.4.4
+417 silly lockFile c11bcebd-cookie-0-0-4 cookie@0.0.4
+418 silly lockFile dc770d3b-send-0-0-4 send@0.0.4
+419 verbose addRemoteTarball [ 'https://registry.npmjs.org/commander/-/commander-0.6.1.tgz',
+419 verbose addRemoteTarball   'fa68a14f6a945d54dbbe50d8cdb3320e9e3b1a06' ]
+420 info retry fetch attempt 1 at 08:45:57
+421 verbose fetch to= C:\Users\srourd\AppData\Local\Temp\npm-5004\1362984357333-0.5454754100646824\tmp.tgz
+422 http GET https://registry.npmjs.org/commander/-/commander-0.6.1.tgz
+423 silly lockFile 3dea7da8-fresh-0-1-0 fresh@0.1.0
+424 silly lockFile 453bb99b-mkdirp-0-3-3 mkdirp@0.3.3
+425 silly lockFile 432e5064-debug-0-7-2 debug@0.7.2
+426 silly lockFile 3ac45eff-debug debug@*
+427 silly lockFile 3e4de13a-crc-0-2-0 crc@0.2.0
+428 http 304 https://registry.npmjs.org/methods/0.0.1
+429 silly registry.get cb [ 304,
+429 silly registry.get   { server: 'CouchDB/1.2.1 (Erlang OTP/R15B03)',
+429 silly registry.get     etag: '"5HC8O8WYLW5NWB76BLD8A2VD5"',
+429 silly registry.get     date: 'Mon, 11 Mar 2013 06:48:40 GMT',
+429 silly registry.get     'content-length': '0' } ]
+430 verbose etag methods/0.0.1 from cache
+431 verbose read json C:\Users\srourd\AppData\Roaming\npm-cache\methods\0.0.1\package\package.json
+432 warn package.json methods@0.0.1 No README.md file found!
+433 silly lockFile 209c2920-methods-0-0-1 methods@0.0.1
+434 http 200 https://registry.npmjs.org/commander/-/commander-0.6.1.tgz
+435 silly shasum updated bytes 9774
+436 info shasum fa68a14f6a945d54dbbe50d8cdb3320e9e3b1a06
+436 info shasum C:\Users\srourd\AppData\Local\Temp\npm-5004\1362984357333-0.5454754100646824\tmp.tgz
+437 verbose tar unpack C:\Users\srourd\AppData\Local\Temp\npm-5004\1362984357333-0.5454754100646824\tmp.tgz
+438 silly lockFile ec43470d-57333-0-5454754100646824-package C:\Users\srourd\AppData\Local\Temp\npm-5004\1362984357333-0.5454754100646824\package
+439 verbose lock C:\Users\srourd\AppData\Local\Temp\npm-5004\1362984357333-0.5454754100646824\package C:\Users\srourd\AppData\Roaming\npm-cache\ec43470d-57333-0-5454754100646824-package.lock
+440 silly gunzTarPerm modes [ '755', '644' ]
+441 silly gunzTarPerm extractEntry .npmignore
+442 silly gunzTarPerm extractEntry .travis.yml
+443 silly gunzTarPerm extractEntry History.md
+444 silly gunzTarPerm extractEntry index.js
+445 silly gunzTarPerm extractEntry lib/
+446 silly gunzTarPerm extractEntry lib/commander.js
+447 silly gunzTarPerm extractEntry Makefile
+448 silly gunzTarPerm extractEntry package.json
+449 silly gunzTarPerm extractEntry Readme.md
+450 verbose read json C:\Users\srourd\AppData\Local\Temp\npm-5004\1362984357333-0.5454754100646824\package\package.json
+451 silly lockFile ec43470d-57333-0-5454754100646824-package C:\Users\srourd\AppData\Local\Temp\npm-5004\1362984357333-0.5454754100646824\package
+452 verbose from cache C:\Users\srourd\AppData\Local\Temp\npm-5004\1362984357333-0.5454754100646824\package\package.json
+453 verbose tar pack [ 'C:\\Users\\srourd\\AppData\\Roaming\\npm-cache\\commander\\0.6.1\\package.tgz',
+453 verbose tar pack   'C:\\Users\\srourd\\AppData\\Local\\Temp\\npm-5004\\1362984357333-0.5454754100646824\\package' ]
+454 verbose tarball C:\Users\srourd\AppData\Roaming\npm-cache\commander\0.6.1\package.tgz
+455 verbose folder C:\Users\srourd\AppData\Local\Temp\npm-5004\1362984357333-0.5454754100646824\package
+456 silly lockFile 737a4733-ache-commander-0-6-1-package-tgz C:\Users\srourd\AppData\Roaming\npm-cache\commander\0.6.1\package.tgz
+457 verbose lock C:\Users\srourd\AppData\Roaming\npm-cache\commander\0.6.1\package.tgz C:\Users\srourd\AppData\Roaming\npm-cache\737a4733-ache-commander-0-6-1-package-tgz.lock
+458 silly lockFile 737a4733-ache-commander-0-6-1-package-tgz C:\Users\srourd\AppData\Roaming\npm-cache\commander\0.6.1\package.tgz
+459 silly lockFile aa416494-pm-cache-commander-0-6-1-package C:\Users\srourd\AppData\Roaming\npm-cache\commander\0.6.1\package
+460 verbose lock C:\Users\srourd\AppData\Roaming\npm-cache\commander\0.6.1\package C:\Users\srourd\AppData\Roaming\npm-cache\aa416494-pm-cache-commander-0-6-1-package.lock
+461 silly lockFile aa416494-pm-cache-commander-0-6-1-package C:\Users\srourd\AppData\Roaming\npm-cache\commander\0.6.1\package
+462 verbose tar unpack C:\Users\srourd\AppData\Roaming\npm-cache\commander\0.6.1\package.tgz
+463 silly lockFile aa416494-pm-cache-commander-0-6-1-package C:\Users\srourd\AppData\Roaming\npm-cache\commander\0.6.1\package
+464 verbose lock C:\Users\srourd\AppData\Roaming\npm-cache\commander\0.6.1\package C:\Users\srourd\AppData\Roaming\npm-cache\aa416494-pm-cache-commander-0-6-1-package.lock
+465 silly gunzTarPerm modes [ '755', '644' ]
+466 silly gunzTarPerm extractEntry package.json
+467 silly gunzTarPerm modified mode [ 'package.json', 438, 420 ]
+468 silly gunzTarPerm extractEntry .npmignore
+469 silly gunzTarPerm modified mode [ '.npmignore', 438, 420 ]
+470 silly gunzTarPerm extractEntry index.js
+471 silly gunzTarPerm modified mode [ 'index.js', 438, 420 ]
+472 silly gunzTarPerm extractEntry .travis.yml
+473 silly gunzTarPerm modified mode [ '.travis.yml', 438, 420 ]
+474 silly gunzTarPerm extractEntry History.md
+475 silly gunzTarPerm modified mode [ 'History.md', 438, 420 ]
+476 silly gunzTarPerm extractEntry lib/commander.js
+477 silly gunzTarPerm modified mode [ 'lib/commander.js', 438, 420 ]
+478 silly gunzTarPerm extractEntry Makefile
+479 silly gunzTarPerm modified mode [ 'Makefile', 438, 420 ]
+480 silly gunzTarPerm extractEntry Readme.md
+481 silly gunzTarPerm modified mode [ 'Readme.md', 438, 420 ]
+482 verbose read json C:\Users\srourd\AppData\Roaming\npm-cache\commander\0.6.1\package\package.json
+483 silly lockFile aa416494-pm-cache-commander-0-6-1-package C:\Users\srourd\AppData\Roaming\npm-cache\commander\0.6.1\package
+484 silly shasum updated bytes 9693
+485 info shasum 5f5f212b683ae6f796b06ba380cfe81c685d3c42
+485 info shasum C:\Users\srourd\AppData\Roaming\npm-cache\commander\0.6.1\package.tgz
+486 verbose from cache C:\Users\srourd\AppData\Roaming\npm-cache\commander\0.6.1\package\package.json
+487 verbose chmod C:\Users\srourd\AppData\Roaming\npm-cache\commander\0.6.1\package.tgz 644
+488 silly chown skipping for windows C:\Users\srourd\AppData\Roaming\npm-cache\commander\0.6.1\package.tgz
+489 silly lockFile 378c912a-rg-commander-commander-0-6-1-tgz https://registry.npmjs.org/commander/-/commander-0.6.1.tgz
+490 silly lockFile fa16a2ce-commander-0-6-1 commander@0.6.1
+491 silly resolved [ { name: 'range-parser',
+491 silly resolved     author:
+491 silly resolved      { name: 'TJ Holowaychuk',
+491 silly resolved        email: 'tj@vision-media.ca',
+491 silly resolved        url: 'http://tjholowaychuk.com' },
+491 silly resolved     description: 'Range header field string parser',
+491 silly resolved     version: '0.0.4',
+491 silly resolved     main: 'index.js',
+491 silly resolved     dependencies: {},
+491 silly resolved     devDependencies: { mocha: '*', should: '*' },
+491 silly resolved     readme: '\n# node-range-parser\n\n  Range header field parser.\n\n## Example:\n\n```js\nassert(-1 == parse(200, \'bytes=500-20\'));\nassert(-2 == parse(200, \'bytes=malformed\'));\nparse(200, \'bytes=0-499\').should.eql(arr(\'bytes\', [{ start: 0, end: 199 }]));\nparse(1000, \'bytes=0-499\').should.eql(arr(\'bytes\', [{ start: 0, end: 499 }]));\nparse(1000, \'bytes=40-80\').should.eql(arr(\'bytes\', [{ start: 40, end: 80 }]));\nparse(1000, \'bytes=-500\').should.eql(arr(\'bytes\', [{ start: 500, end: 999 }]));\nparse(1000, \'bytes=-400\').should.eql(arr(\'bytes\', [{ start: 600, end: 999 }]));\nparse(1000, \'bytes=500-\').should.eql(arr(\'bytes\', [{ start: 500, end: 999 }]));\nparse(1000, \'bytes=400-\').should.eql(arr(\'bytes\', [{ start: 400, end: 999 }]));\nparse(1000, \'bytes=0-0\').should.eql(arr(\'bytes\', [{ start: 0, end: 0 }]));\nparse(1000, \'bytes=-1\').should.eql(arr(\'bytes\', [{ start: 999, end: 999 }]));\nparse(1000, \'items=0-5\').should.eql(arr(\'items\', [{ start: 0, end: 5 }]));\nparse(1000, \'bytes=40-80,-1\').should.eql(arr(\'bytes\', [{ start: 40, end: 80 }, { start: 999, end: 999 }]));\n```\n\n## Installation\n\n```\n$ npm install range-parser\n```',
+491 silly resolved     readmeFilename: 'Readme.md',
+491 silly resolved     _id: 'range-parser@0.0.4',
+491 silly resolved     _from: 'range-parser@0.0.4' },
+491 silly resolved   { name: 'connect',
+491 silly resolved     version: '2.4.4',
+491 silly resolved     description: 'High performance middleware framework',
+491 silly resolved     keywords: [ 'framework', 'web', 'middleware', 'connect', 'rack' ],
+491 silly resolved     repository: { type: 'git', url: 'git://github.com/senchalabs/connect.git' },
+491 silly resolved     author:
+491 silly resolved      { name: 'TJ Holowaychuk',
+491 silly resolved        email: 'tj@vision-media.ca',
+491 silly resolved        url: 'http://tjholowaychuk.com' },
+491 silly resolved     dependencies:
+491 silly resolved      { qs: '0.4.2',
+491 silly resolved        formidable: '1.0.11',
+491 silly resolved        crc: '0.2.0',
+491 silly resolved        cookie: '0.0.4',
+491 silly resolved        bytes: '0.1.0',
+491 silly resolved        send: '0.0.4',
+491 silly resolved        fresh: '0.1.0',
+491 silly resolved        pause: '0.0.1',
+491 silly resolved        debug: '*' },
+491 silly resolved     devDependencies: { should: '*', mocha: '*', jade: '*', dox: '*' },
+491 silly resolved     main: 'index',
+491 silly resolved     engines: { node: '>= 0.5.0' },
+491 silly resolved     readme: '# Connect\n\n  Connect is an extensible HTTP server framework for [node](http://nodejs.org), providing high performance "plugins" known as _middleware_.\n\n Connect is bundled with over _20_ commonly used middleware, including\n a logger, session support, cookie parser, and [more](http://senchalabs.github.com/connect). Be sure to view the 2.x [documentation](http://senchalabs.github.com/connect/).\n\n```js\nvar connect = require(\'connect\')\n  , http = require(\'http\');\n\nvar app = connect()\n  .use(connect.favicon())\n  .use(connect.logger(\'dev\'))\n  .use(connect.static(\'public\'))\n  .use(connect.directory(\'public\'))\n  .use(connect.cookieParser())\n  .use(connect.session({ secret: \'my secret here\' }))\n  .use(function(req, res){\n    res.end(\'Hello from Connect!\\n\');\n  });\n\nhttp.createServer(app).listen(3000);\n```\n\n## Middleware\n\n  - csrf\n  - basicAuth\n  - bodyParser\n  - json\n  - multipart\n  - urlencoded\n  - cookieParser\n  - directory\n  - compress\n  - errorHandler\n  - favicon\n  - limit\n  - logger\n  - methodOverride\n  - query\n  - responseTime\n  - session\n  - static\n  - staticCache\n  - vhost\n  - subdomains\n  - cookieSession\n\n## Running Tests\n\nfirst:\n\n    $ npm install -d\n\nthen:\n\n    $ make test\n\n## Authors\n\n Below is the output from [git-summary](http://github.com/visionmedia/git-extras).\n\n\n     project: connect\n     commits: 2033\n     active : 301 days\n     files  : 171\n     authors: \n      1414\tTj Holowaychuk          69.6%\n       298\tvisionmedia             14.7%\n       191\tTim Caswell             9.4%\n        51\tTJ Holowaychuk          2.5%\n        10\tRyan Olds               0.5%\n         8\tAstro                   0.4%\n         5\tNathan Rajlich          0.2%\n         5\tJakub Nešetřil          0.2%\n         3\tDaniel Dickison         0.1%\n         3\tDavid Rio Deiros        0.1%\n         3\tAlexander Simmerl       0.1%\n         3\tAndreas Lind Petersen   0.1%\n         2\tAaron Heckmann          0.1%\n         2\tJacques Crocker         0.1%\n         2\tFabian Jakobs           0.1%\n         2\tBrian J Brennan         0.1%\n         2\tAdam Malcontenti-Wilson 0.1%\n         2\tGlen Mailer             0.1%\n         2\tJames Campos            0.1%\n         1\tTrent Mick              0.0%\n         1\tTroy Kruthoff           0.0%\n         1\tWei Zhu                 0.0%\n         1\tcomerc                  0.0%\n         1\tdarobin                 0.0%\n         1\tnateps                  0.0%\n         1\tMarco Sanson            0.0%\n         1\tArthur Taylor           0.0%\n         1\tAseem Kishore           0.0%\n         1\tBart Teeuwisse          0.0%\n         1\tCameron Howey           0.0%\n         1\tChad Weider             0.0%\n         1\tCraig Barnes            0.0%\n         1\tEran Hammer-Lahav       0.0%\n         1\tGregory McWhirter       0.0%\n         1\tGuillermo Rauch         0.0%\n         1\tJae Kwon                0.0%\n         1\tJakub Nesetril          0.0%\n         1\tJoshua Peek             0.0%\n         1\tJxck                    0.0%\n         1\tAJ ONeal                0.0%\n         1\tMichael Hemesath        0.0%\n         1\tMorten Siebuhr          0.0%\n         1\tSamori Gorse            0.0%\n         1\tTom Jensen              0.0%\n\n## Node Compatibility\n\n  Connect `< 1.x` is compatible with node 0.2.x\n\n\n  Connect `1.x` is compatible with node 0.4.x\n\n\n  Connect (_master_) `2.x` is compatible with node 0.6.x\n\n## CLA\n\n [http://sencha.com/cla](http://sencha.com/cla)\n\n## License\n\nView the [LICENSE](https://github.com/senchalabs/connect/blob/master/LICENSE) file. The [Silk](http://www.famfamfam.com/lab/icons/silk/) icons used by the `directory` middleware created by/copyright of [FAMFAMFAM](http://www.famfamfam.com/).\n',
+491 silly resolved     readmeFilename: 'Readme.md',
+491 silly resolved     _id: 'connect@2.4.4',
+491 silly resolved     _from: 'connect@2.4.4' },
+491 silly resolved   { author: { name: 'Roman Shtylman', email: 'shtylman@gmail.com' },
+491 silly resolved     name: 'cookie',
+491 silly resolved     description: 'cookie parsing and serialization',
+491 silly resolved     version: '0.0.4',
+491 silly resolved     repository:
+491 silly resolved      { type: 'git',
+491 silly resolved        url: 'git://github.com/shtylman/node-cookie.git' },
+491 silly resolved     keywords: [ 'cookie', 'cookies' ],
+491 silly resolved     main: 'index.js',
+491 silly resolved     scripts: { test: 'mocha' },
+491 silly resolved     dependencies: {},
+491 silly resolved     devDependencies: { mocha: '1.x.x' },
+491 silly resolved     optionalDependencies: {},
+491 silly resolved     engines: { node: '*' },
+491 silly resolved     readme: '# cookie [![Build Status](https://secure.travis-ci.org/shtylman/node-cookie.png?branch=master)](http://travis-ci.org/shtylman/node-cookie) #\n\ncookie is a basic cookie parser and serializer. It doesn\'t make assumptions about how you are going to deal with your cookies. It basically just provides a way to read and write the HTTP cookie headers.\n\nSee [RFC6265](http://tools.ietf.org/html/rfc6265) for details about the http header for cookies.\n\n## how?\n\n```\nnpm install cookie\n```\n\n```javascript\nvar cookie = require(\'cookie\');\n\nvar hdr = cookie.serialize(\'foo\', \'bar\');\n// hdr = \'foo=bar\';\n\nvar cookies = cookie.parse(\'foo=bar; cat=meow; dog=ruff\');\n// cookies = { foo: \'bar\', cat: \'meow\', dog: \'ruff\' };\n```\n\n## more\n\nThe serialize function takes a third parameter, an object, to set cookie options. See the RFC for valid values.\n\n### path\n> cookie path\n\n### expires\n> absolute expiration date for the cookie (Date object)\n\n### maxAge\n> relative max age of the cookie from when the client receives it (seconds)\n\n### domain\n> domain for the cookie\n\n### secure\n> true or false\n\n### httpOnly\n> true or false\n\n',
+491 silly resolved     readmeFilename: 'README.md',
+491 silly resolved     _id: 'cookie@0.0.4',
+491 silly resolved     _from: 'cookie@0.0.4' },
+491 silly resolved   { name: 'send',
+491 silly resolved     version: '0.0.4',
+491 silly resolved     description: 'Better streaming static file server with Range and conditional-GET support',
+491 silly resolved     keywords: [ 'static', 'file', 'server' ],
+491 silly resolved     author: { name: 'TJ Holowaychuk', email: 'tj@vision-media.ca' },
+491 silly resolved     dependencies:
+491 silly resolved      { debug: '*',
+491 silly resolved        mime: '1.2.6',
+491 silly resolved        fresh: '0.1.0',
+491 silly resolved        'range-parser': '0.0.4' },
+491 silly resolved     devDependencies: { mocha: '*', should: '*', supertest: '0.0.1', connect: '2.x' },
+491 silly resolved     scripts: { test: 'make test' },
+491 silly resolved     main: 'index',
+491 silly resolved     readme: '\n# send\n\n  Send is Connect\'s `static()` extracted for generalized use, a streaming static file\n  server supporting partial responses (Ranges), conditional-GET negotiation, high test coverage, and granular events which may be leveraged to take appropriate actions in your application or framework.\n\n## Installation\n\n    $ npm install send\n\n## Examples\n\n  Small:\n\n```js\nvar http = require(\'http\');\nvar send = require(\'send\');\n\nvar app = http.createServer(function(req, res){\n  send(req, req.url).pipe(res);\n});\n```\n\n  Serving from a root directory with custom error-handling:\n\n```js\nvar http = require(\'http\');\nvar send = require(\'send\');\n\nvar app = http.createServer(function(req, res){\n  // your custom error-handling logic:\n  function error(err) {\n    res.statusCode = err.status || 500;\n    res.end(err.message);\n  }\n\n  // your custom directory handling logic:\n  function redirect() {\n    res.statusCode = 301;\n    res.setHeader(\'Location\', req.url + \'/\');\n    res.end(\'Redirecting to \' + req.url + \'/\');\n  }\n\n  // transfer arbitrary files from within\n  // /www/example.com/public/*\n  send(req, url.parse(req.url).pathname)\n  .root(\'/www/example.com/public\')\n  .on(\'error\', error)\n  .on(\'directory\', redirect)\n  .pipe(res);\n});\n```\n\n## API\n\n### Events\n\n  - `error` an error occurred `(err)`\n  - `directory` a directory was requested\n  - `stream` file streaming has started `(stream)`\n  - `end` streaming has completed\n\n### .root(dir)\n\n  Serve files relative to `path`. Aliased as `.from(dir)`.\n\n### .index(path)\n\n  By default send supports "index.html" files, to disable this\n  invoke `.index(false)` or to supply a new index pass a string.\n\n### .maxage(ms)\n\n  Provide a max-age in milliseconds for http caching, defaults to 0.\n\n## Error-handling\n\n  By default when no `error` listeners are present an automatic response will be made, otherwise you have full control over the response, aka you may show a 5xx page etc.\n\n## Caching\n\n  It does _not_ perform internal caching, you should use a reverse proxy cache such\n  as Varnish for this, or those fancy things called CDNs. If your application is small enough that it would benefit from single-node memory caching, it\'s small enough that it does not need caching at all ;).\n\n## Debugging\n\n To enable `debug()` instrumentation output export __DEBUG__:\n\n```\n$ DEBUG=send node app\n```\n\n## Running tests\n\n```\n$ npm install\n$ make test\n```\n\n## License \n\n(The MIT License)\n\nCopyright (c) 2012 TJ Holowaychuk &lt;tj@vision-media.ca&gt;\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\'Software\'), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \'AS IS\', WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.\nIN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY\nCLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,\nTORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE\nSOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.',
+491 silly resolved     readmeFilename: 'Readme.md',
+491 silly resolved     _id: 'send@0.0.4',
+491 silly resolved     _from: 'send@0.0.4' },
+491 silly resolved   { name: 'fresh',
+491 silly resolved     author:
+491 silly resolved      { name: 'TJ Holowaychuk',
+491 silly resolved        email: 'tj@vision-media.ca',
+491 silly resolved        url: 'http://tjholowaychuk.com' },
+491 silly resolved     description: 'HTTP response freshness testing',
+491 silly resolved     version: '0.1.0',
+491 silly resolved     main: 'index.js',
+491 silly resolved     dependencies: {},
+491 silly resolved     devDependencies: { mocha: '*', should: '*' },
+491 silly resolved     readme: '\n# node-fresh\n\n  HTTP response freshness testing\n\n## fresh(req, res)\n\n Check freshness of `req` and `res` headers.\n\n When the cache is "fresh" __true__ is returned,\n otherwise __false__ is returned to indicate that\n the cache is now stale.\n\n## Example:\n\n```js\nvar req = { \'if-none-match\': \'tobi\' };\nvar res = { \'etag\': \'luna\' };\nfresh(req, res);\n// => false\n\nvar req = { \'if-none-match\': \'tobi\' };\nvar res = { \'etag\': \'tobi\' };\nfresh(req, res);\n// => true\n```\n\n## Installation\n\n```\n$ npm install fresh\n```',
+491 silly resolved     readmeFilename: 'Readme.md',
+491 silly resolved     _id: 'fresh@0.1.0',
+491 silly resolved     _from: 'fresh@0.1.0' },
+491 silly resolved   { name: 'mkdirp',
+491 silly resolved     description: 'Recursively mkdir, like `mkdir -p`',
+491 silly resolved     version: '0.3.3',
+491 silly resolved     author:
+491 silly resolved      { name: 'James Halliday',
+491 silly resolved        email: 'mail@substack.net',
+491 silly resolved        url: 'http://substack.net' },
+491 silly resolved     main: './index',
+491 silly resolved     keywords: [ 'mkdir', 'directory' ],
+491 silly resolved     repository:
+491 silly resolved      { type: 'git',
+491 silly resolved        url: 'http://github.com/substack/node-mkdirp.git' },
+491 silly resolved     scripts: { test: 'tap test/*.js' },
+491 silly resolved     devDependencies: { tap: '~0.2.4' },
+491 silly resolved     license: 'MIT/X11',
+491 silly resolved     engines: { node: '*' },
+491 silly resolved     readme: 'mkdirp\n======\n\nLike `mkdir -p`, but in node.js!\n\n[![build status](https://secure.travis-ci.org/substack/node-mkdirp.png)](http://travis-ci.org/substack/node-mkdirp)\n\nexample\n=======\n\npow.js\n------\n    var mkdirp = require(\'mkdirp\');\n    \n    mkdirp(\'/tmp/foo/bar/baz\', function (err) {\n        if (err) console.error(err)\n        else console.log(\'pow!\')\n    });\n\nOutput\n    pow!\n\nAnd now /tmp/foo/bar/baz exists, huzzah!\n\nmethods\n=======\n\nvar mkdirp = require(\'mkdirp\');\n\nmkdirp(dir, mode, cb)\n---------------------\n\nCreate a new directory and any necessary subdirectories at `dir` with octal\npermission string `mode`.\n\nIf `mode` isn\'t specified, it defaults to `0777 & (~process.umask())`.\n\n`cb(err, made)` fires with the error or the first directory `made`\nthat had to be created, if any.\n\nmkdirp.sync(dir, mode)\n----------------------\n\nSynchronously create a new directory and any necessary subdirectories at `dir`\nwith octal permission string `mode`.\n\nIf `mode` isn\'t specified, it defaults to `0777 & (~process.umask())`.\n\nReturns the first directory that had to be created, if any.\n\ninstall\n=======\n\nWith [npm](http://npmjs.org) do:\n\n    npm install mkdirp\n\nlicense\n=======\n\nMIT/X11\n',
+491 silly resolved     readmeFilename: 'README.markdown',
+491 silly resolved     _id: 'mkdirp@0.3.3',
+491 silly resolved     _from: 'mkdirp@0.3.3' },
+491 silly resolved   { name: 'debug',
+491 silly resolved     version: '0.7.2',
+491 silly resolved     repository: { type: 'git', url: 'git://github.com/visionmedia/debug.git' },
+491 silly resolved     description: 'small debugging utility',
+491 silly resolved     keywords: [ 'debug', 'log', 'debugger' ],
+491 silly resolved     author: { name: 'TJ Holowaychuk', email: 'tj@vision-media.ca' },
+491 silly resolved     dependencies: {},
+491 silly resolved     devDependencies: { mocha: '*' },
+491 silly resolved     main: 'lib/debug.js',
+491 silly resolved     browserify: 'debug.js',
+491 silly resolved     engines: { node: '*' },
+491 silly resolved     component: { scripts: [Object] },
+491 silly resolved     readme: '\n# debug\n\n  tiny node.js debugging utility modelled after node core\'s debugging technique.\n\n## Installation\n\n```\n$ npm install debug\n```\n\n## Usage\n\n With `debug` you simply invoke the exported function to generate your debug function, passing it a name which will determine if a noop function is returned, or a decorated `console.error`, so all of the `console` format string goodies you\'re used to work fine. A unique color is selected per-function for visibility.\n \nExample _app.js_:\n\n```js\nvar debug = require(\'debug\')(\'http\')\n  , http = require(\'http\')\n  , name = \'My App\';\n\n// fake app\n\ndebug(\'booting %s\', name);\n\nhttp.createServer(function(req, res){\n  debug(req.method + \' \' + req.url);\n  res.end(\'hello\\n\');\n}).listen(3000, function(){\n  debug(\'listening\');\n});\n\n// fake worker of some kind\n\nrequire(\'./worker\');\n```\n\nExample _worker.js_:\n\n```js\nvar debug = require(\'debug\')(\'worker\');\n\nsetInterval(function(){\n  debug(\'doing some work\');\n}, 1000);\n```\n\n The __DEBUG__ environment variable is then used to enable these based on space or comma-delimited names. Here are some examples:\n\n  ![debug http and worker](http://f.cl.ly/items/18471z1H402O24072r1J/Screenshot.png)\n\n  ![debug worker](http://f.cl.ly/items/1X413v1a3M0d3C2c1E0i/Screenshot.png)\n\n## Millisecond diff\n\n  When actively developing an application it can be useful to see when the time spent between one `debug()` call and the next. Suppose for example you invoke `debug()` before requesting a resource, and after as well, the "+NNNms" will show you how much time was spent between calls.\n\n  ![](http://f.cl.ly/items/2i3h1d3t121M2Z1A3Q0N/Screenshot.png)\n\n  When stdout is not a TTY, `Date#toUTCString()` is used, making it more useful for logging the debug information as shown below:\n  \n  ![](http://f.cl.ly/items/112H3i0e0o0P0a2Q2r11/Screenshot.png)\n\n## Conventions\n\n If you\'re using this in one or more of your libraries, you _should_ use the name of your library so that developers may toggle debugging as desired without guessing names. If you have more than one debuggers you _should_ prefix them with your library name and use ":" to separate features. For example "bodyParser" from Connect would then be "connect:bodyParser". \n\n## Wildcards\n\n  The "*" character may be used as a wildcard. Suppose for example your library has debuggers named "connect:bodyParser", "connect:compress", "connect:session", instead of listing all three with `DEBUG=connect:bodyParser,connect.compress,connect:session`, you may simply do `DEBUG=connect:*`, or to run everything using this module simply use `DEBUG=*`.\n\n  You can also exclude specific debuggers by prefixing them with a "-" character.  For example, `DEBUG=* -connect:*` would include all debuggers except those starting with "connect:".\n\n## Browser support\n\n Debug works in the browser as well, currently persisted by `localStorage`. For example if you have `worker:a` and `worker:b` as shown below, and wish to debug both type `debug.enable(\'worker:*\')` in the console and refresh the page, this will remain until you disable with `debug.disable()`. \n\n```js\na = debug(\'worker:a\');\nb = debug(\'worker:b\');\n\nsetInterval(function(){\n  a(\'doing some work\');\n}, 1000);\n\nsetInterval(function(){\n  a(\'doing some work\');\n}, 1200);\n```\n\n## License \n\n(The MIT License)\n\nCopyright (c) 2011 TJ Holowaychuk &lt;tj@vision-media.ca&gt;\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\'Software\'), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \'AS IS\', WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.\nIN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY\nCLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,\nTORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE\nSOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.',
+491 silly resolved     readmeFilename: 'Readme.md',
+491 silly resolved     _id: 'debug@0.7.2',
+491 silly resolved     _from: 'debug@*' },
+491 silly resolved   { name: 'crc',
+491 silly resolved     version: '0.2.0',
+491 silly resolved     description: 'CRC JavaScript implementation',
+491 silly resolved     author: { name: 'Alex Gorbatchev', email: 'alex.gorbatchev@gmail.com' },
+491 silly resolved     contributors: [],
+491 silly resolved     main: './lib/crc.js',
+491 silly resolved     scripts: {},
+491 silly resolved     directories: {},
+491 silly resolved     devDependencies: { mocha: '*', should: '*' },
+491 silly resolved     repository:
+491 silly resolved      { type: 'git',
+491 silly resolved        url: 'git://github.com/alexgorbatchev/node-crc.git' },
+491 silly resolved     readme: '# JavaScript CRC 8, 16 and 32.\n\nThis is a basic port/copy of the JavaScript CRC implementation. The module works with any CommonJS system supporting `module.exports` notation as well as in the browser. When loaded in the browser, all functions end up under the `window.crc` "namespace".\n\nOriginal code is taken from http://www.digsys.se/JavaScript/CRC.aspx \n\n## Functions\n\nThe following functions are implemented:\n\n    crc8(String)\t#=> Number\n    crcArc(String)\t#=> Number\n    crc16(String)\t#=> Number\n    fcs16(String)\t#=> Number\n    crc32(String)\t#=> Number\n    hex8(Number)\t#=> String\n    hex16(Number)\t#=> String\n    hex32(Number)\t#=> String\n\n## Installation\n\n\tgit clone git://github.com/alexgorbatchev/node-crc.git\n\nor\n\n    npm install crc\n\n## Running tests\n\n    $ npm install\n    $ make test',
+491 silly resolved     readmeFilename: 'README.md',
+491 silly resolved     _id: 'crc@0.2.0',
+491 silly resolved     _from: 'crc@0.2.0' },
+491 silly resolved   { name: 'methods',
+491 silly resolved     version: '0.0.1',
+491 silly resolved     description: 'HTTP methods that node supports',
+491 silly resolved     main: 'index.js',
+491 silly resolved     scripts: { test: 'echo "Error: no test specified" && exit 1' },
+491 silly resolved     keywords: [ 'http', 'methods' ],
+491 silly resolved     author: { name: 'TJ Holowaychuk' },
+491 silly resolved     license: 'MIT',
+491 silly resolved     _id: 'methods@0.0.1',
+491 silly resolved     readme: 'ERROR: No README.md file found!',
+491 silly resolved     _from: 'methods@0.0.1' },
+491 silly resolved   { name: 'commander',
+491 silly resolved     version: '0.6.1',
+491 silly resolved     description: 'the complete solution for node.js command-line programs',
+491 silly resolved     keywords: [ 'command', 'option', 'parser', 'prompt', 'stdin' ],
+491 silly resolved     author: { name: 'TJ Holowaychuk', email: 'tj@vision-media.ca' },
+491 silly resolved     repository:
+491 silly resolved      { type: 'git',
+491 silly resolved        url: 'https://github.com/visionmedia/commander.js.git' },
+491 silly resolved     dependencies: {},
+491 silly resolved     devDependencies: { should: '>= 0.0.1' },
+491 silly resolved     scripts: { test: 'make test' },
+491 silly resolved     main: 'index',
+491 silly resolved     engines: { node: '>= 0.4.x' },
+491 silly resolved     readme: '# Commander.js\n\n  The complete solution for [node.js](http://nodejs.org) command-line interfaces, inspired by Ruby\'s [commander](https://github.com/visionmedia/commander).\n\n [![Build Status](https://secure.travis-ci.org/visionmedia/commander.js.png)](http://travis-ci.org/visionmedia/commander.js)\n\n## Installation\n\n    $ npm install commander\n\n## Option parsing\n\n Options with commander are defined with the `.option()` method, also serving as documentation for the options. The example below parses args and options from `process.argv`, leaving remaining args as the `program.args` array which were not consumed by options.\n\n```js\n#!/usr/bin/env node\n\n/**\n * Module dependencies.\n */\n\nvar program = require(\'commander\');\n\nprogram\n  .version(\'0.0.1\')\n  .option(\'-p, --peppers\', \'Add peppers\')\n  .option(\'-P, --pineapple\', \'Add pineapple\')\n  .option(\'-b, --bbq\', \'Add bbq sauce\')\n  .option(\'-c, --cheese [type]\', \'Add the specified type of cheese [marble]\', \'marble\')\n  .parse(process.argv);\n\nconsole.log(\'you ordered a pizza with:\');\nif (program.peppers) console.log(\'  - peppers\');\nif (program.pineapple) console.log(\'  - pineappe\');\nif (program.bbq) console.log(\'  - bbq\');\nconsole.log(\'  - %s cheese\', program.cheese);\n```\n\n Short flags may be passed as a single arg, for example `-abc` is equivalent to `-a -b -c`. Multi-word options such as "--template-engine" are camel-cased, becoming `program.templateEngine` etc.\n\n## Automated --help\n\n The help information is auto-generated based on the information commander already knows about your program, so the following `--help` info is for free:\n\n```  \n $ ./examples/pizza --help\n\n   Usage: pizza [options]\n\n   Options:\n\n     -V, --version        output the version number\n     -p, --peppers        Add peppers\n     -P, --pineapple      Add pineappe\n     -b, --bbq            Add bbq sauce\n     -c, --cheese <type>  Add the specified type of cheese [marble]\n     -h, --help           output usage information\n\n```\n\n## Coercion\n\n```js\nfunction range(val) {\n  return val.split(\'..\').map(Number);\n}\n\nfunction list(val) {\n  return val.split(\',\');\n}\n\nprogram\n  .version(\'0.0.1\')\n  .usage(\'[options] <file ...>\')\n  .option(\'-i, --integer <n>\', \'An integer argument\', parseInt)\n  .option(\'-f, --float <n>\', \'A float argument\', parseFloat)\n  .option(\'-r, --range <a>..<b>\', \'A range\', range)\n  .option(\'-l, --list <items>\', \'A list\', list)\n  .option(\'-o, --optional [value]\', \'An optional value\')\n  .parse(process.argv);\n\nconsole.log(\' int: %j\', program.integer);\nconsole.log(\' float: %j\', program.float);\nconsole.log(\' optional: %j\', program.optional);\nprogram.range = program.range || [];\nconsole.log(\' range: %j..%j\', program.range[0], program.range[1]);\nconsole.log(\' list: %j\', program.list);\nconsole.log(\' args: %j\', program.args);\n```\n\n## Custom help\n\n You can display arbitrary `-h, --help` information\n by listening for "--help". Commander will automatically\n exit once you are done so that the remainder of your program\n does not execute causing undesired behaviours, for example\n in the following executable "stuff" will not output when\n `--help` is used.\n\n```js\n#!/usr/bin/env node\n\n/**\n * Module dependencies.\n */\n\nvar program = require(\'../\');\n\nfunction list(val) {\n  return val.split(\',\').map(Number);\n}\n\nprogram\n  .version(\'0.0.1\')\n  .option(\'-f, --foo\', \'enable some foo\')\n  .option(\'-b, --bar\', \'enable some bar\')\n  .option(\'-B, --baz\', \'enable some baz\');\n\n// must be before .parse() since\n// node\'s emit() is immediate\n\nprogram.on(\'--help\', function(){\n  console.log(\'  Examples:\');\n  console.log(\'\');\n  console.log(\'    $ custom-help --help\');\n  console.log(\'    $ custom-help -h\');\n  console.log(\'\');\n});\n\nprogram.parse(process.argv);\n\nconsole.log(\'stuff\');\n```\n\nyielding the following help output:\n\n```\n\nUsage: custom-help [options]\n\nOptions:\n\n  -h, --help     output usage information\n  -V, --version  output the version number\n  -f, --foo      enable some foo\n  -b, --bar      enable some bar\n  -B, --baz      enable some baz\n\nExamples:\n\n  $ custom-help --help\n  $ custom-help -h\n\n```\n\n## .prompt(msg, fn)\n\n Single-line prompt:\n\n```js\nprogram.prompt(\'name: \', function(name){\n  console.log(\'hi %s\', name);\n});\n```\n\n Multi-line prompt:\n\n```js\nprogram.prompt(\'description:\', function(name){\n  console.log(\'hi %s\', name);\n});\n```\n\n Coercion:\n\n```js\nprogram.prompt(\'Age: \', Number, function(age){\n  console.log(\'age: %j\', age);\n});\n```\n\n```js\nprogram.prompt(\'Birthdate: \', Date, function(date){\n  console.log(\'date: %s\', date);\n});\n```\n\n## .password(msg[, mask], fn)\n\nPrompt for password without echoing:\n\n```js\nprogram.password(\'Password: \', function(pass){\n  console.log(\'got "%s"\', pass);\n  process.stdin.destroy();\n});\n```\n\nPrompt for password with mask char "*":\n\n```js\nprogram.password(\'Password: \', \'*\', function(pass){\n  console.log(\'got "%s"\', pass);\n  process.stdin.destroy();\n});\n```\n\n## .confirm(msg, fn)\n\n Confirm with the given `msg`:\n\n```js\nprogram.confirm(\'continue? \', function(ok){\n  console.log(\' got %j\', ok);\n});\n```\n\n## .choose(list, fn)\n\n Let the user choose from a `list`:\n\n```js\nvar list = [\'tobi\', \'loki\', \'jane\', \'manny\', \'luna\'];\n\nconsole.log(\'Choose the coolest pet:\');\nprogram.choose(list, function(i){\n  console.log(\'you chose %d "%s"\', i, list[i]);\n});\n```\n\n## Links\n\n - [API documentation](http://visionmedia.github.com/commander.js/)\n - [ascii tables](https://github.com/LearnBoost/cli-table)\n - [progress bars](https://github.com/visionmedia/node-progress)\n - [more progress bars](https://github.com/substack/node-multimeter)\n - [examples](https://github.com/visionmedia/commander.js/tree/master/examples)\n\n## License \n\n(The MIT License)\n\nCopyright (c) 2011 TJ Holowaychuk &lt;tj@vision-media.ca&gt;\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\'Software\'), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \'AS IS\', WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.\nIN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY\nCLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,\nTORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE\nSOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.',
+491 silly resolved     readmeFilename: 'Readme.md',
+491 silly resolved     _id: 'commander@0.6.1',
+491 silly resolved     dist: { shasum: '5f5f212b683ae6f796b06ba380cfe81c685d3c42' },
+491 silly resolved     _from: 'commander@0.6.1' } ]
+492 info install range-parser@0.0.4 into c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express
+493 info install connect@2.4.4 into c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express
+494 info install cookie@0.0.4 into c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express
+495 info install send@0.0.4 into c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express
+496 info install fresh@0.1.0 into c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express
+497 info install mkdirp@0.3.3 into c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express
+498 info install debug@0.7.2 into c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express
+499 info install crc@0.2.0 into c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express
+500 info install methods@0.0.1 into c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express
+501 info install commander@0.6.1 into c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express
+502 info installOne range-parser@0.0.4
+503 info installOne connect@2.4.4
+504 info installOne cookie@0.0.4
+505 info installOne send@0.0.4
+506 info installOne fresh@0.1.0
+507 info installOne mkdirp@0.3.3
+508 info installOne debug@0.7.2
+509 info installOne crc@0.2.0
+510 info installOne methods@0.0.1
+511 info installOne commander@0.6.1
+512 verbose from cache C:\Users\srourd\AppData\Roaming\npm-cache\range-parser\0.0.4\package\package.json
+513 info c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\range-parser unbuild
+514 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\range-parser\package.json
+515 verbose from cache C:\Users\srourd\AppData\Roaming\npm-cache\connect\2.4.4\package\package.json
+516 verbose from cache C:\Users\srourd\AppData\Roaming\npm-cache\cookie\0.0.4\package\package.json
+517 verbose from cache C:\Users\srourd\AppData\Roaming\npm-cache\send\0.0.4\package\package.json
+518 verbose from cache C:\Users\srourd\AppData\Roaming\npm-cache\fresh\0.1.0\package\package.json
+519 verbose from cache C:\Users\srourd\AppData\Roaming\npm-cache\mkdirp\0.3.3\package\package.json
+520 verbose from cache C:\Users\srourd\AppData\Roaming\npm-cache\debug\0.7.2\package\package.json
+521 verbose from cache C:\Users\srourd\AppData\Roaming\npm-cache\crc\0.2.0\package\package.json
+522 verbose from cache C:\Users\srourd\AppData\Roaming\npm-cache\methods\0.0.1\package\package.json
+523 verbose from cache C:\Users\srourd\AppData\Roaming\npm-cache\commander\0.6.1\package\package.json
+524 info c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect unbuild
+525 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\package.json
+526 info c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\cookie unbuild
+527 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\cookie\package.json
+528 info c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\send unbuild
+529 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\send\package.json
+530 info c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\fresh unbuild
+531 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\fresh\package.json
+532 info c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\mkdirp unbuild
+533 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\mkdirp\package.json
+534 info c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\debug unbuild
+535 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\debug\package.json
+536 info c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\crc unbuild
+537 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\crc\package.json
+538 info c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\methods unbuild
+539 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\methods\package.json
+540 info c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\commander unbuild
+541 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\commander\package.json
+542 verbose tar unpack C:\Users\srourd\AppData\Roaming\npm-cache\range-parser\0.0.4\package.tgz
+543 silly lockFile 47140dfa-xpress-node-modules-range-parser c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\range-parser
+544 verbose lock c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\range-parser C:\Users\srourd\AppData\Roaming\npm-cache\47140dfa-xpress-node-modules-range-parser.lock
+545 verbose tar unpack C:\Users\srourd\AppData\Roaming\npm-cache\connect\2.4.4\package.tgz
+546 silly lockFile 01b0cf8a-les-express-node-modules-connect c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect
+547 verbose lock c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect C:\Users\srourd\AppData\Roaming\npm-cache\01b0cf8a-les-express-node-modules-connect.lock
+548 verbose tar unpack C:\Users\srourd\AppData\Roaming\npm-cache\cookie\0.0.4\package.tgz
+549 silly lockFile 29b6d255-ules-express-node-modules-cookie c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\cookie
+550 verbose lock c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\cookie C:\Users\srourd\AppData\Roaming\npm-cache\29b6d255-ules-express-node-modules-cookie.lock
+551 verbose tar unpack C:\Users\srourd\AppData\Roaming\npm-cache\send\0.0.4\package.tgz
+552 silly lockFile f41016bc-odules-express-node-modules-send c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\send
+553 verbose lock c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\send C:\Users\srourd\AppData\Roaming\npm-cache\f41016bc-odules-express-node-modules-send.lock
+554 verbose tar unpack C:\Users\srourd\AppData\Roaming\npm-cache\fresh\0.1.0\package.tgz
+555 silly lockFile 9699c10f-dules-express-node-modules-fresh c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\fresh
+556 verbose lock c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\fresh C:\Users\srourd\AppData\Roaming\npm-cache\9699c10f-dules-express-node-modules-fresh.lock
+557 verbose tar unpack C:\Users\srourd\AppData\Roaming\npm-cache\mkdirp\0.3.3\package.tgz
+558 silly lockFile 1d13ad59-ules-express-node-modules-mkdirp c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\mkdirp
+559 verbose lock c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\mkdirp C:\Users\srourd\AppData\Roaming\npm-cache\1d13ad59-ules-express-node-modules-mkdirp.lock
+560 verbose tar unpack C:\Users\srourd\AppData\Roaming\npm-cache\debug\0.7.2\package.tgz
+561 silly lockFile e847fd07-dules-express-node-modules-debug c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\debug
+562 verbose lock c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\debug C:\Users\srourd\AppData\Roaming\npm-cache\e847fd07-dules-express-node-modules-debug.lock
+563 verbose tar unpack C:\Users\srourd\AppData\Roaming\npm-cache\crc\0.2.0\package.tgz
+564 silly lockFile 64377a22-modules-express-node-modules-crc c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\crc
+565 verbose lock c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\crc C:\Users\srourd\AppData\Roaming\npm-cache\64377a22-modules-express-node-modules-crc.lock
+566 verbose tar unpack C:\Users\srourd\AppData\Roaming\npm-cache\methods\0.0.1\package.tgz
+567 silly lockFile a0129f6f-les-express-node-modules-methods c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\methods
+568 verbose lock c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\methods C:\Users\srourd\AppData\Roaming\npm-cache\a0129f6f-les-express-node-modules-methods.lock
+569 verbose tar unpack C:\Users\srourd\AppData\Roaming\npm-cache\commander\0.6.1\package.tgz
+570 silly lockFile ddaa01e4-s-express-node-modules-commander c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\commander
+571 verbose lock c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\commander C:\Users\srourd\AppData\Roaming\npm-cache\ddaa01e4-s-express-node-modules-commander.lock
+572 silly gunzTarPerm modes [ '755', '644' ]
+573 silly gunzTarPerm modes [ '755', '644' ]
+574 silly gunzTarPerm modes [ '755', '644' ]
+575 silly gunzTarPerm modes [ '755', '644' ]
+576 silly gunzTarPerm modes [ '755', '644' ]
+577 silly gunzTarPerm modes [ '755', '644' ]
+578 silly gunzTarPerm modes [ '755', '644' ]
+579 silly gunzTarPerm modes [ '755', '644' ]
+580 silly gunzTarPerm modes [ '755', '644' ]
+581 silly gunzTarPerm modes [ '755', '644' ]
+582 silly gunzTarPerm extractEntry package.json
+583 silly gunzTarPerm modified mode [ 'package.json', 438, 420 ]
+584 silly gunzTarPerm extractEntry package.json
+585 silly gunzTarPerm modified mode [ 'package.json', 438, 420 ]
+586 silly gunzTarPerm extractEntry package.json
+587 silly gunzTarPerm modified mode [ 'package.json', 438, 420 ]
+588 silly gunzTarPerm extractEntry .npmignore
+589 silly gunzTarPerm modified mode [ '.npmignore', 438, 420 ]
+590 silly gunzTarPerm extractEntry index.js
+591 silly gunzTarPerm modified mode [ 'index.js', 438, 420 ]
+592 silly gunzTarPerm extractEntry .npmignore
+593 silly gunzTarPerm modified mode [ '.npmignore', 438, 420 ]
+594 silly gunzTarPerm extractEntry index.js
+595 silly gunzTarPerm modified mode [ 'index.js', 438, 420 ]
+596 silly gunzTarPerm extractEntry package.json
+597 silly gunzTarPerm modified mode [ 'package.json', 438, 420 ]
+598 silly gunzTarPerm extractEntry index.js
+599 silly gunzTarPerm modified mode [ 'index.js', 438, 420 ]
+600 silly gunzTarPerm extractEntry package.json
+601 silly gunzTarPerm modified mode [ 'package.json', 438, 420 ]
+602 silly gunzTarPerm extractEntry package.json
+603 silly gunzTarPerm modified mode [ 'package.json', 438, 420 ]
+604 silly gunzTarPerm extractEntry package.json
+605 silly gunzTarPerm modified mode [ 'package.json', 438, 420 ]
+606 silly gunzTarPerm extractEntry .npmignore
+607 silly gunzTarPerm modified mode [ '.npmignore', 438, 420 ]
+608 silly gunzTarPerm extractEntry README.md
+609 silly gunzTarPerm modified mode [ 'README.md', 438, 420 ]
+610 silly gunzTarPerm extractEntry package.json
+611 silly gunzTarPerm modified mode [ 'package.json', 438, 420 ]
+612 silly gunzTarPerm extractEntry package.json
+613 silly gunzTarPerm modified mode [ 'package.json', 438, 420 ]
+614 silly gunzTarPerm extractEntry package.json
+615 silly gunzTarPerm modified mode [ 'package.json', 438, 420 ]
+616 silly gunzTarPerm extractEntry .npmignore
+617 silly gunzTarPerm modified mode [ '.npmignore', 438, 420 ]
+618 silly gunzTarPerm extractEntry index.js
+619 silly gunzTarPerm modified mode [ 'index.js', 438, 420 ]
+620 silly gunzTarPerm extractEntry .npmignore
+621 silly gunzTarPerm modified mode [ '.npmignore', 438, 420 ]
+622 silly gunzTarPerm extractEntry LICENSE
+623 silly gunzTarPerm modified mode [ 'LICENSE', 438, 420 ]
+624 silly gunzTarPerm extractEntry .npmignore
+625 silly gunzTarPerm modified mode [ '.npmignore', 438, 420 ]
+626 silly gunzTarPerm extractEntry LICENSE
+627 silly gunzTarPerm modified mode [ 'LICENSE', 438, 420 ]
+628 silly gunzTarPerm extractEntry History.md
+629 silly gunzTarPerm modified mode [ 'History.md', 438, 420 ]
+630 silly gunzTarPerm extractEntry Makefile
+631 silly gunzTarPerm modified mode [ 'Makefile', 438, 420 ]
+632 silly gunzTarPerm extractEntry .travis.yml
+633 silly gunzTarPerm modified mode [ '.travis.yml', 438, 420 ]
+634 silly gunzTarPerm extractEntry History.md
+635 silly gunzTarPerm modified mode [ 'History.md', 438, 420 ]
+636 silly gunzTarPerm extractEntry .npmignore
+637 silly gunzTarPerm modified mode [ '.npmignore', 438, 420 ]
+638 silly gunzTarPerm extractEntry README.md
+639 silly gunzTarPerm modified mode [ 'README.md', 438, 420 ]
+640 silly gunzTarPerm extractEntry .npmignore
+641 silly gunzTarPerm modified mode [ '.npmignore', 438, 420 ]
+642 silly gunzTarPerm extractEntry debug.js
+643 silly gunzTarPerm modified mode [ 'debug.js', 438, 420 ]
+644 silly gunzTarPerm extractEntry .npmignore
+645 silly gunzTarPerm modified mode [ '.npmignore', 438, 420 ]
+646 silly gunzTarPerm extractEntry index.js
+647 silly gunzTarPerm modified mode [ 'index.js', 438, 420 ]
+648 silly gunzTarPerm extractEntry index.js
+649 silly gunzTarPerm modified mode [ 'index.js', 438, 420 ]
+650 silly gunzTarPerm extractEntry .travis.yml
+651 silly gunzTarPerm modified mode [ '.travis.yml', 438, 420 ]
+652 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\methods\package.json
+653 silly gunzTarPerm extractEntry Makefile
+654 silly gunzTarPerm modified mode [ 'Makefile', 438, 420 ]
+655 silly gunzTarPerm extractEntry Readme.md
+656 silly gunzTarPerm modified mode [ 'Readme.md', 438, 420 ]
+657 silly gunzTarPerm extractEntry Readme.md
+658 silly gunzTarPerm modified mode [ 'Readme.md', 438, 420 ]
+659 silly gunzTarPerm extractEntry lib/commander.js
+660 silly gunzTarPerm modified mode [ 'lib/commander.js', 438, 420 ]
+661 silly gunzTarPerm extractEntry Makefile
+662 silly gunzTarPerm modified mode [ 'Makefile', 438, 420 ]
+663 silly gunzTarPerm extractEntry index.js
+664 silly gunzTarPerm modified mode [ 'index.js', 438, 420 ]
+665 silly gunzTarPerm extractEntry .gitignore.orig
+666 silly gunzTarPerm modified mode [ '.gitignore.orig', 438, 420 ]
+667 silly gunzTarPerm extractEntry .gitmodules
+668 silly gunzTarPerm modified mode [ '.gitmodules', 438, 420 ]
+669 silly gunzTarPerm extractEntry lib/crc.js
+670 silly gunzTarPerm modified mode [ 'lib/crc.js', 438, 420 ]
+671 silly gunzTarPerm extractEntry index.js
+672 silly gunzTarPerm modified mode [ 'index.js', 438, 420 ]
+673 silly gunzTarPerm extractEntry test.js
+674 silly gunzTarPerm modified mode [ 'test.js', 438, 420 ]
+675 silly gunzTarPerm extractEntry index.js
+676 silly gunzTarPerm modified mode [ 'index.js', 438, 420 ]
+677 silly gunzTarPerm extractEntry component.json
+678 silly gunzTarPerm modified mode [ 'component.json', 438, 420 ]
+679 silly gunzTarPerm extractEntry History.md
+680 silly gunzTarPerm modified mode [ 'History.md', 438, 420 ]
+681 silly gunzTarPerm extractEntry lib/send.js
+682 silly gunzTarPerm modified mode [ 'lib/send.js', 438, 420 ]
+683 silly lockFile a0129f6f-les-express-node-modules-methods c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\methods
+684 silly gunzTarPerm extractEntry test/parse.js
+685 silly gunzTarPerm modified mode [ 'test/parse.js', 438, 420 ]
+686 silly gunzTarPerm extractEntry test/serialize.js
+687 silly gunzTarPerm modified mode [ 'test/serialize.js', 438, 420 ]
+688 silly gunzTarPerm extractEntry test/mocha.opts
+689 silly gunzTarPerm modified mode [ 'test/mocha.opts', 438, 420 ]
+690 silly gunzTarPerm extractEntry Readme.md
+691 silly gunzTarPerm modified mode [ 'Readme.md', 438, 420 ]
+692 info preinstall methods@0.0.1
+693 silly gunzTarPerm extractEntry .gitignore.rej
+694 silly gunzTarPerm modified mode [ '.gitignore.rej', 438, 420 ]
+695 silly gunzTarPerm extractEntry .travis.yml
+696 silly gunzTarPerm modified mode [ '.travis.yml', 438, 420 ]
+697 silly gunzTarPerm extractEntry Makefile
+698 silly gunzTarPerm modified mode [ 'Makefile', 438, 420 ]
+699 silly gunzTarPerm extractEntry test/crc.js
+700 silly gunzTarPerm modified mode [ 'test/crc.js', 438, 420 ]
+701 silly gunzTarPerm extractEntry lib/cache.js
+702 silly gunzTarPerm modified mode [ 'lib/cache.js', 438, 420 ]
+703 silly gunzTarPerm extractEntry lib/connect.js
+704 silly gunzTarPerm modified mode [ 'lib/connect.js', 438, 420 ]
+705 silly gunzTarPerm extractEntry example/app.js
+706 silly gunzTarPerm modified mode [ 'example/app.js', 438, 420 ]
+707 silly gunzTarPerm extractEntry example/wildcards.js
+708 silly gunzTarPerm modified mode [ 'example/wildcards.js', 438, 420 ]
+709 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\methods\package.json
+710 silly gunzTarPerm extractEntry examples/pow.js
+711 silly gunzTarPerm modified mode [ 'examples/pow.js', 438, 420 ]
+712 silly gunzTarPerm extractEntry lib/utils.js
+713 silly gunzTarPerm modified mode [ 'lib/utils.js', 438, 420 ]
+714 silly gunzTarPerm extractEntry Makefile
+715 silly gunzTarPerm modified mode [ 'Makefile', 438, 420 ]
+716 verbose readDependencies using package.json deps
+717 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\methods\package.json
+718 silly gunzTarPerm extractEntry lib/index.js
+719 silly gunzTarPerm modified mode [ 'lib/index.js', 438, 420 ]
+720 silly gunzTarPerm extractEntry example/worker.js
+721 silly gunzTarPerm modified mode [ 'example/worker.js', 438, 420 ]
+722 verbose readDependencies using package.json deps
+723 silly resolved []
+724 verbose about to build c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\methods
+725 info build c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\methods
+726 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\methods\package.json
+727 verbose linkStuff [ false,
+727 verbose linkStuff   false,
+727 verbose linkStuff   false,
+727 verbose linkStuff   'c:\\Users\\srourd\\Documents\\GitHub\\YAKFRONT\\main\\node_modules\\express\\node_modules' ]
+728 info linkStuff methods@0.0.1
+729 verbose linkBins methods@0.0.1
+730 verbose linkMans methods@0.0.1
+731 verbose rebuildBundles methods@0.0.1
+732 silly gunzTarPerm extractEntry example/browser.html
+733 silly gunzTarPerm modified mode [ 'example/browser.html', 438, 420 ]
+734 info install methods@0.0.1
+735 silly gunzTarPerm extractEntry History.md
+736 silly gunzTarPerm modified mode [ 'History.md', 438, 420 ]
+737 info postinstall methods@0.0.1
+738 silly gunzTarPerm extractEntry examples/pow.js.orig
+739 silly gunzTarPerm modified mode [ 'examples/pow.js.orig', 438, 420 ]
+740 silly gunzTarPerm extractEntry examples/pow.js.rej
+741 silly gunzTarPerm modified mode [ 'examples/pow.js.rej', 438, 420 ]
+742 silly gunzTarPerm extractEntry Readme.md
+743 silly gunzTarPerm modified mode [ 'Readme.md', 438, 420 ]
+744 silly gunzTarPerm extractEntry lib/patch.js
+745 silly gunzTarPerm modified mode [ 'lib/patch.js', 438, 420 ]
+746 silly gunzTarPerm extractEntry lib/proto.js
+747 silly gunzTarPerm modified mode [ 'lib/proto.js', 438, 420 ]
+748 silly gunzTarPerm extractEntry README.markdown
+749 silly gunzTarPerm modified mode [ 'README.markdown', 438, 420 ]
+750 silly gunzTarPerm extractEntry test/chmod.js
+751 silly gunzTarPerm modified mode [ 'test/chmod.js', 438, 420 ]
+752 silly gunzTarPerm extractEntry lib/debug.js
+753 silly gunzTarPerm modified mode [ 'lib/debug.js', 438, 420 ]
+754 silly gunzTarPerm extractEntry Readme.md
+755 silly gunzTarPerm modified mode [ 'Readme.md', 438, 420 ]
+756 silly gunzTarPerm extractEntry test/perm.js
+757 silly gunzTarPerm modified mode [ 'test/perm.js', 438, 420 ]
+758 silly gunzTarPerm extractEntry test/perm_sync.js
+759 silly gunzTarPerm modified mode [ 'test/perm_sync.js', 438, 420 ]
+760 silly gunzTarPerm extractEntry lib/utils.js
+761 silly gunzTarPerm modified mode [ 'lib/utils.js', 438, 420 ]
+762 silly gunzTarPerm extractEntry lib/middleware/basicAuth.js
+763 silly gunzTarPerm modified mode [ 'lib/middleware/basicAuth.js', 438, 420 ]
+764 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\fresh\package.json
+765 silly gunzTarPerm extractEntry test/race.js
+766 silly gunzTarPerm modified mode [ 'test/race.js', 438, 420 ]
+767 silly gunzTarPerm extractEntry test/mkdirp.js
+768 silly gunzTarPerm modified mode [ 'test/mkdirp.js', 438, 420 ]
+769 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\range-parser\package.json
+770 silly gunzTarPerm extractEntry lib/middleware/errorHandler.js
+771 silly gunzTarPerm modified mode [ 'lib/middleware/errorHandler.js', 438, 420 ]
+772 silly gunzTarPerm extractEntry lib/middleware/favicon.js
+773 silly gunzTarPerm modified mode [ 'lib/middleware/favicon.js', 438, 420 ]
+774 silly lockFile 9699c10f-dules-express-node-modules-fresh c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\fresh
+775 silly gunzTarPerm extractEntry lib/middleware/json.js
+776 silly gunzTarPerm modified mode [ 'lib/middleware/json.js', 438, 420 ]
+777 silly gunzTarPerm extractEntry test/return.js
+778 silly gunzTarPerm modified mode [ 'test/return.js', 438, 420 ]
+779 silly gunzTarPerm extractEntry test/return_sync.js
+780 silly gunzTarPerm modified mode [ 'test/return_sync.js', 438, 420 ]
+781 silly lockFile 47140dfa-xpress-node-modules-range-parser c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\range-parser
+782 info preinstall fresh@0.1.0
+783 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\fresh\package.json
+784 verbose readDependencies using package.json deps
+785 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\fresh\package.json
+786 info preinstall range-parser@0.0.4
+787 verbose readDependencies using package.json deps
+788 silly resolved []
+789 verbose about to build c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\fresh
+790 info build c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\fresh
+791 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\fresh\package.json
+792 verbose linkStuff [ false,
+792 verbose linkStuff   false,
+792 verbose linkStuff   false,
+792 verbose linkStuff   'c:\\Users\\srourd\\Documents\\GitHub\\YAKFRONT\\main\\node_modules\\express\\node_modules' ]
+793 info linkStuff fresh@0.1.0
+794 verbose linkBins fresh@0.1.0
+795 verbose linkMans fresh@0.1.0
+796 verbose rebuildBundles fresh@0.1.0
+797 silly gunzTarPerm extractEntry lib/middleware/limit.js
+798 silly gunzTarPerm modified mode [ 'lib/middleware/limit.js', 438, 420 ]
+799 silly gunzTarPerm extractEntry lib/middleware/directory.js
+800 silly gunzTarPerm modified mode [ 'lib/middleware/directory.js', 438, 420 ]
+801 info install fresh@0.1.0
+802 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\range-parser\package.json
+803 silly gunzTarPerm extractEntry lib/middleware/methodOverride.js
+804 silly gunzTarPerm modified mode [ 'lib/middleware/methodOverride.js', 438, 420 ]
+805 verbose readDependencies using package.json deps
+806 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\range-parser\package.json
+807 info postinstall fresh@0.1.0
+808 silly gunzTarPerm extractEntry lib/middleware/multipart.js
+809 silly gunzTarPerm modified mode [ 'lib/middleware/multipart.js', 438, 420 ]
+810 verbose readDependencies using package.json deps
+811 silly resolved []
+812 verbose about to build c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\range-parser
+813 info build c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\range-parser
+814 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\range-parser\package.json
+815 verbose linkStuff [ false,
+815 verbose linkStuff   false,
+815 verbose linkStuff   false,
+815 verbose linkStuff   'c:\\Users\\srourd\\Documents\\GitHub\\YAKFRONT\\main\\node_modules\\express\\node_modules' ]
+816 info linkStuff range-parser@0.0.4
+817 verbose linkBins range-parser@0.0.4
+818 verbose linkMans range-parser@0.0.4
+819 verbose rebuildBundles range-parser@0.0.4
+820 info install range-parser@0.0.4
+821 silly gunzTarPerm extractEntry test/root.js
+822 silly gunzTarPerm modified mode [ 'test/root.js', 438, 420 ]
+823 silly gunzTarPerm extractEntry test/sync.js
+824 silly gunzTarPerm modified mode [ 'test/sync.js', 438, 420 ]
+825 info postinstall range-parser@0.0.4
+826 silly gunzTarPerm extractEntry lib/middleware/query.js
+827 silly gunzTarPerm modified mode [ 'lib/middleware/query.js', 438, 420 ]
+828 silly gunzTarPerm extractEntry lib/middleware/responseTime.js
+829 silly gunzTarPerm modified mode [ 'lib/middleware/responseTime.js', 438, 420 ]
+830 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\cookie\package.json
+831 silly gunzTarPerm extractEntry lib/middleware/urlencoded.js
+832 silly gunzTarPerm modified mode [ 'lib/middleware/urlencoded.js', 438, 420 ]
+833 silly gunzTarPerm extractEntry test/umask.js
+834 silly gunzTarPerm modified mode [ 'test/umask.js', 438, 420 ]
+835 silly gunzTarPerm extractEntry test/clobber.js
+836 silly gunzTarPerm modified mode [ 'test/clobber.js', 438, 420 ]
+837 silly gunzTarPerm extractEntry lib/middleware/csrf.js
+838 silly gunzTarPerm modified mode [ 'lib/middleware/csrf.js', 438, 420 ]
+839 silly gunzTarPerm extractEntry lib/middleware/session.js
+840 silly gunzTarPerm modified mode [ 'lib/middleware/session.js', 438, 420 ]
+841 silly lockFile 29b6d255-ules-express-node-modules-cookie c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\cookie
+842 silly gunzTarPerm extractEntry lib/middleware/cookieSession.js
+843 silly gunzTarPerm modified mode [ 'lib/middleware/cookieSession.js', 438, 420 ]
+844 silly gunzTarPerm extractEntry lib/middleware/static.js
+845 silly gunzTarPerm modified mode [ 'lib/middleware/static.js', 438, 420 ]
+846 silly gunzTarPerm extractEntry test/umask_sync.js
+847 silly gunzTarPerm modified mode [ 'test/umask_sync.js', 438, 420 ]
+848 silly gunzTarPerm extractEntry test/rel.js
+849 silly gunzTarPerm modified mode [ 'test/rel.js', 438, 420 ]
+850 silly gunzTarPerm extractEntry lib/middleware/cookieParser.js
+851 silly gunzTarPerm modified mode [ 'lib/middleware/cookieParser.js', 438, 420 ]
+852 silly gunzTarPerm extractEntry lib/middleware/staticCache.js
+853 silly gunzTarPerm modified mode [ 'lib/middleware/staticCache.js', 438, 420 ]
+854 info preinstall cookie@0.0.4
+855 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\cookie\package.json
+856 verbose readDependencies using package.json deps
+857 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\cookie\package.json
+858 verbose readDependencies using package.json deps
+859 silly resolved []
+860 verbose about to build c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\cookie
+861 info build c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\cookie
+862 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\cookie\package.json
+863 verbose linkStuff [ false,
+863 verbose linkStuff   false,
+863 verbose linkStuff   false,
+863 verbose linkStuff   'c:\\Users\\srourd\\Documents\\GitHub\\YAKFRONT\\main\\node_modules\\express\\node_modules' ]
+864 info linkStuff cookie@0.0.4
+865 verbose linkBins cookie@0.0.4
+866 verbose linkMans cookie@0.0.4
+867 verbose rebuildBundles cookie@0.0.4
+868 info install cookie@0.0.4
+869 silly gunzTarPerm extractEntry lib/middleware/compress.js
+870 silly gunzTarPerm modified mode [ 'lib/middleware/compress.js', 438, 420 ]
+871 silly gunzTarPerm extractEntry lib/middleware/timeout.js
+872 silly gunzTarPerm modified mode [ 'lib/middleware/timeout.js', 438, 420 ]
+873 info postinstall cookie@0.0.4
+874 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\crc\package.json
+875 silly gunzTarPerm extractEntry lib/middleware/bodyParser.js
+876 silly gunzTarPerm modified mode [ 'lib/middleware/bodyParser.js', 438, 420 ]
+877 silly gunzTarPerm extractEntry lib/middleware/vhost.js
+878 silly gunzTarPerm modified mode [ 'lib/middleware/vhost.js', 438, 420 ]
+879 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\send\package.json
+880 silly gunzTarPerm extractEntry lib/middleware/logger.js
+881 silly gunzTarPerm modified mode [ 'lib/middleware/logger.js', 438, 420 ]
+882 silly gunzTarPerm extractEntry lib/middleware/session/cookie.js
+883 silly gunzTarPerm modified mode [ 'lib/middleware/session/cookie.js', 438, 420 ]
+884 silly gunzTarPerm extractEntry lib/middleware/session/memory.js
+885 silly gunzTarPerm modified mode [ 'lib/middleware/session/memory.js', 438, 420 ]
+886 silly gunzTarPerm extractEntry lib/middleware/session/session.js
+887 silly gunzTarPerm modified mode [ 'lib/middleware/session/session.js', 438, 420 ]
+888 silly gunzTarPerm extractEntry lib/middleware/session/store.js
+889 silly gunzTarPerm modified mode [ 'lib/middleware/session/store.js', 438, 420 ]
+890 silly gunzTarPerm extractEntry lib/public/directory.html
+891 silly gunzTarPerm modified mode [ 'lib/public/directory.html', 438, 420 ]
+892 silly gunzTarPerm extractEntry lib/public/error.html
+893 silly gunzTarPerm modified mode [ 'lib/public/error.html', 438, 420 ]
+894 silly lockFile 64377a22-modules-express-node-modules-crc c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\crc
+895 silly gunzTarPerm extractEntry lib/public/favicon.ico
+896 silly gunzTarPerm modified mode [ 'lib/public/favicon.ico', 438, 420 ]
+897 silly lockFile f41016bc-odules-express-node-modules-send c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\send
+898 info preinstall crc@0.2.0
+899 info preinstall send@0.0.4
+900 silly gunzTarPerm extractEntry lib/public/icons/page_white_edit.png
+901 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_edit.png', 438, 420 ]
+902 silly gunzTarPerm extractEntry lib/public/icons/page.png
+903 silly gunzTarPerm modified mode [ 'lib/public/icons/page.png', 438, 420 ]
+904 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\crc\package.json
+905 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\send\package.json
+906 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\commander\package.json
+907 verbose readDependencies using package.json deps
+908 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\crc\package.json
+909 silly gunzTarPerm extractEntry lib/public/icons/page_attach.png
+910 silly gunzTarPerm modified mode [ 'lib/public/icons/page_attach.png', 438, 420 ]
+911 verbose readDependencies using package.json deps
+912 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\send\package.json
+913 silly gunzTarPerm extractEntry lib/public/icons/page_code.png
+914 silly gunzTarPerm modified mode [ 'lib/public/icons/page_code.png', 438, 420 ]
+915 verbose readDependencies using package.json deps
+916 silly resolved []
+917 verbose about to build c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\crc
+918 info build c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\crc
+919 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\crc\package.json
+920 verbose readDependencies using package.json deps
+921 verbose linkStuff [ false,
+921 verbose linkStuff   false,
+921 verbose linkStuff   false,
+921 verbose linkStuff   'c:\\Users\\srourd\\Documents\\GitHub\\YAKFRONT\\main\\node_modules\\express\\node_modules' ]
+922 info linkStuff crc@0.2.0
+923 verbose linkBins crc@0.2.0
+924 verbose linkMans crc@0.2.0
+925 verbose rebuildBundles crc@0.2.0
+926 silly gunzTarPerm extractEntry lib/public/icons/page_copy.png
+927 silly gunzTarPerm modified mode [ 'lib/public/icons/page_copy.png', 438, 420 ]
+928 info install crc@0.2.0
+929 silly gunzTarPerm extractEntry lib/public/icons/page_delete.png
+930 silly gunzTarPerm modified mode [ 'lib/public/icons/page_delete.png', 438, 420 ]
+931 silly gunzTarPerm extractEntry lib/public/icons/page_edit.png
+932 silly gunzTarPerm modified mode [ 'lib/public/icons/page_edit.png', 438, 420 ]
+933 verbose cache add [ 'mime@1.2.6', null ]
+934 silly cache add name=undefined spec="mime@1.2.6" args=["mime@1.2.6",null]
+935 verbose parsed url { pathname: 'mime@1.2.6',
+935 verbose parsed url   path: 'mime@1.2.6',
+935 verbose parsed url   href: 'mime@1.2.6' }
+936 silly cache add name="mime" spec="1.2.6" args=["mime","1.2.6"]
+937 verbose parsed url { pathname: '1.2.6', path: '1.2.6', href: '1.2.6' }
+938 verbose addNamed [ 'mime', '1.2.6' ]
+939 verbose addNamed [ '1.2.6', '1.2.6' ]
+940 silly lockFile 898e3106-mime-1-2-6 mime@1.2.6
+941 verbose lock mime@1.2.6 C:\Users\srourd\AppData\Roaming\npm-cache\898e3106-mime-1-2-6.lock
+942 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\debug\package.json
+943 info postinstall crc@0.2.0
+944 silly gunzTarPerm extractEntry lib/public/icons/page_error.png
+945 silly gunzTarPerm modified mode [ 'lib/public/icons/page_error.png', 438, 420 ]
+946 silly gunzTarPerm extractEntry lib/public/icons/page_excel.png
+947 silly gunzTarPerm modified mode [ 'lib/public/icons/page_excel.png', 438, 420 ]
+948 silly gunzTarPerm extractEntry lib/public/icons/page_find.png
+949 silly gunzTarPerm modified mode [ 'lib/public/icons/page_find.png', 438, 420 ]
+950 silly gunzTarPerm extractEntry lib/public/icons/page_gear.png
+951 silly gunzTarPerm modified mode [ 'lib/public/icons/page_gear.png', 438, 420 ]
+952 silly gunzTarPerm extractEntry lib/public/icons/page_go.png
+953 silly gunzTarPerm modified mode [ 'lib/public/icons/page_go.png', 438, 420 ]
+954 silly lockFile ddaa01e4-s-express-node-modules-commander c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\commander
+955 silly gunzTarPerm extractEntry lib/public/icons/page_green.png
+956 silly gunzTarPerm modified mode [ 'lib/public/icons/page_green.png', 438, 420 ]
+957 silly gunzTarPerm extractEntry lib/public/icons/page_key.png
+958 silly gunzTarPerm modified mode [ 'lib/public/icons/page_key.png', 438, 420 ]
+959 silly lockFile e847fd07-dules-express-node-modules-debug c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\debug
+960 silly gunzTarPerm extractEntry lib/public/icons/page_lightning.png
+961 silly gunzTarPerm modified mode [ 'lib/public/icons/page_lightning.png', 438, 420 ]
+962 silly gunzTarPerm extractEntry lib/public/icons/page_link.png
+963 silly gunzTarPerm modified mode [ 'lib/public/icons/page_link.png', 438, 420 ]
+964 silly gunzTarPerm extractEntry lib/public/icons/page_paintbrush.png
+965 silly gunzTarPerm modified mode [ 'lib/public/icons/page_paintbrush.png', 438, 420 ]
+966 info preinstall commander@0.6.1
+967 silly gunzTarPerm extractEntry lib/public/icons/page_paste.png
+968 silly gunzTarPerm modified mode [ 'lib/public/icons/page_paste.png', 438, 420 ]
+969 info preinstall debug@0.7.2
+970 silly gunzTarPerm extractEntry lib/public/icons/page_red.png
+971 silly gunzTarPerm modified mode [ 'lib/public/icons/page_red.png', 438, 420 ]
+972 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\commander\package.json
+973 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\debug\package.json
+974 verbose readDependencies using package.json deps
+975 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\commander\package.json
+976 verbose readDependencies using package.json deps
+977 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\debug\package.json
+978 verbose readDependencies using package.json deps
+979 silly resolved []
+980 verbose about to build c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\commander
+981 info build c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\commander
+982 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\commander\package.json
+983 verbose linkStuff [ false,
+983 verbose linkStuff   false,
+983 verbose linkStuff   false,
+983 verbose linkStuff   'c:\\Users\\srourd\\Documents\\GitHub\\YAKFRONT\\main\\node_modules\\express\\node_modules' ]
+984 info linkStuff commander@0.6.1
+985 verbose linkBins commander@0.6.1
+986 verbose linkMans commander@0.6.1
+987 verbose rebuildBundles commander@0.6.1
+988 verbose readDependencies using package.json deps
+989 silly resolved []
+990 verbose about to build c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\debug
+991 info build c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\debug
+992 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\debug\package.json
+993 info install commander@0.6.1
+994 verbose linkStuff [ false,
+994 verbose linkStuff   false,
+994 verbose linkStuff   false,
+994 verbose linkStuff   'c:\\Users\\srourd\\Documents\\GitHub\\YAKFRONT\\main\\node_modules\\express\\node_modules' ]
+995 info linkStuff debug@0.7.2
+996 verbose linkBins debug@0.7.2
+997 verbose linkMans debug@0.7.2
+998 verbose rebuildBundles debug@0.7.2
+999 info install debug@0.7.2
+1000 info postinstall commander@0.6.1
+1001 info postinstall debug@0.7.2
+1002 silly gunzTarPerm extractEntry lib/public/icons/page_refresh.png
+1003 silly gunzTarPerm modified mode [ 'lib/public/icons/page_refresh.png', 438, 420 ]
+1004 silly gunzTarPerm extractEntry lib/public/icons/page_save.png
+1005 silly gunzTarPerm modified mode [ 'lib/public/icons/page_save.png', 438, 420 ]
+1006 silly gunzTarPerm extractEntry lib/public/icons/page_white.png
+1007 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white.png', 438, 420 ]
+1008 silly gunzTarPerm extractEntry lib/public/icons/page_white_acrobat.png
+1009 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_acrobat.png', 438, 420 ]
+1010 silly gunzTarPerm extractEntry lib/public/icons/page_white_actionscript.png
+1011 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_actionscript.png', 438, 420 ]
+1012 silly gunzTarPerm extractEntry lib/public/icons/page_white_add.png
+1013 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_add.png', 438, 420 ]
+1014 silly gunzTarPerm extractEntry lib/public/icons/page_white_c.png
+1015 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_c.png', 438, 420 ]
+1016 silly gunzTarPerm extractEntry lib/public/icons/page_white_camera.png
+1017 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_camera.png', 438, 420 ]
+1018 silly gunzTarPerm extractEntry lib/public/icons/page_white_cd.png
+1019 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_cd.png', 438, 420 ]
+1020 silly gunzTarPerm extractEntry lib/public/icons/page_white_code.png
+1021 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_code.png', 438, 420 ]
+1022 silly gunzTarPerm extractEntry lib/public/icons/page_white_code_red.png
+1023 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_code_red.png', 438, 420 ]
+1024 silly gunzTarPerm extractEntry lib/public/icons/page_white_coldfusion.png
+1025 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_coldfusion.png', 438, 420 ]
+1026 verbose url raw mime/1.2.6
+1027 verbose url resolving [ 'https://registry.npmjs.org/', './mime/1.2.6' ]
+1028 verbose url resolved https://registry.npmjs.org/mime/1.2.6
+1029 info trying registry request attempt 1 at 08:46:00
+1030 verbose etag "9XPGLFJG6KSOIIKE4NCZ04C7B"
+1031 http GET https://registry.npmjs.org/mime/1.2.6
+1032 silly gunzTarPerm extractEntry lib/public/icons/page_white_compressed.png
+1033 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_compressed.png', 438, 420 ]
+1034 silly gunzTarPerm extractEntry lib/public/icons/page_white_copy.png
+1035 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_copy.png', 438, 420 ]
+1036 silly gunzTarPerm extractEntry lib/public/icons/page_white_cplusplus.png
+1037 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_cplusplus.png', 438, 420 ]
+1038 silly gunzTarPerm extractEntry lib/public/icons/page_white_csharp.png
+1039 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_csharp.png', 438, 420 ]
+1040 silly gunzTarPerm extractEntry lib/public/icons/page_white_cup.png
+1041 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_cup.png', 438, 420 ]
+1042 silly gunzTarPerm extractEntry lib/public/icons/page_white_database.png
+1043 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_database.png', 438, 420 ]
+1044 silly gunzTarPerm extractEntry lib/public/icons/page_white_delete.png
+1045 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_delete.png', 438, 420 ]
+1046 silly gunzTarPerm extractEntry lib/public/icons/page_white_dvd.png
+1047 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_dvd.png', 438, 420 ]
+1048 silly gunzTarPerm extractEntry lib/public/icons/page_add.png
+1049 silly gunzTarPerm modified mode [ 'lib/public/icons/page_add.png', 438, 420 ]
+1050 silly gunzTarPerm extractEntry lib/public/icons/page_white_error.png
+1051 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_error.png', 438, 420 ]
+1052 silly gunzTarPerm extractEntry lib/public/icons/page_white_excel.png
+1053 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_excel.png', 438, 420 ]
+1054 silly gunzTarPerm extractEntry lib/public/icons/page_white_find.png
+1055 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_find.png', 438, 420 ]
+1056 silly gunzTarPerm extractEntry lib/public/icons/page_white_flash.png
+1057 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_flash.png', 438, 420 ]
+1058 silly gunzTarPerm extractEntry lib/public/icons/page_white_freehand.png
+1059 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_freehand.png', 438, 420 ]
+1060 silly gunzTarPerm extractEntry lib/public/icons/page_white_gear.png
+1061 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_gear.png', 438, 420 ]
+1062 silly gunzTarPerm extractEntry lib/public/icons/page_white_get.png
+1063 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_get.png', 438, 420 ]
+1064 silly gunzTarPerm extractEntry lib/public/icons/page_white_go.png
+1065 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_go.png', 438, 420 ]
+1066 silly gunzTarPerm extractEntry lib/public/icons/page_white_h.png
+1067 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_h.png', 438, 420 ]
+1068 silly gunzTarPerm extractEntry lib/public/icons/page_white_horizontal.png
+1069 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_horizontal.png', 438, 420 ]
+1070 silly gunzTarPerm extractEntry lib/public/icons/page_white_key.png
+1071 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_key.png', 438, 420 ]
+1072 silly gunzTarPerm extractEntry lib/public/icons/page_white_lightning.png
+1073 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_lightning.png', 438, 420 ]
+1074 silly gunzTarPerm extractEntry lib/public/icons/page_white_link.png
+1075 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_link.png', 438, 420 ]
+1076 silly gunzTarPerm extractEntry lib/public/icons/page_white_magnify.png
+1077 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_magnify.png', 438, 420 ]
+1078 silly gunzTarPerm extractEntry lib/public/icons/page_white_medal.png
+1079 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_medal.png', 438, 420 ]
+1080 silly gunzTarPerm extractEntry lib/public/icons/page_white_office.png
+1081 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_office.png', 438, 420 ]
+1082 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\mkdirp\package.json
+1083 silly gunzTarPerm extractEntry lib/public/icons/page_white_paint.png
+1084 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_paint.png', 438, 420 ]
+1085 silly gunzTarPerm extractEntry lib/public/icons/page_white_paintbrush.png
+1086 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_paintbrush.png', 438, 420 ]
+1087 silly gunzTarPerm extractEntry lib/public/icons/page_white_paste.png
+1088 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_paste.png', 438, 420 ]
+1089 silly lockFile 1d13ad59-ules-express-node-modules-mkdirp c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\mkdirp
+1090 info preinstall mkdirp@0.3.3
+1091 silly gunzTarPerm extractEntry lib/public/icons/page_white_php.png
+1092 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_php.png', 438, 420 ]
+1093 silly gunzTarPerm extractEntry lib/public/icons/page_white_picture.png
+1094 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_picture.png', 438, 420 ]
+1095 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\mkdirp\package.json
+1096 silly gunzTarPerm extractEntry lib/public/icons/page_white_powerpoint.png
+1097 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_powerpoint.png', 438, 420 ]
+1098 verbose readDependencies using package.json deps
+1099 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\mkdirp\package.json
+1100 silly gunzTarPerm extractEntry lib/public/icons/page_white_put.png
+1101 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_put.png', 438, 420 ]
+1102 verbose readDependencies using package.json deps
+1103 silly resolved []
+1104 verbose about to build c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\mkdirp
+1105 info build c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\mkdirp
+1106 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\mkdirp\package.json
+1107 verbose linkStuff [ false,
+1107 verbose linkStuff   false,
+1107 verbose linkStuff   false,
+1107 verbose linkStuff   'c:\\Users\\srourd\\Documents\\GitHub\\YAKFRONT\\main\\node_modules\\express\\node_modules' ]
+1108 info linkStuff mkdirp@0.3.3
+1109 verbose linkBins mkdirp@0.3.3
+1110 verbose linkMans mkdirp@0.3.3
+1111 verbose rebuildBundles mkdirp@0.3.3
+1112 info install mkdirp@0.3.3
+1113 info postinstall mkdirp@0.3.3
+1114 silly gunzTarPerm extractEntry lib/public/icons/page_white_ruby.png
+1115 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_ruby.png', 438, 420 ]
+1116 silly gunzTarPerm extractEntry lib/public/icons/page_white_stack.png
+1117 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_stack.png', 438, 420 ]
+1118 silly gunzTarPerm extractEntry lib/public/icons/page_white_star.png
+1119 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_star.png', 438, 420 ]
+1120 silly gunzTarPerm extractEntry lib/public/icons/page_white_swoosh.png
+1121 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_swoosh.png', 438, 420 ]
+1122 silly gunzTarPerm extractEntry lib/public/icons/page_white_text.png
+1123 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_text.png', 438, 420 ]
+1124 silly gunzTarPerm extractEntry lib/public/icons/page_white_text_width.png
+1125 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_text_width.png', 438, 420 ]
+1126 silly gunzTarPerm extractEntry lib/public/icons/page_white_tux.png
+1127 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_tux.png', 438, 420 ]
+1128 silly gunzTarPerm extractEntry lib/public/icons/page_white_vector.png
+1129 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_vector.png', 438, 420 ]
+1130 silly gunzTarPerm extractEntry lib/public/icons/page_white_visualstudio.png
+1131 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_visualstudio.png', 438, 420 ]
+1132 silly gunzTarPerm extractEntry lib/public/icons/page_white_width.png
+1133 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_width.png', 438, 420 ]
+1134 silly gunzTarPerm extractEntry lib/public/icons/page_white_word.png
+1135 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_word.png', 438, 420 ]
+1136 silly gunzTarPerm extractEntry lib/public/icons/page_white_world.png
+1137 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_world.png', 438, 420 ]
+1138 silly gunzTarPerm extractEntry lib/public/icons/page_white_wrench.png
+1139 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_wrench.png', 438, 420 ]
+1140 silly gunzTarPerm extractEntry lib/public/icons/page_white_zip.png
+1141 silly gunzTarPerm modified mode [ 'lib/public/icons/page_white_zip.png', 438, 420 ]
+1142 silly gunzTarPerm extractEntry lib/public/icons/page_word.png
+1143 silly gunzTarPerm modified mode [ 'lib/public/icons/page_word.png', 438, 420 ]
+1144 silly gunzTarPerm extractEntry lib/public/icons/page_world.png
+1145 silly gunzTarPerm modified mode [ 'lib/public/icons/page_world.png', 438, 420 ]
+1146 silly gunzTarPerm extractEntry lib/public/style.css
+1147 silly gunzTarPerm modified mode [ 'lib/public/style.css', 438, 420 ]
+1148 silly gunzTarPerm extractEntry Readme.md
+1149 silly gunzTarPerm modified mode [ 'Readme.md', 438, 420 ]
+1150 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\package.json
+1151 silly lockFile 01b0cf8a-les-express-node-modules-connect c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect
+1152 info preinstall connect@2.4.4
+1153 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\package.json
+1154 verbose readDependencies using package.json deps
+1155 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\package.json
+1156 verbose readDependencies using package.json deps
+1157 verbose cache add [ 'qs@0.4.2', null ]
+1158 silly cache add name=undefined spec="qs@0.4.2" args=["qs@0.4.2",null]
+1159 verbose parsed url { pathname: 'qs@0.4.2', path: 'qs@0.4.2', href: 'qs@0.4.2' }
+1160 silly cache add name="qs" spec="0.4.2" args=["qs","0.4.2"]
+1161 verbose parsed url { pathname: '0.4.2', path: '0.4.2', href: '0.4.2' }
+1162 verbose addNamed [ 'qs', '0.4.2' ]
+1163 verbose addNamed [ '0.4.2', '0.4.2' ]
+1164 silly lockFile 30ab4164-qs-0-4-2 qs@0.4.2
+1165 verbose lock qs@0.4.2 C:\Users\srourd\AppData\Roaming\npm-cache\30ab4164-qs-0-4-2.lock
+1166 verbose cache add [ 'formidable@1.0.11', null ]
+1167 silly cache add name=undefined spec="formidable@1.0.11" args=["formidable@1.0.11",null]
+1168 verbose parsed url { pathname: 'formidable@1.0.11',
+1168 verbose parsed url   path: 'formidable@1.0.11',
+1168 verbose parsed url   href: 'formidable@1.0.11' }
+1169 silly cache add name="formidable" spec="1.0.11" args=["formidable","1.0.11"]
+1170 verbose parsed url { pathname: '1.0.11', path: '1.0.11', href: '1.0.11' }
+1171 verbose addNamed [ 'formidable', '1.0.11' ]
+1172 verbose addNamed [ '1.0.11', '1.0.11' ]
+1173 silly lockFile 85cafced-formidable-1-0-11 formidable@1.0.11
+1174 verbose lock formidable@1.0.11 C:\Users\srourd\AppData\Roaming\npm-cache\85cafced-formidable-1-0-11.lock
+1175 verbose cache add [ 'bytes@0.1.0', null ]
+1176 silly cache add name=undefined spec="bytes@0.1.0" args=["bytes@0.1.0",null]
+1177 verbose parsed url { pathname: 'bytes@0.1.0',
+1177 verbose parsed url   path: 'bytes@0.1.0',
+1177 verbose parsed url   href: 'bytes@0.1.0' }
+1178 silly cache add name="bytes" spec="0.1.0" args=["bytes","0.1.0"]
+1179 verbose parsed url { pathname: '0.1.0', path: '0.1.0', href: '0.1.0' }
+1180 verbose addNamed [ 'bytes', '0.1.0' ]
+1181 verbose addNamed [ '0.1.0', '0.1.0' ]
+1182 silly lockFile d6abeac8-bytes-0-1-0 bytes@0.1.0
+1183 verbose lock bytes@0.1.0 C:\Users\srourd\AppData\Roaming\npm-cache\d6abeac8-bytes-0-1-0.lock
+1184 verbose cache add [ 'pause@0.0.1', null ]
+1185 silly cache add name=undefined spec="pause@0.0.1" args=["pause@0.0.1",null]
+1186 verbose parsed url { pathname: 'pause@0.0.1',
+1186 verbose parsed url   path: 'pause@0.0.1',
+1186 verbose parsed url   href: 'pause@0.0.1' }
+1187 silly cache add name="pause" spec="0.0.1" args=["pause","0.0.1"]
+1188 verbose parsed url { pathname: '0.0.1', path: '0.0.1', href: '0.0.1' }
+1189 verbose addNamed [ 'pause', '0.0.1' ]
+1190 verbose addNamed [ '0.0.1', '0.0.1' ]
+1191 silly lockFile c62fc432-pause-0-0-1 pause@0.0.1
+1192 verbose lock pause@0.0.1 C:\Users\srourd\AppData\Roaming\npm-cache\c62fc432-pause-0-0-1.lock
+1193 verbose url raw bytes/0.1.0
+1194 verbose url resolving [ 'https://registry.npmjs.org/', './bytes/0.1.0' ]
+1195 verbose url resolved https://registry.npmjs.org/bytes/0.1.0
+1196 info trying registry request attempt 1 at 08:46:00
+1197 verbose etag "EIL63HAPIE2BKZ765B6JIS0UB"
+1198 http GET https://registry.npmjs.org/bytes/0.1.0
+1199 verbose url raw formidable/1.0.11
+1200 verbose url resolving [ 'https://registry.npmjs.org/', './formidable/1.0.11' ]
+1201 verbose url resolved https://registry.npmjs.org/formidable/1.0.11
+1202 info trying registry request attempt 1 at 08:46:00
+1203 verbose etag "BW0IPISS5FGY00WVTRKTJ4VY"
+1204 http GET https://registry.npmjs.org/formidable/1.0.11
+1205 verbose url raw pause/0.0.1
+1206 verbose url resolving [ 'https://registry.npmjs.org/', './pause/0.0.1' ]
+1207 verbose url resolved https://registry.npmjs.org/pause/0.0.1
+1208 info trying registry request attempt 1 at 08:46:00
+1209 verbose etag "9BQMRV9X50PB29H6CORDG5OPS"
+1210 http GET https://registry.npmjs.org/pause/0.0.1
+1211 verbose url raw qs/0.4.2
+1212 verbose url resolving [ 'https://registry.npmjs.org/', './qs/0.4.2' ]
+1213 verbose url resolved https://registry.npmjs.org/qs/0.4.2
+1214 info trying registry request attempt 1 at 08:46:00
+1215 verbose etag "RQNFJ4BTAA8VX3X7UETQVI3D"
+1216 http GET https://registry.npmjs.org/qs/0.4.2
+1217 http 304 https://registry.npmjs.org/pause/0.0.1
+1218 silly registry.get cb [ 304,
+1218 silly registry.get   { server: 'CouchDB/1.2.1 (Erlang OTP/R15B03)',
+1218 silly registry.get     etag: '"9BQMRV9X50PB29H6CORDG5OPS"',
+1218 silly registry.get     date: 'Mon, 11 Mar 2013 06:48:45 GMT',
+1218 silly registry.get     'content-length': '0' } ]
+1219 verbose etag pause/0.0.1 from cache
+1220 verbose read json C:\Users\srourd\AppData\Roaming\npm-cache\pause\0.0.1\package\package.json
+1221 http 304 https://registry.npmjs.org/qs/0.4.2
+1222 silly registry.get cb [ 304,
+1222 silly registry.get   { server: 'CouchDB/1.2.1 (Erlang OTP/R15B03)',
+1222 silly registry.get     etag: '"RQNFJ4BTAA8VX3X7UETQVI3D"',
+1222 silly registry.get     date: 'Mon, 11 Mar 2013 06:48:45 GMT',
+1222 silly registry.get     'content-length': '0' } ]
+1223 verbose etag qs/0.4.2 from cache
+1224 silly lockFile c62fc432-pause-0-0-1 pause@0.0.1
+1225 verbose read json C:\Users\srourd\AppData\Roaming\npm-cache\qs\0.4.2\package\package.json
+1226 http 304 https://registry.npmjs.org/mime/1.2.6
+1227 silly registry.get cb [ 304,
+1227 silly registry.get   { server: 'CouchDB/1.2.1 (Erlang OTP/R15B03)',
+1227 silly registry.get     etag: '"9XPGLFJG6KSOIIKE4NCZ04C7B"',
+1227 silly registry.get     date: 'Mon, 11 Mar 2013 06:48:45 GMT',
+1227 silly registry.get     'content-length': '0' } ]
+1228 verbose etag mime/1.2.6 from cache
+1229 verbose read json C:\Users\srourd\AppData\Roaming\npm-cache\mime\1.2.6\package\package.json
+1230 silly lockFile 30ab4164-qs-0-4-2 qs@0.4.2
+1231 silly lockFile 898e3106-mime-1-2-6 mime@1.2.6
+1232 silly resolved [ { author:
+1232 silly resolved      { name: 'Robert Kieffer',
+1232 silly resolved        email: 'robert@broofa.com',
+1232 silly resolved        url: 'http://github.com/broofa' },
+1232 silly resolved     contributors: [ [Object] ],
+1232 silly resolved     dependencies: {},
+1232 silly resolved     description: 'A comprehensive library for mime-type mapping',
+1232 silly resolved     devDependencies: {},
+1232 silly resolved     keywords: [ 'util', 'mime' ],
+1232 silly resolved     main: 'mime.js',
+1232 silly resolved     name: 'mime',
+1232 silly resolved     repository: { url: 'https://github.com/broofa/node-mime', type: 'git' },
+1232 silly resolved     version: '1.2.6',
+1232 silly resolved     readme: '# mime\n\nComprehensive MIME type mapping API. Includes all 600+ types and 800+ extensions defined by the Apache project, plus additional types submitted by the node.js community.\n\n## Install\n\nInstall with [npm](http://github.com/isaacs/npm):\n\n    npm install mime\n\n## API - Queries\n\n### mime.lookup(path)\nGet the mime type associated with a file. Performs a case-insensitive lookup using the extension in `path` (the substring after the last \'/\' or \'.\').  E.g.\n\n    var mime = require(\'mime\');\n\n    mime.lookup(\'/path/to/file.txt\');         // => \'text/plain\'\n    mime.lookup(\'file.txt\');                  // => \'text/plain\'\n    mime.lookup(\'.TXT\');                      // => \'text/plain\'\n    mime.lookup(\'htm\');                       // => \'text/html\'\n\n### mime.extension(type)\nGet the default extension for `type`\n\n    mime.extension(\'text/html\');                 // => \'html\'\n    mime.extension(\'application/octet-stream\');  // => \'bin\'\n\n### mime.charsets.lookup()\n\nMap mime-type to charset\n\n    mime.charsets.lookup(\'text/plain\');        // => \'UTF-8\'\n\n(The logic for charset lookups is pretty rudimentary.  Feel free to suggest improvements.)\n\n## API - Defining Custom Types\n\nThe following APIs allow you to add your own type mappings within your project.  If you feel a type should be included as part of node-mime, see [requesting new types](https://github.com/bentomas/node-mime/wiki/Requesting-New-Types).\n\n### mime.define()\n\nAdd custom mime/extension mappings\n\n    mime.define({\n        \'text/x-some-format\': [\'x-sf\', \'x-sft\', \'x-sfml\'],\n        \'application/x-my-type\': [\'x-mt\', \'x-mtt\'],\n        // etc ...\n    });\n\n    mime.lookup(\'x-sft\');                 // => \'text/x-some-format\'\n\nThe first entry in the extensions array is returned by `mime.extension()`. E.g.\n\n    mime.extension(\'text/x-some-format\'); // => \'x-sf\'\n\n### mime.load(filepath)\n\nLoad mappings from an Apache ".types" format file\n\n    mime.load(\'./my_project.types\');\n\nThe .types file format is simple -  See the `types` dir for examples.\n',
+1232 silly resolved     readmeFilename: 'README.md',
+1232 silly resolved     _id: 'mime@1.2.6',
+1232 silly resolved     _from: 'mime@1.2.6' } ]
+1233 info install mime@1.2.6 into c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\send
+1234 info installOne mime@1.2.6
+1235 verbose from cache C:\Users\srourd\AppData\Roaming\npm-cache\mime\1.2.6\package\package.json
+1236 info c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\send\node_modules\mime unbuild
+1237 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\send\node_modules\mime\package.json
+1238 verbose tar unpack C:\Users\srourd\AppData\Roaming\npm-cache\mime\1.2.6\package.tgz
+1239 silly lockFile 67d0f8d5-e-modules-send-node-modules-mime c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\send\node_modules\mime
+1240 verbose lock c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\send\node_modules\mime C:\Users\srourd\AppData\Roaming\npm-cache\67d0f8d5-e-modules-send-node-modules-mime.lock
+1241 silly gunzTarPerm modes [ '755', '644' ]
+1242 silly gunzTarPerm extractEntry package.json
+1243 silly gunzTarPerm modified mode [ 'package.json', 438, 420 ]
+1244 silly gunzTarPerm extractEntry README.md
+1245 silly gunzTarPerm modified mode [ 'README.md', 438, 420 ]
+1246 silly gunzTarPerm extractEntry LICENSE
+1247 silly gunzTarPerm modified mode [ 'LICENSE', 438, 420 ]
+1248 silly gunzTarPerm extractEntry mime.js
+1249 silly gunzTarPerm modified mode [ 'mime.js', 438, 420 ]
+1250 silly gunzTarPerm extractEntry test.js
+1251 silly gunzTarPerm modified mode [ 'test.js', 438, 420 ]
+1252 silly gunzTarPerm extractEntry types/mime.types
+1253 silly gunzTarPerm modified mode [ 'types/mime.types', 438, 420 ]
+1254 silly gunzTarPerm extractEntry types/node.types
+1255 silly gunzTarPerm modified mode [ 'types/node.types', 438, 420 ]
+1256 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\send\node_modules\mime\package.json
+1257 silly lockFile 67d0f8d5-e-modules-send-node-modules-mime c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\send\node_modules\mime
+1258 info preinstall mime@1.2.6
+1259 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\send\node_modules\mime\package.json
+1260 verbose readDependencies using package.json deps
+1261 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\send\node_modules\mime\package.json
+1262 verbose readDependencies using package.json deps
+1263 silly resolved []
+1264 verbose about to build c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\send\node_modules\mime
+1265 info build c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\send\node_modules\mime
+1266 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\send\node_modules\mime\package.json
+1267 verbose linkStuff [ false,
+1267 verbose linkStuff   false,
+1267 verbose linkStuff   false,
+1267 verbose linkStuff   'c:\\Users\\srourd\\Documents\\GitHub\\YAKFRONT\\main\\node_modules\\express\\node_modules\\send\\node_modules' ]
+1268 info linkStuff mime@1.2.6
+1269 verbose linkBins mime@1.2.6
+1270 verbose linkMans mime@1.2.6
+1271 verbose rebuildBundles mime@1.2.6
+1272 info install mime@1.2.6
+1273 info postinstall mime@1.2.6
+1274 verbose about to build c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\send
+1275 info build c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\send
+1276 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\send\package.json
+1277 verbose linkStuff [ false,
+1277 verbose linkStuff   false,
+1277 verbose linkStuff   false,
+1277 verbose linkStuff   'c:\\Users\\srourd\\Documents\\GitHub\\YAKFRONT\\main\\node_modules\\express\\node_modules' ]
+1278 info linkStuff send@0.0.4
+1279 verbose linkBins send@0.0.4
+1280 verbose linkMans send@0.0.4
+1281 verbose rebuildBundles send@0.0.4
+1282 verbose rebuildBundles [ 'mime' ]
+1283 info install send@0.0.4
+1284 info postinstall send@0.0.4
+1285 http 304 https://registry.npmjs.org/formidable/1.0.11
+1286 silly registry.get cb [ 304,
+1286 silly registry.get   { server: 'CouchDB/1.2.1 (Erlang OTP/R15B03)',
+1286 silly registry.get     etag: '"BW0IPISS5FGY00WVTRKTJ4VY"',
+1286 silly registry.get     date: 'Mon, 11 Mar 2013 06:48:46 GMT',
+1286 silly registry.get     'content-length': '0' } ]
+1287 verbose etag formidable/1.0.11 from cache
+1288 verbose read json C:\Users\srourd\AppData\Roaming\npm-cache\formidable\1.0.11\package\package.json
+1289 silly lockFile 85cafced-formidable-1-0-11 formidable@1.0.11
+1290 http 304 https://registry.npmjs.org/bytes/0.1.0
+1291 silly registry.get cb [ 304,
+1291 silly registry.get   { server: 'CouchDB/1.2.1 (Erlang OTP/R15B03)',
+1291 silly registry.get     etag: '"EIL63HAPIE2BKZ765B6JIS0UB"',
+1291 silly registry.get     date: 'Mon, 11 Mar 2013 06:48:47 GMT',
+1291 silly registry.get     'content-length': '0' } ]
+1292 verbose etag bytes/0.1.0 from cache
+1293 verbose read json C:\Users\srourd\AppData\Roaming\npm-cache\bytes\0.1.0\package\package.json
+1294 silly lockFile d6abeac8-bytes-0-1-0 bytes@0.1.0
+1295 silly resolved [ { name: 'pause',
+1295 silly resolved     version: '0.0.1',
+1295 silly resolved     description: 'Pause streams...',
+1295 silly resolved     keywords: [],
+1295 silly resolved     author: { name: 'TJ Holowaychuk', email: 'tj@vision-media.ca' },
+1295 silly resolved     dependencies: {},
+1295 silly resolved     devDependencies: { mocha: '*', should: '*' },
+1295 silly resolved     main: 'index',
+1295 silly resolved     readme: '\n# pause\n\n  Pause streams...\n\n## License \n\n(The MIT License)\n\nCopyright (c) 2012 TJ Holowaychuk &lt;tj@vision-media.ca&gt;\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\'Software\'), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \'AS IS\', WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.\nIN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY\nCLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,\nTORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE\nSOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.',
+1295 silly resolved     readmeFilename: 'Readme.md',
+1295 silly resolved     _id: 'pause@0.0.1',
+1295 silly resolved     _from: 'pause@0.0.1' },
+1295 silly resolved   { name: 'qs',
+1295 silly resolved     description: 'querystring parser',
+1295 silly resolved     version: '0.4.2',
+1295 silly resolved     repository:
+1295 silly resolved      { type: 'git',
+1295 silly resolved        url: 'git://github.com/visionmedia/node-querystring.git' },
+1295 silly resolved     devDependencies: { mocha: '*', should: '*' },
+1295 silly resolved     author:
+1295 silly resolved      { name: 'TJ Holowaychuk',
+1295 silly resolved        email: 'tj@vision-media.ca',
+1295 silly resolved        url: 'http://tjholowaychuk.com' },
+1295 silly resolved     main: 'index',
+1295 silly resolved     engines: { node: '*' },
+1295 silly resolved     readme: '# node-querystring\n\n  query string parser for node supporting nesting, as it was removed from `0.3.x`, so this library provides the previous and commonly desired behaviour (and twice as fast). Used by [express](http://expressjs.com), [connect](http://senchalabs.github.com/connect) and others.\n\n## Installation\n\n    $ npm install qs\n\n## Examples\n\n```js\nvar qs = require(\'qs\');\n\nqs.parse(\'user[name][first]=Tobi&user[email]=tobi@learnboost.com\');\n// => { user: { name: { first: \'Tobi\' }, email: \'tobi@learnboost.com\' } }\n\nqs.stringify({ user: { name: \'Tobi\', email: \'tobi@learnboost.com\' }})\n// => user[name]=Tobi&user[email]=tobi%40learnboost.com\n```\n\n## Testing\n\nInstall dev dependencies:\n\n    $ npm install -d\n\nand execute:\n\n    $ make test\n\n## License \n\n(The MIT License)\n\nCopyright (c) 2010 TJ Holowaychuk &lt;tj@vision-media.ca&gt;\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\'Software\'), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \'AS IS\', WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.\nIN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY\nCLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,\nTORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE\nSOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.',
+1295 silly resolved     readmeFilename: 'Readme.md',
+1295 silly resolved     _id: 'qs@0.4.2',
+1295 silly resolved     _from: 'qs@0.4.2' },
+1295 silly resolved   { name: 'formidable',
+1295 silly resolved     version: '1.0.11',
+1295 silly resolved     dependencies: {},
+1295 silly resolved     devDependencies:
+1295 silly resolved      { gently: '0.8.0',
+1295 silly resolved        findit: '0.1.1',
+1295 silly resolved        hashish: '0.0.4',
+1295 silly resolved        urun: '0.0.4',
+1295 silly resolved        utest: '0.0.3' },
+1295 silly resolved     directories: { lib: './lib' },
+1295 silly resolved     main: './lib/index',
+1295 silly resolved     scripts: { test: 'make test' },
+1295 silly resolved     engines: { node: '*' },
+1295 silly resolved     optionalDependencies: {},
+1295 silly resolved     readme: '# Formidable\n\n[![Build Status](https://secure.travis-ci.org/felixge/node-formidable.png?branch=master)](http://travis-ci.org/felixge/node-formidable)\n\n## Purpose\n\nA node.js module for parsing form data, especially file uploads.\n\n## Current status\n\nThis module was developed for [Transloadit](http://transloadit.com/), a service focused on uploading\nand encoding images and videos. It has been battle-tested against hundreds of GB of file uploads from\na large variety of clients and is considered production-ready.\n\n## Features\n\n* Fast (~500mb/sec), non-buffering multipart parser\n* Automatically writing file uploads to disk\n* Low memory footprint\n* Graceful error handling\n* Very high test coverage\n\n## Changelog\n\n### v1.0.9\n\n* Emit progress when content length header parsed (Tim Koschützki)\n* Fix Readme syntax due to GitHub changes (goob)\n* Replace references to old \'sys\' module in Readme with \'util\' (Peter Sugihara)\n\n### v1.0.8\n\n* Strip potentially unsafe characters when using `keepExtensions: true`.\n* Switch to utest / urun for testing\n* Add travis build\n\n### v1.0.7\n\n* Remove file from package that was causing problems when installing on windows. (#102)\n* Fix typos in Readme (Jason Davies).\n\n### v1.0.6\n\n* Do not default to the default to the field name for file uploads where\n  filename="".\n\n### v1.0.5\n\n* Support filename="" in multipart parts\n* Explain unexpected end() errors in parser better\n\n**Note:** Starting with this version, formidable emits \'file\' events for empty\nfile input fields. Previously those were incorrectly emitted as regular file\ninput fields with value = "".\n\n### v1.0.4\n\n* Detect a good default tmp directory regardless of platform. (#88)\n\n### v1.0.3\n\n* Fix problems with utf8 characters (#84) / semicolons in filenames (#58)\n* Small performance improvements\n* New test suite and fixture system\n\n### v1.0.2\n\n* Exclude node\\_modules folder from git\n* Implement new `\'aborted\'` event\n* Fix files in example folder to work with recent node versions\n* Make gently a devDependency\n\n[See Commits](https://github.com/felixge/node-formidable/compare/v1.0.1...v1.0.2)\n\n### v1.0.1\n\n* Fix package.json to refer to proper main directory. (#68, Dean Landolt)\n\n[See Commits](https://github.com/felixge/node-formidable/compare/v1.0.0...v1.0.1)\n\n### v1.0.0\n\n* Add support for multipart boundaries that are quoted strings. (Jeff Craig)\n\nThis marks the beginning of development on version 2.0 which will include\nseveral architectural improvements.\n\n[See Commits](https://github.com/felixge/node-formidable/compare/v0.9.11...v1.0.0)\n\n### v0.9.11\n\n* Emit `\'progress\'` event when receiving data, regardless of parsing it. (Tim Koschützki)\n* Use [W3C FileAPI Draft](http://dev.w3.org/2006/webapi/FileAPI/) properties for File class\n\n**Important:** The old property names of the File class will be removed in a\nfuture release.\n\n[See Commits](https://github.com/felixge/node-formidable/compare/v0.9.10...v0.9.11)\n\n### Older releases\n\nThese releases were done before starting to maintain the above Changelog:\n\n* [v0.9.10](https://github.com/felixge/node-formidable/compare/v0.9.9...v0.9.10)\n* [v0.9.9](https://github.com/felixge/node-formidable/compare/v0.9.8...v0.9.9)\n* [v0.9.8](https://github.com/felixge/node-formidable/compare/v0.9.7...v0.9.8)\n* [v0.9.7](https://github.com/felixge/node-formidable/compare/v0.9.6...v0.9.7)\n* [v0.9.6](https://github.com/felixge/node-formidable/compare/v0.9.5...v0.9.6)\n* [v0.9.5](https://github.com/felixge/node-formidable/compare/v0.9.4...v0.9.5)\n* [v0.9.4](https://github.com/felixge/node-formidable/compare/v0.9.3...v0.9.4)\n* [v0.9.3](https://github.com/felixge/node-formidable/compare/v0.9.2...v0.9.3)\n* [v0.9.2](https://github.com/felixge/node-formidable/compare/v0.9.1...v0.9.2)\n* [v0.9.1](https://github.com/felixge/node-formidable/compare/v0.9.0...v0.9.1)\n* [v0.9.0](https://github.com/felixge/node-formidable/compare/v0.8.0...v0.9.0)\n* [v0.9.0](https://github.com/felixge/node-formidable/compare/v0.8.0...v0.9.0)\n* [v0.9.0](https://github.com/felixge/node-formidable/compare/v0.8.0...v0.9.0)\n* [v0.9.0](https://github.com/felixge/node-formidable/compare/v0.8.0...v0.9.0)\n* [v0.9.0](https://github.com/felixge/node-formidable/compare/v0.8.0...v0.9.0)\n* [v0.9.0](https://github.com/felixge/node-formidable/compare/v0.8.0...v0.9.0)\n* [v0.9.0](https://github.com/felixge/node-formidable/compare/v0.8.0...v0.9.0)\n* [v0.9.0](https://github.com/felixge/node-formidable/compare/v0.8.0...v0.9.0)\n* [v0.1.0](https://github.com/felixge/node-formidable/commits/v0.1.0)\n\n## Installation\n\nVia [npm](http://github.com/isaacs/npm):\n\n    npm install formidable@latest\n\nManually:\n\n    git clone git://github.com/felixge/node-formidable.git formidable\n    vim my.js\n    # var formidable = require(\'./formidable\');\n\nNote: Formidable requires [gently](http://github.com/felixge/node-gently) to run the unit tests, but you won\'t need it for just using the library.\n\n## Example\n\nParse an incoming file upload.\n\n    var formidable = require(\'formidable\'),\n        http = require(\'http\'),\n\n        util = require(\'util\');\n\n    http.createServer(function(req, res) {\n      if (req.url == \'/upload\' && req.method.toLowerCase() == \'post\') {\n        // parse a file upload\n        var form = new formidable.IncomingForm();\n        form.parse(req, function(err, fields, files) {\n          res.writeHead(200, {\'content-type\': \'text/plain\'});\n          res.write(\'received upload:\\n\\n\');\n          res.end(util.inspect({fields: fields, files: files}));\n        });\n        return;\n      }\n\n      // show a file upload form\n      res.writeHead(200, {\'content-type\': \'text/html\'});\n      res.end(\n        \'<form action="/upload" enctype="multipart/form-data" method="post">\'+\n        \'<input type="text" name="title"><br>\'+\n        \'<input type="file" name="upload" multiple="multiple"><br>\'+\n        \'<input type="submit" value="Upload">\'+\n        \'</form>\'\n      );\n    }).listen(80);\n\n## API\n\n### formidable.IncomingForm\n\n__new formidable.IncomingForm()__\n\nCreates a new incoming form.\n\n__incomingForm.encoding = \'utf-8\'__\n\nThe encoding to use for incoming form fields.\n\n__incomingForm.uploadDir = process.env.TMP || \'/tmp\' || process.cwd()__\n\nThe directory for placing file uploads in. You can move them later on using\n`fs.rename()`. The default directory is picked at module load time depending on\nthe first existing directory from those listed above.\n\n__incomingForm.keepExtensions = false__\n\nIf you want the files written to `incomingForm.uploadDir` to include the extensions of the original files, set this property to `true`.\n\n__incomingForm.type__\n\nEither \'multipart\' or \'urlencoded\' depending on the incoming request.\n\n__incomingForm.maxFieldsSize = 2 * 1024 * 1024__\n\nLimits the amount of memory a field (not file) can allocate in bytes.\nIf this value is exceeded, an `\'error\'` event is emitted. The default\nsize is 2MB.\n\n__incomingForm.hash = false__\n\nIf you want checksums calculated for incoming files, set this to either `\'sha1\'` or `\'md5\'`.\n\n__incomingForm.bytesReceived__\n\nThe amount of bytes received for this form so far.\n\n__incomingForm.bytesExpected__\n\nThe expected number of bytes in this form.\n\n__incomingForm.parse(request, [cb])__\n\nParses an incoming node.js `request` containing form data. If `cb` is provided, all fields an files are collected and passed to the callback:\n\n    incomingForm.parse(req, function(err, fields, files) {\n      // ...\n    });\n\n__incomingForm.onPart(part)__\n\nYou may overwrite this method if you are interested in directly accessing the multipart stream. Doing so will disable any `\'field\'` / `\'file\'` events  processing which would occur otherwise, making you fully responsible for handling the processing.\n\n    incomingForm.onPart = function(part) {\n      part.addListener(\'data\', function() {\n        // ...\n      });\n    }\n\nIf you want to use formidable to only handle certain parts for you, you can do so:\n\n    incomingForm.onPart = function(part) {\n      if (!part.filename) {\n        // let formidable handle all non-file parts\n        incomingForm.handlePart(part);\n      }\n    }\n\nCheck the code in this method for further inspiration.\n\n__Event: \'progress\' (bytesReceived, bytesExpected)__\n\nEmitted after each incoming chunk of data that has been parsed. Can be used to roll your own progress bar.\n\n__Event: \'field\' (name, value)__\n\nEmitted whenever a field / value pair has been received.\n\n__Event: \'fileBegin\' (name, file)__\n\nEmitted whenever a new file is detected in the upload stream. Use this even if\nyou want to stream the file to somewhere else while buffering the upload on\nthe file system.\n\n__Event: \'file\' (name, file)__\n\nEmitted whenever a field / file pair has been received. `file` is an instance of `File`.\n\n__Event: \'error\' (err)__\n\nEmitted when there is an error processing the incoming form. A request that experiences an error is automatically paused, you will have to manually call `request.resume()` if you want the request to continue firing `\'data\'` events.\n\n__Event: \'aborted\'__\n\nEmitted when the request was aborted by the user. Right now this can be due to a \'timeout\' or \'close\' event on the socket. In the future there will be a separate \'timeout\' event (needs a change in the node core).\n\n__Event: \'end\' ()__\n\nEmitted when the entire request has been received, and all contained files have finished flushing to disk. This is a great place for you to send your response.\n\n### formidable.File\n\n__file.size = 0__\n\nThe size of the uploaded file in bytes. If the file is still being uploaded (see `\'fileBegin\'` event), this property says how many bytes of the file have been written to disk yet.\n\n__file.path = null__\n\nThe path this file is being written to. You can modify this in the `\'fileBegin\'` event in\ncase you are unhappy with the way formidable generates a temporary path for your files.\n\n__file.name = null__\n\nThe name this file had according to the uploading client.\n\n__file.type = null__\n\nThe mime type of this file, according to the uploading client.\n\n__file.lastModifiedDate = null__\n\nA date object (or `null`) containing the time this file was last written to. Mostly\nhere for compatibility with the [W3C File API Draft](http://dev.w3.org/2006/webapi/FileAPI/).\n\n__file.hash = null__\n\nIf hash calculation was set, you can read the hex digest out of this var.\n\n## License\n\nFormidable is licensed under the MIT license.\n\n## Ports\n\n* [multipart-parser](http://github.com/FooBarWidget/multipart-parser): a C++ parser based on formidable\n\n## Credits\n\n* [Ryan Dahl](http://twitter.com/ryah) for his work on [http-parser](http://github.com/ry/http-parser) which heavily inspired multipart_parser.js\n',
+1295 silly resolved     readmeFilename: 'Readme.md',
+1295 silly resolved     _id: 'formidable@1.0.11',
+1295 silly resolved     description: '[![Build Status](https://secure.travis-ci.org/felixge/node-formidable.png?branch=master)](http://travis-ci.org/felixge/node-formidable)',
+1295 silly resolved     _from: 'formidable@1.0.11' },
+1295 silly resolved   { name: 'bytes',
+1295 silly resolved     author:
+1295 silly resolved      { name: 'TJ Holowaychuk',
+1295 silly resolved        email: 'tj@vision-media.ca',
+1295 silly resolved        url: 'http://tjholowaychuk.com' },
+1295 silly resolved     description: 'byte size string parser / serializer',
+1295 silly resolved     version: '0.1.0',
+1295 silly resolved     main: 'index.js',
+1295 silly resolved     dependencies: {},
+1295 silly resolved     devDependencies: { mocha: '*', should: '*' },
+1295 silly resolved     component: { scripts: [Object] },
+1295 silly resolved     readme: '# node-bytes\n\n  Byte string parser / formatter.\n\n## Example:\n\n```js\nbytes(\'1kb\')\n// => 1024\n\nbytes(\'2mb\')\n// => 2097152\n\nbytes(\'1gb\')\n// => 1073741824\n\nbytes(1073741824)\n// => 1gb\n```\n\n## Installation\n\n```\n$ npm install bytes\n$ component install visionmedia/bytes.js\n```\n\n## License \n\n(The MIT License)\n\nCopyright (c) 2012 TJ Holowaychuk &lt;tj@vision-media.ca&gt;\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\'Software\'), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \'AS IS\', WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.\nIN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY\nCLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,\nTORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE\nSOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n',
+1295 silly resolved     readmeFilename: 'Readme.md',
+1295 silly resolved     _id: 'bytes@0.1.0',
+1295 silly resolved     _from: 'bytes@0.1.0' } ]
+1296 info install pause@0.0.1 into c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect
+1297 info install qs@0.4.2 into c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect
+1298 info install formidable@1.0.11 into c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect
+1299 info install bytes@0.1.0 into c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect
+1300 info installOne pause@0.0.1
+1301 info installOne qs@0.4.2
+1302 info installOne formidable@1.0.11
+1303 info installOne bytes@0.1.0
+1304 verbose from cache C:\Users\srourd\AppData\Roaming\npm-cache\pause\0.0.1\package\package.json
+1305 verbose from cache C:\Users\srourd\AppData\Roaming\npm-cache\qs\0.4.2\package\package.json
+1306 verbose from cache C:\Users\srourd\AppData\Roaming\npm-cache\formidable\1.0.11\package\package.json
+1307 verbose from cache C:\Users\srourd\AppData\Roaming\npm-cache\bytes\0.1.0\package\package.json
+1308 info c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\node_modules\pause unbuild
+1309 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\node_modules\pause\package.json
+1310 info c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\node_modules\qs unbuild
+1311 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\node_modules\qs\package.json
+1312 info c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\node_modules\formidable unbuild
+1313 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\node_modules\formidable\package.json
+1314 info c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\node_modules\bytes unbuild
+1315 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\node_modules\bytes\package.json
+1316 verbose tar unpack C:\Users\srourd\AppData\Roaming\npm-cache\pause\0.0.1\package.tgz
+1317 silly lockFile 4fb8b33b-dules-connect-node-modules-pause c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\node_modules\pause
+1318 verbose lock c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\node_modules\pause C:\Users\srourd\AppData\Roaming\npm-cache\4fb8b33b-dules-connect-node-modules-pause.lock
+1319 verbose tar unpack C:\Users\srourd\AppData\Roaming\npm-cache\qs\0.4.2\package.tgz
+1320 silly lockFile 840ae4f1--modules-connect-node-modules-qs c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\node_modules\qs
+1321 verbose lock c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\node_modules\qs C:\Users\srourd\AppData\Roaming\npm-cache\840ae4f1--modules-connect-node-modules-qs.lock
+1322 verbose tar unpack C:\Users\srourd\AppData\Roaming\npm-cache\formidable\1.0.11\package.tgz
+1323 silly lockFile 9516cab6--connect-node-modules-formidable c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\node_modules\formidable
+1324 verbose lock c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\node_modules\formidable C:\Users\srourd\AppData\Roaming\npm-cache\9516cab6--connect-node-modules-formidable.lock
+1325 verbose tar unpack C:\Users\srourd\AppData\Roaming\npm-cache\bytes\0.1.0\package.tgz
+1326 silly lockFile 109e45b6-dules-connect-node-modules-bytes c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\node_modules\bytes
+1327 verbose lock c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\node_modules\bytes C:\Users\srourd\AppData\Roaming\npm-cache\109e45b6-dules-connect-node-modules-bytes.lock
+1328 silly gunzTarPerm modes [ '755', '644' ]
+1329 silly gunzTarPerm modes [ '755', '644' ]
+1330 silly gunzTarPerm modes [ '755', '644' ]
+1331 silly gunzTarPerm modes [ '755', '644' ]
+1332 silly gunzTarPerm extractEntry package.json
+1333 silly gunzTarPerm modified mode [ 'package.json', 438, 420 ]
+1334 silly gunzTarPerm extractEntry .npmignore
+1335 silly gunzTarPerm modified mode [ '.npmignore', 438, 420 ]
+1336 silly gunzTarPerm extractEntry index.js
+1337 silly gunzTarPerm modified mode [ 'index.js', 438, 420 ]
+1338 silly gunzTarPerm extractEntry History.md
+1339 silly gunzTarPerm modified mode [ 'History.md', 438, 420 ]
+1340 silly gunzTarPerm extractEntry Makefile
+1341 silly gunzTarPerm modified mode [ 'Makefile', 438, 420 ]
+1342 silly gunzTarPerm extractEntry Readme.md
+1343 silly gunzTarPerm modified mode [ 'Readme.md', 438, 420 ]
+1344 silly gunzTarPerm extractEntry package.json
+1345 silly gunzTarPerm modified mode [ 'package.json', 438, 420 ]
+1346 silly gunzTarPerm extractEntry .npmignore
+1347 silly gunzTarPerm modified mode [ '.npmignore', 438, 420 ]
+1348 silly gunzTarPerm extractEntry index.js
+1349 silly gunzTarPerm modified mode [ 'index.js', 438, 420 ]
+1350 silly gunzTarPerm extractEntry component.json
+1351 silly gunzTarPerm modified mode [ 'component.json', 438, 420 ]
+1352 silly gunzTarPerm extractEntry History.md
+1353 silly gunzTarPerm modified mode [ 'History.md', 438, 420 ]
+1354 silly gunzTarPerm extractEntry Makefile
+1355 silly gunzTarPerm modified mode [ 'Makefile', 438, 420 ]
+1356 silly gunzTarPerm extractEntry Readme.md
+1357 silly gunzTarPerm modified mode [ 'Readme.md', 438, 420 ]
+1358 silly gunzTarPerm extractEntry package.json
+1359 silly gunzTarPerm modified mode [ 'package.json', 438, 420 ]
+1360 silly gunzTarPerm extractEntry package.json
+1361 silly gunzTarPerm modified mode [ 'package.json', 438, 420 ]
+1362 silly gunzTarPerm extractEntry .npmignore
+1363 silly gunzTarPerm modified mode [ '.npmignore', 438, 420 ]
+1364 silly gunzTarPerm extractEntry benchmark.js
+1365 silly gunzTarPerm modified mode [ 'benchmark.js', 438, 420 ]
+1366 silly gunzTarPerm extractEntry .npmignore
+1367 silly gunzTarPerm modified mode [ '.npmignore', 438, 420 ]
+1368 silly gunzTarPerm extractEntry index.js
+1369 silly gunzTarPerm modified mode [ 'index.js', 438, 420 ]
+1370 silly gunzTarPerm extractEntry examples.js
+1371 silly gunzTarPerm modified mode [ 'examples.js', 438, 420 ]
+1372 silly gunzTarPerm extractEntry index.js
+1373 silly gunzTarPerm modified mode [ 'index.js', 438, 420 ]
+1374 silly gunzTarPerm extractEntry example/post.js
+1375 silly gunzTarPerm modified mode [ 'example/post.js', 438, 420 ]
+1376 silly gunzTarPerm extractEntry example/upload.js
+1377 silly gunzTarPerm modified mode [ 'example/upload.js', 438, 420 ]
+1378 silly gunzTarPerm extractEntry History.md
+1379 silly gunzTarPerm modified mode [ 'History.md', 438, 420 ]
+1380 silly gunzTarPerm extractEntry .gitmodules
+1381 silly gunzTarPerm modified mode [ '.gitmodules', 438, 420 ]
+1382 silly gunzTarPerm extractEntry tool/record.js
+1383 silly gunzTarPerm modified mode [ 'tool/record.js', 438, 420 ]
+1384 silly gunzTarPerm extractEntry lib/file.js
+1385 silly gunzTarPerm modified mode [ 'lib/file.js', 438, 420 ]
+1386 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\node_modules\bytes\package.json
+1387 silly gunzTarPerm extractEntry lib/querystring.js
+1388 silly gunzTarPerm modified mode [ 'lib/querystring.js', 438, 420 ]
+1389 silly gunzTarPerm extractEntry Makefile
+1390 silly gunzTarPerm modified mode [ 'Makefile', 438, 420 ]
+1391 silly gunzTarPerm extractEntry lib/incoming_form.js
+1392 silly gunzTarPerm modified mode [ 'lib/incoming_form.js', 438, 420 ]
+1393 silly gunzTarPerm extractEntry lib/index.js
+1394 silly gunzTarPerm modified mode [ 'lib/index.js', 438, 420 ]
+1395 silly gunzTarPerm extractEntry .travis.yml
+1396 silly gunzTarPerm modified mode [ '.travis.yml', 438, 420 ]
+1397 silly gunzTarPerm extractEntry lib/multipart_parser.js
+1398 silly gunzTarPerm modified mode [ 'lib/multipart_parser.js', 438, 420 ]
+1399 silly lockFile 109e45b6-dules-connect-node-modules-bytes c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\node_modules\bytes
+1400 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\node_modules\pause\package.json
+1401 silly gunzTarPerm extractEntry Readme.md
+1402 silly gunzTarPerm modified mode [ 'Readme.md', 438, 420 ]
+1403 silly gunzTarPerm extractEntry test/parse.js
+1404 silly gunzTarPerm modified mode [ 'test/parse.js', 438, 420 ]
+1405 info preinstall bytes@0.1.0
+1406 silly gunzTarPerm extractEntry lib/querystring_parser.js
+1407 silly gunzTarPerm modified mode [ 'lib/querystring_parser.js', 438, 420 ]
+1408 silly gunzTarPerm extractEntry lib/util.js
+1409 silly gunzTarPerm modified mode [ 'lib/util.js', 438, 420 ]
+1410 silly gunzTarPerm extractEntry .travis.yml
+1411 silly gunzTarPerm modified mode [ '.travis.yml', 438, 420 ]
+1412 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\node_modules\bytes\package.json
+1413 verbose readDependencies using package.json deps
+1414 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\node_modules\bytes\package.json
+1415 silly lockFile 4fb8b33b-dules-connect-node-modules-pause c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\node_modules\pause
+1416 verbose readDependencies using package.json deps
+1417 silly resolved []
+1418 verbose about to build c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\node_modules\bytes
+1419 info build c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\node_modules\bytes
+1420 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\node_modules\bytes\package.json
+1421 verbose linkStuff [ false,
+1421 verbose linkStuff   false,
+1421 verbose linkStuff   false,
+1421 verbose linkStuff   'c:\\Users\\srourd\\Documents\\GitHub\\YAKFRONT\\main\\node_modules\\express\\node_modules\\connect\\node_modules' ]
+1422 info linkStuff bytes@0.1.0
+1423 verbose linkBins bytes@0.1.0
+1424 verbose linkMans bytes@0.1.0
+1425 verbose rebuildBundles bytes@0.1.0
+1426 info install bytes@0.1.0
+1427 silly gunzTarPerm extractEntry test/stringify.js
+1428 silly gunzTarPerm modified mode [ 'test/stringify.js', 438, 420 ]
+1429 silly gunzTarPerm extractEntry test/mocha.opts
+1430 silly gunzTarPerm modified mode [ 'test/mocha.opts', 438, 420 ]
+1431 info postinstall bytes@0.1.0
+1432 silly gunzTarPerm extractEntry node-gently/package.json
+1433 silly gunzTarPerm modified mode [ 'node-gently/package.json', 438, 420 ]
+1434 silly gunzTarPerm extractEntry node-gently/index.js
+1435 silly gunzTarPerm modified mode [ 'node-gently/index.js', 438, 420 ]
+1436 info preinstall pause@0.0.1
+1437 silly gunzTarPerm extractEntry node-gently/example/dog.js
+1438 silly gunzTarPerm modified mode [ 'node-gently/example/dog.js', 438, 420 ]
+1439 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\node_modules\pause\package.json
+1440 verbose readDependencies using package.json deps
+1441 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\node_modules\pause\package.json
+1442 verbose readDependencies using package.json deps
+1443 silly resolved []
+1444 verbose about to build c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\node_modules\pause
+1445 info build c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\node_modules\pause
+1446 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\node_modules\pause\package.json
+1447 verbose linkStuff [ false,
+1447 verbose linkStuff   false,
+1447 verbose linkStuff   false,
+1447 verbose linkStuff   'c:\\Users\\srourd\\Documents\\GitHub\\YAKFRONT\\main\\node_modules\\express\\node_modules\\connect\\node_modules' ]
+1448 info linkStuff pause@0.0.1
+1449 verbose linkBins pause@0.0.1
+1450 verbose linkMans pause@0.0.1
+1451 verbose rebuildBundles pause@0.0.1
+1452 info install pause@0.0.1
+1453 info postinstall pause@0.0.1
+1454 silly gunzTarPerm extractEntry node-gently/example/event_emitter.js
+1455 silly gunzTarPerm modified mode [ 'node-gently/example/event_emitter.js', 438, 420 ]
+1456 silly gunzTarPerm extractEntry node-gently/lib/gently/gently.js
+1457 silly gunzTarPerm modified mode [ 'node-gently/lib/gently/gently.js', 438, 420 ]
+1458 silly gunzTarPerm extractEntry node-gently/lib/gently/index.js
+1459 silly gunzTarPerm modified mode [ 'node-gently/lib/gently/index.js', 438, 420 ]
+1460 silly gunzTarPerm extractEntry node-gently/Makefile
+1461 silly gunzTarPerm modified mode [ 'node-gently/Makefile', 438, 420 ]
+1462 silly gunzTarPerm extractEntry node-gently/Readme.md
+1463 silly gunzTarPerm modified mode [ 'node-gently/Readme.md', 438, 420 ]
+1464 silly gunzTarPerm extractEntry node-gently/test/common.js
+1465 silly gunzTarPerm modified mode [ 'node-gently/test/common.js', 438, 420 ]
+1466 silly gunzTarPerm extractEntry node-gently/test/simple/test-gently.js
+1467 silly gunzTarPerm modified mode [ 'node-gently/test/simple/test-gently.js', 438, 420 ]
+1468 silly gunzTarPerm extractEntry benchmark/bench-multipart-parser.js
+1469 silly gunzTarPerm modified mode [ 'benchmark/bench-multipart-parser.js', 438, 420 ]
+1470 silly gunzTarPerm extractEntry Readme.md
+1471 silly gunzTarPerm modified mode [ 'Readme.md', 438, 420 ]
+1472 silly gunzTarPerm extractEntry test/common.js
+1473 silly gunzTarPerm modified mode [ 'test/common.js', 438, 420 ]
+1474 silly gunzTarPerm extractEntry test/run.js
+1475 silly gunzTarPerm modified mode [ 'test/run.js', 438, 420 ]
+1476 silly gunzTarPerm extractEntry test/fixture/multipart.js
+1477 silly gunzTarPerm modified mode [ 'test/fixture/multipart.js', 438, 420 ]
+1478 silly gunzTarPerm extractEntry test/fixture/file/funkyfilename.txt
+1479 silly gunzTarPerm modified mode [ 'test/fixture/file/funkyfilename.txt', 438, 420 ]
+1480 silly gunzTarPerm extractEntry test/fixture/file/plain.txt
+1481 silly gunzTarPerm modified mode [ 'test/fixture/file/plain.txt', 438, 420 ]
+1482 silly gunzTarPerm extractEntry test/fixture/http/special-chars-in-filename/info.md
+1483 silly gunzTarPerm modified mode [ 'test/fixture/http/special-chars-in-filename/info.md',
+1483 silly gunzTarPerm   438,
+1483 silly gunzTarPerm   420 ]
+1484 silly gunzTarPerm extractEntry test/fixture/js/no-filename.js
+1485 silly gunzTarPerm modified mode [ 'test/fixture/js/no-filename.js', 438, 420 ]
+1486 silly gunzTarPerm extractEntry test/fixture/js/special-chars-in-filename.js
+1487 silly gunzTarPerm modified mode [ 'test/fixture/js/special-chars-in-filename.js', 438, 420 ]
+1488 silly gunzTarPerm extractEntry test/integration/test-fixtures.js
+1489 silly gunzTarPerm modified mode [ 'test/integration/test-fixtures.js', 438, 420 ]
+1490 silly gunzTarPerm extractEntry test/legacy/common.js
+1491 silly gunzTarPerm modified mode [ 'test/legacy/common.js', 438, 420 ]
+1492 silly gunzTarPerm extractEntry test/legacy/integration/test-multipart-parser.js
+1493 silly gunzTarPerm modified mode [ 'test/legacy/integration/test-multipart-parser.js', 438, 420 ]
+1494 silly gunzTarPerm extractEntry test/legacy/simple/test-file.js
+1495 silly gunzTarPerm modified mode [ 'test/legacy/simple/test-file.js', 438, 420 ]
+1496 silly gunzTarPerm extractEntry test/legacy/simple/test-incoming-form.js
+1497 silly gunzTarPerm modified mode [ 'test/legacy/simple/test-incoming-form.js', 438, 420 ]
+1498 silly gunzTarPerm extractEntry test/legacy/simple/test-multipart-parser.js
+1499 silly gunzTarPerm modified mode [ 'test/legacy/simple/test-multipart-parser.js', 438, 420 ]
+1500 silly gunzTarPerm extractEntry test/legacy/simple/test-querystring-parser.js
+1501 silly gunzTarPerm modified mode [ 'test/legacy/simple/test-querystring-parser.js', 438, 420 ]
+1502 silly gunzTarPerm extractEntry test/legacy/system/test-multi-video-upload.js
+1503 silly gunzTarPerm modified mode [ 'test/legacy/system/test-multi-video-upload.js', 438, 420 ]
+1504 silly gunzTarPerm extractEntry test/unit/test-incoming-form.js
+1505 silly gunzTarPerm modified mode [ 'test/unit/test-incoming-form.js', 438, 420 ]
+1506 silly gunzTarPerm extractEntry TODO
+1507 silly gunzTarPerm modified mode [ 'TODO', 438, 420 ]
+1508 silly gunzTarPerm extractEntry Makefile
+1509 silly gunzTarPerm modified mode [ 'Makefile', 438, 420 ]
+1510 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\node_modules\qs\package.json
+1511 silly lockFile 840ae4f1--modules-connect-node-modules-qs c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\node_modules\qs
+1512 info preinstall qs@0.4.2
+1513 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\node_modules\qs\package.json
+1514 verbose readDependencies using package.json deps
+1515 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\node_modules\qs\package.json
+1516 verbose readDependencies using package.json deps
+1517 silly resolved []
+1518 verbose about to build c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\node_modules\qs
+1519 info build c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\node_modules\qs
+1520 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\node_modules\qs\package.json
+1521 verbose linkStuff [ false,
+1521 verbose linkStuff   false,
+1521 verbose linkStuff   false,
+1521 verbose linkStuff   'c:\\Users\\srourd\\Documents\\GitHub\\YAKFRONT\\main\\node_modules\\express\\node_modules\\connect\\node_modules' ]
+1522 info linkStuff qs@0.4.2
+1523 verbose linkBins qs@0.4.2
+1524 verbose linkMans qs@0.4.2
+1525 verbose rebuildBundles qs@0.4.2
+1526 info install qs@0.4.2
+1527 info postinstall qs@0.4.2
+1528 verbose read json c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\node_modules\formidable\package.json
+1529 silly lockFile 9516cab6--connect-node-modules-formidable c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\node_modules\formidable
+1530 info preinstall formidable@1.0.11
+1531 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\node_modules\formidable\package.json
+1532 verbose readDependencies using package.json deps
+1533 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\node_modules\formidable\package.json
+1534 verbose readDependencies using package.json deps
+1535 silly resolved []
+1536 verbose about to build c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\node_modules\formidable
+1537 info build c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\node_modules\formidable
+1538 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\node_modules\formidable\package.json
+1539 verbose linkStuff [ false,
+1539 verbose linkStuff   false,
+1539 verbose linkStuff   false,
+1539 verbose linkStuff   'c:\\Users\\srourd\\Documents\\GitHub\\YAKFRONT\\main\\node_modules\\express\\node_modules\\connect\\node_modules' ]
+1540 info linkStuff formidable@1.0.11
+1541 verbose linkBins formidable@1.0.11
+1542 verbose linkMans formidable@1.0.11
+1543 verbose rebuildBundles formidable@1.0.11
+1544 info install formidable@1.0.11
+1545 info postinstall formidable@1.0.11
+1546 verbose about to build c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect
+1547 info build c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect
+1548 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\node_modules\connect\package.json
+1549 verbose linkStuff [ false,
+1549 verbose linkStuff   false,
+1549 verbose linkStuff   false,
+1549 verbose linkStuff   'c:\\Users\\srourd\\Documents\\GitHub\\YAKFRONT\\main\\node_modules\\express\\node_modules' ]
+1550 info linkStuff connect@2.4.4
+1551 verbose linkBins connect@2.4.4
+1552 verbose linkMans connect@2.4.4
+1553 verbose rebuildBundles connect@2.4.4
+1554 verbose rebuildBundles [ 'bytes', 'formidable', 'pause', 'qs' ]
+1555 info install connect@2.4.4
+1556 info postinstall connect@2.4.4
+1557 verbose about to build c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express
+1558 info build c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express
+1559 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\express\package.json
+1560 verbose linkStuff [ false,
+1560 verbose linkStuff   false,
+1560 verbose linkStuff   false,
+1560 verbose linkStuff   'c:\\Users\\srourd\\Documents\\GitHub\\YAKFRONT\\main\\node_modules' ]
+1561 info linkStuff express@3.0.0rc4
+1562 verbose linkBins express@3.0.0rc4
+1563 verbose link bins [ { express: './bin/express' },
+1563 verbose link bins   'c:\\Users\\srourd\\Documents\\GitHub\\YAKFRONT\\main\\node_modules\\.bin',
+1563 verbose link bins   false ]
+1564 verbose linkMans express@3.0.0rc4
+1565 verbose rebuildBundles express@3.0.0rc4
+1566 verbose rebuildBundles [ 'commander',
+1566 verbose rebuildBundles   'connect',
+1566 verbose rebuildBundles   'cookie',
+1566 verbose rebuildBundles   'crc',
+1566 verbose rebuildBundles   'debug',
+1566 verbose rebuildBundles   'fresh',
+1566 verbose rebuildBundles   'methods',
+1566 verbose rebuildBundles   'mkdirp',
+1566 verbose rebuildBundles   'range-parser',
+1566 verbose rebuildBundles   'send' ]
+1567 info install express@3.0.0rc4
+1568 info postinstall express@3.0.0rc4
+1569 info build c:\Users\srourd\Documents\GitHub\YAKFRONT\main
+1570 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\package.json
+1571 verbose linkStuff [ false,
+1571 verbose linkStuff   false,
+1571 verbose linkStuff   false,
+1571 verbose linkStuff   'c:\\Users\\srourd\\Documents\\GitHub\\YAKFRONT' ]
+1572 info linkStuff Yakxala@1.0.0
+1573 verbose linkBins Yakxala@1.0.0
+1574 verbose linkMans Yakxala@1.0.0
+1575 verbose rebuildBundles Yakxala@1.0.0
+1576 verbose rebuildBundles [ '.bin',
+1576 verbose rebuildBundles   'aws-sdk',
+1576 verbose rebuildBundles   'crypto',
+1576 verbose rebuildBundles   'environ',
+1576 verbose rebuildBundles   'express',
+1576 verbose rebuildBundles   'fs',
+1576 verbose rebuildBundles   'imagemagick',
+1576 verbose rebuildBundles   'jade',
+1576 verbose rebuildBundles   'md5',
+1576 verbose rebuildBundles   'mongoose',
+1576 verbose rebuildBundles   'mongoose-troop',
+1576 verbose rebuildBundles   'mongoose_old',
+1576 verbose rebuildBundles   'multipart',
+1576 verbose rebuildBundles   'nodemailer',
+1576 verbose rebuildBundles   'oauth',
+1576 verbose rebuildBundles   'session',
+1576 verbose rebuildBundles   'sessions',
+1576 verbose rebuildBundles   'socket.io',
+1576 verbose rebuildBundles   'string' ]
+1577 verbose rebuild bundle c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\aws-sdk
+1578 info build c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\aws-sdk
+1579 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\aws-sdk\package.json
+1580 info preinstall aws-sdk@0.9.5-pre.6
+1581 verbose linkStuff [ false,
+1581 verbose linkStuff   false,
+1581 verbose linkStuff   false,
+1581 verbose linkStuff   'c:\\Users\\srourd\\Documents\\GitHub\\YAKFRONT\\main\\node_modules' ]
+1582 info linkStuff aws-sdk@0.9.5-pre.6
+1583 verbose linkBins aws-sdk@0.9.5-pre.6
+1584 verbose linkMans aws-sdk@0.9.5-pre.6
+1585 verbose rebuildBundles aws-sdk@0.9.5-pre.6
+1586 verbose rebuildBundles [ 'xml2js', 'xmlbuilder' ]
+1587 info install aws-sdk@0.9.5-pre.6
+1588 info postinstall aws-sdk@0.9.5-pre.6
+1589 verbose rebuild bundle c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\crypto
+1590 info build c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\crypto
+1591 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\crypto\package.json
+1592 info preinstall crypto@0.0.3
+1593 verbose linkStuff [ false,
+1593 verbose linkStuff   false,
+1593 verbose linkStuff   false,
+1593 verbose linkStuff   'c:\\Users\\srourd\\Documents\\GitHub\\YAKFRONT\\main\\node_modules' ]
+1594 info linkStuff crypto@0.0.3
+1595 verbose linkBins crypto@0.0.3
+1596 verbose linkMans crypto@0.0.3
+1597 verbose rebuildBundles crypto@0.0.3
+1598 info install crypto@0.0.3
+1599 info postinstall crypto@0.0.3
+1600 verbose rebuild bundle c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\environ
+1601 info build c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\environ
+1602 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\environ\package.json
+1603 info preinstall environ@1.3.1
+1604 verbose linkStuff [ false,
+1604 verbose linkStuff   false,
+1604 verbose linkStuff   false,
+1604 verbose linkStuff   'c:\\Users\\srourd\\Documents\\GitHub\\YAKFRONT\\main\\node_modules' ]
+1605 info linkStuff environ@1.3.1
+1606 verbose linkBins environ@1.3.1
+1607 verbose linkMans environ@1.3.1
+1608 verbose rebuildBundles environ@1.3.1
+1609 info install environ@1.3.1
+1610 info postinstall environ@1.3.1
+1611 verbose rebuild bundle c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\fs
+1612 info build c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\fs
+1613 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\fs\package.json
+1614 info preinstall fs@0.0.0
+1615 verbose linkStuff [ false,
+1615 verbose linkStuff   false,
+1615 verbose linkStuff   false,
+1615 verbose linkStuff   'c:\\Users\\srourd\\Documents\\GitHub\\YAKFRONT\\main\\node_modules' ]
+1616 info linkStuff fs@0.0.0
+1617 verbose linkBins fs@0.0.0
+1618 verbose linkMans fs@0.0.0
+1619 verbose rebuildBundles fs@0.0.0
+1620 info install fs@0.0.0
+1621 info postinstall fs@0.0.0
+1622 verbose rebuild bundle c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\imagemagick
+1623 info build c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\imagemagick
+1624 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\imagemagick\package.json
+1625 info preinstall imagemagick@0.1.2
+1626 verbose linkStuff [ false,
+1626 verbose linkStuff   false,
+1626 verbose linkStuff   false,
+1626 verbose linkStuff   'c:\\Users\\srourd\\Documents\\GitHub\\YAKFRONT\\main\\node_modules' ]
+1627 info linkStuff imagemagick@0.1.2
+1628 verbose linkBins imagemagick@0.1.2
+1629 verbose linkMans imagemagick@0.1.2
+1630 verbose rebuildBundles imagemagick@0.1.2
+1631 info install imagemagick@0.1.2
+1632 info postinstall imagemagick@0.1.2
+1633 verbose rebuild bundle c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\md5
+1634 info build c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\md5
+1635 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\md5\package.json
+1636 info preinstall md5@1.0.0
+1637 verbose linkStuff [ false,
+1637 verbose linkStuff   false,
+1637 verbose linkStuff   false,
+1637 verbose linkStuff   'c:\\Users\\srourd\\Documents\\GitHub\\YAKFRONT\\main\\node_modules' ]
+1638 info linkStuff md5@1.0.0
+1639 verbose linkBins md5@1.0.0
+1640 verbose linkMans md5@1.0.0
+1641 verbose rebuildBundles md5@1.0.0
+1642 info install md5@1.0.0
+1643 info postinstall md5@1.0.0
+1644 verbose rebuild bundle c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\mongoose-troop
+1645 verbose rebuild bundle c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\mongoose_old
+1646 info build c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\mongoose_old
+1647 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\mongoose_old\package.json
+1648 info preinstall mongoose@2.7.1
+1649 verbose linkStuff [ false,
+1649 verbose linkStuff   false,
+1649 verbose linkStuff   false,
+1649 verbose linkStuff   'c:\\Users\\srourd\\Documents\\GitHub\\YAKFRONT\\main\\node_modules' ]
+1650 info linkStuff mongoose@2.7.1
+1651 verbose linkBins mongoose@2.7.1
+1652 verbose linkMans mongoose@2.7.1
+1653 verbose rebuildBundles mongoose@2.7.1
+1654 verbose rebuildBundles [ 'hooks', 'mongodb' ]
+1655 info install mongoose@2.7.1
+1656 info postinstall mongoose@2.7.1
+1657 verbose rebuild bundle c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\multipart
+1658 info build c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\multipart
+1659 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\multipart\package.json
+1660 info preinstall multipart@0.1.5
+1661 verbose linkStuff [ false,
+1661 verbose linkStuff   false,
+1661 verbose linkStuff   false,
+1661 verbose linkStuff   'c:\\Users\\srourd\\Documents\\GitHub\\YAKFRONT\\main\\node_modules' ]
+1662 info linkStuff multipart@0.1.5
+1663 verbose linkBins multipart@0.1.5
+1664 verbose linkMans multipart@0.1.5
+1665 verbose rebuildBundles multipart@0.1.5
+1666 verbose rebuildBundles [ 'mime' ]
+1667 info install multipart@0.1.5
+1668 info postinstall multipart@0.1.5
+1669 verbose rebuild bundle c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\nodemailer
+1670 info build c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\nodemailer
+1671 verbose from cache c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\nodemailer\package.json
+1672 info preinstall nodemailer@0.3.31
+1673 verbose linkStuff [ false,
+1673 verbose linkStuff   false,
+1673 verbose linkStuff   false,
+1673 verbose linkStuff   'c:\\Users\\srourd\\Documents\\GitHub\\YAKFRONT\\main\\node_modules' ]
+1674 info linkStuff nodemailer@0.3.31
+1675 verbose linkBins nodemailer@0.3.31
+1676 verbose link bins [ { nodemailer: './bin/nodemailer' },
+1676 verbose link bins   'c:\\Users\\srourd\\Documents\\GitHub\\YAKFRONT\\main\\node_modules\\.bin',
+1676 verbose link bins   false ]
+1677 verbose linkMans nodemailer@0.3.31
+1678 verbose rebuildBundles nodemailer@0.3.31
+1679 verbose rebuildBundles [ 'mailcomposer', 'optimist', 'simplesmtp' ]
+1680 error Error: ENOENT, chmod 'c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\nodemailer\bin\nodemailer'
+1681 error If you need help, you may report this log at:
+1681 error     <http://github.com/isaacs/npm/issues>
+1681 error or email it to:
+1681 error     <npm-@googlegroups.com>
+1682 error System Windows_NT 6.1.7601
+1683 error command "C:\\Program Files\\nodejs\\\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "install"
+1684 error cwd c:\Users\srourd\Documents\GitHub\YAKFRONT\main
+1685 error node -v v0.8.14
+1686 error npm -v 1.1.65
+1687 error path c:\Users\srourd\Documents\GitHub\YAKFRONT\main\node_modules\nodemailer\bin\nodemailer
+1688 error code ENOENT
+1689 error errno 34
+1690 verbose exit [ 34, true ]

@@ -611,6 +611,7 @@ exports.firstvisit = function(req,res){
 			var crypto = require('crypto');
 			var newcryptedPass = crypto.createHash('sha1').update(req.body.password+"yakwala@secure"+docs.salt).digest("hex");	
 			var login = docs.login;
+
 			if(req.body.password.length >= 8){
 				if(req.body.location){
 					var location = JSON.parse(req.body.location);
@@ -634,7 +635,7 @@ exports.firstvisit = function(req,res){
 				}
 				
 				
-				User.update({_id: req.session.user}, {hash : newcryptedPass,location:location, address: address, formatted_address: formatted_address}, {upsert: false}, function(err){
+				User.update({_id: req.session.user}, {hash : newcryptedPass,location:location, address: address, formatted_address: formatted_address, login: req.body.username, name: req.body.username}, {upsert: false}, function(err){
 				
 					if (err) console.log(err);
 					else{

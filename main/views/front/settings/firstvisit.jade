@@ -25,6 +25,9 @@ block content
 										
 					div.control-group
 						div.controls
+							label.control-label.label-xlarge(for="username") Choisissez un nom d'utilisateur( au moin 4 caractères) :  
+							input.input-xlarge#username(type="text", name="username", autocomplete="off", placeholder="Votre nom d'utilisateur") 
+						div.controls
 							label.control-label.label-xlarge(for="oldpass") Choisissez un mot de passe ( au moins 8 caractères ):  
 							input.input-xlarge#password(type="text", name="password", autocomplete="off", placeholder="Votre mot de passe") 
 					div.control-group
@@ -60,11 +63,73 @@ block content
 			var conf = !{conf};
 			var mainConf = !{mainConf};	
 			var user =!{JSON.stringify(user)};
-			
+
+			function randomNames(str){
+			var adjs = ["autumn", "hidden", "bitter", "misty", "silent", "empty", "dry",
+			"dark", "summer", "icy", "delicate", "quiet", "white", "cool", "spring",
+			"winter", "patient", "twilight", "dawn", "crimson", "wispy", "weathered",
+			"blue", "billowing", "broken", "cold", "damp", "falling", "frosty", "green",
+			"long", "late", "lingering", "bold", "little", "morning", "muddy", "old",
+			"red", "rough", "still", "small", "sparkling", "throbbing", "shy",
+			"wandering", "withered", "wild", "black", "young", "holy", "solitary",
+			"fragrant", "aged", "snowy", "proud", "floral", "restless", "divine",
+			"polished", "ancient", "purple", "lively", "nameless"]
+
+			, nouns = ["waterfall", "river", "breeze", "moon", "rain", "wind", "sea",
+			"morning", "snow", "lake", "sunset", "pine", "shadow", "leaf", "dawn",
+			"glitter", "forest", "hill", "cloud", "meadow", "sun", "glade", "bird",
+			"brook", "butterfly", "bush", "dew", "dust", "field", "fire", "flower",
+			"firefly", "feather", "grass", "haze", "mountain", "night", "pond",
+			"darkness", "snowflake", "silence", "sound", "sky", "shape", "surf",
+			"thunder", "violet", "water", "wildflower", "wave", "water", "resonance",
+			"sun", "wood", "dream", "cherry", "tree", "fog", "frost", "voice", "paper",
+			"frog", "smoke", "star"];
+
+			return str+"_"+adjs[Math.floor(Math.random()*(adjs.length-1))]+"_"+nouns[Math.floor(Math.random()*(nouns.length-1))];
+			}
+
+			function setUserName(el)
+			{
+				$("#username").val($(el).html());
+				$("#suggestionsDiv").remove();
+			}
 			$(document).ready(function() {
-				console.log("dsfsdfsdf");
+				
+				$("form").submit(function(){
+					var currusername = $("#username").val();
+					$.getJSON('/api/findbylogin/' + currusername,function(users) {
+						if(users.users.length != 0)
+						{
+
+							var suggestions = "<ul id='suggestionsDiv'>";
+							suggestions += "<li>Nom d'utilisateur reservé:</li>";
+							
+							suggestions += "</ul>";
+							$("#username").after(suggestions);
+							for(i=0; i<9; i++)
+							{
+								var randomName = randomNames(currusername);
+								$("#suggestionsDiv").append("<li><a onclick='setUserName(this)'>" + randomName + "</a></li>");
+									
+							}
+							
+							
+							//alert(suggestions);
+							
+							
+							return false;
+						}
+					
+					});
+				});
+
 				$('#firstvisitForm').isHappy({
 					fields: {
+						'#username': {
+							required: true,
+							message: "Entrez un un nom d'utilisateur d'au moins 4 caractères",
+							test: function(val){return (val.length < 4)?false:true;}
+						},
 						'#password': {
 							required: true,
 							message: "Entrez un mot de passe d'au moins 8 caractères",

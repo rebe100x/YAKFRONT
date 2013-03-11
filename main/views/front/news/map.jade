@@ -103,40 +103,14 @@ block content
 					}else{
 						if(placeName != ''){
 							
-							/* our db is not ready for this ! => use google !
-							$.ajax({
-								url: "/api/search/place/"+placeName,				
-								success: function( ajax ) {
-									if(ajax.data.places.length > 0 && ajax.data.places[0] != "undefined"){
-										var latLng = new google.maps.LatLng(ajax.data.places[0].location.lat,ajax.data.places[0].location.lng);
-										map.panTo(latLng);
-									}else{
-										var salt = new Date().getTime();
-										$('#searchStr').before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide</div>");
-										setTimeout(function() {
-											$("#alert"+salt).fadeOut();
-										}, 3000);
-									$('#searchPlaceStr').select();
-									}
-								}
-							});*/
+							
 							var addressQuery = {"address": placeName ,"region":"fr","language":"fr"};
 							var geocoder = new google.maps.Geocoder();
 							geocoder.geocode( addressQuery, function(results, status) {						
 							if (status == google.maps.GeocoderStatus.OK) {
-								/*var latLng = new google.maps.LatLng(results[0].geometry.location.Ya,results[0].geometry.location.Za);
-								markerHL.setPosition(latLng);
-								markerHL.setVisible(true);
-								markerHL.setMap(map);
-								markerHL.setOptions({icon:"/images/markers/target3.png"});
-								
-								setTimeout(function() {
-									markerHL.setMap(null);
-								}, 3000);
-								map.panTo(latLng);*/
-								//console.log(results);
+							
 								var placeGmap = getPlaceFromGmapResult((results[0]));
-								//changeLocation(JSON.stringify(placeGmap));
+								
 
 							}else{
 								var salt = new Date().getTime();
@@ -294,21 +268,7 @@ block content
 			
 			/*cookies for navigation*/
 			google.maps.event.addDomListener(window, 'load', initialize(curPos.x,curPos.y,curPos.z));
-			/*
-			if(!$.isEmptyObject($.cookie("geoloc"))){
-				curPos = JSON.parse($.cookie("geoloc"));
-				google.maps.event.addDomListener(window, 'load', initialize(curPos.x,curPos.y,curPos.z));
-			}else{
-				if(navigator.geolocation) {
-					navigator.geolocation.getCurrentPosition(getHTML5Pos,getErrHTML5Pos);
-				}else {
-					x = 48.851875;
-					y = 2.356374;
-					z = 13;
-					curPos = {'x':x,'y':y,'z':z};
-					google.maps.event.addDomListener(window, 'load', initialize(curPos.x,curPos.y,curPos.z));
-				}
-			}*/
+			
 			
 			
 			/*POST EFFECTS*/
@@ -379,25 +339,8 @@ block content
 					}
 				});
 				
-				/*
-				$('#place').typeahead({
-					minLength : 3,							
-					source: function (typeahead, query) {
-						$.ajax({
-								url: "/api/places",		
-								success: function( ajax ) {
-									typeahead.process(ajax.data.places);
-								}
-							})},
-					property: "title",
-					onselect: function(obj) { 
-						$('#btn-place-adder').parent().before("<div><i class='icon-remove icon-pointer'  onclick='placeArray.cleanArray(\""+obj._id+"\");$(\"#placeInput\").val(JSON.stringify(placeArray));$(this).parent().remove();'></i> "+obj.title+"</div>");
-						$('#place').val('').focus();
-						placeArray.push(obj);
-						$("#placeInput").val(JSON.stringify(placeArray));
-					}
-				});*/
-					// autocomplete Place
+			
+				// autocomplete Place
 				$('#place').typeahead({
 					minLength : 3,							
 					source: function (typeahead, query) {
