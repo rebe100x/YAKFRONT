@@ -8,6 +8,8 @@ block content
 	div.container-fluid
 		div.row-fluid
 			div.span3
+				div#Locationtip
+
 			div.span6
 				- if (message)
 					div.alert.fade.in
@@ -93,7 +95,39 @@ block content
 				$("#username").val($(el).html());
 				$("#suggestionsDiv").remove();
 			}
+
+			function getLocation()
+			{
+				if (navigator.geolocation) {
+					navigator.geolocation.getCurrentPosition(function(position) {
+						//console.log(position);
+						var curpos = new google.maps.LatLng( position.coords.latitude,position.coords.longitude)
+						var geoQuery = {"location": curpos};
+						var geocoder = new google.maps.Geocoder();
+						geocoder.geocode( geoQuery, function(results, status) {
+							if (status == google.maps.GeocoderStatus.OK) {
+								//console.log(results[0]);
+								var currlocation = "<h4>Currenct Location Info</h4>";
+								currlocation += "<br />";
+								currlocation += results[0].formatted_address;
+								currlocation += "<br /><br />";
+								currlocation += "Lattitude: " + results[0].geometry.location.Ya;
+								currlocation += "<br /><br />";
+								currlocation += "Longitude: " + results[0].geometry.location.Za;
+								currlocation += "<br /><br />";
+								currlocation += "<a>add as default location</a> - <a>add as fav place</a>";
+								$("#Locationtip").html(currlocation);
+							} 
+						});
+						
+					});
+				}
+			}
+			
+
 			$(document).ready(function() {
+
+				getLocation();
 				//console.log(user);
 				if(user.createfrom_social == 1)
 					$("#username").val(user.twitter_screen_name);
