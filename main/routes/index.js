@@ -2,6 +2,20 @@
  * GET home page.
  */
 
+/**
+* OAuth dependencies
+*/
+var OAuth= require('oauth').OAuth;
+var oa = new OAuth(
+	"https://api.twitter.com/oauth/request_token",
+	"https://api.twitter.com/oauth/access_token",
+	"6sbCmvfByrXpLYnPKzQ5qg",
+	"8cgH1lUym2YR7dH9VAaVvXFqzov888LWdgmAnv4",
+	"1.0",
+	"http://localhost:3000/auth/twitter/callback",
+	"HMAC-SHA1"
+);
+
 exports.db = function(conf){
 	mongoose = require('mongoose'), Schema = mongoose.Schema;
 	//mongoose.set('debug', true);
@@ -611,6 +625,7 @@ exports.firstvisit = function(req,res){
 			var crypto = require('crypto');
 			var newcryptedPass = crypto.createHash('sha1').update(req.body.password+"yakwala@secure"+docs.salt).digest("hex");	
 			var login = docs.login;
+
 			if(req.body.password.length >= 8){
 				if(req.body.location){
 					var location = JSON.parse(req.body.location);
@@ -634,7 +649,7 @@ exports.firstvisit = function(req,res){
 				}
 				
 				
-				User.update({_id: req.session.user}, {hash : newcryptedPass,location:location, address: address, formatted_address: formatted_address}, {upsert: false}, function(err){
+				User.update({_id: req.session.user}, {hash : newcryptedPass,location:location, address: address, formatted_address: formatted_address, login: req.body.username, name: req.body.username}, {upsert: false}, function(err){
 				
 					if (err) console.log(err);
 					else{
@@ -1040,4 +1055,111 @@ exports.setLikes = function(req, res){
 	
 };
 
+
+exports.auth_twitter = function(req, res){
+	oa.getOAuthRequestToken(function(error, oauth_token, oauth_token_secret, results){
+			if (error) {
+				console.log(error);
+				res.send(error)
+			}
+			else {
+
+				req.session.oauth = {};
+				req.session.oauth.token = oauth_token;
+				console.log('oauth.token: ' + req.session.oauth.token);
+				req.session.oauth.token_secret = oauth_token_secret;
+				//console.log('oauth.token_secret: ' + req.session.oauth.token_secret);
+				
+				res.redirect('https://twitter.com/oauth/authenticate?oauth_token='+oauth_token);
+
+	}
+	});
+};
+
+exports.auth_twitter_callback = function(req, res){
+	if (req.session.oauth) {
+
+		req.session.oauth.verifier = req.query.oauth_verifier;
+		var oauth = req.session.oauth;
+
+		oa.getOAuthAccessToken(oauth.token,oauth.token_secret,oauth.verifier, 
+		function(error, oauth_access_token, oauth_access_token_secret, results){
+			if (error){
+				console.log(error);
+				res.send("Authentication Failure!");
+			} else {
+				req.session.oauth.access_token = oauth_access_token;
+				req.session.oauth.access_token_secret = oauth_access_token_secret;
+				//console.log(results, req.session.oauth);
+				oa.get("https://api.twitter.com/1/account/verify_credentials.json", req.session.oauth.access_token, req.session.oauth.access_token_secret, function (error, data, response) {
+		        if (error) {
+		          console.log(error);
+		          res.send("Error getting twitter screen name : " + error, 500);
+		        } else {
+
+		       	  data = JSON.parse(data);
+		          //console.log(data);
+		          //console.log(results)
+		          //req.session.twitterScreenName = data.id;    
+		          //res.send('You are signed in: ' +  data.id);\
+
+		        //req.session.screen_name = data.screen_name;
+		        //req.session.twitterLogin = 1;
+
+		        var crypto = require('crypto')
+		        var User = db.model('User');
+			    var user = new User();
+				var login = data.screen_name;
+				var twitter_id = data.id;
+				var salt = Math.round(new Date().valueOf() * Math.random());
+				var token = crypto.createHash('sha1').update("yakwala@secure"+salt).digest("hex");
+				var password = user.generatePassword(5);
+				var logo = conf.fronturl+"/static/images/yakwala-logo_petit.png";
+				
+				user.name=login;
+				user.login=login;
+				user.mail='dany2.srour@hotmail.com';
+				user.token=token;
+				user.status=1;
+				user.hash= password;
+				user.password= password;
+				user.salt="1";
+				user.type=1;
+				user.twitter_id = twitter_id;
+				user.twitter_screen_name = login;
+				user.createfrom_social = 1;
+				user.bio = data.description;
+				user.web = data.url;
+				//user.favplace = [{'name':'Paris, France','location':{'lat':48.851875,'lng':2.356374}},{'name':'Eghézée, Belgique','location':{'lat':50.583346,'lng':4.900031}},{'name':'Montpellier, France','location':{'lat':43.610787,'lng':3.876715}}];
+				user.favplace = [{'name':'Nice, France','location':{'lat':43.681343,'lng':7.232094},'range':100},{'name':'Marseille, France','location':{'lat':43.298198,'lng':5.370255},'range':100},{'name':'Paris, France','location':{'lat':48.851875,'lng':2.356374},'range':100}];
+				
+				User.findByTwitterId(twitter_id,function (err, theuser){
+					if(theuser != undefined && theuser != null ){
+						console.log('LOGGED IN');
+						req.session.user = theuser._id;
+						User.update({"_id":theuser._id},{$set:{"lastLoginDate":new Date()}}, function(err){if (err) console.log(err);});
+						res.redirect('news/map');
+					}else{
+						
+						user.save(function (err) {
+							if (!err){
+								req.session.user = user._id;
+								User.update({"_id":user._id},{$set:{"lastLoginDate":new Date()}}, function(err){if (err) console.log(err);});
+								res.redirect('/settings/firstvisit');
+							} 
+							else console.log(err);
+						});	
+					}
+				});
+		        }  
+		      });
+
+			}
+		}
+		);
+	} else
+	{
+		res.send('youre not supposed to be here');
+	}
+};
 

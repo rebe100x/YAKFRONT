@@ -16,12 +16,12 @@ mixin searchFormUnified(page)
 
 			li
 				img.pull-left.filterIcon(src="images/filter.png")
-				a.btn#rangeSelectorTrigger.pull-left(style="position:relative")
+				a.btn#rangeSelectorTrigger.pull-left
 					span#localnessPrinter.sliderText Localness
 					span.caret
 					mixin range
 			li
-				a.btn#tagSelectorTrigger.pull-left(style="position:relative")
+				a.btn#tagSelectorTrigger.pull-left
 					span#hotTagPrinter.sliderText Hot Tags
 					span.caret
 					ul#dropdownTagSelector.dropdown-menu

@@ -22,6 +22,11 @@ mixin loginForm()
 			div.control-group
 				div.controls
 					button.btn.btn-large.btn-block.btn-inverse(,type='submit', name='submit', id='submit', value='login') Login
+				br
+				div.control-group
+					div.controls
+						a(href="/auth/twitter")
+							img(src="/images/twiiterconnect.png")
 				br	
 				i
 					a(href='/user/new') &nbsp;Vous n'avez pas encore de compte ?
@@ -29,10 +34,6 @@ mixin loginForm()
 				i
 					a(href='/user/forgotpassword') &nbsp;Vous avez oubliez votre mot de passe ?
 			//
-				div.control-group
-					div.controls
-						a(href="/auth/twitter")
-							img(src="/images/twiiterconnect.png")
 				div.control-group
 					div.controls
 						a(href="#")
