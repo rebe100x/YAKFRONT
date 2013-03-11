@@ -31,7 +31,7 @@ mixin searchFormUnified(page)
 						span.btn(title="Voir les Yassalas", type=4) 
 							img(src="/images/markers/latestV1/type4.png")
 			li.rightPull
-				span.btn#btnMesalertes(title="Mes alertes", type=5, onclick='setAlert()')
+				span.btn#btnMesalertes(title="Mes alertes", type=5, onclick='setAlert(this)')
 					i.icon-exclamation-sign
 				span#zoneLocButton.btn
 					i.icon-star(title="Mes endroits Favoris")							
@@ -75,7 +75,11 @@ mixin searchFormUnified(page)
 
 		$(document).ready(function(){
 				
-				
+				alert($.cookie("yaktype"));
+				if($.cookie("yaktype") == "5")
+					$("#btnMesalertes").css("opacity", "1");
+				else
+					$("#btnMesalertes").css("opacity", "0.3");
 				/*
 
 				$("#typeContainer .btn[type=3]").click(function(){
@@ -265,6 +269,10 @@ mixin searchFormUnified(page)
 					$(this).addClass('active');
 					yakType = [5];
 				}else{
+					if($("#btnMesalertes").css("opacity") == "1")
+						$("#btnMesalertes").css("opacity" ,"0.3");
+					else
+						$("#btnMesalertes").css("opacity" ,"1");
 					$('#newsfeedMenu span.btn[type="5"]').removeClass('active');
 					$('#newsfeedMenu span.btn[type="3"]').removeClass('active');
 					yakType.cleanArrayByName(3);	
@@ -468,9 +476,9 @@ mixin searchFormUnified(page)
 			});
 		}
 		*/
-		function setAlert()
+		function setAlert(el)
 		{
-			console.log($.cookie("yaktype"));
+			//console.log($.cookie("yaktype"));
 			if($("#newsfeedMenu .oldActive").length == 0)
 			{
 				$("#newsfeedMenu .active").each(function(){
@@ -493,6 +501,10 @@ mixin searchFormUnified(page)
 			getAndPrintInfo();
 
 			
+			if($(el).css("opacity") == "1")
+				$(el).css("opacity" ,"0.3");
+			else
+				$(el).css("opacity" ,"1");
 		}
 		
 		function setRangeSelectorDropDown()

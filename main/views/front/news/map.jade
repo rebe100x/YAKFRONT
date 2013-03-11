@@ -29,24 +29,16 @@ block content
 					span#newsfeedContent.tabContent
 						ul#newsfeed
 					span#newspostContent.tabContent
-						mixin postForm()
-					
-	//script(src='http://maps.google.com/maps/api/js?v=3.9&sensor=false&libraries=drawing')		
+						mixin postForm()		
 	link(rel='stylesheet', href='/javascripts/lib/jquery/css/share.css')
-	//script(src="/javascripts/lib/jquery/js/timeago.js")	
 	script(src="/javascripts/lib/jquery/js/share.js?v="+JSON.parse(mainConf).version)	
 	script(src="/javascripts/lib/jquery/js/jquery.livequery.js")
 	script(src="/javascripts/json2.js")	
 
 	script
-	
-	
-
 		/*INIT*/
 		var conf = !{conf};
-		var mainConf = !{mainConf};	
-		
-		
+		var mainConf = !{mainConf};
 		var geolocalized = 0;
 		var infowindow = null;
 		var bounds = new Array();
@@ -59,12 +51,10 @@ block content
 		var hashtagTmp = [];
 		var mediumImage;
 		var thumbImage;
-			
 		var markerClustererOptions = {gridSize:30,maxZoom: 17,styles: [{height: 28,width: 28,url: "/images/markers/m1.png"},{height: 38,width: 38,url: "/images/markers/m2.png"},{height: 55,width:55,url: "/images/markers/m3.png"},{height: 85,width: 85,url: "/images/markers/m4.png"},{height: 85,width: 85,url: "/images/markers/m5.png"}]};
 		var markerCluster = null;
 		var pinkParksStyles = [{featureType: "Water",stylers: [{ hue: "#006eff" },{ saturation:1 },{ lightness: -13 }]},{featureType: "Road",stylers: [{ hue: "#ff0000" },{ saturation: -100 },{ lightness: 31 }]},{featureType: "Landscape",stylers: [{ hue: "#ff0008" },{saturation: -90 },{ lightness: 66 }]}];
 		var pinkParksStyles =[{}];
-		
 		var skip = 0;
 		var zoom = 1;
 		var infoContent = '';
