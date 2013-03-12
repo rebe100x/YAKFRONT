@@ -621,7 +621,7 @@ width: 270px;
 .searchYakwala .dropdown-menu li:hover { color: #d3171f;}
 .searchYakwala .mytime {padding-top: 6px; background: url('../images/time.png') no-repeat; background-position: -1px 9px; }
 .searchYakwala .myfilter {padding-left: 8px; background: url('../images/filter.png') no-repeat; background-position: -1px 9px }
-
+.searchYakwala #dropdownRangeSelector { left: auto;}
 /* FOOTER
 ----------------------------------------------------*/
 #footer { background-color: #ffffff; height: 20px; font-size: 12px; padding-top: 2px;}
@@ -636,4 +636,7 @@ width: 270px;
 .customDates { position: relative;; left: 10px; top: -2px; cursor: pointer;}
 .customprofile { margin-right: 12px; cursor: pointer; margin-top: -6px; padding: 3px;}
 .delComment { float: right; position: relative; right: 12px;}
-
+#customMenuProfile { text-align: left;}
+#customMenuProfile .imgSmallProfile { width: 23px; height: 23px; float: left;}
+#customMenuProfile a { display: inline; float: left; clear: none}
+#customMenuProfile li { clear: both;}

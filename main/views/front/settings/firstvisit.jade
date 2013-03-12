@@ -115,7 +115,7 @@ block content
 								currlocation += "<br /><br />";
 								currlocation += "Longitude: " + results[0].geometry.location.Za;
 								currlocation += "<br /><br />";
-								currlocation += "<a>add as default location</a> - <a>add as fav place</a>";
+								currlocation += "<a onclick='setasdefaultLocation(this)' lat='"+results[0].geometry.location.Ya+"' lng='"+results[0].geometry.location.Za+"' address='"+results[0].formatted_address+"'>add as default location</a> - <a>add as fav place</a>";
 								$("#Locationtip").html(currlocation);
 							} 
 						});
@@ -123,7 +123,13 @@ block content
 					});
 				}
 			}
-			
+				
+			function setasdefaultLocation(el)
+			{
+				var lat = $(el).attr("lat");
+				var lng = $(el).attr("lng");
+				var address = $(el).attr("address");
+			}
 
 			$(document).ready(function() {
 
