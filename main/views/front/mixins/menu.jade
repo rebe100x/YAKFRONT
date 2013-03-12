@@ -18,21 +18,27 @@ mixin menu(active)
 					a.customprofile.dropdown-toggle(href="#",data-toggle="dropdown")
 						img.yak-mainMenu-hide(id="userThumb", src=locals.user.thumbsmall)
 						span.caret(style="margin:22px 0px 22px 5px;")
-					ul.dropdown-menu.pull-right(style="right:21px; top: 40px;")
+					ul#customMenuProfile.dropdown-menu.pull-right(style="right:21px; top: 40px;")
 						li
+							img.imgSmallProfile(src="/images/new/lacarte.png")
 							a(href="/news/map") Map
 						li
+							img.imgSmallProfile(src="/images/new/filinfo.png")
 							a(href="/news/feed") Feed
 						li.divider
 						li
+							img.imgSmallProfile(src="/images/new/passwordicon.png")
 							a(href="/settings/password") Mot de Passe
 						
 						li
+							img.imgSmallProfile(src="/images/new/profileicon.png")
 							a(href="/settings/profile") Mon profil
 						li
+							img.imgSmallProfile(src="/images/new/profileicon.png")
 							a(href="/settings/privateprofile") Mon profil privé
 						li.divider
 						li
+							img.imgSmallProfile(src="/images/new/logouticon.png")
 							a(href="/user/logout") Quitter
 				- else
 					//
