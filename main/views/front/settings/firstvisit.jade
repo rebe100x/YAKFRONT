@@ -133,7 +133,9 @@ block content
 					$("#username").val(user.twitter_screen_name);
 
 				$("form").submit(function(){
+
 					var currusername = $("#username").val();
+
 					$.getJSON('/api/findbylogin/' + currusername,function(users) {
 
 						if(users.users.length != 0 && user.login != currusername)
@@ -151,7 +153,7 @@ block content
 									
 							}
 							
-							
+							$("#username").val("");
 							//alert(suggestions);
 							
 							

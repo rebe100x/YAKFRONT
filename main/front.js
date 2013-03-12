@@ -53,7 +53,7 @@ app.configure(function(){
 });
 
 app.configure('development', function(){
-	conf = config.confs.devdany;
+	conf = config.confs.devrenaud;
 	app.locals.conf = JSON.stringify(conf);
 	mainConf = config.confs.main;
 	app.locals.mainConf = JSON.stringify(mainConf);

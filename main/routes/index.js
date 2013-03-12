@@ -621,10 +621,11 @@ exports.firstvisit = function(req,res){
 	formMessage = "";
 	var User = db.model('User');
 	if(req.session.user){	
+		console.log("Entered Here" + req.session.user);
 		User.findById(req.session.user,function (err, docs){
 			var crypto = require('crypto');
 			var newcryptedPass = crypto.createHash('sha1').update(req.body.password+"yakwala@secure"+docs.salt).digest("hex");	
-			var login = docs.login;
+			var login = req.body.username;
 
 			if(req.body.password.length >= 8){
 				if(req.body.location){
