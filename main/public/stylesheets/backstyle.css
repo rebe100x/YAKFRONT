@@ -6,7 +6,7 @@
 
 /* GENERAL
 -------------------------------------------------- */
-#alertInfo{display:none;}
+#alertInfo{display:none;position:relative;z-index:20000000;}
 .icon-pointer{cursor:pointer;margin:2px;}
 .icon-pointer:hover{opacity:0.7;}
 
@@ -17,17 +17,18 @@
 .customprofile img.avatar{height:24px;}
 
 /* Place */
-#placeForm{margin-left:5px;}
-#placeForm .control-group { margin: 0;}
-#placeForm label { font-size: smaller; font-weight: bold; color: #666666; margin-top: 5px;}
-#placeForm .clearBoth {clear: both;}
-#placeForm .col {display: block; float: left; margin-right: 10px;}
-#placeForm input[type=text] { width: 370px; }
-#placeForm input[type=text].big { width: 85%; }
-#placeForm label.radio.inline { margin-right: 10px; }
-#placeForm textarea {width: 85%;}
-#placeForm legend { padding-left: 70px; margin-top: -35px; padding-bottom: 10px;}
-#placeForm .btn.btn-large {margin-top: 20px;}
+.fuelux .yakForm{margin-left:5%;}
+.fuelux .yakForm .control-group { margin: 0;}
+.fuelux .yakForm label { font-size: smaller; font-weight: bold; color: #666666; margin-top: 5px;}
+.fuelux .yakForm .clearBoth {clear: both;}
+.fuelux .yakForm .col {display: block; float: left; margin-right: 10px;width: 45%;}
+.fuelux .yakForm input[type=text] { width: 370px; }
+.fuelux .yakForm input[type=text].big { width: 85%; }
+.fuelux .yakForm input[type=text].small { width: 25%; }
+.fuelux .yakForm label.radio.inline { margin-right: 10px; }
+.fuelux .yakForm textarea {width: 85%;}
+.fuelux .yakForm legend { padding-left: 70px; margin-top: -35px; padding-bottom: 10px;}
+.fuelux .yakForm .btn.btn-large {margin-top: 20px;}
 #MyGrid thead tr.headerControle {background: url(../images/texture.png) repeat; border: none;}
 #MyGrid thead td {border-top: none;}
 #MyGrid thead a {font-size: smaller;}

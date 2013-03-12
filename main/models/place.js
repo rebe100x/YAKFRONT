@@ -49,7 +49,6 @@ var Place = new Schema({
 ,	zone	: {type: Schema.ObjectId}
 },{ collection: 'place' });
 
-Place.index({location : '2d'});
 
 Place.statics.format = function (theplace) {
 	if(theplace.thumb != undefined)

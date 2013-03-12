@@ -53,7 +53,6 @@ var Feed = new Schema({
 	,zone : Number
 },{ collection: 'feed' });
 
-Feed.index({location : '2d'});
 
 Feed.statics.findByName = function (str,callback) {
   searchStr = new RegExp(str,'i');
@@ -107,7 +106,7 @@ Feed.statics.findAll = function (callback) {
 
 
 
-Feed.statics.countSearch = function (searchTerm, status, callback) {
+Feed.statics.countSearch = function (searchTerm, status, type, callback) {
 	var search = new RegExp(searchTerm, 'i');
 
 	var conditions = {
@@ -118,6 +117,10 @@ Feed.statics.countSearch = function (searchTerm, status, callback) {
 			conditions["status"] = status;
 	}
 
+	if (type != 'all') {
+			conditions["feedType"] = type;
+	}
+	
 	return this.count(conditions, callback);
 }
 
@@ -134,7 +137,7 @@ Feed.statics.disableFeed = function (ids, callback) {
 
 
 
-Feed.statics.findGridFeeds = function (pageIndex, pageSize, searchTerm, sortProperties, sortDirections, status, callback) {
+Feed.statics.findGridFeeds = function (pageIndex, pageSize, searchTerm, sortProperties, sortDirections, status, type, callback) {
 
 	var conditions = {
 		$or:[ {'name': new RegExp(searchTerm, 'i')}, {'humanName': new RegExp(searchTerm, 'i')}]	
@@ -151,6 +154,10 @@ Feed.statics.findGridFeeds = function (pageIndex, pageSize, searchTerm, sortProp
 
 	if (status != 'all') {
 			conditions["status"] = status;
+	}
+
+	if (type != 'all') {
+			conditions["feedType"] = type;
 	}
 	
 	return this.find(

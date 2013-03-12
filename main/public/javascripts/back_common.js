@@ -1,12 +1,7 @@
-//var socket = io.connect('http://localhost:3000');
-
-
 		
 /*READY FUNCTIONS*/	
 $(document).ready(function() {
 
-	/*bootstrap alert plugin*/
-	$(".alert").alert('close');
 	
 	/* Detect browser */
 	$.browser.chrome = /chrom(e|ium)/.test(navigator.userAgent.toLowerCase());

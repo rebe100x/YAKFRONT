@@ -1,7 +1,7 @@
 mixin feedForm()
 	button.btn#btnBack(style='display:none')
 		i.icon-chevron-left
-	form#feedForm(action='/feed', method='POST', enctype='multipart/form-data', style='display:none')
+	form#feedform.yakForm(action='/feed', method='POST', enctype='multipart/form-data', style='display:none')
 		input#yakcatInput(type='hidden', name='yakcatInput', value='')
 		input#yakcatNames(type='hidden', name='yakcatNames', value='')
 		input#feedInput(type='hidden', name='feedInput', value='')
@@ -17,31 +17,33 @@ mixin feedForm()
 					label.alert#err(type="text", id="err", name="err", style='display:none') Les champs en rouge sont obligatoires.
 		div.control-group#titleGroup
 			div.controls
-				label Nom
-				input.big.hashtagMaker(type='text', name='title', id='title', placeholder='Le nom du flux')
-		div.control-group#contentGroup
-			div.controls
-				label Description
-				textarea.hashtagMaker(type='text', id='content', name='content', placeholder="Quelques détails sur le lieu à ajouter, avec la possibilité d'ajouter des #hashtags.", rows='3')
-		div.control-group#licenceGroup
-			div.controls
 				.col
-					label Licence
-					input(type='text', name='licence', id='licence', placeholder='Ex: Open Source', autocomplete="off")
+					label Nom:
+					input(type='text', name='humanName', id='humanName', placeholder='Le nom du flux')
 				.col
-					label Origine
-					input(type='text', name='origine', id='origine', placeholder='Yakwala', autocomplete="on")
+					label Lien externe:
+					input(type='text', name='link', id='link', placeholder='Lien vers la source de la donnée')
+				.col	
+					label Licence:
+					input(type='text', name='licence', id='licence', placeholder='Licence')
 				.col
-					label Outgoing Link
-					input(type='text', name='outgoinglink', id='outgoinglink', placeholder='outgoinglink')
-		div.control-group#adresseGroup.clearBoth
-			div.controls
-				label(for='Feed') Adresse
-				.input-append
-					input.big(type="text",data-provide="typeahead", id="feed", name="feed", autocomplete="on", placeholder="Cliquer sur la carte ou entrer l'adresse")
-					button.btn#btn-feed-adder(type="button") Ajouter
-		div.control-group#yakcatGroup
-			div.controls
+					label A quelle fréquense le flux doit-il être rafraichi ?
+					div.select.btn-group#freqMAJ(data-resize="auto")
+						button.btn.dropdown-toggle(data-toggle="dropdown")
+							span.dropdown-label Fréquense de mise à jour
+							span.caret
+						ul.dropdown-menu
+							li(data-value="1")
+								a(href="") Quotidienne
+							li(data-value="2")
+								a(href="") Hebdo
+							li(data-value="3")
+								a(href="") Mensuelle
+							li(data-value="4")
+								a(href="") Annuelle
+		
+		div.control-group#dataGroup.clearBoth
+			div.controls	
 				.col
 					label(for='category') Thèmes
 					input(type="text", data-provide="typeahead", id="yakcat", name="yakcat", autocomplete="off", placeholder='Un ou plusieurs thèmes')
@@ -49,47 +51,68 @@ mixin feedForm()
 						ul
 				.col
 					label Free Tags
-					input#freetag(type="text", data-provide="typeahead", name="freetag",placeholder='Free tags séparés par des virgules')
-		div.control-group.clearBoth
+					input#freetag(type="text", data-provide="typeahead", name="freetag",placeholder='Free tags séparés par des virgules')	
+										
+
+		div.control-group#locationGroup.clearBoth
+			.col
+				label(for='Place') Localisation du flux
+				.input-append
+					input(type="text",data-provide="typeahead", id="place", name="place", autocomplete="on", placeholder="Chercher une ville, département, ou région")
+			.col
+				label Si l'info n'est pas géolocalisée...	
+				div.select.btn-group#defaultPrintFlag(data-resize="auto")
+					button.btn.dropdown-toggle(data-toggle="dropdown")
+						span Si l'info n'est pas géolocalisée... 
+						span.dropdown-label
+						span.caret
+					ul.dropdown-menu
+						li(data-value="0")
+							a(href="") "... ne pas l'afficher sur la carte mais l'afficher sur le fil info au point défini par défaut"
+						li(data-value="1")
+							a(href="") "... l'afficher sur la carte et le fil info au point défini par défaut"
+						li(data-value="3")
+							a(href="") "... ne pas afficher l'info du tout"
+						li(data-value="2")
+							a(href="") "... placer l'info au point défini par défaut sans chercher à la géolocaliser" 
+		
+		div.control-group#parsingGroup.clearBoth
+			.col
+				label Type de flux
+				div.select.btn-group#yakType(data-resize="auto")
+					button.btn.dropdown-toggle(data-toggle="dropdown")						
+						span.dropdown-label Type de flux
+						span.caret
+					ul.dropdown-menu
+						li(data-value="RSS")
+							a(href="") RSS
+						li(data-value="CSV")
+							a(href="") CSV
+						li(data-value="YAKMADE")
+							a(href="") YAKMADE
+			.col	
+				label Source(s)
+				.input-append	
+					input(type='text', name='source', id='source', placeholder='source')
+					button.btn#btn-place-adder(type="button") Ajouter
+			.col
+				label &nbsp;
+				button.btn.btn-primary.btn-warning(type='button', name='parsing', id='parsing') Définir le parsing
+		
+					
+					
+
+		div.control-group#statusGroup.clearBoth
 			div.controls
-				label Contact
-				.col
-					input#tel(type="text", data-provide="typeahead", name="tel", placeholder='Téléphone')
-				.col
-					input#mobile(type="text", data-provide="typeahead", name="mobile", placeholder='Mobile')
-				.col
-					input#mail(type="text", data-provide="typeahead", name="mail", placeholder='Email')
-				.col
-					input#web(type="text", data-provide="typeahead", name="web", placeholder='Site web')
-				label.clearBoth Horaires / Transport
-				.col
-					input#opening(type="text", data-provide="typeahead", name="opening", placeholder="Horaires d'ouverture")
-				.col
-					input#closing(type="text", data-provide="typeahead", name="closing", placeholder='Horaires de fermeture')
-				.col
-					input#special(type="text", data-provide="typeahead", name="special", placeholder='Ouverture exceptionnelle')
-				.col
-					input#transportation(type="text", data-provide="typeahead", name="transportation", placeholder='Comment y arriver? (ex: métro ligne 2 station Jaurès)')
+				label.radio.inline Actif
+					input#option1(type="radio", name="status", value="1")
+				label.radio.inline Inactif
+					input#option4(type="radio", name="status", value="0")
+							
+		div.control-group
+			div.controls
+				button.btn.btn-large.btn-inverse(type='submit', name='submit', id='submit', value='Enregistrer') Enregistrer
 
-				label(for='picture').clearBoth Photo
-				input#picture(type="file", name="picture")
-				span#picturePreview
-			div.control-group
-				div.controls
-					label Status
-					label.radio.inline Valider
-						input#option1(type="radio", name="status", value="1" , checked)
-					label.radio.inline En attente
-						input#option4(type="radio", name="status", value="2")
-					label.radio.inline Rejeter
-						input#option2(type="radio", name="status", value="3")
-					label.radio.inline Erreur de localisation
-						input#options3(type="radio", name="status", value="10")
-			div.control-group
-				div.controls
-					button.btn.btn-large.btn-inverse(type='submit', name='submit', id='submit', value='Enregistrer') Enregistrer
-
-					//button.btn.btn-large.btn-inverse#enregistrer(value='Enregistrer') Enregistrer
 
 script
 
@@ -101,6 +124,6 @@ script
 			$("#btnBack").hide();
 			google.maps.event.removeListener(listenerHandle);
 			markerLocation.setVisible(false);
-			refreshDatagridAndMenu();
+			refreshDatagrid();
 		});
 	});

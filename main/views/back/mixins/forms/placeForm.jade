@@ -1,7 +1,7 @@
 mixin placeForm()
 	button.btn#btnBack(style='display:none')
 		i.icon-chevron-left
-	form#placeForm(action='/place', method='POST', enctype='multipart/form-data', style='display:none')
+	form.yakForm#placeForm(action='/place', method='POST', enctype='multipart/form-data', style='display:none')
 		input#yakcatInput(type='hidden', name='yakcatInput', value='')
 		input#yakcatNames(type='hidden', name='yakcatNames', value='')
 		input#placeInput(type='hidden', name='placeInput', value='')

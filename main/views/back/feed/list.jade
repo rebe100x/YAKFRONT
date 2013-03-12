@@ -17,12 +17,12 @@ mixin list()
 					select#filterStatus
 						option(value="1") Actifs
 						option(value="0") Inactifs
-					.dateSort.datagrid-header-right
-						.input-prepend
-							span.add-on Ordonner par
-							select#sortPlaces
-								option(value="creationDate")	Date de création
-								option(value="lastModifDate")	Date de modification
+					select#filterType
+						option(value="all") Tous les types
+						option(value="RSS") RSS
+						option(value="CSV") CSV
+						option(value="YAKMADE") YAKMADE
+					
 		tfoot
 			tr
 				th
@@ -92,10 +92,11 @@ mixin list()
 					sortDirectionArray.push(options.sortDirection);
 				}
 
-				// Also sort by the selected date
-				sortPropertyArray.push( $('#sortPlaces :selected').val() );
+				// sort by name by default
+				if(sortPropertyArray.length == 0)
+					sortPropertyArray.push( "humanName");
 				// Always newest first
-				sortDirectionArray.push("desc");
+				sortDirectionArray.push("asc");
 
 				// Would be easier if we could pass dictionaries, needs testing
 				url += '/' + sortPropertyArray.join() + '/' + sortDirectionArray.join();
@@ -103,6 +104,10 @@ mixin list()
 				// Filter by status
 				var status = $('#filterStatus :selected').val();
 				url += '/' + status;
+
+				// Filter by type
+				var type = $('#filterType :selected').val();
+				url += '/' + type;
 
 				
 
@@ -113,8 +118,8 @@ mixin list()
 
 					if (firstLoad) {
 						$("#search").focus();
-						$('th[data-property="creationDate"]').addClass('sorted');
-						$('th[data-property="creationDate"]').append('<i class="icon-chevron-down"></i>');
+						$('th[data-property="name"]').addClass('sorted');
+						$('th[data-property="name"]').append('<i class="icon-chevron-down"></i>');
 						firstLoad = false;
 					}
 
@@ -138,14 +143,15 @@ mixin list()
 
 		$('#MyGrid').datagrid({
 			dataSource: new ApiDataSource({
-				columns: [{
-					property: 'feedType',
-					label: 'Type',
-					sortable: true
-				},
+				columns: [
 				{
 					property: 'name',
 					label: 'Flux',
+					sortable: true
+				},
+				{
+					property: 'feedType',
+					label: 'Type',
 					sortable: true
 				},
 				{
@@ -170,16 +176,21 @@ mixin list()
 
 		$('#filterStatus').live('change', function() {
 			var currentSelection = $('#filterStatus :selected').val();
-			refreshDatagridAndMenu();
+			refreshDatagrid();
 		});
 
-		
+		$('#filterType').live('change', function() {
+			var currentSelection = $('#filterType :selected').val();
+			refreshDatagrid();
+		});
+
 		function fillContent(item) {
 			var res = "";
 			var icon = "icon-time";
 			var title_icon = "En attente";
 			var title_title = "";
 
+			
 			res += '<div class="liens">';
 			if (item.link)
 				res += '<a href=\''+ item.link + '\' target="_blank" title="Lien externe"><i class="icon-share-alt "></i></a>';	
@@ -195,7 +206,7 @@ mixin list()
 			
 			res += "</div>";
 
-			res += '<a class="editPlace" id="' + item._id + '" href="#">';
+			res += '<a class="editFeed" id="' + item._id + '" href="#">';
 
 			if (item.status == 1) {
 				icon = 'icon-ok-sign';
@@ -206,54 +217,9 @@ mixin list()
 				title_icon = "Rejetée";
 			}
 
-			res += '<div class="text-info" '+ item.humanName + '><i class="' + icon + ' status" title="' + title_icon + '" ></i>' + item.humanName + '</div>';
+			res += 	'<div class="text-info" '+ item.humanName + '><i class="' + icon + ' status" title="' + title_icon + '" ></i>' + item.humanName + '</div>';
 
-			res += "<small>";
-
-			if (item.persistDays)
-				res += "<div>" + item.persistDays + "</div>";
-
-			if (item.yakCatNameArray) {
-				res += "<div>";
-				for(i = 0; i<  item.yakCatNameArray.length;i++){
-					res += formatYakcat(item.yakCatNameArray[i]);
-					res += ', ';
-				}
-				if (item.freeTag)
-					res += displayFreeTags(item.freeTag);
-				res = res.slice(0,-2);
-				res += "</div>";
-			}
-			else if(item.freeTag) {
-				res += displayFreeTags(item.freeTag);
-				result = result.slice(0,-2);
-			}
-			res += '</small></a>';
-			return res;
-		}
-
-		function displayFreeTags(freeTag) {
-			var result = "";
-
-			for(i = 0; i<  freeTag.length;i++){
-				if (freeTag[i] != "") {
-					result += freeTag[i];
-					result += ', ';
-				}
-			}
-			return result;
-		}
-		function formatYakcat(yakcatId) {
-			var res;
-			$.ajax({
-				url: '/api/cats/'+ yakcatId,
-				dataType: 'json',
-				async: false,
-				success: function(data) {
-					if (data['cat'])
-						res = data['cat'].title;
-				}
-			});
+			res += '</a>';
 			return res;
 		}
 
@@ -264,193 +230,122 @@ mixin list()
 		}
 
 
-
 		$('a.centerMap').live('click', function(event) {
 			event.preventDefault();
 			var latlng = new google.maps.LatLng($(this).attr('lat'), $(this).attr('lng'));
-			getformattedAddress(latlng);
+			//getformattedAddress(latlng);
 			placeMarker(latlng,markerLocation);
-			map.setCenter(markerLocation.getPosition());
+			map.setCenter(latlng);
 		});
 
-		// Toggle searchPanel
-		$('a.showSearchPanel').live('click', function() {
-			$("#iconSearchPanel").toggleClass("icon-chevron-down");
-			$("td.searchPanel").toggle("fast");
-			return false;
-		});
-
-		// Searchpanel yakcat input
-		$('input#yakCat').typeahead({
-			source: function (typeahead, query) {
-				$.ajax({
-					url: "/api/cats",
-					success: function(data) {
-						typeahead.process(data.cats);
-					}
-				})
-			},
-			property: "title",
-			onselect: function(obj) {
-				$(".pillbox#yakCatFilter").show();
-				$(".pillbox#yakCatFilter ul").append("<li class='yakcat-value' data-value="+obj._id+">"+obj.title+"</li>");
-
-				$('input#yakCat').val('').focus();
-				refreshDatagridAndMenu();
-			}
-		});
-
-		// Searchpanel yakcat input
-		$('input#userFilter').typeahead({
-			source: function (typeahead, query) {
-				$.ajax({
-					url: "/api/users",
-					success: function(data) {
-						typeahead.process(data.users);
-					}
-				})
-			},
-			property: "name",
-			onselect: function(obj) {
-				$(".pillbox#userFilter").show();
-				$(".pillbox#userFilter ul").append("<li class='user-value' data-value="+obj._id+">"+obj.name+"</li>");
-
-				$('input#userFilter').val('').focus();
-				refreshDatagridAndMenu();
-			}
-		});
 
 		// Refresh on sort selection
 		$('#sortPlaces').live('change', function() {
-			refreshDatagridAndMenu();
+			refreshDatagrid();
 		});
 		
 
 	
-
-	
-		
-		
-
-
-		function refreshDatagridAndMenu () {
+		function refreshDatagrid () {
 			// Temporary refresh method for datagrid
 			var $gridsearch = jQuery('#MyGrid').find('.search');
 			var search = $gridsearch.find('input').val();
 			$gridsearch.trigger('searched', search);
-			$.getJSON('/api/validplaces', function(data) {
-				$('#placenumber').removeClass('badge badge-important');
-				if (data.info != 0)
-					$('#placenumber').addClass('badge badge-important').html(data.info);
-			});
 		}
 
 		
 
 
-		// Edit Place function
-		$(".editPlace").live('click', function()
+		// Edit Feed function
+		$(".editFeed").live('click', function()
 		{
 			event.preventDefault();
 
 			listenerHandle = google.maps.event.addListener(map, 'click', function(event) {
-				getformattedAddress(event.latLng);
+				//getformattedAddress(event.latLng);
 				placeMarker(event.latLng,markerLocation);
 			});
+
 			listenerHandleDrag = google.maps.event.addListener(markerLocation, 'dragend', function() {
 				var position = markerLocation.getPosition();
-				$('#placeForm #latitude').val(position.lat());
-				$('#placeForm #longitude').val(position.lng());
+				$('#feedForm #latitude').val(position.lat());
+				$('#feedForm #longitude').val(position.lng());
 
-				getformattedAddress(position);
+				//getformattedAddress(position);
 			});
 
 
 			$("#MyGrid").hide();
+			
 			// We remove the error class when we open a form for editing a place
-			$('#placeForm #titleGroup').removeClass("error");
-			$('#placeForm #contentGroup').removeClass("error");
-			$('#placeForm #licenceGroup').removeClass("error");
-			$('#placeForm #origineGroup').removeClass("error");
-			$('#placeForm #adresseGroup').removeClass("error");
-			$("#btnBack").fadeIn();
-			$("#placeForm").fadeIn();
+			$('#feedform #titleGroup').removeClass("error");
+			$('#feedform #contentGroup').removeClass("error");
+			$('#feedform #licenceGroup').removeClass("error");
+			$('#feedform #origineGroup').removeClass("error");
+			$('#feedform #adresseGroup').removeClass("error");
+			$("#btnBack").show();
+			$("#feedform").show();
 			$(".catLabel").remove();
 			$("#pillYakcat ul").empty();
 			$('#err').hide();
 			yakcatArray = new Array();
 			yakcatNames = new Array();
 
-			$("#placeForm legend").html("Editer un lieu");
-			$("#placeForm #objid").val(this.id);
+			$("#feedform legend").html("Editer un Flux");
+			$("#feedform #objid").val(this.id);
 
-			var url = '/api/places/'+this.id;
-
-			// We search for the place in mongo and we fill the form with the place's values
+			var url = '/api/feed/'+this.id;
+			console.log(url);
+			
+			// We search for the feed in mongo and we fill the form with the feed's values
 			$.ajax({
 				url: url,
 				type: 'GET',
 				async: false,
 				success: function (response)
 				{
-					var place = response.place;
+					var feed = response.feed;
 
-					var latlng = new google.maps.LatLng(place.location.lat, place.location.lng);
-					getformattedAddress(latlng);
+					var latlng = new google.maps.LatLng(feed.defaultPlaceLocation.lat, feed.defaultPlaceLocation.lng);
+					//getformattedAddress(latlng);
 					placeMarker(latlng,markerLocation);
 					map.setCenter(markerLocation.getPosition());
-					$("#placeForm #licence").val(place.licence);
-					$("#placeForm #origine").val(place.origin);
-					$("#placeForm #hiddenOrigin").val(place.origin);
-					$("#placeForm #origine").prop('disabled', true);
-					$("#placeForm #outgoinglink").val(place.outGoingLink);
-					$("#placeForm #title").val(place.title);
-					$("#placeForm #content").val(place.content);
-					$("#placeForm #freetag").val(place.freeTag);
+					$("#feedform #humanName").val(feed.humanName);
+					$("#feedform span#XMLname").html(feed.name+'.xml');
+					/*
+					$("#feedform #licence").val(feed.licence);
+					$("#feedform #origine").val(feed.origin);
+					$("#feedform #hiddenOrigin").val(feed.origin);
+					$("#feedform #origine").prop('disabled', true);
+					$("#feedform #outgoinglink").val(feed.outGoingLink);
+					$("#feedform #content").val(feed.content);
+					$("#feedform #freetag").val(feed.freeTag);
+					*/
+					
+					/*
+					$('input:radio[name=status][value='+feed.status+']').click();
+					$("#feedform #name").focus();
+					$("#feedform #feed").val('');
 
-					for (var i = 0; i < place.yakCat.length; i++)
+					
+					$("#feedform #freetag").val(feed.freeTag.join(","));
+
+					if (feed.contact)
 					{
-						var url = '/api/cats/'+place.yakCat[i];
-						$.ajax({
-							url: url,
-							type: 'GET',
-							async: false,
-							success: function (response)
-							{
-								var yakcat = response.cat;
-								$("#pillYakcat").show();
-								$("#pillYakcat ul").append("<li class='yakcat-val' data-value="+yakcat._id+">"+yakcat.title+"</li>");
-								$('#placeForm #yakcat').val('').focus();
-							}
-						});
-					}
-
-					$('input:radio[name=status][value='+place.status+']').click();
-					$("#placeForm #title").focus();
-					$("#placeForm #place").val('');
-
-					// loading the thumb
-					var imag = "<img class='img-rounded' " + "src=\'/uploads/pictures/512_0/" + place.thumb +"\' style='width:100px'/>";
-					$("#placeForm #picturePreview").html(imag);
-
-					$("#placeForm #freetag").val(place.freeTag.join(","));
-
-					if (place.contact)
-					{
-						$("#placeForm #tel").val(place.contact.tel);
-						$("#placeForm #mobile").val(place.contact.mobile);
-						$("#placeForm #mail").val(place.contact.mail);
-						$("#placeForm #transportation").val(place.contact.transportation);
-						$("#placeForm #web").val(place.contact.web);
-						$("#placeForm #opening").val(place.contact.opening);
-						$("#placeForm #closing").val(place.contact.closing);
-						$("#placeForm #special").val(place.contact.special_opening);
-					}
+						$("#feedform #tel").val(feed.contact.tel);
+						$("#feedform #mobile").val(feed.contact.mobile);
+						$("#feedform #mail").val(feed.contact.mail);
+						$("#feedform #transportation").val(feed.contact.transportation);
+						$("#feedform #web").val(feed.contact.web);
+						$("#feedform #opening").val(feed.contact.opening);
+						$("#feedform #closing").val(feed.contact.closing);
+						$("#feedform #special").val(feed.contact.special_opening);
+					}*/
 				}
 			});
 		});
 
-		// Add Place function
+		// Add Feed function
 		$("#btnAdd").click(function()
 		{
 
@@ -463,33 +358,33 @@ mixin list()
 			});
 			listenerHandleDrag = google.maps.event.addListener(markerLocation, 'dragend', function() {
 				var position = markerLocation.getPosition();
-				$('#placeForm #latitude').val(position.lat());
-				$('#placeForm #longitude').val(position.lng());
+				$('#feedform #latitude').val(position.lat());
+				$('#feedform #longitude').val(position.lng());
 
 				getformattedAddress(position);
 			});
 
 			$("#MyGrid").hide();
-			$("#placeForm")[0].reset();
+			$("#feedform")[0].reset();
 			// We remove the error class when we open a form for creating a new place
-			$('#placeForm #titleGroup').removeClass("error");
-			$('#placeForm #contentGroup').removeClass("error");
-			$('#placeForm #licenceGroup').removeClass("error");
-			$('#placeForm #origineGroup').removeClass("error");
-			$('#placeForm #adresseGroup').removeClass("error");
-			$('#placeForm #content').val("");
+			$('#feedform #titleGroup').removeClass("error");
+			$('#feedform #contentGroup').removeClass("error");
+			$('#feedform #licenceGroup').removeClass("error");
+			$('#feedform #origineGroup').removeClass("error");
+			$('#feedform #adresseGroup').removeClass("error");
+			$('#feedform #content').val("");
 			$('#placeLabel').first().remove();
 			$("#btnBack").fadeIn();
-			$("#placeForm").fadeIn();
-			$("#placeForm legend").html("Ajouter un lieu");
-			$("#placeForm #objid").val("");
+			$("#feedform").fadeIn();
+			$("#feedform legend").html("Ajouter un lieu");
+			$("#feedform #objid").val("");
 			$(".catLabel").remove();
 			$("#pillYakcat ul").empty();
 			$('#err').hide();
-			$("#placeForm #title").focus();
-			$("#placeForm #hiddenOrigin").val(user.login);
-			$("#placeForm #origine").val(user.login);
-			$("#placeForm #origine").prop('disabled', true);
+			$("#feedform #title").focus();
+			$("#feedform #hiddenOrigin").val(user.login);
+			$("#feedform #origine").val(user.login);
+			$("#feedform #origine").prop('disabled', true);
 			yakcatArray = new Array();
 			yakcatNames = new Array();
 		});

@@ -122,9 +122,17 @@ exports.feed_add = function(req, res){
 	res.render('feed/add');
 };
 
+exports.findFeedById = function (req, res) {
+	var Feed = db.model('Feed');
+   	Feed.findById(req.params.id, function (err, docs){
+  	  res.json({
+  		feed: docs
+	  });
+	});
+};
+
 exports.gridFeeds = function (req, res) {
 	var Feed = db.model('Feed');
-    
     
     var sortProperties = [];
     if (req.params.sortBy) {
@@ -138,7 +146,7 @@ exports.gridFeeds = function (req, res) {
 
 	Feed.findGridFeeds(req.params.pageIndex,req.params.pageSize,
 		req.params.searchTerm,sortProperties,sortDirections,
-        req.params.status, function (err, feed){
+        req.params.status,req.params.type, function (err, feed){
 
 		var data = {};
 
@@ -146,7 +154,7 @@ exports.gridFeeds = function (req, res) {
 		data['pageIndex'] = req.params.pageIndex;
 		data['pageSize'] = req.params.pageSize;
 
-		Feed.countSearch(req.params.searchTerm, req.params.status, function (err, count){
+		Feed.countSearch(req.params.searchTerm, req.params.status,req.params.type, function (err, count){
 			data['count'] = count;
 			res.json(data);
 		});
@@ -440,17 +448,23 @@ exports.session = function(req, res){
 		res.cookie('loginid', '', { expires: new Date(Date.now() + 90000000000) , httpOnly: false, path: '/'});
 	}
 	User.authenticate(req.body.login,req.body.password, req.body.token, function(err, user) {
-		if( (!(typeof(user) == 'undefined' || user === null || user === '') && user.type > 1)){
-			if(user.status == 1){ 
-				if (req.body.rememberme == "true") {res.cookie('token', user.token, { expires: new Date(Date.now() + 90000000000) , httpOnly: false, path: '/'});}
-				else {res.cookie('token', null);}
-				
-				req.session.user = user._id;
-				User.update({"_id":user._id},{$set:{"lastLoginDate":new Date()}}, function(err){if (err) console.log(err);});
-				res.redirect(req.body.redir || '/news/map');
-			}else if(user.status == 2){
-				req.session.message = 'Compte non validé.';
+		if( (!(typeof(user) == 'undefined' || user === null || user === ''))){
+			if(user.type > 1){
+				if(user.status == 1){ 
+					if (req.body.rememberme == "true") {res.cookie('token', user.token, { expires: new Date(Date.now() + 90000000000) , httpOnly: false, path: '/'});}
+					else {res.cookie('token', null);}
+					
+					req.session.user = user._id;
+					User.update({"_id":user._id},{$set:{"lastLoginDate":new Date()}}, function(err){if (err) console.log(err);});
+					res.redirect(req.body.redir || '/news/map');
+				}else if(user.status == 2){
+					req.session.message = 'Compte non validé.';
+				}	
+			}else{
+				req.session.message = "Ce compte n'est pas admin.";	
+				res.redirect('user/login?redir='+req.body.redir);
 			}
+			
 		}else{
 			req.session.message = 'Identifiants incorrects.';	
 			res.redirect('user/login?redir='+req.body.redir);

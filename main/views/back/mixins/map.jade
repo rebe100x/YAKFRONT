@@ -63,8 +63,7 @@ mixin map()
 				visible:false,
 				map:map,
 				draggable:true,
-				icon:'/images/beachflag.png',
-				//position:center
+				icon:'/images/back/marker1.png',
 			});
 
 
@@ -132,7 +131,15 @@ mixin map()
 			map = new google.maps.Map(document.getElementById('mymap'), {
 				zoom: z,
 				center: center,
-				mapTypeId: google.maps.MapTypeId.ROADMAP
+				mapTypeId: google.maps.MapTypeId.ROADMAP,
+				panControl: false,
+				scaleControl: false,
+				streetViewControl: false,
+				zoomControl: true,
+				zoomControlOptions: {
+					style: google.maps.ZoomControlStyle.LARGE,
+					position: google.maps.ControlPosition.LEFT_BOTTOM
+				},
 			});
 
 			

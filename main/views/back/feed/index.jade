@@ -5,6 +5,7 @@ block content
 	include ../mixins/map.jade
 	include add.jade	
 	include list.jade
+	include ../mixins/forms/feedForm.jade
 	
 
 
@@ -17,9 +18,6 @@ block content
 			div.span4
 				mixin map()
 			div.span8
-				div#alert-nav.alert.alert-info
-					button.close(type="button", data-dismiss="alert") x
-					#msg
 				div.fuelux
 					- if (message)
 						each msg in message
@@ -29,4 +27,4 @@ block content
 
 					div#newsfeedContainer	
 						mixin list()
-						mixin add()
+						mixin feedForm()

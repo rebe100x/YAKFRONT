@@ -81,7 +81,7 @@ app.get('/place/list', back.requiresLogin, back.place_map);
 
 app.get('/feed', back.requiresLogin, back.feed);
 
-app.get('/api/feeds/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status', back.gridFeeds);
+app.get('/api/feeds/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status/:type', back.gridFeeds);
 
 app.post('/place', back.requiresLogin, back.place);
 app.post('/user', back.requiresLogin, back.user);
@@ -98,6 +98,7 @@ app.get('/api/zones/:id', back.findZoneById);
 app.post('/api/users', back.users);
 app.get('/api/users', back.users);
 
+app.get('/api/feed/:id', back.findFeedById);
 app.get('/api/cats/:id', back.cats);
 app.get('/api/places', back.places);
 app.get('/api/places/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status', back.gridPlaces);
