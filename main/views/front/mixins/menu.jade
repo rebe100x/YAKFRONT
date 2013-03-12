@@ -5,20 +5,23 @@ mixin menu(active)
 			div.row-fluid.headerYakwala
 				div		
 					a.leftlink#maplink.yak-mainMenu-hide(href="/news/map")
-						img.imgleft(src="/images/new/lacarte.png")
+						
 					a.leftlink#feedlink.yak-mainMenu-hide(href="/news/feed")
-						img.imgleft(src="/images/new/filinfo.png")
-					a.leftlink(onclick="$('.searchYakwala').slideToggle('slow', function(){drawNewsFeed(); });")
-						img.imgleft(src="/images/search.png")
+					
+					a.leftlink#addLink.yak-mainMenu-hide(href="/news/map/?post=1")
+					//	
+						a.leftlink(onclick="$('.searchYakwala').slideToggle('slow', function(){drawNewsFeed(); });")
+							img.imgleft(src="/images/search.png")
 
-				a(href="/news/map")
-					img#yakLogo(src="/images/new/logo.png")
-		
+				a#logoLink(href="/news/map")
+
 				- if (locals.user && active != "firstvisit")
-					a.customprofile.dropdown-toggle(href="#",data-toggle="dropdown")
-						img.yak-mainMenu-hide(id="userThumb", src=locals.user.thumbsmall)
-						span.caret(style="margin:22px 0px 22px 5px;")
-					ul#customMenuProfile.dropdown-menu.pull-right(style="right:21px; top: 40px;")
+					a#zoneLocButton
+					a#profileMenu.customprofile.dropdown-toggle(href="#",data-toggle="dropdown")
+						//					
+							img.yak-mainMenu-hide(id="userThumb", src=locals.user.thumbsmall)
+							span.caret(style="margin:22px 0px 22px 5px;")
+					ul#customMenuProfile.dropdown-menu.pull-right
 						li
 							img.imgSmallProfile(src="/images/new/lacarte.png")
 							a(href="/news/map") Map
@@ -50,12 +53,82 @@ mixin menu(active)
 		if(active == 'map')
 			script
 				$(document).ready(function(){
-					$("#maplink img").attr("src", "/images/new/lacarte-hover.png");
+					var mq = window.matchMedia( "(min-width: 768px)" );
+					if (mq.matches) {
+						$("#maplink").css("backgroundImage", "url('/images/yakwala_sprite.png')");
+						$("#maplink").css("backgroundPosition", "108px -126px");
+						if(gup("post") == 1)
+						{
+							$("#addLink").css("backgroundImage", "url('/images/yakwala_sprite.png')");
+							$("#addLink").css("backgroundPosition", "-59px 0px");
+						}
+					}
+					else {
+						$("#maplink").css("backgroundImage", "url('/images/yakwala_sprite_medium.png')");
+						$("#maplink").css("backgroundPosition", "55px -62px");	
+						if(gup("post") == 1)
+						{
+							$("#addLink").css("backgroundImage", "url('/images/yakwala_sprite.png')");
+							$("#addLink").css("backgroundPosition", "-30px 0px");
+						}
+					}
+					if (matchMedia) {
+						var mq = window.matchMedia("(min-width: 768px)");
+						mq.addListener(WidthChange);
+						WidthChange(mq);
+						
+					}
+					function WidthChange(mq)
+					{
+						if (mq.matches) {
+							$("#maplink").css("backgroundImage", "url('/images/yakwala_sprite.png')");
+							$("#maplink").css("backgroundPosition", "108px -126px");
+							if(gup("post") == 1)
+							{
+								$("#addLink").css("backgroundImage", "url('/images/yakwala_sprite.png')");
+								$("#addLink").css("backgroundPosition", "-59px 0px");
+							}
+						}
+						else {
+							$("#maplink").css("backgroundImage", "url('/images/yakwala_sprite_medium.png')");
+							$("#maplink").css("backgroundPosition", "55px -62px");	
+							if(gup("post") == 1)
+							{
+								$("#addLink").css("backgroundImage", "url('/images/yakwala_sprite_medium.png')");
+								$("#addLink").css("backgroundPosition", "-30px 0px");
+							}
+						}
+					}
 				});
 		if(active == 'feed')
 			script
 				$(document).ready(function(){
-					$("#feedlink img").attr("src", "/images/new/filinfo-hover.png");
+					var mq = window.matchMedia( "(min-width: 768px)" );
+					if (mq.matches) {
+						$("#feedlink").css("backgroundImage", "url('/images/yakwala_sprite.png')");
+						$("#feedlink").css("backgroundPosition", "108px -62px");
+					}
+					else {
+						$("#feedlink").css("backgroundImage", "url('/images/yakwala_sprite_medium.png')");
+						$("#feedlink").css("backgroundPosition", "-30px -31px");	
+					}
+					if (matchMedia) {
+						var mq = window.matchMedia("(min-width: 768px)");
+						mq.addListener(WidthChange);
+						WidthChange(mq);
+						
+					}
+					function WidthChange(mq)
+					{
+						if (mq.matches) {
+						$("#feedlink").css("backgroundImage", "url('/images/yakwala_sprite.png')");
+						$("#feedlink").css("backgroundPosition", "108px -62px");
+					}
+					else {
+						$("#feedlink").css("backgroundImage", "url('/images/yakwala_sprite_medium.png')");
+						$("#feedlink").css("backgroundPosition", "-30px -31px");	
+					}
+					}
 
 				});
 		if(active == 'firstvisit')
