@@ -335,15 +335,17 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,from,now,type,str,thecount,thesk
 			User.findOne({'login':{$regex:searchExactStr}}).exec(function(err,theuser){			
 				if(theuser != null){
 					qInfo.or([  {'user':theuser._id} ]);
+					qInfo.or([{"origin": {$regex:strClean}}]);
 					res = qInfo.exec(callback);	
 				}else{
 					var Feed = db.model('Feed');
 					var cond = {
-						$or:[ {'humanName': {$regex:searchExactStr}}, {'name': {$regex:searchExactStr}} ]
+						$or:[ {'humanName': {$regex:strClean}}, {'name': {$regex:strClean}} ]
 					};
 					Feed.findOne( cond, function(err,thefeed){
 						if(thefeed != null){
 							qInfo.or([  {'feed':thefeed._id} ]);
+							qInfo.or([{"origin": {$regex:strClean}}]);
 							res = qInfo.exec(callback);	
 						}
 					});
