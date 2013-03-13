@@ -33,6 +33,11 @@ mixin searchFormUnified(page)
 			li.rightPull
 				span.btn#btnMesalertes(title="Mes alertes", type=5, onclick='setAlert(this)')
 
+	div#closehideSearch
+		span.btn
+			|open/close
+
+
 
 	script
 		var psClick = 0;
@@ -72,6 +77,15 @@ mixin searchFormUnified(page)
 
 
 		$(document).ready(function(){
+
+				$("#closehideSearch").click(function(){
+					$(".searchYakwala ul").slideToggle(function(){
+						drawNewsFeed();
+
+					});
+
+
+				});
 				
 				//alert($.cookie("yaktype"));
 				//if($.cookie("yaktype") == "5")
@@ -288,7 +302,15 @@ mixin searchFormUnified(page)
 					else
 					{
 						//for testing reasons only on discussions
-						yakType = ["1", "2", "4"];
+						if($(this).hasClass('active')){
+							yakType = ["1", "2", "4"];
+						}
+						else
+						{
+							yakType = ["1", "2"];	
+						}
+						
+
 					}
 				}
 				$.cookie("yaktype", yakType.join(','),{ expires: 10000, path : '/' });

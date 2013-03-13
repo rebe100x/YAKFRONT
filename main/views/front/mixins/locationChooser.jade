@@ -11,14 +11,14 @@ mixin locationChooser(page)
 					- if(locals.user.favplace)
 							- each favplace in locals.user.favplace
 								li.zoneLoc(pointId=favplace._id, lat=favplace.location.lat, lng=favplace.location.lng, pointname=favplace.name)
-									img.redstar(src="/images/markers/latestV1/redstar.png")
-									span(data-dismiss="modal")= favplace.name
+									img.pull-left.redstar(src="/images/markers/latestV1/redstar.png")
+									span.pull-left(data-dismiss="modal")= favplace.name
 									i.icon-remove.icon-pointer(onclick='removefavPlace($(this));')
 									//
 										div.theslider(title=favplace.range, alt=favplace._id)
 										span.localnessPrinter Local
 									span.mylocalnessPrinter(style="display: none")
-									select.dropdownRangeSelector(alt=favplace._id, range=favplace.range)
+									select.pull-left.dropdownRangeSelector(alt=favplace._id, range=favplace.range)
 										option(value="70", rangeText="Local")
 											|Local
 										option(value="80", rangeText="Très Local")

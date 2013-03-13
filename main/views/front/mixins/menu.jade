@@ -28,6 +28,9 @@ mixin menu(active)
 						li
 							img.imgSmallProfile(src="/images/new/filinfo.png")
 							a(href="/news/feed") Feed
+						li
+							img.imgSmallProfile(src="/images/new/poster2.png")
+							a(href="/news/map/?post=1") Poster
 						li.divider
 						li
 							img.imgSmallProfile(src="/images/new/passwordicon.png")
@@ -53,6 +56,9 @@ mixin menu(active)
 		if(active == 'map')
 			script
 				$(document).ready(function(){
+					try
+					{
+
 					var mq = window.matchMedia( "(min-width: 768px)" );
 					if (mq.matches) {
 						$("#maplink").css("backgroundImage", "url('/images/yakwala_sprite.png')");
@@ -99,10 +105,17 @@ mixin menu(active)
 							}
 						}
 					}
+				}
+				catch(e)
+				{
+
+				}
 				});
 		if(active == 'feed')
 			script
 				$(document).ready(function(){
+					try
+					{
 					var mq = window.matchMedia( "(min-width: 768px)" );
 					if (mq.matches) {
 						$("#feedlink").css("backgroundImage", "url('/images/yakwala_sprite.png')");
@@ -129,7 +142,9 @@ mixin menu(active)
 						$("#feedlink").css("backgroundPosition", "-30px -31px");	
 					}
 					}
-
+					}
+					catch(e)
+					{}
 				});
 		if(active == 'firstvisit')
 			script

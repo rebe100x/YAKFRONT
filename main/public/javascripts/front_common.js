@@ -472,7 +472,7 @@ $(document).ready(function() {
 		theme:"dark-thick" /*"light", "dark", "light-2", "dark-2", "light-thick", "dark-thick", "light-thin", "dark-thin"*/
 	});
 	$(window).resize(function(){
-		console.log($(window).width());
+		//console.log($(window).width());
 	});
 	
 

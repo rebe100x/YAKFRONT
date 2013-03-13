@@ -1,3 +1,4 @@
+
 /* THE FEED PAGE
 ---------------------------------------------------*/
 #mainFeedWrapper {border: 0px solid #292929; background: #E8E8E8; font-family: helvetica,arial,sans-serif;}
@@ -109,7 +110,7 @@
 
 /*MAP TOP CONTROLLER*/
 #newsfeedContainer #boxOpener{position: relative;text-align: center; font-weight:bold;line-height:18px;color:white;background-color:#D8242B;cursor:pointer} 
-#newsfeedContainer{position:relative;overflow:auto;height:auto;margin: 10px 5px 0 0;opacity:0.95; overflow-x: hidden;}
+#newsfeedContainer{position:relative;overflow:auto;height:auto;margin: 14px -20px 0 0;opacity:0.95; overflow-x: hidden;}
 
 #newsfeedMenu #searchBox { position: relative;text-align: center; height: 28px;}
 
@@ -121,10 +122,11 @@
 
 
 .searchYakwala .ui-widget-header {background:transparent;}
-.searchYakwala .ui-slider .ui-slider-handle {width:3px;}
+
 .searchYakwala .ui-slider-horizontal { height: 2px; position: relative; left: 7px;}
-.searchYakwala .ui-slider .ui-slider-handle { height: 8px;cursor:pointer; margin-left: -3px}
+.searchYakwala .ui-slider .ui-slider-handle { height: 18px;cursor:pointer; margin-left: -3px; width:6px; top: -7px;}
 .searchYakwala .btn .caret{margin-left:6px;}
+.searchYakwala #heatSelector { background: #DDDDDD; height: 5px;}
 
 		/*search module*/
 #newsfeedMenu #searchBox .input-append .btn {
@@ -172,7 +174,7 @@
 .mapHighlighterDetails{display:block;}
 ul#newsfeed{display:block;list-style-type:none;width:100%;margin:0px auto;padding:0px 0px;position:relative;opacity:1;z-index:2000;background:#FFFFFF;}
 ul#newsfeed li{width:100%;}
-ul#newsfeed li.highlighted .mapHighlighter{background-color:#F6F6F6; width: 94%; margin-left: 1%;}
+ul#newsfeed li.highlighted .mapHighlighter{background-color:#F6F6F6; width: 99%; margin-left: 1%;}
 
 ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: both; padding-left: 3px; padding-right: 3px;}
 .infowindow .myitem {clear: both; position: relative; top: 12px; text-align: justify;}
@@ -220,7 +222,7 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 
 .infowindow .infodetail{float:left;width:100%;font-style:italic;font-size:0.8em;line-height: 1.5em; clear: both;}
 .infowindow .infodetail a{color:#0C0C0C;}
-.infowindow .icon-remove { float: right; clear: both;  position: absolute; right: -2px;top:-10px;}
+.infowindow .icon-remove { float: right; clear: both;  position: absolute; right: -15px;top:0px;}
 
 
 
@@ -467,9 +469,9 @@ width: 270px;
 
 	#customMenuProfile {  right:5px; top: 36px;}
 
-   #dayPrinter { width: 203px; margin-top: 10px; color: black; font-size: 13px; }
+   #dayPrinter { width: 250px; margin-top: 10px; color: black; font-size: 13px; }
    .headerYakwala .navbar .nav > li > a { line-height: 12px; color: black; text-shadow: 0 0 0 rgba(0, 0, 0, 0.25); font-size: 12px }
-   .searchYakwala .customInput{ width: 200px; margin-top: 6px; float: left; margin-left: 6px;}
+   .searchYakwala .customInput{ width: 320px; margin-top: 6px; float: left; margin-left: 6px;}
    .rightPull { position: fixed; right: 0px}
    .timeIcon { position: relative; top: -14px; }
    .filterIcon { position: relative; top: 15px}
@@ -648,7 +650,7 @@ width: 270px;
  .searchYakwala .customInput{ width: 250px; margin-top: 6px; float: left; margin-left: 6px;}
  .searchYakwala #tagSelectorTrigger, .searchYakwala #rangeSelectorTrigger { margin-top: 10px;}
  .searchYakwala #zoneLocButton { margin-top: 18px;}
- .searchYakwala #btnMesalertes { margin-top: 18px;}
+ .searchYakwala #btnMesalertes { margin-top: 18px; position: relative;}
    .timeIcon { position: relative; top: -14px; }
    .filterIcon { position: relative; top: 15px}
    #heatSelector { position:  relative; left: 23px; bottom: 6px; margin-right: 45px;}
@@ -779,7 +781,7 @@ width: 270px;
 
 /* HEADER
 ----------------------------------------------------*/
-.dropdownRangeSelector {width: 136px; background: #f6f6f6; border: 0px; float: right; position: relative; right: 169px; }
+.dropdownRangeSelector {width: 33%; background: #f6f6f6; border: 0px; float: right; position: relative; right: 18%; }
 .favplacelist li { padding:10px 0px; border-bottom: 1px solid #cecece; float: left; width: 100%;height:25px; cursor: default;}
 .favplacelist li span { cursor: pointer;}
 .headerYakwala { background-color: white; text-align: center;}
@@ -806,7 +808,7 @@ width: 270px;
 /* SEARCH BAR
 ----------------------------------------------------*/
 
-.searchYakwala { background-color: #f6f6f6; float: left;}  
+.searchYakwala { background-color: #F6F6F6; float: left;}  
 .searchYakwala #searchBtn {background-image:url('../images/new/go.png'); width: 27px; height: 27px; border: 0px; margin: 7px; float: left;}
 
 .searchYakwala .myi { position: relative; top: 12px; float: left;}
@@ -853,7 +855,9 @@ width: 270px;
 
 
 /* new design */
-
+#closehideSearch { clear: both; float: left; cursor: pointer; height: 1px; width: 100%; text-align: left; background-color: #272727; color: #BB141A}
+#closehideSearch .btn { position: relative; left: -1px; background: #BB141A; top: -5px; color: white}
+#dayPrinter, #localnessPrinter, #tagSelectorTrigger { color: #898989;}
 
 
 
