@@ -295,7 +295,6 @@ mixin list()
 			$("#feedform #objid").val(this.id);
 
 			var url = '/api/feed/'+this.id;
-			console.log(url);
 			
 			// We search for the feed in mongo and we fill the form with the feed's values
 			$.ajax({
@@ -311,7 +310,17 @@ mixin list()
 					placeMarker(latlng,markerLocation);
 					map.setCenter(markerLocation.getPosition());
 					$("#feedform #humanName").val(feed.humanName);
-					$("#feedform span#XMLname").html(feed.name+'.xml');
+					$("#feedform #licence").val(feed.licence);
+					$("#feedform #link").val(feed.link);
+					$("#feedform #persistDays").val(feed.persistDays);
+					
+					feed.yakCatNameArray.forEach(function(cat){
+						$("#pillYakcat").show();
+						$("#pillYakcat ul").append("<li class='yakcat-val' data-value='id'>"+cat+"</li>");
+						//$('#feedForm #yakcat').val('').focus();
+
+					});
+						
 					/*
 					$("#feedform #licence").val(feed.licence);
 					$("#feedform #origine").val(feed.origin);
@@ -391,6 +400,9 @@ mixin list()
 
 
 		
+
+
+
 
 
 

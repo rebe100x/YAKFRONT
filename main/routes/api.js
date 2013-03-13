@@ -196,6 +196,7 @@ exports.findZoneById = function (req, res) {
 exports.cats = function (req, res) {
 	var Yakcat = db.model('Yakcat');
 	Yakcat.findAll(function (err, docs){
+		console.log(docs);
 	  if(!err)
 	  	res.json({meta:{code:200},data:{cats:docs}});
 	  else

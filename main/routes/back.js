@@ -415,17 +415,7 @@ exports.gridPlaces = function (req, res) {
 };
 
 
-/********* 
-#CATS
-*********/
-exports.cats = function (req, res) {
-	var Yakcat = db.model('Yakcat');
-	Yakcat.findAll(function (err, docs){
-	  res.json({
-		cats: docs
-	  });
-	});
-};
+
 
 
 /******* 
