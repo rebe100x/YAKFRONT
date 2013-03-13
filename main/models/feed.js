@@ -40,6 +40,7 @@ var Feed = new Schema({
 	,licence : String
 	,yakCatNameArray : [String]
 	,yakCatId : [String]
+	,tag : [String]
 	,persistDays : Number
 	,defaultPlaceId : Schema.ObjectId
 	,location	: { type : { lat: Number, lng: Number }, index : '2d',required: true}

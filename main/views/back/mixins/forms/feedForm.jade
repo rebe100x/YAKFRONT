@@ -28,10 +28,10 @@ mixin feedForm()
 					input(type='text', name='licence', id='licence', placeholder='Licence')
 				.col
 					label Combien de temps l info restera sur le front ?
-					div.select.btn-group#persistDays(data-resize="auto")
-						button.btn.dropdown-toggle(data-toggle="dropdown")
-							span.dropdown-label Jours de persistence
-							span.caret
+					div.input-append.dropdown.combobox#persistDays
+						input(type='text', placeholder="Jours de persistence")
+						button.btn(data-toggle="dropdown")
+							i.caret
 						ul.dropdown-menu
 							li(data-value="1")
 								a(href="") 1 jour
@@ -40,25 +40,28 @@ mixin feedForm()
 							li(data-value="3")
 								a(href="") 3 jours
 							li(data-value="7")
-								a(href="") Une semaine
+								a(href="") 1 semaine
 							li(data-value="30")
-								a(href="") Un mois
+								a(href="") 1 mois
 							li(data-value="90")
 								a(href="") 3 mois
 							li(data-value="365")
-								a(href="") Un and
+								a(href="") 1 an
 		
 		div.control-group#dataGroup.clearBoth
 			div.controls	
 				.col
 					label(for='category') Thèmes
-					input(type="text", data-provide="typeahead", id="yakcat", name="yakcat", autocomplete="off", placeholder='Un ou plusieurs thèmes')
+					input#yakcat(type="text", data-provide="typeahead", name="yakcat", autocomplete="off", placeholder='Un ou plusieurs thèmes')
 					.pillbox#pillYakcat(style="display:none")
 						ul
 				.col
 					label Free Tags
-					input#freetag(type="text", name="freetag",placeholder='Free tags séparés par des virgules')	
-										
+					.input-append
+						input#freetag(type="text", data-provide="typeahead", name="freetag", autocomplete="off", placeholder='Tags')
+						button.btn#btn-freetag-adder(type="button") Ajouter	
+					.pillbox#pillFreetag(style="display:none")
+						ul						
 
 		div.control-group#locationGroup.clearBoth
 			.col
@@ -85,7 +88,7 @@ mixin feedForm()
 		div.control-group#parsingGroup.clearBoth
 			.col
 				label Type de flux
-				div.select.btn-group#yakType(data-resize="auto")
+				div.select.btn-group#feedType(data-resize="auto")
 					button.btn.dropdown-toggle(data-toggle="dropdown")						
 						span.dropdown-label Type de flux
 						span.caret
@@ -110,7 +113,21 @@ mixin feedForm()
 					
 
 		div.control-group#statusGroup.clearBoth
-			div.controls
+			.col
+				div.select.btn-group#feedType(data-resize="auto")
+					button.btn.dropdown-toggle(data-toggle="dropdown")						
+						span.dropdown-label Type de flux
+						span.caret
+					ul.dropdown-menu
+						li(data-value="1")
+							a(href="") Actu
+						li(data-value="2")
+							a(href="") Agenda
+						li(data-value="3")
+							a(href="") Infos Pratiques
+						li(data-value="4")
+							a(href="") Discussion
+			.col
 				label.radio.inline Actif
 					input#option1(type="radio", name="status", value="1")
 				label.radio.inline Inactif
@@ -120,27 +137,48 @@ mixin feedForm()
 			div.controls
 				button.btn.btn-large.btn-inverse(type='submit', name='submit', id='submit', value='Enregistrer') Enregistrer
 
-
+			
 	script
 
 		$(document).ready(function() {
+			$('#btn-freetag-adder').on('click',function(event){
+				event.preventDefault();
+				alert('e');
+				//$("#pillFreetag ul").append("<li class='freetag-val' data-value='null'>"+$('#freetag').val()+"</li>");
+				//$('#freetag').val('').focus();
+				//return false;
+			});	
 			$('#yakcat').typeahead({
-						minLength : 3,
-						source: function (typeahead, query) {
-							$.ajax({
-									dataType: "json",
-									url: "/api/cats",				
-									success: function( ajax ) {
+				minLength : 3,
+				source: function (typeahead, query) {
+					$.ajax({
+							dataType: "json",
+							url: "/api/cats",				
+							success: function( ajax ) {
+								typeahead.process(ajax.data.cats);
+							}
+						})},
+				property: "title",
+				onselect: function(obj) { 
+					$("#pillYakcat ul").append("<li class='yakcat-val' data-value='"+obj._id+"'>"+obj.title+"</li>");
+				}
+			});
 
-										console.log(ajax);
-										typeahead.process(ajax.data.cats);
-									}
-								})},
-						property: "title",
-						onselect: function(obj) { 
-							console.log(obj);
-						}
-					});
+			$('#freetag').typeahead({
+				minLength : 3,
+				source: function (typeahead, query) {
+					$.ajax({
+							dataType: "json",
+							url: "/api/tags",				
+							success: function( ajax ) {
+								typeahead.process(ajax.data.tags);
+							}
+						})},
+				property: "title",
+				onselect: function(obj) { 
+					$("#pillFreetag ul").append("<li class='freetag-val' data-value='"+obj._id+"'>"+obj.title+"</li>");
+				}
+			});
 
 			// bind 'myForm' and provide a simple callback function
 			$('#feedForm').ajaxForm(function() {

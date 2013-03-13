@@ -762,7 +762,7 @@ var Tag = new Schema({
 }, { collection: 'tag' });
 
 Tag.statics.findAll = function (callback) {
-  return this.find({},{},{sort:{lastUsageDate:1}}, callback);
+  return this.find({},{},{sort:{numUsed:-1,lastUsageDate:-1,title:1}}, callback);
 }
 
 Tag.statics.getHotTags = function (x,y,z,d,print,callback) {

@@ -101,6 +101,7 @@ app.get('/api/users', back.users);
 app.get('/api/feed/:id', back.findFeedById);
 app.get('/api/cats/:id', back.catsById);
 app.get('/api/cats', api.cats);
+app.get('/api/tags', api.tags);
 app.get('/api/places', back.places);
 app.get('/api/places/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status', back.gridPlaces);
 app.get('/api/places/:id', back.findPlaceById);

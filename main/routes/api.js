@@ -196,7 +196,6 @@ exports.findZoneById = function (req, res) {
 exports.cats = function (req, res) {
 	var Yakcat = db.model('Yakcat');
 	Yakcat.findAll(function (err, docs){
-		console.log(docs);
 	  if(!err)
 	  	res.json({meta:{code:200},data:{cats:docs}});
 	  else
@@ -232,7 +231,7 @@ exports.catsandtags = function (req, res) {
 
 
 /********************************************
-* TAGS
+* 
 ***********************************************/
 exports.findUserById = function (req, res) {
 	var User = db.model('User');
@@ -282,6 +281,15 @@ exports.getHotTags = function(req,res){
 	}); 
 }
 
+exports.tags = function (req, res) {
+	var Tag = db.model('Tag');
+	Tag.findAll(function (err, docs){
+	  if(!err)
+	  	res.json({meta:{code:200},data:{tags:docs}});
+	  else
+	  	res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+	});
+};
 
 /*********************************************
 *FAVPLACE
