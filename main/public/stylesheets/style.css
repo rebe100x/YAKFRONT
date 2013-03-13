@@ -109,7 +109,7 @@
 
 /*MAP TOP CONTROLLER*/
 #newsfeedContainer #boxOpener{position: relative;text-align: center; font-weight:bold;line-height:18px;color:white;background-color:#D8242B;cursor:pointer} 
-#newsfeedContainer{position:relative;overflow:auto;height:auto;margin: 10px 5px 0 0;opacity:0.95; overflow-x: hidden;}
+#newsfeedContainer{position:relative;overflow:auto;height:auto;margin: 14px -20px 0 0;opacity:0.95; overflow-x: hidden;}
 
 #newsfeedMenu #searchBox { position: relative;text-align: center; height: 28px;}
 
@@ -173,7 +173,7 @@
 .mapHighlighterDetails{display:block;}
 ul#newsfeed{display:block;list-style-type:none;width:100%;margin:0px auto;padding:0px 0px;position:relative;opacity:1;z-index:2000;background:#FFFFFF;}
 ul#newsfeed li{width:100%;}
-ul#newsfeed li.highlighted .mapHighlighter{background-color:#F6F6F6; width: 94%; margin-left: 1%;}
+ul#newsfeed li.highlighted .mapHighlighter{background-color:#F6F6F6; width: 99%; margin-left: 1%;}
 
 ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: both; padding-left: 3px; padding-right: 3px;}
 .infowindow .myitem {clear: both; position: relative; top: 12px; text-align: justify;}
@@ -221,7 +221,7 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 
 .infowindow .infodetail{float:left;width:100%;font-style:italic;font-size:0.8em;line-height: 1.5em; clear: both;}
 .infowindow .infodetail a{color:#0C0C0C;}
-.infowindow .icon-remove { float: right; clear: both;  position: absolute; right: -2px;top:-10px;}
+.infowindow .icon-remove { float: right; clear: both;  position: absolute; right: -15px;top:0px;}
 
 
 
@@ -649,7 +649,7 @@ width: 270px;
  .searchYakwala .customInput{ width: 250px; margin-top: 6px; float: left; margin-left: 6px;}
  .searchYakwala #tagSelectorTrigger, .searchYakwala #rangeSelectorTrigger { margin-top: 10px;}
  .searchYakwala #zoneLocButton { margin-top: 18px;}
- .searchYakwala #btnMesalertes { margin-top: 18px;}
+ .searchYakwala #btnMesalertes { margin-top: 18px; position: relative;}
    .timeIcon { position: relative; top: -14px; }
    .filterIcon { position: relative; top: 15px}
    #heatSelector { position:  relative; left: 23px; bottom: 6px; margin-right: 45px;}
