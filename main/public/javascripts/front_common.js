@@ -423,7 +423,20 @@ function correctPlaceholder()
       }
     });
 }
+
+function preload(arrayOfImages) {
+    $(arrayOfImages).each(function(){
+        $('<img/>')[0].src = this;
+    });
+}
+
 $(document).ready(function() {
+
+	preload([
+    '/images/yakwala_sprite.png',
+    '/images/yakwala_sprite-medium.png'
+	]);
+
 	$("#newsfeedContent").mCustomScrollbar({
 		set_width:false, /*optional element width: boolean, pixels, percentage*/
 		set_height:false, /*optional element height: boolean, pixels, percentage*/
