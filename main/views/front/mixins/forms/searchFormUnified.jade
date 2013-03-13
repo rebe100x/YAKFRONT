@@ -81,7 +81,7 @@ mixin searchFormUnified(page)
 				$("#closehideSearch").click(function(){
 					$(".searchYakwala ul").slideToggle(function(){
 						drawNewsFeed();
-						
+
 					});
 
 
@@ -302,7 +302,15 @@ mixin searchFormUnified(page)
 					else
 					{
 						//for testing reasons only on discussions
-						yakType = ["1", "2", "4"];
+						if($(this).hasClass('active')){
+							yakType = ["1", "2", "4"];
+						}
+						else
+						{
+							yakType = ["1", "2"];	
+						}
+						
+
 					}
 				}
 				$.cookie("yaktype", yakType.join(','),{ expires: 10000, path : '/' });
