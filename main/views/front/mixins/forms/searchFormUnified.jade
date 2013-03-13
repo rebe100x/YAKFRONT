@@ -79,7 +79,11 @@ mixin searchFormUnified(page)
 		$(document).ready(function(){
 
 				$("#closehideSearch").click(function(){
-					$(".searchYakwala ul").slideToggle();
+					$(".searchYakwala ul").slideToggle(function(){
+						drawNewsFeed();
+					});
+
+
 				});
 				
 				//alert($.cookie("yaktype"));
