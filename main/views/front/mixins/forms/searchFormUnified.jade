@@ -33,6 +33,11 @@ mixin searchFormUnified(page)
 			li.rightPull
 				span.btn#btnMesalertes(title="Mes alertes", type=5, onclick='setAlert(this)')
 
+	div#closehideSearch
+		span.btn
+			|open/close
+
+
 
 	script
 		var psClick = 0;
@@ -72,6 +77,10 @@ mixin searchFormUnified(page)
 
 
 		$(document).ready(function(){
+
+				$("#closehideSearch").click(function(){
+					$(".searchYakwala ul").slideToggle();
+				});
 				
 				//alert($.cookie("yaktype"));
 				//if($.cookie("yaktype") == "5")
