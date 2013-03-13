@@ -220,6 +220,8 @@ mixin list()
 			res += 	'<div class="text-info"><i class="' + icon + ' status" title="' + title_icon + '" ></i>' + item.humanName + '</div>';
 
 			res += '</span>';
+
+			console.log(res);
 			return res;
 		}
 
@@ -255,7 +257,7 @@ mixin list()
 
 		
 		// Edit Feed function
-		$("#MyGrid").on('click','.editFeed', function(event)
+		$("#MyGrid").unbind("click").on('click','.editFeed', function(event)
 		{
 			alert(this.id);
 			event.preventDefault();
