@@ -494,7 +494,7 @@ mongoose.model('Info', Info);
 var User = new Schema({
 	name	: { type: String, index: true}
 	, bio	: { type: String}
-    , mail	: { type: String, required: true, index: true}
+    , mail	: { type: String, required: false, index: true}
 	, web	: { type: String}
 	, tag	: { type: [String], index: true}
 	, thumb	: { type: String, default:'no-user.png'}

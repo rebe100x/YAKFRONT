@@ -4,12 +4,11 @@ mixin feedForm()
 	form#feedform.yakForm(action='/feed', method='POST', enctype='multipart/form-data', style='display:none')
 		input#yakcatInput(type='hidden', name='yakcatInput', value='')
 		input#yakcatNames(type='hidden', name='yakcatNames', value='')
-		input#feedInput(type='hidden', name='feedInput', value='')
+		input#address(type='hidden', name='address', value='')
 		input#latitude(type="hidden", name="latitude")
 		input#longitude(type="hidden", name="longitude")
 		input#update(type="hidden", name="update", value='0')
 		input#objid(type="hidden", name="objid", value='0')
-		input#hiddenOrigin(type="hidden", name="hiddenOrigin", value='0')
 
 		legend Ajouter un flux
 		div.control-group.error
@@ -27,42 +26,56 @@ mixin feedForm()
 					label Licence:
 					input(type='text', name='licence', id='licence', placeholder='Licence')
 				.col
-					label Combien de temps l info restera sur le front ?
+					label Combien de jours l info restera sur le front ?
 					div.input-append.dropdown.combobox#persistDays
 						input(type='text', placeholder="Jours de persistence")
 						button.btn(data-toggle="dropdown")
 							i.caret
 						ul.dropdown-menu
 							li(data-value="1")
-								a(href="") 1 jour
+								a(href="") 1
 							li(data-value="2")
-								a(href="") 2 jours
+								a(href="") 2
 							li(data-value="3")
-								a(href="") 3 jours
+								a(href="") 3
 							li(data-value="7")
-								a(href="") 1 semaine
+								a(href="") 7
 							li(data-value="30")
-								a(href="") 1 mois
+								a(href="") 30
 							li(data-value="90")
-								a(href="") 3 mois
+								a(href="") 90
 							li(data-value="365")
-								a(href="") 1 an
+								a(href="") 365
 		
+		legend Metadata:		
+		div.control-group#statusGroup.clearBoth
+			.col
+				label Type d info:
+				label.radio.inline Actu
+					input(type="radio", name="yakType", value="1")
+				label.radio.inline Agenda
+					input(type="radio", name="yakType", value="2")
+				label.radio.inline Info pratiques
+					input(type="radio", name="yakType", value="3")
+			
 		div.control-group#dataGroup.clearBoth
 			div.controls	
 				.col
-					label(for='category') Thèmes
-					input#yakcat(type="text", data-provide="typeahead", name="yakcat", autocomplete="off", placeholder='Un ou plusieurs thèmes')
+					label(for='category') Catégories
+					input#yakcat(type="text", data-provide="typeahead", name="yakcat", autocomplete="off", placeholder='Chercher une catégorie...')
 					.pillbox#pillYakcat(style="display:none")
 						ul
 				.col
-					label Free Tags
+					label Tags
 					.input-append
-						input#freetag(type="text", data-provide="typeahead", name="freetag", autocomplete="off", placeholder='Tags')
+						input#freetag(type="text", data-provide="typeahead", name="freetag", autocomplete="off", placeholder='Entrer un tag...')
 						button.btn#btn-freetag-adder(type="button") Ajouter	
 					.pillbox#pillFreetag(style="display:none")
 						ul						
+		
 
+			
+		legend Localisation:						
 		div.control-group#locationGroup.clearBoth
 			.col
 				label(for='Place') Localisation du flux
@@ -70,27 +83,26 @@ mixin feedForm()
 					input(type="text",data-provide="typeahead", id="place", name="place", autocomplete="off", placeholder="Chercher une ville, département, ou région")
 			.col
 				label Si l'info n'est pas géolocalisée...	
-				div.select.btn-group#defaultPrintFlag(data-resize="auto")
-					button.btn.dropdown-toggle(data-toggle="dropdown")
-						span Si l'info n'est pas géolocalisée... 
-						span.dropdown-label
-						span.caret
+				
+				div.input-append.dropdown.combobox#defaultPrintFlag
+					input(type='text', placeholder="Si l'info n'est pas géolocalisée... ")
+					button.btn(data-toggle="dropdown")
+						i.caret	
 					ul.dropdown-menu
 						li(data-value="0")
-							a(href="") ... ne pas l afficher sur la carte mais l afficher sur le fil info au point défini par défaut
+							a(href="") ... ne pas afficher sur la carte mais afficher sur le fil info
 						li(data-value="1")
-							a(href="") ... l afficher sur la carte et le fil info au point défini par défaut
+							a(href="") ... afficher sur la carte + fil info
 						li(data-value="3")
 							a(href="") ... ne pas afficher l info du tout
 						li(data-value="2")
-							a(href="") ... placer l info au point défini par défaut sans chercher à la géolocaliser
-		
+							a(href="") ... ne pas faire de géoloc et la placer au point par défaut
+		legend Parsing:
 		div.control-group#parsingGroup.clearBoth
-			.col
-				label Type de flux
-				div.select.btn-group#feedType(data-resize="auto")
-					button.btn.dropdown-toggle(data-toggle="dropdown")						
-						span.dropdown-label Type de flux
+			label Type de flux : 
+				div.select.btn-group#feedType
+					button.btn.dropdown-toggle(data-toggle="dropdown")
+						span.dropdown-label Type de flux 
 						span.caret
 					ul.dropdown-menu
 						li(data-value="RSS")
@@ -99,12 +111,16 @@ mixin feedForm()
 							a(href="") CSV
 						li(data-value="YAKMADE")
 							a(href="") YAKMADE
-			.col	
-				label Source(s)
-				.input-append	
-					input(type='text', name='source', id='source', placeholder='source')
-					button.btn#btn-place-adder(type="button") Ajouter
-		
+
+				
+				
+			label Source(s)
+			.input-append	
+				input.big(type='text', name='source', id='source', placeholder='source')
+				button.btn#btn-source-adder(type="button") Ajouter
+			.pillbox#pillSource(style="display:none")
+				ul	
+	
 		div.control-group#parsingGroup.clearBoth
 				label &nbsp;
 				button.btn.btn-primary.btn-warning(type='button', name='parsing', id='parsing') Définir le parsing
@@ -112,26 +128,12 @@ mixin feedForm()
 					
 					
 
-		div.control-group#statusGroup.clearBoth
-			.col
-				div.select.btn-group#feedType(data-resize="auto")
-					button.btn.dropdown-toggle(data-toggle="dropdown")						
-						span.dropdown-label Type de flux
-						span.caret
-					ul.dropdown-menu
-						li(data-value="1")
-							a(href="") Actu
-						li(data-value="2")
-							a(href="") Agenda
-						li(data-value="3")
-							a(href="") Infos Pratiques
-						li(data-value="4")
-							a(href="") Discussion
-			.col
+		div.control-group
+			div.controls
 				label.radio.inline Actif
-					input#option1(type="radio", name="status", value="1")
+					input(type="radio", name="status", value="1")
 				label.radio.inline Inactif
-					input#option4(type="radio", name="status", value="0")
+					input(type="radio", name="status", value="0")	
 							
 		div.control-group
 			div.controls
@@ -141,12 +143,14 @@ mixin feedForm()
 	script
 
 		$(document).ready(function() {
+
+			$('#feedform input:radio[name=yakType]').click();
+
 			$('#btn-freetag-adder').on('click',function(event){
 				event.preventDefault();
-				alert('e');
-				//$("#pillFreetag ul").append("<li class='freetag-val' data-value='null'>"+$('#freetag').val()+"</li>");
-				//$('#freetag').val('').focus();
-				//return false;
+				$("#pillFreetag ul").append("<li class='freetag-val' data-value='null'>"+$('#freetag').val()+"</li>");
+				$('#freetag').val('').focus();
+				return false;
 			});	
 			$('#yakcat').typeahead({
 				minLength : 3,
@@ -160,10 +164,12 @@ mixin feedForm()
 						})},
 				property: "title",
 				onselect: function(obj) { 
-					$("#pillYakcat ul").append("<li class='yakcat-val' data-value='"+obj._id+"'>"+obj.title+"</li>");
+					$("#pillYakcat ul").append("<li class='yakcat-val status-important' data-value='"+obj._id+"'>"+obj.title+"</li>");
+					$('#yakcat').val('').focus();
 				}
 			});
-			/*
+
+			
 			$('#freetag').typeahead({
 				minLength : 3,
 				source: function (typeahead, query) {
@@ -176,9 +182,50 @@ mixin feedForm()
 						})},
 				property: "title",
 				onselect: function(obj) { 
-					$("#pillFreetag ul").append("<li class='freetag-val' data-value='"+obj._id+"'>"+obj.title+"</li>");
+					$("#pillFreetag ul").append("<li class='freetag-val status-info' data-value='"+obj._id+"'>"+obj.title+"</li>");
+					$('#freetag').val('').focus();
 				}
-			});*/
+			});
+
+			$('#btn-source-adder').unbind('click').on('click',function(){
+				$("#pillSource").show();
+				$("#pillSource ul").append("<li class='source-val status-warning' data-value='"+$('#source').val()+"'>"+$('#source').val()+"</li>");
+				$('#pillSource').val('').focus();
+			});
+
+			
+
+			/*Place autocomplete*/
+
+			var input = document.getElementById('place');
+			$('#place').on('focus',function(){$(this).val('');});
+			var autocomplete = new google.maps.places.Autocomplete(input);
+			autocomplete.bindTo('bounds', map);
+			google.maps.event.addListener(autocomplete, 'place_changed', function() {
+				infowindow.close();
+				$('#placeForm #btn-place-adder').click();
+				var place = autocomplete.getPlace();
+				if (!place.geometry) {
+					// Inform the user that the place was not found and return.
+					input.className = 'notfound';
+					return;
+				}
+
+				// If the place has a geometry, then present it on a map.
+				if (place.geometry.viewport) {
+					map.fitBounds(place.geometry.viewport);
+				} else {
+					map.setCenter(place.geometry.location);
+					map.setZoom(17);  // Why 17? Because it looks good.					
+					$("#feedform #longitude").val(place.geometry.location.Za);
+					$("#feedform #latitude").val(place.geometry.location.Ya);
+					$("#feedform #address").val(place.formatted_address);
+					
+				}
+				markerLocation.setPosition(place.geometry.location);
+
+			});
+
 
 			/*// bind 'myForm' and provide a simple callback function
 			$('#feedForm').ajaxForm(function() {
