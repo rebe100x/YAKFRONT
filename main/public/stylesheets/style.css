@@ -858,6 +858,7 @@ width: 270px;
 #closehideSearch { clear: both; float: left; cursor: pointer; height: 1px; width: 100%; text-align: left; background-color: #272727; color: #BB141A}
 #closehideSearch .btn { position: relative; left: -1px; background: #BB141A; top: -5px; color: white}
 #dayPrinter, #localnessPrinter, #tagSelectorTrigger { color: #898989;}
+.searchYakwala #searchBtn { display: none;}
 
 
 
