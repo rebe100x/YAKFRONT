@@ -170,6 +170,8 @@ block content
 
 			$('#btn-alert-adder').click(function(){
 				var tag = $('#alert').val();
+				if($.trim(tag) == "")
+					return;
 				$("label[for='alert']").after("<div><i class='icon-remove icon-pointer'  onclick='tagsubsArray.cleanArrayByname(\""+tag+"\");$(\"#tagsubsInput\").val(JSON.stringify(tagsubsArray));$(this).parent().remove();'></i> "+tag+"</div>");
 				$('#alert').val('').focus();
 				tagsubsArray.push(tag);

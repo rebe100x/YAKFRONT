@@ -413,10 +413,10 @@ width: 270px;
 	#feedlink:hover { background-position: 108px -62px;}
 
 	#addLink { width: 51px; height: 51px; background-color: red; display: block; float: left; background-image: url('/images/yakwala_sprite.png'); background-position: 0px 0px; margin-top: 6px; margin-left: 6px; margin-bottom: 6px;}
-	#addLink:hover { background-position: -59px 0px;}
+	#addLink:hover, #addLink.activated { background-position: -59px 0px;}
 
 	#addLink { width: 51px; height: 51px; display: block; float: left; background-image: url('/images/yakwala_sprite.png'); background-position: 0px 0px; margin-top: 6px; margin-left: 6px; margin-bottom: 6px;}
-	#addLink:hover { background-position: -59px 0px;}
+	#addLink:hover, #addLink.activated { background-position: -59px 0px;}
 
 	#logoLink { width: 120px; height: 58px; display: block; float: none; background-image: url('/images/yakwala_sprite.png'); background-position: 0px -190px; margin: 0 auto;}
 
@@ -452,10 +452,10 @@ width: 270px;
 	#feedlink:hover { background-position: 108px -62px;}
 
 	#addLink { width: 51px; height: 51px; background-color: red; display: block; float: left; background-image: url('/images/yakwala_sprite.png'); background-position: 0px 0px; margin-top: 6px; margin-left: 6px; margin-bottom: 6px;}
-	#addLink:hover { background-position: -59px 0px;}
+	#addLink:hover, #addLink.activated { background-position: -59px 0px;}
 
 	#addLink { width: 51px; height: 51px; display: block; float: left; background-image: url('/images/yakwala_sprite.png'); background-position: 0px 0px; margin-top: 6px; margin-left: 6px; margin-bottom: 6px;}
-	#addLink:hover { background-position: -59px 0px;}
+	#addLink:hover, #addLink.activated { background-position: -59px 0px;}
 
 	#logoLink { width: 120px; height: 58px; display: block; float: none; background-image: url('/images/yakwala_sprite.png'); background-position: 0px -190px; margin: 0 auto;}
 
@@ -491,10 +491,10 @@ width: 270px;
 	#feedlink:hover { background-position: 108px -62px;}
 
 	#addLink { width: 51px; height: 51px; background-color: red; display: block; float: left; background-image: url('/images/yakwala_sprite.png'); background-position: 0px 0px; margin-top: 6px; margin-left: 6px; margin-bottom: 6px;}
-	#addLink:hover { background-position: -59px 0px;}
+	#addLink:hover, #addLink.activated { background-position: -59px 0px;}
 
 	#addLink { width: 51px; height: 51px; display: block; float: left; background-image: url('/images/yakwala_sprite.png'); background-position: 0px 0px; margin-top: 6px; margin-left: 6px; margin-bottom: 6px;}
-	#addLink:hover { background-position: -59px 0px;}
+	#addLink:hover, #addLink.activated { background-position: -59px 0px;}
 
 	#logoLink { width: 120px; height: 58px; display: block; float: none; background-image: url('/images/yakwala_sprite.png'); background-position: 0px -190px; margin: 0 auto;}
 
@@ -529,10 +529,10 @@ width: 270px;
 	#feedlink:hover { background-position: -30px -31px;}
 
 	#addLink { width: 26px; height: 26px; display: block; float: left; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 0px 0px; margin-top: 6px; margin-left: 6px; margin-bottom: 6px;}
-	#addLink:hover { background-position: -30px 0px;}
+	#addLink:hover, #addLink.activated { background-position: -30px 0px;}
 
 	#addLink { width: 26px; height: 26px; display: block; float: left; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 0px 0px; margin-top: 6px; margin-left: 6px; margin-bottom: 6px;}
-	#addLink:hover { background-position: -30px 0px;}
+	#addLink:hover, #addLink.activated { background-position: -30px 0px;}
 
 	#logoLink { width: 60px; height: 29px; display: block; float: none; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 0px -96px; margin: 0 auto;}
 
@@ -576,10 +576,10 @@ width: 270px;
 	#feedlink:hover { background-position: -30px -31px;}
 
 	#addLink { width: 26px; height: 26px; display: block; float: left; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 0px 0px; margin-top: 6px; margin-left: 6px; margin-bottom: 6px;}
-	#addLink:hover { background-position: -30px 0px;}
+	#addLink:hover, #addLink.activated { background-position: -30px 0px;}
 
 	#addLink { width: 26px; height: 26px; display: block; float: left; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 0px 0px; margin-top: 6px; margin-left: 6px; margin-bottom: 6px;}
-	#addLink:hover { background-position: -30px 0px;}
+	#addLink:hover, #addLink.activated { background-position: -30px 0px;}
 
 	#logoLink { width: 60px; height: 29px; display: block; float: none; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 0px -96px; margin: 0 auto;}
 
@@ -623,10 +623,10 @@ width: 270px;
 	#feedlink:hover { background-position: -30px -31px;}
 
 	#addLink { width: 26px; height: 26px; display: block; float: left; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 0px 0px; margin-top: 6px; margin-left: 6px; margin-bottom: 6px;}
-	#addLink:hover { background-position: -30px 0px;}
+	#addLink:hover, #addLink.activated { background-position: -30px 0px;}
 
 	#addLink { width: 26px; height: 26px; display: block; float: left; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 0px 0px; margin-top: 6px; margin-left: 6px; margin-bottom: 6px;}
-	#addLink:hover { background-position: -30px 0px;}
+	#addLink:hover, #addLink.activated { background-position: -30px 0px;}
 
 	#logoLink { width: 60px; height: 29px; display: block; float: none; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 0px -96px; margin: 0 auto;}
 
@@ -668,10 +668,10 @@ width: 270px;
 	#feedlink:hover { background-position: -30px -31px;}
 
 	#addLink { width: 26px; height: 26px; display: block; float: left; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 0px 0px; margin-top: 6px; margin-left: 6px; margin-bottom: 6px;}
-	#addLink:hover { background-position: -30px 0px;}
+	#addLink:hover, #addLink.activated { background-position: -30px 0px;}
 
 	#addLink { width: 26px; height: 26px; display: block; float: left; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 0px 0px; margin-top: 6px; margin-left: 6px; margin-bottom: 6px;}
-	#addLink:hover { background-position: -30px 0px;}
+	#addLink:hover, #addLink.activated { background-position: -30px 0px;}
 
 	#logoLink { width: 60px; height: 29px; display: block; float: none; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 0px -96px; margin: 0 auto;}
 
@@ -712,10 +712,10 @@ width: 270px;
 	#feedlink:hover { background-position: -30px -31px;}
 
 	#addLink { width: 26px; height: 26px; display: block; float: left; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 0px 0px; margin-top: 6px; margin-left: 6px; margin-bottom: 6px;}
-	#addLink:hover { background-position: -30px 0px;}
+	#addLink:hover, #addLink.activated { background-position: -30px 0px;}
 
 	#addLink { width: 26px; height: 26px; display: block; float: left; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 0px 0px; margin-top: 6px; margin-left: 6px; margin-bottom: 6px;}
-	#addLink:hover { background-position: -30px 0px;}
+	#addLink:hover, #addLink.activated { background-position: -30px 0px;}
 
 	#logoLink { width: 60px; height: 29px; display: block; float: none; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 0px -96px; margin: 0 auto;}
 
@@ -859,6 +859,7 @@ width: 270px;
 #closehideSearch .btn { position: relative; left: -1px; background: #BB141A; top: -5px; color: white}
 #dayPrinter, #localnessPrinter, #tagSelectorTrigger { color: #898989;}
 .searchYakwala #searchBtn { display: none;}
+#addLink { cursor: pointer;}
 
 
 

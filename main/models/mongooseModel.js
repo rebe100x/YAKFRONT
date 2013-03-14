@@ -577,7 +577,8 @@ User.statics.format = function (theuser) {
 		feedsubs:theuser.feedsubs,
 		tagsubs:theuser.tagsubs,
 		twitter_screen_name: theuser.twitter_screen_name,
-		createfrom_social: theuser.createfrom_social
+		createfrom_social: theuser.createfrom_social,
+		status: theuser.status
 	};
   return formattedUser;
 }

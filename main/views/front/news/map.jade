@@ -83,38 +83,7 @@ block content
 		$(document).ready(function() {
 			if(gup("post") == 1)
 			{
-				var el = $("#newsPost").parent();
-				if(!$(el).hasClass('active')){
-					$('#newsNav li').removeClass('active');	
-					$(el).addClass('active');
-					var contentToLoad = $(el).attr('contentToLoad');
-					
-					$('.tabContent').hide();
-					$('#'+contentToLoad).fadeIn();	
-					
-					if(contentToLoad == "newspostContent"){
-						// INIT MARKERLOCATION
-						
-						listenerHandle = google.maps.event.addListener(map, 'click', function(event) {
-							getformattedAddress(event.latLng);
-							placeMarker(event.latLng,markerLocation);
-							google.maps.event.addListener(markerLocation, 'dragend', function() {
-								cleanMarkers();
-								var position = markerLocation.getPosition();
-								$('#latitude').val(position.lat());	
-								$('#longitude').val(position.lng());	
-								
-								getformattedAddress(position);
-								
-							});		
-						});
-					}
-					else{
-						google.maps.event.removeListener(listenerHandle);
-						markerLocation.setVisible(false);
-					}
-				}
-					drawNewsFeed();
+				showPostForm();
 			}
 				
 			$('#searchBtn').click(function(){

@@ -398,6 +398,7 @@ function setTimeSliderText(y){
 
 		
 /*READY FUNCTIONS*/	
+
 function correctPlaceholder()
 {
 	 $("input").each(function(){
@@ -430,12 +431,85 @@ function preload(arrayOfImages) {
     });
 }
 
+function  showPostForm()
+{
+	var el = $("#newsPost").parent();
+	if(!$(el).hasClass('active')){
+		$('#newsNav li').removeClass('active');	
+		$(el).addClass('active');
+		var contentToLoad = $(el).attr('contentToLoad');
+		
+		$('.tabContent').hide();
+		$('#'+contentToLoad).fadeIn();	
+		
+		if(contentToLoad == "newspostContent"){
+			// INIT MARKERLOCATION
+			
+			listenerHandle = google.maps.event.addListener(map, 'click', function(event) {
+				getformattedAddress(event.latLng);
+				placeMarker(event.latLng,markerLocation);
+				google.maps.event.addListener(markerLocation, 'dragend', function() {
+					cleanMarkers();
+					var position = markerLocation.getPosition();
+					$('#latitude').val(position.lat());	
+					$('#longitude').val(position.lng());	
+					
+					getformattedAddress(position);
+					
+				});		
+			});
+		}
+		else{
+			google.maps.event.removeListener(listenerHandle);
+			markerLocation.setVisible(false);
+		}
+	}
+		drawNewsFeed();
+}
+
+function  hidePostForm()
+{
+	var el = $("#newsFeed").parent();
+	if(!$(el).hasClass('active')){
+		$('#newsNav li').removeClass('active');	
+		$(el).addClass('active');
+		var contentToLoad = $(el).attr('contentToLoad');
+		
+		$('.tabContent').hide();
+		$('#'+contentToLoad).fadeIn();	
+		
+		if(contentToLoad == "newspostContent"){
+			// INIT MARKERLOCATION
+			
+			listenerHandle = google.maps.event.addListener(map, 'click', function(event) {
+				getformattedAddress(event.latLng);
+				placeMarker(event.latLng,markerLocation);
+				google.maps.event.addListener(markerLocation, 'dragend', function() {
+					cleanMarkers();
+					var position = markerLocation.getPosition();
+					$('#latitude').val(position.lat());	
+					$('#longitude').val(position.lng());	
+					
+					getformattedAddress(position);
+					
+				});		
+			});
+		}
+		else{
+			google.maps.event.removeListener(listenerHandle);
+			markerLocation.setVisible(false);
+		}
+	}
+		drawNewsFeed();
+}
+
 $(document).ready(function() {
 
 	preload([
     '/images/yakwala_sprite.png',
     '/images/yakwala_sprite-medium.png'
 	]);
+
 
 	$("#newsfeedContent").mCustomScrollbar({
 		set_width:false, /*optional element width: boolean, pixels, percentage*/

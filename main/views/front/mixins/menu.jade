@@ -59,6 +59,21 @@ mixin menu(active)
 		if(active == 'map')
 			script
 				$(document).ready(function(){
+					$("#addLink").removeAttr("href");
+
+					$("#addLink").click(function(){
+						if(!$(this).hasClass("activated"))
+						{
+							$(this).addClass("activated");
+							showPostForm();
+						}
+						else
+						{
+							$(this).removeClass("activated");
+							hidePostForm();
+						}
+						
+					});
 					try
 					{
 
@@ -152,8 +167,9 @@ mixin menu(active)
 		if(active == 'firstvisit')
 			script
 				$(document).ready(function(){
-					$("#feedlink").removeAttr("href");
-					$("#maplink").removeAttr("href");
+					$("#feedlink").remove();
+					$("#maplink").remove();
+					$("#addLink").remove();
 				});
 		
 		script
