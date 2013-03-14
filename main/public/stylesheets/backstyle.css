@@ -27,7 +27,7 @@
 .fuelux .yakForm input[type=text].small { width: 25%; }
 .fuelux .yakForm label.radio.inline { margin-right: 10px; }
 .fuelux .yakForm textarea {width: 85%;}
-.fuelux .yakForm legend { padding-left: 70px; margin-top: -35px; padding-bottom: 10px;}
+.fuelux .yakForm legend { padding-left: 35px; margin-top: -35px; padding-bottom: 0px;}
 .fuelux .yakForm .btn.btn-large {margin-top: 20px;}
 #MyGrid thead tr.headerControle {background: url(../images/texture.png) repeat; border: none;}
 #MyGrid thead td {border-top: none;}
@@ -35,6 +35,7 @@
 #MyGrid thead .searchPanel {background-color: rgba(255,255,255,0.6);}
 #MyGrid i.status {margin-right: 5px;}
 #MyGrid .liens {float: right; display: block;}
+#MyGrid .editFeed{cursor:pointer;}
 #MyGrid #iconSearchPanel {margin-top: -1px;}
 #MyGrid input#yakCat {display: inline;}
 #MyGrid .pillbox#yakCatFilter, #MyGrid input#userFilter, #MyGrid .pillbox#userFilter {display: inline-table; margin-top: 5px;}
