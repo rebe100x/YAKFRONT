@@ -91,6 +91,7 @@ app.get('/api/geoalerts/:x1/:y1/:x2/:y2/:ago/:now/:str/:limit/:skip', routes.req
 
 app.get('/api/zones/:x/:y', api.zones);
 app.get('/api/zones/:id', api.findZoneById);
+app.get('/api/tags', api.tags);
 app.get('/api/cats', api.cats);
 app.get('/api/findCatById', api.findCatById);
 app.get('/api/catsandtags/:x/:y/:z/:d/:print', api.catsandtags);

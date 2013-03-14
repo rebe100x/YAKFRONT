@@ -206,7 +206,7 @@ mixin list()
 			
 			res += "</div>";
 
-			res += '<a class="editFeed" id="' + item._id + '" href="#">';
+			res += '<span class="editFeed" id="' + item._id + '">';
 
 			if (item.status == 1) {
 				icon = 'icon-ok-sign';
@@ -217,9 +217,11 @@ mixin list()
 				title_icon = "Rejetée";
 			}
 
-			res += 	'<div class="text-info" '+ item.humanName + '><i class="' + icon + ' status" title="' + title_icon + '" ></i>' + item.humanName + '</div>';
+			res += 	'<div class="text-info"><i class="' + icon + ' status" title="' + title_icon + '" ></i>' + item.humanName + '</div>';
 
-			res += '</a>';
+			res += '</span>';
+
+			console.log(res);
 			return res;
 		}
 
@@ -254,13 +256,13 @@ mixin list()
 		}
 
 		
-
-
 		// Edit Feed function
-		$(".editFeed").live('click', function()
+		$("#MyGrid").unbind("click").on('click','.editFeed', function(event)
 		{
+			alert(this.id);
 			event.preventDefault();
-
+			event.stopPropagation();
+			
 			listenerHandle = google.maps.event.addListener(map, 'click', function(event) {
 				//getformattedAddress(event.latLng);
 				placeMarker(event.latLng,markerLocation);
@@ -277,6 +279,7 @@ mixin list()
 
 			$("#MyGrid").hide();
 			
+
 			// We remove the error class when we open a form for editing a place
 			$('#feedform #titleGroup').removeClass("error");
 			$('#feedform #contentGroup').removeClass("error");
@@ -295,7 +298,6 @@ mixin list()
 			$("#feedform #objid").val(this.id);
 
 			var url = '/api/feed/'+this.id;
-			console.log(url);
 			
 			// We search for the feed in mongo and we fill the form with the feed's values
 			$.ajax({
@@ -305,13 +307,26 @@ mixin list()
 				success: function (response)
 				{
 					var feed = response.feed;
-
-					var latlng = new google.maps.LatLng(feed.defaultPlaceLocation.lat, feed.defaultPlaceLocation.lng);
-					//getformattedAddress(latlng);
-					placeMarker(latlng,markerLocation);
-					map.setCenter(markerLocation.getPosition());
+					if(typeof feed.defaultPlaceLocation != 'undefined'){
+						var latlng = new google.maps.LatLng(feed.defaultPlaceLocation.lat, feed.defaultPlaceLocation.lng);
+						placeMarker(latlng,markerLocation);
+						map.setCenter(markerLocation.getPosition());
+					}
 					$("#feedform #humanName").val(feed.humanName);
-					$("#feedform span#XMLname").html(feed.name+'.xml');
+					$("#feedform #licence").val(feed.licence);
+					$("#feedform #link").val(feed.link);
+					$('#persistDays input').val($('#persistDays').find('li[data-value='+feed.persistDays+']').text());
+					feed.yakCatNameArray.forEach(function(cat){
+						$("#pillYakcat").show();
+						$("#pillYakcat ul").append("<li class='yakcat-val' data-value='id'>"+cat+"</li>");
+					});
+					
+					feed.tag.forEach(function(tag){
+						console.log(tag);
+						$("#pillFreetag").show();
+						$("#pillFreetag ul").append("<li class='freetag-val' data-value='id'>"+tag+"</li>");
+					});
+					
 					/*
 					$("#feedform #licence").val(feed.licence);
 					$("#feedform #origine").val(feed.origin);
@@ -391,6 +406,9 @@ mixin list()
 
 
 		
+
+
+
 
 
 

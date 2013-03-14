@@ -4,10 +4,19 @@ $(document).ready(function() {
 
 	
 	/* Detect browser */
+	/*
 	$.browser.chrome = /chrom(e|ium)/.test(navigator.userAgent.toLowerCase());
 	if(!$.browser.chrome){
 		$("#alertInfo").show();
 		$("#alertInfo span.alertText").html("Cette interface est omptimisée pour <a target='_blank' href='https://www.google.com/intl/fr/chrome/browser/?hl=fr'>Chrome</a>.");
+	}*/
+
+	var isChrome = window.chrome;
+	if(!isChrome) {
+
+		$("#alertInfo").show();
+		$("#alertInfo span.alertText").html("Cette interface est omptimisée pour <a target='_blank' href='https://www.google.com/intl/fr/chrome/browser/?hl=fr'>Chrome</a>.");
+	
 	}
 
 

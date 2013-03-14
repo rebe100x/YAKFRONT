@@ -3,7 +3,6 @@ block content
 	include ../mixins/menu.jade
 	include ../mixins/locationChooser.jade
 	include ../mixins/map.jade
-	include add.jade	
 	include list.jade
 	include ../mixins/forms/feedForm.jade
 	
@@ -11,7 +10,6 @@ block content
 
 	mixin menu('feed')
 	mixin locationChooser()
-
 
 	div.container-fluid
 		div.row-fluid
@@ -25,6 +23,7 @@ block content
 								button.close(type="button",data-dismiss="alert") x
 								strong= msg
 
-					div#newsfeedContainer	
+					div#newsfeedContainer
 						mixin list()
 						mixin feedForm()
+						
