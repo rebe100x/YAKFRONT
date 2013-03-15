@@ -120,7 +120,6 @@ app.get('/api/places/wait/:ids', back.waitPlaces);
 app.post('/api/favplace', back.addfavplace);
 app.post('/api/delfavplace', back.delfavplace);
 
-app.get('/test',function(req,res){res.render('index')});
 // redirect all others to the index (HTML5 history)
 app.get('*', back.index);
 
