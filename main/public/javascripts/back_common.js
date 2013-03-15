@@ -18,94 +18,10 @@ $(document).ready(function() {
 		$("#alertInfo span.alertText").html("Cette interface est omptimisée pour <a target='_blank' href='https://www.google.com/intl/fr/chrome/browser/?hl=fr'>Chrome</a>.");
 	
 	}
-
-
-		
-	
-	/*top locator button which pops up the locatorChooser popup*/
-	$('#zoneLocButton').click(function(){
-			$('#locationChooser .modal-body p.alertText').html("");
-			$('#locationChooser').modal('show');
-		});
-	/*locator pop up links*/	
-	//$('.zoneLoc').click(updateXY);
-
-	
-	
-	$('#favplace').typeahead({
-		minLength : 3,							
-		source: function (typeahead, query) {
-			
-			if(query.length > 3){
-				$("#favplace").addClass('searching');
-				console.log("encode"+encodeURIComponent(query));
-				console.log("nomal"+query);
-				/*
-				var urlgmap = "http://maps.googleapis.com/maps/api/geocode/json?address=%C3%A9gh%C3%A9z%C3%A9e&sensor=false";
-				$.post(urlgmap,function(data){
-					var results = JSON.parse(data);
-					if(results.status == 'OK')
-						typeahead.process(data);
-				});*/
-				
-				
-				var addressQuery = {"address": query ,"region":"fr","language":"fr"};
-				var geocoder = new google.maps.Geocoder();
-				geocoder.geocode( addressQuery, function(results, status) {
-				
-					if (status == google.maps.GeocoderStatus.OK) {
-						typeahead.process(results);
-					} 
-					
-					if(status == google.maps.GeocoderStatus.ZERO_RESULTS){}
-						
-					if( status == google.maps.GeocoderStatus.INVALID_REQUEST 
-						|| status == google.maps.GeocoderStatus.REQUEST_DENIED  
-						|| status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT){
-						var salt = new Date().getTime();
-						$('#favplace').before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide ("+status+")</div>");
-						setTimeout(function() {
-							$("#alert"+salt).fadeOut();
-						}, 3000);
-						$('#favplace').select();
-					}
-				});
-			}
-		},
-		property: "formatted_address",
-		onselect: function(obj) { 
-			$("#favplace").removeClass('searching');
-			var placeGmap = getPlaceFromGmapResult(obj);
-			var point = new Object();
-			point.name = placeGmap.title;
-			point.location = placeGmap.location;
-			$.post('api/favplace', {'place':point},function(id) {
-				$('#favplacelist').append("<li pointId='"+id+"' lat='"+placeGmap.location.lat+"' lng='"+placeGmap.location.lng+"' class='zoneLoc'><i class='icon-map-marker'></i><span> "+obj.formatted_address+"</span><i class='icon-remove icon-pointer'  onclick='removefavPlace($(this));'></i></li>");
-				$('#favplace').val('').focus();
-			});
-			
-			//var placeGmap = getPlaceFromGmapResult(obj);
-			
-			//$('#location').val(JSON.stringify(placeGmap.location));
-			//$('#address').val(JSON.stringify(placeGmap.address));
-		}
-	});
 });
 /*END READY FUNCTIONS*/
 
-function removefavPlace(obj){
-	console.log('REMOVE');
-	obj.parent().remove();
-	
-	$.post('api/delfavplace', {'pointId':obj.parent().attr('pointId')},function(data) {
-				
-				
-			});
-}
 
-function csl(str){
-	console.log(str);
-}
 
 Array.prototype.cleanArrayByName=function(str){
 	for(i=0;i<this.length;i++)
@@ -133,7 +49,6 @@ function moveMap(lat,lng){
 	curPos.y = lng;
 	$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000 });
 	var latLng = new google.maps.LatLng(lat,lng);
-	$('#locationChooser').modal('hide');
 	if($('#mymap').length > 0){ // only for the map page
 		google.maps.event.addDomListener(window, 'load', initialize(lat,lng,10)); 
 	}
@@ -170,7 +85,6 @@ function updateXY(){
 	
 	//console.log(curPos);
 			
-	$('#locationChooser').modal('hide');
 	
 	if($('#mymap').length > 0){ // only for the map page
 	// NOTE : initialize function is defined in map.jade and in new.jade : just a bit fifferent to deal the insertion
@@ -211,9 +125,8 @@ function getHTML5Pos(position) {
 		//TODO : if there are info visible where the user is, dont print the alert, just let him surf
 		// we are very far from any zone
 		if(data.zone.length == 0){
-			//console.log('not near area');
-			$('#locationChooser .modal-body p.alertText').html("Yakwala ne couvre pas encore votre zone géographique, vous pouvez choisir ci dessous votre zone de navigation :");
-			$('#locationChooser').modal('show');
+			console.log('not near area');
+			
 		}else{ // a zone is not far
 			var zone = new Object(data.zone[0]);
 			

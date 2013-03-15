@@ -56,7 +56,12 @@ mixin list()
 							button.btn.grid-nextpage
 								i.icon-chevron-right
 
+
 	script
+		
+
+		
+
 		var firstLoad = true;
 
 		var ApiDataSource = function (options) {
@@ -290,10 +295,11 @@ mixin list()
 				$("#pillFreetag ul").html('');
 				google.maps.event.removeListener(listenerHandle);
 				markerLocation.setVisible(false);					
-				$("#feedform input:hidden").val('');
+				$("#feedform input[type=hidden]").val('');
 			});
 
 			$("#feedform").show();
+			$("#feedform legend.mainlegend").html("Modifier un flux");
 			$(".catLabel").remove();
 			$("#pillYakcat ul").empty();
 			$('#err').hide();
@@ -336,23 +342,24 @@ mixin list()
 						$("#feedform #address").val(feed.defaultPlaceSearchName);
 						$("#feedform #place").val(feed.defaultPlaceSearchName);
 					}
-					$("#feedform #defaultPrintFlag input").val($('#feedform #defaultPrintFlag').find('li[data-value='+feed.defaultPrintFlag+']').text());
+					$("#feedform #defaultPrintFlag").val(feed.defaultPrintFlag);
 					
-					$("#feedform #feedType .dropdown-label").html($('#feedform #feedType').find('li[data-value="'+feed.feedType+'"]').text());
+					$("#feedform #feedType").val(feed.feedType);
+					
 
-					$('#feedform input:radio[name=yakType][value='+feed.yakType+']').attr("checked", true);
+					$('#feedform input:radio[name=yakType][value='+feed.yakType+']').attr("checked", true).trigger("change").button('refresh');
 					
 					
 					if(feed.fileSource.length>0){
 						$("#pillSource").show();
-						$("#pillSource ul").append("<li class='source-val status-warning' data-value='"+feed.fileSource+"'>"+feed.fileSource+"</li>");
+						$("#pillSource ul").append("<li class='source-val status-success' data-value='"+feed.fileSource+"'>"+feed.fileSource+"</li>");
 					}
 						
 					
 					feed.linkSource.forEach(function(source){
 						if(source.length>0){
 							$("#pillSource").show();
-							$("#pillSource ul").append("<li class='source-val status-warning' data-value='"+source+"'>"+source+"</li>");	
+							$("#pillSource ul").append("<li class='source-val status-success' data-value='"+source+"'>"+source+"</li>");	
 						}
 						
 					});
@@ -365,18 +372,27 @@ mixin list()
 					$("#feedform #humanName").focus();
 					
 
-					/*
-					if (feed.contact)
+					
+					if (feed.parsingTemplate)
 					{
-						$("#feedform #tel").val(feed.contact.tel);
-						$("#feedform #mobile").val(feed.contact.mobile);
-						$("#feedform #mail").val(feed.contact.mail);
-						$("#feedform #transportation").val(feed.contact.transportation);
-						$("#feedform #web").val(feed.contact.web);
-						$("#feedform #opening").val(feed.contact.opening);
-						$("#feedform #closing").val(feed.contact.closing);
-						$("#feedform #special").val(feed.contact.special_opening);
-					}*/
+						$("#feedform #infoTitle").val(feed.parsingTemplate.title);	
+						$("#feedform #infoContent").val(feed.parsingTemplate.content);	
+						$("#feedform #infoAddress").val(feed.parsingTemplate.address);	
+						$("#feedform #infoLatitude").val(feed.parsingTemplate.latitude);	
+						$("#feedform #infoLongitude").val(feed.parsingTemplate.longitude);	
+						$("#feedform #infoLink").val(feed.parsingTemplate.outGoingLink);	
+						$("#feedform #infoThumb").val(feed.parsingTemplate.thumb);	
+						$("#feedform #infoCat").val(feed.parsingTemplate.yakCats);	
+						$("#feedform #infoTag").val(feed.parsingTemplate.tag);	
+						$("#feedform #infoPlace").val(feed.parsingTemplate.place);	
+						$("#feedform #infoEventDate").val(feed.parsingTemplate.eventDate);	
+						$("#feedform #infoPubDate").val(feed.parsingTemplate.pubDate);	
+						$("#feedform #infoTel").val(feed.parsingTemplate.telephone);
+						$("#feedform #infoMail").val(feed.parsingTemplate.mail);
+						$("#feedform #infoTransportation").val(feed.parsingTemplate.transportation);
+						$("#feedform #infoWeb").val(feed.parsingTemplate.web);
+						$("#feedform #infoOpening").val(feed.parsingTemplate.opening);
+					}
 				}
 			});
 		});
@@ -412,7 +428,7 @@ mixin list()
 			$('#placeLabel').first().remove();
 			$("#btnBack").fadeIn();
 			$("#feedform").fadeIn();
-			$("#feedform legend").html("Ajouter un lieu");
+			$("#feedform legendmainlegend").html("Ajouter un lieu");
 			$("#feedform #objid").val("");
 			$(".catLabel").remove();
 			$("#pillYakcat ul").empty();

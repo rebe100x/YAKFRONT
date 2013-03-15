@@ -9,8 +9,9 @@ mixin feedForm()
 		input#longitude(type="hidden", name="longitude")
 		input#update(type="hidden", name="update", value='0')
 		input#objid(type="hidden", name="objid", value='0')
+		
 
-		legend Ajouter un flux
+		legend.mainlegend Ajouter un flux
 		div.control-group.error
 				div.controls
 					label.alert#err(type="text", id="err", name="err", style='display:none') Les champs en rouge sont obligatoires.
@@ -50,7 +51,6 @@ mixin feedForm()
 		legend Metadata:		
 		div.control-group#statusGroup.clearBoth
 			.col
-				label Type d info:
 				label.radio.inline Actu
 					input(type="radio", name="yakType", value="1")
 				label.radio.inline Agenda
@@ -83,68 +83,131 @@ mixin feedForm()
 					input(type="text",data-provide="typeahead", id="place", name="place", autocomplete="off", placeholder="Chercher une ville, département, ou région")
 			.col
 				label Si l'info n'est pas géolocalisée...	
-				
-				div.input-append.dropdown.combobox#defaultPrintFlag
-					input(type='text', placeholder="Si l'info n'est pas géolocalisée... ")
-					button.btn(data-toggle="dropdown")
-						i.caret	
-					ul.dropdown-menu
-						li(data-value="0")
-							a(href="") ... ne pas afficher sur la carte mais afficher sur le fil info
-						li(data-value="1")
-							a(href="") ... afficher sur la carte + fil info
-						li(data-value="3")
-							a(href="") ... ne pas afficher l info du tout
-						li(data-value="2")
-							a(href="") ... ne pas faire de géoloc et la placer au point par défaut
-		legend Parsing:
-		div.control-group#parsingGroup.clearBoth
-			label Type de flux : 
-				div.select.btn-group#feedType
-					button.btn.dropdown-toggle(data-toggle="dropdown")
-						span.dropdown-label Type de flux 
-						span.caret
-					ul.dropdown-menu
-						li(data-value="RSS")
-							a(href="") RSS
-						li(data-value="CSV")
-							a(href="") CSV
-						li(data-value="YAKMADE")
-							a(href="") YAKMADE
-
-				
-				
-			label Source(s)
-			.input-append	
-				input.big(type='text', name='source', id='source', placeholder='source')
-				button.btn#btn-source-adder(type="button") Ajouter
+				select.big#defaultPrintFlag
+					option(value="0") ... ne pas afficher sur la carte mais afficher sur le fil info
+					option(value="1") ... afficher sur la carte + fil info
+					option(value="3") ... ne pas afficher l info du tout
+					option(value="2") ... ne pas faire de géoloc et la placer au point par défaut
+		
+		legend Sources
+		div.controls.clearBoth		
+			.col					
+				label Uploader un fichier : 
+				input(type="file", id="fileupload", name="files[]", data-url="http://localhost:8888", multiple)
+				div#progress
+					div.bar(style="width: 0%;")
+			.col
+				label Source(s) web
+				.input-append	
+					input.big(type='text', name='source', id='source', placeholder='http://...')
+					button.btn#btn-source-adder(type="button") Ajouter
+		div.controls.clearBoth			
 			.pillbox#pillSource(style="display:none")
 				ul	
-	
+		br
+		br			
+		legend Parsing:
 		div.control-group#parsingGroup.clearBoth
-				label &nbsp;
-				button.btn.btn-primary.btn-warning(type='button', name='parsing', id='parsing') Définir le parsing
-		
-					
-					
+			div.controls.clearBoth
+				.col
+					label Type de flux : 
+					select#feedType
+						option(value="RSS") RSS
+						option(value="CSV") CSV
+						option(value="YAKMADE") YAKMADE
+				.col
+					label &nbsp;
+					button.btn.btn-primary.btn-warning(type='button', name='parsing', id='parsing') Définir le parsing
 
+		div.control-group#parsingGroup.clearBoth
+				
+		legend Désactiver
 		div.control-group
 			div.controls
 				label.radio.inline Actif
 					input(type="radio", name="status", value="1")
 				label.radio.inline Inactif
 					input(type="radio", name="status", value="0")	
+						
 							
 		div.control-group
 			div.controls
 				button.btn.btn-large.btn-inverse(type='submit', name='submit', id='submit', value='Enregistrer') Enregistrer
 
-			
+		div#parsingModal.modal.hide.fade.big
+			div.modal-header
+				button.big(type="button", class="close", data-dismiss="modal", aria-hidden="true") X
+				h3(id="myModalLabel") Définir le modèle de parsing:
+			div.modal-body
+				div#alertInfo.alert.alert-info
+					button.close(type="button", data-dismiss="alert") x
+					span.alertText
+				div.control-group#titleGroup
+					div.controls
+						label Titre de l info:
+						input(type='text', name='infoTitle', id='infoTitle', placeholder="Titre")
+						label Corps de l info:
+						input(type='text', name='infoContent', id='infoContent', placeholder="Corps")
+						label Adresse:
+						input(type='text', name='infoAddress', id='infoAddress', placeholder="Adresse")
+						label Latitude:
+						input(type='text', name='infoLatitude', id='infoLatitude', placeholder="Latitude")
+						label Longitude:
+						input(type='text', name='infoLongitude', id='infoLongitude', placeholder="Longitude")
+						label Lien web vers l info:
+						input(type='text', name='infoLink', id='infoLink', placeholder="Lien web vers l'info")
+						label Imagette:
+						input(type='text', name='infoThumb', id='infoThumb', placeholder="Imagette")
+						label Catégories Yakwala:
+						input(type='text', name='infoCat', id='infoCat', placeholder="Catégories Yakwala")
+						label Tags:
+						input(type='text', name='infoTag', id='infoTag', placeholder="Tags")
+						label Lieu:
+						input(type='text', name='infoPlace', id='infoPlace', placeholder="Le lieu")
+						label Date de l évènement:
+						input(type='text', name='infoEventDate', id='infoEventDate', placeholder="Date de l'évènement")
+						label Date de publication:
+						input(type='text', name='infoPubDate', id='infoPubDate', placeholder="Date de publication")
+						label Téléphone:
+						input(type='text', name='infoTel', id='infoTel', placeholder="Téléphone")
+						label Moyen de transports:
+						input(type='text', name='infoTransportation', id='infoTransportation', placeholder="Moyens de transports")
+						label Heures d ouverture:
+						input(type='text', name='infoOpening', id='infoOpening', placeholder="Heures d'ouverture")
+						label Site web:
+						input(type='text', name='infoWeb', id='infoWeb', placeholder="Site web")
+						label Mail:
+						input(type='text', name='infoMail', id='infoMail', placeholder="Mail")
+			div.modal-footer
+				button.btn.btn-primary.btn-warning(type="button", data-dismiss="modal", aria-hidden="true") OK
+
+	
+
+	
 	script
 
 		$(document).ready(function() {
 
-			$('#feedform input:radio[name=yakType]').click();
+			$('#fileupload').fileupload({
+				dataType: 'json',
+				done: function (e, data) {
+					$.each(data.result.files, function (index, file) {
+						$("#pillSource").show();
+						$("#pillSource ul").append("<li class='source-val status-success' data-value='"+file.name+"'>"+file.name+"</li>");						
+					});
+				},
+				progressall: function (e, data) {
+					var progress = parseInt(data.loaded / data.total * 100, 10);
+					$('#progress .bar').css('width',progress + '%');
+					$('#progress .bar').html(progress+'%');
+				}
+			});
+			
+
+			$('#parsing').unbind('click').click(function(){
+				$('#parsingModal .modal-body span.alertText').html('');
+				$('#parsingModal').modal('show');
+			});
 
 			$('#btn-freetag-adder').on('click',function(event){
 				event.preventDefault();
@@ -152,6 +215,7 @@ mixin feedForm()
 				$('#freetag').val('').focus();
 				return false;
 			});	
+
 			$('#yakcat').typeahead({
 				minLength : 3,
 				source: function (typeahead, query) {
