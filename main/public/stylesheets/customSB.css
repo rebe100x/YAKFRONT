@@ -1,9 +1,10 @@
 /* basic scrollbar styling */
 /* vertical scrollbar */
 .mCSB_container{
-	width:auto;
+	width:95%;
 	margin-right:30px;
 	overflow:hidden;
+	margin-left: 1%;
 }
 .mCSB_container.mCS_no_scrollbar{
 	margin-right:0;

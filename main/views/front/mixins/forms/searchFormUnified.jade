@@ -25,13 +25,9 @@ mixin searchFormUnified(page)
 					span#hotTagPrinter.sliderText Hot Tags
 					span.caret
 					ul#dropdownTagSelector.dropdown-menu
-			li
-				div#newsfeedMenu.pull-left
-					div#typeContainer.row
-						span.btn(title="Voir les Yassalas", type=4) 
-							img(src="/images/markers/latestV1/type4.png")
 			li.rightPull
-				span.btn#btnMesalertes(title="Mes alertes", type=5, onclick='setAlert(this)')
+				span#btnDiscussion(title="Voir les Yassalas", type=4, onclick='setDiscussion(this)') 			
+				span#btnMesalertes(title="Mes alertes", type=5, onclick='setAlert(this)')
 
 	div#closehideSearch
 		span.btn
@@ -496,35 +492,42 @@ mixin searchFormUnified(page)
 			});
 		}
 		*/
-		function setAlert(el)
+
+		function setDiscussion(el)
 		{
-			//console.log($.cookie("yaktype"));
-			if($("#newsfeedMenu .oldActive").length == 0)
-			{
-				$("#newsfeedMenu .active").each(function(){
-					$(this).click();
-					$(this).addClass("oldActive");
-					$(this).removeClass("active");
-				});
+			if($(el).hasClass('active')){
+				$(el).removeClass('active');
+				yakType = ["1", "2"];
+				$.cookie("yaktype", yakType.join(','),{ expires: 10000, path : '/' });
 			}
 			else
 			{
-				$("#newsfeedMenu .oldActive").each(function(){
-					$(this).click();
-					$(this).removeClass("oldActive");
-					$(this).addClass("active");
-				});
+				$(el).addClass('active');
+				yakType = ["1", "2", "4"];
+				$.cookie("yaktype", yakType.join(','),{ expires: 10000, path : '/' });	
 			}
-			yakType = [5];
-			$.cookie("yaktype", 5,{ expires: 10000, path : '/' });
 			cleanMarkers();
 			getAndPrintInfo();
+		}
+		function setAlert(el)
+		{
+			if($(el).hasClass('active')){
+				$(el).removeClass('active');
+				setDiscussion($("#btnDiscussion"));
+				return;
+			}
+			else
+			{
+				$(el).addClass('active');
+				yakType = [5];
+				$.cookie("yaktype", 5,{ expires: 10000, path : '/' });
+				cleanMarkers();
+				getAndPrintInfo();
+			}
 
 			
-			if($(el).css("opacity") == "1")
-				$(el).css("opacity" ,"0.3");
-			else
-				$(el).css("opacity" ,"1");
+
+			
 		}
 		
 		function setRangeSelectorDropDown()
