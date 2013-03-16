@@ -80,27 +80,11 @@ mixin profileForm(type)
 						label.control-label(for="avatar") Votre photo :  
 						span#avatarPreview.pull-left
 							img.size100.img-rounded(src='')
-						input#avatar.pull-left(type="file",style="display:block",name="avatar")
+						input#avatar.pull-left(type="file",style="display:block; margin-left: 30px",name="avatar")
 				div.control-group
 					div.controls
 						label.control-label(for="name") Votre nom :  
 						input#username(type='text', name='username')
-				div.control-group
-					div.controls
-						label.control-label(for="name") Votre ville: 
-							br
-							span#cityTarget
-						input#city.searchInput(type='text', name='city', placeholder='Chercher...', autocomplete="off",)
-				div.control-group
-					div.controls
-						label.control-label(for="name") Default Zoom: 
-							br
-							span#addressZoom
-						select#ddlAddressZoom(onchange="changeZoom()")
-							option(value="70") Local
-							option(value="80") Très Local
-							option(value="100") Super Local
-							option(value="120") Hyper local
 				div.control-group
 					div.controls
 						label.control-label(for="name") Votre site web:  
@@ -111,7 +95,24 @@ mixin profileForm(type)
 					div.controls
 						label.control-label(for="bio") Votre biographie :  
 						textarea(name='bio', id='bio',rows='10')
-			
+				h2 Mes paramètres
+				div.control-group
+					div.controls
+						label.control-label(for="name") Votre ville: 
+							br
+							span#cityTarget
+						input#city.searchInput(type='text', name='city', placeholder='Chercher...', autocomplete="off",)
+				div.control-group
+					div.controls
+						label.control-label(for="name") Zoom par défaut: 
+							br
+							span#addressZoom
+						select#ddlAddressZoom(onchange="changeZoom()")
+							option(value="70") Local
+							option(value="80") Très Local
+							option(value="100") Super Local
+							option(value="120") Hyper local
+				
 				div.control-group
 					div.controls
 						label.control-label(for="name") 

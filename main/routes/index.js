@@ -11,8 +11,8 @@ var OAuth= require('oauth').OAuth;
 var oa = new OAuth(
 	"https://api.twitter.com/oauth/request_token",
 	"https://api.twitter.com/oauth/access_token",
-	secretConf.Twitter.accessKeyId,
-	secretConf.Twitter.secretAccessKey,
+	secretConf.TWITTER.accessKeyId,
+	secretConf.TWITTER.secretAccessKey,
 	"1.0",
 	"http://localhost:3000/auth/twitter/callback",
 	"HMAC-SHA1"
@@ -1130,6 +1130,11 @@ exports.auth_twitter_callback = function(req, res){
 				user.type=1;
 				user.twitter_id = twitter_id;
 				user.twitter_screen_name = login;
+				
+				var twitterAccount = db.model('Twitter');
+				twitterAccount.twitter_id = twitter_id;
+				twitterAccount.twitter_screen_name = login;
+
 				user.createfrom_social = 1;
 				user.bio = data.description;
 				user.web = data.url;
@@ -1140,7 +1145,7 @@ exports.auth_twitter_callback = function(req, res){
 					if(theuser != undefined && theuser != null ){
 						console.log('LOGGED IN');
 						req.session.user = theuser._id;
-						User.update({"_id":theuser._id},{$set:{"lastLoginDate":new Date()}}, function(err){if (err) console.log(err);});
+						User.update({"_id":theuser._id},{$set:{"lastLoginDate":new Date(), Twitter: twitterAccount}}, function(err){if (err) console.log(err);});
 						res.redirect('news/map');
 					}else{
 						

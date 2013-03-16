@@ -2,8 +2,9 @@ mixin locationChooser(page)
 
 	div.modal.hide.fade#locationChooser
 		div.modal-header
-			button.close(type="button", data-dismiss="modal") x
-			h2 Mes endroits favoris: 
+			span#closeModal(type="button", data-dismiss="modal")
+
+			h2 Endroits favoris: 
 		div.modal-body
 			p.alertText 
 				ul#myPlaces.favplacelist.unstyled
@@ -11,9 +12,9 @@ mixin locationChooser(page)
 					- if(locals.user.favplace)
 							- each favplace in locals.user.favplace
 								li.zoneLoc(pointId=favplace._id, lat=favplace.location.lat, lng=favplace.location.lng, pointname=favplace.name)
-									img.pull-left.redstar(src="/images/markers/latestV1/redstar.png")
+									span.redStars
 									span.pull-left(data-dismiss="modal")= favplace.name
-									i.icon-remove.icon-pointer(onclick='removefavPlace($(this));')
+									span.closePlace(type="button", data-dismiss="modal", onclick='removefavPlace($(this));')
 									//
 										div.theslider(title=favplace.range, alt=favplace._id)
 										span.localnessPrinter Local
@@ -34,11 +35,10 @@ mixin locationChooser(page)
 					div.control-group
 						div.controls
 							label(for='favplace') 
-								img.plussign.pull-left(src="/images/markers/latestV1/plussign.png")
+								span.redAdd
 							input#favplace.searchInput.pull-left(type="text",data-provide="typeahead", name="favplace", autocomplete="off", placeholder='Ajouter des endroits favoris') 
 								
-		div.modal-footer
-			span.btn(data-dismiss="modal") Fermer
+		
 	
 	script
 		/*slider range selector*/
@@ -121,7 +121,16 @@ mixin locationChooser(page)
 				for(var i = 0, l = lis.length; i < l; i++)
 				lis[i].innerHTML = vals[i];
 			}
+			function setCitiesAsBold()
+			{
+				$(".zoneLoc span.pull-left").each(function(){
+					var cityCountry = $(this).text().split(",");
+
+					$(this).html("<b>"+cityCountry[0]+", </b>" + cityCountry[1]);
+				});
+			}
 			$(document).ready(function(){
+				setCitiesAsBold();
 				var uldropdownRangeSelector = $("<select />");
 				uldropdownRangeSelector.attr("class", "dropdownRangeSelector")
 				uldropdownRangeSelector.append('<option value="70">Local</li>');

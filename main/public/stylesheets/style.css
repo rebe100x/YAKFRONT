@@ -441,6 +441,10 @@ width: 270px;
    .searchYakwala #btnMesalertes { width: 25px; height: 16px; background-image: url('/images/yakwala_sprite.png'); background-position: -9px -524px; border: 0px; margin-top: 10px; margin-right: 10px;}
    .searchYakwala #btnMesalertes:hover { background-position: -63px -524px;}
    #closehideSearch { display: none;}
+   #closeModal { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -70px -658px; position: relative; float: right; cursor: pointer;}
+   span.closePlace { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -97px -658px; position: relative; float: right; cursor: pointer;}
+   span.redAdd { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -205px -658px; position: relative; float: left; cursor: pointer; top: 16px; margin-right: 10px}
+   span.redStars { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -176px -658px; position: relative; float: left; cursor: pointer; top: 0px; margin-right: 10px}
 
  }
 

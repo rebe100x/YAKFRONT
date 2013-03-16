@@ -35,6 +35,11 @@ var Point = new Schema({
 });
 mongoose.model('Point', Point);
 
+var Twitter = new Schema({
+	  twitter_id : { type : Number }
+	, twitter_screen_name	: { type : String }
+});
+mongoose.model('Twitter', Twitter);
 
 var UserLight = new Schema({
 	  name : String
@@ -528,7 +533,8 @@ var User = new Schema({
 	, lastLoginDate	: {type: Date, required: true, default: Date.now}		
 	, status	: {type: Number,required: true, default: 2,index: true}	
 	, twitter_id : {type: Number}
-	, twitter_screen_name : {type : String} 
+	, twitter_screen_name : {type : String}
+	, Twitter: { type : [Schema.Twitter] }
 	, createfrom_social  :{ type : Number, default:0} // 0 yakwala, 1 twitter, 2 facebook
 	, apiData	: { type: [{
 							apiClientId : {type: Schema.ObjectId,index: true}  
