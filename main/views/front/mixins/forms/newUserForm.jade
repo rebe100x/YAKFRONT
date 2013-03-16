@@ -4,12 +4,21 @@ mixin newUserForm()
 			button.close(type="button",data-dismiss="alert") x
 			strong=message
 	form#newuserForm(action='/user', method='POST')
+		div.header-inner
+			h2 
+				| Créer un compte avec Yakwala
 		div.control-group
 			div.controls
 				input#mail(type="text",name="mail", autocomplete="on", placeholder='Votre email')
 		div.control-group
 			div.controls
 				button.btn.btn-large.btn-block.btn-inverse(,type='submit', name='submit', id='submit', value='envoyer') Envoyer
+		h2 
+				| Créer un compte avec Twitter
+		div.control-group
+			div.controls
+				a(href="/auth/twitter")
+					img(src="/images/twiiterconnect.png")
 		
 	script
 		$(document).ready(function() {

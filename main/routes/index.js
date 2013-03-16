@@ -338,7 +338,7 @@ exports.user_validate = function(req, res){
 	User.authenticateByToken(req.params.token,req.params.password, function(err, model) {
 	if(!(typeof(model) == 'undefined' || model === null || model === '')){
 			req.session.user = model._id;
-			User.update({_id: model._id}, {status:1}, {upsert: false}, function(err){if (err) console.log(err);});						
+			User.update({_id: model._id}, {status:4}, {upsert: false}, function(err){if (err) console.log(err);});						
 			res.render('settings/firstvisit',{user:model});
 		}else{
 			req.session.message = "Votre clé d'activation est incorrecte.";
@@ -384,7 +384,7 @@ exports.session = function(req, res){
 	}
 	User.authenticate(req.body.login,req.body.password, req.body.token, function(err, user) {
 		if(!(typeof(user) == 'undefined' || user === null || user === '')){
-			if(user.status == 1){
+			if(user.status == 1 || user.status == 4){
 				if (req.body.rememberme == "true") {res.cookie('token', user.token, { expires: new Date(Date.now() + 90000000000) , httpOnly: false, path: '/'});}
 				else {res.cookie('token', null);}
 				
@@ -558,7 +558,7 @@ exports.settings_password = function(req,res){
 
 }
 
-exports.settings_password = function(req,res){
+exports.settings_resetpassword = function(req,res){
 	delete req.session.message;
 	res.render('settings/resetpassword');
 
@@ -650,7 +650,7 @@ exports.firstvisit = function(req,res){
 				}
 				
 				
-				User.update({_id: req.session.user}, {hash : newcryptedPass,location:location, address: address, formatted_address: formatted_address, login: req.body.username, name: req.body.username}, {upsert: false}, function(err){
+				User.update({_id: req.session.user}, {hash : newcryptedPass,location:location, address: address, formatted_address: formatted_address, login: req.body.username, name: req.body.username, status: 1}, {upsert: false}, function(err){
 				
 					if (err) console.log(err);
 					else{
@@ -1145,7 +1145,7 @@ exports.auth_twitter_callback = function(req, res){
 						user.save(function (err) {
 							if (!err){
 								req.session.user = user._id;
-								User.update({"_id":user._id},{$set:{"lastLoginDate":new Date()}}, function(err){if (err) console.log(err);});
+								User.update({"_id":user._id},{$set:{"lastLoginDate":new Date(), "status":4}}, function(err){if (err) console.log(err);});
 								res.redirect('/settings/firstvisit');
 							} 
 							else console.log(err);

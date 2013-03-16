@@ -422,7 +422,7 @@ width: 270px;
 
 	#profileMenu { width: 51px; height: 51px; display: block; float: left; background-image: url('/images/yakwala_sprite.png'); background-position: 0px -364px;}
 	#profileMenu:hover { background-position: -59px -364px;}
-
+	#profileMenu img { width: 51px; height: 51px; }	
 	#zoneLocButton { width: 51px; height: 51px; display: block; background-image: url('/images/yakwala_sprite.png'); background-position: 0px -303px; position: absolute; top: 6px; right: 62px; cursor: pointer;}
 	#zoneLocButton:hover { background-position: 108px -303px;}
 
@@ -440,6 +440,7 @@ width: 270px;
    #dayPrinter { position: relative; bottom: 9px; }
    .searchYakwala #btnMesalertes { width: 25px; height: 16px; background-image: url('/images/yakwala_sprite.png'); background-position: -9px -524px; border: 0px; margin-top: 10px; margin-right: 10px;}
    .searchYakwala #btnMesalertes:hover { background-position: -63px -524px;}
+   #closehideSearch { display: none;}
 
  }
 
@@ -461,7 +462,7 @@ width: 270px;
 
 	#profileMenu { width: 51px; height: 51px; display: block; float: left; background-image: url('/images/yakwala_sprite.png'); background-position: 0px -364px;}
 	#profileMenu:hover { background-position: -59px -364px;}
-
+	#profileMenu img { width: 51px; height: 51px; }	
 	#zoneLocButton { width: 51px; height: 51px; display: block; background-image: url('/images/yakwala_sprite.png'); background-position: 0px -303px; position: absolute; top: 6px; right: 62px; cursor: pointer;}
 	#zoneLocButton:hover { background-position: 108px -303px;}
 
@@ -479,7 +480,7 @@ width: 270px;
    #dayPrinter { position: relative; bottom: 9px; }
    .searchYakwala #btnMesalertes { width: 25px; height: 16px; background-image: url('/images/yakwala_sprite.png'); background-position: -9px -524px; border: 0px; margin-top: 10px; margin-right: 10px;}
    .searchYakwala #btnMesalertes:hover { background-position: -63px -524px;}
-   
+    #closehideSearch { display: none;}
  }
 
  /*ipads portrail*/
@@ -500,7 +501,7 @@ width: 270px;
 
 	#profileMenu { width: 51px; height: 51px; display: block; float: left; background-image: url('/images/yakwala_sprite.png'); background-position: 0px -364px;}
 	#profileMenu:hover { background-position: -59px -364px;}
-
+	#profileMenu img { width: 51px; height: 51px; }	
 	#zoneLocButton { width: 51px; height: 51px; display: block; background-image: url('/images/yakwala_sprite.png'); background-position: 0px -303px; position: absolute; top: 6px; right: 62px; cursor: pointer;}
 	#zoneLocButton:hover { background-position: 108px -303px;}
 
@@ -518,6 +519,7 @@ width: 270px;
    #dayPrinter { position: relative; bottom: 9px; }
    .searchYakwala #btnMesalertes { width: 25px; height: 16px; background-image: url('/images/yakwala_sprite.png'); background-position: -9px -524px; border: 0px; margin-top: 10px; margin-right: 10px;}
    .searchYakwala #btnMesalertes:hover { background-position: -63px -524px;}
+    #closehideSearch { display: none;}
  }
 
   /*ipads portrail*/
@@ -538,7 +540,7 @@ width: 270px;
 
 	#profileMenu { width: 26px; height: 26px; display: block; float: left; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 0px -527px;}
 	#profileMenu:hover { background-position: -30px -527px;}
-
+	#profileMenu img { width: 26px26px; height: 26px; }	
 	#zoneLocButton { width: 26px; height: 26px; display: block; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 0px -496px; position: absolute; top: 6px; right: 35px; cursor: pointer;}
 	#zoneLocButton:hover { background-position: 54px -496px;}
 
@@ -585,7 +587,7 @@ width: 270px;
 
 	#profileMenu { width: 26px; height: 26px; display: block; float: left; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 0px -527px;}
 	#profileMenu:hover { background-position: -30px -527px;}
-
+	#profileMenu img { width: 26px26px; height: 26px; }	
 	#zoneLocButton { width: 26px; height: 26px; display: block; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 0px -496px; position: absolute; top: 6px; right: 35px; cursor: pointer;}
 	#zoneLocButton:hover { background-position: 54px -496px;}
 
@@ -632,7 +634,7 @@ width: 270px;
 
 	#profileMenu { width: 26px; height: 26px; display: block; float: left; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 0px -527px;}
 	#profileMenu:hover { background-position: -30px -527px;}
-
+	#profileMenu img { width: 26px26px; height: 26px; }	
 	#zoneLocButton { width: 26px; height: 26px; display: block; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 0px -496px; position: absolute; top: 6px; right: 35px; cursor: pointer;}
 	#zoneLocButton:hover { background-position: 54px -496px;}
 
@@ -677,7 +679,7 @@ width: 270px;
 
 	#profileMenu { width: 26px; height: 26px; display: block; float: left; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 0px -527px;}
 	#profileMenu:hover { background-position: -30px -527px;}
-
+	#profileMenu img { width: 26px26px; height: 26px; }	
 	#zoneLocButton { width: 26px; height: 26px; display: block; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 0px -496px; position: absolute; top: 6px; right: 35px; cursor: pointer;}
 	#zoneLocButton:hover { background-position: 54px -496px;}
 
@@ -721,7 +723,7 @@ width: 270px;
 
 	#profileMenu { width: 26px; height: 26px; display: block; float: left; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 0px -527px;}
 	#profileMenu:hover { background-position: -30px -527px;}
-
+	#profileMenu img { width: 26px26px; height: 26px; }	
 	#zoneLocButton { width: 26px; height: 26px; display: block; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 0px -496px; position: absolute; top: 6px; right: 35px; cursor: pointer;}
 	#zoneLocButton:hover { background-position: 54px -496px;}
 
@@ -860,6 +862,8 @@ width: 270px;
 #dayPrinter, #localnessPrinter, #tagSelectorTrigger { color: #898989;}
 .searchYakwala #searchBtn { display: none;}
 #addLink { cursor: pointer;}
+#profileMenu {}
+.highlightedLi { background: #d51820;}
 
 
 

@@ -504,11 +504,13 @@ function  hidePostForm()
 }
 
 $(document).ready(function() {
-
-	preload([
+	//user.thumbsmall = "http://localhost:3000/images/dangui.jpg";
+	//console.log(user);
+	
+	/*preload([
     '/images/yakwala_sprite.png',
     '/images/yakwala_sprite-medium.png'
-	]);
+	]);*/
 
 
 	$("#newsfeedContent").mCustomScrollbar({
@@ -665,8 +667,19 @@ $(document).ready(function() {
 		},
 		property: "formatted_address",
 		onselect: function(obj) {
+
 			$('#favplace,#favplace2').removeClass('searching');
 			var placeGmap = getPlaceFromGmapResult(obj);
+
+			var liLnLat = $('.favplacelist li[lat="'+placeGmap.location.lat+'"][lng="'+placeGmap.location.lng+'"]');
+			if (liLnLat.length > 0)
+			{
+				liLnLat.addClass("highlightedLi");
+				setTimeout('removeHighlightLi()', '3000');
+				return;
+			}
+				
+
 			var point = new Object();
 			
 			point.name = placeGmap.title;
@@ -723,7 +736,10 @@ $(document).ready(function() {
 	});*/
 });
 /*END READY FUNCTIONS*/
-
+function removeHighlightLi()
+{
+	$(".favplacelist li").removeClass("highlightedLi");
+}
 function removefavPlace(obj){
 	obj.parent().remove();
 	

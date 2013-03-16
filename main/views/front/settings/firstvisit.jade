@@ -76,32 +76,15 @@ block content
 					$("#submit").attr("disabled", "disabled");
 			});
 			function randomNames(str){
-			var adjs = ["autumn", "hidden", "bitter", "misty", "silent", "empty", "dry",
-			"dark", "summer", "icy", "delicate", "quiet", "white", "cool", "spring",
-			"winter", "patient", "twilight", "dawn", "crimson", "wispy", "weathered",
-			"blue", "billowing", "broken", "cold", "damp", "falling", "frosty", "green",
-			"long", "late", "lingering", "bold", "little", "morning", "muddy", "old",
-			"red", "rough", "still", "small", "sparkling", "throbbing", "shy",
-			"wandering", "withered", "wild", "black", "young", "holy", "solitary",
-			"fragrant", "aged", "snowy", "proud", "floral", "restless", "divine",
-			"polished", "ancient", "purple", "lively", "nameless"]
 
-			, nouns = ["waterfall", "river", "breeze", "moon", "rain", "wind", "sea",
-			"morning", "snow", "lake", "sunset", "pine", "shadow", "leaf", "dawn",
-			"glitter", "forest", "hill", "cloud", "meadow", "sun", "glade", "bird",
-			"brook", "butterfly", "bush", "dew", "dust", "field", "fire", "flower",
-			"firefly", "feather", "grass", "haze", "mountain", "night", "pond",
-			"darkness", "snowflake", "silence", "sound", "sky", "shape", "surf",
-			"thunder", "violet", "water", "wildflower", "wave", "water", "resonance",
-			"sun", "wood", "dream", "cherry", "tree", "fog", "frost", "voice", "paper",
-			"frog", "smoke", "star"];
-
-			return str+"_"+adjs[Math.floor(Math.random()*(adjs.length-1))]+"_"+nouns[Math.floor(Math.random()*(nouns.length-1))];
+			var randomnumber=Math.floor(Math.random()*101)
+			return str+randomnumber;
 			}
 
 			function setUserName(el)
 			{
 				$("#username").val($(el).html());
+				$("#username").focus();
 				$("#suggestionsDiv").remove();
 			}
 
@@ -125,7 +108,22 @@ block content
 								currlocation += "Longitude: " + results[0].geometry.location.Za;
 								currlocation += "<br /><br />";
 								currlocation += "<a class='btn' onclick='setasdefaultLocation(this)' lat='"+results[0].geometry.location.Ya+"' lng='"+results[0].geometry.location.Za+"' address='"+results[0].formatted_address+"'>+ Votre géolocalisation</a><br /><br /> <a class='btn' onclick='setasdefaultLocation(this)' lat='"+results[0].geometry.location.Ya+"' lng='"+results[0].geometry.location.Za+"' address='"+results[0].formatted_address+"'>+ Endroits favoris</a>";
-								$("#Locationtip").html(currlocation);
+								//$("#Locationtip").html(currlocation);
+								if(typeof(user.location) === 'undefined')
+									{
+
+										var placeGmap = getPlaceFromGmapResult(results[0]);	
+
+										$("#cityTarget").before("<br />");
+										$("#cityTarget").html(results[0].formatted_address);
+										
+										$('#formatted_address').val(JSON.stringify(results[0].formatted_address));
+										$('#location').val(JSON.stringify(placeGmap.location));
+										var curPos = {x:placeGmap.location.lat,y:placeGmap.location.lng,z:mainConf.rangeDefault};
+										$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
+										$('#address').val(JSON.stringify(placeGmap.address));
+										$('#formatted_address').val(JSON.stringify(placeGmap.formatted_address));
+									}
 							} 
 						});
 						
@@ -146,7 +144,39 @@ block content
 				//console.log(user);
 				if(user.createfrom_social == 1)
 					$("#username").val(user.twitter_screen_name);
+				else
+					$("#username").val(user.login);
 
+
+				$("#username").blur(function(){
+					var currusername = $("#username").val();
+
+					$.getJSON('/api/findbylogin/' + currusername,function(users) {
+
+						if(users.users.length != 0 && user.login != currusername)
+						{
+
+							var suggestions = "<ul id='suggestionsDiv'>";
+							suggestions += "<li>Nom d'utilisateur reservé (essayez):</li>";
+							
+							suggestions += "</ul>";
+							$("#username").after(suggestions);
+							for(i=0; i<9; i++)
+							{
+								var randomName = randomNames(currusername);
+								$("#suggestionsDiv").append("<li><a onclick='setUserName(this)'>" + randomName + "</a></li>");
+									
+							}
+							
+							$("#username").val("");
+							//alert(suggestions);
+							
+							
+							return false;
+						}
+					
+					});
+				});
 				$("form").submit(function(){
 
 					var currusername = $("#username").val();
@@ -157,7 +187,7 @@ block content
 						{
 
 							var suggestions = "<ul id='suggestionsDiv'>";
-							suggestions += "<li>Nom d'utilisateur reservé:</li>";
+							suggestions += "<li>Nom d'utilisateur reservé (essayez):</li>";
 							
 							suggestions += "</ul>";
 							$("#username").after(suggestions);

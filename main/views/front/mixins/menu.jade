@@ -23,31 +23,39 @@ mixin menu(active)
 							span.caret(style="margin:22px 0px 22px 5px;")
 					ul#customMenuProfile.dropdown-menu.pull-right
 						li
-							img.imgSmallProfile(src="/images/new/lacarte.png")
+							//
+								img.imgSmallProfile(src="/images/new/lacarte.png")
 							a(href="/news/map") Map
 						li
-							img.imgSmallProfile(src="/images/new/filinfo.png")
+							//
+								img.imgSmallProfile(src="/images/new/filinfo.png")
 							a(href="/news/feed") Feed
 						li
-							img.imgSmallProfile(src="/images/new/poster2.png")
+							//
+								img.imgSmallProfile(src="/images/new/poster2.png")
 							a(href="/news/map/?post=1") Poster
 						li.divider
 						li
-							img.imgSmallProfile(src="/images/new/passwordicon.png")
+							//
+								img.imgSmallProfile(src="/images/new/passwordicon.png")
 							a(href="/settings/password") Mot de Passe
 						
 						li
-							img.imgSmallProfile(src="/images/new/profileicon.png")
+							//
+								img.imgSmallProfile(src="/images/new/profileicon.png")
 							a(href="/settings/profile") Mon profil
 						li
-							img.imgSmallProfile(src="/images/new/profileicon.png")
+							//
+								img.imgSmallProfile(src="/images/new/profileicon.png")
 							a(href="/settings/privateprofile") Mon profil privé
 						li
-							img.imgSmallProfile(src="/images/new/alertsicon.png")
+							//
+								img.imgSmallProfile(src="/images/new/alertsicon.png")
 							a(href="/settings/alerts") Mes alertes
 						li.divider
 						li
-							img.imgSmallProfile(src="/images/new/logouticon.png")
+							//
+								img.imgSmallProfile(src="/images/new/logouticon.png")
 							a(href="/user/logout") Quitter
 				- else
 					//
@@ -171,10 +179,28 @@ mixin menu(active)
 					$("#maplink").remove();
 					$("#addLink").remove();
 				});
+
+		if(active != 'firstvisit')
+			script
+				$(document).ready(function(){
+					if(typeof(user) != 'undefined')
+						if(user.status == 4)
+							window.location = "/settings/firstvisit";
+				});
+		else
+			script
+				$(document).ready(function(){
+					if(typeof(user) != 'undefined')
+						if(user.status != 4)
+							//window.location = "/news/map";
+				});
 		
 		script
 			$(document).ready(function(){
-
+				if(typeof(user) != "undefined")
+					if (!user.thumbsmall.match("no-user.png$"))
+						$("#profileMenu").html("<img src='"+user.thumbsmall+"' />");
+					
 			});
 			
 
