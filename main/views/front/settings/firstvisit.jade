@@ -30,6 +30,9 @@ block content
 							label.control-label.label-xlarge(for="username") Choisissez un nom d'utilisateur( au moin 4 caractères) :  
 							input.input-xlarge#username(type="text", name="username", autocomplete="off", placeholder="Votre nom d'utilisateur") 
 						div.controls
+							label.control-label.label-xlarge(for="email") Votre courrier electronic :  
+							input.input-xlarge#email(type="text", name="email", autocomplete="off", placeholder="Votre courrier electronic") 
+						div.controls
 							label.control-label.label-xlarge(for="oldpass") Choisissez un mot de passe ( au moins 8 caractères ):  
 							input.input-xlarge#password(type="text", name="password", autocomplete="off", placeholder="Votre mot de passe") 
 					div.control-group
@@ -116,7 +119,7 @@ block content
 
 										$("#cityTarget").before("<br />");
 										$("#cityTarget").html(results[0].formatted_address);
-										
+
 										$('#formatted_address').val(JSON.stringify(results[0].formatted_address));
 										$('#location').val(JSON.stringify(placeGmap.location));
 										var curPos = {x:placeGmap.location.lat,y:placeGmap.location.lng,z:mainConf.rangeDefault};
@@ -143,9 +146,18 @@ block content
 				getLocation();
 				//console.log(user);
 				if(user.createfrom_social == 1)
+				{	
 					$("#username").val(user.twitter_screen_name);
+					if(user.mail != "yak_not_set@yakwala.fr")
+						$("#email").val(user.mail);
+				}
+					
 				else
+				{
+					$("#email").val(user.mail);
 					$("#username").val(user.login);
+				}
+					
 
 
 				$("#username").blur(function(){

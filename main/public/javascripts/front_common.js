@@ -505,8 +505,8 @@ function  hidePostForm()
 
 $(document).ready(function() {
 	//user.thumbsmall = "http://localhost:3000/images/dangui.jpg";
-	//console.log(user);
-	
+	console.log(user);
+
 	/*preload([
     '/images/yakwala_sprite.png',
     '/images/yakwala_sprite-medium.png'

@@ -26,6 +26,7 @@ block content
 						p.subheader Ces informations sont publiques et permettent aux autres utilisateurs de vous trouver et de suivre vos infos.
 				hr
 				mixin profileForm(locals.user.type)
+
 		script
 			var conf = !{conf};
 			var user =!{JSON.stringify(user)};
@@ -36,7 +37,22 @@ block content
 			var rule2 = new RegExp('[#]','g');
 			
 			$(document).ready(function() {
-			
+				
+				if(typeof(user) != "undefined")
+				{
+					
+					if (user.thumbsmall.match("no-user.png$"))
+					{
+						$("#avatarPreview").html("");
+						$("#avatarPreview").css({
+							width: "100px",
+							height: "100px",
+							background: "#E0E0E0"
+						});
+					}
+				}
+						
+
 				// init form
 				//console.log(user);
 				$('#username').val(user.name);

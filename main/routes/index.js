@@ -5,12 +5,14 @@
 /**
 * OAuth dependencies
 */
+var config_secret = require('../confs_secret.js');
+var secretConf = config_secret.confs_secret;
 var OAuth= require('oauth').OAuth;
 var oa = new OAuth(
 	"https://api.twitter.com/oauth/request_token",
 	"https://api.twitter.com/oauth/access_token",
-	"6sbCmvfByrXpLYnPKzQ5qg",
-	"8cgH1lUym2YR7dH9VAaVvXFqzov888LWdgmAnv4",
+	secretConf.Twitter.accessKeyId,
+	secretConf.Twitter.secretAccessKey,
 	"1.0",
 	"http://localhost:3000/auth/twitter/callback",
 	"HMAC-SHA1"
@@ -650,7 +652,7 @@ exports.firstvisit = function(req,res){
 				}
 				
 				
-				User.update({_id: req.session.user}, {hash : newcryptedPass,location:location, address: address, formatted_address: formatted_address, login: req.body.username, name: req.body.username, status: 1}, {upsert: false}, function(err){
+				User.update({_id: req.session.user}, {hash : newcryptedPass,location:location, address: address, formatted_address: formatted_address, login: req.body.username, name: req.body.username, mail: req.body.email, status: 1}, {upsert: false}, function(err){
 				
 					if (err) console.log(err);
 					else{
@@ -1119,7 +1121,7 @@ exports.auth_twitter_callback = function(req, res){
 				
 				user.name=login;
 				user.login=login;
-				user.mail='dany2.srour@hotmail.com';
+				user.mail='yak_not_set@yakwala.fr';
 				user.token=token;
 				user.status=1;
 				user.hash= password;
