@@ -847,10 +847,7 @@ block content
 			infoContent.attr("class", "infowindow mapHighlighter");
 			infoContent.attr("infoId", item._id);
 
-			var yakTypeImage = $("<div />");
-			yakTypeImage.attr("class", "yakTypeImage");
-			yakTypeImage.html("<img src='/images/markers/new/type" + item.yakType + ".png' />");
-			infoContent.append(yakTypeImage);
+			
 
 			if(!(typeof item.thumb === 'undefined') && item.thumb != conf.batchurl && item.thumb != null) {
 				thumbImage = item.thumb.replace('thumb/','');
@@ -861,8 +858,10 @@ block content
 				infoContent.append(thumbImageCode);
 			
 			}
-
-			
+			var yakTypeImage = $("<div />");
+			yakTypeImage.attr("class", "yakTypeImage");
+			yakTypeImage.html("<img src='/images/markers/new/type" + item.yakType + ".png' />");
+			infoContent.append(yakTypeImage);
 			
 
 				

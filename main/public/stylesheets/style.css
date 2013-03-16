@@ -207,7 +207,7 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 
 		/*POST*/
 
-.infowindow .yakTypeImage { float: left; width:95%;height:22px; z-index: 111; position: absolute;}
+.infowindow .yakTypeImage { float: left; height:22px; z-index: 111; position: relative;}
 .infowindow .yakTypeImage img { float: left; width:15px;height:22px;}
 
 .infowindow .thumbImage { float: left;  margin: 0 3px 0 0;}
