@@ -864,6 +864,7 @@ width: 270px;
 #addLink { cursor: pointer;}
 #profileMenu {}
 .highlightedLi { background: #d51820;}
+#customMenuProfile a { width: 80%}
 
 
 
