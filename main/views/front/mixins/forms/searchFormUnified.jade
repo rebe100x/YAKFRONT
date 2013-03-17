@@ -9,10 +9,10 @@ mixin searchFormUnified(page)
 			
 				button#searchBtn(type="submit")	
 			li
-				
-				div#dayPrinter.sliderText Aujourd hui	
-				img.pull-left.timeIcon(src="/images/time.png")
-				div#heatSelector
+				div#timeContainer
+					div#dayPrinter.sliderText Aujourd hui	
+					img.pull-left.timeIcon(src="/images/time.png")
+					div#heatSelector
 
 			li
 				img.pull-left.filterIcon(src="/images/filter.png")
@@ -30,8 +30,7 @@ mixin searchFormUnified(page)
 				span#btnMesalertes(title="Mes alertes", type=5, onclick='setAlert(this)')
 
 	div#closehideSearch
-		span.btn
-			|open/close
+		img(src="/images/new/openClose.png", alt="Ouvrir, Fermer", title="Ouvrir, Fermer")
 
 
 
@@ -75,7 +74,7 @@ mixin searchFormUnified(page)
 		$(document).ready(function(){
 
 				$("#closehideSearch").click(function(){
-					$(".searchYakwala ul").slideToggle(function(){
+					$(".searchYakwala ul").slideToggle('slow', function(){
 						drawNewsFeed();
 
 					});

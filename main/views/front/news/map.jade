@@ -1099,7 +1099,7 @@ block content
 			if (currentItem.find(".loadingMore").length > 0 || currentItem.find(".myitem").length > 0)
 			{
 				currentItem.find(".myitem").find(".icon-remove").remove();
-				currentItem.find(".yakTypeImage").append("<i class='icon-remove' title='close' onclick='closemyitem(this);'></i>");
+				currentItem.find(".itemTitle").append("<i class='icon-remove' title='close' onclick='closemyitem(this);'></i>");
 				currentItem.find(".myitem").show();
 				return;
 			}
@@ -1158,7 +1158,7 @@ block content
 				
 				
 				currentItem.find(".infodetail").insertAfter(currentItem.find(".postedBy"));
-				currentItem.find(".icon-remove").appendTo(currentItem.find(".yakTypeImage"));
+				currentItem.find(".icon-remove").appendTo(currentItem.find(".itemTitle"));
 				$("ul#newsfeed li").css("width", "100%");
 				$("ul#newsfeed").css("width", "100%");
 				$("#newsfeed li").removeClass('highlighted');

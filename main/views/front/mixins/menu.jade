@@ -4,20 +4,20 @@ mixin menu(active)
 		div.navbar.navbar-fixed-top
 			div.row-fluid.headerYakwala
 				div		
-					a.leftlink#maplink.yak-mainMenu-hide(href="/news/map")
+					a.leftlink#maplink.yak-mainMenu-hide(href="/news/map", alt="Carte", title="Carte")
 						
-					a.leftlink#feedlink.yak-mainMenu-hide(href="/news/feed")
+					a.leftlink#feedlink.yak-mainMenu-hide(href="/news/feed", alt="Feed", title="Feed")
 					
-					a.leftlink#addLink.yak-mainMenu-hide(href="/news/map/?post=1")
+					a.leftlink#addLink.yak-mainMenu-hide(href="/news/map/?post=1", alt="Poster", title="Poster"))
 					//	
-						a.leftlink(onclick="$('.searchYakwala').slideToggle('slow', function(){drawNewsFeed(); });")
+						a.leftlink(onclick="$('.searchYakwala').slideToggle('6000', function(){drawNewsFeed(); });")
 							img.imgleft(src="/images/search.png")
 
-				a#logoLink(href="/news/map")
+				a#logoLink(href="/news/map", alt="Yakwala", title="Yakwala")
 
 				- if (locals.user && active != "firstvisit")
-					a#zoneLocButton
-					a#profileMenu.customprofile.dropdown-toggle(href="#",data-toggle="dropdown")
+					a#zoneLocButton(alt="Favoris", title="Favoris")
+					a#profileMenu.customprofile.dropdown-toggle(href="#",data-toggle="dropdown", alt="Profile", title="Profile")
 						//					
 							img.yak-mainMenu-hide(id="userThumb", src=locals.user.thumbsmall)
 							span.caret(style="margin:22px 0px 22px 5px;")
