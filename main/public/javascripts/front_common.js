@@ -389,7 +389,7 @@ function setTimeSliderText(y){
 		yText = "Demain";
 	if(y==-1)
 		yText = "Hier";
-	$("#dayPrinter").html(yText);
+	$("#dayPrinter span").html(yText);
 
 	return yText;
 	

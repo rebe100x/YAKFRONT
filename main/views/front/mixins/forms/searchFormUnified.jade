@@ -10,7 +10,9 @@ mixin searchFormUnified(page)
 				button#searchBtn(type="submit")	
 			li
 				div#timeContainer
-					div#dayPrinter.sliderText Aujourd hui	
+					div#dayPrinter.sliderText 
+						span#blackBox
+							|Aujourd hui	
 					img.pull-left.timeIcon(src="/images/time.png")
 					div#heatSelector
 
@@ -481,7 +483,7 @@ mixin searchFormUnified(page)
 					currtext = lasttext;
 				}
 			}
-			$("#dayPrinter").html(setTimeSliderText($.cookie("dateFrom"), 1));
+			$("#dayPrinter span").html(setTimeSliderText($.cookie("dateFrom"), 1));
 			
 			/*$("#dropdownTimeSelector li").click(function(){
 				$("#dayPrinter").html($(this).find("a").html());
