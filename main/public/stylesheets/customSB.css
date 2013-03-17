@@ -386,7 +386,7 @@
 .mCS-dark-thick>.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar{
 	width:6px;
 	background:#000; /* rgba fallback */
-	background:rgba(0,0,0,0.75);
+	background:#d5d5d5;
 	-webkit-border-radius:2px;
 	-moz-border-radius:2px;
 	border-radius:2px;
