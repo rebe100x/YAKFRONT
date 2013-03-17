@@ -452,6 +452,7 @@ width: 270px;
    #closehideSearch { display: none}
    #blackBox { background-color: #3c3c3c; color: white; font-weight: bold; padding: 3px 15px; position: relative; top: 42px; }
    #dayPrinter .blackArrow { position: relative; top: -9px; left: 50%; float: left;}
+   .searchYakwala #rangeSelectorTrigger, .searchYakwala #tagSelectorTrigger { margin-top: 10px;}
 
  }
 
@@ -503,6 +504,7 @@ width: 270px;
    #closehideSearch { display: none}
    #blackBox { background-color: #3c3c3c; color: white; font-weight: bold; padding: 3px 15px; position: relative; top: 42px; }
    #dayPrinter .blackArrow { position: relative; top: -9px; left: 50%; float: left;}
+   .searchYakwala #rangeSelectorTrigger, .searchYakwala #tagSelectorTrigger { margin-top: 10px;}
  }
 
  /*ipads portrail*/
