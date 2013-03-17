@@ -486,7 +486,7 @@ mixin searchFormUnified(page)
 			$("#dayPrinter span").html(setTimeSliderText($.cookie("dateFrom"), 1));
 			
 			/*$("#dropdownTimeSelector li").click(function(){
-				$("#dayPrinter").html($(this).find("a").html());
+				$("#dayPrinter span").html($(this).find("a").html());
 				dateFrom = setTimeSliderText($(this).attr("value"));
 				getAndPrintInfo();
 				$.cookie("dateFrom", $(this).attr("value"),{ expires: 10000, path : '/' });

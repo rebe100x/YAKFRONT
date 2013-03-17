@@ -448,6 +448,10 @@ width: 270px;
    span.redAdd { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -205px -658px; position: relative; float: left; cursor: pointer; top: 16px; margin-right: 10px}
    span.redStars { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -176px -658px; position: relative; float: left; cursor: pointer; top: 0px; margin-right: 10px}
    .searchYakwala #timeContainer { position: relative; margin-left: 12px; margin-top: 10px;}
+   .searchYakwala #searchStr, .searchYakwala #searchPlaceStr { height: 26px;}
+   #closehideSearch { display: none}
+   #blackBox { background-color: #3c3c3c; color: white; font-weight: bold; padding: 3px 15px; position: relative; top: 42px; }
+   #dayPrinter .blackArrow { position: relative; top: -9px; left: 50%; float: left;}
 
  }
 
@@ -495,6 +499,10 @@ width: 270px;
    span.redAdd { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -205px -658px; position: relative; float: left; cursor: pointer; top: 16px; margin-right: 10px}
    span.redStars { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -176px -658px; position: relative; float: left; cursor: pointer; top: 0px; margin-right: 10px}
    .searchYakwala #timeContainer { position: relative; margin-left: 12px;}
+   .searchYakwala #searchStr, .searchYakwala #searchPlaceStr { height: 26px;}
+   #closehideSearch { display: none}
+   #blackBox { background-color: #3c3c3c; color: white; font-weight: bold; padding: 3px 15px; position: relative; top: 42px; }
+   #dayPrinter .blackArrow { position: relative; top: -9px; left: 50%; float: left;}
  }
 
  /*ipads portrail*/
@@ -544,6 +552,7 @@ width: 270px;
    span.redAdd { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -205px -658px; position: relative; float: left; cursor: pointer; top: 16px; margin-right: 10px}
    span.redStars { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -176px -658px; position: relative; float: left; cursor: pointer; top: 0px; margin-right: 10px}
    .searchYakwala #timeContainer { position: relative; margin-left: 12px; margin-top: 10px;}
+   .searchYakwala #searchStr, .searchYakwala #searchPlaceStr { height: 23px;}
  }
 
   /*ipads portrail*/
@@ -935,7 +944,7 @@ width: 270px;
 .highlightedLi { background: #d51820;}
 #customMenuProfile a { width: 80%}
 #zoomnavigation { display: none;}
-/*#blackBox { background-color: black; color: white; font-weight: bold; padding: 3px; position: relative; top: 42px}*/
+
 
 
 

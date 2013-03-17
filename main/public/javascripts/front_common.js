@@ -389,7 +389,7 @@ function setTimeSliderText(y){
 		yText = "Demain";
 	if(y==-1)
 		yText = "Hier";
-	$("#dayPrinter span").html(yText);
+	$("#dayPrinter span").html('<img class="blackArrow" src="/images/new/blackboxbg.png" />' + yText);
 
 	return yText;
 	
@@ -505,7 +505,7 @@ function  hidePostForm()
 
 $(document).ready(function() {
 	//user.thumbsmall = "http://localhost:3000/images/dangui.jpg";
-	console.log(user);
+	//console.log(user);
 
 	/*preload([
     '/images/yakwala_sprite.png',
