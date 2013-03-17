@@ -389,8 +389,17 @@ function setTimeSliderText(y){
 		yText = "Demain";
 	if(y==-1)
 		yText = "Hier";
-	$("#dayPrinter span").html('<img class="blackArrow" src="/images/new/blackboxbg.png" />' + yText);
+	//$("#dayPrinter span").html('<img class="blackArrow" src="/images/new/blackboxbg.png" />' + yText);
+	$("#dayPrinter span").html(yText);
+	if(typeof($(".ui-slider-handle").position()) != 'undefined')
+	{
+		var currElposition = $(".ui-slider-handle").position();	
+		//console.log(currElposition);
+		$("#blackBox").css("left", (currElposition.left - 87) + "px");
+	}
+	
 
+	
 	return yText;
 	
 }
@@ -511,7 +520,13 @@ $(document).ready(function() {
     '/images/yakwala_sprite.png',
     '/images/yakwala_sprite-medium.png'
 	]);*/
-
+	
+	if(typeof($(".ui-slider-handle").position()) != 'undefined')
+	{
+		var currElposition = $(".ui-slider-handle").position();	
+		//console.log(currElposition);
+		$("#blackBox").css("left", (currElposition.left - 87) + "px");
+	}
 
 	$("#newsfeedContent").mCustomScrollbar({
 		set_width:false, /*optional element width: boolean, pixels, percentage*/
