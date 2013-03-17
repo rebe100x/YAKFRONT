@@ -234,10 +234,14 @@ mixin searchFormUnified(page)
 					setTimeSliderText(dateFrom);
 				},
 				change:function(event, ui){
+					
 					var x = ui.value;
 					dateFrom = getDaysFrom(x);
 					getAndPrintInfo();
 					$.cookie("dateFrom", dateFrom,{ expires: 10000, path : '/' });
+				},
+				create: function(event, ui){
+					setBlackBockPosition();
 				}
 			});
 			

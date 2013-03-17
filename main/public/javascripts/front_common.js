@@ -391,20 +391,20 @@ function setTimeSliderText(y){
 		yText = "Hier";
 	//$("#dayPrinter span").html('<img class="blackArrow" src="/images/new/blackboxbg.png" />' + yText);
 	$("#dayPrinter span").html(yText);
+	setBlackBockPosition();
+	return yText;
+	
+}
+
+function setBlackBockPosition()
+{
 	if(typeof($(".ui-slider-handle").position()) != 'undefined')
 	{
 		var currElposition = $(".ui-slider-handle").position();	
 		//console.log(currElposition);
 		$("#blackBox").css("left", (currElposition.left - 87) + "px");
 	}
-	
-
-	
-	return yText;
-	
 }
-
-
 		
 /*READY FUNCTIONS*/	
 
