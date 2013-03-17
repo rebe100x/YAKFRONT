@@ -102,6 +102,8 @@ mixin searchFormUnified(page)
 				$('#dropdownTagSelector').on('click','li', function (e) {
 					searchString = "#"+$(this).html();
 					$('#searchStr').val(decodeURIComponent(searchString.replace('%2520', ' ')));
+					$('#searchStr').focus();
+					$('#searchStr').select();
 					$('#searchBtn').trigger('click');
 				});
 

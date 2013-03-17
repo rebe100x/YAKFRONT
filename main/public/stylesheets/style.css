@@ -125,7 +125,7 @@
 
 .searchYakwala .ui-slider-horizontal { height: 2px; position: relative; left: 7px;}
 .searchYakwala .ui-slider .ui-slider-handle { height: 16px;cursor:pointer; margin-left: -3px; width:7px; top: -5px; border-radius: 0px; border: 0px;}
-.searchYakwala .btn .caret{margin-left:6px;}
+.searchYakwala .btn .caret{margin-left:6px; margin-top: 4px;}
 .searchYakwala #heatSelector { background: #DDDDDD; height: 7px; border: 0px; border-radius: 0px;}
 
 		/*search module*/
