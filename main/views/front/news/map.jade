@@ -854,7 +854,8 @@ block content
 				//thumbImage = thumbImage.replace('//','/');
 				var thumbImageCode = $("<div />");
 				thumbImageCode.attr("class", "thumbImage");
-				thumbImageCode.append("<img src=\'"+thumbImage+"\' />");
+				//thumbImageCode.append("<img src=\'"+thumbImage+"\' />");
+				thumbImageCode.append("<img src='http://batch.yakwala.fr/PROD/YAKREP/BACKEND/thumb/d44cf5f99c5ba8c818809a2a19aa390a.jpg' />");
 				infoContent.append(thumbImageCode);
 			
 			}
@@ -1132,7 +1133,7 @@ block content
 				var item = createFeedPageItem(val);
 				currentItem.find(".loadingMore").remove();
 				currentItem.append(item);
-				currentItem.find(".myitem").append("<i class='icon-remove' title='close' rel='" + thumbImage + "' onclick='closemyitem(this);'></i>");
+				currentItem.find(".itemTitle").append("<i class='icon-remove' title='close' rel='" + thumbImage + "' onclick='closemyitem(this);'></i>");
 				setshortUrl();
 				setLikeSystem();
 
@@ -1158,7 +1159,7 @@ block content
 				
 				
 				currentItem.find(".infodetail").insertAfter(currentItem.find(".postedBy"));
-				currentItem.find(".icon-remove").appendTo(currentItem.find(".yakTypeImage"));
+				currentItem.find(".icon-remove").appendTo(currentItem.find(".itemTitle"));
 				$("ul#newsfeed li").css("width", "100%");
 				$("ul#newsfeed").css("width", "100%");
 				$("#newsfeed li").removeClass('highlighted');
