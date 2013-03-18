@@ -541,6 +541,7 @@ var User = new Schema({
 	, Social: { 
 		Twitter : [Twitter]
 	 }
+	,twitter_id : { type : Number}
 	, createfrom_social  :{ type : Number, default:0} // 0 yakwala, 1 twitter, 2 facebook
 	, apiData	: { type: [{
 							apiClientId : {type: Schema.ObjectId,index: true}  
@@ -627,6 +628,10 @@ User.statics.countUnvalidated = function (callback) {
 
 User.statics.findByLogin = function (login,callback) {
   return this.find({login:login,status:1}, callback);
+}
+
+User.statics.findbyMail = function (mail,callback) {
+  return this.find({'mail':mail}, callback);
 }
 
 User.statics.findByLoginDuplicate = function (login,callback) {

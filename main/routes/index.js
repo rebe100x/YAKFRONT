@@ -1131,7 +1131,7 @@ exports.auth_twitter_callback = function(req, res){
 				user.password= password;
 				user.salt="1";
 				user.type=1;
-
+				user.twitter_id = twitter_id;
 				
 				var Twitter = db.model('Twitter');
 				var aTwitter = new Twitter();	

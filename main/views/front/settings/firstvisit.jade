@@ -168,7 +168,18 @@ block content
 					$("#username").val(user.login);
 				}
 					
+				$("#email").blur(function(){
+					$.getJSON('/api/findbymail/' + curremail,function(users) {
 
+						if(users.users.length != 0 && user.mail != curremail)
+						{
+							$("#email").val("");
+							alert("Email enregistre'");
+							return false;
+						}
+					
+					});
+				});
 
 				$("#username").blur(function(){
 					var currusername = $("#username").val();
@@ -202,6 +213,7 @@ block content
 				$("form").submit(function(){
 
 					var currusername = $("#username").val();
+					var curremail = $("#email").val();
 
 					$.getJSON('/api/findbylogin/' + currusername,function(users) {
 
@@ -224,6 +236,17 @@ block content
 							//alert(suggestions);
 							
 							
+							return false;
+						}
+					
+					});
+
+					$.getJSON('/api/findbymail/' + curremail,function(users) {
+
+						if(users.users.length != 0 && user.mail != curremail)
+						{
+							$("#email").val("");
+							alert("Email enregistre'");
 							return false;
 						}
 					

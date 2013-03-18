@@ -1288,6 +1288,20 @@ exports.user_findbylogin = function (req, res) {
 	});
 };
 
+exports.user_findbymail = function (req, res) {
+	var User = db.model('User');	
+	User.findbyMail(req.params.string,function (err, docs){
+		var usersFormated = docs.map(function(item){
+			var User = db.model('User');
+			return User.formatLight(item);
+		});
+
+		res.json({
+			users: usersFormated
+		  });
+	});
+};
+
 
 exports.feeduser_search = function (req, res) {
 	var results = new Array();
