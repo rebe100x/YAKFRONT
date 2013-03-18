@@ -113,7 +113,7 @@ exports.countUnvalidatedCats = function (req, res) {
 /******* 
 #FEED
 *******/
-exports.feed = function(req, res){
+exports.feed_list = function(req, res){
 	delete req.session.message;
 	res.render('feed/index');
 };
@@ -161,7 +161,198 @@ exports.gridFeeds = function (req, res) {
 	});
 };
 
+exports.feed = function(req, res){
+/*
+	var formMessage = new Array();
+	delete req.session.message;
+	var Feed = db.model('Feed');
+	var Yakcat = db.model('Yakcat');
+	mongoose.set('debug', true);
+	var obj_id = req.body.objid;
+	var edit = false;
+	console.log(obj_id);
+	console.log(req.body);
+	feed = new Feed();
+	{ yakcatInput: '',
+  yakcatNames: '',
+  address: 'Provence-Alpes-Côte-d\'Azur',
+  latitude: '43.935175',
+  longitude: '6.067918',
+  update: '0',
+  objid: '50fd24f3fa9a955c0b00016b',
+  humanName: 'CCIMP',
+  link: 'http://opendata.regionpaca.fr/donnees/detail/signataires-de-la-charte-e
+sprit-client-de-la-ccimp.html',
+  licence: 'Open',
+  yakType: '',
+  yakcat: '',
+  freetag: '',
+  place: 'Provence-Alpes-Côte-d\'Azur',
+  source: '',
+  status: '',
+  submit: 'Enregistrer',
+  infoTitle: '#YKL2 est signataire de la charte Esprit Client 2013 de la CCIMP',
 
+  infoContent: 'content',
+  infoAddress: '#YKL3 #YKL4 #YKL5 #YKL6 #YKL7, FRANCE',
+  infoLatitude: '#YKL15',
+  infoLongitude: '#YKL14',
+  infoLink: 'http://www.espritclient.ccimp.com/',
+  infoThumb: 'thumb',
+  infoCat: 'ctas',
+  infoTag: '#YKL13',
+  infoPlace: '#YKL2',
+  infoEventDate: 'eventDate',
+  infoPubDate: '2013-01-01T00:00:00+0100',
+  infoTel: '#YKL10',
+  infoTransportation: 'transportation',
+  infoOpening: 'opening',
+  infoWeb: 'web',
+  infoMail: 'mail' }
+
+	feed.save(function (err){
+
+	});
+	/*
+	if(req.body.placeInput && req.body.title && req.session.user)
+	{
+		Place.findById(obj_id, function (err, place)
+		{
+			if (err || place == null)
+			{
+				console.log("Place not found by id: creating a new place");
+				edit = false;
+				place = new Place();
+			}
+			else
+			{
+				console.log("Place found by id: updating");
+				edit = true;
+			}
+
+			var placeThumb = new Object();
+			if (req.files.picture) {
+				if(req.files.picture.size && req.files.picture.size > 0 && req.files.picture.size < 1048576*5)
+				{
+					var drawTool = require('../mylib/drawlib.js');
+					var size = [{"width":120,"height":90},{"width":512,"height":0}];
+					placeThumb = drawTool.StoreImg(req.files.picture,size,conf);
+					place.thumb = placeThumb.name;
+				}
+			}
+			else
+				placeThumb.err = 0;
+
+
+			if(placeThumb.err == 0)
+			{
+				if(req.body.yakcatInput.length > 0)
+				{
+					var yak = eval('('+req.body.yakcatInput+')');
+					var yakN = eval('('+req.body.yakcatNames+')');
+					place.yakCat = yak;
+					place.yakcatName = yakN;
+				}
+				place.title = req.body.title;
+				place.content = req.body.content;
+
+				// NOTE : in the query below, order is important : in DB we have lat, lng but need to insert in reverse order : lng,lat  (=> bug mongoose ???)
+				place.formatted_address = JSON.parse(req.body.placeInput).title;
+				place.location = {lng:parseFloat(req.body.longitude),lat:parseFloat(req.body.latitude)};
+
+				if (!edit)
+					place.creationDate = new Date();
+				place.lastModifDate = new Date();
+				place.origin = req.body.hiddenOrigin;
+				place.outGoingLink = req.body.outgoinglink;
+
+				place.status = req.body.status;
+
+				place.access = 1;
+				place.licence = req.body.licence;
+				place.freeTag = req.body.freetag.split(',');
+
+				var contact = {
+						'tel' : req.body.tel,
+						'mobile' : req.body.mobile,
+						'mail' : req.body.mail,
+						'transportation' : req.body.transportation,
+						'web' : req.body.web,
+						'opening' : req.body.opening,
+						'closing' : req.body.closing,
+						'special_opening' : req.body.special
+					};
+
+				place.contact = contact;
+
+				Zone.findNear(place.location.lat, place.location.lng, function(err, zone)
+				{
+					if (!err)
+					{
+						//place.zone = zone[0]._id;
+						place.zone = zone[0].num;
+						// security against unidentified users
+						if(req.session.user)
+						{
+							if (!edit)
+								place.user = req.session.user._id;
+							place.save(function (err)
+							{
+								if (!err)
+								{
+									if (place.status == 1)
+										formMessage.push("Le lieu a été validé.");
+									else if (place.status == 3)
+										formMessage.push("Le lieu a été rejeté.");
+									else
+									{
+										if (edit)
+											formMessage.push("Le lieu a été modifié et est en attente de validation.");
+										else
+											formMessage.push("Le lieu a été ajouté et est en attente de validation.");
+									}
+									console.log('Success!');
+								}
+								else
+								{
+									formMessage.push("Une erreur est survenue lors de l'ajout du lieu (Doublon...etc).");
+									console.log(err);
+								}
+								req.session.message = formMessage;
+
+
+								res.redirect('place/list');
+
+							});
+						}
+					}
+					else
+					{
+						console.log(err);
+					}
+				});
+			}
+			else
+			{
+				formMessage.push("Erreur dans l'image uploadée: Le lieu n'est pas sauvegardé.");
+				console.log("Erreur dans l'image uploadée: Le lieu n'est pas sauvegardé.");
+				req.session.message = formMessage;
+				res.redirect('place/list');
+			}
+		});
+	}
+	else
+	{
+		if(!req.session.user)
+			formMessage.push("Veuillez vous identifier pour ajouter un lieu");
+		if(!req.body.title)
+			formMessage.push("Erreur: définissez le titre du lieu");
+		if(!req.body.placeInput)
+			formMessage.push("Erreur: définissez une géolocalisation du lieu");
+		req.session.message = formMessage;
+		res.redirect('place/list');
+	}*/
+};
 
 /******* 
 #PLACE 
@@ -170,7 +361,7 @@ exports.place_add = function(req, res){
 	res.render('place/add');
 };
 
-exports.place_map = function(req, res){
+exports.place_list = function(req, res){
 	delete req.session.message;
 	res.render('place/list');
 };

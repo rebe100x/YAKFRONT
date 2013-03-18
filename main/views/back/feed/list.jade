@@ -265,13 +265,22 @@ mixin list()
 			
 			listenerHandle = google.maps.event.addListener(map, 'click', function(event) {
 				placeMarker(event.latLng,markerLocation);
+				getformattedAddress(event.latLng);
+				$('#feedform #latitude').val(event.latLng.lat());
+				$('#feedform #longitude').val(event.latLng.lng());
 			});
 
 			listenerHandleDrag = google.maps.event.addListener(markerLocation, 'dragend', function() {
+				
 				var position = markerLocation.getPosition();
-				$('#feedForm #latitude').val(position.lat());
-				$('#feedForm #longitude').val(position.lng());
+				getformattedAddress(position);
+				$('#feedform #latitude').val(position.lat());
+				$('#feedform #longitude').val(position.lng());
+
 			});
+
+
+
 
 
 			$("#MyGrid").hide();
@@ -293,6 +302,7 @@ mixin list()
 				google.maps.event.removeListener(listenerHandle);
 				markerLocation.setVisible(false);					
 				$("#feedform input[type=hidden]").val('');
+				$('#feedform').clearForm();
 			});
 
 			$("#feedform").show();
@@ -300,10 +310,12 @@ mixin list()
 			$(".catLabel").remove();
 			$("#pillYakcat ul").empty();
 			$('#err').hide();
-			yakcatArray = new Array();
-			yakcatNames = new Array();
+			yakcatIds = new Array();
+			tags = new Array();
+			sourceFile = new Array();
+			sourceLink = new Array();			
 
-			$("#feedform #objid").val(this.id);
+			
 
 			var url = '/api/feed/'+this.id;
 			
@@ -314,21 +326,31 @@ mixin list()
 				async: false,
 				success: function (response)
 				{
+					/*FORM INITIALISATION*/
+
+					
+
 					var feed = response.feed;
 					
+					$("#feedform #objid").val(this.id);
+
 					$("#feedform #humanName").val(feed.humanName);
 					$("#feedform #licence").val(feed.licence);
 					$("#feedform #link").val(feed.link);
 					$('#feedform #persistDays input').val($('#feedform #persistDays').find('li[data-value='+feed.persistDays+']').text());
-					feed.yakCatNameArray.forEach(function(cat){
+					feed.yakcat.forEach(function(cat){
 						$("#pillYakcat").show();
-						$("#pillYakcat ul").append("<li class='yakcat-val status-important' data-value='id'>"+cat+"</li>");
+						$("#pillYakcat ul").append("<li class='yakcat-val status-important' data-value='"+cat._id+"'>"+cat.name+"</li>");
+						yakcatIds.push(cat._id);
 					});
+					$("#feedform #yakcatIdsHidden").val(yakcatIds.join(','));
 					
 					feed.tag.forEach(function(tag){
 						$("#pillFreetag").show();
-						$("#pillFreetag ul").append("<li class='freetag-val status-info' data-value='id'>"+tag+"</li>");
+						$("#pillFreetag ul").append("<li class='freetag-val status-info' data-value='"+tag+"'>"+tag+"</li>");
+						tags.push(tag);
 					});
+					$("#feedform #tagsHidden").val(tags.join(','));
 					
 					if(typeof feed.defaultPlaceLocation != 'undefined'){
 						var latlng = new google.maps.LatLng(feed.defaultPlaceLocation.lat, feed.defaultPlaceLocation.lng);
@@ -339,28 +361,38 @@ mixin list()
 						$("#feedform #address").val(feed.defaultPlaceSearchName);
 						$("#feedform #place").val(feed.defaultPlaceSearchName);
 					}
+					$('#placeSearch').val(feed.defaultPlaceSearchName);
+					
+
 					$("#feedform #defaultPrintFlag").val(feed.defaultPrintFlag);
 					
 					$("#feedform #feedType").val(feed.feedType);
-					
+					if(feed.feedType=='CSV'){
+						$('#alertFeedType').show().children('span.alertText').html('Le fichier doit être sauvé en UTF8, séparation point virgule (;) et textes délimités par des guillemets doubles ("). ');
+					}
 
 					$('#feedform input:radio[name=yakType][value='+feed.yakType+']').attr("checked", true).trigger("change").button('refresh');
 					
-					
-					if(feed.fileSource.length>0){
-						$("#pillSource").show();
-						$("#pillSource ul").append("<li class='source-val status-success' data-value='"+feed.fileSource+"'>"+feed.fileSource+"</li>");
-					}
-						
+					var tmpArr = new Array();
+					console.log(feed);
+					tmpArr = feed.fileSource;
+					tmpArr.forEach(function(source){ 
+						if(source.length>0){	
+							$("#pillSourceFile").show();
+							$("#pillSourceFile ul").append("<li class='source-val status-success' data-value='"+source+"'>"+source+"</li>");
+							sourceFile.push(source);
+						}
+					});
+					$("#feedform #sourceFileHidden").val(sourceFile.join(','));	
 					
 					feed.linkSource.forEach(function(source){
 						if(source.length>0){
-							$("#pillSource").show();
-							$("#pillSource ul").append("<li class='source-val status-success' data-value='"+source+"'>"+source+"</li>");	
-						}
-						
+							$("#pillSourceLink").show();
+							$("#pillSourceLink ul").append("<li class='source-val status-warning' data-value='"+source+"'>"+source+"</li>");
+							sourceLink.push(source);
+						}						
 					});
-
+					$("#feedform #sourceLinkHidden").val(sourceLink.join(','));
 
 					$('#feedform input:radio[name=status][value='+feed.status+']').attr("checked", true).trigger("change").button('refresh');
 
@@ -403,19 +435,21 @@ mixin list()
 			event.preventDefault();
 			listenerHandle = google.maps.event.addListener(map, 'click', function(event) {
 				getformattedAddress(event.latLng);
-				placeMarker(event.latLng,markerLocation);
+				$('#feedform #latitude').val(position.lat());
+				$('#feedform #longitude').val(position.lng());
 			});
 			listenerHandleDrag = google.maps.event.addListener(markerLocation, 'dragend', function() {
 				var position = markerLocation.getPosition();
+				getformattedAddress(position);
 				$('#feedform #latitude').val(position.lat());
 				$('#feedform #longitude').val(position.lng());
 
-				getformattedAddress(position);
+				
 			});
 
 			$("#MyGrid").hide();
 			$("#feedform")[0].reset();
-			// We remove the error class when we open a form for creating a new place
+			// We remove the error class when we open a form for creating a new feed
 			$('#feedform #titleGroup').removeClass("error");
 			$('#feedform #contentGroup').removeClass("error");
 			$('#feedform #licenceGroup').removeClass("error");
@@ -434,8 +468,9 @@ mixin list()
 			$("#feedform #hiddenOrigin").val(user.login);
 			$("#feedform #origine").val(user.login);
 			$("#feedform #origine").prop('disabled', true);
-			yakcatArray = new Array();
-			yakcatNames = new Array();
+			yakcatIds = new Array();
+			tags = new Array();
+			//yakcatNames = new Array();
 		});
 
 

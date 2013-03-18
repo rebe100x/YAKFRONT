@@ -77,12 +77,11 @@ app.get('/user/login', back.user_login);
 app.get('/user/logout', back.user_logout);
 app.post('/session',back.session);
 
-app.get('/place/list', back.requiresLogin, back.place_map);
+app.get('/place/list', back.requiresLogin, back.place_list);
+app.get('/feed/list', back.requiresLogin, back.feed_list);
 
-app.get('/feed', back.requiresLogin, back.feed);
 
-app.get('/api/feeds/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status/:type', back.gridFeeds);
-
+app.post('/feed', back.requiresLogin, back.feed);
 app.post('/place', back.requiresLogin, back.place);
 app.post('/user', back.requiresLogin, back.user);
 app.post('/news', back.requiresLogin, back.news);
@@ -105,6 +104,7 @@ app.get('/api/tags', api.tags);
 app.get('/api/places', back.places);
 app.get('/api/places/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status', back.gridPlaces);
 app.get('/api/places/:id', back.findPlaceById);
+app.get('/api/feeds/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status/:type', back.gridFeeds);
 app.get('/api/usersearch/:string', back.usersearch);
 app.get('/api/findCatById', back.findCatById);
 app.get('/api/user/:id', back.findUserById);

@@ -2,8 +2,8 @@ mixin feedForm()
 	button.btn#btnBack(style='display:none')
 		i.icon-chevron-left
 	form#feedform.yakForm(action='/feed', method='POST', enctype='multipart/form-data', style='display:none')
-		input#yakcatInput(type='hidden', name='yakcatInput', value='')
-		input#yakcatNames(type='hidden', name='yakcatNames', value='')
+		input#yakcatIdsHidden(type='hidden', name='yakcatIdsHidden', value='')
+		input#tagsHidden(type='hidden', name='tagsHidden', value='')
 		input#address(type='hidden', name='address', value='')
 		input#latitude(type="hidden", name="latitude")
 		input#longitude(type="hidden", name="longitude")
@@ -72,38 +72,49 @@ mixin feedForm()
 						button.btn#btn-freetag-adder(type="button") Ajouter	
 					.pillbox#pillFreetag(style="display:none")
 						ul						
-		
+			br
+			br		
 
 			
 		legend Localisation:						
 		div.control-group#locationGroup.clearBoth
-			.col
-				label(for='Place') Localisation du flux
-				.input-append
-					input(type="text",data-provide="typeahead", id="place", name="place", autocomplete="off", placeholder="Chercher une ville, département, ou région")
-			.col
-				label Si l'info n'est pas géolocalisée...	
-				select.big#defaultPrintFlag
-					option(value="0") ... ne pas afficher sur la carte mais afficher sur le fil info
-					option(value="1") ... afficher sur la carte + fil info
-					option(value="3") ... ne pas afficher l info du tout
-					option(value="2") ... ne pas faire de géoloc et la placer au point par défaut
-		
+			div.controls.clearBoth	
+				.col
+					label(for='Place') Localisation du flux:
+					.input-append
+						input(type="text",data-provide="typeahead", id="place", name="place", autocomplete="off", placeholder="Chercher une ville, département, ou région")
+				.col
+					label Si l'info n'est pas géolocalisée...	
+					select.big#defaultPrintFlag
+						option(value="0") ... ne pas afficher sur la carte mais afficher sur le fil info
+						option(value="1") ... afficher sur la carte + fil info
+						option(value="3") ... ne pas afficher l info du tout
+						option(value="2") ... ne pas faire de géoloc et la placer au point par défaut
+			div.controls.clearBoth	
+				label Texte de recherche sur Google Map:
+				input(type="text", id="placeSearch", name="placeSearch", autocomplete="off", placeholder="Texte de recherche sur google map.")
+			br
+			br
+			br			
 		legend Sources
-		div.controls.clearBoth		
-			.col					
-				label Uploader un fichier : 
-				input(type="file", id="fileupload", name="files[]", data-url="http://localhost:8888", multiple)
-				div#progress
-					div.bar(style="width: 0%;")
-			.col
-				label Source(s) web
-				.input-append	
-					input.big(type='text', name='source', id='source', placeholder='http://...')
-					button.btn#btn-source-adder(type="button") Ajouter
-		div.controls.clearBoth			
-			.pillbox#pillSource(style="display:none")
-				ul	
+		div.control-group#locationGroup.clearBoth	
+			div.controls.clearBoth		
+				.col					
+					label Uploader un fichier : 
+					input(type="file", id="fileupload", name="files[]", data-url="http://localhost:"+JSON.parse(conf).fileport, multiple)
+					div#progress
+						div.bar.alert.alert-success(style="width: 0%;")
+							span.alertText 0%
+					.pillbox#pillSourceFile(style="display:none")
+						ul
+				.col
+					label Source(s) web
+					.input-append	
+						input.big(type='text', name='source', id='source', placeholder='http://...')
+						button.btn#btn-source-adder(type="button") Ajouter
+					.pillbox#pillSourceLink(style="display:none")
+						ul	
+
 		br
 		br			
 		legend Parsing:
@@ -115,6 +126,9 @@ mixin feedForm()
 						option(value="RSS") RSS
 						option(value="CSV") CSV
 						option(value="YAKMADE") YAKMADE
+					div#alertFeedType.alert.alert-info
+						button.close(type="button", data-dismiss="alert") x
+						span.alertText
 				.col
 					label &nbsp;
 					button.btn.btn-primary.btn-warning(type='button', name='parsing', id='parsing') Définir le parsing
@@ -129,11 +143,13 @@ mixin feedForm()
 				label.radio.inline Inactif
 					input(type="radio", name="status", value="0")	
 						
-							
+		br				
 		div.control-group
 			div.controls
 				button.btn.btn-large.btn-inverse(type='submit', name='submit', id='submit', value='Enregistrer') Enregistrer
-
+			br
+			br
+			br		
 		div#parsingModal.modal.hide.fade.big
 			div.modal-header
 				button.big(type="button", class="close", data-dismiss="modal", aria-hidden="true") X
@@ -188,19 +204,35 @@ mixin feedForm()
 
 		$(document).ready(function() {
 
+			$('#alertFeedType').hide();
+			$('#feedType').on('change',function(){
+				if($(this).val()=='CSV'){
+					$('#alertFeedType').show().children('span.alertText').html('Le fichier doit être sauvé en UTF8, séparation point virgule et textes délimités par des guillemets doubles. ');
+				}else
+					$('#alertFeedType').hide();
+			});
+
 			$('#fileupload').fileupload({
 				dataType: 'json',
 				done: function (e, data) {
 					$.each(data.result.files, function (index, file) {
 						$("#pillSource").show();
-						$("#pillSource ul").append("<li class='source-val status-success' data-value='"+file.name+"'>"+file.name+"</li>");						
+						$("#pillSource ul").append("<li class='source-val status-success' data-value='"+file.name+"'>"+file.name+"</li>");
+						if(file.name.split('.').pop().toLowerCase() == 'csv'){
+							$('#feedType').val('CSV');
+						}
 					});
 				},
 				progressall: function (e, data) {
 					var progress = parseInt(data.loaded / data.total * 100, 10);
-					$('#progress .bar').css('width',progress + '%');
-					$('#progress .bar').html(progress+'%');
+					$('#progress .bar').css('width',(progress-20) + '%');
+					$('#progress .bar span.alertText').html(progress+'%');
 				}
+			});
+			$('#fileupload').click(function(){
+				$('#progress .bar').css('width','0%');
+				$('#progress .bar span.alertText').html('0%');
+	
 			});
 			
 
@@ -209,12 +241,7 @@ mixin feedForm()
 				$('#parsingModal').modal('show');
 			});
 
-			$('#btn-freetag-adder').on('click',function(event){
-				event.preventDefault();
-				$("#pillFreetag ul").append("<li class='freetag-val' data-value='null'>"+$('#freetag').val()+"</li>");
-				$('#freetag').val('').focus();
-				return false;
-			});	
+			
 
 			$('#yakcat').typeahead({
 				minLength : 3,
@@ -230,10 +257,25 @@ mixin feedForm()
 				onselect: function(obj) { 
 					$("#pillYakcat ul").append("<li class='yakcat-val status-important' data-value='"+obj._id+"'>"+obj.title+"</li>");
 					$('#yakcat').val('').focus();
+					$('#yakcatIdsHidden').val($('#yakcatIdsHidden').val()+','+obj._id);
 				}
 			});
 
+			$("#pillYakcat ul").unbind('click').on('click','li',function(){
+				var tmpCat = $('#yakcatIdsHidden').val().split(',');
+				tmpCat.cleanArrayByName($(this).attr('data-value'));
+				$('#yakcatIdsHidden').val(tmpCat.join(','));
+			});
 			
+			
+			$('#btn-freetag-adder').unbind('click').on('click',function(event){
+				event.preventDefault();
+				$("#pillFreetag ul").append("<li class='freetag-val' data-value='"+$('#freetag').val()+"'>"+$('#freetag').val()+"</li>");
+				$('#tagsHidden').val($('#tagsHidden').val()+','+$('#freetag').val());
+				$('#freetag').val('').focus();
+				return false;
+			});	
+
 			$('#freetag').typeahead({
 				minLength : 3,
 				source: function (typeahead, query) {
@@ -246,15 +288,24 @@ mixin feedForm()
 						})},
 				property: "title",
 				onselect: function(obj) { 
-					$("#pillFreetag ul").append("<li class='freetag-val status-info' data-value='"+obj._id+"'>"+obj.title+"</li>");
+					$("#pillFreetag ul").append("<li class='freetag-val status-info' data-value='"+obj.title+"'>"+obj.title+"</li>");
 					$('#freetag').val('').focus();
+					$('#tagsHidden').val($('#tagsHidden').val()+','+obj.title);
 				}
 			});
 
+			$("#pillFreetag ul").unbind('click').on('click','li',function(){
+				console.log('RRR');
+				var tmpTag = $('#tagsHidden').val().split(',');
+				console.log(tmpTag);
+				tmpTag.cleanArrayByName($(this).attr('data-value'));
+				$('#tagsHidden').val(tmpTag.join(','));
+			});
+
 			$('#btn-source-adder').unbind('click').on('click',function(){
-				$("#pillSource").show();
-				$("#pillSource ul").append("<li class='source-val status-warning' data-value='"+$('#source').val()+"'>"+$('#source').val()+"</li>");
-				$('#pillSource').val('').focus();
+				$("#pillSourceLink").show();
+				$("#pillSourceLink ul").append("<li class='source-val status-warning' data-value='"+$('#source').val()+"'>"+$('#source').val()+"</li>");
+				$('#pillSourceLink').val('').focus();
 			});
 
 			
@@ -266,7 +317,6 @@ mixin feedForm()
 			var autocomplete = new google.maps.places.Autocomplete(input);
 			autocomplete.bindTo('bounds', map);
 			google.maps.event.addListener(autocomplete, 'place_changed', function() {
-				infowindow.close();
 				$('#placeForm #btn-place-adder').click();
 				var place = autocomplete.getPlace();
 				if (!place.geometry) {
@@ -274,11 +324,14 @@ mixin feedForm()
 					input.className = 'notfound';
 					return;
 				}
-
+				
+				var formattedPlace = getPlaceFromGmapResult(place);
+				$('#placeSearch').val(formattedPlace.address.state+', '+formattedPlace.address.area);
 				// If the place has a geometry, then present it on a map.
 				if (place.geometry.viewport) {
 					map.fitBounds(place.geometry.viewport);
 				} else {
+
 					map.setCenter(place.geometry.location);
 					map.setZoom(17);  // Why 17? Because it looks good.					
 					$("#feedform #longitude").val(place.geometry.location.Za);
@@ -291,7 +344,6 @@ mixin feedForm()
 			});
 
 
-			/*// bind 'myForm' and provide a simple callback function
 			$('#feedForm').ajaxForm(function() {
 				$("#MyGrid").fadeIn();
 				$("#feedForm").hide();
@@ -299,7 +351,7 @@ mixin feedForm()
 				google.maps.event.removeListener(listenerHandle);
 				markerLocation.setVisible(false);
 				refreshDatagrid();
-			});*/
+			});
 
 
 		});
