@@ -101,7 +101,7 @@ mixin menu(active)
 						}
 						
 					});
-					/*try
+					try
 					{
 
 					var mq = window.matchMedia( "(min-width: 768px)" );
@@ -132,6 +132,7 @@ mixin menu(active)
 					function WidthChange(mq)
 					{
 						if (mq.matches) {
+							$("#searchElementContainer").eq(0).show();
 							$("#maplink").css("backgroundImage", "url('/images/yakwala_sprite.png')");
 							$("#maplink").css("backgroundPosition", "0px -126px");
 							if(gup("post") == 1)
@@ -154,7 +155,7 @@ mixin menu(active)
 				catch(e)
 				{
 
-				} */
+				} 
 				});
 		if(active == 'feed')
 			script

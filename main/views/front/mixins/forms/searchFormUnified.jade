@@ -1,7 +1,7 @@
 include ../blocks/range.jade
 mixin searchFormUnified(page)
 	div.navbar.navbar-fixed-top.searchYakwala(style="width: 100%; float: left")
-		ul.nav
+		ul#searchElementContainer.nav
 			li
 				input.search-query.customInput.tour_1#searchStr(type="search",placeholder="Quoi ?",autocomplete="off")
 			
@@ -76,7 +76,7 @@ mixin searchFormUnified(page)
 		$(document).ready(function(){
 
 				$("#closehideSearch").click(function(){
-					$(".searchYakwala ul").slideToggle('slow', function(){
+					$("#searchElementContainer").slideToggle('slow', function(){
 						drawNewsFeed();
 
 					});

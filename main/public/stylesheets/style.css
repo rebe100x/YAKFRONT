@@ -890,7 +890,7 @@ width: 270px;
 /* SEARCH BAR
 ----------------------------------------------------*/
 
-.searchYakwala { background-color: #F6F6F6; float: left;}  
+.searchYakwala { background-color: #F6F6F6; float: left; border-top: 1px solid #E2E2E2; border-bottom: 1px solid #E2E2E2;}  
 .searchYakwala #searchBtn {background-image:url('../images/new/go.png'); width: 27px; height: 27px; border: 0px; margin: 7px; float: left;}
 
 .searchYakwala .myi { position: relative; top: 12px; float: left;}
@@ -937,7 +937,7 @@ width: 270px;
 
 
 /* new design */
-#closehideSearch { clear: both; float: left; cursor: pointer; height: 1px; width: 100%; text-align: left; background-color: #272727; color: #BB141A; text-align: center;}
+#closehideSearch { clear: both; float: left; cursor: pointer; height: 1px; width: 100%; text-align: left; color: #BB141A; text-align: center;}
 #closehideSearch .btn { position: relative; left: -1px; background: #BB141A; top: -5px; color: white}
 #dayPrinter, #localnessPrinter, #tagSelectorTrigger { color: #898989;}
 .searchYakwala #searchBtn { display: none;}
@@ -961,5 +961,7 @@ border-bottom: 1px solid #e5e5e5;}
 
 .clearBoth { clear: both;}
 
+.searchYakwala .customInput { margin-bottom: 6px}
+.searchYakwala .ui-state-focus { }
 
 
