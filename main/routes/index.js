@@ -918,6 +918,7 @@ exports.profile = function(req, res){
 			cond.tagsubs = req.body.tag.split(',');
 		}
 			
+		
 		//req.session.user.location = location;
 		
 		User.update({_id: req.session.user}, 
