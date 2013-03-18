@@ -342,6 +342,7 @@ exports.user_validate = function(req, res){
 			req.session.user = model._id;
 			User.update({_id: model._id}, {status:4}, {upsert: false}, function(err){if (err) console.log(err);});						
 			res.render('settings/firstvisit',{user:model});
+			res.redirect('/user/validate');
 		}else{
 			req.session.message = "Votre clé d'activation est incorrecte.";
 			res.redirect('/user/validate');
@@ -784,17 +785,17 @@ exports.password = function(req,res){
 						else{
 							formMessage = "Votre mot de passe doit au moins 8 caractères";
 							req.session.message = formMessage;
-							res.render('settings/password');
+							res.redirect('settings/password');
 						}
 				}else{
 					formMessage = "Attention, vos 2 nouveaux mots de passe ne sont pas identiques.";
 					req.session.message = formMessage;
-					res.render('settings/password');
+					res.redirect('settings/password');
 				}
 			}else{
 				formMessage = "Votre ancien mot de passe est incorrect";
 				req.session.message = formMessage;
-				res.render('settings/password');
+				res.redirect('settings/password');
 			}	
 		});
 	}else{
@@ -887,7 +888,6 @@ exports.profile = function(req, res){
 				web:req.body.web,
 //				thumb:infoThumb.name,
 				bio:req.body.bio,
-				tagsubs:req.body.tag.split(','),
 //				location :{lng:parseFloat(location.lng),lat:parseFloat(location.lat)},
 //				address :JSON.parse(req.body.address),								
 				};
@@ -914,8 +914,11 @@ exports.profile = function(req, res){
 			cond.addressZoomText = req.body.defaultCityZoomText;
 		}
 
-
+		if(req.body.tag != null && req.body.tag != ""){
+			cond.tagsubs = req.body.tag.split(',');
+		}
 			
+		
 		//req.session.user.location = location;
 		
 		User.update({_id: req.session.user}, 
@@ -1149,14 +1152,33 @@ exports.auth_twitter_callback = function(req, res){
 						res.redirect('news/map');
 					}else{
 						
-						user.save(function (err) {
-							if (!err){
-								req.session.user = user._id;
-								User.update({"_id":user._id},{$set:{"lastLoginDate":new Date(), "status":4}}, function(err){if (err) console.log(err);});
-								res.redirect('/settings/firstvisit');
-							} 
-							else console.log(err);
-						});	
+						User.findByLoginDuplicate(login, function(err, theuser){
+							if(theuser != undefined && theuser != null )
+							{
+								user.name=login+"_twitter";
+								user.login=login+"_twitter";
+								user.save(function (err) {
+									if (!err){
+										req.session.user = user._id;
+										User.update({"_id":user._id},{$set:{"lastLoginDate":new Date(), "status":4}}, function(err){if (err) console.log(err);});
+										res.redirect('/settings/firstvisit');
+									} 
+									else console.log(err);
+								});	
+								
+							}
+							else
+							{
+								user.save(function (err) {
+								if (!err){
+									req.session.user = user._id;
+									User.update({"_id":user._id},{$set:{"lastLoginDate":new Date(), "status":4}}, function(err){if (err) console.log(err);});
+									res.redirect('/settings/firstvisit');
+								} 
+								else console.log(err);
+								});	
+							}
+						})
 					}
 				});
 		        }  

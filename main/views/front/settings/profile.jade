@@ -95,7 +95,10 @@ block content
 							
 							binimage1 = binimage.replace('data:'+file.type+';base64,', '');
 							var src = "data:"+file.type+";base64," + binimage1;
-							$("#avatarPreview img").attr('src',src);
+							var imgPrev = "<img src='" + src +"' class='size100 img-rounded' />";
+							//$("#avatarPreview img").attr('src',src);
+							$("#avatarPreview").html(imgPrev);
+							$("#avatarPreview").removeAttr("style");
 						};
 						r.readAsDataURL(file);
 					

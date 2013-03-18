@@ -38,11 +38,6 @@ mixin menu(active)
 						li
 							//
 								img.imgSmallProfile(src="/images/new/passwordicon.png")
-							a(href="/settings/password") Mot de Passe
-						
-						li
-							//
-								img.imgSmallProfile(src="/images/new/profileicon.png")
 							a(href="/settings/profile") Mon profil
 						li
 							//
@@ -50,8 +45,13 @@ mixin menu(active)
 							a(href="/settings/privateprofile") Mon profil privé
 						li
 							//
-								img.imgSmallProfile(src="/images/new/alertsicon.png")
+								img.imgSmallProfile(src="/images/new/profileicon.png")
 							a(href="/settings/alerts") Mes alertes
+						li
+							//
+								img.imgSmallProfile(src="/images/new/alertsicon.png")
+							a(href="/settings/password") Mot de Passe
+							
 						li.divider
 						li
 							//
@@ -192,7 +192,7 @@ mixin menu(active)
 				$(document).ready(function(){
 					if(typeof(user) != 'undefined')
 						if(user.status != 4)
-							//window.location = "/news/map";
+							window.location = "/news/map";
 				});
 		
 		script

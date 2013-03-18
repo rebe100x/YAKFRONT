@@ -124,7 +124,7 @@
 .searchYakwala .ui-widget-header {background:transparent;}
 
 .searchYakwala .ui-slider-horizontal { height: 2px; position: relative; left: 7px;}
-.searchYakwala .ui-slider .ui-slider-handle { height: 16px;cursor:pointer; margin-left: -3px; width:7px; top: -5px; border-radius: 0px; border: 0px;}
+.searchYakwala .ui-slider .ui-slider-handle { height: 15px;cursor:pointer; margin-left: -3px; width:7px; top: -5px; }
 .searchYakwala .btn .caret{margin-left:6px; margin-top: 4px;}
 .searchYakwala #heatSelector { background: #DDDDDD; height: 7px; border: 0px; border-radius: 0px;}
 
@@ -431,7 +431,7 @@ width: 270px;
 	#customMenuProfile {  right:5px; top: 36px;}
 
    #dayPrinter { width: 203px; margin-top: 0px; color: black; font-size: 13px; }
-   .headerYakwala .navbar .nav > li > a { line-height: 12px; color: black; text-shadow: 0 0 0 rgba(0, 0, 0, 0.25); font-size: 12px }
+   .headerYakwala .navbar .nav > li > a { line-height: 12px; color: black; text-shadow: 0 0 0 rgba(0, 0, 0, 0.25); font-size: 14px }
    .searchYakwala .customInput{ width: 227px; margin-top: 6px; float: left; margin-left: 6px; height: 26	px; border: 1px solid #dddddd}
    .rightPull { position: fixed; right: 0px}
    .timeIcon { position: relative; top: -14px; }
@@ -483,7 +483,7 @@ width: 270px;
 	#customMenuProfile {  right:5px; top: 36px;}
 
    #dayPrinter { width: 260px; color: black; font-size: 13px; }
-   .headerYakwala .navbar .nav > li > a { line-height: 12px; color: black; text-shadow: 0 0 0 rgba(0, 0, 0, 0.25); font-size: 12px }
+   .headerYakwala .navbar .nav > li > a { line-height: 12px; color: black; text-shadow: 0 0 0 rgba(0, 0, 0, 0.25); font-size: 14px }
    .searchYakwala .customInput{ width: 260px; margin-top: 6px; float: left; margin-left: 6px; height: 26px; border: 1px solid #dddddd}
    .rightPull { position: fixed; right: 0px}
    .timeIcon { position: relative; top: -14px; }
