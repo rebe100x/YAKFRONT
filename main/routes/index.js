@@ -888,7 +888,6 @@ exports.profile = function(req, res){
 				web:req.body.web,
 //				thumb:infoThumb.name,
 				bio:req.body.bio,
-				tagsubs:req.body.tag.split(','),
 //				location :{lng:parseFloat(location.lng),lat:parseFloat(location.lat)},
 //				address :JSON.parse(req.body.address),								
 				};
@@ -915,7 +914,9 @@ exports.profile = function(req, res){
 			cond.addressZoomText = req.body.defaultCityZoomText;
 		}
 
-
+		if(req.body.tag != null && req.body.tag != ""){
+			cond.tagsubs = req.body.tag.split(',');
+		}
 			
 		//req.session.user.location = location;
 		
