@@ -623,6 +623,10 @@ User.statics.findByLogin = function (login,callback) {
   return this.find({login:login,status:1}, callback);
 }
 
+User.statics.findByLoginDuplicate = function (login,callback) {
+  return this.findOne({'login': login}, callback);
+}
+
 User.statics.findByIds = function (ids,callback) {
   return this.find({'_id': { $in: ids}}, callback);
 }

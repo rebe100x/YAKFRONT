@@ -27,10 +27,10 @@ block content
 										
 					div.control-group
 						div.controls
-							label.control-label.label-xlarge(for="username") Choisissez un nom d'utilisateur( au moin 4 caractères) :  
+							label.control-label.label-xlarge(for="username") Choisissez un nom d'utilisateur ( au moins 4 caractères ):  
 							input.input-xlarge#username(type="text", name="username", autocomplete="off", placeholder="Votre nom d'utilisateur") 
-						div.controls
-							label.control-label.label-xlarge(for="email") Votre courrier electronic :  
+						div#emailContainer.controls
+							label.control-label.label-xlarge(for="email") Votre email :  
 							input.input-xlarge#email(type="text", name="email", autocomplete="off", placeholder="Votre courrier electronic") 
 						div.controls
 							label.control-label.label-xlarge(for="oldpass") Choisissez un mot de passe ( au moins 8 caractères ):  
@@ -47,15 +47,19 @@ block content
 									-if(locals.user.favplace)
 										- each favplace in locals.user.favplace
 											li(pointid=favplace._id,lat=favplace.location.lat, lng=favplace.location.lng)
-												i.icon-map-marker
+												span.redStars
 												span= favplace.name
-												i.icon-remove.icon-pointer(onclick='removefavPlace($(this));')
+												span.closePlace(onclick='removefavPlace($(this));')
 					div.control-group
 						div.controls
 							label(for='favplace') Ajouter des endroits favoris : 
 							div.input-append
 								input#favplace2.searchInput(type="text",data-provide="typeahead", name="favplace", autocomplete="off", placeholder='Chercher une adresse, une ville...') 
 								button.btn#btn-favplace-adder(type="button") Add
+					br				
+					div#accept_unhappy.alert.fade.in.unhappyMessage
+						strong
+							| Verifier que vous avez lu et accepté les conditions générales d'utilisation
 					div.control-group
 						div.controls
 							label.checkbox
@@ -63,10 +67,15 @@ block content
 								| J'ai lu et j'accepte 
 								a(href="/docs/cgu", target="_blank")
 									| les conditions générales d'utilisation
+					br
 					div.control-group
 						div.controls
 							button.btn.btn-large.btn-block.btn-inverse(type='submit', name='submit', id='submit', value='submit', disabled='disabled') Enregistrer
+					br
+					br
+					br
 		//script(src='http://maps.google.com/maps/api/js?v=3.9&sensor=false&libraries=drawing')		
+
 		script
 			var conf = !{conf};
 			var mainConf = !{mainConf};	
@@ -147,13 +156,14 @@ block content
 				//console.log(user);
 				if(user.createfrom_social == 1)
 				{	
-					$("#username").val(user.twitter_screen_name);
+					$("#username").val(user.login);
 					if(user.mail != "yak_not_set@yakwala.fr")
 						$("#email").val(user.mail);
 				}
 					
 				else
 				{
+					$("#emailContainer").hide();
 					$("#email").val(user.mail);
 					$("#username").val(user.login);
 				}
