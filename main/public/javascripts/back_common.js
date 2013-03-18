@@ -218,6 +218,8 @@ function getformattedAddress(position){
 				//console.log(results);
 				placeArray = placeGmap;
 				$("#placeForm #placeInput").val(JSON.stringify(placeArray));
+				console.log(placeGmap.address.state);
+				$('#placeSearch').val(placeGmap.address.state+', '+placeGmap.address.area);
 				$('#placeLabel').first().remove();
 				$('#btn-place-adder').parent().before("<div id='placeLabel'><i class='icon-remove' onclick='placeArray=null;$(\"#placeInput\").val(JSON.stringify(placeArray));$(this).parent().remove();'></i> "+results[0].formatted_address+"</div>");
 			} else {
@@ -230,6 +232,7 @@ function getformattedAddress(position){
 			}
 		});
 		//$("#place").val('').select();
+
 }
 
 

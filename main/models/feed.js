@@ -13,7 +13,7 @@ var Feed = new Schema({
 	,linkSource	:[String]
 	,link	: String 
 	,feedType	: String 
-	,fileSource	: String 
+	,fileSource	: [String] 
 	,rootElement	: String 
 	,lineToBegin	: Number
 	,parsingTemplate : {type:{
