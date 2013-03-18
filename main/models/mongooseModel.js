@@ -36,8 +36,14 @@ var Point = new Schema({
 mongoose.model('Point', Point);
 
 var Twitter = new Schema({
-	  twitter_id : { type : Number }
-	, twitter_screen_name	: { type : String }
+	name : { type : String }
+	,profile_image_url : { type : String }
+	,url : { type : String }
+	,description : { type : String }
+	,screen_name : { type : String }
+	,twitter_id : { type : Number }
+	, screen_name	: { type : String }
+	, geo : {type : String }
 });
 mongoose.model('Twitter', Twitter);
 
@@ -532,9 +538,9 @@ var User = new Schema({
 	, lastModifDate	: {type: Date, required: true, default: Date.now}		
 	, lastLoginDate	: {type: Date, required: true, default: Date.now}		
 	, status	: {type: Number,required: true, default: 2,index: true}	
-	, twitter_id : {type: Number}
-	, twitter_screen_name : {type : String}
-	, Twitter: { type : [Schema.Twitter] }
+	, Social: { 
+		Twitter : [Twitter]
+	 }
 	, createfrom_social  :{ type : Number, default:0} // 0 yakwala, 1 twitter, 2 facebook
 	, apiData	: { type: [{
 							apiClientId : {type: Schema.ObjectId,index: true}  
@@ -582,7 +588,7 @@ User.statics.format = function (theuser) {
 		usersubs:theuser.usersubs,
 		feedsubs:theuser.feedsubs,
 		tagsubs:theuser.tagsubs,
-		twitter_screen_name: theuser.twitter_screen_name,
+		Social: theuser.Social,
 		createfrom_social: theuser.createfrom_social,
 		status: theuser.status
 	};

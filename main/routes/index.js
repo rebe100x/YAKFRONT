@@ -1122,7 +1122,7 @@ exports.auth_twitter_callback = function(req, res){
 				var password = user.generatePassword(5);
 				var logo = conf.fronturl+"/static/images/yakwala-logo_petit.png";
 				
-				user.name=login;
+				user.name=data.name;
 				user.login=login;
 				user.mail='yak_not_set@yakwala.fr';
 				user.token=token;
@@ -1131,12 +1131,21 @@ exports.auth_twitter_callback = function(req, res){
 				user.password= password;
 				user.salt="1";
 				user.type=1;
-				user.twitter_id = twitter_id;
-				user.twitter_screen_name = login;
+
 				
-				var twitterAccount = db.model('Twitter');
-				twitterAccount.twitter_id = twitter_id;
-				twitterAccount.twitter_screen_name = login;
+				var Twitter = db.model('Twitter');
+				var aTwitter = new Twitter();	
+				aTwitter.twitter_id = twitter_id;
+				aTwitter.screen_name = login;
+				aTwitter.name = data.name;
+				aTwitter.profile_image_url = data.profile_image_url;
+				aTwitter.url = data.url;
+				aTwitter.description = data.description;
+				if(typeof(data.geo) != 'undefined')
+					aTwitter.geo = data.geo.coordinates;
+
+
+				user.Social.Twitter = aTwitter;
 
 				user.createfrom_social = 1;
 				user.bio = data.description;
@@ -1148,7 +1157,7 @@ exports.auth_twitter_callback = function(req, res){
 					if(theuser != undefined && theuser != null ){
 						console.log('LOGGED IN');
 						req.session.user = theuser._id;
-						User.update({"_id":theuser._id},{$set:{"lastLoginDate":new Date(), Twitter: twitterAccount}}, function(err){if (err) console.log(err);});
+						User.update({"_id":theuser._id},{$set:{"lastLoginDate":new Date()}}, function(err){if (err) console.log(err);});
 						res.redirect('news/map');
 					}else{
 						
