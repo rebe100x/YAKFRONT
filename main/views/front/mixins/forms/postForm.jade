@@ -76,11 +76,11 @@ mixin postForm()
 						span#picturePreview
 						input.span6#picture(type="file",style="display:block",name="picture")
 				br
-				h3 A quel endroit ?
+				h3.clearBoth A quel endroit ?
 				div.control-group
 					label(for='Place') Clicker sur la carte ou bien entrer une adresse:<br>
 					div.controls
-						div.input-append
+						div.input-append.clearBoth
 							input#place(type="text",data-provide="typeahead", name="place", autocomplete="off", placeholder='Rechercher...') 
 							button.btn#btn-place-adder(type="button") Add
 							br
