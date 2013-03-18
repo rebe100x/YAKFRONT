@@ -8,7 +8,7 @@ mixin menu(active)
 						
 					a.leftlink#feedlink.yak-mainMenu-hide(href="/news/feed", alt="Feed", title="Feed")
 					
-					a.leftlink#addLink.yak-mainMenu-hide(href="/news/map/?post=1", alt="Poster", title="Poster"))
+					a.leftlink#addLink.yak-mainMenu-hide(href="/news/map/?post=1", alt="Poster", title="Poster")
 					//	
 						a.leftlink(onclick="$('.searchYakwala').slideToggle('6000', function(){drawNewsFeed(); });")
 							img.imgleft(src="/images/search.png")
@@ -68,21 +68,40 @@ mixin menu(active)
 			script
 				$(document).ready(function(){
 					$("#addLink").removeAttr("href");
+					$("#maplink").removeAttr("href");
+					$("#maplink").addClass("activated");
 
 					$("#addLink").click(function(){
 						if(!$(this).hasClass("activated"))
 						{
 							$(this).addClass("activated");
+							$("#maplink").removeClass("activated");
 							showPostForm();
 						}
 						else
 						{
 							$(this).removeClass("activated");
+							$("#maplink").addClass("activated");
 							hidePostForm();
 						}
 						
 					});
-					try
+					$("#maplink").click(function(){
+						if(!$(this).hasClass("activated"))
+						{
+							$(this).addClass("activated");
+							$("#addLink").removeClass("activated");
+							hidePostForm();
+						}
+						else
+						{
+							$(this).removeClass("activated");
+							$("#addLink").addClass("activated");
+							showPostForm();
+						}
+						
+					});
+					/*try
 					{
 
 					var mq = window.matchMedia( "(min-width: 768px)" );
@@ -135,12 +154,12 @@ mixin menu(active)
 				catch(e)
 				{
 
-				}
+				} */
 				});
 		if(active == 'feed')
 			script
 				$(document).ready(function(){
-					try
+					/*try
 					{
 					var mq = window.matchMedia( "(min-width: 768px)" );
 					if (mq.matches) {
@@ -170,7 +189,7 @@ mixin menu(active)
 					}
 					}
 					catch(e)
-					{}
+					{} */
 				});
 		if(active == 'firstvisit')
 			script
