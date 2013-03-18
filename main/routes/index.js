@@ -785,17 +785,17 @@ exports.password = function(req,res){
 						else{
 							formMessage = "Votre mot de passe doit au moins 8 caractères";
 							req.session.message = formMessage;
-							res.render('settings/password');
+							res.redirect('settings/password');
 						}
 				}else{
 					formMessage = "Attention, vos 2 nouveaux mots de passe ne sont pas identiques.";
 					req.session.message = formMessage;
-					res.render('settings/password');
+					res.redirect('settings/password');
 				}
 			}else{
 				formMessage = "Votre ancien mot de passe est incorrect";
 				req.session.message = formMessage;
-				res.render('settings/password');
+				res.redirect('settings/password');
 			}	
 		});
 	}else{
