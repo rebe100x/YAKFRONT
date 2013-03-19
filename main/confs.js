@@ -7,7 +7,7 @@ exports.confs = {
 		"rangeDefault":80,
 		"typeDefault":'1,2,4',
 		"dateFromDefault":0,
-		"version":'1.1.1',
+		"version":'1.1.2',
 		"versionback":'0.0.1',
 	},
 	"devrenaud" : {
@@ -17,6 +17,7 @@ exports.confs = {
 		"backurl":"http://dev.backend.yakwala.fr:3001",
 		"fronturl":"http://dev.labs.yakwala.fr:3000",
 		"apiurl":"http://dev.api.yakwala.fr:3002",
+		"twitter_callbackurl":"http://dev.labs.yakwala.fr:3000/auth/twitter/callback",
 		"backdns":"dev.backend.yakwala.fr",
 		"frontdns":"dev.labs.yakwala.fr",
 		"apidns":"dev.api.yakwala.fr",
@@ -30,7 +31,8 @@ exports.confs = {
 		"ga":"",
 		"gmapKey":"AIzaSyBBjGZqkyZuTHuSuaZ_aHP9gyf4rCW1qe4",
 		"bucket":"yak1",
-		"bucketstatic":"yakstatic"
+		"bucketstatic":"yakstatic",
+		
 	},
 	
 	"devdany" : {
@@ -40,6 +42,7 @@ exports.confs = {
 		"backurl":"http://localhost:8080/YAKREP/BACKEND/",
 		"fronturl":"http://localhost:3000",
 		"apiurl":"localhost:3000",
+		"twitter_callbackurl":"http://dev.labs.yakwala.fr:3000/auth/twitter/callback",
 		"backdns":"localhost",
 		"frontdns":"localhost",
 		"apidns":"localhost",
@@ -62,6 +65,7 @@ exports.confs = {
 		"backurl":"http://preprod.backend.yakwala.fr/PREPROD/YAKREP/BACKEND/",
 		"fronturl":"http://preprod.labs.yakwala.fr",
 		"apiurl":"http://preprod.api.yakwala.fr",
+		"twitter_callbackurl":"http://preprod.labs.yakwala.fr/auth/twitter/callback",
 		"backdns":"preprod.backend.yakwala.fr",
 		"frontdns":"preprod.labs.yakwala.fr",
 		"apidns":"api.yakwala.fr",
@@ -83,6 +87,7 @@ exports.confs = {
 		"backurl":"http://backend.yakwala.fr/PROD/YAKREP/BACKEND/",
 		"fronturl":"http://labs.yakwala.fr",
 		"apiurl":"http://api.yakwala.fr",
+		"twitter_callbackurl":"http://labs.yakwala.fr/auth/twitter/callback",
 		"backdns":"backend.yakwala.fr",
 		"frontdns":"labs.yakwala.fr",
 		"apidns":"api.yakwala.fr",

@@ -31,7 +31,7 @@ block content
 							input.input-xlarge#username(type="text", name="username", autocomplete="off", placeholder="Votre nom d'utilisateur") 
 						div#emailContainer.controls
 							label.control-label.label-xlarge(for="email") Votre email :  
-							input.input-xlarge#email(type="text", name="email", autocomplete="off", placeholder="Votre courrier electronic") 
+							input.input-xlarge#email(type="text", name="email", autocomplete="off", placeholder="Votre email") 
 						div.controls
 							label.control-label.label-xlarge(for="oldpass") Choisissez un mot de passe ( au moins 8 caractères ):  
 							input.input-xlarge#password(type="text", name="password", autocomplete="off", placeholder="Votre mot de passe") 
@@ -50,6 +50,15 @@ block content
 												span.redStars
 												span= favplace.name
 												span.closePlace(onclick='removefavPlace($(this));')
+												select.pull-left.dropdownRangeSelector(alt=favplace._id, range=favplace.range)
+													option(value="70", rangeText="Local")
+														|Local
+													option(value="80", rangeText="Très Local")
+														|Très Local
+													option(value="100", rangeText="Super Local")
+														|Super Local
+													option(value="120", rangeText="Hyper Local")
+														|Hyper Local
 					div.control-group
 						div.controls
 							label(for='favplace') Ajouter des endroits favoris : 
@@ -57,9 +66,9 @@ block content
 								input#favplace2.searchInput(type="text",data-provide="typeahead", name="favplace", autocomplete="off", placeholder='Chercher une adresse, une ville...') 
 								button.btn#btn-favplace-adder(type="button") Add
 					br				
-					div#accept_unhappy.alert.fade.in.unhappyMessage
+					div#alertCGU.alert.fade.in.hide
 						strong
-							| Verifier que vous avez lu et accepté les conditions générales d'utilisation
+							| Veuillez accepter les <a href='/docs/cgu' target='_blank'>conditions générales d'utilisation</a>
 					div.control-group
 						div.controls
 							label.checkbox
@@ -70,27 +79,27 @@ block content
 					br
 					div.control-group
 						div.controls
-							button.yakbtn(type='submit', name='submit', id='submit', value='submit', disabled='disabled') Enregistrer
+							button.yakbtn(type='submit', name='submit', id='submit', value='submit') Enregistrer
 					br
 					br
 					br
-		//script(src='http://maps.google.com/maps/api/js?v=3.9&sensor=false&libraries=drawing')		
-
+		
 		script
 			var conf = !{conf};
 			var mainConf = !{mainConf};	
 			var user =!{JSON.stringify(user)};
 
+			/*
 			$("#cgu").change(function(){
 				if($(this).attr("checked"))
 					$("#submit").removeAttr("disabled");
 				else
 					$("#submit").attr("disabled", "disabled");
-			});
-			function randomNames(str){
+			});*/
 
-			var randomnumber=Math.floor(Math.random()*101)
-			return str+randomnumber;
+			function randomNames(str){
+				var randomnumber=Math.floor(Math.random()*101)
+				return str+randomnumber;
 			}
 
 			function setUserName(el)
@@ -98,6 +107,7 @@ block content
 				$("#username").val($(el).html());
 				$("#username").focus();
 				$("#suggestionsDiv").remove();
+				$("#alertUsername").hide();
 			}
 
 			function getLocation()
@@ -169,37 +179,37 @@ block content
 				}
 					
 				$("#email").blur(function(){
-					$.getJSON('/api/findbymail/' + curremail,function(users) {
+					
+					var curremail = $(this).val();
+					$.getJSON('/api/findbymail/' + curremail,function(res) {
 
-						if(users.users.length != 0 && user.mail != curremail)
-						{
-							$("#email").val("");
-							alert("Email enregistre'");
+						$('#alertMail').hide();	
+						if(res.users.length != 0){
+							$('#email').focus().select().parent().prepend("<div id='alertMail' class='alert fade in'><strong>Cet email est déjà pris. Pour vous faire renvoyer un mot de passe, c'est <a href='/user/forgotpassword'>ici.</a></div>");
 							return false;
 						}
+
 					
 					});
 				});
 
 				$("#username").blur(function(){
-					var currusername = $("#username").val();
+					var currusername = $(this).val();
 
 					$.getJSON('/api/findbylogin/' + currusername,function(users) {
 
 						if(users.users.length != 0 && user.login != currusername)
 						{
-
-							var suggestions = "<ul id='suggestionsDiv'>";
-							suggestions += "<li>Nom d'utilisateur reservé (essayez):</li>";
-							
-							suggestions += "</ul>";
+							var suggestions = "<div class='alert fade in' id='alertUsername'>Désolé, ce nom d'utilisateur est déjà utilisé. Choisissez en un autre ! Par exemple:</div>";
+							suggestions += "<ul id='suggestionsDiv'>";
 							$("#username").after(suggestions);
-							for(i=0; i<9; i++)
+							for(i=0; i<3; i++)
 							{
 								var randomName = randomNames(currusername);
 								$("#suggestionsDiv").append("<li><a onclick='setUserName(this)'>" + randomName + "</a></li>");
 									
 							}
+							suggestions += "</ul>";
 							
 							$("#username").val("");
 							//alert(suggestions);
@@ -210,8 +220,15 @@ block content
 					
 					});
 				});
-				$("form").submit(function(){
 
+				$("form").submit(function(){
+					$("#alertCGU").hide();
+					if(!$("#cgu").attr("checked")){
+						$("#alertCGU").show();
+						return false;
+					}
+					$('#alertMail').hide();
+					
 					var currusername = $("#username").val();
 					var curremail = $("#email").val();
 
@@ -265,10 +282,12 @@ block content
 							message: "Entrez un mot de passe d'au moins 8 caractères",
 							test: function(val){return (val.length < 8)?false:true;}
 						},
-						'#cgu': {
+						'#email': {
 							required: true,
-							message: 'Lisez et validez les CGU',
-							test: function(val){return (val == 1)?true:false;}
+							message: "Entrer votre email",
+							test: function(val){
+								var reg = new RegExp('^[a-z0-9]+([_|\.|-]{1}[a-z0-9]+)*@[a-z0-9]+([_|\.|-]{1}[a-z0-9]+)*[\.]{1}[a-z]{2,6}$', 'i');
+								return(reg.test(val));}
 						}
 					}
 				});

@@ -316,6 +316,11 @@ span.help-inline.small{font-size:0.65em;font-style:italic;}
 width: 270px;
 }
 
+/* Settings FIRSTVISIT
+-------------------------------------------------- */
+#suggestionsDiv{cursor:pointer;}
+
+
 /* image size
 -------------------------------------------------- */
 .size100{

@@ -2,21 +2,7 @@
  * GET home page.
  */
 
-/**
-* OAuth dependencies
-*/
-var config_secret = require('../confs_secret.js');
-var secretConf = config_secret.confs_secret;
-var OAuth= require('oauth').OAuth;
-var oa = new OAuth(
-	"https://api.twitter.com/oauth/request_token",
-	"https://api.twitter.com/oauth/access_token",
-	secretConf.TWITTER.accessKeyId,
-	secretConf.TWITTER.secretAccessKey,
-	"1.0",
-	"http://localhost:3000/auth/twitter/callback",
-	"HMAC-SHA1"
-);
+
 
 exports.db = function(conf){
 	mongoose = require('mongoose'), Schema = mongoose.Schema;
@@ -1063,6 +1049,24 @@ exports.setLikes = function(req, res){
 
 
 exports.auth_twitter = function(req, res){
+	/**
+	* OAuth dependencies
+	*/
+	var config_secret = require('../confs_secret.js');
+	var secretConf = config_secret.confs_secret;
+
+	var OAuth= require('oauth').OAuth;
+	var oa = new OAuth(
+		"https://api.twitter.com/oauth/request_token",
+		"https://api.twitter.com/oauth/access_token",
+		secretConf.TWITTER.accessKeyId,
+		secretConf.TWITTER.secretAccessKey,
+		"1.0",
+		conf.twitter_callbackurl,
+		"HMAC-SHA1"
+	);
+
+	
 	oa.getOAuthRequestToken(function(error, oauth_token, oauth_token_secret, results){
 			if (error) {
 				console.log(error);
@@ -1084,6 +1088,23 @@ exports.auth_twitter = function(req, res){
 
 exports.auth_twitter_callback = function(req, res){
 	if (req.session.oauth) {
+
+		/**
+		* OAuth dependencies
+		*/
+		var config_secret = require('../confs_secret.js');
+		var secretConf = config_secret.confs_secret;
+
+		var OAuth= require('oauth').OAuth;
+		var oa = new OAuth(
+			"https://api.twitter.com/oauth/request_token",
+			"https://api.twitter.com/oauth/access_token",
+			secretConf.TWITTER.accessKeyId,
+			secretConf.TWITTER.secretAccessKey,
+			"1.0",
+			conf.twitter_callbackurl,
+			"HMAC-SHA1"
+		);
 
 		req.session.oauth.verifier = req.query.oauth_verifier;
 		var oauth = req.session.oauth;
@@ -1145,7 +1166,7 @@ exports.auth_twitter_callback = function(req, res){
 					aTwitter.geo = data.geo.coordinates;
 
 
-				user.Social.Twitter = aTwitter;
+				user.social.twitter = aTwitter;
 
 				user.createfrom_social = 1;
 				user.bio = data.description;
@@ -1154,6 +1175,8 @@ exports.auth_twitter_callback = function(req, res){
 				user.favplace = [{'name':'Nice, France','location':{'lat':43.681343,'lng':7.232094},'range':100},{'name':'Marseille, France','location':{'lat':43.298198,'lng':5.370255},'range':100},{'name':'Paris, France','location':{'lat':48.851875,'lng':2.356374},'range':100}];
 				
 				User.findByTwitterId(twitter_id,function (err, theuser){
+					console.log('theuser');
+					console.log(theuser);
 					if(theuser != undefined && theuser != null ){
 						console.log('LOGGED IN');
 						req.session.user = theuser._id;

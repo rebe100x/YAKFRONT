@@ -242,6 +242,7 @@ exports.findUserById = function (req, res) {
 	});
 };
 
+/*
 exports.getUsers = function (req, res) {
 	var Users = db.model('User');
 	var results =  new Array();
@@ -252,7 +253,7 @@ exports.getUsers = function (req, res) {
 			else
 				res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 		});
-};
+};*/
 
 exports.getContentTitles = function (req, res) {
 	var infoTitles = db.model('infoTitles');

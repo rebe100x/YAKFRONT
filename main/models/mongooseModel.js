@@ -41,7 +41,7 @@ var Twitter = new Schema({
 	,url : { type : String }
 	,description : { type : String }
 	,screen_name : { type : String }
-	,twitter_id : { type : Number }
+	,twitter_id : { type : Number, index : true }
 	, screen_name	: { type : String }
 	, geo : {type : String }
 });
@@ -538,10 +538,9 @@ var User = new Schema({
 	, lastModifDate	: {type: Date, required: true, default: Date.now}		
 	, lastLoginDate	: {type: Date, required: true, default: Date.now}		
 	, status	: {type: Number,required: true, default: 2,index: true}	
-	, Social: { 
-		Twitter : [Twitter]
+	, social: { 
+		twitter : [Twitter]
 	 }
-	,twitter_id : { type : Number}
 	, createfrom_social  :{ type : Number, default:0} // 0 yakwala, 1 twitter, 2 facebook
 	, apiData	: { type: [{
 							apiClientId : {type: Schema.ObjectId,index: true}  
@@ -565,7 +564,6 @@ User.statics.format = function (theuser) {
 	else{
 		var thethumb = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucketstatic+'/128_128/no-user.png';
 		var thethumbsmall = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucketstatic+'/48_48/no-user.png';
-		
 	}
 		
 
@@ -589,7 +587,7 @@ User.statics.format = function (theuser) {
 		usersubs:theuser.usersubs,
 		feedsubs:theuser.feedsubs,
 		tagsubs:theuser.tagsubs,
-		Social: theuser.Social,
+		social: theuser.social,
 		createfrom_social: theuser.createfrom_social,
 		status: theuser.status
 	};
@@ -597,17 +595,21 @@ User.statics.format = function (theuser) {
 }
 
 User.statics.formatLight = function (theuser) {
-	if(theuser.thumb)
-		var thethumb = 	conf.fronturl+'/pictures/128_128/'+theuser.thumb;
-	else
-		var thethumb = 	'';
+	if(theuser.thumb && theuser.thumb!= 'no-user.png'){
+		var thethumb = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/128_128/'+theuser.thumb;
+		var thethumbsmall = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/48_48/'+theuser.thumb;
+	}else{
+		var thethumb = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucketstatic+'/128_128/no-user.png';
+		var thethumbsmall = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucketstatic+'/48_48/no-user.png';
+	}
 
 	var formattedUser = {
 		_id:theuser._id,
 		name:theuser.name,
 		login:theuser.login,
 		userdetails:theuser.name+'(@'+theuser.login+')',
-		thumb:thethumb
+		thumb:thethumb,
+		thumbsmall:thethumbsmall,
 	};
   return formattedUser;
 }
@@ -654,7 +656,7 @@ User.statics.findByToken = function (token,callback) {
   return this.findOne({'token': token,'status':2}, callback);
 }
 User.statics.findByTwitterId = function (twitter_id,callback) {
-  return this.findOne({'twitter_id': twitter_id,'status':1}, callback);
+  return this.findOne({'social.twitter.twitter_id': twitter_id,'status':1}, callback);
 }
 User.statics.findAll = function (callback) {
   return this.find({},{},{sort:{name:1}}, callback);
