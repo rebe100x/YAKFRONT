@@ -865,7 +865,7 @@ block content
 
 			
 
-			if(!(typeof item.thumb === 'undefined') && item.thumb != conf.batchurl && item.thumb != null) {
+			if(!(typeof item.thumb === 'undefined') && item.thumb != conf.batchurl && item.thumb != null && item.thumb != '') {
 				thumbImage = item.thumb.replace('thumb/','');
 				//thumbImage = thumbImage.replace('//','/');
 				var thumbImageCode = $("<div />");

@@ -60,6 +60,7 @@ exports.confs = {
 	},
 	
 	"preprod" : {
+		"resetpassUrl":"http://preprod.labs.yakwala.fr/user/resetpassword/",	
 		"validationUrl":"http://preprod.labs.yakwala.fr/user/validate/",
 		"batchurl":"http://batch.yakwala.fr/PREPROD/YAKREP/BACKEND/",
 		"backurl":"http://preprod.backend.yakwala.fr/PREPROD/YAKREP/BACKEND/",
@@ -82,6 +83,7 @@ exports.confs = {
 		"bucketstatic":"yakstatic"
 	},
 	"prod" : {
+		"resetpassUrl":"http://labs.yakwala.fr/user/resetpassword/",	
 		"validationUrl":"http://labs.yakwala.fr/user/validate/",
 		"batchurl":"http://batch.yakwala.fr/PROD/YAKREP/BACKEND/",
 		"backurl":"http://backend.yakwala.fr/PROD/YAKREP/BACKEND/",
