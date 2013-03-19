@@ -930,20 +930,45 @@ exports.privateprofile = function(req, res){
 	var user = new User();
 				
 	if(req.session.user){
-		
-		User.update({_id: req.session.user}, 
-		{mail:req.body.mail}
-		, {upsert: true}, function(err){
-			if (err)
-				console.log(err);
+		User.findbyMail(req.body.mail, function(err, theuser){
+			if(!err)
+			{
+				if(theuser == "")
+				{
+					User.update({_id: req.session.user}, 
+					{mail:req.body.mail}
+					, {upsert: true}, function(err){
+						if (err)
+							console.log(err);
+					});
+					formMessage.push("Votre profil privé est enregistré");
+					req.session.message = formMessage;
+					res.redirect('settings/privateprofile');
+				}
+				else
+				{
+					formMessage.push("Ce mail est déjà enregistré");	
+					req.session.message = formMessage;
+					res.redirect('settings/privateprofile');
+				}
+				
+			}
+			else
+			{
+				formMessage.push("Erreur : Essayez de nouveau !");
+				req.session.message = formMessage;
+				res.redirect('settings/privateprofile');
+			}
 		});
-		formMessage.push("Votre profil privé est enregistré");
 	}else
+	{
 		formMessage.push("Erreur : vous n'êtes pas connecté !");
+		req.session.message = formMessage;
+		res.redirect('settings/privateprofile');
+	}
+		
 	
-	req.session.message = formMessage;
 	
-	res.redirect('settings/privateprofile');
 }
 
 

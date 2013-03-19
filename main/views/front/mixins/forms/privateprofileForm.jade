@@ -7,4 +7,20 @@ mixin privateprofileForm()
 					input#mail(type='text', name='mail')
 					
 			button.yakbtn(type='submit', name='submit', id='submit', value='Envoyer') Envoyer
+
+	script
+		/*$(document).ready(function(){
+			$("form").submit(function(){
+				var curremail = $("#mail").val();
+				$.getJSON('/api/findbymail/' + curremail,function(users) {
+						if(users.users.length != 0 && user.mail != curremail)
+						{
+							$("#email").val("");
+							$("#email").after("<div class='alert'>Ce mail est déjà enregistré</div>");
+							return false;
+						}
+					});
+			});
+			return false;
+		});*/
 		
