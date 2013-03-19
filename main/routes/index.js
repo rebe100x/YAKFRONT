@@ -1175,8 +1175,6 @@ exports.auth_twitter_callback = function(req, res){
 				user.favplace = [{'name':'Nice, France','location':{'lat':43.681343,'lng':7.232094},'range':100},{'name':'Marseille, France','location':{'lat':43.298198,'lng':5.370255},'range':100},{'name':'Paris, France','location':{'lat':48.851875,'lng':2.356374},'range':100}];
 				
 				User.findByTwitterId(twitter_id,function (err, theuser){
-					console.log('theuser');
-					console.log(theuser);
 					if(theuser != undefined && theuser != null ){
 						console.log('LOGGED IN');
 						req.session.user = theuser._id;
