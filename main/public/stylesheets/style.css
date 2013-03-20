@@ -970,3 +970,8 @@ border-bottom: 1px solid #e5e5e5;}
 .searchYakwala .ui-state-focus { }
 #heatSelector a:focus { outline: none; outline-offset: 0px;}
 
+
+#userinfo { color: #455FA1; font-weight: bold; }
+#userinfo a { color: #455FA1; position: relative; top: 8px;}
+#userinfo img { width: 43px; margin-right: 20px;}
+#userinfo #fbloader { width: 15px; top: 3px; left: 9px; position: relative;}

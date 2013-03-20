@@ -1248,3 +1248,23 @@ exports.auth_twitter_callback = function(req, res){
 	}
 };
 
+
+
+/*exports.auth_facebook = function(req, res){
+	req.Facebook.api('/me', function(err, user) {
+		res.writeHead(200, {'Content-Type': 'text/plain'});
+	    res.end('Hello, ' + user.name + '!');
+	});
+	
+}
+
+
+exports.auth_google = function(req, res){
+	res.send("google pulus");
+	
+}*/
+
+exports.auth_facebook = function(req, res){
+
+	res.json({user: req.body.user});
+}

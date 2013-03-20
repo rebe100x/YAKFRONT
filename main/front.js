@@ -3,7 +3,8 @@
 /**
  * Module dependencies.
  */
-
+var config_secret = require('confs_secret.js');
+var secretConf = config_secret.confs_secret;
 
 var express = require('express'),
   routes = require('./routes'),
@@ -15,8 +16,9 @@ var express = require('express'),
   S = require('string'),
   crypto = require('crypto'),
   nodemailer = require("nodemailer"),
-  AWS = require('aws-sdk')
-  config_secret = require('./confs_secret.js');
+  AWS = require('aws-sdk'),
+  config_secret = require('./confs_secret.js'),
+  Facebook = require('facebook-node-sdk')
   ;
     
 var app = express();
@@ -47,6 +49,7 @@ app.configure(function(){
   
   app.use(express.methodOverride());
   app.use(app.router);
+  app.use(Facebook.middleware({ appId: secretConf.FACEBOOK.accessKeyId, secret: secretConf.FACEBOOK.secretAccessKey }));
   
 });
 
@@ -178,6 +181,16 @@ app.get('/auth/twitter', routes.auth_twitter);
 * routes / the call back after validation
 */
 app.get('/auth/twitter/callback', routes.auth_twitter_callback);
+
+/**
+routes / call to facebook
+*/
+app.post('/auth/facebook', routes.auth_facebook);
+
+/**
+routes / call to google plus
+*/
+app.get('/auth/google', routes.auth_google);
 
 
 // redirect all others to the index (HTML5 history)
