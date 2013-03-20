@@ -27,12 +27,12 @@ mixin loginForm()
 					div.controls
 						a(href="/auth/twitter")
 							img(src="/images/twiiterconnect.png")
-				//
-					div.control-group
-						div.controls
-							img#loginFB(src="/images/fblogin.png", style="cursor: pointer")
-							span#userinfo
-							span#fb-root
+			
+				div.control-group
+					div.controls
+						img#loginFB(src="/images/fblogin.png", style="cursor: pointer")
+						span#userinfo
+						span#fb-root
 				div.clearBoth
 				br	
 				i
@@ -57,9 +57,7 @@ mixin loginForm()
 		// handle a session response from any of the auth related calls
 		function handleSessionResponse() {
 			FB.api('/me', function(response) {
-				if(response.error)
-					console.log("You are not logged in or you don't have access to our application")
-				else
+				if(!response.error)
 				{
 					$("#loginFB").remove();
 					var fbinfo = "<img class='pull-left' src='https:/graph.facebook.com/"+response.id+"/picture/' /><span class='pull-left'><a style='cursor: pointer' id='authenticatefb'> Bienvenu  " + response.name + "<br />" + " Login with facebook</a></span><span class='clearBoth'></span>";

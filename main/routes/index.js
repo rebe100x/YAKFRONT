@@ -1309,7 +1309,7 @@ exports.auth_facebook = function(req, res){
 			console.log('LOGGED IN');
 			req.session.user = theuser._id;
 			User.update({"_id":theuser._id},{$set:{"lastLoginDate":new Date()}}, function(err){if (err) console.log(err);});
-			res.json({response: "loggedin"});
+			res.json({response: "1"});
 		}else{
 			
 			User.findByLoginDuplicate(login, function(err, theuser){
