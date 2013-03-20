@@ -1351,3 +1351,93 @@ exports.auth_facebook = function(req, res){
 	});
 	
 }
+
+
+
+exports.auth_google = function(req, res){
+	var data = req.body.user;
+	var crypto = require('crypto')
+    var User = db.model('User');
+    var user = new User();
+	var login = data.name.givenName + "." + data.name.familyName;
+	var google_id = data.id;
+	var salt = Math.round(new Date().valueOf() * Math.random());
+	var token = crypto.createHash('sha1').update("yakwala@secure"+salt).digest("hex");
+	var password = user.generatePassword(5);
+	var logo = conf.fronturl+"/static/images/yakwala-logo_petit.png";
+	
+	user.name=req.body.user.name;
+	user.login=login;
+	user.mail='yak_not_set@yakwala.fr';
+	user.token=token;
+	user.status=1;
+	user.hash= password;
+	user.password= password;
+	user.salt="1";
+	user.type=1;
+	user.google_id = google_id;
+	
+	var Google = db.model('Google');
+	var aGoogle = new Google();	
+	aGoogle.google_id = google_id;
+	aGoogle.screen_name = login;
+	aGoogle.name = data.name.givenName + "." + data.name.familyName;
+	aGoogle.profile_image_url = data.image.url;
+	aGoogle.url = data.url;
+	aGoogle.description = data.aboutMe;
+
+	user.social.google = aGoogle;
+
+	user.createfrom_social = 3;
+	user.bio = data.bio;
+	user.web = data.link;
+	//user.favplace = [{'name':'Paris, France','location':{'lat':48.851875,'lng':2.356374}},{'name':'Eghézée, Belgique','location':{'lat':50.583346,'lng':4.900031}},{'name':'Montpellier, France','location':{'lat':43.610787,'lng':3.876715}}];
+	user.favplace = [{'name':'Nice, France','location':{'lat':43.681343,'lng':7.232094},'range':100},{'name':'Marseille, France','location':{'lat':43.298198,'lng':5.370255},'range':100},{'name':'Paris, France','location':{'lat':48.851875,'lng':2.356374},'range':100}];
+	
+	User.findByGoogleId(google_id,function (err, theuser){
+		if(theuser != undefined && theuser != null ){
+			console.log('LOGGED IN');
+			req.session.user = theuser._id;
+			User.update({"_id":theuser._id},{$set:{"lastLoginDate":new Date()}}, function(err){if (err) console.log(err);});
+			res.json({response: "1"});
+		}else{
+			
+			User.findByLoginDuplicate(login, function(err, theuser){
+				if(theuser != undefined && theuser != null )
+				{
+					user.name=login+"_google";
+					user.login=login+"_google";
+					user.save(function (err) {
+						if (!err){
+							req.session.user = user._id;
+							User.update({"_id":user._id},{$set:{"lastLoginDate":new Date(), "status":4}}, function(err){if (err) console.log(err);});
+							res.json({response: "1"});
+						} 
+						else 
+						{
+							console.log(err);
+							res.json({response: "0"});
+						}
+					});	
+					
+				}
+				else
+				{
+					user.save(function (err) {
+					if (!err){
+						req.session.user = user._id;
+						User.update({"_id":user._id},{$set:{"lastLoginDate":new Date(), "status":4}}, function(err){if (err) console.log(err);});
+						res.json({response: "4"});
+					} 
+					else 
+						{
+							res.json({response: "0"});
+							console.log(err);
+						}
+					});	
+				}
+			})
+		}
+	});
+	
+}

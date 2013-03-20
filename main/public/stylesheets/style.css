@@ -971,9 +971,9 @@ border-bottom: 1px solid #e5e5e5;}
 #heatSelector a:focus { outline: none; outline-offset: 0px;}
 
 
-#userinfo { color: #455FA1; font-weight: bold; }
-#userinfo a { color: #455FA1; position: relative; top: 0px; font-size: 10px;}
-#userinfo img { width: 43px; margin-right: 2px; margin-bottom: 9px;}
-#userinfo #fbloader { width: 15px; top: 3px; left: 9px; position: relative;}
+.userinfo { color: #455FA1; font-weight: bold; }
+.userinfo a { color: #455FA1; position: relative; top: 0px; font-size: 10px;}
+.userinfo img { width: 43px; margin-right: 2px; margin-bottom: 9px;}
+.userinfo .loader { width: 15px; top: 3px; left: 9px; position: relative;}
 #connectedas { background: #D1161E; color: white; font-weight: bold}
 .yakbtnLogin { background: url(/images/yakconnect.png) no-repeat transparent; width: 155px; height: 34px; border: 0px;}

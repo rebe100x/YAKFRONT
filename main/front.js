@@ -17,8 +17,7 @@ var express = require('express'),
   crypto = require('crypto'),
   nodemailer = require("nodemailer"),
   AWS = require('aws-sdk'),
-  config_secret = require('./confs_secret.js'),
-  Facebook = require('facebook-node-sdk')
+  config_secret = require('./confs_secret.js')
   ;
     
 var app = express();
@@ -49,7 +48,7 @@ app.configure(function(){
   
   app.use(express.methodOverride());
   app.use(app.router);
-  app.use(Facebook.middleware({ appId: secretConf.FACEBOOK.accessKeyId, secret: secretConf.FACEBOOK.secretAccessKey }));
+  //app.use(Facebook.middleware({ appId: secretConf.FACEBOOK.accessKeyId, secret: secretConf.FACEBOOK.secretAccessKey }));
   
 });
 
@@ -186,6 +185,12 @@ app.get('/auth/twitter/callback', routes.auth_twitter_callback);
 routes / call to facebook
 */
 app.post('/auth/facebook', routes.auth_facebook);
+
+/**
+routes / call to google
+*/
+app.post('/auth/google', routes.auth_google);
+
 
 /**
 routes / call to google plus
