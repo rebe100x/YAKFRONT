@@ -21,6 +21,14 @@ mixin menu(active)
 							span.caret(style="margin:22px 0px 22px 5px;")
 					ul#customMenuProfile.dropdown-menu.pull-right
 						li
+							a#connectedas
+								|Connecté avec 
+								span#connectWith
+								br
+								|@
+								= locals.user.login
+						li.divider
+						li
 							//
 								img.imgSmallProfile(src="/images/new/lacarte.png")
 							a(href="/news/map") Map
@@ -187,9 +195,31 @@ mixin menu(active)
 		
 		script
 			$(document).ready(function(){
+
 				if(typeof(user) != "undefined")
+				{
 					if (!user.thumbsmall.match("no-user.png$"))
 						$("#profileMenu").html("<img src='"+user.thumbsmall+"' />");
+
+					switch(user.createfrom_social)
+					{
+						case 0:
+						{
+							$("#connectWith").html("yakwala");
+							break;
+						}
+						case 1:
+						{
+							$("#connectWith").html("twitter");
+							break;
+						}
+						case 2:
+						{
+							$("#connectWith").html("facebook");
+							break;
+						}
+					}
+				}
 
 				try
 					{

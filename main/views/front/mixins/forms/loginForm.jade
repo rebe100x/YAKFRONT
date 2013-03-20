@@ -19,20 +19,25 @@ mixin loginForm()
 					input(type="hidden", name="token", id="token")
 					span
 						|Conserver mes infos
-			div.control-group
+			div.control-group.clearBoth
+				div.controls				
+					button.yakbtnLogin(type='submit', name='submit', id='submit')
+				
+			div.control-group.clearBoth
 				div.controls
-					button.btn.btn-large.btn-block.btn-inverse(,type='submit', name='submit', id='submit', value='login') Login
-				br
-				div.control-group
-					div.controls
-						a(href="/auth/twitter")
-							img(src="/images/twiiterconnect.png")
-			
-				div.control-group
-					div.controls
-						img#loginFB(src="/images/fblogin.png", style="cursor: pointer")
-						span#userinfo
-						span#fb-root
+					a(href="/auth/twitter")
+						img(src="/images/twiiterconnect.png")
+		
+			div.control-group.clearBoth
+				div.controls
+					img#loginFB(src="/images/fblogin.png", style="cursor: pointer")
+					span#userinfo
+					span#fb-root
+
+			div.control-group.clearBoth
+				div.controls
+					a(href="#")
+						img(src="/images/googleconnect.png")
 				div.clearBoth
 				br	
 				i
