@@ -27,7 +27,7 @@ mixin loginForm()
 					div.controls
 						a(href="/auth/twitter")
 							img(src="/images/twiiterconnect.png")
-				//			
+				//
 					div.control-group
 						div.controls
 							img#loginFB(src="/images/fblogin.png", style="cursor: pointer")
@@ -67,10 +67,27 @@ mixin loginForm()
 					$("#authenticatefb").click(function(){
 						$(this).after("<img id='fbloader' src='/images/loader.gif' />");
 						$.post("/auth/facebook", {user: response}, function(data){
-							console.log(data);
+							
+							if(data.response == "4")
+							{
+								console.log("fv");	
+								window.location = "http://localhost:3000/settings/firstvisit";
+							}
+								
+							else if(data.response == "1")
+							{
+								console.log("map");	
+								window.location = "http://localhost:3000/news/map";
+							}
+								
+							else
+							{
+								console.log("here");
+								$("#fbloader").remove();
+							}
+								
 						});
 					});
-					console.log(response);
 				}
 					
 			});
