@@ -19,8 +19,6 @@ var theconf = config.confs.devrenaud;
     
 (function (port) {
     'use strict';
-	console.log(__dirname + '/public/uploads/tmp');
-	console.log(__dirname + '/public/uploads/files');
 	var path = require('path'),
         fs = require('fs'),
         // Since Node 0.8, .existsSync() moved from path to fs:
