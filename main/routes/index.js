@@ -1377,6 +1377,7 @@ exports.auth_google = function(req, res){
 	user.type=1;
 	user.google_id = google_id;
 	
+	
 	var Google = db.model('Google');
 	var aGoogle = new Google();	
 	aGoogle.google_id = google_id;

@@ -56,12 +56,13 @@ mixin loginForm()
 	script(src="http://connect.facebook.net/en_US/all.js")
 	script
 		// initialize the library with the API key
-		FB.init({ appId:'548066291890740' });
+		FB.init({ appId: 548066291890740 });
 
 		// fetch the status on load
 		FB.getLoginStatus(handleSessionResponse);
 
 		$('#loginFB').bind('click', function() {
+			alert("great");
 			FB.login(handleSessionResponse);
 		});
 
