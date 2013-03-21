@@ -47,6 +47,18 @@ var Twitter = new Schema({
 });
 mongoose.model('Twitter', Twitter);
 
+var Facebook = new Schema({
+	name : { type : String }
+	,profile_image_url : { type : String }
+	,url : { type : String }
+	,description : { type : String }
+	,screen_name : { type : String }
+	,facebook_id : { type : Number, index : true }
+	, screen_name	: { type : String }
+	, geo : {type : String }
+});
+mongoose.model('Facebook', Facebook);
+
 var UserLight = new Schema({
 	  name : String
 	, location	: { type : { lat: Number, lng: Number }}
@@ -539,7 +551,8 @@ var User = new Schema({
 	, lastLoginDate	: {type: Date, required: true, default: Date.now}		
 	, status	: {type: Number,required: true, default: 2,index: true}	
 	, social: { 
-		twitter : [Twitter]
+		twitter : [Twitter],
+		facebook : [Facebook]
 	 }
 	, createfrom_social  :{ type : Number, default:0} // 0 yakwala, 1 twitter, 2 facebook
 	, apiData	: { type: [{
@@ -657,6 +670,10 @@ User.statics.findByToken = function (token,callback) {
 }
 User.statics.findByTwitterId = function (twitter_id,callback) {
   return this.findOne({'social.twitter.twitter_id': twitter_id,'status':1}, callback);
+}
+
+User.statics.findByFacebookId = function (facebook_id,callback) {
+  return this.findOne({'social.facebook.facebook_id': facebook_id,'status':1}, callback);
 }
 User.statics.findAll = function (callback) {
   return this.find({},{},{sort:{name:1}}, callback);

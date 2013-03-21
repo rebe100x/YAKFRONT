@@ -21,6 +21,14 @@ mixin menu(active)
 							span.caret(style="margin:22px 0px 22px 5px;")
 					ul#customMenuProfile.dropdown-menu.pull-right
 						li
+							a#connectedas
+								|Connecté avec 
+								span#connectWith
+								br
+								|@
+								= locals.user.login
+						li.divider
+						li
 							//
 								img.imgSmallProfile(src="/images/new/lacarte.png")
 							a(href="/news/map") Map
@@ -67,7 +75,16 @@ mixin menu(active)
 				$(document).ready(function(){
 					$("#addLink").removeAttr("href");
 					$("#maplink").removeAttr("href");
-					$("#maplink").addClass("activated");
+					if(gup('post') == 1)
+					{
+						$("#addLink").addClass("activated");
+						$("#maplink").removeClass("activated");
+					}
+					else
+					{
+						$("#maplink").addClass("activated");
+						$("#addLink").removeClass("activated");
+					}
 
 					$("#addLink").click(function(){
 						if(!$(this).hasClass("activated"))
@@ -99,97 +116,60 @@ mixin menu(active)
 						}
 						
 					});
-					try
-					{
-
-					var mq = window.matchMedia( "(min-width: 768px)" );
-					if (mq.matches) {
-						$("#maplink").css("backgroundImage", "url('/images/yakwala_sprite.png')");
-						$("#maplink").css("backgroundPosition", "0px -126px");
-						if(gup("post") == 1)
-						{
-							$("#addLink").css("backgroundImage", "url('/images/yakwala_sprite.png')");
-							$("#addLink").css("backgroundPosition", "-59px 0px");
-						}
-					}
-					else {
-						$("#maplink").css("backgroundImage", "url('/images/yakwala_sprite_medium.png')");
-						$("#maplink").css("backgroundPosition", "55px -62px");	
-						if(gup("post") == 1)
-						{
-							$("#addLink").css("backgroundImage", "url('/images/yakwala_sprite.png')");
-							$("#addLink").css("backgroundPosition", "-30px 0px");
-						}
-					}
-					if (matchMedia) {
-						var mq = window.matchMedia("(min-width: 768px)");
-						mq.addListener(WidthChange);
-						WidthChange(mq);
-						
-					}
-					function WidthChange(mq)
-					{
-						if (mq.matches) {
-							$("#searchElementContainer").eq(0).show();
-							$("#maplink").css("backgroundImage", "url('/images/yakwala_sprite.png')");
-							$("#maplink").css("backgroundPosition", "0px -126px");
-							if(gup("post") == 1)
-							{
-								$("#addLink").css("backgroundImage", "url('/images/yakwala_sprite.png')");
-								$("#addLink").css("backgroundPosition", "-59px 0px");
-							}
-						}
-						else {
-							$("#maplink").css("backgroundImage", "url('/images/yakwala_sprite_medium.png')");
-							$("#maplink").css("backgroundPosition", "55px -62px");	
-							if(gup("post") == 1)
-							{
-								$("#addLink").css("backgroundImage", "url('/images/yakwala_sprite_medium.png')");
-								$("#addLink").css("backgroundPosition", "-30px 0px");
-							}
-						}
-					}
-				}
-				catch(e)
-				{
-
-				} 
 				});
+
+
+				$("#closehideSearch").click(function(){
+					$("#searchElementContainer").slideToggle('slow', function(){
+						drawNewsFeed();
+
+					});
+
+
+				});
+
+				function WidthChange(mq)
+				{
+					if (mq.matches)
+						{
+							if($("#searchElementContainer").css("display") == "none")
+							{
+								$("#searchElementContainer").slideToggle('slow', function(){
+									drawNewsFeed();
+								});
+							}
+							
+						}
+				}
 		if(active == 'feed')
 			script
 				$(document).ready(function(){
-					/*try
-					{
-					var mq = window.matchMedia( "(min-width: 768px)" );
-					if (mq.matches) {
-						$("#feedlink").css("backgroundImage", "url('/images/yakwala_sprite.png')");
-						$("#feedlink").css("backgroundPosition", "0px -62px");
-					}
-					else {
-						$("#feedlink").css("backgroundImage", "url('/images/yakwala_sprite_medium.png')");
-						$("#feedlink").css("backgroundPosition", "0px -31px");	
-					}
-					if (matchMedia) {
-						var mq = window.matchMedia("(min-width: 768px)");
-						mq.addListener(WidthChange);
-						WidthChange(mq);
-						
-					}
-					function WidthChange(mq)
-					{
-						if (mq.matches) {
-						$("#feedlink").css("backgroundImage", "url('/images/yakwala_sprite.png')");
-						$("#feedlink").css("backgroundPosition", "0px -62px");
-					}
-					else {
-						$("#feedlink").css("backgroundImage", "url('/images/yakwala_sprite_medium.png')");
-						$("#feedlink").css("backgroundPosition", "0px -31px");	
-					}
-					}
-					}
-					catch(e)
-					{} */
+					$("#feedlink").addClass("activated");
 				});
+
+
+				$("#closehideSearch").click(function(){
+					$("#searchElementContainer").slideToggle('slow', function(){
+
+
+					});
+
+
+				});
+
+				function WidthChange(mq)
+				{
+					if (mq.matches)
+						{
+							if($("#searchElementContainer").css("display") == "none")
+							{
+								$("#searchElementContainer").slideToggle('slow', function(){
+									
+								});
+							}
+							
+						}
+				}
 		if(active == 'firstvisit')
 			script
 				$(document).ready(function(){
@@ -215,11 +195,50 @@ mixin menu(active)
 		
 		script
 			$(document).ready(function(){
+
 				if(typeof(user) != "undefined")
+				{
 					if (!user.thumbsmall.match("no-user.png$"))
 						$("#profileMenu").html("<img src='"+user.thumbsmall+"' />");
+
+					switch(user.createfrom_social)
+					{
+						case 0:
+						{
+							$("#connectWith").html("yakwala");
+							break;
+						}
+						case 1:
+						{
+							$("#connectWith").html("twitter");
+							break;
+						}
+						case 2:
+						{
+							$("#connectWith").html("facebook");
+							break;
+						}
+					}
+				}
+
+				try
+					{
+
+					var mq = window.matchMedia( "(min-width: 768px)" );
+					if (matchMedia) {
+						var mq = window.matchMedia("(min-width: 768px)");
+						mq.addListener(WidthChange);
+						WidthChange(mq);
+						
+					}
+				}
+				catch(e)
+				{
+
+				} 
 					
 			});
+			
 			
 
 	

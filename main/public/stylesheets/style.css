@@ -415,7 +415,7 @@ width: 270px;
 	#maplink:hover, #maplink.activated { background-position: 0px -126px;}
 
 	#feedlink { width: 51px; height: 51px; display: block; float: left; background-image: url('/images/yakwala_sprite.png'); background-position: 108px -62px; margin-top: 6px; margin-left: 6px; margin-bottom: 6px;}
-	#feedlink:hover { background-position: 0px -62px;}
+	#feedlink:hover, #feedlink.activated { background-position: 0px -62px;}
 
 	#addLink { width: 51px; height: 51px; background-color: red; display: block; float: left; background-image: url('/images/yakwala_sprite.png'); background-position: -59px 0px; margin-top: 6px; margin-left: 6px; margin-bottom: 6px;}
 	#addLink:hover, #addLink.activated { background-position: 0px 0px;}
@@ -464,10 +464,10 @@ width: 270px;
  /*large screens*/
  @media only screen and ( min-width: 1824px ) {
 	#maplink { width: 51px; height: 51px; display: block; float: left; background-image: url('/images/yakwala_sprite.png'); background-position: 108px -126px; margin-top: 6px; margin-left: 6px; margin-bottom: 6px;}
-	#maplink:hover { background-position: 0px -126px;}
+	#maplink:hover, #maplink.activated { background-position: 0px -126px;}
 
 	#feedlink { width: 51px; height: 51px; display: block; float: left; background-image: url('/images/yakwala_sprite.png'); background-position: 108px -62px; margin-top: 6px; margin-left: 6px; margin-bottom: 6px;}
-	#feedlink:hover { background-position: 0px -62px;}
+	#feedlink:hover, #feedlink.activated { background-position: 0px -62px;}
 
 	#addLink { width: 51px; height: 51px; background-color: red; display: block; float: left; background-image: url('/images/yakwala_sprite.png'); background-position: -59px 0px; margin-top: 6px; margin-left: 6px; margin-bottom: 6px;}
 	#addLink:hover, #addLink.activated { background-position: 0px 0px;}
@@ -515,10 +515,10 @@ width: 270px;
  /*ipads portrail*/
  @media only screen and (min-width : 768px) and (max-width : 1024px)  {
    #maplink { width: 51px; height: 51px; display: block; float: left; background-image: url('/images/yakwala_sprite.png'); background-position: 108px -126px; margin-top: 6px; margin-left: 6px; margin-bottom: 6px;}
-	#maplink:hover { background-position: 0px -126px;}
+	#maplink:hover, #maplink.activated { background-position: 0px -126px;}
 
 	#feedlink { width: 51px; height: 51px; display: block; float: left; background-image: url('/images/yakwala_sprite.png'); background-position: 108px -62px; margin-top: 6px; margin-left: 6px; margin-bottom: 6px;}
-	#feedlink:hover { background-position: 0px -62px;}
+	#feedlink:hover, #feedlink.activated { background-position: 0px -62px;}
 
 	#addLink { width: 51px; height: 51px; background-color: red; display: block; float: left; background-image: url('/images/yakwala_sprite.png'); background-position: -59px 0px; margin-top: 6px; margin-left: 6px; margin-bottom: 6px;}
 	#addLink:hover, #addLink.activated { background-position: 0px 0px;}
@@ -565,10 +565,10 @@ width: 270px;
   /*ipads portrail*/
  @media only screen and (min-width : 630px) and (max-width : 768px)  {
  	#maplink { width: 26px; height: 26px; display: block; float: left; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 55px -62px; margin-top: 6px; margin-left: 6px; margin-bottom: 6px;}
-	#maplink:hover { background-position: 0px -63px;}
+	#maplink:hover, #maplink.activated { background-position: 0px -63px;}
 
 	#feedlink { width: 26px; height: 26px; display: block; float: left; background-image: url('/images/yakwala_sprite_medium.png'); background-position: -30px -31px; margin-top: 6px; margin-left: 6px; margin-bottom: 6px;}
-	#feedlink:hover { background-position: 0px -31px;}
+	#feedlink:hover, #feedlink.activated { background-position: 0px -31px;}
 
 	#addLink { width: 26px; height: 26px; display: block; float: left; background-image: url('/images/yakwala_sprite_medium.png'); background-position: -30px 0px; margin-top: 6px; margin-left: 6px; margin-bottom: 6px;}
 	#addLink:hover, #addLink.activated { background-position: 0px 0px;}
@@ -622,10 +622,10 @@ width: 270px;
  /*ipads portrail*/
  @media only screen and (min-width : 321px) and (max-width : 630px)  {
  	#maplink { width: 26px; height: 26px; display: block; float: left; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 55px -62px; margin-top: 6px; margin-left: 6px; margin-bottom: 6px;}
-	#maplink:hover { background-position: 0px -63px;}
+	#maplink:hover, #feedlink.activated { background-position: 0px -63px;}
 
 	#feedlink { width: 26px; height: 26px; display: block; float: left; background-image: url('/images/yakwala_sprite_medium.png'); background-position: -30px -31px; margin-top: 6px; margin-left: 6px; margin-bottom: 6px;}
-	#feedlink:hover { background-position: 0px -31px;}
+	#feedlink:hover, #feedlink.activated { background-position: 0px -31px;}
 
 	#addLink { width: 26px; height: 26px; display: block; float: left; background-image: url('/images/yakwala_sprite_medium.png'); background-position: -30px 0px; margin-top: 6px; margin-left: 6px; margin-bottom: 6px;}
 	#addLink:hover, #addLink.activated { background-position: 0px 0px;}
@@ -678,10 +678,10 @@ width: 270px;
 /* Smartphones (portrait) ----------- */
 @media only screen and (max-width : 320px) {
 	#maplink { width: 26px; height: 26px; display: block; float: left; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 55px -62px; margin-top: 6px; margin-left: 6px; margin-bottom: 6px;}
-	#maplink:hover { background-position: 0px -63px;}
+	#maplink:hover, #maplink.activated { background-position: 0px -63px;}
 
 	#feedlink { width: 26px; height: 26px; display: block; float: left; background-image: url('/images/yakwala_sprite_medium.png'); background-position: -30px -31px; margin-top: 6px; margin-left: 6px; margin-bottom: 6px;}
-	#feedlink:hover { background-position: 0px -31px;}
+	#feedlink:hover, #feedlink.activated { background-position: 0px -31px;}
 
 	#addLink { width: 26px; height: 26px; display: block; float: left; background-image: url('/images/yakwala_sprite_medium.png'); background-position: -30px 0px; margin-top: 6px; margin-left: 6px; margin-bottom: 6px;}
 	#addLink:hover, #addLink.activated { background-position: 0px 0px;}
@@ -732,10 +732,10 @@ width: 270px;
 /* Smartphones (landscape) ----------- */
 @media only screen and (min-width : 321px)  and (max-width : 480px) {
 	#maplink { width: 26px; height: 26px; display: block; float: left; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 55px -62px; margin-top: 6px; margin-left: 6px; margin-bottom: 6px;}
-	#maplink:hover { background-position: 0px -63px;}
+	#maplink:hover, #maplink.activated { background-position: 0px -63px;}
 
 	#feedlink { width: 26px; height: 26px; display: block; float: left; background-image: url('/images/yakwala_sprite_medium.png'); background-position: -30px -31px; margin-top: 6px; margin-left: 6px; margin-bottom: 6px;}
-	#feedlink:hover { background-position: 0px -31px;}
+	#feedlink:hover, #feedlink.activated { background-position: 0px -31px;}
 
 	#addLink { width: 26px; height: 26px; display: block; float: left; background-image: url('/images/yakwala_sprite_medium.png'); background-position: -30px 0px; margin-top: 6px; margin-left: 6px; margin-bottom: 6px;}
 	#addLink:hover, #addLink.activated { background-position: 0px 0px;}
@@ -785,10 +785,10 @@ width: 270px;
 
 @media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
 	#maplink { width: 26px; height: 26px; display: block; float: left; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 55px -62px; margin-top: 6px; margin-left: 6px; margin-bottom: 6px;}
-	#maplink:hover { background-position: 0px -63px;}
+	#maplink:hover, #maplink.activated { background-position: 0px -63px;}
 
 	#feedlink { width: 26px; height: 26px; display: block; float: left; background-image: url('/images/yakwala_sprite_medium.png'); background-position: -30px -31px; margin-top: 6px; margin-left: 6px; margin-bottom: 6px;}
-	#feedlink:hover { background-position: 0px -31px;}
+	#feedlink:hover, #feedlink.activated { background-position: 0px -31px;}
 
 	#addLink { width: 26px; height: 26px; display: block; float: left; background-image: url('/images/yakwala_sprite_medium.png'); background-position: -30px 0px; margin-top: 6px; margin-left: 6px; margin-bottom: 6px;}
 	#addLink:hover, #addLink.activated { background-position: 0px 0px;}
@@ -970,3 +970,10 @@ border-bottom: 1px solid #e5e5e5;}
 .searchYakwala .ui-state-focus { }
 #heatSelector a:focus { outline: none; outline-offset: 0px;}
 
+
+#userinfo { color: #455FA1; font-weight: bold; }
+#userinfo a { color: #455FA1; position: relative; top: 0px; font-size: 10px;}
+#userinfo img { width: 43px; margin-right: 2px; margin-bottom: 9px;}
+#userinfo #fbloader { width: 15px; top: 3px; left: 9px; position: relative;}
+#connectedas { background: #D1161E; color: white; font-weight: bold}
+.yakbtnLogin { background: url(/images/yakconnect.png) no-repeat transparent; width: 155px; height: 34px; border: 0px;}

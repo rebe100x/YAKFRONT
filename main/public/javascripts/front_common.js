@@ -410,7 +410,7 @@ function setBlackBockPosition()
 
 function correctPlaceholder()
 {
-	 $("input").each(function(){
+	 $("input[id!='searchStr']").each(function(){
       if($(this).val()=="" && $(this).attr("placeholder")!=""){
         $(this).val($(this).attr("placeholder"));
         $(this).focus(function(){

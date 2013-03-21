@@ -933,20 +933,45 @@ exports.privateprofile = function(req, res){
 	var user = new User();
 				
 	if(req.session.user){
-		
-		User.update({_id: req.session.user}, 
-		{mail:req.body.mail}
-		, {upsert: true}, function(err){
-			if (err)
-				console.log(err);
+		User.findbyMail(req.body.mail, function(err, theuser){
+			if(!err)
+			{
+				if(theuser == "")
+				{
+					User.update({_id: req.session.user}, 
+					{mail:req.body.mail}
+					, {upsert: true}, function(err){
+						if (err)
+							console.log(err);
+					});
+					formMessage.push("Votre profil privé est enregistré");
+					req.session.message = formMessage;
+					res.redirect('settings/privateprofile');
+				}
+				else
+				{
+					formMessage.push("Ce mail est déjà enregistré");	
+					req.session.message = formMessage;
+					res.redirect('settings/privateprofile');
+				}
+				
+			}
+			else
+			{
+				formMessage.push("Erreur : Essayez de nouveau !");
+				req.session.message = formMessage;
+				res.redirect('settings/privateprofile');
+			}
 		});
-		formMessage.push("Votre profil privé est enregistré");
 	}else
+	{
 		formMessage.push("Erreur : vous n'êtes pas connecté !");
+		req.session.message = formMessage;
+		res.redirect('settings/privateprofile');
+	}
+		
 	
-	req.session.message = formMessage;
 	
-	res.redirect('settings/privateprofile');
 }
 
 
@@ -1226,3 +1251,106 @@ exports.auth_twitter_callback = function(req, res){
 	}
 };
 
+
+
+/*exports.auth_facebook = function(req, res){
+	req.Facebook.api('/me', function(err, user) {
+		res.writeHead(200, {'Content-Type': 'text/plain'});
+	    res.end('Hello, ' + user.name + '!');
+	});
+	
+}
+
+
+exports.auth_google = function(req, res){
+	res.send("google pulus");
+	
+}*/
+
+exports.auth_facebook = function(req, res){
+	var data = req.body.user;
+	var crypto = require('crypto')
+    var User = db.model('User');
+    var user = new User();
+	var login = data.username;
+	var facebook_id = data.id;
+	var salt = Math.round(new Date().valueOf() * Math.random());
+	var token = crypto.createHash('sha1').update("yakwala@secure"+salt).digest("hex");
+	var password = user.generatePassword(5);
+	var logo = conf.fronturl+"/static/images/yakwala-logo_petit.png";
+	
+	user.name=req.body.user.name;
+	user.login=login;
+	user.mail='yak_not_set@yakwala.fr';
+	user.token=token;
+	user.status=1;
+	user.hash= password;
+	user.password= password;
+	user.salt="1";
+	user.type=1;
+	user.facebook_id = facebook_id;
+	
+	var Facebook = db.model('Facebook');
+	var aFacebook = new Facebook();	
+	aFacebook.facebook_id = facebook_id;
+	aFacebook.screen_name = login;
+	aFacebook.name = data.name;
+	aFacebook.profile_image_url = 'https:/graph.facebook.com/'+data.id+'/picture/';
+	aFacebook.url = data.link;
+	aFacebook.description = data.bio;
+
+	user.social.facebook = aFacebook;
+
+	user.createfrom_social = 2;
+	user.bio = data.bio;
+	user.web = data.link;
+	//user.favplace = [{'name':'Paris, France','location':{'lat':48.851875,'lng':2.356374}},{'name':'Eghézée, Belgique','location':{'lat':50.583346,'lng':4.900031}},{'name':'Montpellier, France','location':{'lat':43.610787,'lng':3.876715}}];
+	user.favplace = [{'name':'Nice, France','location':{'lat':43.681343,'lng':7.232094},'range':100},{'name':'Marseille, France','location':{'lat':43.298198,'lng':5.370255},'range':100},{'name':'Paris, France','location':{'lat':48.851875,'lng':2.356374},'range':100}];
+	
+	User.findByFacebookId(facebook_id,function (err, theuser){
+		if(theuser != undefined && theuser != null ){
+			console.log('LOGGED IN');
+			req.session.user = theuser._id;
+			User.update({"_id":theuser._id},{$set:{"lastLoginDate":new Date()}}, function(err){if (err) console.log(err);});
+			res.json({response: "1"});
+		}else{
+			
+			User.findByLoginDuplicate(login, function(err, theuser){
+				if(theuser != undefined && theuser != null )
+				{
+					user.name=login+"_facebook";
+					user.login=login+"_facebook";
+					user.save(function (err) {
+						if (!err){
+							req.session.user = user._id;
+							User.update({"_id":user._id},{$set:{"lastLoginDate":new Date(), "status":4}}, function(err){if (err) console.log(err);});
+							res.json({response: "1"});
+						} 
+						else 
+						{
+							console.log(err);
+							res.json({response: "0"});
+						}
+					});	
+					
+				}
+				else
+				{
+					user.save(function (err) {
+					if (!err){
+						req.session.user = user._id;
+						User.update({"_id":user._id},{$set:{"lastLoginDate":new Date(), "status":4}}, function(err){if (err) console.log(err);});
+						res.json({response: "4"});
+					} 
+					else 
+						{
+							res.json({response: "0"});
+							console.log(err);
+						}
+					});	
+				}
+			})
+		}
+	});
+	
+}
