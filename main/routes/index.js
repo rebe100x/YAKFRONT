@@ -382,6 +382,7 @@ exports.session = function(req, res){
 				res.redirect(req.body.redir || '/news/map');
 			}else if(user.status == 2){
 				req.session.message = 'Compte non validé.';
+				res.redirect('user/login?redir='+req.body.redir);
 			}
 		}else{
 			req.session.message = 'Identifiants incorrects.';	
@@ -1197,8 +1198,10 @@ exports.auth_twitter_callback = function(req, res){
 				user.social.twitter = aTwitter;
 
 				user.createfrom_social = 1;
-				user.bio = data.description;
-				user.web = data.url;
+				if(!(typeof data.description  === 'undefined') && data.description  != null && data.description  != '')
+					user.bio = data.description;
+				if(!(typeof data.url  === 'undefined') && data.url  != null && data.url  != '')
+					user.web = data.url;
 				//user.favplace = [{'name':'Paris, France','location':{'lat':48.851875,'lng':2.356374}},{'name':'Eghézée, Belgique','location':{'lat':50.583346,'lng':4.900031}},{'name':'Montpellier, France','location':{'lat':43.610787,'lng':3.876715}}];
 				user.favplace = [{'name':'Nice, France','location':{'lat':43.681343,'lng':7.232094},'range':100},{'name':'Marseille, France','location':{'lat':43.298198,'lng':5.370255},'range':100},{'name':'Paris, France','location':{'lat':48.851875,'lng':2.356374},'range':100}];
 				

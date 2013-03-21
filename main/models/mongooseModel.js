@@ -563,9 +563,9 @@ var User = new Schema({
 	, lastLoginDate	: {type: Date, required: true, default: Date.now}		
 	, status	: {type: Number,required: true, default: 2,index: true}	
 	, social: { 
-		twitter : [Twitter],
-		facebook : [Facebook],
-		google : [Google]
+		twitter : {type: [Twitter],required: false},
+		facebook : {type: [Facebook],required: false},
+		google : {type: [Google],required: false}
 	 }
 	, createfrom_social  :{ type : Number, default:0} // 0 yakwala, 1 twitter, 2 facebook, 3 google
 	, apiData	: { type: [{

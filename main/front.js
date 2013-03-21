@@ -3,8 +3,6 @@
 /**
  * Module dependencies.
  */
-var config_secret = require('confs_secret.js');
-var secretConf = config_secret.confs_secret;
 
 var express = require('express'),
   routes = require('./routes'),
@@ -24,9 +22,6 @@ var app = express();
 
 
 // Configuration
-
-
-
 
 app.configure(function(){
   app.set('views', __dirname + '/views/front');
@@ -48,7 +43,6 @@ app.configure(function(){
   
   app.use(express.methodOverride());
   app.use(app.router);
-  //app.use(Facebook.middleware({ appId: secretConf.FACEBOOK.accessKeyId, secret: secretConf.FACEBOOK.secretAccessKey }));
   
 });
 
