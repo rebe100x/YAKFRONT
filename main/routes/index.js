@@ -510,6 +510,9 @@ exports.forgotpassword = function(req, res){
 				});
 				req.session.message = "Un nouveau mail a été renvoyé avec une nouvelle clé d'activation. Veuillez vérifier qu'il n'est pas dans les spams.";
 				res.redirect('user/forgotpassword');
+			}else{
+				req.session.message = "Ce mail ne correspond à aucun compte Yakwala !";
+				res.redirect('user/forgotpassword');
 			}
 	});
 	
