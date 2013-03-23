@@ -55,6 +55,7 @@ mixin loginForm()
 			
 	script(src="http://connect.facebook.net/en_US/all.js")
 	script
+		var conf = !{conf};
 		// initialize the library with the API key
 		FB.init({ appId: 548066291890740 });
 
@@ -62,7 +63,6 @@ mixin loginForm()
 		FB.getLoginStatus(handleSessionResponse);
 
 		$('#loginFB').bind('click', function() {
-			alert("great");
 			FB.login(handleSessionResponse);
 		});
 
@@ -80,19 +80,19 @@ mixin loginForm()
 							
 							if(data.response == "4")
 							{
-								console.log("fv");	
-								window.location = "http://localhost:3000/settings/firstvisit";
+								//console.log("fv");	
+								window.location = conf.fronturl + "/settings/firstvisit";
 							}
 								
 							else if(data.response == "1")
 							{
-								console.log("map");	
-								window.location = "http://localhost:3000/news/map";
+								//console.log("map");	
+								window.location = conf.fronturl + "/news/map";
 							}
 								
 							else
 							{
-								console.log("here");
+								//console.log("here");
 								$("#fbloader").remove();
 							}
 								
@@ -187,19 +187,19 @@ mixin loginForm()
 				$.post("/auth/google", {user: resp}, function(data){		
 					if(data.response == "4")
 					{
-						console.log("fv");	
-						window.location = "http://localhost:3000/settings/firstvisit";
+						//console.log("fv");	
+						window.location = conf.fronturl + "/settings/firstvisit";
 					}
 						
 					else if(data.response == "1")
 					{
 						console.log("map");	
-						window.location = "http://localhost:3000/news/map";
+						window.location = conf.fronturl + "/news/map";
 					}
 						
 					else
 					{
-						console.log("here");
+						//console.log("here");
 						$("#fbloader").remove();
 					}
 								
