@@ -1436,3 +1436,16 @@ function checkByWidth()
 			if (checker.android || checker.iphone || checker.blackberry)
 				$("#zoomnavigation").remove();
 		}
+
+		function trackUser(userid, actionid, params)
+		{
+			var url = 'http://localhost:3004/track/user/'+userid+'/'+actionid+'/'+params;
+			$.ajax({
+			type: "get",
+			url : url,
+			dataType: "json",
+			success: function(response){
+				console.log(response);	 
+			}
+			});
+		}

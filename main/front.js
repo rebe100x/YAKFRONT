@@ -80,6 +80,8 @@ app.get('/user/resetpassword/:token/:password', routes.user_resetpassword);
 app.get('/pictures/:size/:picture', routes.picture);
 app.get('/static/images/:name', routes.static_image);
 
+app.get('/track/user/:userid/:actionid/:params', routes.track_user);
+
 app.post('/user',routes.user);
 app.post('/forgotpassword',routes.forgotpassword);
 //app.post('/validate',routes.validate);

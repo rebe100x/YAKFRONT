@@ -104,6 +104,19 @@ exports.geoalerts = function (req, res) {
 
 
 exports.geoinfos = function (req, res) {
+	var trackParams = {"params": [,req.params.limit,
+										{"x1": req.params.x1},
+										{"y1": req.params.y1},
+										{"x2": req.params.x2},
+										{"y2": req.params.y2},
+										{"ago": req.params.ago},
+										{"now": req.params.now},
+										{"type": type},
+										{"str": req.params.str},
+										{"limit": req.params.limit},
+									]
+								};
+	//trackUser(req.session.user, 5, JSON.stringify(trackParams));
 	var Info = db.model('Info');
 	var type = [];
 	type = req.params.type.split(',');
@@ -119,6 +132,7 @@ exports.geoinfos = function (req, res) {
 		}else
 			res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 	}); 
+	
 };
 
 
@@ -1602,3 +1616,4 @@ exports.del_comment = function (req, res) {
 		res.json({meta:{code:404,error_type:'missing parameter',error_description:'Comment not set'}});
 	}		
 };
+

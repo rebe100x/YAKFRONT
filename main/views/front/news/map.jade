@@ -89,6 +89,7 @@ block content
 			}
 				
 			$('#searchBtn').click(function(){
+
 					$.cookie("searchString",searchString,{ expires: 10000, path : '/' });
 
 					var str = encodeURIComponent($('#searchStr').val());
@@ -128,7 +129,26 @@ block content
 						searchString = null;
 					}
 					
+					var mybounds = getMyBounds();
+					
+			
 					getAndPrintInfo();
+					var trackParams = {"params": [
+										{"x1": mybounds.ca.b},
+										{"y1": mybounds.ea.b},
+										{"x2": mybounds.ca.f},
+										{"y2": mybounds.ea.f},
+										{"dateFrom": dateFrom},
+										{"type": yakType.toString()},
+										{"str": searchString},
+									]
+								};
+					/*$.ajax({
+						url: '/track/user/'+user._id+'/'+'5'+'/'+JSON.stringify(trackParams),
+						type: "get",
+						dataType: "json"
+					});*/
+
 				});
 
 
@@ -821,7 +841,8 @@ block content
 					$("#searchPlaceStr").val(placeGmap.address.city + ", " + placeGmap.address.country);
 				}
 			});		
-			
+			//apiUrl = '/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/0/'+yakType.toString()+'/'+searchString+'/500';
+		
 		}
 
 		function printMapItem(item,key,bounce){

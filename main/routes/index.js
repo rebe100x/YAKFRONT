@@ -329,9 +329,20 @@ exports.user_validate = function(req, res){
 			User.update({_id: model._id}, {status:4}, {upsert: false}, function(err){if (err) console.log(err);});						
 			res.render('settings/firstvisit',{user:model});
 			res.redirect('/user/validate');
+			var trackParams = {"params": [
+    										{"success": 1},
+									     ]
+							  		};
+			trackUser(user._id, 2,  JSON.stringify(trackParams));
 		}else{
 			req.session.message = "Votre clé d'activation est incorrecte.";
 			res.redirect('/user/validate');
+			var trackParams = {"params": [
+    										{"success": 0},
+    										{"error" : "clé d'activation incorrecte."},
+									     ]
+							  		};
+			trackUser(user._id, 2,  JSON.stringify(trackParams));
 		}
 	
 	});
@@ -357,6 +368,11 @@ exports.user_resetpassword = function(req, res){
 exports.user_logout = function(req, res){
 	delete req.session.user;
 	res.redirect('/news/map');
+	var trackParams = {"params": [
+									{"logout": 1},
+							     ]
+					};
+	trackUser(user._id, 4,  JSON.stringify(trackParams));
 };
 
 
@@ -380,15 +396,32 @@ exports.session = function(req, res){
 				req.session.user = user._id;
 				User.update({"_id":user._id},{$set:{"lastLoginDate":new Date()}}, function(err){if (err) console.log(err);});
 				res.redirect(req.body.redir || '/news/map');
+
+				//track user
+				var trackParams = {"params": [
+        										{"loginFrom": 0},
+        										{"success": 1},
+										     ]
+								  };
+				trackUser(user._id, 3,  JSON.stringify(trackParams));
+
 			}else if(user.status == 2){
 				req.session.message = 'Compte non validé.';
 				res.redirect('user/login?redir='+req.body.redir);
+				var trackParams = {"params": [
+        										{"loginFrom": 0},
+        										{"success": 0},
+        										{"error": "Compte non validé."},
+										     ]
+								  };
+				trackUser(user._id, 3,  JSON.stringify(trackParams));
 			}
 		}else{
 			req.session.message = 'Identifiants incorrects.';	
 			res.redirect('user/login?redir='+req.body.redir);
 		}
 	});
+	
 };
 
 exports.user = function(req, res){
@@ -465,6 +498,12 @@ exports.user = function(req, res){
 						if(!err)
 							console.log(err);
 					});
+					var trackParams = {"params": [
+        										{"createdFrom": 0},
+        										{"success": 1},
+										     ]
+								  		};
+					trackUser(user._id, 1,  JSON.stringify(trackParams));
 					} 
 					else console.log(err);
 				});
@@ -1143,6 +1182,13 @@ exports.auth_twitter_callback = function(req, res){
 			if (error){
 				console.log(error);
 				res.send("Authentication Failure!");
+				var trackParams = {"params": [
+        										{"loginFrom": 1},
+        										{"success": 0},
+        										{"error": "Authentication Failure!"},
+										     ]
+								  };
+				trackUser(user._id, 3,  JSON.stringify(trackParams));
 			} else {
 				req.session.oauth.access_token = oauth_access_token;
 				req.session.oauth.access_token_secret = oauth_access_token_secret;
@@ -1151,6 +1197,13 @@ exports.auth_twitter_callback = function(req, res){
 		        if (error) {
 		          console.log(error);
 		          res.send("Error getting twitter screen name : " + error, 500);
+		          var trackParams = {"params": [
+        										{"loginFrom": 1},
+        										{"success": 0},
+        										{"error": "Error getting twitter screen name!"},
+										     ]
+								  };
+				trackUser(user._id, 3,  JSON.stringify(trackParams));
 		        } else {
 
 		       	  data = JSON.parse(data);
@@ -1211,6 +1264,12 @@ exports.auth_twitter_callback = function(req, res){
 						req.session.user = theuser._id;
 						User.update({"_id":theuser._id},{$set:{"lastLoginDate":new Date()}}, function(err){if (err) console.log(err);});
 						res.redirect('news/map');
+						var trackParams = {"params": [
+        										{"loginFrom": 1},
+        										{"success": 1},
+										     ]
+								  };
+						trackUser(user._id, 3,  JSON.stringify(trackParams));
 					}else{
 						
 						User.findByLoginDuplicate(login, function(err, theuser){
@@ -1223,6 +1282,19 @@ exports.auth_twitter_callback = function(req, res){
 										req.session.user = user._id;
 										User.update({"_id":user._id},{$set:{"lastLoginDate":new Date(), "status":4}}, function(err){if (err) console.log(err);});
 										res.redirect('/settings/firstvisit');
+										var trackParams = {"params": [
+        										{"createdFrom": 1},
+        										{"success": 1},
+										     ]
+								  		};
+										trackUser(user._id, 1,  JSON.stringify(trackParams));
+										var trackParams = {"params": [
+        										{"loginFrom": 1},
+        										{"success": 1},
+        										{"firstVisit": 1},
+										     ]
+								  		};
+										trackUser(user._id, 3,  JSON.stringify(trackParams));
 									} 
 									else console.log(err);
 								});	
@@ -1235,6 +1307,19 @@ exports.auth_twitter_callback = function(req, res){
 									req.session.user = user._id;
 									User.update({"_id":user._id},{$set:{"lastLoginDate":new Date(), "status":4}}, function(err){if (err) console.log(err);});
 									res.redirect('/settings/firstvisit');
+									var trackParams = {"params": [
+        										{"createdFrom": 1},
+        										{"success": 1},
+										     ]
+								  		};
+									trackUser(user._id, 1,  JSON.stringify(trackParams));
+									var trackParams = {"params": [
+        										{"loginFrom": 1},
+        										{"success": 1},
+        										{"firstVisit": 1},
+										     ]
+								  		};
+										trackUser(user._id, 3,  JSON.stringify(trackParams));
 								} 
 								else console.log(err);
 								});	
@@ -1316,6 +1401,12 @@ exports.auth_facebook = function(req, res){
 			req.session.user = theuser._id;
 			User.update({"_id":theuser._id},{$set:{"lastLoginDate":new Date()}}, function(err){if (err) console.log(err);});
 			res.json({response: "1"});
+			var trackParams = {"params": [
+        										{"loginFrom": 2},
+        										{"success": 1},
+										     ]
+								  		};
+			trackUser(user._id, 3,  JSON.stringify(trackParams));
 		}else{
 			
 			User.findByLoginDuplicate(login, function(err, theuser){
@@ -1328,6 +1419,18 @@ exports.auth_facebook = function(req, res){
 							req.session.user = user._id;
 							User.update({"_id":user._id},{$set:{"lastLoginDate":new Date(), "status":4}}, function(err){if (err) console.log(err);});
 							res.json({response: "1"});
+							var trackParams = {"params": [
+        										{"createdFrom": 2},
+        										{"success": 1},
+										     ]
+								  		};
+							trackUser(user._id, 1,  JSON.stringify(trackParams));
+							var trackParams = {"params": [
+        										{"loginFrom": 2},
+        										{"success": 1},
+										     ]
+								  		};
+							trackUser(user._id, 3,  JSON.stringify(trackParams));
 						} 
 						else 
 						{
@@ -1344,6 +1447,19 @@ exports.auth_facebook = function(req, res){
 						req.session.user = user._id;
 						User.update({"_id":user._id},{$set:{"lastLoginDate":new Date(), "status":4}}, function(err){if (err) console.log(err);});
 						res.json({response: "4"});
+						var trackParams = {"params": [
+        										{"createdFrom": 2},
+        										{"success": 1},
+										     ]
+								  		};
+						trackUser(user._id, 1,  JSON.stringify(trackParams));
+						var trackParams = {"params": [
+    										{"loginFrom": 2},
+    										{"success": 1},
+    										{"firstVisit": 1},
+									     ]
+							  		};
+						trackUser(user._id, 3,  JSON.stringify(trackParams));
 					} 
 					else 
 						{
@@ -1405,6 +1521,12 @@ exports.auth_google = function(req, res){
 			req.session.user = theuser._id;
 			User.update({"_id":theuser._id},{$set:{"lastLoginDate":new Date()}}, function(err){if (err) console.log(err);});
 			res.json({response: "1"});
+			var trackParams = {"params": [
+    										{"loginFrom": 3},
+    										{"success": 1},
+									     ]
+							  		};
+			trackUser(user._id, 3,  JSON.stringify(trackParams));
 		}else{
 			
 			User.findByLoginDuplicate(login, function(err, theuser){
@@ -1417,6 +1539,18 @@ exports.auth_google = function(req, res){
 							req.session.user = user._id;
 							User.update({"_id":user._id},{$set:{"lastLoginDate":new Date(), "status":4}}, function(err){if (err) console.log(err);});
 							res.json({response: "1"});
+							var trackParams = {"params": [
+    										{"createdFrom": 3},
+    										{"success": 1},
+									     ]
+							  		};
+							trackUser(user._id, 1,  JSON.stringify(trackParams));
+							var trackParams = {"params": [
+    										{"loginFrom": 3},
+    										{"success": 1},
+									     ]
+							  		};
+							trackUser(user._id, 3,  JSON.stringify(trackParams));
 						} 
 						else 
 						{
@@ -1433,6 +1567,19 @@ exports.auth_google = function(req, res){
 						req.session.user = user._id;
 						User.update({"_id":user._id},{$set:{"lastLoginDate":new Date(), "status":4}}, function(err){if (err) console.log(err);});
 						res.json({response: "4"});
+						var trackParams = {"params": [
+    										{"createdFrom": 3},
+    										{"success": 1},
+									     ]
+							  		};
+						trackUser(user._id, 1,  JSON.stringify(trackParams));
+						var trackParams = {"params": [
+											{"loginFrom": 3},
+											{"success": 1},
+											{"firstVisit": 1},
+									     ]
+							  		};
+						trackUser(user._id, 3,  JSON.stringify(trackParams));
 					} 
 					else 
 						{
@@ -1445,4 +1592,18 @@ exports.auth_google = function(req, res){
 		}
 	});
 	
+}
+
+exports.track_user = function(req, res)
+{
+	trackUser(req.params.userid, req.params.actionid, req.params.params);
+	res.send("great");
+}
+function trackUser(userid, actionid, params)
+{
+	var request = require('request');
+	var url = 'http://localhost:3004/track/user/'+userid+'/'+actionid+'/'+params;
+	request.get({url:url, json:true}, function (e, r, response) {
+      console.log(response)
+    })
 }
