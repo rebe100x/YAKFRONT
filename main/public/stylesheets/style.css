@@ -980,5 +980,11 @@ border-bottom: 1px solid #e5e5e5;}
 .userinfo .loader { width: 15px; top: 3px; left: 9px; position: relative;}
 #connectedas { background: #D1161E; color: white; font-weight: bold}
 
+#uc_Name { color: #d51820; font-size: 18px; font-weight: bold; float: left;}
+#userChooser #uc_profile_brief { text-align: center; background: #d51820; line-height: 25px; color: white; font-weight: bold; font-size: 14px; }
 
+#userChooser #uc_profile_brief img { width: 73px; height: 73px;}
+
+#userChooser #uc_profile_yaks_alerts { float: right; position: relative; bottom: 8px;}
+#userChooser #uc_profile_yaks { background: #f6f6f6; padding-top: 12px; padding-bottom: 12px;}
 

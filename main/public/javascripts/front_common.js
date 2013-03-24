@@ -1447,3 +1447,24 @@ function checkByWidth()
 			if (checker.android || checker.iphone || checker.blackberry)
 				$("#zoomnavigation").remove();
 		}
+
+		function showUserProfile(el)
+		{
+			console.log(user);
+			var userid = $(el).parent().find("input").val();
+			$('#userChooser').modal('show');
+			$.getJSON('/api/usersearchbyid2/' + userid ,function(data) {
+				var theuser = data.user[0];
+				$("#userChooser #uc_Name").html(theuser.name);
+				$("#userChooser p.alertText").html("");
+				$("#userChooser #uc_profile_brief").html("<img src='" + theuser.thumbsmall +"' /><br />" + theuser.name + "<br />" + " @"+ theuser.login + "<br />" + theuser.bio + "<br /><br />" + theuser.formatted_address)
+				
+				$.getJSON('/api/countUserInfo/' + userid ,function(data) {
+					$("#userChooser #uc_profile_yaks_posts").html(data.count + "posts |");		
+				});
+				if($.inArray(userid,user.usersubs))
+					$("#userChooser #uc_profile_yaks_alerts.btn").html("Unsubscribed");		
+				else
+					$("#userChooser #uc_profile_yaks_alerts.btn").html("Subscribe");		
+			});
+		}

@@ -256,6 +256,28 @@ exports.findUserById = function (req, res) {
 	});
 };
 
+exports.countUserInfo = function (req, res) {
+	var Info = db.model('Info');
+	Info.countUserInfo(req.params.id, function (err, docs){
+  	  res.json({
+  		count: docs
+	  });
+	});
+};
+
+exports.findUserById2 = function (req, res) {
+	var User = db.model('User');
+	User.findById2(req.params.id, function (err, docs){
+	  var usersFormated = docs.map(function(item){
+			var User = db.model('User');
+			return User.FormatProfile(item);
+		});
+  	  res.json({
+  		user: usersFormated
+	  });
+	});
+};
+
 /*
 exports.getUsers = function (req, res) {
 	var Users = db.model('User');

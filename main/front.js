@@ -150,6 +150,8 @@ app.get('/api/catsandtags/:x/:y/:z/:d/:print', api.catsandtags);
 app.get('/api/places', api.places);
 app.get('/api/searchplaces/:str', api.searchplaces);
 app.get('/api/usersearch/:string', api.user_search);
+app.get('/api/usersearchbyid2/:id', api.findUserById2);
+app.get('/api/countUserInfo/:id', api.countUserInfo);
 
 app.get('/api/findbylogin/:string', api.user_findbylogin);
 app.get('/api/findbymail/:string', api.user_findbymail);

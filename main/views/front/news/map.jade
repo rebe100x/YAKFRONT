@@ -2,9 +2,11 @@ extends ../layout
 block content
 	include ../mixins/menu.jade
 	include ../mixins/locationChooser.jade
+	include ../mixins/userChooser.jade
 	include ../mixins/forms/postForm.jade
 	mixin menu('map')
 	mixin locationChooser('map')
+	mixin userChooser
 
 
 	div.container-fluid
@@ -917,9 +919,9 @@ block content
 				item.origin ="@"+item.origin;
 
 			if(item.yakType !=2 )
-				postedBy.html("Posté par <a class='prevent-default' onclick='setSearchFor(this)'>"+item.origin+"</a> " + "<span class=\'date\'> - "+thedate+"</span>");
+				postedBy.html("Posté par <a class='prevent-default' onclick='setSearchFor(this); showUserProfile(this)'>"+item.origin+"</a><input type='hidden' value='" + item.user + "' />" + "<span class=\'date\'> - "+thedate+"</span>");
 			else{
-				postedBy.html("Posté par <a class='prevent-default' onclick='setSearchFor(this)'>"+item.origin+"</a>");
+				postedBy.html("Posté par <a class='prevent-default' onclick='setSearchFor(this); showUserProfile(this)'>"+item.origin+"</a><input type='hidden' value='" + item.user + "' />");
 				itemTitle.append(" - <span class=\'dateAgenda\'>"+thedate+"</span>");			
 			}
 				

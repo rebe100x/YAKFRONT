@@ -168,7 +168,8 @@ Info.statics.format = function (theinfo) {
 		yaklikeUsersIds:theinfo.yaklikeUsersIds,
 		yakunlikeUsersIds:theinfo.yakunlikeUsersIds,
 		yakComments:theinfo.yakComments,
-		outGoingLink:theinfo.outGoingLink
+		outGoingLink:theinfo.outGoingLink,
+		user: theinfo.user
 	};
   return formattedInfo;
 }
@@ -272,6 +273,9 @@ Info.statics.findByUser = function (userid, count, from, callback) {
   return this.find({ user: userid,status :1 },{},{limit:limit,skip:skip,sort:{pudDate:-1}}, callback);
 }
 
+Info.statics.countUserInfo = function (userid, callback) {
+  return this.find({ user: userid,status :1 },{},{sort:{pudDate:-1}}).count().exec(callback);
+}
 
 Info.statics.findByUserIds = function (useridArray, count, from, callback) {
 	var limit = (typeof(count) != 'undefined' && count > 0) ? count : 100;		
@@ -650,6 +654,31 @@ User.statics.formatLight2 = function (theuser) {
   return formattedUser;
 }
 
+User.statics.FormatProfile = function (theuser) {
+
+
+	if(theuser.thumb && theuser.thumb!= 'no-user.png'){
+		var thethumb = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/128_128/'+theuser.thumb;
+		var thethumbsmall = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/48_48/'+theuser.thumb;
+	}else{
+		var thethumb = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucketstatic+'/128_128/no-user.png';
+		var thethumbsmall = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucketstatic+'/48_48/no-user.png';
+	}
+
+
+	var formattedUser = {
+		_id:theuser._id,
+		name: theuser.name,
+		login: theuser.login,
+		formatted_address : theuser.formatted_address,
+		bio: theuser.bio,
+		creationDate : theuser.creationDate,
+		thumb:thethumb,
+		thumbsmall:thethumbsmall,
+	};
+  return formattedUser;
+}
+
 User.statics.countUnvalidated = function (callback) {
 	return this.count( {'status': { $in: [2, 10]}}, callback );
 }
@@ -674,6 +703,9 @@ User.statics.identifyByToken = function (token,userid,callback) {
 }
 User.statics.findById = function (id,callback) {
   return this.findOne({'_id': id}, callback);
+}
+User.statics.findById2 = function (id,callback) {
+  return this.find({'_id': id}, callback);
 }
 User.statics.PublicProfileFindById = function (id,callback) {
   return this.findOne({'_id': id},{_id:1,address:1,bio:1,location:1,login:1,mail:1,name:1,thumb:1,type:1,web:1,lastLoginDate:1,favplace:1,placesubs:1,tagsubs:1,usersubs:1, feedsubs:1,tags:1}, callback);

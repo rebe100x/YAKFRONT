@@ -22,9 +22,6 @@ mixin menu(active)
 					ul#customMenuProfile.dropdown-menu.pull-right
 						li
 							a#connectedas
-								|Connecté avec 
-								span#connectWith
-								br
 								|@
 								= locals.user.login
 						li.divider
@@ -201,7 +198,7 @@ mixin menu(active)
 					if (!user.thumbsmall.match("no-user.png$"))
 						$("#profileMenu").html("<img src='"+user.thumbsmall+"' />");
 
-					switch(user.createfrom_social)
+					/*switch(user.createfrom_social)
 					{
 						case 0:
 						{
@@ -223,7 +220,7 @@ mixin menu(active)
 							$("#connectWith").html("googleplus");
 							break;
 						}
-					}
+					}*/
 				}
 
 				try

@@ -1,0 +1,18 @@
+mixin userChooser
+
+	div.modal.hide.fade#userChooser
+		div.modal-header
+			span#uc_Name
+			span#closeModal(type="button", data-dismiss="modal")
+
+			h2 
+		div.modal-body
+			p.alertText 
+				img(src="/images/loader_big.gif")
+			p#uc_profile_brief
+			P#uc_profile_yaks
+				span#uc_profile_yaks_posts
+				span#uc_profile_yaks_subscribers
+				span#uc_profile_yaks_subscribed
+				span#uc_profile_yaks_alerts.btn
+					| following
