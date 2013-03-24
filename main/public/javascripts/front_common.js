@@ -1206,20 +1206,31 @@ function setCommentText(len,item){
 		item.html("Il y a " + len + " commentaires");
 
 }
-function setLikeSystem()
+function setLikeSystem(from)
 		{
 			$(".icon-thumbs-up").click(function(){
 
 				var currEl = $(this);
 				var thumbs = $(this).parent().find(".theUps");
-
+				var infoid = $(this).parent().attr("rel");
 				var currentLikes = parseInt(thumbs.html());
-				$.post('/setLikes', {infoId : $(this).parent().attr("rel"), islike: 'like'} , function(res){
+				$.post('/setLikes', {infoId : infoid, islike: 'like'} , function(res){
 					if (res == 'updated')
 					{
 						thumbs.html(currentLikes + 1);
 						//currEl.parent().find("i").eq(0).before("déjà aimé");
 						currEl.parent().find("i").remove();
+
+						var trackParams = {"params": [
+											{"infoId":infoid},
+											{"page": "map"},
+									]
+								};
+						$.ajax({
+							url: '/track/user/'+user._id+'/'+'7'+'/'+JSON.stringify(trackParams),
+							type: "get",
+							dataType: "json"
+						});
 						
 					}
 
@@ -1435,17 +1446,4 @@ function checkByWidth()
 
 			if (checker.android || checker.iphone || checker.blackberry)
 				$("#zoomnavigation").remove();
-		}
-
-		function trackUser(userid, actionid, params)
-		{
-			var url = 'http://localhost:3004/track/user/'+userid+'/'+actionid+'/'+params;
-			$.ajax({
-			type: "get",
-			url : url,
-			dataType: "json",
-			success: function(response){
-				console.log(response);	 
-			}
-			});
 		}

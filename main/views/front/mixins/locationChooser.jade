@@ -80,7 +80,19 @@ mixin locationChooser(page)
 				
 				changeRange();
 				moveMap();
-
+				var trackParams = {"params": [
+										{"page" : "map"},
+										{"name" : $("#searchPlaceStr").val()},
+										{"lat" : curPos.x},
+										{"lng" : curPos.y},
+										{"range" : curPos.z},
+									]
+								};
+				$.ajax({
+					url: '/track/user/'+user._id+'/'+'9'+'/'+JSON.stringify(trackParams),
+					type: "get",
+					dataType: "json"
+				});
 
 			});	
 	- if(page == 'feed')
@@ -95,6 +107,19 @@ mixin locationChooser(page)
 				$("#searchPlaceStr").val(curPos.name);
 				$("#localnessPrinter").html($(this).parent().find(".dropdownRangeSelector option:selected").text());
 				changeRange();
+				var trackParams = {"params": [
+										{"page" : "feed"},
+										{"name" : $("#searchPlaceStr").val()},
+										{"lat" : curPos.x},
+										{"lng" : curPos.y},
+										{"range" : curPos.z},
+									]
+								};
+				$.ajax({
+					url: '/track/user/'+user._id+'/'+'9'+'/'+JSON.stringify(trackParams),
+					type: "get",
+					dataType: "json"
+				});
 			});	
 		
 

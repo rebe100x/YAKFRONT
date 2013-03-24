@@ -333,6 +333,9 @@ width: 270px;
 */
 .yakbtn { background-color: #b6070f; width: 140px; padding-top: 6px; padding-bottom: 6px; color: #ffffff; text-transform: uppercase; border: 0px; font-weight: bold; margin-bottom: 50px;}
 .yakbtn:hover { background-color: #fae8e8; color: #cd131b}
+
+.yakbtnLogin { background-color: #b6070f; width: 111px; height: 31px; color: #ffffff; text-transform: uppercase; border: 0px; font-weight: bold; font-size: 12px;}
+
 #passwordForm label { color: #000000; font-weight: bold;}
 #formProfile .control-group { width: 100%; float: left; border-bottom: 1px solid #eeeeee; padding-top: 28px; padding-bottom: 28px;}
 #formProfile label { font-weight: bold; color: #000000; float: left; display: block; width: 140px;}
@@ -976,4 +979,6 @@ border-bottom: 1px solid #e5e5e5;}
 .userinfo img { width: 43px; margin-right: 2px; margin-bottom: 9px;}
 .userinfo .loader { width: 15px; top: 3px; left: 9px; position: relative;}
 #connectedas { background: #D1161E; color: white; font-weight: bold}
-.yakbtnLogin { background: url(/images/yakconnect.png) no-repeat transparent; width: 155px; height: 34px; border: 0px;}
+
+
+

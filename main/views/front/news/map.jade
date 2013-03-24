@@ -1172,7 +1172,7 @@ block content
 				currentItem.append(item);
 				currentItem.find(".itemTitle").append("<i class='icon-remove' title='close' rel='" + thumbImage + "' onclick='closemyitem(this);'></i>");
 				setshortUrl();
-				setLikeSystem();
+				setLikeSystem('map');
 
 				
 				if(val.thumbFlag == 2)
@@ -1215,6 +1215,16 @@ block content
 			}
 
 
+			var trackParams = {"params": [
+										{"infoId":infoid},
+										{"page": "map"},
+									]
+								};
+			$.ajax({
+				url: '/track/user/'+user._id+'/'+'6'+'/'+JSON.stringify(trackParams),
+				type: "get",
+				dataType: "json"
+			});
 			
 		}
 

@@ -283,7 +283,15 @@ exports.news = function(req, res){
 					info.origin = "@"+req.body.username;
 					
 					info.save(function (err) {
-						if (!err) console.log('Success!');
+						if (!err) 
+							{
+								console.log('Success!');
+								var trackParams = {"params": [
+    										{"infoid": info._id},
+									     ]
+							  		};
+								trackUser(req.session.user, 10,  JSON.stringify(trackParams));
+							}
 						else console.log(err);
 					});
 				}
@@ -366,13 +374,14 @@ exports.user_resetpassword = function(req, res){
 };
 
 exports.user_logout = function(req, res){
-	delete req.session.user;
-	res.redirect('/news/map');
 	var trackParams = {"params": [
 									{"logout": 1},
 							     ]
 					};
-	trackUser(user._id, 4,  JSON.stringify(trackParams));
+	trackUser(req.session.user, 4,  JSON.stringify(trackParams));
+	delete req.session.user;
+	res.redirect('/news/map');
+	
 };
 
 
@@ -791,6 +800,11 @@ exports.password = function(req,res){
 							User.update({_id: req.session.user}, {hash : newcryptedPass}, {upsert: false}, function(err){
 								if (err) console.log(err);
 								else{
+									var trackParams = {"params": [
+																	
+															     ]
+													};
+									trackUser(req.session.user, 13,  JSON.stringify(trackParams));
 									formMessage = "Votre nouveau mot de passe est enregistré";
 									//delete req.session.user;
 									User.authenticate(login,req.body.newpass1,  "",function(err, user) {
@@ -955,6 +969,14 @@ exports.profile = function(req, res){
 		, {upsert: true}, function(err){
 			if (err)
 				console.log(err);
+			else
+			{
+				var trackParams = {"params": [
+    										
+									     ]
+							  		};
+				trackUser(req.session.user, 11,  JSON.stringify(trackParams));
+			}
 		});
 		formMessage.push("Votre profil est enregistré");
 	}else
@@ -1597,13 +1619,16 @@ exports.auth_google = function(req, res){
 exports.track_user = function(req, res)
 {
 	trackUser(req.params.userid, req.params.actionid, req.params.params);
-	res.send("great");
+	res.send("");
 }
 function trackUser(userid, actionid, params)
 {
+	var config = require('../confs.js');
+	var Conf = config.confs;
 	var request = require('request');
-	var url = 'http://localhost:3004/track/user/'+userid+'/'+actionid+'/'+params;
+	var url = Conf.devdany.trackurl + '/track/user/'+userid+'/'+actionid+'/'+params;
+	console.log(url);
 	request.get({url:url, json:true}, function (e, r, response) {
-      console.log(response)
+      //console.localhostg(response)
     })
 }
