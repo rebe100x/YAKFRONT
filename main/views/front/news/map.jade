@@ -858,7 +858,9 @@ block content
 				$("#newsfeed li[infoId=\""+item._id+"\"]").addClass('highlighted');
 				if(typeof($(".mapHighlighter[infoId=\""+item._id+"\"]").html()) != 'undefined')
 				{
-					$('#newsfeedContent').mCustomScrollbar("scrollTo",".mapHighlighter[infoId=\""+item._id+"\"]");
+
+					if($(".mCSB_scrollTools").eq(1).css("display") != "none")
+						$('#newsfeedContent').mCustomScrollbar("scrollTo",".mapHighlighter[infoId=\""+item._id+"\"]");
 				}
 				else{
 					printFeedItem(infoArray[key],1,1);
@@ -1235,7 +1237,7 @@ block content
 			var currentItem = $(el).parent().parent();
 			currentItem.find(".thumbImage img").show();
 			currentItem.find(".thumbImage img").attr("src", $(el).attr("rel"));
-			currentItem.find(".thumbImage").insertAfter(currentItem.find(".yakTypeImage"));
+			currentItem.find(".thumbImage").insertBefore(currentItem.find(".yakTypeImage"));
 			currentItem.find(".infodetail").insertAfter(currentItem.find(".tags"));
 			currentItem.removeClass("currentDetails");
 			currentItem.addClass("infowindow");
