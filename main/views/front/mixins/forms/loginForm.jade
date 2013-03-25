@@ -71,6 +71,7 @@ mixin loginForm()
 			FB.api('/me', function(response) {
 				if(!response.error)
 				{
+					console.log(response);
 					$("#loginFB").remove();
 					var fbinfo = "<img class='pull-left' src='https:/graph.facebook.com/"+response.id+"/picture/' /><span class='pull-left'><a style='cursor: pointer' id='authenticatefb'> Bienvenu  " + response.name + "<br />" + " Login with facebook</a></span><span class='clearBoth'></span>";
 					$("#userinfo").html(fbinfo);
@@ -81,19 +82,19 @@ mixin loginForm()
 							if(data.response == "4")
 							{
 								//console.log("fv");	
-								window.location = conf.fronturl + "/settings/firstvisit";
+								//window.location = conf.fronturl + "/settings/firstvisit";
 							}
 								
 							else if(data.response == "1")
 							{
 								//console.log("map");	
-								window.location = conf.fronturl + "/news/map";
+								//window.location = conf.fronturl + "/news/map";
 							}
 								
 							else
 							{
 								//console.log("here");
-								$("#fbloader").remove();
+								//$("#fbloader").remove();
 							}
 								
 						});

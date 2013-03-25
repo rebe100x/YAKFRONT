@@ -1260,19 +1260,26 @@ exports.auth_twitter_callback = function(req, res){
 				
 				var Twitter = db.model('Twitter');
 				var aTwitter = new Twitter();	
-				aTwitter.twitter_id = twitter_id;
-				aTwitter.screen_name = login;
+
 				aTwitter.name = data.name;
 				aTwitter.profile_image_url = data.profile_image_url;
 				aTwitter.url = data.url;
 				aTwitter.description = data.description;
+				aTwitter.screen_name = login;
+				aTwitter.twitter_id = twitter_id;
 				if(typeof(data.geo) != 'undefined')
 					aTwitter.geo = data.geo.coordinates;
-
+				aTwitter.followers_count = data.followers_count;
+				aTwitter.time_zone = data.time_zone;
+				aTwitter.statuses_count = data.statuses_count;
+				aTwitter.lang = data.lang;
+				aTwitter.friends_count = data.friends_count;
+				aTwitter.created_at = data.created_at;
 
 				user.social.twitter = aTwitter;
 
 				user.createfrom_social = 1;
+
 				if(!(typeof data.description  === 'undefined') && data.description  != null && data.description  != '')
 					user.bio = data.description;
 				if(!(typeof data.url  === 'undefined') && data.url  != null && data.url  != '')

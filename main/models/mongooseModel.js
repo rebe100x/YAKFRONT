@@ -42,8 +42,13 @@ var Twitter = new Schema({
 	,description : { type : String }
 	,screen_name : { type : String }
 	,twitter_id : { type : Number, index : true }
-	, screen_name	: { type : String }
 	, geo : {type : String }
+	, followers_count : { type : Number}
+	, time_zone : { type : String }
+	, statuses_count : { type : Number}
+	, lang : { type : String}
+	, friends_count : { type : Number }
+	, created_at : { type : Date }
 });
 mongoose.model('Twitter', Twitter);
 

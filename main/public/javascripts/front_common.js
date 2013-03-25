@@ -1237,7 +1237,7 @@ function setLikeSystem(from)
 				});
 			});
 
-			$(".icon-thumbs-down").click(function(){
+			$(".icon-span").click(function(){
 				var currEl = $(this);
 				var thumbs = $(this).parent().find(".theDowns");
 				var currentLikes = parseInt(thumbs.html());
