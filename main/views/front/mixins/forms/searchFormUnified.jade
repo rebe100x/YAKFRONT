@@ -357,6 +357,7 @@ mixin searchFormUnified(page)
 								print = 1;	
 							var currenturl = '/api/catsandtags/'+curPos.x+'/'+curPos.y+'/'+((-1)*0.0099/1*(curPos.z)+1)+'/'+dateFrom+'/'+print;						
 						}
+						console.log(currenturl);
 						encodeURIComponent(query);
 						if(query.length >= 2){
 							$.ajax({
@@ -453,7 +454,7 @@ mixin searchFormUnified(page)
 			if('#{page}' == 'map')
 				print = 1;
 		
-			$.getJSON('/api/getHotTags/'+curPos.x+'/'+curPos.y+'/'+((-1)*0.0099/1*(curPos.z)+1)+'/'+dateFrom+'/'+print,function(ajax) {
+			$.getJSON('/api/getHotTags/'+curPos.x+'/'+curPos.y+'/'+((-1)*0.0099/1*(curPos.z)+1)+'/'+dateFrom+'/'+print+'/10',function(ajax) {
 				$('#dropdownTagSelector').html('');
 				if(ajax.data.tag.length > 0){
 					$.each(ajax.data.tag,function(key,val){

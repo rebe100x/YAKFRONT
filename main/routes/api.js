@@ -230,9 +230,8 @@ exports.catsandtags = function (req, res) {
 	var Yakcat = db.model('Yakcat');
 	var Tag = db.model('Tag');
 	var results =  new Array();
-	Yakcat.find({},'title',function (err, cats){
-		//Tag.find({},{title:1,_id:1},function (err, tags){
-		Tag.getHotTags(req.params.x,req.params.y,req.params.z,req.params.d,req.params.print,function (err, tags){
+	Yakcat.find({status:1},'title',function (err, cats){
+		Tag.getHotTags(req.params.x,req.params.y,req.params.z,req.params.d,req.params.print,1000,function (err, tags){
 			results = tags.concat(cats);		
 			if(!err)
 				res.json({meta:{code:200},data:{catsandtags:results}});
@@ -310,7 +309,7 @@ exports.getContentTitles = function (req, res) {
 exports.getHotTags = function(req,res){
 	var Tag = db.model('Tag');
 	
-	Tag.getHotTags(req.params.x,req.params.y,req.params.z,req.params.d,req.params.print,function (err, docs){
+	Tag.getHotTags(req.params.x,req.params.y,req.params.z,req.params.d,req.params.print,req.params.limit,function (err, docs){
 		if(!err)
 			res.json({meta:{code:200},data:{tag:docs}});
 		else

@@ -160,7 +160,7 @@ app.get('/api/feedusersearch/:string', api.feeduser_search);
 app.get('/api/feedsearch/:string', api.feed_search);
 //app.get('/api/getUsers', api.getUsers);
 app.get('/api/getContentTitles', api.getContentTitles);
-app.get('/api/getHotTags/:x/:y/:z/:d/:print', api.getHotTags);
+app.get('/api/getHotTags/:x/:y/:z/:d/:print/:limit', api.getHotTags);
 
 // DOCS
 app.get('/docs/api', routes.docs_api);
