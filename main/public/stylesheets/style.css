@@ -441,7 +441,7 @@ width: 270px;
    #dayPrinter { width: 203px; margin-top: 0px; color: black; font-size: 13px; }
    .headerYakwala .navbar .nav > li > a { line-height: 12px; color: black; text-shadow: 0 0 0 rgba(0, 0, 0, 0.25); font-size: 14px }
    .searchYakwala .customInput{ width: 227px; margin-top: 6px; float: left; margin-left: 6px; height: 26	px; border: 1px solid #dddddd}
-   .rightPull { position: fixed; right: 0px}
+   .rightPull { position: absolute; right: 0px}
    .timeIcon { position: relative; top: -14px; }
    .filterIcon { position: relative; top: 15px}
    #heatSelector { position:  relative; left: 23px; bottom: 6px; margin-right: 45px;}
@@ -987,4 +987,6 @@ border-bottom: 1px solid #e5e5e5;}
 
 #userChooser #uc_profile_yaks_alerts { float: right; position: relative; bottom: 8px;}
 #userChooser #uc_profile_yaks { background: #f6f6f6; padding-top: 12px; padding-bottom: 12px;}
+
+#searchElementContainer { width: 100%}
 
