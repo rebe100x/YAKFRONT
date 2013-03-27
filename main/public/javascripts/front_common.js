@@ -1214,7 +1214,6 @@ function setSpamSystem(item){
 		
 
 		alertid = res;
-		alert(alertid);
 		if(alertid == "" || alertid == null)
 		{
 			item.html("Marquer comme spam");
