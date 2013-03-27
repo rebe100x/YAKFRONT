@@ -1137,6 +1137,41 @@ exports.setLikes = function(req, res){
 	
 };
 
+exports.setSpams = function(req, res){
+	//console.log(req.session.user);
+	var infoAlert = db.model('infoAlert');
+	var aspamAlert = new infoAlert();
+	if(req.session.user){
+			aspamAlert.info = req.body.infoId;
+			aspamAlert.user = req.session.user;
+			aspamAlert.save(function(err){
+				if(!err)
+					res.send("1");
+				else
+					res.send("0");
+			});
+		
+	}else{
+		req.session.message = "Erreur : vous devez être connecté pour sauver vos favoris";
+		res.redirect('/user/login');
+	}
+	
+};
+
+exports.getSpams = function(req, res){
+	//console.log(req.session.user);
+	var infoAlert = db.model('infoAlert');
+	
+	infoAlert.findByUser(req.params.userid, req.params.infoid, function (err, thealert){
+		if(thealert != undefined && thealert != null ){
+			res.send(thealert._id);
+		}
+		else
+			res.send("");
+	}); 
+	
+};
+
 
 exports.auth_twitter = function(req, res){
 	/**

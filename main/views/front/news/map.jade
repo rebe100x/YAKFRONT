@@ -1401,5 +1401,11 @@ block content
 			item.append(content);
 			item.append(yakLikes);
 			item.append(yakComments);
+
+			var yakSpam = $("<span />");
+			yakSpam.attr("class", "yakSpam");
+			yakSpam.attr("rel", val._id);
+			setSpamSystem(yakSpam);
+			item.append(yakSpam);
 			return item;	
 		}

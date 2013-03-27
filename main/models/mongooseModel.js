@@ -35,6 +35,20 @@ var Point = new Schema({
 });
 mongoose.model('Point', Point);
 
+var infoAlert = new Schema({
+	info : { type : Schema.ObjectId }
+	,user : { type : Schema.ObjectId }
+	,creationDate : {type: Date, default: Date.now } 	
+	,status : { type : Number, default: 1 }
+});
+
+infoAlert.statics.findByUser = function (userid, infoid, callback) {
+ 	return this.findOne({'info': infoid,'user':userid}, callback);
+}
+
+mongoose.model('infoAlert', infoAlert);
+
+
 var Twitter = new Schema({
 	name : { type : String }
 	,profile_image_url : { type : String }
