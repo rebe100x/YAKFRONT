@@ -107,11 +107,11 @@ var Info = new Schema({
   , outGoingLink       : { type: String }  
   , heat	: {type: Number}		
   , print	: {type: Number}		
-  , yakCat	: {type: [Yakcat],index:1}
+  , yakCat	: {type: [Schema.ObjectId],index:1}
   , yakCatName	: {type: [String],index:1}	
   , yakTag	: {type: [String],index:1}
   , yakType	: {type: Number,index:1}  
-  , freeTag	: {type: [String]}	
+  , freeTag	: {type: [String],index:1}	
   , pubDate	: {type: Date, required: true, default: Date.now,index:1}		  
   , creationDate	: {type: Date, required: true, default: Date.now}		
   , lastModifDate	: {type: Date, required: true, default: Date.now}		
@@ -852,7 +852,7 @@ mongoose.model('Yakcat', Yakcat);
 /******************************YAKTAG*/
 var Tag = new Schema({
     title     : { type: String, required: true, index:true}
-  , lastUsageDate       : { type:Date , default: Date.now, index:true}
+  , usageDate       : { type:Date , default: Date.now, index:true}
   , numUsed :{type:Number}
   , location	: { type : { lat: Number, lng: Number }, index : '2d'}
   , print :{type:Number,require: true, index: true, default: 0}	
@@ -860,18 +860,19 @@ var Tag = new Schema({
 }, { collection: 'tag' });
 
 Tag.statics.findAll = function (callback) {
-  return this.find({},{},{sort:{numUsed:-1,lastUsageDate:-1,title:1}}, callback);
+  return this.find({},{},{sort:{numUsed:-1,usageDate:-1,title:1}}, callback);
 }
 
-Tag.statics.getHotTags = function (x,y,z,d,print,callback) {
+Tag.statics.getHotTags = function (x,y,z,d,print,limit,callback) {
+	var now = new Date();
 	var DUSED = new Date();
 	var DUSEDMAX = new Date();
-	var offset = 24*60*60*1000;
-	
-	DUSED.setTime(DUSED.getTime()+d*1000-offset);
-	DUSEDMAX.setTime(DUSEDMAX.getTime()+d*1000);
-	return this.find({lastUsageDate:{$gte:DUSED,$lte:DUSEDMAX}, location:{$near:[parseFloat(x),parseFloat(y)],$maxDistance:parseFloat(z)},print:print},{},{sort:{numUsed:1,lastUsageDate:1},limit:10}, callback);
+	var offset = 24*60*60*1000; // 1 day
+	DUSED.setTime((now.getTime()+d*24*60*60*1000)-offset);
+	DUSEDMAX.setTime(now.getTime()+d*24*60*60*1000);
+	return this.find({usageDate:{$gte:DUSED,$lte:DUSEDMAX}, location:{$near:[parseFloat(x),parseFloat(y)],$maxDistance:parseFloat(z)},print:print},{},{sort:{numUsed:-1},limit:limit}, callback);
 }
+
 
 
 Tag.statics.searchOne = function (str,callback) {
@@ -882,7 +883,7 @@ Tag.statics.search = function(string,count,from,sensitive,order,callback){
 	var limit = (typeof(count) != 'undefined' && count > 0) ? count : 100;		
 	var case_sensitive = (typeof(sensitive) != 'undefined' && sensitive > 0) ? 'g' : 'gi';	
 	var skip = (typeof(from) != 'undefined' && from > 0) ? from : 0;		
-	var thesort = (typeof(order) != 'undefined' && order == 'lastUsed') ? {sort:{lastUsageDate:-1}} : {sort:{numUsed:1}};		
+	var thesort = (typeof(order) != 'undefined' && order == 'lastUsed') ? {sort:{usageDate:-1}} : {sort:{numUsed:-1}};		
 	var input = new RegExp(string,case_sensitive);
 	
 	var cond = {
