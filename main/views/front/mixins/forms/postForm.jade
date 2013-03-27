@@ -6,6 +6,7 @@ mixin postForm()
 				input#placeInput(type='hidden', name='placeInput', value='')
 				input#latitude(type="hidden",name="latitude")
 				input#longitude(type="hidden",name="longitude")
+				input#postFormRange(type="hidden",name="postFormRange")
 				input#username(type="hidden", name="username",value=locals.user.login)
 				legend Poster une info:
 				div.control-group
@@ -55,6 +56,7 @@ mixin postForm()
 				input#placeInput(type='hidden', name='placeInput', value='')
 				input#latitude(type="hidden",data-provide="typeahead", name="latitude")
 				input#longitude(type="hidden",data-provide="typeahead", name="longitude")
+				input#postFormRange(type="hidden",name="postFormRange")
 				input#username(type="hidden", name="username",value=locals.user.login)
 				h3 Poster une info:
 					img(src="/images/new/posterinfo.png", style="float: right; position: relative; top: -29px;  left: 20px;")

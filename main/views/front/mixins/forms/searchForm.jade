@@ -80,7 +80,7 @@ mixin searchForm(page)
 						if($(this).val()==''){
 							curPos.name = user.formatted_address;
 							curPos.x = user.location.lat;
-							curPos.y = user.location.lng;
+							curPos.y = user.location.lng-feedOffsetW/4;
 							//curPos.z = mainConf.rangeDefault;
 							$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
 							$('#searchPlaceStr').val(curPos.name);								
@@ -97,7 +97,7 @@ mixin searchForm(page)
 					if($(this).val()==''){
 						curPos.name = user.formatted_address;
 						curPos.x = user.location.lat;
-						curPos.y = user.location.lng;
+						curPos.y = user.location.lng-feedOffsetW/4;
 						//curPos.z = mainConf.rangeDefault;
 						$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
 						$('#searchPlaceStr').val(curPos.name);

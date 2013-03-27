@@ -67,6 +67,8 @@ block content
 		var postFlag = 0;
 		var listenerHandle = null;
 		
+		var feedOffsetW = 0; // this is the offset for recenter map on map's page due to the fil info on the right => set in the getMyBounds function
+
 		var map = new google.maps.Map(document.getElementById('mymap'), {
 				mapTypeId: google.maps.MapTypeId.ROADMAP,
 				disableDefaultUI: true,
@@ -101,7 +103,6 @@ block content
 						changeLocation(location);
 					}else{
 						if(placeName != ''){
-							
 							
 							var addressQuery = {"address": placeName ,"region":"fr","language":"fr"};
 							var geocoder = new google.maps.Geocoder();
@@ -495,18 +496,18 @@ block content
 			
 					
 			$('#locationChooser').modal('hide');
-			
+			/*
 			if($('#mymap').length > 0){ // only for the map page
 			// NOTE : initialize function is defined in map.jade and in new.jade : just a bit fifferent to deal the insertion
 				google.maps.event.addDomListener(window, 'load', initialize(curPos.x,curPos.y,curPos.z)); 
-			}
-			//return curPos;
+			}*/
+			
 		}
 
 		function changeLocation(location){
 			var locationObj = JSON.parse(location);
 			var latLng = new google.maps.LatLng(locationObj.lat,locationObj.lng);
-			markerHL.setPosition(latLng);
+			markerHL.setPosition(new google.maps.LatLng(locationObj.lat,locationObj.lng));
 			markerHL.setVisible(true);
 			markerHL.setMap(map);
 			markerHL.setOptions({icon:"/images/markers/target3.png"});
@@ -558,7 +559,7 @@ block content
 			var scaleH = (top - bottom) / height ;
 									
 
-			var feedOffsetW = pos.left * scaleW;
+			feedOffsetW = pos.left * scaleW;
 			var feedOffsetH = pos.top * scaleH;
 			var borderOffsetW = 15 * scaleW;
 			var borderOffsetHTop = 140 * scaleH;
@@ -671,13 +672,13 @@ block content
 			zoom = rangeFromZ();
 			map.setZoom(zoom);
 			$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
+
 		};
 		function changeZoom(){
 			curPos.z  = zFromRange();
 			setLocalnessSliderText(curPos.z);	
 			$("#rangeSelector").val(curPos.z).slider('value',curPos.z);
 			$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
-			
 		};
 
 		function initialize(x,y,z){
@@ -706,11 +707,15 @@ block content
 				center = this.getCenter();
 				curPos.x = center.lat();
 				curPos.y = center.lng();
+				curPos.y = center.lng();
 				zoom = this.getZoom();
 				curPos.z = zFromRange();
+				console.log('IDLE');
 				$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
 				//markerCluster.clearMarkers();
 				getAndPrintInfo();
+
+				$('#postFormRange').val(((-1)*0.0096/1*(curPos.z)+1)); // set value for the post form to define tags geo range
 			});
 			
 			

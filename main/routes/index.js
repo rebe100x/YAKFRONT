@@ -259,9 +259,17 @@ exports.news = function(req, res){
 				var freeTags = req.body.freetag.split(',');
 				info.freeTag = freeTags;
 				
+				var startOfDay = new Date();
+				startOfDay.setHours(0,0,0,0);
+				var endOfDay = new Date();
+				endOfDay.setHours(23,59,59,999);
+
+				var range = parseFloat(0.035);
+				if(typeof req.body.postFormRange != 'undefined' && req.body.postFormRange != 0)
+					range = parseFloat(req.body.postFormRange);
 				if(req.body.freetag.length > 0){
 					freeTags.forEach(function(freeTag){
-						Tag.findOne({'title':freeTag,"location" : {  "$near" : [parseFloat(info.location.lat),parseFloat(info.location.lng)], $maxDistance : parseFloat(0.5) }},function(err,thetag){
+						Tag.findOne({'title':freeTag,"location" : {  "$near" : [parseFloat(info.location.lat),parseFloat(info.location.lng)], $maxDistance : range },usageDate:{$gte:startOfDay,$lte:endOfDay}},function(err,thetag){
 							if(thetag == null){
 								tag.title=freeTag;
 								tag.numUsed = 1;
@@ -270,7 +278,7 @@ exports.news = function(req, res){
 								tag.save();
 							}
 							else{
-								Tag.update({_id: thetag._id}, {lastUsageDate:now,$inc:{numUsed:1}}, {upsert: false}, function(err){if (err) console.log(err);});						
+								Tag.update({_id: thetag._id}, {usageDate:now,$inc:{numUsed:1}}, {upsert: false}, function(err){if (err) console.log(err);});						
 							}
 						});
 					});

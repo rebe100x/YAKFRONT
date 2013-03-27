@@ -281,7 +281,7 @@ block content
 					bounds = this.getBounds();
 					center = this.getCenter();
 					curPos.x = center.lat();
-					curPos.y = center.lng();
+					curPos.y = center.lng()+feedOffsetW/4;
 					$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
 					getAndPrintInfo();
 				});

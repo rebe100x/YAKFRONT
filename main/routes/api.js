@@ -943,7 +943,7 @@ exports.add_user_feed = function (req, res) {
 								tag.save();
 							}
 							else{
-								Tag.update({_id: thetag._id}, {lastUsageDate:now,$inc:{numUsed:1}}, {upsert: false}, function(err){if (err) console.log(err);});						
+								Tag.update({_id: thetag._id}, {usageDate:now,$inc:{numUsed:1}}, {upsert: false}, function(err){if (err) console.log(err);});						
 							}
 						});
 					

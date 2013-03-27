@@ -60,7 +60,7 @@ block content
 		var postFlag = 0;
 		var listenerHandle = null;
 		
-		
+		var feedOffsetW = 0; // this is the offset for recenter map on map's page due to the fil info on the right => null here !
 
 		setInterval(function() {
 				silentUpdater();			
@@ -622,7 +622,7 @@ block content
 		}
 
 		function rangeFromZ(){
-			return (-1)*0.0099/1*(curPos.z)+1;
+			return (-1)*0.0096/1*(curPos.z)+1;
 		}
 
 		function changeRange(){
@@ -633,5 +633,5 @@ block content
 
 		
 		function zFromRange(){
-			//return (1-)/0.0099;
+			//return (1-)/0.0096;
 		}
