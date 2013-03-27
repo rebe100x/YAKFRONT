@@ -128,6 +128,8 @@ app.post('/delfavplace', routes.requiresLogin, routes.delfavplace);
 app.post('/favplacerange', routes.requiresLogin, routes.updatefavplacerange);
 
 app.post('/setLikes', routes.requiresLogin, routes.setLikes);
+app.post('/setSpams', routes.requiresLogin, routes.setSpams);
+app.get('/getSpams/:infoid/:userid', routes.requiresLogin, routes.getSpams);
 app.post('/api/setComment', routes.requiresLogin, api.setComment);
 app.post('/api/del_Comment', routes.requiresLogin, api.del_comment);
 

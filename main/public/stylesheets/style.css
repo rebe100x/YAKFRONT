@@ -236,6 +236,7 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 
 .currentDetails .myitem .yakLikes{font-size:11px;font-style:italic; position: relative; clear: both; width: auto; float: left; color: #D71920;}
 .currentDetails .myitem .yakComments{font-size:11px;font-style:italic; position: relative; clear: both; width: auto; float: left; left: 0px; top: -33px; color: #D71920; cursor: pointer;}
+.currentDetails .myitem .yakSpam{font-size:11px;font-style:italic; position: relative; clear: both; width: auto; float: right; left: 0px; top: -33px; color: #E07C1C; cursor: pointer;}
 .currentDetails .myitem .commentBox .aComment { clear:  both; padding-bottom: 12px;}
 .currentDetails .myitem .commentBox .timeago{ margin-left:5px;}
 .currentDetails .myitem .commentBox {font-style:italic; position: relative; clear: both; width: auto; float: left; left: 0px; top: -30px; color: #D71920; cursor: pointer; background: #F1F2F6; width: 100%; margin-bottom: 10px;}
@@ -334,7 +335,7 @@ width: 270px;
 .yakbtn { background-color: #b6070f; width: 140px; padding-top: 6px; padding-bottom: 6px; color: #ffffff; text-transform: uppercase; border: 0px; font-weight: bold; margin-bottom: 50px;}
 .yakbtn:hover { background-color: #fae8e8; color: #cd131b}
 
-.yakbtnLogin { background-color: #b6070f; width: 111px; height: 31px; color: #ffffff; text-transform: uppercase; border: 0px; font-weight: bold; font-size: 12px;}
+.yakbtnLogin { background-color: #b6070f; width: 111px; height: 31px; color: #ffffff; text-transform: uppercase; border: 0px; font-weight: bold; font-size: 11px;}
 
 #passwordForm label { color: #000000; font-weight: bold;}
 #formProfile .control-group { width: 100%; float: left; border-bottom: 1px solid #eeeeee; padding-top: 28px; padding-bottom: 28px;}

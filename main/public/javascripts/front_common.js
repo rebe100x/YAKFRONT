@@ -1206,6 +1206,41 @@ function setCommentText(len,item){
 		item.html("Il y a " + len + " commentaires");
 
 }
+
+function setSpamSystem(item){
+	var alertid = "";
+	var url = '/getSpams/' + item.attr("rel") + '/' + user._id;
+	$.get(url, function(res){
+		
+
+		alertid = res;
+		if(alertid == "" || alertid == null)
+		{
+			item.html("Marquer comme spam");
+
+			item.click(function(){
+				
+					$.post('/setSpams', {infoId : $(this).attr("rel")} , function(res){
+							if (res != "0")
+							{
+								item.html("tu as marqué comme spam");
+								item.alertid = res;
+							}
+
+					});
+
+			});
+		}
+		else
+		{
+			item.html("déjà marqué comme spam");
+		}
+
+	});
+
+	
+
+}
 function setLikeSystem(from)
 		{
 			$(".icon-thumbs-up").click(function(){
