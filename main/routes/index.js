@@ -487,8 +487,8 @@ exports.user = function(req, res){
 				var password = user.generatePassword(5);
 				var logo = conf.fronturl+"/static/images/yakwala-logo_petit.png";
 				var templateMail = "link";
-				user.name=login;
-				user.login=login;
+				
+				
 				user.mail=themail;
 				user.token=token;
 				user.status=2;
@@ -500,21 +500,33 @@ exports.user = function(req, res){
 				user.favplace = [{'name':'Nice, France','location':{'lat':43.681343,'lng':7.232094},'range':100},{'name':'Marseille, France','location':{'lat':43.298198,'lng':5.370255},'range':100},{'name':'Paris, France','location':{'lat':48.851875,'lng':2.356374},'range':100}];
 				var link = conf.validationUrl+token+"/"+password;
 				
-				user.save(function (err) {
-					if (!err){
-						User.sendValidationMail(link,themail,templateMail,logo,function(err){
-						if(!err)
-							console.log(err);
+				user.name=login;
+				user.login=login;
+
+				User.findByLoginDuplicate(login, function(err, theuser){
+					if(theuser != undefined && theuser != null )
+					{
+						user.name= login + "_yakwala";
+						user.login= login + "_yakwala";
+					}
+						user.save(function (err) {
+						if (!err){
+							User.sendValidationMail(link,themail,templateMail,logo,function(err){
+							if(!err)
+								console.log(err);
+						});
+						var trackParams = {"params": [
+	        										{"createdFrom": 0},
+	        										{"success": 1},
+											     ]
+									  		};
+						trackUser(user._id, 1,  JSON.stringify(trackParams));
+						} 
+						else console.log(err);
 					});
-					var trackParams = {"params": [
-        										{"createdFrom": 0},
-        										{"success": 1},
-										     ]
-								  		};
-					trackUser(user._id, 1,  JSON.stringify(trackParams));
-					} 
-					else console.log(err);
 				});
+
+				
 				
 				req.session.message = 'Un email vous a été envoyé contenant un lien et une clé de validation de votre compte.';
 				res.redirect('user/new');
