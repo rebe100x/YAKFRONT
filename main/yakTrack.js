@@ -33,7 +33,7 @@ app.options('/track/user/:userid/:actionid/:params', function(req, res){
   res.end('');
 });
 
-var db = routes.db(conf);	
+var db = track.db(conf);	
 
 app.get('/track/user/:userid/:actionid/:params', track.trak_user);
 

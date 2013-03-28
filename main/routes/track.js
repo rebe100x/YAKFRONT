@@ -1,3 +1,11 @@
+
+exports.db = function(conf){
+	mongoose = require('mongoose'), Schema = mongoose.Schema;
+	//mongoose.set('debug', true);
+	db = mongoose.connect('mongodb://localhost/'+conf.dbtrackname);
+	
+};
+
 exports.trak_user = function(req,res){
 	console.log(req.params);
 	var Track = db.model('Track');
@@ -21,3 +29,4 @@ exports.trak_user = function(req,res){
 		
 	});
 };
+
