@@ -160,11 +160,13 @@ block content
 				var address = $(el).attr("address");
 			}
 
+			
+
 			$(document).ready(function() {
 
 				getLocation();
 				//console.log(user);
-				if(user.createfrom_social == 1)
+				if(user.createfrom_social == 1 || user.createfrom_social == 2 || user.createfrom_social == 3)
 				{	
 					$("#username").val(user.login);
 					if(user.mail != "yak_not_set@yakwala.fr")
@@ -183,9 +185,9 @@ block content
 					var curremail = $(this).val();
 					$.getJSON('/api/findbymail/' + curremail,function(res) {
 
-						$('#alertMail').hide();	
+						$('#alertMail').remove();	
 						if(res.users.length != 0){
-							$('#email').focus().select().parent().prepend("<div id='alertMail' class='alert fade in'><strong>Cet email est déjà pris. Pour vous faire renvoyer un mot de passe, c'est <a href='/user/forgotpassword'>ici.</a></div>");
+							$('#email').val("").parent().prepend("<div id='alertMail' class='alert fade in'><strong>Cet email est déjà pris. Pour vous faire renvoyer un mot de passe, c'est <a href='/user/forgotpassword'>ici.</a></div>");
 							return false;
 						}
 
