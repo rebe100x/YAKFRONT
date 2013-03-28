@@ -81,12 +81,16 @@ mixin searchFormUnified(page)
 				//else
 				//	$("#btnMesalertes").css("opacity", "0.3");
 				/*
+				
 
 				$("#typeContainer .btn[type=3]").click(function(){
 					$("#typeContainer .btn").removeClass("active");
 					$.cookie("yaktype", $(this).attr("type"),{ expires: 10000, path : '/' });
 					getAndPrintInfo();
 				});*/
+
+				if($.inArray("4", yakType) != -1)
+					$("#btnDiscussion").addClass('active');
 
 				getHotTags(curPos,dateFrom);
 
