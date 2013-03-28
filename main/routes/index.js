@@ -1304,20 +1304,44 @@ exports.auth_twitter_callback = function(req, res){
 				var Twitter = db.model('Twitter');
 				var aTwitter = new Twitter();	
 
-				aTwitter.name = data.name;
-				aTwitter.profile_image_url = data.profile_image_url;
-				aTwitter.url = data.url;
-				aTwitter.description = data.description;
-				aTwitter.screen_name = login;
-				aTwitter.twitter_id = twitter_id;
+				if(typeof(data.name) != 'undefined')
+					aTwitter.name = data.name;
+
+				if(typeof(data.profile_image_url) != 'undefined')
+					aTwitter.profile_image_url = data.profile_image_url;
+
+				if(typeof(data.url) != 'undefined')
+					aTwitter.url = data.url;
+
+				if(typeof(data.description) != 'undefined')
+					aTwitter.description = data.description;
+
+				if(typeof(data.screen_name) != 'undefined')
+					aTwitter.screen_name = data.screen_name;
+
+				if(typeof(data.twitter_id) != 'undefined')
+					aTwitter.twitter_id = data.twitter_id;
+
 				if(typeof(data.geo) != 'undefined')
 					aTwitter.geo = data.geo.coordinates;
-				aTwitter.followers_count = data.followers_count;
-				aTwitter.time_zone = data.time_zone;
-				aTwitter.statuses_count = data.statuses_count;
-				aTwitter.lang = data.lang;
-				aTwitter.friends_count = data.friends_count;
-				aTwitter.created_at = data.created_at;
+
+				if(typeof(data.followers_count) != 'undefined')
+					aTwitter.followers_count = data.followers_count;
+
+				if(typeof(data.time_zone) != 'undefined')
+					aTwitter.time_zone = data.time_zone;
+
+				if(typeof(data.statuses_count) != 'undefined')
+					aTwitter.statuses_count = data.statuses_count;
+
+				if(typeof(data.lang) != 'undefined')
+					aTwitter.lang = data.lang;
+
+				if(typeof(data.friends_count) != 'undefined')
+					aTwitter.friends_count = data.friends_count;
+
+				if(typeof(data.created_at) != 'undefined')
+					aTwitter.created_at = data.created_at;
 
 				user.social.twitter = aTwitter;
 
@@ -1452,12 +1476,24 @@ exports.auth_facebook = function(req, res){
 	
 	var Facebook = db.model('Facebook');
 	var aFacebook = new Facebook();	
-	aFacebook.facebook_id = facebook_id;
-	aFacebook.screen_name = login;
-	aFacebook.name = data.name;
-	aFacebook.profile_image_url = 'https:/graph.facebook.com/'+data.id+'/picture/';
-	aFacebook.url = data.link;
-	aFacebook.description = data.bio;
+
+	if(typeof(data.id) != 'undefined')
+		aFacebook.facebook_id = data.id;
+
+	if(typeof(data.username) != 'undefined')
+		aFacebook.screen_name = data.username;
+
+	if(typeof(data.name) != 'undefined')
+		aFacebook.name = data.name;
+
+	if(typeof(data.id) != 'undefined')
+		aFacebook.profile_image_url = 'https:/graph.facebook.com/'+data.id+'/picture/';
+
+	if(typeof(data.link) != 'undefined')
+		aFacebook.url = data.link;
+
+	if(typeof(data.bio) != 'undefined')
+		aFacebook.description = data.bio;
 
 	user.social.facebook = aFacebook;
 
@@ -1572,12 +1608,34 @@ exports.auth_google = function(req, res){
 	
 	var Google = db.model('Google');
 	var aGoogle = new Google();	
-	aGoogle.google_id = google_id;
-	aGoogle.screen_name = login;
-	aGoogle.name = data.name.givenName + "." + data.name.familyName;
-	aGoogle.profile_image_url = data.image.url;
-	aGoogle.url = data.url;
-	aGoogle.description = data.aboutMe;
+
+	if(typeof(data.id) != 'undefined')
+		aGoogle.google_id = data.id;
+
+	if(typeof(data.name) != 'undefined')
+		aGoogle.screen_name = login;
+
+	if(typeof(data.name) != 'undefined')
+		aGoogle.name = data.name.givenName + "." + data.name.familyName;
+
+	if(typeof(data.image) != 'undefined')
+		aGoogle.profile_image_url = data.image.url;
+
+	if(typeof(data.url) != 'undefined')
+		aGoogle.url = data.url;
+
+	if(typeof(data.aboutMe) != 'undefined')
+		aGoogle.description = data.aboutMe;
+
+	if(typeof(data.ageRange) != 'undefined')
+		aGoogle.ageRange = data.ageRange;	
+
+	if(typeof(data.gender) != 'undefined')
+		aGoogle.gender = data.gender;		
+
+	if(typeof(data.language) != 'undefined')
+		aGoogle.language = data.language;			
+
 
 	user.social.google = aGoogle;
 

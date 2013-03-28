@@ -87,6 +87,9 @@ var Google = new Schema({
 	,google_id : { type : Number, index : true }
 	, screen_name	: { type : String }
 	, geo : {type : String }
+	,ageRange : {type : Schema.Types.Mixed}
+	,gender : { type : String }
+	,language : { type : String }
 });
 mongoose.model('Google', Google);
 
