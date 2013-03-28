@@ -127,7 +127,8 @@ mixin loginForm()
 					$("#rememberme").val("false");
 					killCookie('loginid', '/');
 					killCookie('token', '/');
-					
+					$("#login").val("");
+					$("#password").val("");
 				}
 				
 			});

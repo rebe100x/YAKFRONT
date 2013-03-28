@@ -345,20 +345,11 @@ exports.user_validate = function(req, res){
 			User.update({_id: model._id}, {status:4}, {upsert: false}, function(err){if (err) console.log(err);});						
 			res.render('settings/firstvisit',{user:model});
 			res.redirect('/user/validate');
-			var trackParams = {"params": [
-    										{"success": 1},
-									     ]
-							  		};
-			trackUser(user._id, 2,  JSON.stringify(trackParams));
+
 		}else{
 			req.session.message = "Votre clé d'activation est incorrecte.";
 			res.redirect('/user/validate');
-			var trackParams = {"params": [
-    										{"success": 0},
-    										{"error" : "clé d'activation incorrecte."},
-									     ]
-							  		};
-			trackUser(user._id, 2,  JSON.stringify(trackParams));
+			
 		}
 	
 	});
