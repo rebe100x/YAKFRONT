@@ -1149,8 +1149,8 @@ block content
 			
 			if (currentItem.find(".loadingMore").length > 0 || currentItem.find(".myitem").length > 0)
 			{
-				currentItem.find(".myitem").find(".icon-remove").remove();
-				currentItem.find(".itemTitle").append("<i class='icon-remove' title='close' onclick='closemyitem(this);'></i>");
+				currentItem.find(".icon-remove").remove();
+				currentItem.prepend("<i class='icon-remove' title='close' onclick='closemyitem(this);'></i>");
 				currentItem.find(".myitem").show();
 				return;
 			}
@@ -1183,7 +1183,7 @@ block content
 				var item = createFeedPageItem(val);
 				currentItem.find(".loadingMore").remove();
 				currentItem.append(item);
-				currentItem.find(".itemTitle").append("<i class='icon-remove' title='close' rel='" + thumbImage + "' onclick='closemyitem(this);'></i>");
+				currentItem.prepend("<i class='icon-remove' title='close' rel='" + thumbImage + "' onclick='closemyitem(this);'></i>");
 				setshortUrl();
 				setLikeSystem('map');
 
@@ -1192,15 +1192,15 @@ block content
 				{
 					currentItem.find(".thumbImage").insertAfter(currentItem.find(".tags"));	
 					currentItem.find(".thumbImage img").attr("src", mediumImage);
-					currentItem.addClass("currentDetails");
-					currentItem.removeClass("infowindow");
+					//currentItem.addClass("currentDetails");
+					//currentItem.removeClass("infowindow");
 
 				}
 				else
 				{
 					//currentItem.find(".thumbImage").remove();
 					currentItem.find(".thumbImage img").show();
-					currentItem.find(".thumbImage").insertAfter(currentItem.find(".yakTypeImage"));
+					//currentItem.find(".thumbImage").insertAfter(currentItem.find(".yakTypeImage"));
 					currentItem.find(".infodetail").insertAfter(currentItem.find(".tags"));
 					
 					$("ul#newsfeed li").removeAttr("style");
@@ -1209,7 +1209,7 @@ block content
 				
 				
 				currentItem.find(".infodetail").insertAfter(currentItem.find(".postedBy"));
-				currentItem.find(".icon-remove").appendTo(currentItem.find(".itemTitle"));
+				//currentItem.find(".icon-remove").appendTo(currentItem.find(".yakTypeImage"));
 				$("ul#newsfeed li").css("width", "100%");
 				$("ul#newsfeed").css("width", "100%");
 				$("#newsfeed li").removeClass('highlighted');

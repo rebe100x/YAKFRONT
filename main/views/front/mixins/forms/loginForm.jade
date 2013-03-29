@@ -26,8 +26,11 @@ mixin loginForm()
 				
 				div.control-group.clearBoth
 					div.controls
-						span#signinButton
-							span.g-signin(data-callback="signinCallback", data-clientid="80128462314.apps.googleusercontent.com", data-cookiepolicy="single_host_origin", data-requestvisibleactions="http://schemas.google.com/AddActivity", data-scope="https://www.googleapis.com/auth/plus.login")
+						div#customBtn.customGPlusSignIn
+							img#customButton(src="/images/googleconnect.png", style="cursor: pointer")
+						//
+							span#signinButton
+								span.g-signin(data-callback="signinCallback", data-clientid="80128462314.apps.googleusercontent.com", data-cookiepolicy="single_host_origin", data-requestvisibleactions="http://schemas.google.com/AddActivity", data-scope="https://www.googleapis.com/auth/plus.login")
 						span#usergoogleinfo.userinfo
 
 			div.span6.innerSplitter
@@ -124,6 +127,8 @@ mixin loginForm()
 		
 	
 		$(document).ready(function(){
+
+			
 			$("#remember").change(function(){
 				if ($('#remember').attr('checked')) {
 					$("#rememberme").val("true");
@@ -155,17 +160,31 @@ mixin loginForm()
 		
 	script
 		(function() {
-			var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-			po.src = 'https://apis.google.com/js/client:plusone.js';
-			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+			var po = document.createElement('script'); 
+			po.type = 'text/javascript'; po.async = true;
+			po.src = 'https://apis.google.com/js/client:plusone.js?onload=render';
+			var s = document.getElementsByTagName('script')[0]; 
+			s.parentNode.insertBefore(po, s);
 		})();
+
+		function render()
+		{
+			gapi.signin.render("customBtn", { 
+				'callback': 'signinCallback', 
+				'clientid': '80128462314.apps.googleusercontent.com', 
+				'cookiepolicy': 'single_host_origin', 
+				'requestvisibleactions': 'http://schemas.google.com/AddActivity',
+				'scope': 'https://www.googleapis.com/auth/plus.login'
+			});
+
+		}
 
 		function signinCallback(authResult) {
 			console.log(authResult);
 			if (authResult['access_token']) {
 			// Successfully authorized
 			// Hide the sign-in button now that the user is authorized, for example:
-			document.getElementById('signinButton').setAttribute('style', 'display: none');
+			document.getElementById('customBtn').setAttribute('style', 'display: none');
 			
 			gapi.client.load('plus', 'v1', function() {
 				var request = gapi.client.plus.people.get({
@@ -186,7 +205,8 @@ mixin loginForm()
 		}
 
 		function createProfileResponse(resp) {
-			console.log(resp);
+			//console.log(resp);
+
 			var googleinfo = "<img class='pull-left' src='"+resp.image.url+"' /><span class='pull-left'><a style='cursor: pointer' id='authenticategoogle'> Bienvenu  " + resp.displayName + "<br />" + " Login with google</a></span><span class='clearBoth'></span>";
 			$("#usergoogleinfo").html(googleinfo);
 			$("#authenticategoogle").click(function(){

@@ -177,7 +177,7 @@ ul#newsfeed li{width:100%;}
 ul#newsfeed li.highlighted .mapHighlighter{background-color:#F6F6F6; width: 99%; margin-left: 1%;}
 
 ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: both; padding-left: 3px; padding-right: 3px;}
-.infowindow .myitem {clear: both; position: relative; top: 12px; text-align: justify;}
+.infowindow .myitem {clear: both; position: relative; top: 12px; text-align: justify; padding-left: 7px; padding-right: 12px;}
 .infowindow .myitem .shareMe { width: auto; float: right; clear: both; top: -17px; position: relative; right: 85px;}
 .infowindow .myitem .ftgIcon { height: 14px; position: absolute; top: 4px; float: left; clear: both;}
 .infowindow .myitem .yakLikes {top: -33px; position: relative; float: left; clear: both; }
@@ -216,14 +216,14 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 
 .infowindow .itemTitle { font-size: 1.3em; font-weight: bold; color: #5D5D5D; left: 0px;margin-left:20px; padding-right: 25px; position: relative; text-align: justify;line-height:1.3em; margin-top: 8px; padding-left: 10px;}
 
-.infowindow .postedBy { position: relative; left: 0px; padding-right: 12px; font-size: 0.91em;color:#c5c5c5;line-height:2em; padding-left: 0px; }
+.infowindow .postedBy { position: relative; left: 7px; padding-right: 12px; font-size: 0.91em;color:#c5c5c5;line-height:2em; padding-left: 0px; clear: both;}
 
-.infowindow .tags{float:left;margin-left:0px;text-align:left;font-style:italic;font-weight:bold;font-size:0.95em;line-height: 1.3em; clear: both; margin-top: 6px; margin-bottom: 3px;color:#5D5D5D;}
+.infowindow .tags{float:left;margin-left:7px;text-align:left;font-style:italic;font-weight:bold;font-size:0.95em;line-height: 1.3em; clear: both; margin-top: 6px; margin-bottom: 3px;color:#5D5D5D;}
 .infowindow .tags a{color:#5D5D5D;}
 
-.infowindow .infodetail{float:left;width:100%;font-style:italic;font-size:0.8em;line-height: 1.5em; clear: both; color: #c5c5c5}
+.infowindow .infodetail{float:left;width:100%;font-style:italic;font-size:0.8em;line-height: 1.5em; clear: both; color: #c5c5c5; position: relative;left: 7px; }
 .infowindow .infodetail a{color:#0C0C0C;}
-.infowindow .icon-remove { float: right; clear: both;  position: absolute; right: 2px;top:0px;}
+.infowindow .icon-remove { float: right; clear: both;  position: relative; right: 5px;top:5px; z-index: 11111;}
 
 
 
@@ -247,7 +247,7 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 .currentDetails .myitem .commentBox .comment { color: black; margin-bottom: 12px;}
 .currentDetails .myitem .commentBox textarea { width: 97%; height: 50px; margin-top: 2px; margin-left: 0px;}
 .currentDetails .myitem i.icon-chevron-up { }
-.currentDetails .icon-remove { float: right; clear: both;  position: absolute; right: 4px; bottom: 34px;}
+.currentDetails .icon-remove { float: right; position: absolute; right: 2px;}
 .currentDetails{width:95%;margin:5px 0px 5px 5px;padding:3px;font-size:13px;float: left;box-shadow: 0 1px 0 #DDD;background: white;border-color: #BBB;color: #505050;}
 .currentDetails.loadingfeeditem{padding:30px 0px;text-align: center;background-image: url(../images/loader_big.gif);background-position: center center;background-repeat: no-repeat;}
 .currentDetails.emptyfeeditem{padding:20px 0px;text-align: center;	font-weight:bold;}
@@ -269,7 +269,7 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 .currentDetails .thumbImage { float: left;  width: 100%; padding-top: 6px;}
 .currentDetails .thumbImage img { float: left; width:99%;height:auto; border: 1px solid #cecece;}
 
-.currentDetails .itemTitle { font-size: 16px; font-weight: bold; color: #5D5D5D; left: 0px; padding-right: 0px; position: relative; text-align: justify; float: none; width: 100%; padding-top: 6px}
+.currentDetails .itemTitle { font-size: 16px; font-weight: bold; color: #5D5D5D; left: 0px; padding-right: 0px; position: relative; text-align: justify; float: none; width: 98%; padding-top: 6px}
 
 .currentDetails .postedBy { position: relative; left: 0px; padding-right: 12px; font-size: 12px; float: none; padding-top: 6px;}
 
@@ -461,6 +461,7 @@ width: 270px;
    .searchYakwala #searchStr, .searchYakwala #searchPlaceStr { height: 26px;}
    #closehideSearch { display: none}
    #blackBox { background-color: #3c3c3c; color: white; font-weight: bold; padding: 3px 15px; position: relative; top: 42px; }
+
    #dayPrinter .blackArrow { position: relative; top: -9px; left: 50%; float: left;}
    .searchYakwala #rangeSelectorTrigger, .searchYakwala #tagSelectorTrigger { margin-top: 10px;}
 
@@ -993,6 +994,7 @@ border-bottom: 1px solid #e5e5e5;}
 #searchElementContainer { width: 100%}
 
 .infowindow .myitem .yakSpam{font-size:11px;font-style:italic; position: relative; clear: both; width: auto; float: right; left: 0px; top: -33px; color: #E07C1C; cursor: pointer;}
+.currentDetails .myitem .yakSpam{font-size:11px;font-style:italic; position: relative; clear: both; width: auto; float: right; left: 0px; top: -33px; color: #E07C1C; cursor: pointer;}
 
 .myLogin { 
 	background-color: #FFFFFF; 
@@ -1004,3 +1006,11 @@ border-bottom: 1px solid #e5e5e5;}
 .myLogin .loginHeader { color: #4c4c4c; font-size: 20px; width: 100%; text-align: center;}
 .myLogin a { color: #b71105; }
 .myLogin .innerSplitter { border-left: 1px solid #cecece; padding-left: 60px;}
+
+#signinButton.g-signin { display: none;}
+
+#blackBox { min-width: 100px; display: block;}
+#blackBox:after, #blackBox:before { bottom: 100%; border: solid transparent; content: " "; height: 0; width: 0; position: absolute; pointer-events: none; } 
+#blackBox:after { border-color: rgba(136, 183, 213, 0); border-bottom-color: #3c3c3c; border-width: 8px; left: 50%; margin-left: 2px; } 
+.arrow_box:before { border-color: rgba(194, 225, 245, 0); border-bottom-color: #c2e1f5; border-width: 36px; left: 50%; margin-left: -36px; }
+

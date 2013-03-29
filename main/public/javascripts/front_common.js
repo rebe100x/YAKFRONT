@@ -560,7 +560,7 @@ $(document).ready(function() {
 			onTotalScrollBackOffset:0, /*scroll begin reached offset: integer (pixels)*/
 			whileScrolling:function(){} /*user custom callback function on scrolling event*/
 		},
-		theme:"dark-thick" /*"light", "dark", "light-2", "dark-2", "light-thick", "dark-thick", "light-thin", "dark-thin"*/
+		theme:"dark-2" /*"light", "dark", "light-2", "dark-2", "light-thick", "dark-thick", "light-thin", "dark-thin"*/
 	});
 	$(window).resize(function(){
 		//console.log($(window).width());
