@@ -3,22 +3,44 @@ mixin newUserForm()
 		div.alert.fade.in
 			button.close(type="button",data-dismiss="alert") x
 			strong=message
-	form#newuserForm(action='/user', method='POST')
-		div.header-inner
-			h2 
-				| Créer un compte avec Yakwala
-		div.control-group
-			div.controls
-				input#mail(type="text",name="mail", autocomplete="on", placeholder='Votre email')
-		div.control-group
-			div.controls
-				button.btn.btn-large.btn-block.btn-inverse(,type='submit', name='submit', id='submit', value='envoyer') Envoyer
-		h2 
-				| Créer un compte avec Twitter
-		div.control-group
-			div.controls
-				a(href="/auth/twitter")
-					img(src="/images/twiiterconnect.png")
+	div.myLogin
+		br
+		br
+		div.loginHeader
+			| Créer un compte avec Yakwala
+		br
+		br
+		form#newuserForm(action='/user', method='POST')
+			div.span1
+			div.span4
+				div.control-group.clearBoth
+					div.controls
+						a(href="/auth/twitter")
+							img(src="/images/twiiterconnect.png")
+			
+				div.control-group.clearBoth
+					div.controls
+						img#loginFB(src="/images/fblogin.png", style="cursor: pointer")
+						span#userinfo.userinfo
+						span#fb-root
+				
+				div.control-group.clearBoth
+					div.controls
+						span#signinButton
+							span.g-signin(data-callback="signinCallback", data-clientid="80128462314.apps.googleusercontent.com", data-cookiepolicy="single_host_origin", data-requestvisibleactions="http://schemas.google.com/AddActivity", data-scope="https://www.googleapis.com/auth/plus.login")
+						span#usergoogleinfo.userinfo
+
+			div.span6.innerSplitter
+				input#redir(type='hidden', name='redir', value=redir)
+				div.control-group
+					div.controls
+						input#mail(type="text",name="mail", autocomplete="on", placeholder='Votre email')
+				div.control-group.clearBoth
+					div.controls				
+						button.yakbtnLogin(type='submit', name='submit', id='submit') Envoyer
+		div.clearBoth
+
+	
 		
 	script
 		$(document).ready(function() {
@@ -36,3 +58,161 @@ mixin newUserForm()
 				}
 			});
 		});
+
+	script(src="http://connect.facebook.net/en_US/all.js")
+	script
+		var conf = !{conf};
+		// initialize the library with the API key
+		FB.init({ appId: 548066291890740 });
+
+		// fetch the status on load
+		FB.getLoginStatus(handleSessionResponse);
+
+		$('#loginFB').bind('click', function() {
+			FB.login(handleSessionResponse);
+		});
+
+		// handle a session response from any of the auth related calls
+		function handleSessionResponse() {
+			FB.api('/me', function(response) {
+				if(!response.error)
+				{
+					console.log(response);
+					$("#loginFB").remove();
+					var fbinfo = "<img class='pull-left' src='https:/graph.facebook.com/"+response.id+"/picture/' /><span class='pull-left'><a style='cursor: pointer' id='authenticatefb'> Bienvenu  " + response.name + "<br />" + " Login with facebook</a></span><span class='clearBoth'></span>";
+					$("#userinfo").html(fbinfo);
+					$("#authenticatefb").click(function(){
+						$(this).after("<img id='fbloader' class='loader' src='/images/loader.gif' />");
+						$.post("/auth/facebook", {user: response}, function(data){
+							
+							if(data.response == "4")
+							{
+								//console.log("fv");	
+								//window.location = conf.fronturl + "/settings/firstvisit";
+							}
+								
+							else if(data.response == "1")
+							{
+								//console.log("map");	
+								//window.location = conf.fronturl + "/news/map";
+							}
+								
+							else
+							{
+								//console.log("here");
+								//$("#fbloader").remove();
+							}
+								
+						});
+					});
+				}
+					
+			});
+		}
+
+		//console.log($.cookie);
+		if($.cookie("firstlogin") == null)
+		{ 
+			killCookie("connect.sid");
+			killCookie("geoloc", '/news/map/search');
+			killCookie("geoloc", '/');
+			killCookie("searchString");
+
+			$.cookie("firstlogin", "1");
+
+		}
+
+		
+	
+		$(document).ready(function(){
+			$("#remember").change(function(){
+				if ($('#remember').attr('checked')) {
+					$("#rememberme").val("true");
+				}else
+				{
+					$("#rememberme").val("false");
+					killCookie('loginid', '/');
+					killCookie('token', '/');
+					$("#login").val("");
+					$("#password").val("");
+				}
+				
+			});
+			
+
+			var login = $.cookie('loginid');
+			
+			if ( login != '' && login != null ) {
+				var password = "********";
+				var token = $.cookie('token');
+				// autofill the fields
+				$('#login').attr("value", login);
+				$('#password').attr("value", password);
+				$('#remember').attr('checked', "checked");
+				$('#rememberme').val("true");
+				$('#token').val(token);				
+			}
+		});
+		
+	script
+		(function() {
+			var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+			po.src = 'https://apis.google.com/js/client:plusone.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+		})();
+
+		function signinCallback(authResult) {
+			console.log(authResult);
+			if (authResult['access_token']) {
+			// Successfully authorized
+			// Hide the sign-in button now that the user is authorized, for example:
+			document.getElementById('signinButton').setAttribute('style', 'display: none');
+			
+			gapi.client.load('plus', 'v1', function() {
+				var request = gapi.client.plus.people.get({
+				'userId': 'me'
+				});
+				request.execute(createProfileResponse);
+			});
+
+
+			
+			} else if (authResult['error']) {
+			// There was an error.
+			// Possible error codes:
+			//   "access_denied" - User denied access to your app
+			//   "immediate_failed" - Could not automatially log in the user
+			// console.log('There was an error: ' + authResult['error']);
+			}
+		}
+
+		function createProfileResponse(resp) {
+			console.log(resp);
+			var googleinfo = "<img class='pull-left' src='"+resp.image.url+"' /><span class='pull-left'><a style='cursor: pointer' id='authenticategoogle'> Bienvenu  " + resp.displayName + "<br />" + " Login with google</a></span><span class='clearBoth'></span>";
+			$("#usergoogleinfo").html(googleinfo);
+			$("#authenticategoogle").click(function(){
+				$(this).after("<img id='fbloader' class='loader' src='/images/loader.gif' />");
+				$.post("/auth/google", {user: resp}, function(data){		
+					if(data.response == "4")
+					{
+						//console.log("fv");	
+						window.location = conf.fronturl + "/settings/firstvisit";
+					}
+						
+					else if(data.response == "1")
+					{
+						console.log("map");	
+						window.location = conf.fronturl + "/news/map";
+					}
+						
+					else
+					{
+						//console.log("here");
+						$("#fbloader").remove();
+					}
+								
+				});	
+			});
+		}
+		
+
