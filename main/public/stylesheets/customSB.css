@@ -8,6 +8,7 @@
 }
 .mCSB_container.mCS_no_scrollbar{
 	margin-right:0;
+	width: 100%;
 }
 .mCS_disabled>.mCustomScrollBox>.mCSB_container.mCS_no_scrollbar,
 .mCS_destroyed>.mCustomScrollBox>.mCSB_container.mCS_no_scrollbar{
@@ -31,7 +32,7 @@
 	margin:20px 0;
 }
 .mCSB_scrollTools .mCSB_draggerRail{
-	width:2px;
+	width:10px;
 	height:100%;
 	margin:0 auto;
 	-webkit-border-radius:10px;
@@ -44,7 +45,7 @@
 	height:30px;
 }
 .mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar{
-	width:4px;
+	width:10px;
 	height:100%;
 	margin:0 auto;
 	-webkit-border-radius:10px;
