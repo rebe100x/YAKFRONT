@@ -17,7 +17,7 @@ exports.confs = {
 		"backurl":"http://dev.backend.yakwala.fr:3001",
 		"fronturl":"http://dev.labs.yakwala.fr:3000",
 		"apiurl":"http://dev.api.yakwala.fr:3002",
-		"trackurl":"http://localhost:3004",
+		"trackurl":"http://dev.labs.yakwala.fr:3004",
 		"twitter_callbackurl":"http://dev.labs.yakwala.fr:3000/auth/twitter/callback",
 		"backdns":"dev.backend.yakwala.fr",
 		"frontdns":"dev.labs.yakwala.fr",

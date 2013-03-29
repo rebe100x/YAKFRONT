@@ -8,11 +8,17 @@ var express = require('express'),
     
 var app = express();
 
+var allowCrossDomain = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', conf.fronturl);
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+}
 
-// Configuration
 
 app.configure(function(){
   app.use(express.methodOverride());
+  app.use(allowCrossDomain);
   app.use(app.router);
   
 });
@@ -20,6 +26,7 @@ app.configure(function(){
 app.configure('development', function(){
 	conf = config.confs.devrenaud;
 	app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+   
 });
 
 
@@ -28,14 +35,9 @@ app.configure('production', function(){
 	app.use(express.errorHandler());
 });
 
-app.options('/track/user/:userid/:actionid/:params', function(req, res){
-  res.header("Access-Control-Allow-Origin", "*");
-  res.end('');
-});
-
 var db = track.db(conf);	
 
-app.get('/track/user/:userid/:actionid/:params', track.trak_user);
+app.get('/track/user/:userid/:actionid/:logparams', track.trak_user);
 
 // Start server
 app.listen(conf.trakport, function(){

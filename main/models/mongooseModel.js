@@ -55,7 +55,7 @@ var Twitter = new Schema({
 	,url : { type : String }
 	,description : { type : String }
 	,screen_name : { type : String }
-	,twitter_id : { type : Number, index : true }
+	,twitter_id : { type : Number}
 	, geo : {type : String }
 	, followers_count : { type : Number}
 	, time_zone : { type : String }
@@ -72,7 +72,7 @@ var Facebook = new Schema({
 	,url : { type : String }
 	,description : { type : String }
 	,screen_name : { type : String }
-	,facebook_id : { type : Number, index : true }
+	,facebook_id : { type : Number}
 	, screen_name	: { type : String }
 	, geo : {type : String }
 });
@@ -84,7 +84,7 @@ var Google = new Schema({
 	,url : { type : String }
 	,description : { type : String }
 	,screen_name : { type : String }
-	,google_id : { type : Number, index : true }
+	,google_id : { type : Number}
 	, screen_name	: { type : String }
 	, geo : {type : String }
 	,ageRange : {type : Schema.Types.Mixed}
@@ -605,6 +605,9 @@ var User = new Schema({
 					}
 }, { collection: 'user' });
 
+User.index({"social.twitter.twitter_id":1});
+User.index({"social.facebook.facebook_id":1});
+User.index({"social.google.google_id":1});
 
 User.statics.format = function (theuser) {
 	if(theuser.thumb && theuser.thumb!= 'no-user.png'){

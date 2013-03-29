@@ -4,14 +4,14 @@ var mongoose = require('mongoose')
   , crypto = require('crypto')
   ObjectId = Schema.ObjectId;
 
-mongoose.set('debug', true);
+//mongoose.set('debug', true);
 
 
 var Track = new Schema({
-	  userid : {type: Schema.ObjectId}
-	, actiondate	: { type: Date, default: Date.now }	
-	, actionid : { type: Number }
+	  userid : {type: Schema.ObjectId, index:true}
+	, actiondate	: { type: Date, default: Date.now, index:true }	
+	, actionid : { type: Number, index:true }
 	, params : { type : Schema.Types.Mixed}
 });
 mongoose.model('Track', Track);
-
+Track.index({"params.location":"2d"});

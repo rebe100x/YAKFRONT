@@ -1037,21 +1037,21 @@ function setShare(el){
 		$(api.element).find('.buttons').show();
 	},
 	hide: function(api, options){
-		//$(api.element).find("span").eq(0).remove();
 		$(api.element).find('.buttons').hide();
 	},
 	render: function(api, options){
-		//console.log($(api.element).find('.buttons'));
-		//$(api.element).find('.buttons').css("display", "block");
 		$(api.element).find('.box').livequery(function(){
-    		//element created
-    		//alert("created");
-    		//$(api.element).find(".loadingMore").hide();
     		$(api.element).prepend("<img src='images/ftg.png' class='ftgIcon' class='icon-share' /> ");
     		$(api.element).find('.buttons').css("display", "block");
     		$(this).trigger('mouseover'); // or similar
 		});
-	}
+	},
+	click: function(api, options){
+		//log
+		console.log('click');
+		var trackParams ={};
+		$.getJSON(this.trackurl+'/track/user/'+this.userid+'/'+'7'+'/'+encodeURIComponent(JSON.stringify(trackParams)));
+	},
 
 });
  

@@ -132,25 +132,11 @@ block content
 						searchString = null;
 					}
 					
-					var mybounds = getMyBounds();
-					
-			
 					getAndPrintInfo();
-					var trackParams = {"params": [
-										{"x1": mybounds.ca.b},
-										{"y1": mybounds.ea.b},
-										{"x2": mybounds.ca.f},
-										{"y2": mybounds.ea.f},
-										{"dateFrom": dateFrom},
-										{"type": yakType.toString()},
-										{"str": searchString},
-									]
-								};
-					/*$.ajax({
-						url: '/track/user/'+user._id+'/'+'5'+'/'+JSON.stringify(trackParams),
-						type: "get",
-						dataType: "json"
-					});*/
+
+					
+
+
 
 				});
 
@@ -707,7 +693,6 @@ block content
 				center = this.getCenter();
 				curPos.x = center.lat();
 				curPos.y = center.lng();
-				curPos.y = center.lng();
 				zoom = this.getZoom();
 				curPos.z = zFromRange();
 				console.log('IDLE');
@@ -849,7 +834,26 @@ block content
 				}
 			});		
 			//apiUrl = '/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/0/'+yakType.toString()+'/'+searchString+'/500';
-		
+			
+
+			// log
+			var mapCenter =  map.getCenter();
+			var now = new Date();
+			var searchDate = now.setTime(now.getTime()+dateFrom*24*60*60*1000);
+			var trackParams = 	{
+									"location":{
+										"lat": mapCenter.lat().toString(),
+										"lng": mapCenter.lng().toString(),
+									},
+									"dateFrom": searchDate.toString(),
+									"type": yakType.toString(),
+									"str": searchString
+								};
+			$.ajax({
+				url: conf.trackurl+'/track/user/'+user._id+'/'+'5'+'/'+encodeURIComponent(JSON.stringify(trackParams)),
+				type: "get",
+				dataType: "json"
+			});
 		}
 
 		function printMapItem(item,key,bounce){
@@ -1224,13 +1228,9 @@ block content
 			}
 
 
-			var trackParams = {"params": [
-										{"infoId":infoid},
-										{"page": "map"},
-									]
-								};
+			var trackParams ={"infoId":infoid,"page": "map"};
 			$.ajax({
-				url: '/track/user/'+user._id+'/'+'6'+'/'+JSON.stringify(trackParams),
+				url: conf.trackurl+'/track/user/'+user._id+'/'+'6'+'/'+encodeURIComponent(JSON.stringify(trackParams)),
 				type: "get",
 				dataType: "json"
 			});
@@ -1394,6 +1394,8 @@ block content
 			more = $("<a />");
 			more.attr("class", "more");
 			more.attr("href", val.outGoingLink);
+			more.attr("userid", user._id);
+			more.attr("trackurl", conf.trackurl);
 			more.attr("target", "_blank");
 			more.attr("rel", val._id);
 			more.attr("data-toggle", "data-toggle");

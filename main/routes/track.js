@@ -7,12 +7,11 @@ exports.db = function(conf){
 };
 
 exports.trak_user = function(req,res){
-	console.log(req.params);
 	var Track = db.model('Track');
 	track = new Track();
 	track.userid = req.params.userid;
 	track.actionid = parseInt(req.params.actionid);
-	track.params = JSON.parse(req.params.params);
+	track.params = JSON.parse(decodeURIComponent (req.params.logparams));
 
 
 	track.save(function (err) {
