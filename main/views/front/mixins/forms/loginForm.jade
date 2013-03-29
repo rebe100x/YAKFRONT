@@ -3,55 +3,60 @@ mixin loginForm()
 		div.alert.fade.in
 			button.close(type="button",data-dismiss="alert") x
 			strong=message
-	div.well
+	div.myLogin
+		br
+		br
+		div.loginHeader
+			| Se connecter à Yakwala
+		br
+		br
 		form(action='/session', method='POST')
-			input#redir(type='hidden', name='redir', value=redir)
-			div.control-group
-				div.controls
-					input#login(type="text",name="login", autocomplete="on", placeholder='Login')
-			div.control-group
-				div.controls
-					input#password(type="password",name="password", autocomplete="on", placeholder='Password')
-			div.control-group
-				div.controls.rememberme
-					input(type="checkbox", name="remember", id="remember") 
-					input(type="hidden", name="rememberme", id="rememberme")
-					input(type="hidden", name="token", id="token")
-					span
-						|Conserver mes infos
-			div.control-group.clearBoth
-				div.controls				
-					button.yakbtnLogin(type='submit', name='submit', id='submit') Se Connecter
-				
-			div.control-group.clearBoth
-				div.controls
-					a(href="/auth/twitter")
-						img(src="/images/twiiterconnect.png")
-		
-			div.control-group.clearBoth
-				div.controls
-					img#loginFB(src="/images/fblogin.png", style="cursor: pointer")
-					span#userinfo.userinfo
-					span#fb-root
-			//
+			div.span1
+			div.span4
 				div.control-group.clearBoth
 					div.controls
-						a(href="#")
-							img(src="/images/googleconnect.png")\
-			div.control-group.clearBoth
-				div.controls
-					span#signinButton
-						span.g-signin(data-callback="signinCallback", data-clientid="80128462314.apps.googleusercontent.com", data-cookiepolicy="single_host_origin", data-requestvisibleactions="http://schemas.google.com/AddActivity", data-scope="https://www.googleapis.com/auth/plus.login")
-					span#usergoogleinfo.userinfo
+						a(href="/auth/twitter")
+							img(src="/images/twiiterconnect.png")
+			
+				div.control-group.clearBoth
+					div.controls
+						img#loginFB(src="/images/fblogin.png", style="cursor: pointer")
+						span#userinfo.userinfo
+						span#fb-root
+				
+				div.control-group.clearBoth
+					div.controls
+						span#signinButton
+							span.g-signin(data-callback="signinCallback", data-clientid="80128462314.apps.googleusercontent.com", data-cookiepolicy="single_host_origin", data-requestvisibleactions="http://schemas.google.com/AddActivity", data-scope="https://www.googleapis.com/auth/plus.login")
+						span#usergoogleinfo.userinfo
 
-			div.clearBoth
-			br	
-			i
-				a(href='/user/new') &nbsp;Vous n&quot;avez pas encore de compte ?
-			br	
-			i
-				a(href='/user/forgotpassword') &nbsp;Vous avez oublié votre mot de passe ?
-		
+			div.span6.innerSplitter
+				input#redir(type='hidden', name='redir', value=redir)
+				div.control-group
+					div.controls
+						input#login(type="text",name="login", autocomplete="on", placeholder='Login')
+				div.control-group
+					div.controls
+						input#password(type="password",name="password", autocomplete="on", placeholder='Password')
+				
+				i
+					a(href='/user/new') &nbsp;Vous n&quot;avez pas encore de compte ?
+				br	
+				i
+					a(href='/user/forgotpassword') &nbsp;Vous avez oublié votre mot de passe ?
+				br	
+				br	
+				div.control-group
+					div.controls.rememberme
+						input(type="checkbox", name="remember", id="remember") 
+						input(type="hidden", name="rememberme", id="rememberme")
+						input(type="hidden", name="token", id="token")
+						span
+							|Conserver mes infos
+				div.control-group.clearBoth
+					div.controls				
+						button.yakbtnLogin(type='submit', name='submit', id='submit') Envoyer
+		div.clearBoth
 			
 	script(src="http://connect.facebook.net/en_US/all.js")
 	script

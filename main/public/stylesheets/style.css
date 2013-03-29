@@ -994,3 +994,13 @@ border-bottom: 1px solid #e5e5e5;}
 
 .infowindow .myitem .yakSpam{font-size:11px;font-style:italic; position: relative; clear: both; width: auto; float: right; left: 0px; top: -33px; color: #E07C1C; cursor: pointer;}
 
+.myLogin { 
+	background-color: #FFFFFF; 
+	margin-top: 60px;
+	-webkit-box-shadow: 10px 10px 5px #888888;
+	-moz-box-shadow: 10px 10px 5px #888888;
+	box-shadow: 10px 10px 5px #888888;
+}
+.myLogin .loginHeader { color: #4c4c4c; font-size: 20px; width: 100%; text-align: center;}
+.myLogin a { color: #b71105; }
+.myLogin .innerSplitter { border-left: 1px solid #cecece; padding-left: 60px;}
