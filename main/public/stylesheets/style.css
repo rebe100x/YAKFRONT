@@ -1004,3 +1004,6 @@ border-bottom: 1px solid #e5e5e5;}
 .myLogin .loginHeader { color: #4c4c4c; font-size: 20px; width: 100%; text-align: center;}
 .myLogin a { color: #b71105; }
 .myLogin .innerSplitter { border-left: 1px solid #cecece; padding-left: 60px;}
+
+#signinButton.g-signin { display: none;}
+
