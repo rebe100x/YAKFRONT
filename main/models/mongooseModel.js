@@ -37,9 +37,10 @@ mongoose.model('Point', Point);
 
 var contenuIllicite = new Schema({
 	content_id : { type : Schema.ObjectId }
-	,user_id : { type : Schema.ObjectId }
+	,user_id : { type : [Schema.ObjectId] }
 	,last_date_mark : {type: Date, default: Date.now }
 	,content_type : { type : Number, default: 1 } // 1 info, 2 comments , 3 users
+	,count : { type : Number, default : 1}
 });
 
 contenuIllicite.statics.findByUser = function (userid, infoid, callback) {
