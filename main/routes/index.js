@@ -799,7 +799,7 @@ exports.password = function(req,res){
 												res.locals.user = user;
 												req.session.message = formMessage;
 												res.redirect('settings/password');
-										}else{
+										}else{			
 											if(user.status == 2)
 												req.session.message = 'Compte non validé.';
 											else
@@ -880,6 +880,7 @@ exports.alerts = function(req, res){
 			else{
 				//console.log('Vos alertes sont enregistrées ');
 				formMessage.push("Vos alertes sont enregistrées");
+				trackUser(req.session.user, 12,  {users:usersubsArray,tags:tagsubsArray,feeds:feedsubsArray});
 				res.json("1");
 			}
 				
@@ -956,7 +957,7 @@ exports.profile = function(req, res){
 			if (err)
 				console.log(err);
 			else
-				trackUser(req.session.user, 11,  {});
+				trackUser(req.session.user, 11,  {tags:req.body.tag});
 		});
 		formMessage.push("Votre profil est enregistré");
 	}else
@@ -1097,7 +1098,7 @@ exports.setLikes = function(req, res){
 			if (islike == 'like') { 
 				Info.update({_id:infoId},{$inc:{likes : 1}, $push:{yaklikeUsersIds: req.session.user}, new:true}, function(err, result){
 					res.json("updated");
-					trackUser(req.session.user, 7, {});
+					trackUser(req.session.user, 7, {infoId:infoId});
 				})
 			}
 			else
@@ -1123,6 +1124,8 @@ exports.setSpams = function(req, res){
 	var aspamAlert = new contenuIllicite();
 	if(req.session.user){
 			contenuIllicite.findById(req.params.infoid, function (err, thealert){
+				//log
+				trackUser(req.session.user, 14,  {infoId:req.params.infoid});
 				if(thealert != undefined && thealert != null ){
 					infoAlert.update({"_id":thealert._id},{$push:{user_id: req.session.user}},{$inc:{count : 1}},{$set:{"last_date_mark":new Date()}}, function(err){
 						if (err) 

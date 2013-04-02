@@ -67,3 +67,10 @@ function killCookie(name, path){
 	$.cookie(name, null, { path: path, expires: -5 });
 }
 
+var setdelay = (function(){
+	var timer = 0;
+	return function(callback, ms){
+		clearTimeout (timer);
+		timer = setTimeout(callback, ms);
+	};
+})();

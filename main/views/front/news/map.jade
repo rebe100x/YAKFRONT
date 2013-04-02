@@ -68,6 +68,7 @@ block content
 		var listenerHandle = null;
 		var feedOffsetW = 0; // this is the offset for recenter map on map's page due to the fil info on the right => set in the getMyBounds function
 		var filteredInfoArray = [];
+		var lastSearchString = null;
 		var map = new google.maps.Map(document.getElementById('mymap'), {
 				mapTypeId: google.maps.MapTypeId.ROADMAP,
 				disableDefaultUI: true,
@@ -87,86 +88,104 @@ block content
 		/*READY FUNCTIONS*/
 		$(document).ready(function() {
 			if(gup("post") == 1)
-			{
 				showPostForm();
-			}
+			
 				
-			$('#searchBtn').click(function(){
-					console.log('SEARCH CLICK');
-					$.cookie("searchString",searchString,{ expires: 10000, path : '/' });
-
-					var str = encodeURIComponent($('#searchStr').val());
-					var placeName = $('#searchPlaceStr').val();
-					var location = JSON.stringify({lat:curPos.x,lng:curPos.y});				
-					if(location != ''){
-						changeLocation(location);
-					}else{
-						if(placeName != ''){
-							
-							var addressQuery = {"address": placeName ,"region":"fr","language":"fr"};
-							var geocoder = new google.maps.Geocoder();
-							geocoder.geocode( addressQuery, function(results, status) {						
-							if (status == google.maps.GeocoderStatus.OK) {
-							
-								var placeGmap = getPlaceFromGmapResult((results[0]));
-								
-							}else{
-								var salt = new Date().getTime();
-								$('#searchStr').before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide</div>");
-								setTimeout(function() {
-									$("#alert"+salt).fadeOut();
-								}, 3000);
-								
-							} 
-							});
-						}
-					}
-					
-					
-					if(str != 'Quoi ?' && str != ''){
-						searchString = str;
-						filteredInfoArray = [];
-						cleanMarkers();
-						cleanFeed();
-						$.each(infoArray,function(key,val){
-							str = decodeURIComponent(str);
-							var searchStr = new RegExp(str,'gi');
-							var searchExactStr = new RegExp("(?:^| )(" + str + ")",'gi');
-							
-							if(searchExactStr.test(val.title) 
-								|| searchExactStr.test(val.content) 
-								|| searchExactStr.test(val.yakCatName) 
-								|| searchExactStr.test(val.freeTag) 
-								|| searchExactStr.test(val.origin)  ){
-								filteredInfoArray.push(val);
-							}
-								
-						});
+			$('#searchBtn').unbind("click").on('click',function(){
+				console.log('SEARCH CLICK');
+				
+				var str = encodeURIComponent($('#searchStr').val());
+				var placeName = $('#searchPlaceStr').val();
+				var location = JSON.stringify({lat:curPos.x,lng:curPos.y});				
+				if(location != ''){
+					changeLocation(location);
+				}else{
+					if(placeName != ''){
 						
-
-						printMapAndFeed(filteredInfoArray,1);
-					}else
-					{
-						cleanMarkers();
-						cleanFeed();
-						searchString = null;
-						printMapAndFeed(infoArray,1);
+						var addressQuery = {"address": placeName ,"region":"fr","language":"fr"};
+						var geocoder = new google.maps.Geocoder();
+						geocoder.geocode( addressQuery, function(results, status) {						
+						if (status == google.maps.GeocoderStatus.OK) {
+						
+							var placeGmap = getPlaceFromGmapResult((results[0]));
+							
+						}else{
+							var salt = new Date().getTime();
+							$('#searchStr').before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide</div>");
+							setTimeout(function() {
+								$("#alert"+salt).fadeOut();
+							}, 3000);
+							
+						} 
+						});
 					}
-					
-					//getAndPrintInfo();
-					
-					// search in infoArray
-					
+				}
+				
+				
+				if(str != 'Quoi ?' && str != ''){
+					searchString = str;
+					filteredInfoArray = [];
+					cleanMarkers();
+					cleanFeed();
+					$.each(infoArray,function(key,val){
+						str = decodeURIComponent(str);
+						var searchStr = new RegExp(str,'gi');
+						var searchExactStr = new RegExp("(?:^| )(" + str + ")",'gi');
+						
+						if(searchExactStr.test(val.title) 
+							|| searchExactStr.test(val.content) 
+							|| searchExactStr.test(val.yakCatName) 
+							|| searchExactStr.test(val.freeTag) 
+							|| searchExactStr.test(val.origin)  ){
+							filteredInfoArray.push(val);
+						}
+							
+					});
 					
 
+					printMapAndFeed(filteredInfoArray,1);
 
+					
 
-				});
+				}else
+				{
+					cleanMarkers();
+					cleanFeed();
+					searchString = null;
+					if(infoArray.length > 0)
+						printMapAndFeed(infoArray,1);
+					else
+						getAndPrintInfo();
+				}
+				
+			
+				
+				console.log(lastSearchString +'='+ str);
+				if(lastSearchString == null || lastSearchString != str ){
+					$.cookie("searchString",searchString,{ expires: 10000, path : '/' });
+					var mapCenter =  map.getCenter();
+					var now = new Date();
+					var searchDate = now.setTime(now.getTime()+dateFrom*24*60*60*1000);
+					
+					var trackParams = 	{
+						"location":{
+							"lat": mapCenter.lat().toString(),
+							"lng": mapCenter.lng().toString(),
+						},
+						"dateFrom": searchDate.toString(),
+						"type": yakType.toString(),
+						"str": searchString
+					};
+
+					$.getJSON(conf.trackurl+'/track/user/'+user._id+'/'+'5'+'/'+encodeURIComponent(JSON.stringify(trackParams))); 
+				}	
+				lastSearchString = str;
+			});
 
 
 			zoom = rangeFromZ();
 			
-			$('#arroundme').click(function(){
+			$('#arroundme').unbind("click").on('click',function(){
 
 				if(user.location){
 					var latLng = new google.maps.LatLng(user.location['lat'],user.location['lng']);
@@ -187,7 +206,7 @@ block content
 
 
 			/*map tools*/
-			$('#zoomplus').click(function () {	
+			$('#zoomplus').unbind("click").on('click',function () {	
 				
 				if(curPos.z == 120)
 					return
@@ -196,11 +215,11 @@ block content
 				map.setZoom(zoom);	
 				changeZoom();
 				if(curPos.z == 90 || curPos.z == 110)
-					$('#zoomplus').click();
+					$('#zoomplus').trigger('click');
 
 			});
 
-			$('#zoomminus').click(function () {
+			$('#zoomminus').unbind("click").on('click',function () {
 				if(curPos.z == 70)
 					return
 				zoom = map.getZoom();
@@ -208,13 +227,13 @@ block content
 				map.setZoom(zoom);
 				changeZoom();
 				if(curPos.z == 90 || curPos.z == 110)
-					$('#zoomminus').click();
+					$('#zoomminus').trigger('click');
 				
 			});
 
 			
 			/*control opener*/
-			$('#boxOpener').click(function(event){
+			$('#boxOpener').unbind("click").on('click',function(event){
 				event.preventDefault();
 				if($(this).hasClass('opened')){
 					$(this).removeClass('opened').addClass('closed');
@@ -226,7 +245,7 @@ block content
 			});
 
 			/*news nav*/
-			$('#newsNav li').click(function(event){
+			$('#newsNav li').unbind("click").on('click',function(event){
 				event.preventDefault();
 				
 				if(!$(this).hasClass('active')){
@@ -277,7 +296,8 @@ block content
 				manageSearchBox();
 			});
 			
-			$('#newsfeed').delegate(".mapHighlighter",'click', function (e) {
+			
+			$('#newsfeed').unbind("click").on('click',".mapHighlighter", function (e) {	
 				if(e.target.className != 'prevent-default'){
 					if($(this).find(".myitem").length == 0)
 					{
@@ -311,125 +331,127 @@ block content
 						}
 					}
 				});
-				
-				
-				
-				$('#picture').live('change', function () {
-
-					if ( window.FileReader ) {
-						var fileList = this.files;
-						var file = fileList[0];
-						var r = new FileReader();
-						r.onload = function () {
-							var binimage = r.result;
-							binimage1 = binimage.replace('data:'+file.type+';base64,', '');
-							var imag = "<img class='img-rounded' " + "src='" + 
-							"data:"+file.type+";base64," + binimage1 + "' style='width:100px'/>";
-							$("#picturePreview").html(imag);
-						};
-						r.readAsDataURL(file);
 					
-					}
 					
-					//r.readAsBinaryString(file);
+					
+			$('#picture').live('change', function () {
+
+				if ( window.FileReader ) {
+					var fileList = this.files;
+					var file = fileList[0];
+					var r = new FileReader();
+					r.onload = function () {
+						var binimage = r.result;
+						binimage1 = binimage.replace('data:'+file.type+';base64,', '');
+						var imag = "<img class='img-rounded' " + "src='" + 
+						"data:"+file.type+";base64," + binimage1 + "' style='width:100px'/>";
+						$("#picturePreview").html(imag);
+					};
+					r.readAsDataURL(file);
+				
+				}
+				
+				//r.readAsBinaryString(file);
+
+				
+
+			});
 
 					
-
-				});
-
-				
-				
-				markerLocation = new google.maps.Marker({
-					visible:false,
-					map:map,
-					draggable:true,
-					icon:'/images/beachflag.png',
-					//position:center
-				});
-				
-				$('#yakcat').typeahead({
-					minLength : 3,
-					source: function (typeahead, query) {
-						$.ajax({
-								url: "/api/cats",				
-								success: function( ajax ) {
-									typeahead.process(ajax.data.cats);
-								}
-							})},
-					property: "title",
-					onselect: function(obj) { 
-						$("label[for='category']").after("<div class='pillItem'><i class='icon-remove icon-pointer'  onclick='yakcatArray.cleanArray(\""+obj._id+"\");$(\"#yakcatInput\").val(JSON.stringify(yakcatArray));$(this).parent().remove();'></i> "+obj.title+"</div>");
-						$('#yakcat').val('').focus();
-						yakcatArray.push(obj);
-						$("#yakcatInput").val(JSON.stringify(yakcatArray));
-						
-						
-					}
-				});
-				
+					
+			markerLocation = new google.maps.Marker({
+				visible:false,
+				map:map,
+				draggable:true,
+				icon:'/images/beachflag.png',
+				//position:center
+			});
 			
-				// autocomplete Place
-				$('#place').typeahead({
-					minLength : 3,							
-					source: function (typeahead, query) {
-						if(query.length >= 3){
-							encodeURIComponent(query);
-							$("#place").addClass('searching');
-							var addressQuery = {"address": query ,"region":"fr","language":"fr"};
-							var geocoder = new google.maps.Geocoder();
-							geocoder.geocode( addressQuery, function(results, status) {						
-							if (status == google.maps.GeocoderStatus.OK) {
-								typeahead.process(results);
-								$("#place").removeClass('searching');
-							} 
-							});
-						}
-					},
-					property: "formatted_address",
-					onselect: function(obj) { 
-						var placeGmap = getPlaceFromGmapResult(obj);
-						$('#btn-place-adder').parent().before("<div class='pillItem'><i class='icon-remove icon-pointer'  onclick='placeArray.cleanArrayByLocation(\""+placeGmap.location.lat+","+placeGmap.location.lng+"\");$(\"#placeInput\").val(JSON.stringify(placeArray));$(this).parent().remove();'></i> "+placeGmap.title+"</div>");
-						$('#place').val('').focus();
-						placeArray.push(placeGmap);
-						$("#placeInput").val(JSON.stringify(placeArray));
-					}
-				});
-
-				
-				$('#btn-place-adder').click(function(){
-					var addressString = $('#place').val();
-					if(addressString != "Rechercher..." && addressString != "" && addressString.length > 1){
-						var addressQuery = {"address": addressString,"latLng":map.getCenter(),"bounds":map.getBounds()};
-						var geocoder = new google.maps.Geocoder();
-						geocoder.geocode( addressQuery, function(results, status) {
-							if (status == google.maps.GeocoderStatus.OK) {
-								//map.setCenter(results[0].geometry.location);
-								map.panTo(results[0].geometry.location);
-								markerLocation.setVisible(true);
-								markerLocation.setPosition(results[0].geometry.location);
-								placeMarker(results[0].geometry.location,markerLocation);
-								var placeGmap = getPlaceFromGmapResult(results[0]);
-								placeArray.push(placeGmap);
-								$("#placeInput").val(JSON.stringify(placeArray));
-								$('#btn-place-adder').parent().before("<div class='pillItem'><i class='icon-remove icon-pointer' onclick='placeArray.cleanArrayByLocation("+results[0].geometry.location.Ya+","+results[0].geometry.location.Za+");$(\"#placeInput\").val(JSON.stringify(placeArray));$(this).parent().remove();'></i> "+results[0].formatted_address+"</div>");
-								
-							} else {
-								var salt = new Date().getTime();
-								$('#btn-place-adder').parent().before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide ("+status+")</div>");
-								setTimeout(function() {
-									$("#alert"+salt).fadeOut();
-								}, 3000);
-								$('#place').select();
+			$('#yakcat').typeahead({
+				minLength : 3,
+				source: function (typeahead, query) {
+					$.ajax({
+							url: "/api/cats",				
+							success: function( ajax ) {
+								typeahead.process(ajax.data.cats);
 							}
+						})},
+				property: "title",
+				onselect: function(obj) { 
+					$("label[for='category']").after("<div class='pillItem'><i class='icon-remove icon-pointer'  onclick='yakcatArray.cleanArray(\""+obj._id+"\");$(\"#yakcatInput\").val(JSON.stringify(yakcatArray));$(this).parent().remove();'></i> "+obj.title+"</div>");
+					$('#yakcat').val('').focus();
+					yakcatArray.push(obj);
+					$("#yakcatInput").val(JSON.stringify(yakcatArray));
+					
+					
+				}
+			});
+			
+
+			// autocomplete Place
+			$('#place').typeahead({
+				minLength : 3,							
+				source: function (typeahead, query) {
+					if(query.length >= 3){
+						encodeURIComponent(query);
+						$("#place").addClass('searching');
+						var addressQuery = {"address": query ,"region":"fr","language":"fr"};
+						var geocoder = new google.maps.Geocoder();
+						geocoder.geocode( addressQuery, function(results, status) {						
+						if (status == google.maps.GeocoderStatus.OK) {
+							typeahead.process(results);
+							$("#place").removeClass('searching');
+						} 
 						});
 					}
-					
-					
-				});
+				},
+				property: "formatted_address",
+				onselect: function(obj) { 
+					var placeGmap = getPlaceFromGmapResult(obj);
+					$('#btn-place-adder').parent().before("<div class='pillItem'><i class='icon-remove icon-pointer'  onclick='placeArray.cleanArrayByLocation(\""+placeGmap.location.lat+","+placeGmap.location.lng+"\");$(\"#placeInput\").val(JSON.stringify(placeArray));$(this).parent().remove();'></i> "+placeGmap.title+"</div>");
+					$('#place').val('').focus();
+					placeArray.push(placeGmap);
+					$("#placeInput").val(JSON.stringify(placeArray));
+				}
+			});
+
 			
-			
+			$('#btn-place-adder').unbind("click").on('click',function(){
+				var addressString = $('#place').val();
+				if(addressString != "Rechercher..." && addressString != "" && addressString.length > 1){
+					var addressQuery = {"address": addressString,"latLng":map.getCenter(),"bounds":map.getBounds()};
+					var geocoder = new google.maps.Geocoder();
+					geocoder.geocode( addressQuery, function(results, status) {
+						if (status == google.maps.GeocoderStatus.OK) {
+							//map.setCenter(results[0].geometry.location);
+							map.panTo(results[0].geometry.location);
+							markerLocation.setVisible(true);
+							markerLocation.setPosition(results[0].geometry.location);
+							placeMarker(results[0].geometry.location,markerLocation);
+							var placeGmap = getPlaceFromGmapResult(results[0]);
+							placeArray.push(placeGmap);
+							$("#placeInput").val(JSON.stringify(placeArray));
+							$('#btn-place-adder').parent().before("<div class='pillItem'><i class='icon-remove icon-pointer' onclick='placeArray.cleanArrayByLocation("+results[0].geometry.location.Ya+","+results[0].geometry.location.Za+");$(\"#placeInput\").val(JSON.stringify(placeArray));$(this).parent().remove();'></i> "+results[0].formatted_address+"</div>");
+							
+						} else {
+							var salt = new Date().getTime();
+							$('#btn-place-adder').parent().before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide ("+status+")</div>");
+							setTimeout(function() {
+								$("#alert"+salt).fadeOut();
+							}, 3000);
+							$('#place').select();
+						}
+					});
+				}
+				
+				
+			});
+
+				
 			/*linkify*/
-			$("body").delegate('.tagHashLink','click',function(event){
+			
+
+			$("body").unbind("click").on('click','.tagHashLink',function(event){
 				//event.preventDefault();
 				searchString = $(this).html();
 				
@@ -439,7 +461,7 @@ block content
 				
 				getAndPrintInfo();
 			});
-			$("body").delegate('.userHashLink','click',function(event){
+			$("body").unbind("click").on('click','.userHashLink',function(event){
 				event.preventDefault();
 				searchString = $(this).html();
 				
@@ -474,44 +496,7 @@ block content
 			
 		}
 
-		function updateXY(){
-				
-			var id = $(this).attr('id');
-			switch(id){
-			case 'zone1':
-				x = 48.851875;
-				y = 2.356374;
-				z = 13;
-			break;
-			case 'zone2':
-				x = 43.610787;
-				y = 3.876715;
-				z = 14;
-			break;
-			case 'zone3':
-				x = 50.583346;
-				y = 4.900031;
-				z = 14;
-			break;
-			default:
-				x = 48.851875;
-				y = 2.356374;
-				z = 13;
-			}
-			curPos = {'x':x,'y':y,'z':z};
-
-			//socket.emit('position', curPos);
-			
-			
-					
-			$('#locationChooser').modal('hide');
-			/*
-			if($('#mymap').length > 0){ // only for the map page
-			// NOTE : initialize function is defined in map.jade and in new.jade : just a bit fifferent to deal the insertion
-				google.maps.event.addDomListener(window, 'load', initialize(curPos.x,curPos.y,curPos.z)); 
-			}*/
-			
-		}
+		
 
 		function changeLocation(location){
 			var locationObj = JSON.parse(location);
@@ -713,9 +698,7 @@ block content
 				curPos.y = center.lng();
 				zoom = this.getZoom();
 				curPos.z = zFromRange();
-				console.log('IDLE');
 				$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
-				//markerCluster.clearMarkers();
 				getAndPrintInfo();
 
 				$('#postFormRange').val(((-1)*0.0096/1*(curPos.z)+1)); // set value for the post form to define tags geo range
@@ -732,9 +715,7 @@ block content
 				curPos.y = center.lng();
 				zoom = this.getZoom();
 				curPos.z = zFromRange();
-				console.log('DRAG');
 				$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
-				//markerCluster.clearMarkers();
 				getAndPrintInfo();
 
 				$('#postFormRange').val(((-1)*0.0096/1*(curPos.z)+1)); // set value for the post form to define tags geo range
@@ -748,11 +729,8 @@ block content
 				curPos.y = center.lng();
 				zoom = this.getZoom();
 				curPos.z = zFromRange();
-				console.log('ZOOMED');
 				$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
-				//markerCluster.clearMarkers();
 				getAndPrintInfo();
-
 				$('#postFormRange').val(((-1)*0.0096/1*(curPos.z)+1)); // set value for the post form to define tags geo range
 			});
 			
@@ -828,7 +806,7 @@ block content
 		}
 		
 		function getAndPrintInfo(){
-			console.log('getAndPrintInfo');
+			//console.log('getAndPrintInfo');
 			getHotTags(curPos,dateFrom);
 
 			infoArray = [];
@@ -1177,7 +1155,7 @@ block content
 		}
 		function closeAllItems()
 		{
-			$("#newsfeed .icon-remove").click();
+			$("#newsfeed .icon-remove").trigger('click');
 		}
 		function getItemDetails(el){
 			
@@ -1319,7 +1297,7 @@ block content
 			setCommentText(val.yakComments.length,yakComments);
 			
 
-			yakComments.click(function(){
+			yakComments.unbind("click").on('click',function(){
 				if ($(this).parent().find(".commentBox").length > 0)
 				{
 					return;
@@ -1342,7 +1320,7 @@ block content
 								return false;
 							});
 
-							divComment.find("textarea").click(function(){
+							divComment.find("textarea").unbind("click").on('click',function(){
 								return false;
 							});
 						});
@@ -1404,7 +1382,7 @@ block content
 			{
 				//yakLikes.append("<span class='theUps'>" + val.likes + "</span> likes- " + "" + "<span class='theDowns'>" + val.unlikes +"</span> dislikes");			
 				yakLikes.append("<span class='theUps'>" + val.likes + "</span> likes");			
-				yakLikes.click(function(){
+				yakLikes.unbind("click").on('click',function(){
 					$('.alreadyVoted').hide();	
 					$(this).append("<span class='alreadyVoted'> Vous avez déjà donnée votre avis !</span>");
 					setTimeout('$(".alreadyVoted").remove()', 3000);
@@ -1415,7 +1393,7 @@ block content
 			{
 				//yakLikes.append("<span class='theUps'>" + val.likes + "</span> likes- " + "" + "<span class='theDowns'>" + val.unlikes +"</span> dislikes");							
 				yakLikes.append("<span class='theUps'>" + val.likes + "</span> likes");							
-				yakLikes.click(function(){
+				yakLikes.unbind("click").on('click',function(){
 					$('.alreadyVoted').hide();
 					$(this).append("<span class='alreadyVoted'> Vous avez déjà donnée votre avis !</span>");
 					setTimeout('$(".alreadyVoted").remove()', 3000);
