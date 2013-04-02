@@ -15,3 +15,4 @@ var Track = new Schema({
 });
 mongoose.model('Track', Track);
 Track.index({"params.location":"2d"});
+Track.index({"params.infoId":1});

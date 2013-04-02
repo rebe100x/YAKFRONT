@@ -31,7 +31,6 @@ var Place = new Schema({
 ,	heat : {type:Number}
 ,	yakCat	: {type: [Schema.Types.ObjectId],index:1}
 ,	yakcatName: [String]
-,	yakTag	: {type: [String],index:1}
 ,	freeTag	: {type: [String],index:1}		
 ,	contact : {type : {
 						tel: String,
@@ -97,7 +96,7 @@ Place.statics.searchOne = function (str,exact,callback) {
   
   var cond = {
 	"status":1,
-	$or:[ {'title': {$regex:searchStr}}, {'content': {$regex:searchStr}} , {"freeTag": {$regex:searchStr}} , {"yakTag": {$regex:searchStr}}],	
+	$or:[ {'title': {$regex:searchStr}}, {'content': {$regex:searchStr}} , {"freeTag": {$regex:searchStr}}],	
 };
   return this.find(cond,{},{limit:1}, callback);
 }

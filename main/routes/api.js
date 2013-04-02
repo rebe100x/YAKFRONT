@@ -104,7 +104,8 @@ exports.geoalerts = function (req, res) {
 
 
 exports.geoinfos = function (req, res) {
-	var trackParams = {"params": [,req.params.limit,
+	/*
+	var trackParams = {
 										{"x1": req.params.x1},
 										{"y1": req.params.y1},
 										{"x2": req.params.x2},
@@ -116,7 +117,11 @@ exports.geoinfos = function (req, res) {
 										{"limit": req.params.limit},
 									]
 								};
-	//trackUser(req.session.user, 5, JSON.stringify(trackParams));
+	// we log only if it is not a silent updater							
+	if(req.params.now != 0){							
+		trackUser(req.session.user, 5, JSON.stringify(trackParams));
+	}
+	*/
 	var Info = db.model('Info');
 	var type = [];
 	type = req.params.type.split(',');

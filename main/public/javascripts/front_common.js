@@ -1015,7 +1015,8 @@ function setShare(el){
 	facebook: true,
 	twitter: true
 	},
-	enableTracking: true,
+	enableTracking: true, // Here the original lib is modified to track to yakTrack.js instead of google analytics #RB 2apr2013
+	yakwalaTrackingUrl : conf.trackurl,
 	buttons: {
 		googlePlus: {
 			url: el.parent().parent().find(".title").find(".more").attr("href"),
@@ -1045,14 +1046,7 @@ function setShare(el){
     		$(api.element).find('.buttons').css("display", "block");
     		$(this).trigger('mouseover'); // or similar
 		});
-	},
-	click: function(api, options){
-		//log
-		console.log('click');
-		var trackParams ={};
-		$.getJSON(this.trackurl+'/track/user/'+this.userid+'/'+'7'+'/'+encodeURIComponent(JSON.stringify(trackParams)));
-	},
-
+	}
 });
  
 }

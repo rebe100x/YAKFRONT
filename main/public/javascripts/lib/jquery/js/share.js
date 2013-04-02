@@ -1,4 +1,8 @@
 /*
+* modified by rebe100x for Yakwala: added call to yaktrack.js
+add params line 272
+add yakwalaTrackingUrl line 41
+
  *  Sharrre.com - Make your sharing widget!
  *  Version: beta 1.3.3 
  *  Author: Julien Hany
@@ -34,6 +38,7 @@
     enableHover: true, //disable if you want to personalize hover event with callback
     enableCounter: true, //disable if you just want use buttons
     enableTracking: false, //tracking with google analitycs
+    yakwalaTrackingUrl : false, // url de tracking Yakwala #RB 2apr2013 
     hover: function(){}, //personalize hover event with this callback function
     hide: function(){}, //personalize hide event with this callback function
     click: function(){}, //personalize click event with this callback function
@@ -262,20 +267,38 @@
     }
   },
   /* Tracking for Google Analytics
+  modified by rebe100x for Yakwala: add params
   ================================================== */
   tracking = {
-    googlePlus: function(){},
-    facebook: function(){
+    googlePlus: function(params){
+      //track Yakwala
+      trackParams ={from:1};
+      $.getJSON(params.trackurl+'/track/user/'+params.userid+'/'+'8'+'/'+encodeURIComponent(JSON.stringify(trackParams)));  
+           
+    },
+    facebook: function(params){
       //console.log('facebook');
       fb = window.setInterval(function(){
         if (typeof FB !== 'undefined') {
           FB.Event.subscribe('edge.create', function(targetUrl) {
+            //track Yakwala
+            trackParams ={from:2};
+            $.getJSON(params.trackurl+'/track/user/'+params.userid+'/'+'8'+'/'+encodeURIComponent(JSON.stringify(trackParams)));  
+           
             _gaq.push(['_trackSocial', 'facebook', 'like', targetUrl]);
           });
           FB.Event.subscribe('edge.remove', function(targetUrl) {
+            //track Yakwala
+            trackParams ={from:2};
+            $.getJSON(params.trackurl+'/track/user/'+params.userid+'/'+'8'+'/'+encodeURIComponent(JSON.stringify(trackParams)));  
+           
             _gaq.push(['_trackSocial', 'facebook', 'unlike', targetUrl]);
           });
           FB.Event.subscribe('message.send', function(targetUrl) {
+            //track Yakwala
+            trackParams ={from:2};
+            $.getJSON(params.trackurl+'/track/user/'+params.userid+'/'+'8'+'/'+encodeURIComponent(JSON.stringify(trackParams)));  
+           
             _gaq.push(['_trackSocial', 'facebook', 'send', targetUrl]);
           });
           //console.log('ok');
@@ -283,12 +306,14 @@
         }
       },1000);
     },
-    twitter: function(){
-      //console.log('twitter');
+    twitter: function(params){
       tw = window.setInterval(function(){
         if (typeof twttr !== 'undefined') {
           twttr.events.bind('tweet', function(event) {
             if (event) {
+              //track Yakwala
+              trackParams ={from:1};
+              $.getJSON(params.trackurl+'/track/user/'+params.userid+'/'+'8'+'/'+encodeURIComponent(JSON.stringify(trackParams)));  
               _gaq.push(['_trackSocial', 'twitter', 'tweet']);
             }
           });
@@ -432,7 +457,13 @@
       if(val == true){
         loadButton[name](self);
         if(self.options.enableTracking === true){ //add tracking
-          tracking[name]();
+          //modified by rebe100x for Yakwala: add params
+          var trackurl = self.options.yakwalaTrackingUrl;
+          if(trackurl){
+            var userid = $(self.element).parent().attr('userid');
+            var params = {userid:userid,trackurl:trackurl};        
+            tracking[name](params);
+          }
         }
       }
     });

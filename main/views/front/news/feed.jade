@@ -288,16 +288,6 @@ block content
 				}
 			}
 
-			if (typeof(item.yakTag) != 'undefined') {
-					
-					for (var i = 0; i < item.yakTag.length; i++) {
-						if(item.yakTag[i] != ""){
-							thetags += '<a class="tagHashLink prevent-default" onclick="setSearchFor(this)">#' + item.yakTag[i] +'</a> ';	
-							if( i < item.yakTag.length -1)
-								thetags += ', ';
-						}
-					}
-			}
 
 			if (typeof(item.freeTag) != 'undefined') {
 					

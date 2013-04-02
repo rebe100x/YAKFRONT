@@ -114,31 +114,27 @@ mixin searchFormUnified(page)
 				$('#searchStr').click(function(){
 					$(this).select();
 				});
+				
 				$('#searchStr').keyup(function(event){
 
-					if($(this).val().length >= 2)
-					{
+					if($(this).val().length > 0){
 						$(this).addClass('searching');
-					}
-					else
-					{
-						$(this).removeClass('searching');
-					}
-
-					if($(this).val()==''){
-						searchString = null;
-						$('#searchBtn').trigger('click');
-					}
-					else
-					{
 						searchString = encodeURIComponent($('#searchStr').val());
 					}
-
-					if($(this).val().length >= 2)
-					{
-						$('#searchBtn').trigger('click');
+						
+					else{
+						$(this).removeClass('searching');
+						searchString = null;
 					}
+						
+					
+
+					$('#searchBtn').trigger('click');
+					console.log('TRIGGERED');
+				
 				});
+
+
 				$('#searchPlaceStr').click(function(){
 					$(this).select();
 				});

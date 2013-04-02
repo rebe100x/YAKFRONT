@@ -126,7 +126,6 @@ var Info = new Schema({
   , print	: {type: Number}		
   , yakCat	: {type: [Schema.ObjectId],index:1}
   , yakCatName	: {type: [String],index:1}	
-  , yakTag	: {type: [String],index:1}
   , yakType	: {type: Number,index:1}  
   , freeTag	: {type: [String],index:1}	
   , pubDate	: {type: Date, required: true, default: Date.now,index:1}		  
@@ -180,7 +179,6 @@ Info.statics.format = function (theinfo) {
 		eventDate:theinfo.eventDate,
 		pubDate:theinfo.pubDate,
 		freeTag:theinfo.freeTag,
-		yakTag:theinfo.yakTag,
 		yakCatName:theinfo.yakCatName,
 		yakCat:theinfo.yakCat,
 		placeId:theinfo.placeId,
@@ -366,7 +364,7 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,from,now,type,str,thecount,thesk
 	/*mode update*/
 	if(now != 0){
 		var DCRE = new Date();
-		DCRE.setTime( now*1000 );
+		DCRE.setTime( now );
 		qInfo.where('creationDate').gt(DCRE);
 	}
 		
@@ -386,9 +384,9 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,from,now,type,str,thecount,thesk
 		if(firstChar=='#' || thirdChar == '%23'){
 			Yakcat.findOne({'title': {$regex:searchStr}}).exec(function(err,theyakcat){
 				if(theyakcat == null){
-					qInfo.or([{"freeTag": {$regex:searchExactStr}} , {"yakTag": {$regex:searchExactStr}}]);
+					qInfo.or([{"freeTag": {$regex:searchExactStr}}]);
 				}else{
-					qInfo.or([{"freeTag": {$regex:searchExactStr}} , {"yakTag": {$regex:searchExactStr}},{"yakCat": {$in:[theyakcat._id]}}]);
+					qInfo.or([{"freeTag": {$regex:searchExactStr}},{"yakCat": {$in:[theyakcat._id]}}]);
 				}
 				res = qInfo.exec(callback);
 			});
@@ -418,14 +416,14 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,from,now,type,str,thecount,thesk
 				if(theyakcat == null){
 					User.findOne({'login':{$regex:searchExactStr}}).exec(function(err,theuser){
 						if(theuser == null){ // NO TAG, NO YAKCAT, NO USER
-							qInfo.or([ {'title': {$regex:searchExactStr}}, {'content': {$regex:searchExactStr}} , {"freeTag": {$regex:searchExactStr}} , {"yakTag": {$regex:searchExactStr}}]);
+							qInfo.or([ {'title': {$regex:searchExactStr}}, {'content': {$regex:searchExactStr}} , {"freeTag": {$regex:searchExactStr}}]);
 						}else{
-							qInfo.or([ {'title': {$regex:searchExactStr}}, {'content': {$regex:searchExactStr}} , {"freeTag": {$regex:searchExactStr}} , {"yakTag": {$regex:searchExactStr}}, {'user':theuser._id}]);
+							qInfo.or([ {'title': {$regex:searchExactStr}}, {'content': {$regex:searchExactStr}} , {"freeTag": {$regex:searchExactStr}}, {'user':theuser._id}]);
 						}
 						res = qInfo.exec(callback);
 					});
 				}else{
-					qInfo.or([ {'title': {$regex:searchExactStr}}, {'content': {$regex:searchExactStr}} , {"freeTag": {$regex:searchExactStr}} , {"yakTag": {$regex:searchExactStr}},{"yakCat": {$in:[theyakcat._id]}}]);
+					qInfo.or([ {'title': {$regex:searchExactStr}}, {'content': {$regex:searchExactStr}} , {"freeTag": {$regex:searchExactStr}}, {"yakCat": {$in:[theyakcat._id]}}]);
 					res = qInfo.exec(callback);
 				}
 			});
@@ -502,9 +500,9 @@ Info.statics.findAllGeoAlert = function (x1,y1,x2,y2,from,now,str,usersubs,tagsu
 		if(firstChar=='#'){
 			Yakcat.findOne({'title': {$regex:searchStr}}).exec(function(err,theyakcat){
 				if(theyakcat == null){
-					qInfo.or([{"freeTag": {$regex:searchExactStr}} , {"yakTag": {$regex:searchExactStr}}]);
+					qInfo.or([{"freeTag": {$regex:searchExactStr}}]);
 				}else{
-					qInfo.or([{"freeTag": {$regex:searchExactStr}} , {"yakTag": {$regex:searchExactStr}},{"yakCat": {$in:[theyakcat._id]}}]);
+					qInfo.or([{"freeTag": {$regex:searchExactStr}},{"yakCat": {$in:[theyakcat._id]}}]);
 				}
 				res = qInfo.exec(callback);
 			});
@@ -520,14 +518,14 @@ Info.statics.findAllGeoAlert = function (x1,y1,x2,y2,from,now,str,usersubs,tagsu
 				if(theyakcat == null){
 					User.findOne({'login':{$regex:searchExactStr}}).exec(function(err,theuser){
 						if(theuser == null){ // NO TAG, NO YAKCAT, NO USER
-							qInfo.or([ {'title': {$regex:searchStr}}, {'content': {$regex:searchStr}} , {"freeTag": {$regex:searchExactStr}} , {"yakTag": {$regex:searchExactStr}}]);
+							qInfo.or([ {'title': {$regex:searchStr}}, {'content': {$regex:searchStr}} , {"freeTag": {$regex:searchExactStr}} ]);
 						}else{
-							qInfo.or([ {'title': {$regex:searchStr}}, {'content': {$regex:searchStr}} , {"freeTag": {$regex:searchExactStr}} , {"yakTag": {$regex:searchExactStr}}, {'user':theuser._id}]);
+							qInfo.or([ {'title': {$regex:searchStr}}, {'content': {$regex:searchStr}} , {"freeTag": {$regex:searchExactStr}} , {'user':theuser._id}]);
 						}
 						res = qInfo.exec(callback);
 					});
 				}else{
-					qInfo.or([ {'title': {$regex:searchStr}}, {'content': {$regex:searchStr}} , {"freeTag": {$regex:searchExactStr}} , {"yakTag": {$regex:searchExactStr}},{"yakCat": {$in:[theyakcat._id]}}]);
+					qInfo.or([ {'title': {$regex:searchStr}}, {'content': {$regex:searchStr}} , {"freeTag": {$regex:searchExactStr}} ,{"yakCat": {$in:[theyakcat._id]}}]);
 					res = qInfo.exec(callback);
 				}
 			});

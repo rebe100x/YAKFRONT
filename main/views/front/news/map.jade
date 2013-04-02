@@ -33,7 +33,7 @@ block content
 					span#newspostContent.tabContent
 						mixin postForm()		
 	link(rel='stylesheet', href='/javascripts/lib/jquery/css/share.css')
-	script(src="/javascripts/lib/jquery/js/share.js?v="+JSON.parse(mainConf).version)	
+	script(src="/javascripts/lib/jquery/js/share.js?v=12"+JSON.parse(mainConf).version)	
 	script(src="/javascripts/lib/jquery/js/jquery.livequery.js")
 	script(src="/javascripts/json2.js")	
 
@@ -66,9 +66,8 @@ block content
 		var rule2 = new RegExp('[#]','g');
 		var postFlag = 0;
 		var listenerHandle = null;
-		
 		var feedOffsetW = 0; // this is the offset for recenter map on map's page due to the fil info on the right => set in the getMyBounds function
-
+		var filteredInfoArray = [];
 		var map = new google.maps.Map(document.getElementById('mymap'), {
 				mapTypeId: google.maps.MapTypeId.ROADMAP,
 				disableDefaultUI: true,
@@ -93,7 +92,7 @@ block content
 			}
 				
 			$('#searchBtn').click(function(){
-
+					console.log('SEARCH CLICK');
 					$.cookie("searchString",searchString,{ expires: 10000, path : '/' });
 
 					var str = encodeURIComponent($('#searchStr').val());
@@ -111,7 +110,6 @@ block content
 							
 								var placeGmap = getPlaceFromGmapResult((results[0]));
 								
-
 							}else{
 								var salt = new Date().getTime();
 								$('#searchStr').before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide</div>");
@@ -127,13 +125,38 @@ block content
 					
 					if(str != 'Quoi ?' && str != ''){
 						searchString = str;
+						filteredInfoArray = [];
+						cleanMarkers();
+						cleanFeed();
+						$.each(infoArray,function(key,val){
+							str = decodeURIComponent(str);
+							var searchStr = new RegExp(str,'gi');
+							var searchExactStr = new RegExp("(?:^| )(" + str + ")",'gi');
+							
+							if(searchExactStr.test(val.title) 
+								|| searchExactStr.test(val.content) 
+								|| searchExactStr.test(val.yakCatName) 
+								|| searchExactStr.test(val.freeTag) 
+								|| searchExactStr.test(val.origin)  ){
+								filteredInfoArray.push(val);
+							}
+								
+						});
+						
+
+						printMapAndFeed(filteredInfoArray,1);
 					}else
 					{
+						cleanMarkers();
+						cleanFeed();
 						searchString = null;
+						printMapAndFeed(infoArray,1);
 					}
 					
-					getAndPrintInfo();
-
+					//getAndPrintInfo();
+					
+					// search in infoArray
+					
 					
 
 
@@ -669,15 +692,8 @@ block content
 
 		function initialize(x,y,z){
 			// set user cookies
-			//$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
 			var center = new google.maps.LatLng(x,y);
 			infowindow = new google.maps.InfoWindow({content: ".",maxWidth : 300});
-			/*map = new google.maps.Map(document.getElementById('mymap'), {
-				zoom: zoom,
-				center: center,
-				mapTypeId: google.maps.MapTypeId.ROADMAP,
-				disableDefaultUI: true,
-			});*/
 			map.setZoom(zoom);
 			map.setCenter(center);
 			
@@ -686,8 +702,10 @@ block content
 			//markerCluster = new MarkerClusterer(map, markers,markerClustererOptions);
 			
 			markerHL = new google.maps.Marker({position: center,map:map,visible:false});
+
+			//getAndPrintInfo();
 			
-			google.maps.event.addListener(map, 'idle', function() {
+			google.maps.event.addListenerOnce(map, 'idle', function() {
 				cleanMarkers();
 				bounds = getMyBounds();
 				center = this.getCenter();
@@ -703,6 +721,40 @@ block content
 				$('#postFormRange').val(((-1)*0.0096/1*(curPos.z)+1)); // set value for the post form to define tags geo range
 			});
 			
+
+
+
+			google.maps.event.addListener(map, 'dragend', function() {
+				cleanMarkers();
+				bounds = getMyBounds();
+				center = this.getCenter();
+				curPos.x = center.lat();
+				curPos.y = center.lng();
+				zoom = this.getZoom();
+				curPos.z = zFromRange();
+				console.log('DRAG');
+				$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
+				//markerCluster.clearMarkers();
+				getAndPrintInfo();
+
+				$('#postFormRange').val(((-1)*0.0096/1*(curPos.z)+1)); // set value for the post form to define tags geo range
+			});
+			
+			google.maps.event.addListener(map, 'zoom_changed', function() {
+				cleanMarkers();
+				bounds = getMyBounds();
+				center = this.getCenter();
+				curPos.x = center.lat();
+				curPos.y = center.lng();
+				zoom = this.getZoom();
+				curPos.z = zFromRange();
+				console.log('ZOOMED');
+				$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
+				//markerCluster.clearMarkers();
+				getAndPrintInfo();
+
+				$('#postFormRange').val(((-1)*0.0096/1*(curPos.z)+1)); // set value for the post form to define tags geo range
+			});
 			
 			
 		}
@@ -715,6 +767,10 @@ block content
 			
 			markers = [];
 			//markerCluster.clearMarkers();
+		}
+
+		function cleanFeed(){
+			$('#newsfeed').html('');
 		}
 		
 		function hideMarkers(ms){
@@ -731,6 +787,7 @@ block content
 			}, ms);
 			
 		}
+
 		
 		function silentUpdater(){
 			
@@ -739,15 +796,15 @@ block content
 			//bounds = map.getBounds();
 			bounds = getMyBounds();
 			var apiUrl = '';
+			var nowts = new Date().getTime();
 			if(yakType.toString() == 5)
-				apiUrl = '/api/geoalerts/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/0/'+searchString+'/500';
+				apiUrl = '/api/geoalerts/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/'+nowts+'/'+searchString+'/500';
 			else	
-				apiUrl = '/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/0/'+yakType.toString()+'/'+searchString+'/500';
+				apiUrl = '/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/'+nowts+'/'+yakType.toString()+'/'+searchString+'/500';
 			
 
 			$.getJSON(apiUrl,function(ajax) {	
 				$.each(ajax.data.info, function(key,val) {
-					
 					
 
 					var flagExists = 0;
@@ -765,16 +822,15 @@ block content
 					
 						
 						infoArray.push(val);	
-						
-						
-						
 					}
 				});
 			});
 		}
 		
 		function getAndPrintInfo(){
+			console.log('getAndPrintInfo');
 			getHotTags(curPos,dateFrom);
+
 			infoArray = [];
 			bounds = getMyBounds();
 			//console.log(curPos.z);
@@ -808,15 +864,8 @@ block content
 					printEmptyFeedItem();
 				}else{
 					
-					$.each(ajax.data.info, function(key,val) {
-						
-						infoArray.push(val);					
-						printMapItem(val,key,0);
-						if(key<10)
-							printFeedItem(val,0,0);	
-					});
-				printLoadingFeedItem();	
-				//markerCluster.addMarkers(markers);
+					printMapAndFeed(ajax.data.info,0);
+				
 				}
 				$("abbr.timeago").timeago();
 				//$('#newsfeedContent').mCustomScrollbar("update");
@@ -833,9 +882,7 @@ block content
 					$("#searchPlaceStr").val(placeGmap.address.city + ", " + placeGmap.address.country);
 				}
 			});		
-			//apiUrl = '/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/0/'+yakType.toString()+'/'+searchString+'/500';
-			
-
+		
 			// log
 			var mapCenter =  map.getCenter();
 			var now = new Date();
@@ -849,11 +896,20 @@ block content
 									"type": yakType.toString(),
 									"str": searchString
 								};
-			$.ajax({
-				url: conf.trackurl+'/track/user/'+user._id+'/'+'5'+'/'+encodeURIComponent(JSON.stringify(trackParams)),
-				type: "get",
-				dataType: "json"
+
+			$.getJSON(conf.trackurl+'/track/user/'+user._id+'/'+'5'+'/'+encodeURIComponent(JSON.stringify(trackParams)));  
+
+		}
+
+		function printMapAndFeed(data,flagFilter){
+			$.each(data, function(key,val) {
+				if(flagFilter!=1)
+					infoArray.push(val);					
+				printMapItem(val,key,0);
+				if(key<10)
+					printFeedItem(val,0,0);	
 			});
+			printLoadingFeedItem();	
 		}
 
 		function printMapItem(item,key,bounce){
@@ -949,16 +1005,7 @@ block content
 				}
 			}
 
-			if (typeof(item.yakTag) != 'undefined') {
-					
-					for (var i = 0; i < item.yakTag.length; i++) {
-						if(item.yakTag[i] != ""){
-							thetags += '<a class="tagHashLink prevent-default" onclick="setSearchFor(this)">#' + item.yakTag[i] +'</a> ';	
-							if( i < item.yakTag.length -1)
-								thetags += ', ';
-						}
-					}
-			}
+			
 
 			if (typeof(item.freeTag) != 'undefined') {
 					
@@ -1107,19 +1154,15 @@ block content
 				infoContent = "<div class=\'infowindow loadingfeeditem\'></div>";					
 				$('#newsfeed').append('<li class=\'mapHighlighterDetails\'>'+infoContent+'</li>');
 			}
-			
 		}
 
 		function printEmptyFeedItem(){
 			$('.emptyfeeditem').hide();
 			if($("#typeContainer .active").length > 0)
-			{
-			infoContent = "<div class=\'infowindow emptyfeeditem\'>Aucune info !</div>";					
-			}
+				infoContent = "<div class=\'infowindow emptyfeeditem\'>Aucune info !</div>";					
 			else
-			{
-			infoContent = "<div class=\'infowindow emptyfeeditem\'>Choisissez un type d'info !!!</div>";					
-			}
+				infoContent = "<div class=\'infowindow emptyfeeditem\'>Choisissez un type d'info !!!</div>";
+
 			$('#newsfeed').append('<li class=\'mapHighlighterDetails\'>'+infoContent+'</li>');
 		}
 
@@ -1229,11 +1272,7 @@ block content
 
 
 			var trackParams ={"infoId":infoid,"page": "map"};
-			$.ajax({
-				url: conf.trackurl+'/track/user/'+user._id+'/'+'6'+'/'+encodeURIComponent(JSON.stringify(trackParams)),
-				type: "get",
-				dataType: "json"
-			});
+			$.getJSON(conf.trackurl+'/track/user/'+user._id+'/'+'6'+'/'+encodeURIComponent(JSON.stringify(trackParams)));  
 			
 		}
 
@@ -1394,14 +1433,13 @@ block content
 			more = $("<a />");
 			more.attr("class", "more");
 			more.attr("href", val.outGoingLink);
-			more.attr("userid", user._id);
-			more.attr("trackurl", conf.trackurl);
 			more.attr("target", "_blank");
 			more.attr("rel", val._id);
 			more.attr("data-toggle", "data-toggle");
 			more.html(" plus de détails...");
 			
-			content.append("<div class='shareMe'><i style='background: none' class='icon-share' title='Share Me'><img src='/images/ftg.png' class='ftgIcon' /> </i></div>");
+			
+			content.append("<div class='shareMe' userid='"+user._id+"'><i style='background: none' class='icon-share' title=''><img src='/images/ftg.png' class='ftgIcon' /> </i></div>");
 			
 			if(typeof(val.outGoingLink) != 'undefined')
 				content.find(".theContent").append(more);

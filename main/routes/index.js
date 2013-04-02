@@ -339,6 +339,7 @@ exports.user_validate = function(req, res){
 	User.authenticateByToken(req.params.token,req.params.password, function(err, model) {
 	if(!(typeof(model) == 'undefined' || model === null || model === '')){
 			req.session.user = model._id;
+			trackUser(user._id, 2,{});
 			User.update({_id: model._id}, {status:4}, {upsert: false}, function(err){if (err) console.log(err);});						
 			res.render('settings/firstvisit',{user:model});
 			res.redirect('/user/validate');
@@ -370,8 +371,8 @@ exports.user_resetpassword = function(req, res){
 };
 
 exports.user_logout = function(req, res){
-	var trackParams = {"logout": 1};
-	trackUser(req.session.user, 4, trackParams);
+	
+	trackUser(req.session.user, 4, {});
 	delete req.session.user;
 	res.redirect('/news/map');
 	
@@ -1096,7 +1097,7 @@ exports.setLikes = function(req, res){
 			if (islike == 'like') { 
 				Info.update({_id:infoId},{$inc:{likes : 1}, $push:{yaklikeUsersIds: req.session.user}, new:true}, function(err, result){
 					res.json("updated");
-					trackUser(req.session.user, 6, {});
+					trackUser(req.session.user, 7, {});
 				})
 			}
 			else
