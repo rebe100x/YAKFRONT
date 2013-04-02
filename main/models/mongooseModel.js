@@ -35,18 +35,23 @@ var Point = new Schema({
 });
 mongoose.model('Point', Point);
 
-var infoAlert = new Schema({
-	info : { type : Schema.ObjectId }
-	,user : { type : Schema.ObjectId }
-	,creationDate : {type: Date, default: Date.now } 	
-	,status : { type : Number, default: 1 }
+var contenuIllicite = new Schema({
+	content_id : { type : Schema.ObjectId }
+	,user_id : { type : [Schema.ObjectId] }
+	,last_date_mark : {type: Date, default: Date.now }
+	,content_type : { type : Number, default: 1 } // 1 info, 2 comments , 3 users
+	,count : { type : Number, default : 1}
 });
 
-infoAlert.statics.findByUser = function (userid, infoid, callback) {
- 	return this.findOne({'info': infoid,'user':userid}, callback);
+contenuIllicite.statics.findByUser = function (userid, infoid, callback) {
+ 	return this.findOne({'content_id': infoid,'user_id':userid}, callback);
 }
 
-mongoose.model('infoAlert', infoAlert);
+contenuIllicite.statics.findById = function (id, callback) {
+ 	return this.findOne({'_id': id}, callback);
+}
+
+mongoose.model('contenuIllicite', contenuIllicite);
 
 
 var Twitter = new Schema({

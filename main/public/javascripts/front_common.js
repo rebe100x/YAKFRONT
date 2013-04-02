@@ -1202,11 +1202,13 @@ function setCommentText(len,item){
 }
 
 function setSpamSystem(item){
-	var alertid = "";
+	
 	var url = '/getSpams/' + item.attr("rel") + '/' + user._id;
+	
+	console.log(url);
 	$.get(url, function(res){
 		
-
+		
 		alertid = res;
 		if(alertid == "" || alertid == null)
 		{

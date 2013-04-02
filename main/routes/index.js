@@ -1119,19 +1119,44 @@ exports.setLikes = function(req, res){
 
 exports.setSpams = function(req, res){
 	//console.log(req.session.user);
-	var infoAlert = db.model('infoAlert');
-	var aspamAlert = new infoAlert();
+	var contenuIllicite = db.model('contenuIllicite');
+	var aspamAlert = new contenuIllicite();
 	if(req.session.user){
-			aspamAlert.info = req.body.infoId;
-			aspamAlert.user = req.session.user;
-			aspamAlert.save(function(err){
-				if(!err)
-					res.send("1");
+			contenuIllicite.findById(req.params.infoid, function (err, thealert){
+				if(thealert != undefined && thealert != null ){
+					infoAlert.update({"_id":thealert._id},{$push:{user_id: req.session.user}},{$inc:{count : 1}},{$set:{"last_date_mark":new Date()}}, function(err){
+						if (err) 
+						{
+							console.log(err);
+							res.send("0");
+						}
+						else
+						{
+							res.send("1");	
+						}
+							
+					});	
+				}
 				else
-					res.send("0");
-			});
+				{
+					aspamAlert.content_id = req.body.infoId;
+					aspamAlert.user_id = req.session.user;
+					aspamAlert.content_type = 1;
+
+					aspamAlert.save(function(err){
+						if(!err)
+							res.send("1");
+						else
+						{
+							console.log(err);
+							res.send("0");
+						}
+					});
+				}
 		
-	}else{
+			});
+		}
+		else{
 		req.session.message = "Erreur : vous devez être connecté pour sauver vos favoris";
 		res.redirect('/user/login');
 	}
@@ -1140,14 +1165,23 @@ exports.setSpams = function(req, res){
 
 exports.getSpams = function(req, res){
 	//console.log(req.session.user);
-	var infoAlert = db.model('infoAlert');
+	var contenuIllicite = db.model('contenuIllicite');
 	
-	infoAlert.findByUser(req.params.userid, req.params.infoid, function (err, thealert){
-		if(thealert != undefined && thealert != null ){
+	contenuIllicite.findByUser(req.params.userid, req.params.infoid, function (err, thealert){
+		if(!err)
+		{
+			if(thealert != undefined && thealert != null ){
 			res.send(thealert._id);
+			}
+			else
+				res.send("");	
 		}
 		else
+		{
+			console.log(err);
 			res.send("");
+		}
+		
 	}); 
 	
 };
