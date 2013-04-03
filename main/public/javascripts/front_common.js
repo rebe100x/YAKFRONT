@@ -37,11 +37,30 @@ function setToolTip(el)
 
 function setSearchFor(el)
 {
-	//$("html, body").animate({ scrollTop: 0 }, "slow");
 	$("#searchStr").val($(el).text());
 	$("#searchBtn").click();
 	
 }
+
+
+function setSearchForUser(str)
+{
+	emptyUserChooser();
+	$('#userChooser').modal('hide');
+	$("#searchStr").val(str);
+	getAndPrintInfo();
+	
+}
+
+function setSearchForTag(el)
+{
+	emptyUserChooser();
+	$('#userChooser').modal('hide');
+	$("#searchStr").val($(el).text());
+	getAndPrintInfo();
+	
+}
+
 
 function colorFirstRecord()
 {
@@ -1479,9 +1498,22 @@ function checkByWidth()
 				$("#zoomnavigation").remove();
 		}
 
+		function emptyUserChooser()
+		{
+			$("#userChooser .alertText").html('<img src="/images/loader_big.gif" />');
+			$("#userChooser #uc_profile_brief").html("");
+			$("#userChooser #uc_profile_yaks_alerts.mybtn").html("");
+			$("#userChooser #uc_profile_yaks_posts").html("");
+			$("#userChooser #subscribers_number").html("0");
+			$("#userChooser #subscribed_number").html("0");
+			$("#userChooser #thealerts").html("");
+
+
+		}
 		function showUserProfile(el)
 		{
 			var userid = $(el).parent().find("input").val();
+			emptyUserChooser();
 			$('#userChooser').modal('show');
 			$.getJSON('/api/usersearchbyid2/' + userid ,function(data) {
 				var theuser = data.user[0];
@@ -1489,7 +1521,7 @@ function checkByWidth()
 				//$("#userChooser #uc_Name").html(theuser.name);
 				//$("#uc_image").html("<img src='" + theuser.thumbsmall +"' height='150' width='150' />");
 				$("#userChooser p.alertText").html("");
-				$("#userChooser #uc_profile_brief").html("<span class='theimage'><img src='" + theuser.thumbsmall +"' /></span><span class='theinfo'><span class='thename'>" + theuser.name + "</span><br />" + "<span class='thelogin'>@"+ theuser.login + "</span><br /><span class='thebio'>" + theuser.bio + "</span><span class='thelink'><a href='" + theuser.web +"' target='_blank'>" + theuser.web + "</a></span></span>");
+				$("#userChooser #uc_profile_brief").html("<span class='theimage'><img src='" + theuser.thumb +"' /></span><span class='theinfo'><span class='thename' id='uc_username'>" + theuser.name + "</span><br />" + "<span class='thelogin'>@"+ theuser.login + "</span><br /><span class='thebio'>" + theuser.bio + "</span><span class='thelink'><a href='" + theuser.web +"' target='_blank'>" + theuser.web + "</a></span></span>");
 				
 				$.getJSON('/api/countUserInfo/' + userid ,function(data) {
 					$("#userChooser #uc_profile_yaks_posts").html("Yassalas<br /><b>" + data.count + "<b>");		
@@ -1502,7 +1534,7 @@ function checkByWidth()
 				var thetags = "";
 				for(i=0; i<user.tagsubs.length; i++)
 				{
-					thetags += "#" + user.tagsubs[i] + " ";
+					thetags += "<a onclick='setSearchForTag(this)'>#" + user.tagsubs[i] + " </a>";
 				}
 				$("#userChooser #uc_profile_tags #thealerts").html(thetags);
 
@@ -1511,6 +1543,10 @@ function checkByWidth()
 
 				$.getJSON('/api/countUserSubscribers/' + userid ,function(data) {
 					$("#userChooser #subscribers_number").html(data.count);		
+				});
+
+				$("#uc_profile_yaks_search").click(function(){
+				setSearchForUser(theuser.name);
 				});
 
 			});

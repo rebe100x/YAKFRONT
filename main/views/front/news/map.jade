@@ -951,17 +951,21 @@ block content
 			var postedBy = $("<div />");
 			postedBy.attr("class", "postedBy");
 
-			
+			var onclickUser = "showUserProfile(this)";
 			if(item.origin.indexOf('@') != 0)
+			{
 				item.origin ="@"+item.origin;
+				onclickUser = "setSearchFor(this);";
+			}
+			
 
 			if(item.yakType !=2 )
 			{
-				postedBy.html("Posté par <a class='prevent-default' onclick='setSearchFor(this); showUserProfile(this)'>"+item.origin+"</a><input type='hidden' value='" + item.user + "' />" + "<span class=\'date\'> - "+thedate+"</span>");
+				postedBy.html("Posté par <a class='prevent-default' onclick='" + onclickUser +"'>"+item.origin+"</a><input type='hidden' value='" + item.user + "' />" + "<span class=\'date\'> - "+thedate+"</span>");
 			}
 				
 			else{
-				postedBy.html("Posté par <a class='prevent-default' onclick='setSearchFor(this); showUserProfile(this)'>"+item.origin+"</a><input type='hidden' value='" + item.user + "' />");
+				postedBy.html("Posté par <a class='prevent-default' onclick='" + onclickUser + "'>"+item.origin+"</a><input type='hidden' value='" + item.user + "' />");
 				itemTitle.append(" - <span class=\'dateAgenda\'>"+thedate+"</span>");			
 			}
 				
