@@ -35,23 +35,18 @@ var Point = new Schema({
 });
 mongoose.model('Point', Point);
 
-var contenuIllicite = new Schema({
-	content_id : { type : Schema.ObjectId }
-	,user_id : { type : [Schema.ObjectId] }
-	,last_date_mark : {type: Date, default: Date.now }
-	,content_type : { type : Number, default: 1 } // 1 info, 2 comments , 3 users
-	,count : { type : Number, default : 1}
+var infoAlert = new Schema({
+	info : { type : Schema.ObjectId }
+	,user : { type : Schema.ObjectId }
+	,creationDate : {type: Date, default: Date.now } 	
+	,status : { type : Number, default: 1 }
 });
 
-contenuIllicite.statics.findByUser = function (userid, infoid, callback) {
- 	return this.findOne({'content_id': infoid,'user_id':userid}, callback);
+infoAlert.statics.findByUser = function (userid, infoid, callback) {
+ 	return this.findOne({'info': infoid,'user':userid}, callback);
 }
 
-contenuIllicite.statics.findById = function (id, callback) {
- 	return this.findOne({'_id': id}, callback);
-}
-
-mongoose.model('contenuIllicite', contenuIllicite);
+mongoose.model('infoAlert', infoAlert);
 
 
 var Twitter = new Schema({
@@ -184,6 +179,7 @@ Info.statics.format = function (theinfo) {
 		eventDate:theinfo.eventDate,
 		pubDate:theinfo.pubDate,
 		freeTag:theinfo.freeTag,
+		yakTag:theinfo.yakTag,
 		yakCatName:theinfo.yakCatName,
 		yakCat:theinfo.yakCat,
 		placeId:theinfo.placeId,
@@ -428,7 +424,7 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,from,now,type,str,thecount,thesk
 						res = qInfo.exec(callback);
 					});
 				}else{
-					qInfo.or([ {'title': {$regex:searchExactStr}}, {'content': {$regex:searchExactStr}} , {"freeTag": {$regex:searchExactStr}}, {"yakCat": {$in:[theyakcat._id]}}]);
+					qInfo.or([ {'title': {$regex:searchExactStr}}, {'content': {$regex:searchExactStr}} , {"freeTag": {$regex:searchExactStr}} , {"yakTag": {$regex:searchExactStr}},{"yakCat": {$in:[theyakcat._id]}}]);
 					res = qInfo.exec(callback);
 				}
 			});

@@ -1499,3 +1499,10 @@ function checkByWidth()
 					$("#userChooser #uc_profile_yaks_alerts.btn").html("Subscribe");		
 			});
 		}
+
+		// clean the feed element on map and feed page
+		function cleanFeed(){
+			$('#newsfeed').html('');
+		}
+
+		
