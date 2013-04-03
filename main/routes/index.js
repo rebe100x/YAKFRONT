@@ -339,7 +339,7 @@ exports.user_validate = function(req, res){
 	User.authenticateByToken(req.params.token,req.params.password, function(err, model) {
 	if(!(typeof(model) == 'undefined' || model === null || model === '')){
 			req.session.user = model._id;
-			trackUser(user._id, 2,{});
+			trackUser(req.session.user._id, 2,{});
 			User.update({_id: model._id}, {status:4}, {upsert: false}, function(err){if (err) console.log(err);});						
 			res.render('settings/firstvisit',{user:model});
 			res.redirect('/user/validate');
