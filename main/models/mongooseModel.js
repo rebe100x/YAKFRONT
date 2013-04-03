@@ -608,6 +608,11 @@ User.index({"social.twitter.twitter_id":1});
 User.index({"social.facebook.facebook_id":1});
 User.index({"social.google.google_id":1});
 
+User.statics.countUserSubscribers = function (userid, callback) {
+  return this.find({ usersubs: { $in : usersubs } },{},{sort:{pudDate:-1}}).count().exec(callback);
+}
+
+
 User.statics.format = function (theuser) {
 	if(theuser.thumb && theuser.thumb!= 'no-user.png'){
 		var thethumb = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/128_128/'+theuser.thumb;
@@ -699,6 +704,7 @@ User.statics.FormatProfile = function (theuser) {
 		creationDate : theuser.creationDate,
 		thumb:thethumb,
 		thumbsmall:thethumbsmall,
+		web: theuser.web,
 	};
   return formattedUser;
 }

@@ -956,7 +956,10 @@ block content
 				item.origin ="@"+item.origin;
 
 			if(item.yakType !=2 )
+			{
 				postedBy.html("Posté par <a class='prevent-default' onclick='setSearchFor(this); showUserProfile(this)'>"+item.origin+"</a><input type='hidden' value='" + item.user + "' />" + "<span class=\'date\'> - "+thedate+"</span>");
+			}
+				
 			else{
 				postedBy.html("Posté par <a class='prevent-default' onclick='setSearchFor(this); showUserProfile(this)'>"+item.origin+"</a><input type='hidden' value='" + item.user + "' />");
 				itemTitle.append(" - <span class=\'dateAgenda\'>"+thedate+"</span>");			

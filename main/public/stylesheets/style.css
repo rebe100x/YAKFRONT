@@ -983,13 +983,24 @@ border-bottom: 1px solid #e5e5e5;}
 .userinfo .loader { width: 15px; top: 3px; left: 9px; position: relative;}
 #connectedas { background: #D1161E; color: white; font-weight: bold}
 
+#userChooser { width: 50%}
 #uc_Name { color: #d51820; font-size: 18px; font-weight: bold; float: left;}
-#userChooser #uc_profile_brief { text-align: center; background: #d51820; line-height: 25px; color: white; font-weight: bold; font-size: 14px; }
+#userChooser #uc_profile_brief { background: white; line-height: 25px; color: black; font-size: 14px; clear: both; float: left;}
 
-#userChooser #uc_profile_brief img { width: 73px; height: 73px;}
+#userChooser #uc_profile_brief .theimage { float: left; width: 150px; height: 150px; background-color: #c2160d}
+#userChooser #uc_profile_brief .theinfo { float: left; position: relative; left: 24px}
+#userChooser #uc_profile_brief .theinfo .thename { font-size: 24px; font-weight: bold; text-transform: capitalize;}
+#userChooser #uc_profile_brief .theinfo .thelogin { font-size: 18px; text-transform: capitalize; color: #aeaeae;}
+#userChooser #uc_profile_brief .theinfo .thebio { font-size: 12px; line-height: 20px; width: 300px; display: block; margin-top: 12px;}
+#userChooser #uc_profile_brief .theinfo .thelink a { font-size: 12px; line-height: 20px; width: 300px; display: block; color: #c2160d; margin-top: 12px; float: left; clear: both; margin-top: 12px}
 
-#userChooser #uc_profile_yaks_alerts { float: right; position: relative; bottom: 8px;}
-#userChooser #uc_profile_yaks { background: #f6f6f6; padding-top: 12px; padding-bottom: 12px;}
+#userChooser #uc_profile_yaks_alerts { float: left; position: relative; bottom: 8px; background-color: #c5170e; padding: 10px; color: white; text-align: center; width: 130px}
+#userChooser #uc_profile_yaks { background: #f6f6f6; padding-top: 15px; float: left; clear: both; display: block; width: 100%}
+#userChooser #uc_profile_tags { padding-top: 15px; float: left; clear: both; display: block; width: 100%}
+#userChooser #uc_profile_yaks #uc_profile_yaks_posts { position: relative; margin-left: 24px; float: left; text-align: center; font-size: 13px; margin-top: -3px; display: block; border-left: 1px solid #cecece; border-right: 1px solid #cecece; width: 100px}
+#userChooser #uc_profile_yaks #uc_profile_yaks_subscribed { position: relative; margin-left: 24px; float: left; text-align: center; font-size: 13px; margin-top: -3px; display: block; border-left: 1px solid #cecece; border-right: 1px solid #cecece; width: 100px}
+#userChooser #uc_profile_yaks #uc_profile_yaks_subscribers { position: relative; margin-left: 24px; float: left; text-align: center; font-size: 13px; margin-top: -3px; display: block; border-left: 1px solid #cecece; border-right: 1px solid #cecece; width: 100px}
+
 
 #searchElementContainer { width: 100%}
 

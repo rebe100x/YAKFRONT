@@ -269,6 +269,18 @@ exports.countUserInfo = function (req, res) {
 	});
 };
 
+
+exports.countUserSubscribers = function (req, res) {
+	var User = db.model('User');
+	User.countUserSubscribers(req.params.id, function (err, docs){
+  	  res.json({
+  		count: docs
+	  });
+	});
+};
+
+
+
 exports.findUserById2 = function (req, res) {
 	var User = db.model('User');
 	User.findById2(req.params.id, function (err, docs){

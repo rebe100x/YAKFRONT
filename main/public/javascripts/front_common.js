@@ -1481,22 +1481,38 @@ function checkByWidth()
 
 		function showUserProfile(el)
 		{
-			console.log(user);
 			var userid = $(el).parent().find("input").val();
 			$('#userChooser').modal('show');
 			$.getJSON('/api/usersearchbyid2/' + userid ,function(data) {
 				var theuser = data.user[0];
-				$("#userChooser #uc_Name").html(theuser.name);
+				console.log(theuser);
+				//$("#userChooser #uc_Name").html(theuser.name);
+				//$("#uc_image").html("<img src='" + theuser.thumbsmall +"' height='150' width='150' />");
 				$("#userChooser p.alertText").html("");
-				$("#userChooser #uc_profile_brief").html("<img src='" + theuser.thumbsmall +"' /><br />" + theuser.name + "<br />" + " @"+ theuser.login + "<br />" + theuser.bio + "<br /><br />" + theuser.formatted_address)
+				$("#userChooser #uc_profile_brief").html("<span class='theimage'><img src='" + theuser.thumbsmall +"' /></span><span class='theinfo'><span class='thename'>" + theuser.name + "</span><br />" + "<span class='thelogin'>@"+ theuser.login + "</span><br /><span class='thebio'>" + theuser.bio + "</span><span class='thelink'><a href='" + theuser.web +"' target='_blank'>" + theuser.web + "</a></span></span>");
 				
 				$.getJSON('/api/countUserInfo/' + userid ,function(data) {
-					$("#userChooser #uc_profile_yaks_posts").html(data.count + "posts |");		
+					$("#userChooser #uc_profile_yaks_posts").html("Yassalas<br /><b>" + data.count + "<b>");		
 				});
 				if($.inArray(userid,user.usersubs))
-					$("#userChooser #uc_profile_yaks_alerts.btn").html("Unsubscribed");		
+					$("#userChooser #uc_profile_yaks_alerts.mybtn").html("Unsubscribed");		
 				else
-					$("#userChooser #uc_profile_yaks_alerts.btn").html("Subscribe");		
+					$("#userChooser #uc_profile_yaks_alerts.mybtn").html("Subscribe");		
+
+				var thetags = "";
+				for(i=0; i<user.tagsubs.length; i++)
+				{
+					thetags += "#" + user.tagsubs[i] + " ";
+				}
+				$("#userChooser #uc_profile_tags #thealerts").html(thetags);
+
+				var subscribed_number = user.usersubs.length + user.feedsubs.length;
+				$("#userChooser #subscribed_number").html(subscribed_number);
+
+				$.getJSON('/api/countUserSubscribers/' + userid ,function(data) {
+					$("#userChooser #subscribers_number").html(data.count);		
+				});
+
 			});
 		}
 
