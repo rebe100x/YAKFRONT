@@ -43,8 +43,8 @@ block content
 		/*INIT*/
 		var conf = !{conf};
 		var mainConf = !{mainConf};
-		var geolocalized = 0;
-		var infowindow = null;
+		//var geolocalized = 0;
+		//var infowindow = null;
 		var bounds = new Array();
 		var markers = [];
 		var infoArray = [];
@@ -55,10 +55,10 @@ block content
 		var hashtagTmp = [];
 		var mediumImage;
 		var thumbImage;
-		var markerClustererOptions = {gridSize:30,maxZoom: 17,styles: [{height: 28,width: 28,url: "/images/markers/m1.png"},{height: 38,width: 38,url: "/images/markers/m2.png"},{height: 55,width:55,url: "/images/markers/m3.png"},{height: 85,width: 85,url: "/images/markers/m4.png"},{height: 85,width: 85,url: "/images/markers/m5.png"}]};
-		var markerCluster = null;
-		var pinkParksStyles = [{featureType: "Water",stylers: [{ hue: "#006eff" },{ saturation:1 },{ lightness: -13 }]},{featureType: "Road",stylers: [{ hue: "#ff0000" },{ saturation: -100 },{ lightness: 31 }]},{featureType: "Landscape",stylers: [{ hue: "#ff0008" },{saturation: -90 },{ lightness: 66 }]}];
-		var pinkParksStyles =[{}];
+		//var markerClustererOptions = {gridSize:30,maxZoom: 17,styles: [{height: 28,width: 28,url: "/images/markers/m1.png"},{height: 38,width: 38,url: "/images/markers/m2.png"},{height: 55,width:55,url: "/images/markers/m3.png"},{height: 85,width: 85,url: "/images/markers/m4.png"},{height: 85,width: 85,url: "/images/markers/m5.png"}]};
+		//var markerCluster = null;
+		//var pinkParksStyles = [{featureType: "Water",stylers: [{ hue: "#006eff" },{ saturation:1 },{ lightness: -13 }]},{featureType: "Road",stylers: [{ hue: "#ff0000" },{ saturation: -100 },{ lightness: 31 }]},{featureType: "Landscape",stylers: [{ hue: "#ff0008" },{saturation: -90 },{ lightness: 66 }]}];
+		//var pinkParksStyles =[{}];
 		var skip = 0;
 		var zoom = 1;
 		var infoContent = '';
@@ -66,7 +66,7 @@ block content
 		var rule2 = new RegExp('[#]','g');
 		var postFlag = 0;
 		var listenerHandle = null;
-		var feedOffsetW = 0; // this is the offset for recenter map on map's page due to the fil info on the right => set in the getMyBounds function
+		//var feedOffsetW = 0; // this is the offset for recenter map on map's page due to the fil info on the right => set in the getMyBounds function
 		var filteredInfoArray = [];
 		var lastSearchString = null;
 		var map = new google.maps.Map(document.getElementById('mymap'), {
@@ -129,9 +129,7 @@ block content
 					cleanFeed();
 					$.each(infoArray,function(key,val){
 						str = decodeURIComponent(str);
-						var searchStr = new RegExp(str,'gi');
 						var searchExactStr = new RegExp("(?:^| )(" + str + ")",'gi');
-						
 						if(searchExactStr.test(val.title) 
 							|| searchExactStr.test(val.content) 
 							|| searchExactStr.test(val.yakCatName) 
@@ -141,18 +139,13 @@ block content
 						}
 							
 					});
-					
-
+					// print Map and Feed from the filtered array
 					printMapAndFeed(filteredInfoArray,1);
-
-					
-
-				}else
-				{
+				}else{ // if the search string is empty
 					cleanMarkers();
 					cleanFeed();
 					searchString = null;
-					if(infoArray.length > 0)
+					if(infoArray.length > 0) // if the info array is empty we get it from db else we print it.
 						printMapAndFeed(infoArray,1);
 					else
 						getAndPrintInfo();
@@ -167,6 +160,7 @@ block content
 					var searchDate = now.setTime(now.getTime()+dateFrom*24*60*60*1000);
 					
 					var trackParams = 	{
+						"page":"map",
 						"location":{
 							"lat": mapCenter.lat().toString(),
 							"lng": mapCenter.lng().toString(),
@@ -179,6 +173,7 @@ block content
 					$.getJSON(conf.trackurl+'/track/user/'+user._id+'/'+'5'+'/'+encodeURIComponent(JSON.stringify(trackParams))); 
 				}	
 				lastSearchString = str;
+				$('#searchStr').removeClass('searching');
 			});
 
 
@@ -677,11 +672,11 @@ block content
 		function initialize(x,y,z){
 			// set user cookies
 			var center = new google.maps.LatLng(x,y);
-			infowindow = new google.maps.InfoWindow({content: ".",maxWidth : 300});
+			//infowindow = new google.maps.InfoWindow({content: ".",maxWidth : 300});
 			map.setZoom(zoom);
 			map.setCenter(center);
 			
-			map.setOptions({styles: pinkParksStyles});
+			//map.setOptions({styles: pinkParksStyles});
 			//var markerClustererOptions = {gridSize:30,maxZoom: 17,styles: [{height: 28,width: 28,url: "/images/markers/m1.png"},{height: 38,width: 38,url: "/images/markers/m2.png"},{height: 55,width:55,url: "/images/markers/m3.png"},{height: 85,width: 85,url: "/images/markers/m4.png"},{height: 85,width: 85,url: "/images/markers/m5.png"}]};
 			//markerCluster = new MarkerClusterer(map, markers,markerClustererOptions);
 			
@@ -746,9 +741,7 @@ block content
 			//markerCluster.clearMarkers();
 		}
 
-		function cleanFeed(){
-			$('#newsfeed').html('');
-		}
+		
 		
 		function hideMarkers(ms){
 		// hide existing markers for ms milisec
@@ -824,16 +817,15 @@ block content
 			var apiUrl = '';
 			if(yakType.toString() == 5)
 			{
-			
-				apiUrl = '/api/geoalerts/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/0/'+searchString+'/500';
+				apiUrl = '/api/geoalerts/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/0/'+searchStr+'/500';
 			}
 			else	
-				apiUrl = '/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/0/'+yakType.toString()+'/'+searchString+'/500';
+				apiUrl = '/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/0/'+yakType.toString()+'/'+searchStr+'/500';
 			
 			//console.log(apiUrl);
 			$.getJSON(apiUrl,function(ajax) {
 				// empty the news feed
-				$('#newsfeed').html('');
+				cleanFeed();
 
 				if(typeof(ajax.data.info) == 'undefined' || ajax.data.info.length == 0){
 
@@ -845,7 +837,7 @@ block content
 				
 				}
 				$("abbr.timeago").timeago();
-				//$('#newsfeedContent').mCustomScrollbar("update");
+				$('#newsfeedContent').mCustomScrollbar("update");
 
 
 			});
@@ -865,6 +857,7 @@ block content
 			var now = new Date();
 			var searchDate = now.setTime(now.getTime()+dateFrom*24*60*60*1000);
 			var trackParams = 	{
+									"page":"feed",
 									"location":{
 										"lat": mapCenter.lat().toString(),
 										"lng": mapCenter.lng().toString(),
