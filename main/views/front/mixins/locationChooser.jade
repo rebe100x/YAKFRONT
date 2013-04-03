@@ -71,15 +71,16 @@ mixin locationChooser(page)
 			/*endroits favoris*/
 			$('ul.favplacelist').delegate("li.zoneLoc span",'click', function () {
 				
-				curPos.name = $(this).parent().find("span").eq(0).html();
+				curPos.name = $(this).parent().find("span").eq(1).text();
 				curPos.x =  $(this).parent().attr("lat");
 				curPos.y =  $(this).parent().attr("lng");
 				curPos.z =  $(this).parent().find(".dropdownRangeSelector").val();
+
 				$("#searchPlaceStr").val(curPos.name);
 				$("#localnessPrinter").html($(this).parent().find(".dropdownRangeSelector option:selected").text());
 				
-				changeRange();
 				moveMap();
+				changeRange();
 				var trackParams = {"params": [
 										{"page" : "map"},
 										{"name" : $("#searchPlaceStr").val()},
@@ -100,7 +101,7 @@ mixin locationChooser(page)
 			/*endroits favoris*/
 			$('ul.favplacelist').delegate("li.zoneLoc span",'click', function () {
 				
-				curPos.name = $(this).parent().find("span").eq(0).html();
+				curPos.name = $(this).parent().find("span").eq(1).text();
 				curPos.x =  $(this).parent().attr("lat");
 				curPos.y =  $(this).parent().attr("lng");
 				curPos.z =  $(this).parent().find(".dropdownRangeSelector").val();
