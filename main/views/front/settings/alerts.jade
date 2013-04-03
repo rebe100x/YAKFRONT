@@ -52,7 +52,7 @@ block content
 								div.control-group
 									div.controls
 										div.input-append
-											label.control-label.label-xlarge(for="alert") Abonnez vous à une alerte sur un mot clé :
+											label.control-label.label-xlarge(for="alert") Abonnez-vous à une alerte sur un mot clé :
 											- each tag in tagsubs
 												p
 													div
@@ -142,15 +142,6 @@ block content
 							$("#usersubsInput").val(JSON.stringify(usersubsArray));
 
 							clickSubmit($('#usersubs'));
-							var trackParams = {"params": [
-										{"type": "user"},
-									]
-								};
-							$.ajax({
-								url: '/track/user/'+user._id+'/'+'12'+'/'+JSON.stringify(trackParams),
-								type: "get",
-								dataType: "json"
-							});
 						}else{
 							$('#usersubs').val('').focus();
 						}
@@ -176,15 +167,7 @@ block content
 							feedsubsArray.push(obj);
 							$("#feedsubsInput").val(JSON.stringify(feedsubsArray));
 							clickSubmit($('#userfeeds'));
-							var trackParams = {"params": [
-										{"type": "feed"},
-									]
-								};
-							$.ajax({
-								url: '/track/user/'+user._id+'/'+'12'+'/'+JSON.stringify(trackParams),
-								type: "get",
-								dataType: "json"
-							});
+							
 						}else{
 							$('#userfeeds').val('').focus();
 						}
@@ -204,15 +187,7 @@ block content
 				tagsubsArray.push(tag);
 				$("#tagsubsInput").val(JSON.stringify(tagsubsArray));
 				clickSubmit(this);
-				var trackParams = {"params": [
-										{"type": "tag"},
-									]
-								};
-				$.ajax({
-					url: '/track/user/'+user._id+'/'+'12'+'/'+JSON.stringify(trackParams),
-					type: "get",
-					dataType: "json"
-				});
+				
 			});
 		}); // END READY
 

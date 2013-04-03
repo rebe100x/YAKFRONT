@@ -80,20 +80,7 @@ mixin searchFormUnified(page)
 
 		$(document).ready(function(){
 				
-				//alert($.cookie("yaktype"));
-				//if($.cookie("yaktype") == "5")
-				//	$("#btnMesalertes").css("opacity", "1");
-				//else
-				//	$("#btnMesalertes").css("opacity", "0.3");
-				/*
 				
-
-				$("#typeContainer .btn[type=3]").click(function(){
-					$("#typeContainer .btn").removeClass("active");
-					$.cookie("yaktype", $(this).attr("type"),{ expires: 10000, path : '/' });
-					getAndPrintInfo();
-				});*/
-
 				if($.inArray("4", yakType) != -1)
 					$("#btnDiscussion").addClass('active');
 
@@ -115,12 +102,9 @@ mixin searchFormUnified(page)
 				if(searchString != null)
 					$('#searchStr').val(decodeURIComponent(searchString.replace('%2520', ' ')));
 
-				// reset
-				$('#searchStr').unbind("click").on('click',function(){
-					$(this).select();
-				});
 				
-				$('#searchStr').keyup(function(event){
+				
+				$('#searchStr').unbind('keyup').on('keyup',function(event){
 					var clicked = $(this);
 					setdelay(function(){
 						if(clicked.val().length > 0){
@@ -135,7 +119,7 @@ mixin searchFormUnified(page)
 						$('#searchBtn').trigger('click');
 						console.log('TRIGGERED');
 					
-					}, 300);
+					}, 400);
 					
 				});
 
@@ -143,6 +127,12 @@ mixin searchFormUnified(page)
 				$('#searchPlaceStr').unbind("click").on('click',function(){
 					$(this).select();
 				});
+
+				// reset
+				$('#searchStr').unbind("click").on('click',function(){
+					$(this).select();
+				});
+				
 				$('#searchPlaceStr').keyup(function(event){
 					var query = $("#searchPlaceStr").val();
 					if(query.length < 3)

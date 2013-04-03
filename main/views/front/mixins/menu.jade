@@ -5,9 +5,9 @@ mixin menu(active)
 			div.row-fluid.headerYakwala
 				div		
 					a.leftlink#maplink.yak-mainMenu-hide(href="/news/map", alt="Carte", title="Carte")
-						
+
 					a.leftlink#feedlink.yak-mainMenu-hide(href="/news/feed", alt="Feed", title="Feed")
-					
+
 					a.leftlink#addLink.yak-mainMenu-hide(href="/news/map/?post=1", alt="Poster", title="Poster")
 
 
@@ -54,7 +54,7 @@ mixin menu(active)
 							//
 								img.imgSmallProfile(src="/images/new/alertsicon.png")
 							a(href="/settings/password") Mot de Passe
-							
+
 						li.divider
 						li
 							//
@@ -96,7 +96,7 @@ mixin menu(active)
 							$("#maplink").addClass("activated");
 							hidePostForm();
 						}
-						
+
 					});
 					$("#maplink").click(function(){
 						if(!$(this).hasClass("activated"))
@@ -111,7 +111,7 @@ mixin menu(active)
 							$("#addLink").addClass("activated");
 							showPostForm();
 						}
-						
+
 					});
 				});
 
@@ -135,7 +135,7 @@ mixin menu(active)
 									drawNewsFeed();
 								});
 							}
-							
+
 						}
 				}
 		if(active == 'feed')
@@ -161,10 +161,10 @@ mixin menu(active)
 							if($("#searchElementContainer").css("display") == "none")
 							{
 								$("#searchElementContainer").slideToggle('slow', function(){
-									
+
 								});
 							}
-							
+
 						}
 				}
 		if(active == 'firstvisit')
@@ -189,9 +189,22 @@ mixin menu(active)
 						if(user.status != 4)
 							window.location = "/news/map";
 				});
-		
+
 		script
 			$(document).ready(function(){
+
+				$("#profileMenu").unbind("click").on('click',function(){
+					
+					if($("#customMenuProfile").css("display") == "none")
+					{
+						$("#customMenuProfile").show();
+					}
+					else
+					{
+						$("#customMenuProfile").hide();
+					}
+					return false;		
+				});
 
 				if(typeof(user) != "undefined")
 				{
@@ -231,16 +244,12 @@ mixin menu(active)
 						var mq = window.matchMedia("(min-width: 768px)");
 						mq.addListener(WidthChange);
 						WidthChange(mq);
-						
+
 					}
 				}
 				catch(e)
 				{
 
 				} 
-					
-			});
-			
-			
 
-	
+			});

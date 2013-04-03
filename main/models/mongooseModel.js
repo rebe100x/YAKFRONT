@@ -592,6 +592,10 @@ var User = new Schema({
 		facebook : {type: [Facebook],required: false},
 		google : {type: [Google],required: false}
 	 }
+	, stats: { 
+		cats: {type : Schema.Types.Mixed},
+		tags: {type : Schema.Types.Mixed},
+	}
 	, createfrom_social  :{ type : Number, default:0} // 0 yakwala, 1 twitter, 2 facebook, 3 google
 	, apiData	: { type: [{
 							apiClientId : {type: Schema.ObjectId,index: true}  
@@ -646,7 +650,9 @@ User.statics.format = function (theuser) {
 		usersubs:theuser.usersubs,
 		feedsubs:theuser.feedsubs,
 		tagsubs:theuser.tagsubs,
+		tag:theuser.tag,
 		social: theuser.social,
+		stats: theuser.stats,
 		createfrom_social: theuser.createfrom_social,
 		status: theuser.status
 	};

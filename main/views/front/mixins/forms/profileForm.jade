@@ -8,6 +8,7 @@ mixin profileForm(type)
 			input#formatted_address(type='hidden', name='formatted_address', value='')
 			input#defaultCityZoom(type='hidden', name='defaultCityZoom', value='')
 			input#defaultCityZoomText(type='hidden', name='defaultCityZoomText', value='')
+			input#tagInput(type='hidden', name='tagInput', value='')
 			div.span12
 				div.control-group
 					div.controls
@@ -53,11 +54,19 @@ mixin profileForm(type)
 			
 				div.control-group
 					div.controls
-						label.control-label(for="name") 
-							|Mots clés
-							br
-							|(ex: sport,music) :  
-						input#tag(type='text', name='tag')
+						div.input-append 
+							label.control-label(for="tag") 
+								|Quelques mots clés pour définir vos centres d'intérêt:
+								br
+								|(ex: sport,music) :
+							- each tag in tags
+								p
+									div
+										i.icon-remove.icon-pointer(onclick="tagArray.cleanArrayByName(\""+tag+"\");$(\"#tagInput\").val(JSON.stringify(tagArray));$(this).parent().remove(); clickSubmit(this);") 
+										= tag 
+							input#tag(type='text', name='tag')
+							button.btn#btn-tag-adder(type="button") Ajouter
+
 						
 				button.yakbtn(type='submit', name='submit', id='submit', value='Envoyer') Envoyer
 				br
@@ -74,6 +83,7 @@ mixin profileForm(type)
 			input#formatted_address(type='hidden', name='formatted_address', value='')
 			input#defaultCityZoom(type='hidden', name='defaultCityZoom', value='')
 			input#defaultCityZoomText(type='hidden', name='defaultCityZoomText', value='')
+			input#tagInput(type='hidden', name='tagInput', value='')
 			div.span12
 				div.control-group
 					div.controls
@@ -89,12 +99,25 @@ mixin profileForm(type)
 					div.controls
 						label.control-label(for="name") Votre site web:  
 						input#web(type='text', name='web')
-				
-			
 				div.control-group
 					div.controls
 						label.control-label(for="bio") Votre biographie :  
 						textarea(name='bio', id='bio',rows='10')
+				div.control-group
+					div.controls
+						div.input-append 
+							label.control-label(for="tag") 
+								|Quelques mots clés pour définir vos centres d'intérêt:
+								br
+								|(ex: sport,music) :
+							- each tag in tags
+								p
+									div
+										i.icon-remove.icon-pointer(onclick="tagArray.cleanArrayByName(\""+tag+"\");$(\"#tagInput\").val(JSON.stringify(tagArray));$(this).parent().remove(); clickSubmit(this);") 
+										= tag 
+							input#tag(type='text', name='tag')
+							button.btn#btn-tag-adder(type="button") Ajouter
+
 				h2 Mes paramètres
 				div.control-group
 					div.controls
@@ -113,13 +136,7 @@ mixin profileForm(type)
 							option(value="100") Super Local
 							option(value="120") Hyper local
 				
-				div.control-group
-					div.controls
-						label.control-label(for="name") 
-							|Mots clés
-							br
-							|(ex: sport,music) :  
-						input#tag(type='text', name='tag')
+				
 						
 				button.yakbtn(type='submit', name='submit', id='submit', value='Envoyer') Envoyer
 				br
@@ -127,6 +144,4 @@ mixin profileForm(type)
 				br 
 				br
 				br
-
-
-			
+	
