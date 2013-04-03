@@ -1424,10 +1424,13 @@ block content
 			item.append(yakLikes);
 			item.append(yakComments);
 
+			if(val.origin.indexOf('@') == 0)
+			{
 			var yakSpam = $("<span />");
 			yakSpam.attr("class", "yakSpam");
 			yakSpam.attr("rel", val._id);
 			setSpamSystem(yakSpam);
 			item.append(yakSpam);
+			}
 			return item;	
 		}
