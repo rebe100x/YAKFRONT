@@ -35,9 +35,24 @@ block content
 			var hashtagTmp = [];
 			var rule = new RegExp('#([^\\s]*)','g');
 			var rule2 = new RegExp('[#]','g');
-			
+			var tagArray = user.tag; 
+
 			$(document).ready(function() {
 				
+				$('#tagInput').val(JSON.stringify(tagArray));
+			
+
+				$('#btn-tag-adder').unbind('click').click(function(){
+					var tag = $('#tag').val();
+					if($.trim(tag) == "")
+						return;
+					$("label[for='tag']").after("<div><i class='icon-remove icon-pointer'  onclick='tagArray.cleanArrayByname(\""+tag+"\");$(\"#tagInput\").val(JSON.stringify(tagArray));$(this).parent().remove();'></i> "+tag+"</div>");
+					$('#alert').val('').focus();
+					tagArray.push(tag);
+					$("#tagInput").val(JSON.stringify(tagArray));
+					
+				});
+
 				if(typeof(user) != "undefined")
 				{
 					
@@ -58,7 +73,6 @@ block content
 				$('#username').val(user.name);
 				
 				$('#bio').val(user.bio);
-				$('#tag').val(user.tagsubs);
 				$('#web').val(user.web);
 				
 				if(user.formatted_address)

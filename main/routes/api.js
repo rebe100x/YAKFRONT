@@ -104,24 +104,7 @@ exports.geoalerts = function (req, res) {
 
 
 exports.geoinfos = function (req, res) {
-	/*
-	var trackParams = {
-										{"x1": req.params.x1},
-										{"y1": req.params.y1},
-										{"x2": req.params.x2},
-										{"y2": req.params.y2},
-										{"ago": req.params.ago},
-										{"now": req.params.now},
-										{"type": type},
-										{"str": req.params.str},
-										{"limit": req.params.limit},
-									]
-								};
-	// we log only if it is not a silent updater							
-	if(req.params.now != 0){							
-		trackUser(req.session.user, 5, JSON.stringify(trackParams));
-	}
-	*/
+	
 	var Info = db.model('Info');
 	var type = [];
 	type = req.params.type.split(',');
@@ -1616,11 +1599,12 @@ exports.setComment = function(req, res){
 			
 
 			Info.update({_id:infoId},{$push:{yakComments: acomment}, new:true}, function(err, result){
+				trackUser(req.session.user, 15, {infoId:infoId});
 				res.json({meta:{code:200, cid: acomment._id}});
 			})	
 		
 	}else{
-		req.session.message = "Erreur : vous devez être connecté pour sauver vos favoris";
+		req.session.message = "Erreur : vous devez être connecté pour poster un commentaire";
 		res.redirect('/user/login');
 	}
 	
@@ -1643,3 +1627,10 @@ exports.del_comment = function (req, res) {
 	}		
 };
 
+function trackUser(userid, actionid, logparams)
+{
+	var request = require('request');
+	var url = conf.trackurl + '/track/user/'+userid+'/'+actionid+'/'+encodeURIComponent(JSON.stringify(logparams));
+	console.log('---log:'+url);
+	request.get({url:url, json:true}, function (err) {if (err) console.log(err);})
+}

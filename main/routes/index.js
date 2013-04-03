@@ -294,7 +294,7 @@ exports.news = function(req, res){
 						if (!err) 
 							{
 								console.log('Success!');
-								var trackParams = {"infoid": info._id};
+								var trackParams = {"infoId": info._id};
 								trackUser(req.session.user, 10,  trackParams);
 							}
 						else console.log(err);
@@ -339,7 +339,7 @@ exports.user_validate = function(req, res){
 	User.authenticateByToken(req.params.token,req.params.password, function(err, model) {
 	if(!(typeof(model) == 'undefined' || model === null || model === '')){
 			req.session.user = model._id;
-			trackUser(user._id, 2,{});
+			trackUser(model._id, 2,{});
 			User.update({_id: model._id}, {status:4}, {upsert: false}, function(err){if (err) console.log(err);});						
 			res.render('settings/firstvisit',{user:model});
 			res.redirect('/user/validate');
@@ -495,10 +495,14 @@ exports.user = function(req, res){
 					}
 						user.save(function (err) {
 							if (!err){
-								User.sendValidationMail(link,themail,templateMail,logo,function(err){
-								if(!err)
-									console.log(err);
-							});
+								User.sendValidationMail(link,themail,templateMail,logo,function(err,usersubs){
+									if(!err)
+										console.log(err);
+								});
+								
+								var trackParams = {"createdFrom": 0};
+								trackUser(user._id, 1,  trackParams);
+						
 						} 
 						else console.log(err);
 					});
@@ -605,7 +609,7 @@ exports.settings_profile = function(req, res){
 	//var User = db.model('User');
 	
 	if(req.session.user){
-		res.render('settings/profile');
+		res.render('settings/profile',{tags:res.locals.user.tag});
 	}else{
 		req.session.message = "Erreur : vous devez être connecté pour voir votre profil";
 		res.redirect('/user/login?redir=settings/profile');
@@ -861,8 +865,6 @@ exports.alerts = function(req, res){
 		for(i=0;i<tagsubs.length;i++){
 			tagsubsArray.push(tagsubs[i]);
 		}
-
-		
 	}
 
 	if(req.body.feedsubsInput.length > 0){
@@ -870,8 +872,6 @@ exports.alerts = function(req, res){
 		for(i=0;i<feedsubs.length;i++){
 			feedsubsArray.push(feedsubs[i]);
 		}
-
-		
 	}
 				
 	if(req.session.user){
@@ -894,6 +894,7 @@ exports.alerts = function(req, res){
 
 exports.profile = function(req, res){
 		
+	var tagArray = [];	
 	var formMessage = new Array();
 	delete req.session.message;
 	var User = db.model('User');
@@ -944,10 +945,20 @@ exports.profile = function(req, res){
 			cond.addressZoomText = req.body.defaultCityZoomText;
 		}
 
+		/*
 		if(req.body.tag != null && req.body.tag != ""){
-			cond.tagsubs = req.body.tag.split(',');
-		}
+			cond.tag = req.body.tag;
+		}*/
 			
+		// tag subscribtions
+		if(req.body.tagInput.length > 0){
+			var tag = eval('('+req.body.tagInput+')');
+			for(i=0;i<tag.length;i++){
+				tagArray.push(tag[i]);
+			}
+			cond.tag = tagArray;
+		}	
+		
 		
 		//req.session.user.location = location;
 		
@@ -957,7 +968,7 @@ exports.profile = function(req, res){
 			if (err)
 				console.log(err);
 			else
-				trackUser(req.session.user, 11,  {tags:req.body.tag});
+				trackUser(req.session.user, 11,  {tags:tagArray});
 		});
 		formMessage.push("Votre profil est enregistré");
 	}else

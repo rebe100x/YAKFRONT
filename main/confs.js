@@ -83,7 +83,7 @@ exports.confs = {
 		"fileport":62403,
 		"trakport" : 62404,
 		"dbname":"yakwala_preprod",
-		"dbtrackname":"yaktrack",
+		"dbtrackname":"yaktrack_preprod",
 		"env":"PREPROD",
 		"uploadsDir":__dirname+'/public/uploads/',
 		"ga":"",
