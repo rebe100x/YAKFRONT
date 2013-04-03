@@ -1289,8 +1289,9 @@ exports.auth_twitter_callback = function(req, res){
 				var password = user.generatePassword(5);
 				var logo = conf.fronturl+"/static/images/yakwala-logo_petit.png";
 				
-				user.name=data.name;
-				user.login=login;
+				var randomnumber=Math.floor(Math.random()*101)
+				user.name=login+randomnumber.toString();
+				user.login=login+randomnumber.toString();
 				user.mail='yak_not_set@yakwala.fr';
 				user.token=token;
 				user.status=1;
@@ -1369,8 +1370,9 @@ exports.auth_twitter_callback = function(req, res){
 						User.findByLoginDuplicate(login, function(err, theuser){
 							if(theuser != undefined && theuser != null )
 							{
-								user.name=login+"_twitter";
-								user.login=login+"_twitter";
+								var randomnumber=(Math.floor(Math.random()*101)).toString();
+								user.name=login+randomnumber;
+								user.login=login+randomnumber;
 								user.save(function (err) {
 									if (!err){
 										req.session.user = user._id;
@@ -1435,8 +1437,10 @@ exports.auth_facebook = function(req, res){
 	var password = user.generatePassword(5);
 	var logo = conf.fronturl+"/static/images/yakwala-logo_petit.png";
 	
-	user.name=req.body.user.name;
-	user.login=login;
+	var randomnumber=Math.floor(Math.random()*101)
+	user.name=login+randomnumber.toString();
+	user.login=login+randomnumber.toString();
+	
 	user.mail='yak_not_set@yakwala.fr';
 	user.token=token;
 	user.status=1;
@@ -1492,8 +1496,9 @@ exports.auth_facebook = function(req, res){
 				trackUser(user._id, 3,  trackParams);
 				if(theuser != undefined && theuser != null )
 				{
-					user.name=login+"_facebook";
-					user.login=login+"_facebook";
+					var randomnumber=Math.floor(Math.random()*101)
+					user.name=login+randomnumber;
+					user.login=login+randomnumber;
 					user.save(function (err) {
 						if (!err){
 							req.session.user = user._id;
@@ -1541,8 +1546,9 @@ exports.auth_google = function(req, res){
 	var password = user.generatePassword(5);
 	var logo = conf.fronturl+"/static/images/yakwala-logo_petit.png";
 	
-	user.name=req.body.user.name;
-	user.login=login;
+	var randomnumber=Math.floor(Math.random()*101)
+	user.name=login+randomnumber.toString();
+	user.login=login+randomnumber.toString();
 	user.mail='yak_not_set@yakwala.fr';
 	user.token=token;
 	user.status=1;
@@ -1610,8 +1616,9 @@ exports.auth_google = function(req, res){
 				
 				if(theuser != undefined && theuser != null )
 				{
-					user.name=login+"_google";
-					user.login=login+"_google";
+					var randomnumber=Math.floor(Math.random()*101)
+					user.name=login+randomnumber.toString();
+					user.login=login+randomnumber.toString();
 					user.save(function (err) {
 						if (!err){
 							req.session.user = user._id;
