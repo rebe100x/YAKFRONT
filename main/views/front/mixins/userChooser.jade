@@ -1,7 +1,8 @@
 mixin userChooser
 
 	div.modal.hide.fade#userChooser
-		span#closeModal(type="button", data-dismiss="modal", style="position: relative; top:12px; right: 12px;")
+		//
+			span#closeModal(type="button", data-dismiss="modal", style="position: relative; top:12px; right: 12px;")
 
 		div.modal-body
 			p.alertText 
@@ -26,6 +27,7 @@ mixin userChooser
 					|Tags alertes 
 				span#thealerts
 					|#dany #dany
+			p#uc_newsfeed
 			P#uc_profile_tags
 				a#uc_profile_yaks_search
-					|Cliquer ici pour avoir les info publié par cet utilisateur
+					|Cliquer ici pour avoir les info publié par cet utilisateur dans cette region

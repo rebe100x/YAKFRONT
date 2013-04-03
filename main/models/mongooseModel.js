@@ -305,6 +305,7 @@ Info.statics.findByUserIds = function (useridArray, count, from, callback) {
 }
 
 
+
 Info.statics.findAllGeo = function (x1,y1,x2,y2,from,now,type,str,thecount,theskip,callback) {
 	var limit = (typeof(thecount) != 'undefined' && thecount > 0) ? thecount : 100;		
 	var skip = (typeof(theskip) != 'undefined' && theskip > 0) ? theskip : 0;	
@@ -711,6 +712,7 @@ User.statics.FormatProfile = function (theuser) {
 		thumb:thethumb,
 		thumbsmall:thethumbsmall,
 		web: theuser.web,
+		
 	};
   return formattedUser;
 }

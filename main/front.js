@@ -47,7 +47,7 @@ app.configure(function(){
 });
 
 app.configure('development', function(){
-	conf = config.confs.devdany;
+	conf = config.confs.devrenaud;
 	app.locals.conf = JSON.stringify(conf);
 	mainConf = config.confs.main;
 	app.locals.mainConf = JSON.stringify(mainConf);
@@ -155,6 +155,7 @@ app.get('/api/usersearch/:string', api.user_search);
 app.get('/api/usersearchbyid2/:id', api.findUserById2);
 app.get('/api/countUserInfo/:id', api.countUserInfo);
 app.get('/api/countUserSubscribers/:id', api.countUserSubscribers);
+app.get('/api/user/feed/:userid', api.get_user_feed);
 
 app.get('/api/findbylogin/:string', api.user_findbylogin);
 app.get('/api/findbymail/:string', api.user_findbymail);

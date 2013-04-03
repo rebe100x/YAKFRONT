@@ -1527,18 +1527,18 @@ function checkByWidth()
 					$("#userChooser #uc_profile_yaks_posts").html("Yassalas<br /><b>" + data.count + "<b>");		
 				});
 				if($.inArray(userid,user.usersubs))
-					$("#userChooser #uc_profile_yaks_alerts.mybtn").html("Unsubscribed");		
+					$("#userChooser #uc_profile_yaks_alerts.mybtn").html("Supprimer de mes alertes");		
 				else
-					$("#userChooser #uc_profile_yaks_alerts.mybtn").html("Subscribe");		
+					$("#userChooser #uc_profile_yaks_alerts.mybtn").html("Ajouter a mes alertes");		
 
 				var thetags = "";
-				for(i=0; i<user.tagsubs.length; i++)
+				for(i=0; i<theuser.tagsubs.length; i++)
 				{
-					thetags += "<a onclick='setSearchForTag(this)'>#" + user.tagsubs[i] + " </a>";
+					thetags += "<a onclick='setSearchForTag(this)'>#" + theuser.tagsubs[i] + " </a>";
 				}
 				$("#userChooser #uc_profile_tags #thealerts").html(thetags);
 
-				var subscribed_number = user.usersubs.length + user.feedsubs.length;
+				var subscribed_number = theuser.usersubs.length + theuser.feedsubs.length;
 				$("#userChooser #subscribed_number").html(subscribed_number);
 
 				$.getJSON('/api/countUserSubscribers/' + userid ,function(data) {
@@ -1549,6 +1549,14 @@ function checkByWidth()
 				setSearchForUser(theuser.name);
 				});
 
+				var uri = '/api/user/feed/' + theuser._id;
+
+				$.getJSON(uri,function(ajax) {
+					console.log(ajax);
+					$.each(ajax.data, function(key,val) {
+						printFeedItemPopUp(val);	
+					});
+				});
 			});
 		}
 
@@ -1558,3 +1566,109 @@ function checkByWidth()
 		}
 
 		
+
+		function printFeedItemPopUp(item){
+			var dateTmp = new Date(item.pubDate);
+			var pubDate = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
+			dateTmp = new Date(item.dateEndPrint);
+			var dateTmp2 = new Date(item.dateEndPrint);
+			var dateEndPrint = dateTmp2.getDate()+'/'+(dateTmp2.getMonth()+1)+'/'+dateTmp2.getFullYear();
+
+			infoContent = $("<div />");
+			infoContent.attr("class", "infowindow mapHighlighter");
+			infoContent.attr("infoId", item._id);
+
+			
+
+			if(!(typeof item.thumb === 'undefined') && item.thumb != conf.batchurl && item.thumb != null && item.thumb != '') {
+				thumbImage = item.thumb.replace('thumb/','');
+				//thumbImage = thumbImage.replace('//','/');
+				var thumbImageCode = $("<div />");
+				thumbImageCode.attr("class", "thumbImage");
+				thumbImageCode.append("<img src=\'"+thumbImage+"\' />");
+				//thumbImageCode.append("<img src='http://batch.yakwala.fr/PROD/YAKREP/BACKEND/thumb/d44cf5f99c5ba8c818809a2a19aa390a.jpg' />");
+				infoContent.append(thumbImageCode);
+			
+			}
+			var yakTypeImage = $("<div />");
+			yakTypeImage.attr("class", "yakTypeImage");
+			yakTypeImage.html("<img src='/images/markers/new/type" + item.yakType + ".png' />");
+			infoContent.append(yakTypeImage);
+			
+
+				
+
+			var itemTitle = $("<div />");
+			itemTitle.attr("class", "itemTitle");
+			itemTitle.html(item.title.linkify());
+
+			thedate = buildItemDate(item);
+			var postedBy = $("<div />");
+			postedBy.attr("class", "postedBy");
+
+			var onclickUser = "showUserProfile(this)";
+			if(item.origin.indexOf('@') != 0)
+			{
+				item.origin ="@"+item.origin;
+				onclickUser = "setSearchFor(this);";
+			}
+			
+
+			if(item.yakType !=2 )
+			{
+				postedBy.html("Posté par <a class='prevent-default' onclick='" + onclickUser +"'>"+item.origin+"</a><input type='hidden' value='" + item.user + "' />" + "<span class=\'date\'> - "+thedate+"</span>");
+			}
+				
+			else{
+				postedBy.html("Posté par <a class='prevent-default' onclick='" + onclickUser + "'>"+item.origin+"</a><input type='hidden' value='" + item.user + "' />");
+				itemTitle.append(" - <span class=\'dateAgenda\'>"+thedate+"</span>");			
+			}
+				
+			infoContent.append(itemTitle);
+			infoContent.append(postedBy);
+			
+			var thetags = "<div class=\'tags\'>";					
+
+			
+			if(item.yakCatName.length > 0)
+			{
+				for (var i = 0; i < item.yakCatName.length; i++) {
+					thetags += '<a class="tagHashLink prevent-default" onclick="setSearchFor(this)">#' + item.yakCatName[i] +'</a> ';	
+				}
+			}
+
+			
+
+			if (typeof(item.freeTag) != 'undefined') {
+					
+					for (var i = 0; i < item.freeTag.length; i++) {
+						if(item.freeTag[i] != ""){
+							thetags += '<a class="tagHashLink prevent-default" onclick="setSearchFor(this)">#' + item.freeTag[i] +'</a> ';	
+							if( i < item.freeTag.length -1)
+								thetags += ', ';
+						}
+					}
+			}
+			thetags += "</div>";
+
+			
+			infoContent.append(thetags);
+
+
+			if(typeof(item.address) != 'undefined' && item.address != 'null' && item.address != ''){
+				var theaddress = "<div class=\'infodetail\'>"+item.address+"</div>";
+				if(user.login == 'renaud.bessieres' || user.login == 'dany.srour') /// this is debug
+					theaddress += "<div class=\'infodetail\'>"+pubDate+" >> "+dateEndPrint+"</div>";
+				infoContent.append(theaddress);
+			}
+				
+			/*PRINT ON THE FEED*/
+			
+			var li = $("<li />");
+			li.attr("class", "mapHighlighterDetails");
+			li.attr("infoId", item._id);
+			li.append(infoContent);
+			$('#uc_newsfeed').append(li);
+
+			
+		}

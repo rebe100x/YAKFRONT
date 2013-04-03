@@ -269,7 +269,7 @@ exports.findUserById2 = function (req, res) {
 	User.findById2(req.params.id, function (err, docs){
 	  var usersFormated = docs.map(function(item){
 			var User = db.model('User');
-			return User.FormatProfile(item);
+			return User.format(item);
 		});
   	  res.json({
   		user: usersFormated
