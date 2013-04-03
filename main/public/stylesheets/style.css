@@ -460,7 +460,7 @@ width: 270px;
    .searchYakwala #timeContainer { position: relative; margin-left: 12px; margin-top: 10px;}
    .searchYakwala #searchStr, .searchYakwala #searchPlaceStr { height: 26px;}
    #closehideSearch { display: none}
-   #blackBox { background-color: #3c3c3c; color: white; font-weight: bold; padding: 3px 15px; position: relative; top: 42px; }
+   #blackBox { background-color: #3c3c3c; color: white; font-weight: bold; padding: 3px 15px; position: relative; top: 50px; }
 
    #dayPrinter .blackArrow { position: relative; top: -9px; left: 50%; float: left;}
    .searchYakwala #rangeSelectorTrigger, .searchYakwala #tagSelectorTrigger { margin-top: 10px;}
@@ -513,7 +513,7 @@ width: 270px;
    .searchYakwala #timeContainer { position: relative; margin-left: 12px;}
    .searchYakwala #searchStr, .searchYakwala #searchPlaceStr { height: 26px;}
    #closehideSearch { display: none}
-   #blackBox { background-color: #3c3c3c; color: white; font-weight: bold; padding: 3px 15px; position: relative; top: 42px; }
+   #blackBox { background-color: #3c3c3c; color: white; font-weight: bold; padding: 3px 15px; position: relative; top: 50px; }
    #dayPrinter .blackArrow { position: relative; top: -9px; left: 50%; float: left;}
    .searchYakwala #rangeSelectorTrigger, .searchYakwala #tagSelectorTrigger { margin-top: 10px;}
  }
@@ -1009,7 +1009,7 @@ border-bottom: 1px solid #e5e5e5;}
 
 #signinButton.g-signin { display: none;}
 
-#blackBox { min-width: 100px; display: block;}
+#blackBox { min-width: 100px; display: inline-table;}
 #blackBox:after, #blackBox:before { bottom: 100%; border: solid transparent; content: " "; height: 0; width: 0; position: absolute; pointer-events: none; } 
 #blackBox:after { border-color: rgba(136, 183, 213, 0); border-bottom-color: #3c3c3c; border-width: 8px; left: 50%; margin-left: 2px; } 
 .arrow_box:before { border-color: rgba(194, 225, 245, 0); border-bottom-color: #c2e1f5; border-width: 36px; left: 50%; margin-left: -36px; }
