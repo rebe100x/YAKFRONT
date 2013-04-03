@@ -457,7 +457,7 @@ width: 270px;
    span.closePlace { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -97px -658px; position: relative; float: right; cursor: pointer;}
    span.redAdd { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -205px -658px; position: relative; float: left; cursor: pointer; top: 16px; margin-right: 10px}
    span.redStars { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -176px -658px; position: relative; float: left; cursor: pointer; top: 0px; margin-right: 10px}
-   .searchYakwala #timeContainer { position: relative; margin-left: 12px; margin-top: 10px;}
+   .searchYakwala #timeContainer { position: relative; margin-left: 12px; margin-top: 4px;}
    .searchYakwala #searchStr, .searchYakwala #searchPlaceStr { height: 26px;}
    #closehideSearch { display: none}
    #blackBox { background-color: #3c3c3c; color: white; font-weight: bold; padding: 3px 15px; position: relative; top: 50px; }
