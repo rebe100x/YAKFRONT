@@ -212,7 +212,7 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 .infowindow .yakTypeImage img { float: left; width:15px;height:22px;}
 
 .infowindow .thumbImage { float: left;  margin: 0 3px 0 0; position: relative;}
-.infowindow .thumbImage img { float: left; width:120px;height: 90px;}
+.infowindow .thumbImage img { float: left;}
 
 .infowindow .itemTitle { font-size: 1.3em; font-weight: bold; color: #5D5D5D; left: 0px;margin-left:20px; padding-right: 25px; position: relative; text-align: justify;line-height:1.3em; margin-top: 8px; padding-left: 10px;}
 
