@@ -1,49 +1,37 @@
-exports.GetImg = function(url,conf,mainConf){
+exports.GetImg = function(urlImg, destName, conf, mainConf){
 	var http = require('http')
 	, fs = require('fs')
-	,crypto = require('crypto');
+	, url = require('url');
 
-
+	var theUrl = url.parse(urlImg);
 	var options = {
-		hostname: 'http://a0.twimg.com/',
+		hostname: theUrl.hostname,
 		port: 80,
-		path: '/profile_images/2956066144/921781f7706fd0e6442a63b5a64bb875_normal.jpeg',
+		path: theUrl.pathname,
 		method: 'GET'
 	};  
-
-	destName =  crypto.createHash('md5').update(url).digest("hex")+'.jpeg'; 
-	
-	console.log(url);
 	var request = http.get(options, function(res){
-		console.log('STATUS: ' + res.statusCode);
-		console.log('HEADERS: ' + JSON.stringify(res.headers));
-		res.setEncoding('utf8');
+		res.setEncoding('binary')
 		var imagedata = '';
 		var image = {};		
-		res.setEncoding('binary')
+		
 
 		res.on('data', function(chunk){
-			console.log(chunk);
 			imagedata += chunk
 		})
 
 		res.on('end', function(){
 			fs.writeFile(conf.uploadsDir+'originals/'+destName, imagedata, 'binary', function(err){
 				if (err) throw err
-				console.log('File saved.')
-
-				image.path = conf.uploadsDir+'originals/';
+				image.path = conf.uploadsDir+'originals/'+destName;
 				image.name = destName;
-				fs.watchFile(conf.uploadsDir+'originals/'+profileImg.name, function () {
-					fs.stat(conf.uploadsDir+'originals/'+profileImg.name, function (err, stats) {
-						image.size = stats.size;
-
-						var size = mainConf.imgSizeInfo;
-						for(i=0;i<size.length;i++){
-							profileThumb = StoreImg(image,{w:size[i].width,h:size[i].height},conf);
-						}
-						return image.name;
-					});
+				fs.stat(conf.uploadsDir+'originals\\'+image.name, function (err, stats) {
+					image.size = stats.size;
+					var size = mainConf.imgSizeAvatar;
+					for(i=0;i<size.length;i++){
+						profileThumb = module.exports.StoreImg(image,destName,{w:size[i].width,h:size[i].height},conf);
+					}
+					return image.name;
 				});
 			})
 		})
@@ -56,7 +44,7 @@ exports.GetImg = function(url,conf,mainConf){
 
 }
 
-exports.StoreImg = function(file,size,conf){
+exports.StoreImg = function(file,destName,size,conf){
 	
 	var message = [];
 	var thumbFlag = 0;
@@ -65,7 +53,7 @@ exports.StoreImg = function(file,size,conf){
 	var srcName = '';
 	var im = require('imagemagick');
 	var fs = require('fs');	
-	var crypto = require('crypto');
+	//var crypto = require('crypto');
 	
 	if(file.size){
 		
@@ -77,7 +65,7 @@ exports.StoreImg = function(file,size,conf){
 		srcName = srcNameTmp.replace('.gif', '.jpeg');
 		srcName = srcNameTmp.replace('.png', '.jpeg');
 		srcName = srcNameTmp.replace('.jpg', '.jpeg');
-		destName =  crypto.createHash('md5').update(srcName).digest("hex")+'.jpeg'; 
+		//destName =  crypto.createHash('md5').update(srcName).digest("hex")+'.jpeg'; 
 		// convert to jpeg
 		im.convert([srcPathTmp,srcPath],function(err,stdout){
 			// if convertion ok, we begin to build the small images
@@ -118,7 +106,6 @@ exports.StoreImg = function(file,size,conf){
 					if(size.h == 0){
 						//console.log("2="+conf.uploadsDir+'pictures/'+size.w+'_'+size.h+'/'+destName);
 						im.identify(['-format', '%w', srcPath], function(err, output){
-							console.log(output);
 							if (!err){
 								//console.log('ELO'+output +">"+ size.w);
 								if(output > size.w){
@@ -191,7 +178,7 @@ exports.StoreImg = function(file,size,conf){
 exports.SetThumbFlag = function(imgName,conf){
 	var im = require('imagemagick');
 	var fs = require('fs');	
-	var crypto = require('crypto');
+	//var crypto = require('crypto');
 	var srcPathTmp = imgName;
 	var srcPath = '';	
 	srcPath = srcPathTmp.replace('.gif', '.jpeg');
@@ -201,8 +188,6 @@ exports.SetThumbFlag = function(imgName,conf){
 	var imgPath = conf.uploadsDir+'originals/'+srcPath;
 	var thumbFlag = 0;
 	im.identify(['-format', '%w', imgPath], function(err, output){
-		console.log('output'+output);
-		console.log('imgPath'+imgPath);
 		if(output>320)
 			thumbFlag = 2;
 		else

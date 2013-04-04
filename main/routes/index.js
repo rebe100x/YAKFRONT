@@ -155,9 +155,11 @@ exports.news = function(req, res){
 		if(req.files.picture.size && req.files.picture.size > 0 && req.files.picture.size < 1048576*5){
 			var drawTool = require('../mylib/drawlib.js');
 			var size = mainConf.imgSizeInfo;
-			
+			var crypto = require('crypto');
+			var destFile = crypto.createHash('md5').update(req.files.picture.name).digest("hex")+'.jpeg';
+					
 			for(i=0;i<size.length;i++){
-				infoThumb = drawTool.StoreImg(req.files.picture,{w:size[i].width,h:size[i].height},conf);
+				infoThumb = drawTool.StoreImg(req.files.picture,destFile,{w:size[i].width,h:size[i].height},conf);
 			}
 			
 			formMessage.push(msg);
@@ -480,8 +482,8 @@ exports.user = function(req, res){
 				user.password= password;
 				user.salt="1";
 				user.type=1;
-				//user.favplace = [{'name':'Paris, France','location':{'lat':48.851875,'lng':2.356374}},{'name':'Eghézée, Belgique','location':{'lat':50.583346,'lng':4.900031}},{'name':'Montpellier, France','location':{'lat':43.610787,'lng':3.876715}}];
-				user.favplace = [{'name':'Nice, France','location':{'lat':43.681343,'lng':7.232094},'range':100},{'name':'Marseille, France','location':{'lat':43.298198,'lng':5.370255},'range':100},{'name':'Paris, France','location':{'lat':48.851875,'lng':2.356374},'range':100}];
+				//user.favplace = [{'name':'Nice, France','location':{'lat':43.681343,'lng':7.232094},'range':100},{'name':'Marseille, France','location':{'lat':43.298198,'lng':5.370255},'range':100},{'name':'Paris, France','location':{'lat':48.851875,'lng':2.356374},'range':100}];
+				user.favplace = mainConf.favPlaces;
 				var link = conf.validationUrl+token+"/"+password;
 				
 				user.name=login;
@@ -904,9 +906,11 @@ exports.profile = function(req, res){
 		var avatar = req.body.avatar;
 		var drawTool = require('../mylib/drawlib.js');
 		var size = mainConf.imgSizeAvatar;
-
+		var crypto = require('crypto');
+		var destFile = crypto.createHash('md5').update(req.files.avatar.name).digest("hex")+'.jpeg';
+			
 		for(i=0;i<size.length;i++){
-				infoThumb = drawTool.StoreImg(req.files.avatar,{w:size[i].width,h:size[i].height},conf);
+				infoThumb = drawTool.StoreImg(req.files.avatar,destFile,{w:size[i].width,h:size[i].height},conf);
 			}
 		
 		if(infoThumb.msg)
@@ -1277,8 +1281,7 @@ exports.auth_twitter_callback = function(req, res){
 		          res.send("Error getting twitter screen name : " + error, 500);
 		        } else {
 
-		       	  data = JSON.parse(data);
-		          
+				data = JSON.parse(data);
 		        var crypto = require('crypto')
 		        var User = db.model('User');
 			    var user = new User();
@@ -1308,18 +1311,18 @@ exports.auth_twitter_callback = function(req, res){
 					aTwitter.name = data.name;
 
 				
-				if(typeof(data.profile_image_url) != 'undefined'){
-					/*
+				if(typeof(data.profile_image_url) != 'undefined'){					
 					var drawTool = require('../mylib/drawlib.js');
 					var profileImg;
-
-					console.log(data.profile_image_url);
-					user.thumb = drawTool.GetImg(data.profile_image_url,conf,mainConf);
+					// this line is only for Twitter to get a better image
+					data.profile_image_url = data.profile_image_url.replace('normal','bigger');
 					
-					*/
+					user.thumb = crypto.createHash('md5').update(data.profile_image_url).digest("hex")+'.jpeg';
+					drawTool.GetImg(data.profile_image_url,user.thumb,conf,mainConf);
+					
 					aTwitter.profile_image_url = data.profile_image_url;
-					 
 				}
+
 					
 
 				if(typeof(data.url) != 'undefined')
@@ -1363,9 +1366,8 @@ exports.auth_twitter_callback = function(req, res){
 					user.bio = data.description;
 				if(!(typeof data.url  === 'undefined') && data.url  != null && data.url  != '')
 					user.web = data.url;
-				//user.favplace = [{'name':'Paris, France','location':{'lat':48.851875,'lng':2.356374}},{'name':'Eghézée, Belgique','location':{'lat':50.583346,'lng':4.900031}},{'name':'Montpellier, France','location':{'lat':43.610787,'lng':3.876715}}];
-				user.favplace = [{'name':'Nice, France','location':{'lat':43.681343,'lng':7.232094},'range':100},{'name':'Marseille, France','location':{'lat':43.298198,'lng':5.370255},'range':100},{'name':'Paris, France','location':{'lat':48.851875,'lng':2.356374},'range':100}];
-				
+				//user.favplace = [{'name':'Nice, France','location':{'lat':43.681343,'lng':7.232094},'range':100},{'name':'Marseille, France','location':{'lat':43.298198,'lng':5.370255},'range':100},{'name':'Paris, France','location':{'lat':48.851875,'lng':2.356374},'range':100}];
+				user.favplace = mainConf.favPlaces;
 				User.findByTwitterId(twitter_id,function (err, theuser){
 					if(theuser != undefined && theuser != null ){
 						console.log('LOGGED IN');
@@ -1423,20 +1425,6 @@ exports.auth_twitter_callback = function(req, res){
 
 
 
-/*exports.auth_facebook = function(req, res){
-	req.Facebook.api('/me', function(err, user) {
-		res.writeHead(200, {'Content-Type': 'text/plain'});
-	    res.end('Hello, ' + user.name + '!');
-	});
-	
-}
-
-
-exports.auth_google = function(req, res){
-	res.send("google pulus");
-	
-}*/
-
 exports.auth_facebook = function(req, res){
 	var data = req.body.user;
 	var crypto = require('crypto')
@@ -1477,20 +1465,29 @@ exports.auth_facebook = function(req, res){
 	if(typeof(data.id) != 'undefined')
 		aFacebook.profile_image_url = 'https:/graph.facebook.com/'+data.id+'/picture/';
 
+	if(typeof(aFacebook.profile_image_url) != 'undefined'){					
+		var drawTool = require('../mylib/drawlib.js');
+		var profileImg;
+		
+		user.thumb = crypto.createHash('md5').update(aFacebook.profile_image_url).digest("hex")+'.jpeg';
+		drawTool.GetImg(aFacebook.profile_image_url,user.thumb,conf,mainConf);
+	}
+
 	if(typeof(data.link) != 'undefined')
 		aFacebook.url = data.link;
 
 	if(typeof(data.bio) != 'undefined')
 		aFacebook.description = data.bio;
 
+	
+
 	user.social.facebook = aFacebook;
 
 	user.createfrom_social = 2;
 	user.bio = data.bio;
 	user.web = data.link;
-	//user.favplace = [{'name':'Paris, France','location':{'lat':48.851875,'lng':2.356374}},{'name':'Eghézée, Belgique','location':{'lat':50.583346,'lng':4.900031}},{'name':'Montpellier, France','location':{'lat':43.610787,'lng':3.876715}}];
-	user.favplace = [{'name':'Nice, France','location':{'lat':43.681343,'lng':7.232094},'range':100},{'name':'Marseille, France','location':{'lat':43.298198,'lng':5.370255},'range':100},{'name':'Paris, France','location':{'lat':48.851875,'lng':2.356374},'range':100}];
-	
+	//user.favplace = [{'name':'Nice, France','location':{'lat':43.681343,'lng':7.232094},'range':100},{'name':'Marseille, France','location':{'lat':43.298198,'lng':5.370255},'range':100},{'name':'Paris, France','location':{'lat':48.851875,'lng':2.356374},'range':100}];
+	user.favplace = mainConf.favPlaces;
 	User.findByFacebookId(facebook_id,function (err, theuser){
 		if(theuser != undefined && theuser != null ){
 			console.log('LOGGED IN');
@@ -1583,8 +1580,14 @@ exports.auth_google = function(req, res){
 	if(typeof(data.name) != 'undefined')
 		aGoogle.name = data.name.givenName + "." + data.name.familyName;
 
-	if(typeof(data.image) != 'undefined')
+	
+	if(typeof(data.image) != 'undefined'){					
+		var drawTool = require('../mylib/drawlib.js');
+		
+		user.thumb = crypto.createHash('md5').update(data.image.url).digest("hex")+'.jpeg';
+		drawTool.GetImg(data.image.url,user.thumb,conf,mainConf);
 		aGoogle.profile_image_url = data.image.url;
+	}
 
 	if(typeof(data.url) != 'undefined')
 		aGoogle.url = data.url;
@@ -1608,7 +1611,7 @@ exports.auth_google = function(req, res){
 	user.bio = data.bio;
 	user.web = data.link;
 	//user.favplace = [{'name':'Paris, France','location':{'lat':48.851875,'lng':2.356374}},{'name':'Eghézée, Belgique','location':{'lat':50.583346,'lng':4.900031}},{'name':'Montpellier, France','location':{'lat':43.610787,'lng':3.876715}}];
-	user.favplace = [{'name':'Nice, France','location':{'lat':43.681343,'lng':7.232094},'range':100},{'name':'Marseille, France','location':{'lat':43.298198,'lng':5.370255},'range':100},{'name':'Paris, France','location':{'lat':48.851875,'lng':2.356374},'range':100}];
+	user.favplace = mainConf.favPlaces;
 	
 	User.findByGoogleId(google_id,function (err, theuser){
 		if(theuser != undefined && theuser != null ){
