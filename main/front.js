@@ -141,9 +141,9 @@ app.get('/api/afeed', api.afeed);
 app.get('/api/geoinfos/:x1/:y1/:x2/:y2/:ago/:now/:type/:str', api.geoinfos);
 app.get('/api/geoinfos/:x1/:y1/:x2/:y2/:ago/:now/:type/:str/:limit', api.geoinfos);
 app.get('/api/geoinfos/:x1/:y1/:x2/:y2/:ago/:now/:type/:str/:limit/:skip', api.geoinfos);
-app.get('/api/geoalerts/:x1/:y1/:x2/:y2/:ago/:now/:str', routes.requiresLogin, api.geoalerts);
-app.get('/api/geoalerts/:x1/:y1/:x2/:y2/:ago/:now/:str/:limit', routes.requiresLogin, api.geoalerts);
-app.get('/api/geoalerts/:x1/:y1/:x2/:y2/:ago/:now/:str/:limit/:skip', routes.requiresLogin, api.geoalerts);
+app.get('/api/geoalerts/:x1/:y1/:x2/:y2/:ago/:now/:type/:str', routes.requiresLogin, api.geoalerts);
+app.get('/api/geoalerts/:x1/:y1/:x2/:y2/:ago/:now/:type/:str/:limit', routes.requiresLogin, api.geoalerts);
+app.get('/api/geoalerts/:x1/:y1/:x2/:y2/:ago/:now/:type/:str/:limit/:skip', routes.requiresLogin, api.geoalerts);
 
 
 app.get('/api/zones/:x/:y', api.zones);

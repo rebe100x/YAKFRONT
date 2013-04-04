@@ -155,7 +155,6 @@ block content
 			
 				
 				if( (lastSearchString == null || lastSearchString != str ) && str.length > 1 ){
-					$.cookie("searchString",searchString,{ expires: 10000, path : '/' });
 					var mapCenter =  map.getCenter();
 					var now = new Date();
 					var searchDate = now.setTime(now.getTime()+dateFrom*24*60*60*1000);
@@ -173,6 +172,7 @@ block content
 
 					$.getJSON(conf.trackurl+'/track/user/'+user._id+'/'+'5'+'/'+encodeURIComponent(JSON.stringify(trackParams))); 
 				}	
+				$.cookie("searchString",searchString,{ expires: 10000, path : '/' });
 				lastSearchString = str;
 				$('#searchStr').removeClass('searching');
 			});
@@ -768,13 +768,15 @@ block content
 			bounds = getMyBounds();
 			var apiUrl = '';
 			var nowts = new Date().getTime();
-			if(yakType.toString() == 5)
-				apiUrl = '/api/geoalerts/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/'+nowts+'/'+searchString+'/500';
+			if(yakType.inArray("5"))
+				apiUrl = '/api/geoalerts/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/'+nowts+'/'+yakType.toString()+'/'+searchString+'/500';
 			else	
-				apiUrl = '/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/'+nowts+'/'+yakType.toString()+'/'+searchString+'/500';
+				apiUrl = '/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/'+nowts+'/'+searchString+'/500';
 			
 
-			$.getJSON(apiUrl,function(ajax) {	
+			$.getJSON(apiUrl,function(ajax) {
+				if(typeof ajax.data == 'undefined')
+					return;
 				$.each(ajax.data.info, function(key,val) {
 					
 
@@ -816,14 +818,13 @@ block content
 			}
 
 			var apiUrl = '';
-			if(yakType.toString() == 5)
-			{
-				apiUrl = '/api/geoalerts/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/0/'+searchString+'/500';
+			if(yakType.inArray("5")){	
+				apiUrl = '/api/geoalerts/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/0/'+yakType.toString()+'/'+searchString+'/500';
 			}
-			else	
+			else{
 				apiUrl = '/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/0/'+yakType.toString()+'/'+searchString+'/500';
-			
-			//console.log(apiUrl);
+			}	
+				
 			$.getJSON(apiUrl,function(ajax) {
 				// empty the news feed
 				cleanFeed();
@@ -1139,7 +1140,7 @@ block content
 			if($("#typeContainer .active").length > 0)
 				infoContent = "<div class=\'infowindow emptyfeeditem\'>Aucune info !</div>";					
 			else
-				infoContent = "<div class=\'infowindow emptyfeeditem\'>Choisissez un type d'info !!!</div>";
+				infoContent = "<div class=\'infowindow emptyfeeditem\'>Il n'y a pas d'info ici !!!</div>";
 
 			$('#newsfeed').append('<li class=\'mapHighlighterDetails\'>'+infoContent+'</li>');
 		}
@@ -1167,7 +1168,14 @@ block content
 
 			var infoid = currentItem.attr("infoid");
 
-			
+			/* PLEASE DO IT LIKE THIS
+			$.each(infoArray,function(key,val){
+				if(infoid == val._id){
+					console.log(val);
+				}	
+			});*/
+
+
 			if (currentItem.find(".loadingMore").length > 0 || currentItem.find(".myitem").length > 0)
 			{
 				currentItem.find(".icon-remove").remove();

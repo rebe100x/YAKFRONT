@@ -29,7 +29,7 @@ mixin searchFormUnified(page)
 					ul#dropdownTagSelector.dropdown-menu
 			li.rightPull
 				span#btnDiscussion(title="Voir les Yassalas", type=4, onclick='setDiscussion(this)') 			
-				span#btnMesalertes(title="Mes alertes", type=5, onclick='setAlert(this)')
+				span#btnMesalertes(title="Passer en mode Alertes", type=5, onclick='setAlert(this)')
 
 	div#closehideSearch
 		img(src="/images/new/openClose.png", alt="Ouvrir, Fermer", title="Ouvrir, Fermer")
@@ -47,6 +47,7 @@ mixin searchFormUnified(page)
 		
 		var yakType = ($.isEmptyObject($.cookie("yaktype")))?mainConf.typeDefault.split(','):$.cookie("yaktype").split(',');
 
+		var yakTypeStored = [];
 		// unicity
 		yakType = yakType.filter(function (e, i, arr) {
 			return arr.lastIndexOf(e) === i;
@@ -79,11 +80,19 @@ mixin searchFormUnified(page)
 
 
 		$(document).ready(function(){
-				
-				
-				if($.inArray("4", yakType) != -1)
-					$("#btnDiscussion").addClass('active');
 
+				
+				
+				if(yakType.inArray("4"))
+					$("#btnDiscussion").addClass('active').attr('title','Cacher les Yassalas');
+					
+					
+
+				if(yakType.inArray("5")){
+					$("#btnMesalertes").addClass('active').attr('title','Passer en mode normal');
+					console.log('active ALerte');
+				}
+					
 				//getHotTags(curPos,dateFrom);
 
 				$('#dropdownTagSelector').unbind("click").on('click','li', function (e) {
@@ -256,24 +265,20 @@ mixin searchFormUnified(page)
 				$("#newsfeedMenu span.btn[type=\""+val+"\"]").addClass('active');
 			});
 
-			$('#newsfeedMenu span.btn[type="5"]').removeClass('active');
+			
 			/*type selector*/
+			/*
 			$('#newsfeedMenu span.btn').unbind("click").on('click',function(){
 				var curtype = $(this).attr('type');
-				if(curtype == 3)
-				{
-					$('#newsfeedMenu span.btn').removeClass('active');
-					$(this).addClass('active');
-					yakType = [3];
-				}else if(curtype == 5){
+				if(curtype == 5){
 					$('#newsfeedMenu span.btn').removeClass('active');
 					$(this).addClass('active');
 					yakType = [5];
 				}else{
-					if($("#btnMesalertes").css("opacity") == "1")
-						$("#btnMesalertes").css("opacity" ,"0.3");
+					if($("#btnMesalertes").hasClass('active'))
+						$("#btnMesalertes").removeClass('active');
 					else
-						$("#btnMesalertes").css("opacity" ,"1");
+						$("#btnMesalertes").addClass('active');
 					$('#newsfeedMenu span.btn[type="5"]').removeClass('active');
 					$('#newsfeedMenu span.btn[type="3"]').removeClass('active');
 					yakType.cleanArrayByName(3);	
@@ -286,6 +291,7 @@ mixin searchFormUnified(page)
 						$(this).addClass('active');
 						yakType.push(curtype);
 					}
+
 					if(yakType.length == 0)
 						yakType = [];
 					else
@@ -306,7 +312,7 @@ mixin searchFormUnified(page)
 
 				getAndPrintInfo();
 			});
-
+			*/
 
 			// autocomplete Place
 			$('#searchPlaceStr').typeahead({
@@ -497,41 +503,43 @@ mixin searchFormUnified(page)
 		}
 		*/
 
-		function setDiscussion(el)
-		{
+		function setDiscussion(el){
+
 			if($(el).hasClass('active')){
-				$(el).removeClass('active');
-				yakType = ["1", "2"];
+				$(el).removeClass('active').attr('title','Voir les Yassalas');
+				yakType.cleanArrayByName("4");
 				$.cookie("yaktype", yakType.join(','),{ expires: 10000, path : '/' });
 			}
 			else
 			{
-				$(el).addClass('active');
-				yakType = ["1", "2", "4"];
+				$(el).addClass('active').attr('title','Cacher les Yassalas');
+				yakType.push("4");
+				yakType = yakType.filter(function (e, i, arr) {
+					return arr.lastIndexOf(e) === i;
+				});
 				$.cookie("yaktype", yakType.join(','),{ expires: 10000, path : '/' });	
 			}
-			cleanMarkers();
+			console.log('PRINT');
 			getAndPrintInfo();
 		}
-		function setAlert(el)
-		{
+
+		function setAlert(el){
 			if($(el).hasClass('active')){
-				$(el).removeClass('active');
-				setDiscussion($("#btnDiscussion"));
-				return;
+				$(el).removeClass('active').attr('title','Passer en mode Alertes');
+				yakType.cleanArrayByName("5");
+				$.cookie("yaktype", yakType.join(','),{ expires: 10000, path : '/' });
+			}else{
+				$(el).addClass('active').attr('title','Passer en mode normal');
+				
+				yakType.push("5");
+				yakType = yakType.filter(function (e, i, arr) {
+					return arr.lastIndexOf(e) === i;
+				});
+				$.cookie("yaktype",  yakType.join(','),{ expires: 10000, path : '/' });
+				
 			}
-			else
-			{
-				$(el).addClass('active');
-				yakType = [5];
-				$.cookie("yaktype", 5,{ expires: 10000, path : '/' });
-				cleanMarkers();
-				getAndPrintInfo();
-			}
-
 			
-
-			
+			getAndPrintInfo();
 		}
 		
 		function setRangeSelectorDropDown()

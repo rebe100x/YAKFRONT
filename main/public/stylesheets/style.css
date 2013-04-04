@@ -448,10 +448,12 @@ width: 270px;
    .filterIcon { position: relative; top: 15px}
    #heatSelector { position:  relative; left: 23px; bottom: 6px; margin-right: 45px;}
    #dayPrinter { position: relative; bottom: 9px; }
-   .searchYakwala #btnMesalertes { width: 50px; height: 30px; background-image: url('/images/yakwala_sprite.png'); background-position: -7px -521px; border: 0px; margin-top: 10px; margin-right: 6px;}
-   .searchYakwala #btnMesalertes:hover, .searchYakwala #btnMesalertes.active { background-position: 106px -521px;}
-   .searchYakwala #btnDiscussion { width: 50px; height: 30px; background-image: url('/images/yakwala_sprite.png'); background-position: -5px -478px; border: 0px; margin-top: 10px; margin-right: 6px; float: left;}
-   .searchYakwala #btnDiscussion:hover, .searchYakwala #btnDiscussion.active { background-position: -59px -478px;}
+   .searchYakwala #btnMesalertes { width: 50px; height: 30px; background-image: url('/images/yakwala_sprite.png'); background-position: -7px -521px; border: 0px; margin-top: 10px; margin-right: 6px;opacity:0.5;cursor:pointer;}
+   .searchYakwala #btnMesalertes.active { background-position: 106px -521px;opacity:1;}
+   .searchYakwala #btnMesalertes:hover{ background-position: -7px -521px;}
+   .searchYakwala #btnDiscussion { width: 50px; height: 30px; background-image: url('/images/yakwala_sprite.png'); background-position: -5px -478px; border: 0px; margin-top: 10px; margin-right: 6px; float: left;opacity:0.5;cursor:pointer;}
+   .searchYakwala #btnDiscussion.active { background-position: -59px -478px;opacity:1;}
+   .searchYakwala #btnDiscussion:hover{ background-position: -5px -478px;}
    #closehideSearch { display: block;}
    #closeModal { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -70px -658px; position: relative; float: right; cursor: pointer;}
    span.closePlace { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -97px -658px; position: relative; float: right; cursor: pointer;}

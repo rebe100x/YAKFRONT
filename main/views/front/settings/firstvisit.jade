@@ -187,7 +187,8 @@ block content
 
 						$('#alertMail').remove();	
 						if(res.users.length != 0){
-							$('#email').val("").parent().prepend("<div id='alertMail' class='alert fade in'><strong>Cet email est déjà pris. Pour vous faire renvoyer un mot de passe, c'est <a href='/user/forgotpassword'>ici.</a></div>");
+							$('#email').parent().prepend("<div id='alertMail' class='alert fade in'><strong><i>"+$('#email').val()+"</i> est déjà pris. Pour vous faire renvoyer un mot de passe, c'est <a href='/user/forgotpassword'>ici.</a></div>");
+							$('#email').val('');
 							return false;
 						}
 

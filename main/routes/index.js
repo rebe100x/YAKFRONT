@@ -1307,8 +1307,20 @@ exports.auth_twitter_callback = function(req, res){
 				if(typeof(data.name) != 'undefined')
 					aTwitter.name = data.name;
 
-				if(typeof(data.profile_image_url) != 'undefined')
+				
+				if(typeof(data.profile_image_url) != 'undefined'){
+					/*
+					var drawTool = require('../mylib/drawlib.js');
+					var profileImg;
+
+					console.log(data.profile_image_url);
+					user.thumb = drawTool.GetImg(data.profile_image_url,conf,mainConf);
+					
+					*/
 					aTwitter.profile_image_url = data.profile_image_url;
+					 
+				}
+					
 
 				if(typeof(data.url) != 'undefined')
 					aTwitter.url = data.url;

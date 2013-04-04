@@ -86,10 +86,11 @@ exports.geoalerts = function (req, res) {
 	var usersubs= res.locals.user.usersubs;
 	var tagsubs= res.locals.user.tagsubs;
 	var feedsubs = res.locals.user.feedsubs;
-
-	Info.findAllGeoAlert(req.params.x1,req.params.y1,req.params.x2,req.params.y2,req.params.ago,req.params.now,req.params.str,usersubs,tagsubs,feedsubs,req.params.limit,req.params.skip,function (err, docs){
-		if(!err)
-		{
+	var type = [];
+	type = req.params.type.split(',');
+	
+	Info.findAllGeoAlert(req.params.x1,req.params.y1,req.params.x2,req.params.y2,req.params.ago,req.params.now,type,req.params.str,usersubs,tagsubs,feedsubs,req.params.limit,req.params.skip,function (err, docs){
+		if(!err){
 			var infosFormated = docs.map(function(item){
 					var Info = db.model('Info');
 					return Info.format(item);
@@ -131,7 +132,11 @@ exports.feedalerts = function (req, res) {
 	var usersubs= res.locals.user.usersubs;
 	var tagsubs= res.locals.user.tagsubs;
 	
-	Info.findAllGeoAlert(req.params.x1,req.params.y1,req.params.range,null,req.params.ago,req.params.now,req.params.str,usersubs,tagsubs,req.params.limit,req.params.skip,function (err, docs){
+	var type = [];
+	type = req.params.type.split(',');
+	
+
+	Info.findAllGeoAlert(req.params.x1,req.params.y1,req.params.range,null,req.params.ago,req.params.now,type,req.params.str,usersubs,tagsubs,req.params.limit,req.params.skip,function (err, docs){
 		if(!err)
 			res.json({meta:{code:200},data:{info:docs}});
 		else

@@ -184,7 +184,7 @@ block content
 			
 			var nowts = new Date().getTime();
 			var apiUrl = '';
-			if(yakType.toString() == 5)
+			if(yakType.inArray("5"))
 				apiUrl = '/api/geoalerts/'+curPos.x+'/'+curPos.y+'/'+rangeFromZ()+'/'+'null'+'/'+dateFrom+'/'+nowts+'/'+searchString+'/500';
 			else	
 				apiUrl = '/api/geoinfos/'+curPos.x+'/'+curPos.y+'/'+rangeFromZ()+'/'+'null'+'/'+dateFrom+'/'+nowts+'/'+yakType.toString()+'/'+searchString+'/500';
@@ -223,7 +223,7 @@ block content
 			}
 
 			var apiUrl = '';
-			if(yakType.toString() == 5)
+			if(yakType.inArray("5"))
 				apiUrl = '/api/geoalerts/'+curPos.x+'/'+curPos.y+'/'+rangeFromZ()+'/'+'null'+'/'+dateFrom+'/0/'+searchString+'/500';
 			else	
 				apiUrl = '/api/geoinfos/'+curPos.x+'/'+curPos.y+'/'+rangeFromZ()+'/'+'null'+'/'+dateFrom+'/0/'+yakType.toString()+'/'+searchString+'/500';
@@ -422,7 +422,7 @@ block content
 			}
 			else
 			{
-			infoContent = "<div class=\'infowindow emptyfeeditem\'>Choisissez un type d'info !!!</div>";					
+			infoContent = "<div class=\'infowindow emptyfeeditem\'>Il n'y a pas d'info ici !!!</div>";					
 			}
 			$('#newsfeed').append('<li class=\'mapHighlighterDetails\'>'+infoContent+'</li>');
 		}
