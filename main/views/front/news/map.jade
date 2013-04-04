@@ -298,10 +298,10 @@ block content
 					{
 						getItemDetails(this);
 					}
-					else if(!($.contains(this, e.target)) || $(this).find(".myitem").css("display") == "none")
+					/*else if(!($.contains(this, e.target)) || $(this).find(".myitem").css("display") == "none")
 					{
-						getItemDetails(this);
-					}
+						//getItemDetails(this);
+					}*/
 					unhighlightInfo($(this),highlightInfo);	
 				}
 				
@@ -1204,7 +1204,7 @@ block content
 				thumbImage = val.thumb.replace('thumb/','');
 				//thumbImage = thumbImage.replace('//','/');
 				mediumImage = 	thumbImage.replace('120_90', '512_0');
-			
+				
 
 				
 				
@@ -1221,6 +1221,7 @@ block content
 				{
 					currentItem.find(".thumbImage").insertAfter(currentItem.find(".tags"));	
 					currentItem.find(".thumbImage img").attr("src", mediumImage);
+					currentItem.find(".thumbImage img").addClass("mediumSizeThumb");
 					//currentItem.addClass("currentDetails");
 					//currentItem.removeClass("infowindow");
 
@@ -1244,7 +1245,7 @@ block content
 				$("#newsfeed li").removeClass('highlighted');
 				currentItem.parent().addClass('highlighted');
 				//$('#newsfeedContent').mCustomScrollbar("update");
-				//$('#newsfeedContent').mCustomScrollbar("scrollTo",".mapHighlighter[infoId=\""+currentItem.parent().attr("infoid")+"\"]");
+				$('#newsfeedContent').mCustomScrollbar("scrollTo",".mapHighlighter[infoId=\""+currentItem.parent().attr("infoid")+"\"]");
 			});
 
 			if ($(el).find(".myitem").css("display") == "none") {
@@ -1275,6 +1276,7 @@ block content
 			$("ul#newsfeed").removeAttr("style");
 			currentItem.find('.myitem').remove();
 			currentItem.find(".icon-remove").remove();
+			currentItem.attr("class","mapHighlighterDetails");
 		}
 		function stopScroll()
 		{
