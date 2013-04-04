@@ -99,6 +99,7 @@ block content
 				var location = JSON.stringify({lat:curPos.x,lng:curPos.y});				
 				if(location != ''){
 					changeLocation(location);
+					getAndPrintInfo();
 				}else{
 					if(placeName != ''){
 						
@@ -817,10 +818,10 @@ block content
 			var apiUrl = '';
 			if(yakType.toString() == 5)
 			{
-				apiUrl = '/api/geoalerts/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/0/'+searchStr+'/500';
+				apiUrl = '/api/geoalerts/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/0/'+searchString+'/500';
 			}
 			else	
-				apiUrl = '/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/0/'+yakType.toString()+'/'+searchStr+'/500';
+				apiUrl = '/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/0/'+yakType.toString()+'/'+searchString+'/500';
 			
 			//console.log(apiUrl);
 			$.getJSON(apiUrl,function(ajax) {
