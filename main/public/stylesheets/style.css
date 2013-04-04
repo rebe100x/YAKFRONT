@@ -1026,7 +1026,7 @@ border-bottom: 1px solid #e5e5e5;}
 #signinButton.g-signin { display: none;}
 
 #blackBox { min-width: 100px; display: inline-table;}
-#blackBox:after, #blackBox:before { bottom: 100%; border: solid transparent; content: " "; height: 0; width: 0; position: absolute; pointer-events: none; } 
-#blackBox:after { border-color: rgba(136, 183, 213, 0); border-bottom-color: #3c3c3c; border-width: 8px; left: 50%; margin-left: 2px; } 
+#blackBox:after, #blackBox:before { bottom: 102%; border: solid transparent; content: " "; height: 0; width: 0; position: absolute; pointer-events: none; } 
+#blackBox:after { border-color: rgba(136, 183, 213, 0); border-bottom-color: #3c3c3c; border-width: 8px; left: 43%; margin-left: 2px; } 
 .arrow_box:before { border-color: rgba(194, 225, 245, 0); border-bottom-color: #c2e1f5; border-width: 36px; left: 50%; margin-left: -36px; }
 

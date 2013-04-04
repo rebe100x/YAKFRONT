@@ -421,7 +421,7 @@ function setBlackBockPosition()
 	{
 		var currElposition = $(".ui-slider-handle").position();	
 		//console.log(currElposition);
-		$("#blackBox").css("left", (currElposition.left - 87) + "px");
+		$("#blackBox").css("left", (currElposition.left - 78) + "px");
 	}
 }
 		
