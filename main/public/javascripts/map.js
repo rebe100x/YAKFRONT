@@ -728,7 +728,7 @@
 			if(yakType.inArray("5"))
 				apiUrl = '/api/geoalerts/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/'+nowts+'/'+yakType.toString()+'/'+searchString+'/500';
 			else	
-				apiUrl = '/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/'+nowts+'/'+searchString+'/500';
+				apiUrl = '/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/'+nowts+'/'+yakType.toString()+'/'+searchString+'/500';
 			
 
 			$.getJSON(apiUrl,function(ajax) {
