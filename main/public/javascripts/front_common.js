@@ -1518,46 +1518,86 @@ function checkByWidth()
 		function showUserProfile(el)
 		{
 			var userid = $(el).parent().find("input").val();
+
 			emptyUserChooser();
+
 			$('#userChooser').modal('show');
+
 			$.getJSON('/api/usersearchbyid2/' + userid ,function(data) {
+
 				var theuser = data.user[0];
-				console.log(theuser);
-				//$("#userChooser #uc_Name").html(theuser.name);
-				//$("#uc_image").html("<img src='" + theuser.thumbsmall +"' height='150' width='150' />");
+				if(typeof theuser == 'undefined')
+				{
+					return;
+				}
+
+				var userName = ""; var userBio = ""; var userThumb = ""; var userWeb = ""; var userLogin = "";
+					
+
 				$("#userChooser p.alertText").html("");
-				$("#userChooser #uc_profile_brief").html("<span class='theimage'><img src='" + theuser.thumb +"' /></span><span class='theinfo'><span class='thename' id='uc_username'>" + theuser.name + "</span><br />" + "<span class='thelogin'>@"+ theuser.login + "</span><br /><span class='thebio'>" + theuser.bio + "</span><span class='thelink'><a href='" + theuser.web +"' target='_blank'>" + theuser.web + "</a></span></span>");
+
+				if(typeof theuser.thumb != 'undefined')
+					userThumb = theuser.thumb;
+
+				if(typeof theuser.bio != 'undefined')
+					userBio = theuser.bio;
+
+				if(typeof theuser.name != 'undefined')
+					userName = theuser.name;
+
+				if(typeof theuser.web != 'undefined')
+					userWeb = theuser.web;
+
+				if(typeof theuser.login != 'undefined')
+					userLogin = theuser.login;
+
+					$("#userChooser #uc_profile_brief").html("<span class='theimage'><img src='" + userThumb +"' /></span><span class='theinfo'><span class='thename' id='uc_username'>" + userName + "</span><br />" + "<span class='thelogin'>@"+ userLogin+ "</span><br /><span class='thebio'>" + userBio + "</span><span class='thelink'><a href='" + userWeb +"' target='_blank'>" + userWeb + "</a></span></span>");
 				
 				$.getJSON('/api/countUserInfo/' + userid ,function(data) {
-					$("#userChooser #uc_profile_yaks_posts").html("Yassalas<br /><b>" + data.count + "<b>");		
+					if(typeof data.count != 'undefined')
+						$("#userChooser #uc_profile_yaks_posts").html("Yassalas<br /><b>" + data.count + "<b>");		
 				});
+
 				if($.inArray(userid,user.usersubs))
 					$("#userChooser #uc_profile_yaks_alerts.mybtn").html("Supprimer de mes alertes");		
 				else
 					$("#userChooser #uc_profile_yaks_alerts.mybtn").html("Ajouter a mes alertes");		
 
 				var thetags = "";
-				for(i=0; i<theuser.tagsubs.length; i++)
+
+				if(typeof theuser.tagsubs != 'undefined')
 				{
-					thetags += "<a onclick='setSearchForTag(this)'>#" + theuser.tagsubs[i] + " </a>";
+					for(i=0; i<theuser.tagsubs.length; i++)
+					{
+						thetags += "<a onclick='setSearchForTag(this)'>#" + theuser.tagsubs[i] + " </a>";
+					}	
 				}
+				
+
 				$("#userChooser #uc_profile_tags #thealerts").html(thetags);
 
-				var subscribed_number = theuser.usersubs.length + theuser.feedsubs.length;
+				var subscribed_number = 0;
+
+				if(typeof theuser.tagsubs != 'undefined')
+					subscribed_number += theuser.usersubs.length;
+				if(typeof theuser.feedsubs != 'undefined')
+					subscribed_number += theuser.feedsubs.length;
+
 				$("#userChooser #subscribed_number").html(subscribed_number);
 
 				$.getJSON('/api/countUserSubscribers/' + userid ,function(data) {
-					$("#userChooser #subscribers_number").html(data.count);		
+					if(typeof data != 'undefined')
+						$("#userChooser #subscribers_number").html(data.count);		
 				});
 
+
 				$("#uc_profile_yaks_search").click(function(){
-				setSearchForUser(theuser.name);
+					setSearchForUser(theuser.name);
 				});
 
 				var uri = '/api/user/feed/' + theuser._id;
 
 				$.getJSON(uri,function(ajax) {
-					console.log(ajax);
 					$.each(ajax.data, function(key,val) {
 						printFeedItemPopUp(val);	
 					});
