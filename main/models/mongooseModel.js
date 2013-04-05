@@ -51,6 +51,10 @@ contenuIllicite.statics.findById = function (id, callback) {
  	return this.findOne({'_id': id}, callback);
 }
 
+contenuIllicite.statics.findByUserInfoType = function (content_id, content_type, callback) {
+ 	return this.findOne({'content_id': content_id, 'content_type' : content_type}, callback);
+}
+
 mongoose.model('contenuIllicite', contenuIllicite);
 
 
@@ -576,7 +580,8 @@ var User = new Schema({
 		twitter : {type: [Twitter],required: false},
 		facebook : {type: [Facebook],required: false},
 		google : {type: [Google],required: false}
-	 }
+	 },
+	 illicite : {type: [contenuIllicite],required: false}
 	, stats: { 
 		cats: {type : Schema.Types.Mixed},
 		tags: {type : Schema.Types.Mixed},
@@ -639,7 +644,8 @@ User.statics.format = function (theuser) {
 		social: theuser.social,
 		stats: theuser.stats,
 		createfrom_social: theuser.createfrom_social,
-		status: theuser.status
+		status: theuser.status,
+		illicite: theuser.illicite
 	};
   return formattedUser;
 }

@@ -533,7 +533,7 @@ function  hidePostForm()
 
 $(document).ready(function() {
 	//user.thumbsmall = "http://localhost:3000/images/dangui.jpg";
-	//console.log(user);
+	console.log(user);
 
 	/*preload([
     '/images/yakwala_sprite.png',
@@ -1222,36 +1222,40 @@ function setCommentText(len,item){
 
 function setSpamSystem(item){
 	
-	var url = '/getSpams/' + item.attr("rel") + '/' + user._id;
+	//var url = '/getSpams/' + item.attr("rel") + '/' + user._id;
 	
-	console.log(url);
-	$.get(url, function(res){
-		
-		
-		alertid = res;
-		if(alertid == "" || alertid == null)
-		{
-			item.html("Marquer comme spam");
+	//console.log(url);
+	var isSpammed = false;
 
-			item.click(function(){
-				
-					$.post('/setSpams', {infoId : $(this).attr("rel")} , function(res){
-							if (res != "0")
-							{
-								item.html("tu as marqué comme spam");
-								item.alertid = res;
-							}
+	$.each(user.illicite, function(key, val){
+		//console.log(val);
+		if(item.attr("rel") ==  val.content_id && val.content_type == 1)
+			isSpammed = true;
+	});	
 
-					});
+	if(!isSpammed)
+	{
+		item.html("Marquer comme spam");
 
-			});
-		}
-		else
-		{
-			item.html("déjà marqué comme spam");
-		}
+		item.click(function(){
+			
+				$.post('/setSpams', {content_id : $(this).attr("rel"), content_type : 1} , function(res){
+						if (res != "0")
+						{
+							item.html("tu as marqué comme spam");
+							item.alertid = res;
+						}
 
-	});
+				});
+
+		});
+	}
+	else
+	{
+		item.html("déjà marqué comme spam");
+	}
+
+
 
 	
 

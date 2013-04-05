@@ -1145,13 +1145,19 @@ exports.setLikes = function(req, res){
 exports.setSpams = function(req, res){
 	//console.log(req.session.user);
 	var contenuIllicite = db.model('contenuIllicite');
+	var User = db.model('User');
+
 	var aspamAlert = new contenuIllicite();
+	aspamAlert.content_id = req.body.content_id;
+	aspamAlert.user_id = req.session.user;
+	aspamAlert.content_type = 1;
+
 	if(req.session.user){
-			contenuIllicite.findById(req.params.infoid, function (err, thealert){
+			contenuIllicite.findByUserInfoType(req.body.content_id, req.body.content_type, function (err, thealert){
 				//log
-				trackUser(req.session.user, 14,  {infoId:req.params.infoid});
+				trackUser(req.session.user, 14,  {infoId:req.body.content_id});
 				if(thealert != undefined && thealert != null ){
-					infoAlert.update({"_id":thealert._id},{$push:{user_id: req.session.user}},{$inc:{count : 1}},{$set:{"last_date_mark":new Date()}}, function(err){
+					contenuIllicite.update({"_id":thealert._id},{$push:{user_id: req.session.user}, $inc:{count : 1}},{$set:{"last_date_mark":new Date()}}, function(err){
 						if (err) 
 						{
 							console.log(err);
@@ -1163,13 +1169,13 @@ exports.setSpams = function(req, res){
 						}
 							
 					});	
+
+					User.update({"_id":req.session.user}, {$push:{illicite:aspamAlert}}, function(err){
+
+					});
 				}
 				else
 				{
-					aspamAlert.content_id = req.body.infoId;
-					aspamAlert.user_id = req.session.user;
-					aspamAlert.content_type = 1;
-
 					aspamAlert.save(function(err){
 						if(!err)
 							res.send("1");
@@ -1178,6 +1184,9 @@ exports.setSpams = function(req, res){
 							console.log(err);
 							res.send("0");
 						}
+					});
+					User.update({"_id":req.session.user}, {$push:{illicite:aspamAlert}}, function(err){
+
 					});
 				}
 		
