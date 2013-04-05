@@ -1187,11 +1187,10 @@ block content
 
 			
 			currentItem.append('<img src="images/loader_big.gif" class="loadingMore">');
-			$.getJSON('/api/afeed', { id: infoid } ,function(data) {
-				//console.log(data.info[0]);
-				
-				var val = data.info[0];
-				
+			
+			$.each(infoArray,function(key,val){
+				if(infoid == val._id){
+				console.log(val);
 				/*
 				if(val.user != undefined){
 					thumbImage = 	val.thumb;
@@ -1246,20 +1245,13 @@ block content
 				currentItem.parent().addClass('highlighted');
 				//$('#newsfeedContent').mCustomScrollbar("update");
 				$('#newsfeedContent').mCustomScrollbar("scrollTo",".mapHighlighter[infoId=\""+currentItem.parent().attr("infoid")+"\"]");
+
+				var trackParams ={"infoId":infoid,"page": "map"};
+				$.getJSON(conf.trackurl+'/track/user/'+user._id+'/'+'6'+'/'+encodeURIComponent(JSON.stringify(trackParams)));  
+				}	
 			});
 
-			if ($(el).find(".myitem").css("display") == "none") {
-				$("#newsfeed").find(".myitem").hide();
-				$(el).find(".myitem").show();
-			}
-			else
-			{
-				$(el).find(".myitem").hide();
-			}
-
-
-			var trackParams ={"infoId":infoid,"page": "map"};
-			$.getJSON(conf.trackurl+'/track/user/'+user._id+'/'+'6'+'/'+encodeURIComponent(JSON.stringify(trackParams)));  
+			
 			
 		}
 
@@ -1284,6 +1276,7 @@ block content
 		}
 		function createFeedPageItem(val)
 		{
+
 			var item = $("<div />");
 			item.attr("class", "myitem");
 
