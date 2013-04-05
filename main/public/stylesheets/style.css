@@ -858,14 +858,18 @@ width: 270px;
  
 
  
-
+/*FIX BOOTSTRAP*/
  @media (max-width: 979px) {
      .yak-sidenav-fixed {
          margin-top:100px;
         width: auto;
      }
  }
-
+@media (max-width: 979px){}
+	.navbar-fixed-top {
+		margin-bottom: 0px;
+	}
+}
 
  td#highlight{
  	background-color: #F7F7F9;
@@ -904,7 +908,7 @@ width: 270px;
 /* SEARCH BAR
 ----------------------------------------------------*/
 
-.searchYakwala { background-color: #F6F6F6; float: left; border-top: 1px solid #E2E2E2; border-bottom: 1px solid #E2E2E2;}  
+.searchYakwala { background-color: #F6F6F6; float: left; border-top: 1px solid #E2E2E2; border-bottom: 1px solid #E2E2E2;width: 100%;}  
 .searchYakwala #searchBtn {background-image:url('../images/new/go.png'); width: 27px; height: 27px; border: 0px; margin: 7px; float: left;}
 
 .searchYakwala .myi { position: relative; top: 12px; float: left;}
@@ -967,12 +971,8 @@ color: #333333;
 border: 0;
 border-bottom: 1px solid #e5e5e5;}
 
-#postForm button.btn.btn-large, input[type="submit"].btn.btn-large
-{
-	background: #c20e16;
-	color: #f9e7e8;
-}
-
+#postForm button.btn.btn-large, input[type="submit"].btn.btn-large{background: #c20e16;color: #f9e7e8;}
+#postForm #yakTypeController label{margin-left:10%;}
 .clearBoth { clear: both;}
 
 .searchYakwala .customInput { margin-bottom: 6px}

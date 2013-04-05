@@ -14,17 +14,17 @@ mixin postForm()
 						input.span12.hashtagMaker(type='text', name='title', id='title', placeholder='Titre: vous pouvez utiliser des hashtags dans votre texte ( #maisonavendre )')
 						textarea#content.span12.hashtagMaker(name='content', placeholder='Texte: vous pouvez utiliser des hashtags dans votre texte ( #maisonavendre )',rows='3')
 				div.control-group
-					label(for='type') Choisissez la rubrique danslaquelle votre info apparaitra:
+					label(for='type') Quelle type de contenu voulez vous poster:
 					div.controls#yakTypeController
-						label.radio.inline Actu
+						label.radio.inline Une actualité
 							input#option1(type="radio", name="yakType", value="1" , checked) 
 						- if(type != 2)
-							label.radio.inline Discussion
+							label.radio.inline Un Yassala
 								input#option4(type="radio", name="yakType", value="4")
-						label.radio.inline Agenda
+						label.radio.inline Un évènement
 							input#option2(type="radio", name="yakType", value="2")
-						label.radio.inline Infos&nbsp;pratiques
-							input#options3(type="radio", name="yakType", value="3")
+						//label.radio.inline Infos&nbsp;pratiques
+						//	input#options3(type="radio", name="yakType", value="3")
 				div.control-group#eventDateController
 					label(for='eventDate') Date de l événement :
 						div.controls
@@ -48,8 +48,9 @@ mixin postForm()
 							button.btn#btn-place-adder(type="button") Add
 							span.help-inline(style='font-size:0.95em;font-style:italic;margin-left:20px;') Ajoutez plusieurs adresses <br>et faites apparaître votre info <br>à plusieurs endroits !
 				br
-				button.btn.btn-large.btn-block.btn-inverse(style='width:100%',type='submit', name='submit', id='submit', value='Envoyer') Envoyer
-			
+				button.btn.btn-large.btn-block.btn-inverse(style='width:100%',type='submit', name='submit', id='submit', value='Envoyer') POSTER
+				br
+				br
 		- if(locals.user.type == 1)
 			form#postForm(action='/news', method='POST', enctype='multipart/form-data')
 				input#yakcatInput(type='hidden', name='yakcatInput', value='')
@@ -95,6 +96,9 @@ mixin postForm()
 						input#option1(type="radio", name="yakType", value="4" , checked) 
 				div(style="text-align: center; width: 100%")
 					button.yakbtn(type='submit', name='submit', id='submit', value='Envoyer') POSTER
+				br
+				br
+
 	- else
 		mixin loginForm() 
 	script(src='/javascripts/lib/plugin/jquery-ui-timepicker-addon.js')
