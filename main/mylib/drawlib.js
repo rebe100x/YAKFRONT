@@ -156,7 +156,7 @@ exports.StoreImg = function(file,destName,size,conf){
 				console.log('convert to jpeg failed');
 				flagError = 1;
 				message.push("L'image n'est pas reconnue, essayer avec une autre image !");
-				throw err;
+				console.log(err);
 			}
 		});// END CONVERT TO JPG
 	} // END FILE null

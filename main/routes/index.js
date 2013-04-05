@@ -1310,8 +1310,8 @@ exports.auth_twitter_callback = function(req, res){
 				var logo = conf.fronturl+"/static/images/yakwala-logo_petit.png";
 				
 				var randomnumber=Math.floor(Math.random()*101)
-				user.name=login+randomnumber.toString();
-				user.login=login+randomnumber.toString();
+				user.name=login+"_twitter";
+				user.login=login+"_twitter";
 				user.mail='yak_not_set@yakwala.fr';
 				user.token=token;
 				user.status=1;
@@ -1329,15 +1329,25 @@ exports.auth_twitter_callback = function(req, res){
 
 				
 				if(typeof(data.profile_image_url) != 'undefined'){					
-					var drawTool = require('../mylib/drawlib.js');
-					var profileImg;
-					// this line is only for Twitter to get a better image
-					data.profile_image_url = data.profile_image_url.replace('normal','bigger');
-					var ts = new Date().getTime();
-					user.thumb = crypto.createHash('md5').update(ts.toString()).digest("hex")+'.jpeg';
-					drawTool.GetImg(data.profile_image_url,user.thumb,conf,mainConf);
+					try
+					{
+						var drawTool = require('../mylib/drawlib.js');
+						var profileImg;
+						// this line is only for Twitter to get a better image
+						data.profile_image_url = data.profile_image_url.replace('normal','bigger');
+						var ts = new Date().getTime();
+						user.thumb = crypto.createHash('md5').update(ts.toString()).digest("hex")+'.jpeg';
+						drawTool.GetImg(data.profile_image_url,user.thumb,conf,mainConf);
+						
+						aTwitter.profile_image_url = data.profile_image_url;	
+					}
+					catch(err)
+					{
+						console.log(err);
+						user.thumb = "no-user.png";
+					}
+
 					
-					aTwitter.profile_image_url = data.profile_image_url;
 				}
 
 					
@@ -1455,8 +1465,8 @@ exports.auth_facebook = function(req, res){
 	var logo = conf.fronturl+"/static/images/yakwala-logo_petit.png";
 	
 	var randomnumber=Math.floor(Math.random()*101)
-	user.name=login+randomnumber.toString();
-	user.login=login+randomnumber.toString();
+	user.name=login+"_facebook";
+	user.login=login+"_facebook";
 	
 	user.mail='yak_not_set@yakwala.fr';
 	user.token=token;
@@ -1483,11 +1493,20 @@ exports.auth_facebook = function(req, res){
 		aFacebook.profile_image_url = 'https:/graph.facebook.com/'+data.id+'/picture/';
 
 	if(typeof(aFacebook.profile_image_url) != 'undefined'){					
-		var drawTool = require('../mylib/drawlib.js');
-		var profileImg;
-		var ts = new Date().getTime();
-		user.thumb = crypto.createHash('md5').update(ts.toString()).digest("hex")+'.jpeg';
-		drawTool.GetImg(aFacebook.profile_image_url,user.thumb,conf,mainConf);
+		try
+		{
+			var drawTool = require('../mylib/drawlib.js');
+			var profileImg;
+			var ts = new Date().getTime();
+			user.thumb = crypto.createHash('md5').update(ts.toString()).digest("hex")+'.jpeg';
+			drawTool.GetImg(aFacebook.profile_image_url,user.thumb,conf,mainConf);	
+		}
+		catch(err)
+		{
+			console.log(err);
+			user.thumb = "no-user.png";
+		}
+		
 	}
 
 	if(typeof(data.link) != 'undefined')
@@ -1573,8 +1592,8 @@ exports.auth_google = function(req, res){
 	var logo = conf.fronturl+"/static/images/yakwala-logo_petit.png";
 	
 	var randomnumber=Math.floor(Math.random()*101)
-	user.name=login+randomnumber.toString();
-	user.login=login+randomnumber.toString();
+	user.name=login+"_google";
+	user.login=login+"_google";
 	user.mail='yak_not_set@yakwala.fr';
 	user.token=token;
 	user.status=1;
@@ -1598,12 +1617,21 @@ exports.auth_google = function(req, res){
 		aGoogle.name = data.name.givenName + "." + data.name.familyName;
 
 	
-	if(typeof(data.image) != 'undefined'){					
-		var drawTool = require('../mylib/drawlib.js');
-		var ts = new Date().getTime();
-		user.thumb = crypto.createHash('md5').update(ts.toString()).digest("hex")+'.jpeg';
-		drawTool.GetImg(data.image.url,user.thumb,conf,mainConf);
-		aGoogle.profile_image_url = data.image.url;
+	if(typeof(data.image) != 'undefined'){
+		try
+		{
+			var drawTool = require('../mylib/drawlib.js');
+			var ts = new Date().getTime();
+			user.thumb = crypto.createHash('md5').update(ts.toString()).digest("hex")+'.jpeg';
+			drawTool.GetImg(data.image.url,user.thumb,conf,mainConf);
+			aGoogle.profile_image_url = data.image.url;
+		}	
+		catch(err)
+		{
+			user.thumb = "no-user.png";
+			console.log(err);
+		}				
+		
 	}
 
 	if(typeof(data.url) != 'undefined')
