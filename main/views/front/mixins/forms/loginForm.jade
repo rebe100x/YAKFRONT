@@ -63,6 +63,7 @@ mixin loginForm()
 			
 	script(src="http://connect.facebook.net/en_US/all.js")
 	script
+		var user = {};
 		var conf = !{conf};
 		// initialize the library with the API key
 		FB.init({ appId: 548066291890740 });
@@ -127,8 +128,7 @@ mixin loginForm()
 		
 	
 		$(document).ready(function(){
-
-			
+						
 			$("#remember").change(function(){
 				if ($('#remember').attr('checked')) {
 					$("#rememberme").val("true");
