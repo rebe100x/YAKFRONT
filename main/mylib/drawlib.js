@@ -58,14 +58,15 @@ exports.StoreImg = function(file,destName,size,conf){
 	if(file.size){
 		
 		var srcPathTmp = file.path;
-		var srcNameTmp = file.name;
+		//var srcNameTmp = file.name;
 		srcPath = srcPathTmp.replace('.gif', '.jpeg');
 		srcPath = srcPathTmp.replace('.png', '.jpeg');
 		srcPath = srcPathTmp.replace('.jpg', '.jpeg');
-		srcName = srcNameTmp.replace('.gif', '.jpeg');
-		srcName = srcNameTmp.replace('.png', '.jpeg');
-		srcName = srcNameTmp.replace('.jpg', '.jpeg');
-		srcName = srcNameTmp.replace('.jpeg', '-new.jpeg');
+		srcPath = srcPathTmp.replace('.jpeg', '-new.jpeg');
+		//srcName = srcNameTmp.replace('.gif', '.jpeg');
+		//srcName = srcNameTmp.replace('.png', '.jpeg');
+		//srcName = srcNameTmp.replace('.jpg', '.jpeg');
+		
 		//destName =  crypto.createHash('md5').update(srcName).digest("hex")+'.jpeg'; 
 		// convert to jpeg
 		console.log(srcPathTmp+','+srcPath);
