@@ -1244,6 +1244,7 @@ function setSpamSystem(item){
 						{
 							item.html("tu as marqué comme spam");
 							item.alertid = res;
+							user.illicite = user.illicite.concat(res)
 						}
 
 				});

@@ -1165,7 +1165,7 @@ exports.setSpams = function(req, res){
 						}
 						else
 						{
-							res.send("1");	
+							res.send(aspamAlert);	
 						}
 							
 					});	
@@ -1178,7 +1178,7 @@ exports.setSpams = function(req, res){
 				{
 					aspamAlert.save(function(err){
 						if(!err)
-							res.send("1");
+							res.send(aspamAlert);
 						else
 						{
 							console.log(err);
