@@ -57,6 +57,8 @@ app.configure('development', function(){
 
 
 app.configure('production', function(){
+	var oneYear = 31557600000;
+	app.use(express.static(__dirname + '/public'), { maxAge: oneYear });
 	conf = config.confs.prod;
 	app.locals.conf = JSON.stringify(conf);
 	mainConf = config.confs.main;
@@ -250,23 +252,23 @@ new compressor.minify({
 	type: 'yui-js',
 	fileIn: [
 	
-	 'public/javascripts/lib/jquery/js/jquery-1.8.2.min.js'
-	, 'public/javascripts/lib/jquery/js/jquery-ui-1.8.24.custom.min.js'
-	, 'public/javascripts/lib/bootstrap/js/bootstrap.min.js'
-	, 'public/javascripts/lib/bootstrap/js/bootstrap-typeahead.js'
-	, 'public/javascripts/lib/plugin/jquery.cookie.js'
-	, 'public/javascripts/lib/plugin/jquery.mousewheel.min.js'
-	, 'public/javascripts/lib/plugin/happy.js'
-	, 'public/javascripts/lib/plugin/jquery.scrollTo-min.js'
-	, 'public/javascripts/lib/jquery/js/timeago.js'
-	, 'public/javascripts/customSB.js'
-	, 'public/javascripts/lib/jquery/js/share.js'
-	, 'public/javascripts/lib/jquery/js/jquery.livequery.js'
-	, 'public/javascripts/json2.js'
-	, 'public/javascripts/common.js'
-	, 'public/javascripts/front_common.js'
+	 __dirname+'/public/javascripts/lib/jquery/js/jquery-1.8.2.min.js'
+	, __dirname+'/public/javascripts/lib/jquery/js/jquery-ui-1.8.24.custom.min.js'
+	, __dirname+'/public/javascripts/lib/bootstrap/js/bootstrap.min.js'
+	, __dirname+'/public/javascripts/lib/bootstrap/js/bootstrap-typeahead.js'
+	, __dirname+'/public/javascripts/lib/plugin/jquery.cookie.js'
+	, __dirname+'/public/javascripts/lib/plugin/jquery.mousewheel.min.js'
+	, __dirname+'/public/javascripts/lib/plugin/happy.js'
+	, __dirname+'/public/javascripts/lib/plugin/jquery.scrollTo-min.js'
+	, __dirname+'/public/javascripts/lib/jquery/js/timeago.js'
+	, __dirname+'/public/javascripts/customSB.js'
+	, __dirname+'/public/javascripts/lib/jquery/js/share.js'
+	, __dirname+'/public/javascripts/lib/jquery/js/jquery.livequery.js'
+	, __dirname+'/public/javascripts/json2.js'
+	, __dirname+'/public/javascripts/common.js'
+	, __dirname+'/public/javascripts/front_common.js'
 	],
-	fileOut: 'public/javascripts/minify/front-min.js',
+	fileOut: __dirname+'/public/javascripts/minify/front-min.js',
 	callback: function(err){
 		if(err)
 			console.log(err);
@@ -279,15 +281,15 @@ new compressor.minify({
 	type: 'yui-css',
 	fileIn: [
 	
-	 'public/javascripts/lib/bootstrap/css/bootstrap.css'
-	, 'public/javascripts/lib/bootstrap/css/bootstrap-responsive.css'
-	, 'public/javascripts/lib/jquery/css/custom-theme/jquery-ui-1.8.24.custom.css'
-	, 'public/stylesheets/common.css'
-	, 'public/stylesheets/customSB.css'
-	, 'public/javascripts/lib/jquery/css/share.css'
-	, 'public/stylesheets/style.css'
+	 __dirname+'/public/javascripts/lib/bootstrap/css/bootstrap.css'
+	, __dirname+'/public/javascripts/lib/bootstrap/css/bootstrap-responsive.css'
+	, __dirname+'/public/javascripts/lib/jquery/css/custom-theme/jquery-ui-1.8.24.custom.css'
+	, __dirname+'/public/stylesheets/common.css'
+	, __dirname+'/public/stylesheets/customSB.css'
+	, __dirname+'/public/javascripts/lib/jquery/css/share.css'
+	, __dirname+'/public/stylesheets/style.css'
 	],
-	fileOut: 'public/stylesheets/minify/front-min.css',
+	fileOut: __dirname+'/public/stylesheets/minify/front-min.css',
 	callback: function(err){
 		if(err)
 			console.log(err);
@@ -300,9 +302,9 @@ new compressor.minify({
 new compressor.minify({
 	type: 'yui-js',
 	fileIn: [
-	 'public/javascripts/map.js'
+	 __dirname+'/public/javascripts/map.js'
 	],
-	fileOut: 'public/javascripts/minify/map-min.js',
+	fileOut: __dirname+'/public/javascripts/minify/map-min.js',
 	callback: function(err){
 		if(err)
 			console.log(err);
@@ -315,9 +317,9 @@ new compressor.minify({
 new compressor.minify({
 	type: 'yui-js',
 	fileIn: [
-	 'public/javascripts/feed.js'
+	 __dirname+'/public/javascripts/feed.js'
 	],
-	fileOut: 'public/javascripts/minify/feed-min.js',
+	fileOut: __dirname+'/public/javascripts/minify/feed-min.js',
 	callback: function(err){
 		if(err)
 			console.log(err);
