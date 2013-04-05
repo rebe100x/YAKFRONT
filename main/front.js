@@ -15,7 +15,8 @@ var express = require('express'),
   crypto = require('crypto'),
   nodemailer = require("nodemailer"),
   AWS = require('aws-sdk'),
-  config_secret = require('./confs_secret.js')
+  config_secret = require('./confs_secret.js'),
+  compressor = require('node-minify')
   ;
     
 var app = express();
@@ -244,3 +245,83 @@ app.listen(conf.frontport, function(){
  console.log("Express server %s listening on port %d in %s mode", conf.frontdns, conf.frontport, app.settings.env);
 });
 
+// Uglify with node-minify : https://github.com/srod/node-minify
+new compressor.minify({
+	type: 'yui-js',
+	fileIn: [
+	
+	 'public/javascripts/lib/jquery/js/jquery-1.8.2.min.js'
+	, 'public/javascripts/lib/jquery/js/jquery-ui-1.8.24.custom.min.js'
+	, 'public/javascripts/lib/bootstrap/js/bootstrap.min.js'
+	, 'public/javascripts/lib/bootstrap/js/bootstrap-typeahead.js'
+	, 'public/javascripts/lib/plugin/jquery.cookie.js'
+	, 'public/javascripts/lib/plugin/jquery.mousewheel.min.js'
+	, 'public/javascripts/lib/plugin/happy.js'
+	, 'public/javascripts/lib/plugin/jquery.scrollTo-min.js'
+	, 'public/javascripts/lib/jquery/js/timeago.js'
+	, 'public/javascripts/customSB.js'
+	, 'public/javascripts/lib/jquery/js/share.js'
+	, 'public/javascripts/lib/jquery/js/jquery.livequery.js'
+	, 'public/javascripts/json2.js'
+	, 'public/javascripts/common.js'
+	, 'public/javascripts/front_common.js'
+	],
+	fileOut: 'public/javascripts/minify/front-min.js',
+	callback: function(err){
+		if(err)
+			console.log(err);
+		else
+			console.log('YUI JS FRONT compressor ok');
+	}	
+});
+
+new compressor.minify({
+	type: 'yui-css',
+	fileIn: [
+	
+	 'public/javascripts/lib/bootstrap/css/bootstrap.css'
+	, 'public/javascripts/lib/bootstrap/css/bootstrap-responsive.css'
+	, 'public/javascripts/lib/jquery/css/custom-theme/jquery-ui-1.8.24.custom.css'
+	, 'public/stylesheets/common.css'
+	, 'public/stylesheets/customSB.css'
+	, 'public/javascripts/lib/jquery/css/share.css'
+	, 'public/stylesheets/style.css'
+	],
+	fileOut: 'public/stylesheets/minify/front-min.css',
+	callback: function(err){
+		if(err)
+			console.log(err);
+		else
+			console.log('YUI CSS FRONT compressor ok');
+	}	
+});
+
+// MAP PAGE
+new compressor.minify({
+	type: 'yui-js',
+	fileIn: [
+	 'public/javascripts/map.js'
+	],
+	fileOut: 'public/javascripts/minify/map-min.js',
+	callback: function(err){
+		if(err)
+			console.log(err);
+		else
+			console.log('YUI JS MAP compressor ok');
+	}	
+});
+
+// FEED PAGE
+new compressor.minify({
+	type: 'yui-js',
+	fileIn: [
+	 'public/javascripts/feed.js'
+	],
+	fileOut: 'public/javascripts/minify/feed-min.js',
+	callback: function(err){
+		if(err)
+			console.log(err);
+		else
+			console.log('YUI JS FEED compressor ok');
+	}	
+});

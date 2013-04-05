@@ -1273,7 +1273,7 @@ function setLikeSystem(from)
 
 						var trackParams = {"params": [
 											{"infoId":infoid},
-											{"page": "map"},
+											{"page": "map"}
 									]
 								};
 						$.ajax({
