@@ -58,18 +58,12 @@ exports.StoreImg = function(file,destName,size,conf){
 	if(file.size){
 		
 		var srcPathTmp = file.path;
-		//var srcNameTmp = file.name;
 		srcPath = srcPathTmp.replace('.gif', '.jpeg');
 		srcPath = srcPathTmp.replace('.png', '.jpeg');
 		srcPath = srcPathTmp.replace('.jpg', '.jpeg');
 		srcPath = srcPathTmp.replace('.jpeg', '-new.jpeg');
-		//srcName = srcNameTmp.replace('.gif', '.jpeg');
-		//srcName = srcNameTmp.replace('.png', '.jpeg');
-		//srcName = srcNameTmp.replace('.jpg', '.jpeg');
-		
-		//destName =  crypto.createHash('md5').update(srcName).digest("hex")+'.jpeg'; 
 		// convert to jpeg
-		console.log(srcPathTmp+','+srcPath);
+		//console.log(srcPathTmp+','+srcPath);
 		im.convert([srcPathTmp,srcPath],function(err,stdout){
 			// if convertion ok, we begin to build the small images
 			if(!err){
@@ -211,6 +205,12 @@ function StoreImgOnS3(imgPath,conf){
 	  var data2send = {Bucket: conf.bucket, Key: imgPath, Body: data, ACL:'public-read',ContentType:'image/jpeg'};
 	  s3.client.putObject(data2send, function() {
 	    console.log("Successfully uploaded data to "+conf.bucket+"/"+imgPath);
+	    fs.unlink(conf.uploadsDir+'pictures/'+imgPath,function(err){
+	    	if(err)
+	    		console.log(err);
+	    	else
+	    		console.log('file deleted localy');
+	    });
 	  });
 	});
 }
