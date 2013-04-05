@@ -18,7 +18,7 @@ exports.GetImg = function(urlImg, destName, conf, mainConf){
 
 		res.on('data', function(chunk){
 			imagedata += chunk
-		})
+		});
 
 		res.on('end', function(){
 			fs.writeFile(conf.uploadsDir+'originals/'+destName, imagedata, 'binary', function(err){
@@ -65,94 +65,96 @@ exports.StoreImg = function(file,destName,size,conf){
 		srcName = srcNameTmp.replace('.gif', '.jpeg');
 		srcName = srcNameTmp.replace('.png', '.jpeg');
 		srcName = srcNameTmp.replace('.jpg', '.jpeg');
+		srcName = srcNameTmp.replace('.jpeg', '-new.jpeg');
 		//destName =  crypto.createHash('md5').update(srcName).digest("hex")+'.jpeg'; 
 		// convert to jpeg
+		console.log(srcPathTmp+','+srcPath);
 		im.convert([srcPathTmp,srcPath],function(err,stdout){
 			// if convertion ok, we begin to build the small images
 			if(!err){
 				
-					//var w = size.w;
-					//var h = size.h;
-					//console.log( size.w+' x '+ size.h);
-					
-					if(size.w > 0 && size.h > 0){
-						//console.log("1="+conf.uploadsDir+'pictures/'+ size.w+'_'+ size.h+'/'+destName);
-						im.resize({
-							srcPath: srcPath,
-							dstPath: conf.uploadsDir+'pictures/'+size.w+'_'+size.h+'/'+destName,
-							strip : false,
-							width : size.w,
-							height : size.h+"^",
-							customArgs: [
-								 "-gravity", "center"
-								,"-extent", size.w+"x"+size.h
-								]
+				//var w = size.w;
+				//var h = size.h;
+				//console.log( size.w+' x '+ size.h);
+				
+				if(size.w > 0 && size.h > 0){
+					//console.log("1="+conf.uploadsDir+'pictures/'+ size.w+'_'+ size.h+'/'+destName);
+					im.resize({
+						srcPath: srcPath,
+						dstPath: conf.uploadsDir+'pictures/'+size.w+'_'+size.h+'/'+destName,
+						strip : false,
+						width : size.w,
+						height : size.h+"^",
+						customArgs: [
+							 "-gravity", "center"
+							,"-extent", size.w+"x"+size.h
+							]
+						
+					}, function(err, stdout, stderr){
+						if (err) {
+							//console.log('error creating thumbnail');
+							flagError = 1;
+							message.push("L'image n'est pas reconnue, essayer avec une autre image !");
+						}else{
+							//console.log(size.w+" "+size.h);
+							//console.log('thumbnail created successfully');
+							//console.log("11="+conf.uploadsDir+'pictures/'+size.w+'_'+size.h+'/'+destName);
+							StoreImgOnS3(size.w+'_'+size.h+'/'+destName,conf);
+						}
 							
-						}, function(err, stdout, stderr){
-							if (err) {
-								//console.log('error creating thumbnail');
-								flagError = 1;
-								message.push("L'image n'est pas reconnue, essayer avec une autre image !");
+					});
+				}
+				
+				if(size.h == 0){
+					//console.log("2="+conf.uploadsDir+'pictures/'+size.w+'_'+size.h+'/'+destName);
+					im.identify(['-format', '%w', srcPath], function(err, output){
+						if (!err){
+							//console.log('ELO'+output +">"+ size.w);
+							if(output > size.w){
+								im.resize({
+									srcPath: srcPath,
+									dstPath: conf.uploadsDir+'pictures/'+size.w+'_0/'+destName,
+									strip : false,
+									width : size.w,
+								}, function(err, stdout, stderr){
+									if (err){
+										//console.log('im.resize failed');
+										flagError = 1;
+										message.push("L'image n'est pas reconnue, essayer avec une autre image !");
+										throw err;
+									}else{
+										//console.log('resized to'+size.w+'_'+size.h+'/'+destName);
+										StoreImgOnS3(size.w+'_'+size.h+'/'+destName,conf);
+									}
+										
+								});
 							}else{
-								//console.log(size.w+" "+size.h);
-								//console.log('thumbnail created successfully');
-								//console.log("11="+conf.uploadsDir+'pictures/'+size.w+'_'+size.h+'/'+destName);
-								StoreImgOnS3(size.w+'_'+size.h+'/'+destName,conf);
+								im.resize({
+									srcPath: srcPath,
+									dstPath: conf.uploadsDir+'pictures/'+size.w+'_0/'+destName,
+									strip : false,
+									height : '100%',
+									width : '100%',
+								}, function(err, stdout, stderr){
+									if (err){
+										//console.log('im.resize to same size failed');
+										flagError = 1;
+										message.push("L'image n'est pas reconnue, essayer avec une autre image !");
+									}else{
+										//console.log('resized to'+size.w+'_'+size.h+'/'+destName);
+										StoreImgOnS3(size.w+'_'+size.h+'/'+destName,conf);
+									}
+										
+								});
 							}
-								
-						});
-					}
-					
-					if(size.h == 0){
-						//console.log("2="+conf.uploadsDir+'pictures/'+size.w+'_'+size.h+'/'+destName);
-						im.identify(['-format', '%w', srcPath], function(err, output){
-							if (!err){
-								//console.log('ELO'+output +">"+ size.w);
-								if(output > size.w){
-									im.resize({
-										srcPath: srcPath,
-										dstPath: conf.uploadsDir+'pictures/'+size.w+'_0/'+destName,
-										strip : false,
-										width : size.w,
-									}, function(err, stdout, stderr){
-										if (err){
-											//console.log('im.resize failed');
-											flagError = 1;
-											message.push("L'image n'est pas reconnue, essayer avec une autre image !");
-											throw err;
-										}else{
-											//console.log('resized to'+size.w+'_'+size.h+'/'+destName);
-											StoreImgOnS3(size.w+'_'+size.h+'/'+destName,conf);
-										}
-											
-									});
-								}else{
-									im.resize({
-										srcPath: srcPath,
-										dstPath: conf.uploadsDir+'pictures/'+size.w+'_0/'+destName,
-										strip : false,
-										height : '100%',
-										width : '100%',
-									}, function(err, stdout, stderr){
-										if (err){
-											//console.log('im.resize to same size failed');
-											flagError = 1;
-											message.push("L'image n'est pas reconnue, essayer avec une autre image !");
-										}else{
-											//console.log('resized to'+size.w+'_'+size.h+'/'+destName);
-											StoreImgOnS3(size.w+'_'+size.h+'/'+destName,conf);
-										}
-											
-									});
-								}
-							}else{
-								//console.log('im.identity failed'+srcPath);
-								flagError = 1;
-								message.push("L'image n'est pas reconnue, essayer avec une autre image !");
-								throw err;
-							}
-						});
-					} // END H==0
+						}else{
+							//console.log('im.identity failed'+srcPath);
+							flagError = 1;
+							message.push("L'image n'est pas reconnue, essayer avec une autre image !");
+							throw err;
+						}
+					});
+				} // END H==0
 				
 			} // END NO ERR IN CONVERT TO JPG
 			else{
