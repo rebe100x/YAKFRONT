@@ -686,7 +686,16 @@ exports.firstvisit = function(req,res){
 				}
 				
 				
-				User.update({_id: req.session.user}, {hash : newcryptedPass,location:location, address: address, formatted_address: formatted_address, login: req.body.username, name: req.body.username, mail: req.body.email, status: 1}, {upsert: false}, function(err){
+				// tag subscribtions
+				var tagArray = [];
+				if(req.body.tagInput.length > 0){
+					var tag = eval('('+req.body.tagInput+')');
+					for(i=0;i<tag.length;i++){
+						tagArray.push(tag[i]);
+					}
+				}	
+
+				User.update({_id: req.session.user}, {hash : newcryptedPass,location:location, address: address, formatted_address: formatted_address, login: req.body.username, name: req.body.username, mail: req.body.email, tag:tagArray, status: 1}, {upsert: false}, function(err){
 				
 					if (err) console.log(err);
 					else{
@@ -710,7 +719,7 @@ exports.firstvisit = function(req,res){
 				});
 			}
 			else
-				formMessage = "Votre mot de passe doit au moins 8 caractères";
+				formMessage = "Votre mot de passe doit faire au moins 8 caractères";
 				
 			
 		});
@@ -1233,7 +1242,6 @@ exports.auth_twitter = function(req, res){
 
 				req.session.oauth = {};
 				req.session.oauth.token = oauth_token;
-				console.log('oauth.token: ' + req.session.oauth.token);
 				req.session.oauth.token_secret = oauth_token_secret;
 				//console.log('oauth.token_secret: ' + req.session.oauth.token_secret);
 				
@@ -1316,8 +1324,8 @@ exports.auth_twitter_callback = function(req, res){
 					var profileImg;
 					// this line is only for Twitter to get a better image
 					data.profile_image_url = data.profile_image_url.replace('normal','bigger');
-					
-					user.thumb = crypto.createHash('md5').update(data.profile_image_url).digest("hex")+'.jpeg';
+					var ts = new Date().getTime();
+					user.thumb = crypto.createHash('md5').update(ts.toString()).digest("hex")+'.jpeg';
 					drawTool.GetImg(data.profile_image_url,user.thumb,conf,mainConf);
 					
 					aTwitter.profile_image_url = data.profile_image_url;
@@ -1468,8 +1476,8 @@ exports.auth_facebook = function(req, res){
 	if(typeof(aFacebook.profile_image_url) != 'undefined'){					
 		var drawTool = require('../mylib/drawlib.js');
 		var profileImg;
-		
-		user.thumb = crypto.createHash('md5').update(aFacebook.profile_image_url).digest("hex")+'.jpeg';
+		var ts = new Date().getTime();
+		user.thumb = crypto.createHash('md5').update(ts.toString()).digest("hex")+'.jpeg';
 		drawTool.GetImg(aFacebook.profile_image_url,user.thumb,conf,mainConf);
 	}
 
@@ -1583,8 +1591,8 @@ exports.auth_google = function(req, res){
 	
 	if(typeof(data.image) != 'undefined'){					
 		var drawTool = require('../mylib/drawlib.js');
-		
-		user.thumb = crypto.createHash('md5').update(data.image.url).digest("hex")+'.jpeg';
+		var ts = new Date().getTime();
+		user.thumb = crypto.createHash('md5').update(ts.toString()).digest("hex")+'.jpeg';
 		drawTool.GetImg(data.image.url,user.thumb,conf,mainConf);
 		aGoogle.profile_image_url = data.image.url;
 	}

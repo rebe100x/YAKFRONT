@@ -167,6 +167,7 @@ mixin menu(active)
 
 						}
 				}
+
 		if(active == 'firstvisit')
 			script
 				$(document).ready(function(){
@@ -175,6 +176,7 @@ mixin menu(active)
 					$("#addLink").remove();
 				});
 
+		// this should be done in the erver side:		
 		if(active != 'firstvisit')
 			script
 				$(document).ready(function(){
