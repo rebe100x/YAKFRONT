@@ -43,11 +43,12 @@ block content
 			
 
 				$('#btn-tag-adder').unbind('click').click(function(){
+
 					var tag = $('#tag').val();
 					if($.trim(tag) == "")
 						return;
 					$("label[for='tag']").after("<div><i class='icon-remove icon-pointer'  onclick='tagArray.cleanArrayByname(\""+tag+"\");$(\"#tagInput\").val(JSON.stringify(tagArray));$(this).parent().remove();'></i> "+tag+"</div>");
-					$('#alert').val('').focus();
+					$('#tag').val('').focus();
 					tagArray.push(tag);
 					$("#tagInput").val(JSON.stringify(tagArray));
 					
@@ -92,7 +93,6 @@ block content
 							hashtagTmp.push(inputStrArray[i]);
 					}
 					$('#tag').val(hashtagTmp);
-					//alert($('#taginit').val());
 				});
 				
 				$('#avatar').live('change', function () {

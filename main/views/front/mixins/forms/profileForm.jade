@@ -1,8 +1,6 @@
 mixin profileForm(type)
 	- if(type > 1)
 		form(action='/profile', method='POST', enctype='multipart/form-data', id='formProfile')
-			input#taginit(type='hidden', name='taginit', value='')
-			input#tag(type='hidden', name='tag', value='')
 			input#location(type='hidden', name='location', value='')
 			input#address(type='hidden', name='address', value='')
 			input#formatted_address(type='hidden', name='formatted_address', value='')
@@ -58,7 +56,7 @@ mixin profileForm(type)
 							label.control-label(for="tag") 
 								|Quelques mots clés pour définir vos centres d'intérêt:
 								br
-								|(ex: sport,music) :
+								|(ex: sport,musique) :
 							- each tag in tags
 								p
 									div
@@ -77,7 +75,6 @@ mixin profileForm(type)
 		
 	- if(type == 1)
 		form(action='/profile', method='POST', enctype='multipart/form-data', id='formProfile')
-			input#taginit(type='hidden', name='taginit', value='')
 			input#location(type='hidden', name='location', value='')
 			input#address(type='hidden', name='address', value='')
 			input#formatted_address(type='hidden', name='formatted_address', value='')
@@ -109,7 +106,7 @@ mixin profileForm(type)
 							label.control-label(for="tag") 
 								|Quelques mots clés pour définir vos centres d'intérêt:
 								br
-								|(ex: sport,music) :
+								|(ex: sport,musique) :
 							- each tag in tags
 								p
 									div
