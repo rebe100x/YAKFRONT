@@ -101,6 +101,7 @@ mixin searchFormUnified(page)
 					$('#searchStr').focus();
 					$('#searchStr').select();
 					$('#searchBtn').trigger('click');
+					changeRange();
 				});
 
 				setTimeSliderText(dateFrom);
