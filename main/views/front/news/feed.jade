@@ -2,10 +2,11 @@ extends ../layout
 block content
 	include ../mixins/menu.jade
 	include ../mixins/locationChooser.jade
+	include ../mixins/userChooser.jade
 	include ../mixins/forms/postForm.jade
 	mixin menu('feed')
 	mixin locationChooser('feed')
-
+	mixin userChooser
 
 
 	div.container-fluid
@@ -21,12 +22,12 @@ block content
 	style
 		#newsfeedContent{position:relative;display:block;overflow:auto;height:auto;z-index:2000; overflow-x: hidden;}				
 
-	script(src='/javascripts/minify/map-min.js?v='+JSON.parse(mainConf).version)	
+	//script(src='/javascripts/minify/map-min.js?v='+JSON.parse(mainConf).version)	
 	//link(rel='stylesheet', href='/javascripts/lib/jquery/css/share.css')
 	//script(src="/javascripts/lib/jquery/js/share.js?v="+JSON.parse(mainConf).version)	
 	//script(src="/javascripts/lib/jquery/js/jquery.livequery.js")
 	//script(src="/javascripts/json2.js")	
-
+	script(src='/javascripts/minify/feed-min.js?v='+JSON.parse(mainConf).version)
 	script
 		var conf = !{conf};
 		var mainConf = !{mainConf};	
