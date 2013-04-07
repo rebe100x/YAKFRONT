@@ -1157,6 +1157,18 @@ function changePlaceRange(id, lat, lng, pointname, range)
 	
 }
 
+function setCommentSpam(el)
+{
+	$.post('/setSpams', {content_id : $(el).attr("rel"), content_type : 2} , function(res){
+		if (res != "0")
+		{
+			el.remove();
+			user.illicite = user.illicite.concat(res)
+		}
+
+	});
+}
+
 function drawAComment(val,infoId, from)
 {
 	
@@ -1172,19 +1184,35 @@ function drawAComment(val,infoId, from)
 		var date	 = $.timeago(val.date);
 	}
 
+	var isSpammed = false;
+	var comment_id = val._id;
+	var iconSpam = "";
+	$.each(user.illicite, function(key, val1){
+		//console.log(val1);
+		if(comment_id ==  val1.content_id && val1.content_type == 2)
+			isSpammed = true;
+	});	
+
+	if(!isSpammed)
+	{
+		iconSpam = "<i class='icon-warning-sign' rel='" + comment_id + "' onclick='setCommentSpam(this)'></i>";
+	}
+	
+
+
 	if (typeof(from) === 'undefined' ) {
 			if(user._id	!= userid)
-				return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username prevent-default' onclick='setSearchFor(this)'>@" + username + "</a><span class='timeago'>" + date + "</span><div class='comment'>" + comment + "</div></div>";
+				return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username prevent-default' onclick='setSearchFor(this)'>@" + username + "</a><span class='timeago'>" + date + "</span><div class='comment'>" + comment + "</div><div>" + iconSpam + "</div></div>";
 			else
-				return 	"<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username prevent-default' onclick='setSearchFor(this)'>@" + username + "</a><span class='timeago'>" + date + "</span><a class='delComment' onclick='deleteComment(this)' id='" + val._id +"' infoid='" + infoId + "'>X</a><div class='comment'>" + comment + "</div></div>";
+				return 	"<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username prevent-default' onclick='setSearchFor(this)'>@" + username + "</a><span class='timeago'>" + date + "</span><a class='delComment' onclick='deleteComment(this)' id='" + val._id +"' infoid='" + infoId + "'>X</a><div class='comment'>" + comment + "</div><div></div></div>";
 	}
 	else
 	{
 		var urlsearch = conf.fronturl + '/news/map/search/@' + username;
 		if(user._id	!= userid)
-			return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username prevent-default' onclick='setSearchFor(this)'>@" + username + "</a><span class='timeago'>" + date + "</span><div class='comment'>" + comment + "</div></div>";	
+			return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username prevent-default' onclick='setSearchFor(this)'>@" + username + "</a><span class='timeago'>" + date + "</span><div class='comment'>" + comment + "</div><div>"+iconSpam+"</div></div>";	
 		else
-			return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username prevent-default' onclick='setSearchFor(this)'>@" + username + "</a><span class='timeago'>" + date + "</span><a class='delComment' onclick='deleteComment(this)' id='" + val._id +"' infoid='" + infoId + "'>X</a><div class='comment'>" + comment + "</div></div>";		
+			return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username prevent-default' onclick='setSearchFor(this)'>@" + username + "</a><span class='timeago'>" + date + "</span><a class='delComment' onclick='deleteComment(this)' id='" + val._id +"' infoid='" + infoId + "'>X</a><div class='comment'>" + comment + "</div><div></div></div>";		
 	}
 
 	
