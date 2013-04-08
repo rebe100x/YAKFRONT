@@ -38,8 +38,9 @@ function setToolTip(el)
 function setSearchFor(el)
 {
 	$("#searchStr").val($(el).text());
-	$("#searchBtn").click();
-	
+	$("#searchBtn").focus().trigger('click');
+	$('#userChooser').modal('hide');
+	return false;
 }
 
 
@@ -48,8 +49,9 @@ function setSearchForUser(str)
 	emptyUserChooser();
 	$('#userChooser').modal('hide');
 	$("#searchStr").val(str);
-	getAndPrintInfo();
-	
+	$('#searchBtn').focus().trigger('click');
+	$('#userChooser').modal('hide');
+	return false;
 }
 
 function setSearchForTag(el)
@@ -57,8 +59,9 @@ function setSearchForTag(el)
 	emptyUserChooser();
 	$('#userChooser').modal('hide');
 	$("#searchStr").val($(el).text());
-	getAndPrintInfo();
-	
+	$('#searchBtn').focus().trigger('click');
+	$('#userChooser').modal('hide');
+	return false;
 }
 
 
@@ -532,9 +535,6 @@ function  hidePostForm()
 }
 
 $(document).ready(function() {
-	//user.thumbsmall = "http://localhost:3000/images/dangui.jpg";
-	console.log(user);
-
 	/*preload([
     '/images/yakwala_sprite.png',
     '/images/yakwala_sprite-medium.png'
@@ -787,6 +787,7 @@ function csl(str){
 	console.log(str);
 }
 
+/*
 String.prototype.linkify = function(myurl, ajaxified) {
 	if(typeof(ajaxified)==='undefined') ajaxified = 0;
 	if(typeof(myurl)==='undefined') myurl = "/news/map/search/%23";
@@ -796,6 +797,14 @@ String.prototype.linkify = function(myurl, ajaxified) {
     	res = hash.replace(/(^|\s)#([A-Za-z0-9àáâãäåçèéêëìíîïðòóôõöùúûüýÿ]+)/gi, "$1<a class=\"tagHashLink prevent-default\" href=\"" + myurl +"$2\">#$2</a>");
    	else
    		res = hash.replace(/(^|\s)#([A-Za-z0-9àáâãäåçèéêëìíîïðòóôõöùúûüýÿ]+)/gi, "$1<a class=\"tagHashLink prevent-default\" onclick=\"setSearchFor(this)\">#$2</a>");
+	res = res.replace(/(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/, "<a target=\"_blank\" class=\"externalLink\" href=\"http://$3\">$3</a>");
+	return res;
+ }*/
+
+String.prototype.linkify = function() {
+	var res = this;
+	var hash = res.replace(/(^|\s)@([A-Za-z0-9àáâãäåçèéêëìíîïðòóôõöùúûüýÿ\.]+)/gi, "$1<a class=\"userHashLink prevent-default\" href=\"$2\">@$2</a>");
+	res = hash.replace(/(^|\s)#([A-Za-z0-9àáâãäåçèéêëìíîïðòóôõöùúûüýÿ]+)/gi, "$1<a class=\"tagHashLink prevent-default\" onclick=\"setSearchFor(this)\">#$2</a>");
 	res = res.replace(/(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/, "<a target=\"_blank\" class=\"externalLink\" href=\"http://$3\">$3</a>");
 	return res;
  }
@@ -1208,7 +1217,6 @@ function drawAComment(val,infoId, from)
 	}
 	else
 	{
-		var urlsearch = conf.fronturl + '/news/map/search/@' + username;
 		if(user._id	!= userid)
 			return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username prevent-default' onclick='setSearchFor(this)'>@" + username + "</a><span class='timeago'>" + date + "</span><div class='comment'>" + comment + "</div><div>"+iconSpam+"</div></div>";	
 		else
@@ -1597,12 +1605,14 @@ function checkByWidth()
 				{
 					for(i=0; i<theuser.tagsubs.length; i++)
 					{
-						thetags += "<a onclick='setSearchForTag(this)'>#" + theuser.tagsubs[i] + " </a>";
+						thetags += "<a onclick='setSearchForTag(this)'>#" + theuser.tagsubs[i] + "</a> ";
 					}	
 				}
 				
-
-				$("#userChooser #uc_profile_tags #thealerts").html(thetags);
+				if(thetags.length>0)
+					$("#userChooser #uc_profile_tags #thealerts").html(thetags);
+				else
+					$("#userChooser #uc_profile_tags").html("");	
 
 				var subscribed_number = 0;
 
@@ -1619,12 +1629,14 @@ function checkByWidth()
 				});
 
 
-				$("#uc_profile_yaks_search").click(function(){
-					setSearchForUser(theuser.name);
+				$("#uc_profile_yaks_search").unbind('click').on('click',function(){
+					setSearchForUser(theuser.login);
+					$('#userChooser').modal('hide');
 				});
 
 				var uri = '/api/user/feed/' + theuser._id;
 
+				$('#uc_newsfeed').html('');
 				$.getJSON(uri,function(ajax) {
 					$.each(ajax.data, function(key,val) {
 						printFeedItemPopUp(val);	

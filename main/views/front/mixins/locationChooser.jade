@@ -29,15 +29,16 @@ mixin locationChooser(page)
 										option(value="120", rangeText="Hyper Local")
 											|Hyper Local
 											
-
-				br	
+		div.modal-footer									
 				- if(session)
 					div.control-group
 						div.controls
 							label(for='favplace') 
 								span.redAdd
 							input#favplace.searchInput.pull-left(type="text",data-provide="typeahead", name="favplace", autocomplete="off", placeholder='Ajouter des endroits favoris') 
-								
+				br
+				br
+				br				
 		
 	
 	script

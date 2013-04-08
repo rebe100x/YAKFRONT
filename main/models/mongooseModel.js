@@ -602,7 +602,7 @@ User.index({"social.twitter.twitter_id":1});
 User.index({"social.facebook.facebook_id":1});
 User.index({"social.google.google_id":1});
 
-User.statics.countUserSubscribers = function (userid, callback) {
+User.statics.countUserSubscribers = function (usersubs, callback) {
   return this.find({ usersubs: { $in : usersubs } },{},{sort:{pudDate:-1}}).count().exec(callback);
 }
 

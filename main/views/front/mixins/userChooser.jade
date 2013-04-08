@@ -1,10 +1,8 @@
 mixin userChooser
 
 	div.modal.hide.fade#userChooser
-		//
-			span#closeModal(type="button", data-dismiss="modal", style="position: relative; top:12px; right: 12px;")
-
 		div.modal-body
+			span#closeModal(type="button", data-dismiss="modal")
 			p.alertText 
 				img(src="/images/loader_big.gif")
 			p#uc_profile_brief
@@ -28,6 +26,6 @@ mixin userChooser
 				span#thealerts
 					|#dany #dany
 			p#uc_newsfeed
-			P#uc_profile_tags
+			p#uc_profile_tags
 				a#uc_profile_yaks_search
-					|Cliquer ici pour avoir les info publié par cet utilisateur dans cette region
+					|Cliquer ici pour filtrer les infos publiées par cet utilisateur dans cette région

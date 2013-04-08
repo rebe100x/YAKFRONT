@@ -689,6 +689,7 @@ width: 270px;
 
 /* Smartphones (portrait) ----------- */
 @media only screen and (max-width : 320px) {
+	body{background-color: :#FF0000;}
 	#blackBox:after, #blackBox:before { display: none}
 	#maplink { width: 26px; height: 26px; display: block; float: left; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 55px -62px; margin-top: 6px; margin-left: 6px; margin-bottom: 6px;}
 	#maplink:hover, #maplink.activated { background-position: 0px -63px;}
@@ -714,32 +715,32 @@ width: 270px;
 
 	#customMenuProfile {  right:5px; top: 36px;}
 
- #dayPrinter { width: 295px; color: black; font-size: 14px; }
- .headerYakwala .navbar .nav > li > a { line-height: 12px; color: black; text-shadow: 0 0 0 rgba(0, 0, 0, 0.25); }
- #zoomnavigation { display: none;}
- .searchYakwala {margin: 0 auto;}
- #yakLogo { width: 100px;   height: 45px; margin-left: -12px}
- .headerYakwala .leftlink img { width: 30px;}
- .customprofile img { width: 30px;}
- .searchYakwala .customInput{ width: 250px; margin-top: 6px; float: left; margin-left: 6px;}
- .searchYakwala #tagSelectorTrigger, .searchYakwala #rangeSelectorTrigger { margin-top: 10px;}
- .searchYakwala #zoneLocButton { margin-top: 18px;}
- .searchYakwala #btnMesalertes { margin-top: 18px; position: relative;}
-   .timeIcon { position: relative; top: -14px; }
-   .filterIcon { position: relative; top: 15px}
-   #heatSelector { position:  relative; left: 23px; bottom: 6px; margin-right: 45px;}
-   #dayPrinter { position: relative; bottom: 9px; }
-    .searchYakwala #btnMesalertes { width: 50px; height: 30px; background-image: url('/images/yakwala_sprite.png'); background-position: -7px -521px; border: 0px; margin-top: 10px; margin-right: 6px;}
-   .searchYakwala #btnMesalertes:hover, .searchYakwala #btnMesalertes.active { background-position: 106px -521px;}
-   .searchYakwala #btnDiscussion { width: 50px; height: 30px; background-image: url('/images/yakwala_sprite.png'); background-position: -5px -478px; border: 0px; margin-top: 10px; margin-right: 6px; float: left;}
-   .searchYakwala #btnDiscussion:hover, .searchYakwala #btnDiscussion.active { background-position: -59px -478px;}
-    
-   
-   #closeModal { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -70px -658px; position: relative; float: right; cursor: pointer;}
-   span.closePlace { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -97px -658px; position: relative; float: right; cursor: pointer;}
-   span.redAdd { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -205px -658px; position: relative; float: left; cursor: pointer; top: 16px; margin-right: 10px}
-   span.redStars { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -176px -658px; position: relative; float: left; cursor: pointer; top: 0px; margin-right: 10px}
-   .searchYakwala #timeContainer { position: relative; margin-left: 12px; margin-top: 10px;}
+	#dayPrinter { width: 295px; color: black; font-size: 14px; }
+	.headerYakwala .navbar .nav > li > a { line-height: 12px; color: black; text-shadow: 0 0 0 rgba(0, 0, 0, 0.25); }
+	#zoomnavigation { display: none;}
+	.searchYakwala {margin: 0 auto;}
+	#yakLogo { width: 100px;   height: 45px; margin-left: -12px}
+	.headerYakwala .leftlink img { width: 30px;}
+	.customprofile img { width: 30px;}
+	.searchYakwala .customInput{ width: 250px; margin-top: 6px; float: left; margin-left: 6px;}
+	.searchYakwala #tagSelectorTrigger, .searchYakwala #rangeSelectorTrigger { margin-top: 10px;}
+	.searchYakwala #zoneLocButton { margin-top: 18px;}
+	.searchYakwala #btnMesalertes { margin-top: 18px; position: relative;}
+	.timeIcon { position: relative; top: -14px; }
+	.filterIcon { position: relative; top: 15px}
+	#heatSelector { position:  relative; left: 23px; bottom: 6px; margin-right: 45px;}
+	#dayPrinter { position: relative; bottom: 9px; }
+	.searchYakwala #btnMesalertes { width: 50px; height: 30px; background-image: url('/images/yakwala_sprite.png'); background-position: -7px -521px; border: 0px; margin-top: 10px; margin-right: 6px;}
+	.searchYakwala #btnMesalertes:hover, .searchYakwala #btnMesalertes.active { background-position: 106px -521px;}
+	.searchYakwala #btnDiscussion { width: 50px; height: 30px; background-image: url('/images/yakwala_sprite.png'); background-position: -5px -478px; border: 0px; margin-top: 10px; margin-right: 6px; float: left;}
+	.searchYakwala #btnDiscussion:hover, .searchYakwala #btnDiscussion.active { background-position: -59px -478px;}
+
+
+	#closeModal { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -70px -658px; position: relative; float: right; cursor: pointer;}
+	span.closePlace { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -97px -658px; position: relative; float: right; cursor: pointer;}
+	span.redAdd { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -205px -658px; position: relative; float: left; cursor: pointer; top: 16px; margin-right: 10px}
+	span.redStars { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -176px -658px; position: relative; float: left; cursor: pointer; top: 0px; margin-right: 10px}
+	.searchYakwala #timeContainer { position: relative; margin-left: 12px; margin-top: 10px;}
 }
 
 /* Smartphones (landscape) ----------- */
@@ -769,32 +770,32 @@ width: 270px;
 
 	#customMenuProfile {  right:5px; top: 36px;}
 
- #dayPrinter { width: 346px; color: black; font-size: 14px; }
- .headerYakwala .navbar .nav > li > a { line-height: 12px; color: black; text-shadow: 0 0 0 rgba(0, 0, 0, 0.25); }
- #zoomnavigation { display: none;}
- .searchYakwala {margin: 0 auto;}
- #yakLogo { width: 100px;   height: 45px; margin-left: -12px}
- .headerYakwala .leftlink img { width: 30px;}
- .customprofile img { width: 30px;}
- .searchYakwala .customInput{ width: 300px; margin-top: 6px; float: left; margin-left: 6px;}
- .searchYakwala #tagSelectorTrigger, .searchYakwala #rangeSelectorTrigger { margin-top: 10px;}
- .searchYakwala #zoneLocButton { margin-top: 18px;}
- .searchYakwala #btnMesalertes { margin-top: 18px;}
-   .timeIcon { position: relative; top: -14px; }
-   .filterIcon { position: relative; top: 15px}
-   #heatSelector { position:  relative; left: 23px; bottom: 6px; margin-right: 45px;}
-   #dayPrinter { position: relative; bottom: 9px; }
-      .searchYakwala #btnMesalertes { width: 50px; height: 30px; background-image: url('/images/yakwala_sprite.png'); background-position: -7px -521px; border: 0px; margin-top: 10px; margin-right: 6px;}
-   .searchYakwala #btnMesalertes:hover, .searchYakwala #btnMesalertes.active { background-position: 106px -521px;}
-   .searchYakwala #btnDiscussion { width: 50px; height: 30px; background-image: url('/images/yakwala_sprite.png'); background-position: -5px -478px; border: 0px; margin-top: 10px; margin-right: 6px; float: left;}
-   .searchYakwala #btnDiscussion:hover, .searchYakwala #btnDiscussion.active { background-position: -59px -478px;}
-    
-   
-   #closeModal { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -70px -658px; position: relative; float: right; cursor: pointer;}
-   span.closePlace { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -97px -658px; position: relative; float: right; cursor: pointer;}
-   span.redAdd { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -205px -658px; position: relative; float: left; cursor: pointer; top: 16px; margin-right: 10px}
-   span.redStars { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -176px -658px; position: relative; float: left; cursor: pointer; top: 0px; margin-right: 10px}
-   .searchYakwala #timeContainer { position: relative; margin-left: 12px; margin-top: 10px;}
+	#dayPrinter { width: 346px; color: black; font-size: 14px; }
+	.headerYakwala .navbar .nav > li > a { line-height: 12px; color: black; text-shadow: 0 0 0 rgba(0, 0, 0, 0.25); }
+	#zoomnavigation { display: none;}
+	.searchYakwala {margin: 0 auto;}
+	#yakLogo { width: 100px;   height: 45px; margin-left: -12px}
+	.headerYakwala .leftlink img { width: 30px;}
+	.customprofile img { width: 30px;}
+	.searchYakwala .customInput{ width: 300px; margin-top: 6px; float: left; margin-left: 6px;}
+	.searchYakwala #tagSelectorTrigger, .searchYakwala #rangeSelectorTrigger { margin-top: 10px;}
+	.searchYakwala #zoneLocButton { margin-top: 18px;}
+	.searchYakwala #btnMesalertes { margin-top: 18px;}
+	.timeIcon { position: relative; top: -14px; }
+	.filterIcon { position: relative; top: 15px}
+	#heatSelector { position:  relative; left: 23px; bottom: 6px; margin-right: 45px;}
+	#dayPrinter { position: relative; bottom: 9px; }
+	.searchYakwala #btnMesalertes { width: 50px; height: 30px; background-image: url('/images/yakwala_sprite.png'); background-position: -7px -521px; border: 0px; margin-top: 10px; margin-right: 6px;}
+	.searchYakwala #btnMesalertes:hover, .searchYakwala #btnMesalertes.active { background-position: 106px -521px;}
+	.searchYakwala #btnDiscussion { width: 50px; height: 30px; background-image: url('/images/yakwala_sprite.png'); background-position: -5px -478px; border: 0px; margin-top: 10px; margin-right: 6px; float: left;}
+	.searchYakwala #btnDiscussion:hover, .searchYakwala #btnDiscussion.active { background-position: -59px -478px;}
+
+
+	#closeModal { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -70px -658px; position: relative; float: right; cursor: pointer;}
+	span.closePlace { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -97px -658px; position: relative; float: right; cursor: pointer;}
+	span.redAdd { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -205px -658px; position: relative; float: left; cursor: pointer; top: 16px; margin-right: 10px}
+	span.redStars { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -176px -658px; position: relative; float: left; cursor: pointer; top: 0px; margin-right: 10px}
+	.searchYakwala #timeContainer { position: relative; margin-left: 12px; margin-top: 10px;}
 }
 
 @media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
@@ -824,31 +825,31 @@ width: 270px;
 	#customMenuProfile {  right:5px; top: 36px;}
 
 	#dayPrinter { width: 295px; color: black; font-size: 14px; }
- .headerYakwala .navbar .nav > li > a { line-height: 12px; color: black; text-shadow: 0 0 0 rgba(0, 0, 0, 0.25); }
- #zoomnavigation { display: none;}
- .searchYakwala {margin: 0 auto;}
- #yakLogo { width: 100px;   height: 45px; margin-left: -12px}
- .headerYakwala .leftlink img { width: 30px;}
- .customprofile img { width: 30px;}
- .searchYakwala .customInput{ width: 280px; margin-top: 6px; float: left; margin-left: 6px;}
- .searchYakwala #tagSelectorTrigger, .searchYakwala #rangeSelectorTrigger { margin-top: 10px;}
- .searchYakwala #zoneLocButton { margin-top: 18px;}
- .searchYakwala #btnMesalertes { margin-top: 18px;}
-   .timeIcon { position: relative; top: -14px; }
-   .filterIcon { position: relative; top: 15px}
-   #heatSelector { position:  relative; left: 23px; bottom: 6px; margin-right: 45px;}
-   #dayPrinter { position: relative; bottom: 9px; }
-     .searchYakwala #btnMesalertes { width: 50px; height: 30px; background-image: url('/images/yakwala_sprite.png'); background-position: -7px -521px; border: 0px; margin-top: 10px; margin-right: 6px;}
-   .searchYakwala #btnMesalertes:hover, .searchYakwala #btnMesalertes.active { background-position: 106px -521px;}
-   .searchYakwala #btnDiscussion { width: 50px; height: 30px; background-image: url('/images/yakwala_sprite.png'); background-position: -5px -478px; border: 0px; margin-top: 10px; margin-right: 6px; float: left;}
-   .searchYakwala #btnDiscussion:hover, .searchYakwala #btnDiscussion.active { background-position: -59px -478px;}
-    
-   
-   #closeModal { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -70px -658px; position: relative; float: right; cursor: pointer;}
-   span.closePlace { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -97px -658px; position: relative; float: right; cursor: pointer;}
-   span.redAdd { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -205px -658px; position: relative; float: left; cursor: pointer; top: 16px; margin-right: 10px}
-   span.redStars { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -176px -658px; position: relative; float: left; cursor: pointer; top: 0px; margin-right: 10px}
-.searchYakwala #timeContainer { position: relative; margin-left: 12px; margin-top: 10px;}
+	.headerYakwala .navbar .nav > li > a { line-height: 12px; color: black; text-shadow: 0 0 0 rgba(0, 0, 0, 0.25); }
+	#zoomnavigation { display: none;}
+	.searchYakwala {margin: 0 auto;}
+	#yakLogo { width: 100px;   height: 45px; margin-left: -12px}
+	.headerYakwala .leftlink img { width: 30px;}
+	.customprofile img { width: 30px;}
+	.searchYakwala .customInput{ width: 280px; margin-top: 6px; float: left; margin-left: 6px;}
+	.searchYakwala #tagSelectorTrigger, .searchYakwala #rangeSelectorTrigger { margin-top: 10px;}
+	.searchYakwala #zoneLocButton { margin-top: 18px;}
+	.searchYakwala #btnMesalertes { margin-top: 18px;}
+	.timeIcon { position: relative; top: -14px; }
+	.filterIcon { position: relative; top: 15px}
+	#heatSelector { position:  relative; left: 23px; bottom: 6px; margin-right: 45px;}
+	#dayPrinter { position: relative; bottom: 9px; }
+	.searchYakwala #btnMesalertes { width: 50px; height: 30px; background-image: url('/images/yakwala_sprite.png'); background-position: -7px -521px; border: 0px; margin-top: 10px; margin-right: 6px;}
+	.searchYakwala #btnMesalertes:hover, .searchYakwala #btnMesalertes.active { background-position: 106px -521px;}
+	.searchYakwala #btnDiscussion { width: 50px; height: 30px; background-image: url('/images/yakwala_sprite.png'); background-position: -5px -478px; border: 0px; margin-top: 10px; margin-right: 6px; float: left;}
+	.searchYakwala #btnDiscussion:hover, .searchYakwala #btnDiscussion.active { background-position: -59px -478px;}
+
+
+	#closeModal { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -70px -658px; position: relative; float: right; cursor: pointer;}
+	span.closePlace { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -97px -658px; position: relative; float: right; cursor: pointer;}
+	span.redAdd { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -205px -658px; position: relative; float: left; cursor: pointer; top: 16px; margin-right: 10px}
+	span.redStars { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -176px -658px; position: relative; float: left; cursor: pointer; top: 0px; margin-right: 10px}
+	.searchYakwala #timeContainer { position: relative; margin-left: 12px; margin-top: 10px;}
 }
 
 #closeSearchBar { background-color: #f6f6f6; cursor: pointer;}
@@ -902,6 +903,8 @@ width: 270px;
 
 
 /*location chooser */
+#locationChooser {top:40%;}
+#locationChooser .modal-body {max-height: 420px;}
 #locationChooser .redstar { position: relative; top: 3px; margin-right: 12px;}
 #locationChooser .plussign { position: relative; top: 17px; margin-right: 12px;}
 #locationChooser .icon-home { position: relative; top: 3px; margin-right: 12px; }
@@ -993,9 +996,10 @@ border-bottom: 1px solid #e5e5e5;}
 #connectedas { background: #D1161E; color: white; font-weight: bold}
 
 #userChooser { width: 50%}
+#userChooser #thealerts a{cursor : pointer;}
 #uc_Name { color: #d51820; font-size: 18px; font-weight: bold; float: left;}
 #userChooser #uc_profile_brief { background: white; line-height: 25px; color: black; font-size: 14px; clear: both; float: left;}
-
+#userChooser .modal-body {max-height: 450px;}
 #userChooser #uc_profile_brief .theimage { float: left; width: 150px; height: 150px; background-color: #c2160d; text-align: center;}
 #userChooser #uc_profile_brief .theinfo { float: left; position: relative; left: 24px}
 #userChooser #uc_profile_brief .theinfo .thename { font-size: 24px; font-weight: bold;}
@@ -1003,12 +1007,12 @@ border-bottom: 1px solid #e5e5e5;}
 #userChooser #uc_profile_brief .theinfo .thebio { font-size: 12px; line-height: 20px; width: 300px; display: block; margin-top: 12px;}
 #userChooser #uc_profile_brief .theinfo .thelink a { font-size: 12px; line-height: 20px; width: 300px; display: block; color: #c2160d; margin-top: 12px; float: left; clear: both; margin-top: 12px}
 
-#userChooser #uc_profile_yaks_alerts { float: left; position: relative; bottom: 8px; background-color: #c5170e; padding: 10px; color: white; text-align: center; width: 130px}
-#userChooser #uc_profile_yaks { background: #f6f6f6; padding-top: 15px; float: left; clear: both; display: block; width: 100%; cursor: pointer;}
+#userChooser #uc_profile_yaks_alerts { float: left; position: relative; bottom: 8px; background-color: #c5170e; padding: 10px; color: white; text-align: center; width: 130px;cursor:pointer;}
+#userChooser #uc_profile_yaks { background: #f6f6f6; padding-top: 15px; float: left; clear: both; display: block; width: 100%;}
 #userChooser #uc_profile_tags { padding-top: 15px; float: left; clear: both; display: block; width: 100%}
-#userChooser #uc_profile_yaks #uc_profile_yaks_posts { position: relative; margin-left: 24px; float: left; text-align: center; font-size: 13px; margin-top: -3px; display: block; border-left: 1px solid #cecece; border-right: 1px solid #cecece; width: 100px}
-#userChooser #uc_profile_yaks #uc_profile_yaks_subscribed { position: relative; margin-left: 24px; float: left; text-align: center; font-size: 13px; margin-top: -3px; display: block; border-left: 1px solid #cecece; border-right: 1px solid #cecece; width: 100px}
-#userChooser #uc_profile_yaks #uc_profile_yaks_subscribers { position: relative; margin-left: 24px; float: left; text-align: center; font-size: 13px; margin-top: -3px; display: block; border-left: 1px solid #cecece; border-right: 1px solid #cecece; width: 100px}
+#userChooser #uc_profile_yaks #uc_profile_yaks_posts { position: relative; padding:0 20px; float: left; text-align: center; font-size: 13px; margin-top: -3px; display: block;border-right: 1px solid #cecece; width: 100px}
+#userChooser #uc_profile_yaks #uc_profile_yaks_subscribed { position: relative; padding:0 20px; float: left; text-align: center; font-size: 13px; margin-top: -3px; display: block; border-right: 1px solid #cecece; width: 100px}
+#userChooser #uc_profile_yaks #uc_profile_yaks_subscribers { position: relative; padding:0 20px; float: left; text-align: center; font-size: 13px; margin-top: -3px; display: block;  border-right: 1px solid #cecece; width: 100px}
 #userChooser #uc_profile_yaks_search { cursor: pointer;}
 #userChooser #uc_profile_yaks_search a {color: #c2160d}
 #userChooser #uc_profile_tags a { color: #c2160d; }

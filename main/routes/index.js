@@ -177,10 +177,10 @@ exports.news = function(req, res){
 				var yakCat = new Array();
 				var yakCatName = new Array();
 				// we introduce a redondancy between types and yakcat to be able to forget the type in the future
-				if(theYakType == 4){ // if type =4 ( discussion : by default push it in YAKCAT discussion )
-					yakCat.push(mongoose.Types.ObjectId("5092390bfa9a95f40c000000")); 
-					yakCatName.push('Discussion');
-				}
+				//if(theYakType == 4){ // if type =4 ( discussion : by default push it in YAKCAT discussion )
+				//	yakCat.push(mongoose.Types.ObjectId("5092390bfa9a95f40c000000")); 
+				//	yakCatName.push('Discussion');
+				//}
 				if(theYakType == 2){ // if type =2 ( agenda : by default push it in YAKCAT agenda )
 					yakCat.push(mongoose.Types.ObjectId("50923b9afa9a95d409000000")); 
 					yakCatName.push('Agenda');

@@ -155,7 +155,7 @@
 		else	
 			apiUrl = '/api/geoinfos/'+curPos.x+'/'+curPos.y+'/'+rangeFromZ()+'/'+'null'+'/'+dateFrom+'/'+nowts+'/'+yakType.toString()+'/'+searchString+'/500';
 		
-
+		console.log('CALL DB '+apiUrl);
 		$.getJSON(apiUrl,function(ajax) {	
 			if(typeof ajax.data != 'undefined'){
 				$.each(ajax.data.info, function(key,val) {
@@ -194,7 +194,7 @@
 		else	
 			apiUrl = '/api/geoinfos/'+curPos.x+'/'+curPos.y+'/'+rangeFromZ()+'/'+'null'+'/'+dateFrom+'/0/'+yakType.toString()+'/'+searchString+'/500';
 		
-		//console.log(apiUrl);
+		console.log('CALL DB '+apiUrl);
 		$.getJSON(apiUrl,function(ajax) {	
 		
 
