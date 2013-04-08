@@ -113,6 +113,7 @@ app.get('/settings/privateprofile', routes.requiresLogin, routes.settings_privat
 app.post('/privateprofile',routes.requiresLogin, routes.privateprofile);
 
 app.get('/settings/alerts', routes.requiresLogin, routes.settings_alerts);
+app.post('/user/setUserAlerts', routes.requiresLogin, routes.set_user_alerts);
 app.post('/alerts',routes.requiresLogin,routes.alerts);
 
 app.get('/settings/password', routes.requiresLogin, routes.settings_password);
