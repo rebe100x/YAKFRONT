@@ -89,6 +89,7 @@ app.post('/user',routes.user);
 app.post('/forgotpassword',routes.forgotpassword);
 //app.post('/validate',routes.validate);
 app.post('/session',routes.session);
+app.post('/session2',routes.session2);
 
 // SECURED BY LOGIN ROUTES:
 
@@ -191,11 +192,12 @@ app.get('/auth/twitter/callback', routes.auth_twitter_callback);
 routes / call to facebook
 */
 app.post('/auth/facebook', routes.auth_facebook);
-
+app.post('/auth/facebook/check', routes.auth_facebook_check);
 /**
 routes / call to google
 */
 app.post('/auth/google', routes.auth_google);
+app.post('/auth/google/check', routes.auth_google_check);
 
 
 /**

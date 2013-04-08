@@ -32,15 +32,15 @@ block content
 						ul#newsfeed
 					span#newspostContent.tabContent
 						mixin postForm()		
-	//link(rel='stylesheet', href='/javascripts/lib/jquery/css/share.css')
-	script(src='/javascripts/minify/map-min.js?v='+JSON.parse(mainConf).version)
-	//script(src="/javascripts/lib/jquery/js/share.js?v=12"+JSON.parse(mainConf).version)	
-	//script(src="/javascripts/lib/jquery/js/jquery.livequery.js")
-	//script(src="/javascripts/json2.js")	
-	//script(src="/javascripts/map.js")
-
+	
 	style
 		body { overflow-y: hidden;}
 	script
 		var conf = !{conf};
 		var mainConf = !{mainConf};
+
+	- if(JSON.parse(conf).env == 'DEV')	
+		script(src="/javascripts/map.js")
+	- else
+		script(src='/javascripts/minify/map-min.js?v='+JSON.parse(mainConf).version)
+	

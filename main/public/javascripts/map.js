@@ -37,6 +37,7 @@
 				minZoom: 11,
 				disableDoubleClickZoom: true,
 			});
+		var oldLocation = {lat:0,lng:0};
 
 		setInterval(function() {
 				silentUpdater();			
@@ -49,50 +50,54 @@
 			
 				
 			$('#searchBtn').unbind("click").on('click',function(){
-				console.log('SEARCH CLICK');
 				
+				filteredInfoArray = [];
 				var str = encodeURIComponent($('#searchStr').val());
+				console.log('SEARCH CLICK='+str);
 				var placeName = $('#searchPlaceStr').val();
 				var location = JSON.stringify({lat:curPos.x,lng:curPos.y});				
-				if(location != ''){
-					changeLocation(location);
-					getAndPrintInfo();
-				}else{
-					if(placeName != ''){
+				
+				changeLocation(location);
+				
+				if(placeName != ''){
+					
+					var addressQuery = {"address": placeName ,"region":"fr","language":"fr"};
+					var geocoder = new google.maps.Geocoder();
+					geocoder.geocode( addressQuery, function(results, status) {						
+					if (status == google.maps.GeocoderStatus.OK) {
+					
+						var placeGmap = getPlaceFromGmapResult((results[0]));
 						
-						var addressQuery = {"address": placeName ,"region":"fr","language":"fr"};
-						var geocoder = new google.maps.Geocoder();
-						geocoder.geocode( addressQuery, function(results, status) {						
-						if (status == google.maps.GeocoderStatus.OK) {
+					}else{
+						var salt = new Date().getTime();
+						$('#searchStr').before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide</div>");
+						setTimeout(function() {
+							$("#alert"+salt).fadeOut();
+						}, 3000);
 						
-							var placeGmap = getPlaceFromGmapResult((results[0]));
-							
-						}else{
-							var salt = new Date().getTime();
-							$('#searchStr').before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide</div>");
-							setTimeout(function() {
-								$("#alert"+salt).fadeOut();
-							}, 3000);
-							
-						} 
-						});
-					}
+					} 
+					});
 				}
 				
-				
+				var localSearchString = decodeURIComponent(str);
 				if(str != 'Quoi ?' && str != ''){
 					searchString = str;
-					filteredInfoArray = [];
 					cleanMarkers();
 					cleanFeed();
 					$.each(infoArray,function(key,val){
-						str = decodeURIComponent(str);
-						var searchExactStr = new RegExp("(?:^| )(" + str + ")",'gi');
+						if(val.origin.charAt(0) == "@")
+							val.origin = val.origin.substring(1,val.origin.length);
+						if(localSearchString.charAt(0) == "@")
+							localSearchString = localSearchString.substring(1,str.length);
+						if(localSearchString.charAt(0) == "#")
+							localSearchString = localSearchString.substring(1,str.length);
+						var searchExactStr = new RegExp("(?:^| )(" + localSearchString + ")",'gi');
+						
 						if(searchExactStr.test(val.title) 
 							|| searchExactStr.test(val.content) 
-							|| searchExactStr.test(val.yakCatName) 
-							|| searchExactStr.test(val.freeTag) 
-							|| searchExactStr.test(val.origin)  ){
+							|| searchExactStr.test(val.yakCatName.join(' ')) 
+							|| searchExactStr.test(val.freeTag.join(' ')) 
+							|| searchExactStr.test(val.origin) ){
 							filteredInfoArray.push(val);
 						}
 							
@@ -103,7 +108,7 @@
 					cleanMarkers();
 					cleanFeed();
 					searchString = null;
-					if(infoArray.length > 0) // if the info array is empty we get it from db else we print it.
+					if(infoArray.length > 0 && str !='') // if the info array is empty we get it from db else we print it.
 						printMapAndFeed(infoArray,1);
 					else
 						getAndPrintInfo();
@@ -410,7 +415,7 @@
 				
 				$('#searchStr').val(searchString);
 				//searchString = encodeURIComponent(searchString);
-				
+				console.log('HASH');
 				getAndPrintInfo();
 			});
 			$("body").unbind("click").on('click','.userHashLink',function(event){
@@ -419,7 +424,7 @@
 				
 				$('#searchStr').val(searchString);
 				//searchString = encodeURIComponent(searchString);
-				
+				console.log('HASHUSER');
 				getAndPrintInfo();
 			});
 			
@@ -452,16 +457,18 @@
 
 		function changeLocation(location){
 			var locationObj = JSON.parse(location);
-			var latLng = new google.maps.LatLng(locationObj.lat,locationObj.lng);
-			markerHL.setPosition(new google.maps.LatLng(locationObj.lat,locationObj.lng));
-			markerHL.setVisible(true);
-			markerHL.setMap(map);
-			markerHL.setOptions({icon:"/images/markers/target3.png"});
-			setTimeout(function() {
-				markerHL.setMap(null);
-			}, 3000);
-			map.panTo(latLng);
-
+			if(location != '' && oldLocation.lat != locationObj.lat && oldLocation.lng != locationObj.lng){
+				var latLng = new google.maps.LatLng(locationObj.lat,locationObj.lng);
+				markerHL.setPosition(new google.maps.LatLng(locationObj.lat,locationObj.lng));
+				markerHL.setVisible(true);
+				markerHL.setMap(map);
+				markerHL.setOptions({icon:"/images/markers/target3.png"});
+				setTimeout(function() {
+					markerHL.setMap(null);
+				}, 3000);
+				map.panTo(latLng);
+				oldLocation = locationObj;
+			}
 		}
 		function manageSearchBox(){
 			var width = $(window).width();
@@ -729,7 +736,7 @@
 				apiUrl = '/api/geoalerts/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/'+nowts+'/'+yakType.toString()+'/'+searchString+'/500';
 			else	
 				apiUrl = '/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/'+nowts+'/'+yakType.toString()+'/'+searchString+'/500';
-			
+			console.log('CALL DB '+apiUrl);
 
 			$.getJSON(apiUrl,function(ajax) {
 				if(typeof ajax.data == 'undefined')
@@ -782,6 +789,7 @@
 				apiUrl = '/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/0/'+yakType.toString()+'/'+searchString+'/500';
 			}	
 				
+			console.log('CALL DB '+apiUrl);	
 			$.getJSON(apiUrl,function(ajax) {
 				// empty the news feed
 				cleanFeed();
@@ -831,6 +839,8 @@
 		}
 
 		function printMapAndFeed(data,flagFilter){
+			cleanFeed();
+			cleanMarkers();
 			$.each(data, function(key,val) {
 				if(flagFilter!=1)
 					infoArray.push(val);					
@@ -911,11 +921,13 @@
 			postedBy.attr("class", "postedBy");
 
 			var onclickUser = "showUserProfile(this)";
-			if(item.origin.indexOf('@') != 0)
-			{
-				item.origin ="@"+item.origin;
+			
+			if(typeof item.feed != 'undefined')
 				onclickUser = "setSearchFor(this);";
-			}
+
+			if(item.origin.indexOf('@') != 0)
+				item.origin ="@"+item.origin;
+				
 			
 
 			if(item.yakType !=2 )
@@ -1147,16 +1159,7 @@
 			
 			$.each(infoArray,function(key,val){
 				if(infoid == val._id){
-				console.log(val);
-				/*
-				if(val.user != undefined){
-					thumbImage = 	val.thumb;
-					mediumImage = 	thumbImage.replace('120_90', '512_0');
-				}else{
-					thumbImage = 	val.thumb;
-					mediumImage = 	thumbImage.replace('thumb', 'medium');
-				}*/
-
+				
 				thumbImage = val.thumb.replace('thumb/','');
 				//thumbImage = thumbImage.replace('//','/');
 				mediumImage = 	thumbImage.replace('120_90', '512_0');

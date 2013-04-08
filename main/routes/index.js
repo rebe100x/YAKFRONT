@@ -201,10 +201,10 @@ exports.news = function(req, res){
 				var yakCat = new Array();
 				var yakCatName = new Array();
 				// we introduce a redondancy between types and yakcat to be able to forget the type in the future
-				if(theYakType == 4){ // if type =4 ( discussion : by default push it in YAKCAT discussion )
-					yakCat.push(mongoose.Types.ObjectId("5092390bfa9a95f40c000000")); 
-					yakCatName.push('Discussion');
-				}
+				//if(theYakType == 4){ // if type =4 ( discussion : by default push it in YAKCAT discussion )
+				//	yakCat.push(mongoose.Types.ObjectId("5092390bfa9a95f40c000000")); 
+				//	yakCatName.push('Discussion');
+				//}
 				if(theYakType == 2){ // if type =2 ( agenda : by default push it in YAKCAT agenda )
 					yakCat.push(mongoose.Types.ObjectId("50923b9afa9a95d409000000")); 
 					yakCatName.push('Agenda');
@@ -405,6 +405,136 @@ exports.user_logout = function(req, res){
 };
 
 
+exports.session2 = function(req, res)
+{
+	var User = db.model('User');
+	User.authenticate(req.body.login2,req.body.password2, req.body.token, function(err, user) {
+		if(!(typeof(user) == 'undefined' || user === null || user === '')){
+			if(user.status == 1 || user.status == 4){
+				
+			if(req.body.fromSocial == "3")
+			{
+			var data = JSON.parse(req.body.social);
+			var login = data.name.givenName + "." + data.name.familyName;
+			var Google = db.model('Google');
+
+			var aGoogle = new Google();	
+
+			if(typeof(data.id) != 'undefined')
+				aGoogle.google_id = data.id;
+
+			if(typeof(data.name) != 'undefined')
+				aGoogle.screen_name = login;
+
+			if(typeof(data.name) != 'undefined')
+				aGoogle.name = data.name.givenName + "." + data.name.familyName;
+
+			
+			if(typeof(data.image) != 'undefined'){
+				try
+				{
+					/*var drawTool = require('../mylib/drawlib.js');
+					var ts = new Date().getTime();
+					user.thumb = crypto.createHash('md5').update(ts.toString()).digest("hex")+'.jpeg';
+					drawTool.GetImg(data.image.url,user.thumb,conf,mainConf);*/
+					aGoogle.profile_image_url = data.image.url;
+				}	
+				catch(err)
+				{
+					user.thumb = "no-user.png";
+					console.log(err);
+				}				
+				
+			}
+
+			if(typeof(data.url) != 'undefined')
+				aGoogle.url = data.url;
+
+			if(typeof(data.aboutMe) != 'undefined')
+				aGoogle.description = data.aboutMe;
+
+			if(typeof(data.ageRange) != 'undefined')
+				aGoogle.ageRange = data.ageRange;	
+
+			if(typeof(data.gender) != 'undefined')
+				aGoogle.gender = data.gender;		
+
+			if(typeof(data.language) != 'undefined')
+				aGoogle.language = data.language;			
+
+
+			user.social.google = aGoogle;
+			req.session.user = user._id;
+			User.update({"_id":user._id},{$set:{"lastLoginDate":new Date()}, $set:{"social.google":aGoogle}}, function(err){if (err) console.log(err);});
+			res.redirect(req.body.redir || '/news/map');
+
+			//track user
+			var trackParams = {"loginFrom": 0};
+			trackUser(user._id, 3, trackParams);
+			}
+
+			if(req.body.fromSocial == "2")
+			{
+			var data = JSON.parse(req.body.social);
+			var Facebook = db.model('Facebook');
+			var aFacebook = new Facebook();	
+
+			if(typeof(data.id) != 'undefined')
+				aFacebook.facebook_id = data.id;
+
+			if(typeof(data.username) != 'undefined')
+				aFacebook.screen_name = data.username;
+
+			if(typeof(data.name) != 'undefined')
+				aFacebook.name = data.name;
+
+			if(typeof(data.id) != 'undefined')
+				aFacebook.profile_image_url = 'https:/graph.facebook.com/'+data.id+'/picture/';
+
+			if(typeof(aFacebook.profile_image_url) != 'undefined'){					
+				/*try
+				{
+					var drawTool = require('../mylib/drawlib.js');
+					var profileImg;
+					var ts = new Date().getTime();
+					user.thumb = crypto.createHash('md5').update(ts.toString()).digest("hex")+'.jpeg';
+					drawTool.GetImg(aFacebook.profile_image_url,user.thumb,conf,mainConf);	
+				}
+				catch(err)
+				{
+					console.log(err);
+					user.thumb = "no-user.png";
+				}*/
+				
+			}
+
+			if(typeof(data.link) != 'undefined')
+				aFacebook.url = data.link;
+
+			if(typeof(data.bio) != 'undefined')
+				aFacebook.description = data.bio;
+
+			req.session.user = user._id;
+			User.update({"_id":user._id},{$set:{"lastLoginDate":new Date()}, $set:{"social.facebook":aFacebook}}, function(err){if (err) console.log(err);});
+			res.redirect(req.body.redir || '/news/map');
+
+			//track user
+			var trackParams = {"loginFrom": 0};
+			trackUser(user._id, 3, trackParams);
+			}
+
+			
+
+			}else if(user.status == 2){
+				req.session.message = 'Compte non validé.';
+				res.redirect('user/login?redir='+req.body.redir);
+			}
+		}else{
+			req.session.message = 'Identifiants incorrects.';	
+			res.redirect('user/login?redir='+req.body.redir);
+		}
+	});	
+}
 
 exports.session = function(req, res){
 
@@ -1602,6 +1732,41 @@ exports.auth_facebook = function(req, res){
 	});
 	
 }
+
+exports.auth_facebook_check = function(req, res){
+	var User = db.model('User');
+	var data = req.body.user;
+	var facebook_id = data.id;
+		User.findByFacebookId(facebook_id,function (err, theuser){
+		if(theuser != undefined && theuser != null ){
+			console.log('Facebook User Associated');
+			res.json({response: "1"});
+		}
+		else
+		{
+			console.log('No Facebook User Associated');
+			res.json({response: "0"});		
+		}
+	});
+};
+
+
+exports.auth_google_check = function(req, res){
+	var User = db.model('User');
+	var data = req.body.user;
+	var google_id = data.id;
+		User.findByGoogleId(google_id,function (err, theuser){
+		if(theuser != undefined && theuser != null ){
+			console.log('Google User Associated');
+			res.json({response: "1"});
+		}
+		else
+		{
+			console.log('No Google User Associated');
+			res.json({response: "0"});		
+		}
+	});
+};
 
 exports.auth_google = function(req, res){
 	var data = req.body.user;
