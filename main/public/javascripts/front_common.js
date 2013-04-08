@@ -1675,7 +1675,7 @@ function checkByWidth()
 				});
 
 				var uri = '/api/user/feed/' + theuser._id;
-				
+				$('#uc_newsfeed').html("");
 				$.getJSON(uri,function(ajax) {
 					$.each(ajax.data, function(key,val) {
 						if(key < 3)
