@@ -15,8 +15,11 @@ mixin loginForm()
 			div.span4
 				div.control-group.clearBoth
 					div.controls
-						a(href="/auth/twitter")
-							img(src="/images/twiiterconnect.png")
+						//
+							a(href="/auth/twitter")
+								img(src="/images/twiiterconnect.png")
+						a(style="cursor: pointer", onclick="getOptionsTwitter()")
+								img(src="/images/twiiterconnect.png")
 			
 				div.control-group.clearBoth
 					div.controls
@@ -54,6 +57,7 @@ mixin loginForm()
 						input(type="checkbox", name="remember", id="remember") 
 						input(type="hidden", name="rememberme", id="rememberme")
 						input(type="hidden", name="token", id="token")
+						
 						span
 							|Conserver mes infos
 				div.control-group.clearBoth
@@ -75,6 +79,22 @@ mixin loginForm()
 			FB.login(handleSessionResponse);
 		});
 
+		function getOptionsTwitter()
+		{
+			$(".Socialoptions").remove();
+			var Socialoptions = $("<div />");
+			Socialoptions.attr("class", "Socialoptions");
+			Socialoptions.html('<button class="yakbtnLogin" id="social_create">Login/Create</button>&nbsp;<button class="yakbtnLogin" id="social_associate">Associate</button>');
+			$(".myLogin").after(Socialoptions);
+			$("#social_associate").click(function(){
+				$("#fromSocial").val("1");
+				$('#loginPopUp').modal('show');
+			});
+			$("#social_create").click(function(){
+				window.location = "/auth/twitter";
+			});	
+		}
+
 		// handle a session response from any of the auth related calls
 		function handleSessionResponse() {
 			FB.api('/me', function(response) {
@@ -86,27 +106,73 @@ mixin loginForm()
 					$("#userinfo").html(fbinfo);
 					$("#authenticatefb").click(function(){
 						$(this).after("<img id='fbloader' class='loader' src='/images/loader.gif' />");
-						$.post("/auth/facebook", {user: response}, function(data){
+
+						$.post("/auth/facebook/check", {user: response}, function(data){
+							if(data.response == "0")
+								{
+									
+									$("#fbloader").remove();
+									$(".Socialoptions").remove();
+									var Socialoptions = $("<div />");
+									Socialoptions.attr("class", "Socialoptions");
+									Socialoptions.html('<button class="yakbtnLogin" id="social_create">Create</button>&nbsp;<button class="yakbtnLogin" id="social_associate">Associate</button>');
+									$(".myLogin").after(Socialoptions);
+									$("#social_associate").click(function(){
+										$("#social").val(JSON.stringify(response));
+										$("#fromSocial").val("2");
+										$('#loginPopUp').modal('show');
+									});
+									$("#social_create").click(function(){
+										$.post("/auth/facebook", {user: response}, function(data){
 							
-							if(data.response == "4")
-							{
-								//console.log("fv");	
-								window.location = conf.fronturl + "/settings/firstvisit";
-							}
-								
-							else if(data.response == "1")
-							{
-								//console.log("map");	
-								window.location = conf.fronturl + "/news/map";
-							}
-								
+											if(data.response == "4")
+											{
+												//console.log("fv");	
+												window.location = conf.fronturl + "/settings/firstvisit";
+											}
+												
+											else if(data.response == "1")
+											{
+												//console.log("map");	
+												window.location = conf.fronturl + "/news/map";
+											}
+												
+											else
+											{
+												//console.log("here");
+												$("#fbloader").remove();
+											}
+												
+										});		
+									});
+								}
 							else
 							{
-								//console.log("here");
-								$("#fbloader").remove();
+								$.post("/auth/facebook", {user: response}, function(data){
+							
+									if(data.response == "4")
+									{
+										//console.log("fv");	
+										window.location = conf.fronturl + "/settings/firstvisit";
+									}
+										
+									else if(data.response == "1")
+									{
+										//console.log("map");	
+										window.location = conf.fronturl + "/news/map";
+									}
+										
+									else
+									{
+										//console.log("here");
+										$("#fbloader").remove();
+									}
+										
+								});		
 							}
-								
-						});
+						});						
+
+						
 					});
 				}
 					
@@ -211,26 +277,71 @@ mixin loginForm()
 			$("#usergoogleinfo").html(googleinfo);
 			$("#authenticategoogle").click(function(){
 				$(this).after("<img id='fbloader' class='loader' src='/images/loader.gif' />");
-				$.post("/auth/google", {user: resp}, function(data){		
-					if(data.response == "4")
+
+				$.post("/auth/google/check", {user: resp}, function(data){	
+					if(data.response == "0")
 					{
-						//console.log("fv");	
-						window.location = conf.fronturl + "/settings/firstvisit";
-					}
 						
-					else if(data.response == "1")
-					{
-						console.log("map");	
-						window.location = conf.fronturl + "/news/map";
+						$("#fbloader").remove();
+						$(".Socialoptions").remove();
+						var Socialoptions = $("<div />");
+						Socialoptions.attr("class", "Socialoptions");
+						Socialoptions.html('<button class="yakbtnLogin" id="social_create">Create</button>&nbsp;<button class="yakbtnLogin" id="social_associate">Associate</button>');
+						$(".myLogin").after(Socialoptions);
+						$("#social_associate").click(function(){
+							$("#social").val(JSON.stringify(resp));
+							$("#fromSocial").val("3");
+							$('#loginPopUp').modal('show');
+						});
+						$("#social_create").click(function(){
+							$.post("/auth/google", {user: resp}, function(data){		
+								if(data.response == "4")
+								{
+									//console.log("fv");	
+									window.location = conf.fronturl + "/settings/firstvisit";
+								}
+									
+								else if(data.response == "1")
+								{
+									console.log("map");	
+									window.location = conf.fronturl + "/news/map";
+								}
+									
+								else
+								{
+									//console.log("here");
+									$("#fbloader").remove();
+								}
+									
+							});						
+						});
 					}
-						
 					else
 					{
-						//console.log("here");
-						$("#fbloader").remove();
-					}
+						$.post("/auth/google", {user: resp}, function(data){		
+							if(data.response == "4")
+							{
+								//console.log("fv");	
+								window.location = conf.fronturl + "/settings/firstvisit";
+							}
 								
-				});	
+							else if(data.response == "1")
+							{
+								console.log("map");	
+								window.location = conf.fronturl + "/news/map";
+							}
+								
+							else
+							{
+								//console.log("here");
+								$("#fbloader").remove();
+							}
+									
+						});						
+					}
+				});				
+
+	
 			});
 		}
 		

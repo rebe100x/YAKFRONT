@@ -52,6 +52,30 @@ exports.static_image = function(req,res){
 		res.json({error:'file does not exist'});
 }
 
+exports.set_user_alerts = function(req, res){
+	var User = db.model('User');
+	console.log(req.body.theuser._id);
+	if(req.body.addAlert == 1)
+	{
+		User.update({_id: req.session.user},{$push:{"usersubs":req.body.theuser}}, function(err){
+			if(!err)
+				res.json("1");
+			else
+				res.json("0");
+		});
+	}
+	else
+	{
+		User.update({_id: req.session.user},{$pull:{'usersubs':{_id:req.body.theuser._id}}}, function(err){
+			if(!err)
+				res.json("1");
+			else
+				res.json("0");
+		});	
+	}
+		
+}
+
 exports.requiresLogin = function(req,res,next){
 	
 	if(req.session.user){
@@ -381,6 +405,142 @@ exports.user_logout = function(req, res){
 };
 
 
+exports.session2 = function(req, res)
+{
+	var User = db.model('User');
+	User.authenticate(req.body.login2,req.body.password2, req.body.token, function(err, user) {
+		if(!(typeof(user) == 'undefined' || user === null || user === '')){
+			if(user.status == 1 || user.status == 4){
+			
+			if(req.body.fromSocial == "1")
+			{
+				req.session.user = user._id;
+				res.redirect('/auth/twitter/associate');
+			}			
+
+			if(req.body.fromSocial == "3")
+			{
+			var data = JSON.parse(req.body.social);
+			var login = data.name.givenName + "." + data.name.familyName;
+			var Google = db.model('Google');
+
+			var aGoogle = new Google();	
+
+			if(typeof(data.id) != 'undefined')
+				aGoogle.google_id = data.id;
+
+			if(typeof(data.name) != 'undefined')
+				aGoogle.screen_name = login;
+
+			if(typeof(data.name) != 'undefined')
+				aGoogle.name = data.name.givenName + "." + data.name.familyName;
+
+			
+			if(typeof(data.image) != 'undefined'){
+				try
+				{
+					/*var drawTool = require('../mylib/drawlib.js');
+					var ts = new Date().getTime();
+					user.thumb = crypto.createHash('md5').update(ts.toString()).digest("hex")+'.jpeg';
+					drawTool.GetImg(data.image.url,user.thumb,conf,mainConf);*/
+					aGoogle.profile_image_url = data.image.url;
+				}	
+				catch(err)
+				{
+					user.thumb = "no-user.png";
+					console.log(err);
+				}				
+				
+			}
+
+			if(typeof(data.url) != 'undefined')
+				aGoogle.url = data.url;
+
+			if(typeof(data.aboutMe) != 'undefined')
+				aGoogle.description = data.aboutMe;
+
+			if(typeof(data.ageRange) != 'undefined')
+				aGoogle.ageRange = data.ageRange;	
+
+			if(typeof(data.gender) != 'undefined')
+				aGoogle.gender = data.gender;		
+
+			if(typeof(data.language) != 'undefined')
+				aGoogle.language = data.language;			
+
+
+			user.social.google = aGoogle;
+			req.session.user = user._id;
+			User.update({"_id":user._id},{$set:{"lastLoginDate":new Date()}, $set:{"social.google":aGoogle}}, function(err){if (err) console.log(err);});
+			res.redirect(req.body.redir || '/news/map');
+
+			//track user
+			var trackParams = {"loginFrom": 0};
+			trackUser(user._id, 3, trackParams);
+			}
+
+			if(req.body.fromSocial == "2")
+			{
+			var data = JSON.parse(req.body.social);
+			var Facebook = db.model('Facebook');
+			var aFacebook = new Facebook();	
+
+			if(typeof(data.id) != 'undefined')
+				aFacebook.facebook_id = data.id;
+
+			if(typeof(data.username) != 'undefined')
+				aFacebook.screen_name = data.username;
+
+			if(typeof(data.name) != 'undefined')
+				aFacebook.name = data.name;
+
+			if(typeof(data.id) != 'undefined')
+				aFacebook.profile_image_url = 'https:/graph.facebook.com/'+data.id+'/picture/';
+
+			if(typeof(aFacebook.profile_image_url) != 'undefined'){					
+				/*try
+				{
+					var drawTool = require('../mylib/drawlib.js');
+					var profileImg;
+					var ts = new Date().getTime();
+					user.thumb = crypto.createHash('md5').update(ts.toString()).digest("hex")+'.jpeg';
+					drawTool.GetImg(aFacebook.profile_image_url,user.thumb,conf,mainConf);	
+				}
+				catch(err)
+				{
+					console.log(err);
+					user.thumb = "no-user.png";
+				}*/
+				
+			}
+
+			if(typeof(data.link) != 'undefined')
+				aFacebook.url = data.link;
+
+			if(typeof(data.bio) != 'undefined')
+				aFacebook.description = data.bio;
+
+			req.session.user = user._id;
+			User.update({"_id":user._id},{$set:{"lastLoginDate":new Date()}, $set:{"social.facebook":aFacebook}}, function(err){if (err) console.log(err);});
+			res.redirect(req.body.redir || '/news/map');
+
+			//track user
+			var trackParams = {"loginFrom": 0};
+			trackUser(user._id, 3, trackParams);
+			}
+
+			
+
+			}else if(user.status == 2){
+				req.session.message = 'Compte non validé.';
+				res.redirect('user/login?redir='+req.body.redir);
+			}
+		}else{
+			req.session.message = 'Identifiants incorrects.';	
+			res.redirect('user/login?redir='+req.body.redir);
+		}
+	});	
+}
 
 exports.session = function(req, res){
 
@@ -1260,6 +1420,102 @@ exports.auth_twitter = function(req, res){
 	});
 };
 
+exports.auth_twitter_check = function(req, res){
+	/**
+	* OAuth dependencies
+	*/
+	var config_secret = require('../confs_secret.js');
+	var secretConf = config_secret.confs_secret;
+
+	var OAuth= require('oauth').OAuth;
+	var oa = new OAuth(
+		"https://api.twitter.com/oauth/request_token",
+		"https://api.twitter.com/oauth/access_token",
+		secretConf.TWITTER.accessKeyId,
+		secretConf.TWITTER.secretAccessKey,
+		"1.0",
+		conf.twitter_callbackurl,
+		"HMAC-SHA1"
+	);
+
+	
+	oa.getOAuthRequestToken(function(error, oauth_token, oauth_token_secret, results){
+			if (error) {
+				
+				res.send("0");
+			}
+			else {
+				console.log(results.screen_name)
+				 req.session.oauth.verifier = req.query.oauth_verifier;
+    			var oauth = req.session.oauth;
+				oa.getOAuthAccessToken(oauth.token,oauth.token_secret,oauth.verifier, 
+				      function(error, oauth_access_token, oauth_access_token_secret, results){
+				        if (error) 
+				        {
+				        	res.send("0");
+				        }
+				        else
+				        {
+				        	User.findByTwitterId(results.id,function (err, theuser){
+								if(theuser != undefined && theuser != null ){
+									console.log('LOGGED IN');
+									req.session.user = theuser._id;
+									User.update({"_id":theuser._id},{$set:{"lastLoginDate":new Date()}}, function(err){if (err) console.log(err);});
+									res.redirect('news/map');
+									var trackParams = {"loginFrom": 1};
+									trackUser(user._id, 3,  trackParams);
+								}
+								else
+								{
+									res.send("0");
+								}
+							});
+				        }
+				        	
+				    }
+				  );
+			}
+	});
+};
+
+
+exports.auth_twitter_associate = function(req, res){
+	/**
+	* OAuth dependencies
+	*/
+	var config_secret = require('../confs_secret.js');
+	var secretConf = config_secret.confs_secret;
+
+	var OAuth= require('oauth').OAuth;
+	var oa = new OAuth(
+		"https://api.twitter.com/oauth/request_token",
+		"https://api.twitter.com/oauth/access_token",
+		secretConf.TWITTER.accessKeyId,
+		secretConf.TWITTER.secretAccessKey,
+		"1.0",
+		conf.twitter_callbackurl2,
+		"HMAC-SHA1"
+	);
+
+	
+	oa.getOAuthRequestToken(function(error, oauth_token, oauth_token_secret, results){
+			if (error) {
+				console.log(error);
+				res.send(error)
+			}
+			else {
+
+				req.session.oauth = {};
+				req.session.oauth.token = oauth_token;
+				req.session.oauth.token_secret = oauth_token_secret;
+				//console.log('oauth.token_secret: ' + req.session.oauth.token_secret);
+				
+				res.redirect('https://twitter.com/oauth/authenticate?oauth_token='+oauth_token);
+
+	}
+	});
+};
+
 exports.auth_twitter_callback = function(req, res){
 	if (req.session.oauth) {
 
@@ -1299,6 +1555,7 @@ exports.auth_twitter_callback = function(req, res){
 		        } else {
 
 				data = JSON.parse(data);
+				console.log(data);
 		        var crypto = require('crypto')
 		        var User = db.model('User');
 			    var user = new User();
@@ -1324,6 +1581,8 @@ exports.auth_twitter_callback = function(req, res){
 				var Twitter = db.model('Twitter');
 				var aTwitter = new Twitter();	
 
+				aTwitter.twitter_id = twitter_id;
+
 				if(typeof(data.name) != 'undefined')
 					aTwitter.name = data.name;
 
@@ -1331,13 +1590,13 @@ exports.auth_twitter_callback = function(req, res){
 				if(typeof(data.profile_image_url) != 'undefined'){					
 					try
 					{
-						var drawTool = require('../mylib/drawlib.js');
+						/*var drawTool = require('../mylib/drawlib.js');
 						var profileImg;
 						// this line is only for Twitter to get a better image
 						data.profile_image_url = data.profile_image_url.replace('normal','bigger');
 						var ts = new Date().getTime();
 						user.thumb = crypto.createHash('md5').update(ts.toString()).digest("hex")+'.jpeg';
-						drawTool.GetImg(data.profile_image_url,user.thumb,conf,mainConf);
+						drawTool.GetImg(data.profile_image_url,user.thumb,conf,mainConf);*/
 						
 						aTwitter.profile_image_url = data.profile_image_url;	
 					}
@@ -1452,6 +1711,138 @@ exports.auth_twitter_callback = function(req, res){
 
 
 
+exports.auth_twitter_callback2 = function(req, res){
+	if (req.session.oauth) {
+
+		/**
+		* OAuth dependencies
+		*/
+		var config_secret = require('../confs_secret.js');
+		var secretConf = config_secret.confs_secret;
+
+		var OAuth= require('oauth').OAuth;
+		var oa = new OAuth(
+			"https://api.twitter.com/oauth/request_token",
+			"https://api.twitter.com/oauth/access_token",
+			secretConf.TWITTER.accessKeyId,
+			secretConf.TWITTER.secretAccessKey,
+			"1.0",
+			conf.twitter_callbackurl2,
+			"HMAC-SHA1"
+		);
+
+		req.session.oauth.verifier = req.query.oauth_verifier;
+		var oauth = req.session.oauth;
+
+		oa.getOAuthAccessToken(oauth.token,oauth.token_secret,oauth.verifier, 
+		function(error, oauth_access_token, oauth_access_token_secret, results){
+			if (error){
+				console.log(error);
+				res.send("Authentication Failure!");
+			} else {
+				req.session.oauth.access_token = oauth_access_token;
+				req.session.oauth.access_token_secret = oauth_access_token_secret;
+				//console.log(results, req.session.oauth);
+				oa.get("https://api.twitter.com/1/account/verify_credentials.json", req.session.oauth.access_token, req.session.oauth.access_token_secret, function (error, data, response) {
+		        if (error) {
+		          console.log(error);
+		          res.send("Error getting twitter screen name : " + error, 500);
+		        } else {
+
+				data = JSON.parse(data);
+				//console.log(data);
+		        
+		        var User = db.model('User');
+			    var user = new User();
+				var login = data.screen_name;
+				var twitter_id = data.id;
+				
+				var logo = conf.fronturl+"/static/images/yakwala-logo_petit.png";
+				
+				var Twitter = db.model('Twitter');
+				var aTwitter = new Twitter();	
+
+				aTwitter.twitter_id = twitter_id;
+
+				if(typeof(data.name) != 'undefined')
+					aTwitter.name = data.name;
+
+				
+				if(typeof(data.profile_image_url) != 'undefined'){					
+					try
+					{
+						/*var drawTool = require('../mylib/drawlib.js');
+						var profileImg;
+						// this line is only for Twitter to get a better image
+						data.profile_image_url = data.profile_image_url.replace('normal','bigger');
+						var ts = new Date().getTime();
+						user.thumb = crypto.createHash('md5').update(ts.toString()).digest("hex")+'.jpeg';
+						drawTool.GetImg(data.profile_image_url,user.thumb,conf,mainConf);*/
+						
+						aTwitter.profile_image_url = data.profile_image_url;	
+					}
+					catch(err)
+					{
+						console.log(err);
+						user.thumb = "no-user.png";
+					}
+
+					
+				}
+
+					
+
+				if(typeof(data.url) != 'undefined')
+					aTwitter.url = data.url;
+
+				if(typeof(data.description) != 'undefined')
+					aTwitter.description = data.description;
+
+				if(typeof(data.screen_name) != 'undefined')
+					aTwitter.screen_name = data.screen_name;
+
+				if(typeof(data.twitter_id) != 'undefined')
+					aTwitter.twitter_id = data.twitter_id;
+
+				if(typeof(data.geo) != 'undefined')
+					aTwitter.geo = data.geo.coordinates;
+
+				if(typeof(data.followers_count) != 'undefined')
+					aTwitter.followers_count = data.followers_count;
+
+				if(typeof(data.time_zone) != 'undefined')
+					aTwitter.time_zone = data.time_zone;
+
+				if(typeof(data.statuses_count) != 'undefined')
+					aTwitter.statuses_count = data.statuses_count;
+
+				if(typeof(data.lang) != 'undefined')
+					aTwitter.lang = data.lang;
+
+				if(typeof(data.friends_count) != 'undefined')
+					aTwitter.friends_count = data.friends_count;
+
+				if(typeof(data.created_at) != 'undefined')
+					aTwitter.created_at = data.created_at;
+
+				User.update({"_id":req.session.user},{$set:{"lastLoginDate":new Date()}, $set:{"social.twitter":aTwitter}}, function(err){if (err) console.log(err);});
+				var trackParams = {"loginFrom": 1};
+				trackUser(req.session.user, 3,  trackParams);
+				res.redirect('news/map');
+		        }  
+		      });
+
+			}
+		}
+		);
+	} else
+	{
+		res.send('youre not supposed to be here');
+	}
+};
+
+
+
 exports.auth_facebook = function(req, res){
 	var data = req.body.user;
 	var crypto = require('crypto')
@@ -1493,7 +1884,7 @@ exports.auth_facebook = function(req, res){
 		aFacebook.profile_image_url = 'https:/graph.facebook.com/'+data.id+'/picture/';
 
 	if(typeof(aFacebook.profile_image_url) != 'undefined'){					
-		try
+		/*try
 		{
 			var drawTool = require('../mylib/drawlib.js');
 			var profileImg;
@@ -1505,7 +1896,7 @@ exports.auth_facebook = function(req, res){
 		{
 			console.log(err);
 			user.thumb = "no-user.png";
-		}
+		}*/
 		
 	}
 
@@ -1579,6 +1970,41 @@ exports.auth_facebook = function(req, res){
 	
 }
 
+exports.auth_facebook_check = function(req, res){
+	var User = db.model('User');
+	var data = req.body.user;
+	var facebook_id = data.id;
+		User.findByFacebookId(facebook_id,function (err, theuser){
+		if(theuser != undefined && theuser != null ){
+			console.log('Facebook User Associated');
+			res.json({response: "1"});
+		}
+		else
+		{
+			console.log('No Facebook User Associated');
+			res.json({response: "0"});		
+		}
+	});
+};
+
+
+exports.auth_google_check = function(req, res){
+	var User = db.model('User');
+	var data = req.body.user;
+	var google_id = data.id;
+		User.findByGoogleId(google_id,function (err, theuser){
+		if(theuser != undefined && theuser != null ){
+			console.log('Google User Associated');
+			res.json({response: "1"});
+		}
+		else
+		{
+			console.log('No Google User Associated');
+			res.json({response: "0"});		
+		}
+	});
+};
+
 exports.auth_google = function(req, res){
 	var data = req.body.user;
 	var crypto = require('crypto')
@@ -1620,10 +2046,10 @@ exports.auth_google = function(req, res){
 	if(typeof(data.image) != 'undefined'){
 		try
 		{
-			var drawTool = require('../mylib/drawlib.js');
+			/*var drawTool = require('../mylib/drawlib.js');
 			var ts = new Date().getTime();
 			user.thumb = crypto.createHash('md5').update(ts.toString()).digest("hex")+'.jpeg';
-			drawTool.GetImg(data.image.url,user.thumb,conf,mainConf);
+			drawTool.GetImg(data.image.url,user.thumb,conf,mainConf);*/
 			aGoogle.profile_image_url = data.image.url;
 		}	
 		catch(err)

@@ -89,6 +89,7 @@ app.post('/user',routes.user);
 app.post('/forgotpassword',routes.forgotpassword);
 //app.post('/validate',routes.validate);
 app.post('/session',routes.session);
+app.post('/session2',routes.session2);
 
 // SECURED BY LOGIN ROUTES:
 
@@ -113,6 +114,7 @@ app.get('/settings/privateprofile', routes.requiresLogin, routes.settings_privat
 app.post('/privateprofile',routes.requiresLogin, routes.privateprofile);
 
 app.get('/settings/alerts', routes.requiresLogin, routes.settings_alerts);
+app.post('/user/setUserAlerts', routes.requiresLogin, routes.set_user_alerts);
 app.post('/alerts',routes.requiresLogin,routes.alerts);
 
 app.get('/settings/password', routes.requiresLogin, routes.settings_password);
@@ -180,21 +182,25 @@ app.get('/docs/log', routes.docs_log);
 /**
 * routes / call to twitter
 */
+app.get('/auth/twitter/check', routes.auth_twitter_check);
 app.get('/auth/twitter', routes.auth_twitter);
+app.get('/auth/twitter/associate', routes.auth_twitter_associate);
 /**
 * routes / the call back after validation
 */
 app.get('/auth/twitter/callback', routes.auth_twitter_callback);
+app.get('/auth/twitter/callback2', routes.auth_twitter_callback2);
 
 /**
 routes / call to facebook
 */
 app.post('/auth/facebook', routes.auth_facebook);
-
+app.post('/auth/facebook/check', routes.auth_facebook_check);
 /**
 routes / call to google
 */
 app.post('/auth/google', routes.auth_google);
+app.post('/auth/google/check', routes.auth_google_check);
 
 
 /**

@@ -3,8 +3,10 @@ block content
 
 	include ../mixins/menu.jade
 	include ../mixins/forms/loginForm.jade
+	include ../mixins/loginPopUp.jade
 	
 	mixin menu('login')
+
 	div.navbar.navbar-fixed-top(style="background: #FFFFFF")
 		div.container-fluid
 			div.row-fluid
@@ -20,6 +22,7 @@ block content
 			div.span3
 			div.span6
 				mixin loginForm() 
+				mixin loginPopUp
 			div.span3
 				
 	script

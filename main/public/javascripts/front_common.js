@@ -1594,10 +1594,61 @@ function checkByWidth()
 						$("#userChooser #uc_profile_yaks_posts").html("Yassalas<br /><b>" + data.count + "<b>");		
 				});
 
-				if($.inArray(userid,user.usersubs))
-					$("#userChooser #uc_profile_yaks_alerts.mybtn").html("Supprimer de mes alertes");		
+				
+				if(userid != user._id)
+				{
+					//console.log(userid);
+					if($.inArray(userid,user.usersubs) && user.usersubs.length > 0)
+					{
+						$("#userChooser #uc_profile_yaks_alerts.mybtn").html("Supprimer de mes alertes");		
+						$("#userChooser #uc_profile_yaks_alerts.mybtn").click(function(){
+							var alertUser = {};
+							alertUser._id = theuser._id;
+							alertUser.name = userName;
+							alertUser.login = userLogin;
+							alertUser.details = userName + "(@" + userLogin + ")";
+							alertUser.thumb = userThumb;
+							console.log(alertUser);
+							$.post('/user/setUserAlerts', {'theuser':alertUser, 'addAlert' : 0},function(res) {
+								if(res == 1)
+								{
+									$("#userChooser #uc_profile_yaks_alerts.mybtn").html("Ajouter a mes alertes");		
+									$.each(user.usersubs, function(i){
+   										 if(user.usersubs[i]._id === theuser._id) user.usersubs.splice(i,1);
+									});
+								}
+							});
+						});
+					}
+						
+					else
+					{
+						$("#userChooser #uc_profile_yaks_alerts.mybtn").html("Ajouter a mes alertes");		
+						$("#userChooser #uc_profile_yaks_alerts.mybtn").click(function(){
+							var alertUser = {};
+							alertUser._id = theuser._id;
+							alertUser.name = userName;
+							alertUser.login = userLogin;
+							alertUser.details = userName + "(@" + userLogin + ")";
+							alertUser.thumb = userThumb;
+							console.log(alertUser);
+							$.post('/user/setUserAlerts', {'theuser':alertUser, 'addAlert' : 1},function(res) {
+								if(res == 1)
+								{
+									$("#userChooser #uc_profile_yaks_alerts.mybtn").html("Supprimer de mes alertes");		
+									user.usersubs = user.usersubs.concat(alertUser);
+								}
+							});
+						});
+					}
+						
+
+					
+				}	
 				else
-					$("#userChooser #uc_profile_yaks_alerts.mybtn").html("Ajouter a mes alertes");		
+				{
+					$("#userChooser #uc_profile_yaks_alerts.mybtn").html("C'est ton profile");		
+				}
 
 				var thetags = "";
 
@@ -1635,11 +1686,13 @@ function checkByWidth()
 				});
 
 				var uri = '/api/user/feed/' + theuser._id;
+				
+				$('#uc_newsfeed').html("");
 
-				$('#uc_newsfeed').html('');
 				$.getJSON(uri,function(ajax) {
 					$.each(ajax.data, function(key,val) {
-						printFeedItemPopUp(val);	
+						if(key < 3)
+							printFeedItemPopUp(val);	
 					});
 				});
 			});
