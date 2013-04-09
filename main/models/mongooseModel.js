@@ -127,7 +127,7 @@ var Info = new Schema({
   , content	: {type: String}		
   , thumb	: {type: String}
   , thumbFlag :{type:Number,default:0}		
-  , origin	: {type: String}		
+  , origin	: {type: String}	
   , access	: {type: Number}
   , licence	: {type: String}		
   , outGoingLink       : { type: String }  
@@ -145,7 +145,8 @@ var Info = new Schema({
   , address	: {type : String}	
   , location	: { type : { lat: Number, lng: Number }, index : '2d'}	
   , status	: {type: Number,index:1}		
-  , user	: {type: Schema.ObjectId}		
+  , user	: {type: Schema.ObjectId}	
+  , feed :	{type: Schema.ObjectId}	
   , userName	: {type: String}		
   , zone	: {type: Schema.ObjectId}
   ,	placeId	: {type: Schema.ObjectId} 
@@ -199,7 +200,8 @@ Info.statics.format = function (theinfo) {
 		yakunlikeUsersIds:theinfo.yakunlikeUsersIds,
 		yakComments:theinfo.yakComments,
 		outGoingLink:theinfo.outGoingLink,
-		user: theinfo.user
+		user: theinfo.user,
+		feed: theinfo.feed
 	};
   return formattedInfo;
 }

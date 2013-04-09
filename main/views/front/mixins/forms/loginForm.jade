@@ -65,14 +65,12 @@ mixin loginForm()
 						button.yakbtnLogin(type='submit', name='submit', id='submit') Connexion
 		div.clearBoth
 			
-	script(src="http://connect.facebook.net/en_US/all.js")
+	script(src="http://connect.facebook.net/fr_FR/all.js")
 	script
 		var user = {};
 		var conf = !{conf};
-		// initialize the library with the API key
-		FB.init({ appId: 548066291890740 });
-
-		// fetch the status on load
+		var mainConf = !{mainConf};
+		FB.init({ appId: mainConf.fbAccessKeyId });
 		FB.getLoginStatus(handleSessionResponse);
 
 		$('#loginFB').bind('click', function() {
@@ -84,7 +82,7 @@ mixin loginForm()
 			$(".Socialoptions").remove();
 			var Socialoptions = $("<div />");
 			Socialoptions.attr("class", "Socialoptions");
-			Socialoptions.html('<button class="yakbtnLogin" id="social_create">Login/Create</button>&nbsp;<button class="yakbtnLogin" id="social_associate">Associate</button>');
+			Socialoptions.html('<button class="yakbtnLogin" id="social_create" title="Vous ne possédez pas de compte Yakwala ? Créer le à partir de votre compte Twitter, vous gagnerez du temps !">Créer</button><!--&nbsp;<button class="yakbtnLogin" id="social_associate" title="Vous possédez déjà un compte Yakwala ? Associez le avec votre compte Twitter! Vous gagnerez du temps !">Associer</button>-->');
 			$(".myLogin").after(Socialoptions);
 			$("#social_associate").click(function(){
 				$("#fromSocial").val("1");
@@ -100,9 +98,9 @@ mixin loginForm()
 			FB.api('/me', function(response) {
 				if(!response.error)
 				{
-					console.log(response);
+					//console.log(response);
 					$("#loginFB").remove();
-					var fbinfo = "<img class='pull-left' src='https:/graph.facebook.com/"+response.id+"/picture/' /><span class='pull-left'><a style='cursor: pointer' id='authenticatefb'> Bienvenu  " + response.name + "<br />" + " Login with facebook</a></span><span class='clearBoth'></span>";
+					var fbinfo = "<img class='pull-left' src='https:/graph.facebook.com/"+response.id+"/picture/' /><span class='pull-left'><a style='cursor: pointer' id='authenticatefb'> Bienvenue  " + response.name + "<br />" + " Login with facebook</a></span><span class='clearBoth'></span>";
 					$("#userinfo").html(fbinfo);
 					$("#authenticatefb").click(function(){
 						$(this).after("<img id='fbloader' class='loader' src='/images/loader.gif' />");
@@ -115,7 +113,7 @@ mixin loginForm()
 									$(".Socialoptions").remove();
 									var Socialoptions = $("<div />");
 									Socialoptions.attr("class", "Socialoptions");
-									Socialoptions.html('<button class="yakbtnLogin" id="social_create">Create</button>&nbsp;<button class="yakbtnLogin" id="social_associate">Associate</button>');
+									Socialoptions.html('<button class="yakbtnLogin" id="social_create" title="Vous ne possédez pas de compte Yakwala ? Créer le à partir de votre compte Facebook, vous gagnerez du temps !">Créer</button>&nbsp;<button class="yakbtnLogin" id="social_associate" title="Vous possédez déjà un compte Yakwala ? Associez le avec votre compte Facebook! Vous gagnerez du temps !">Associer</button>');
 									$(".myLogin").after(Socialoptions);
 									$("#social_associate").click(function(){
 										$("#social").val(JSON.stringify(response));
@@ -237,7 +235,7 @@ mixin loginForm()
 		{
 			gapi.signin.render("customBtn", { 
 				'callback': 'signinCallback', 
-				'clientid': '80128462314.apps.googleusercontent.com', 
+				'clientid': mainConf.gpKey+'.apps.googleusercontent.com', 
 				'cookiepolicy': 'single_host_origin', 
 				'requestvisibleactions': 'http://schemas.google.com/AddActivity',
 				'scope': 'https://www.googleapis.com/auth/plus.login'
@@ -246,7 +244,6 @@ mixin loginForm()
 		}
 
 		function signinCallback(authResult) {
-			console.log(authResult);
 			if (authResult['access_token']) {
 			// Successfully authorized
 			// Hide the sign-in button now that the user is authorized, for example:
@@ -286,7 +283,7 @@ mixin loginForm()
 						$(".Socialoptions").remove();
 						var Socialoptions = $("<div />");
 						Socialoptions.attr("class", "Socialoptions");
-						Socialoptions.html('<button class="yakbtnLogin" id="social_create">Create</button>&nbsp;<button class="yakbtnLogin" id="social_associate">Associate</button>');
+						Socialoptions.html('<button class="yakbtnLogin" id="social_create" title="Vous ne possédez pas de compte Yakwala ? Créer le à partir de votre compte Google Plus, vous gagnerez du temps !">Créer</button>&nbsp;<button class="yakbtnLogin" id="social_associate" title="Vous possédez déjà un compte Yakwala ? Associez le avec votre compte Google Plus! Vous gagnerez du temps !">Associer</button>');
 						$(".myLogin").after(Socialoptions);
 						$("#social_associate").click(function(){
 							$("#social").val(JSON.stringify(resp));
@@ -303,7 +300,7 @@ mixin loginForm()
 									
 								else if(data.response == "1")
 								{
-									console.log("map");	
+									//console.log("map");	
 									window.location = conf.fronturl + "/news/map";
 								}
 									
@@ -327,7 +324,7 @@ mixin loginForm()
 								
 							else if(data.response == "1")
 							{
-								console.log("map");	
+								//console.log("map");	
 								window.location = conf.fronturl + "/news/map";
 							}
 								

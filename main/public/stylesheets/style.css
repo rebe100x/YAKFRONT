@@ -1022,6 +1022,10 @@ border-bottom: 1px solid #e5e5e5;}
 .infowindow .myitem .yakSpam{font-size:11px;font-style:italic; position: relative; clear: both; width: auto; float: right; left: 0px; top: -33px; color: #E07C1C; cursor: pointer;}
 .currentDetails .myitem .yakSpam{font-size:11px;font-style:italic; position: relative; clear: both; width: auto; float: right; left: 0px; top: -33px; color: #E07C1C; cursor: pointer;}
 
+#loginPageNavBar{background-color: #FFF;position:relative;}
+#loginPageNavBar div.span6{text-align:center;margin:0px;}
+#loginPageContent{border-top: 1px solid #e2e2e2; background: #f6f6f6;}
+
 .myLogin { 
 	background-color: #FFFFFF; 
 	margin-top: 60px;

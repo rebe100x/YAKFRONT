@@ -1,19 +1,25 @@
 mixin loginPopUp
 
+
 	div.modal.hide.fade#loginPopUp
-		div(style="text-align: center")
-			form(action='/session2', method='POST')
-				div.span6
-					div.control-group
-						div.controls
-							input#login2(type="text",name="login2", autocomplete="on", placeholder='Login')
-					div.control-group
-						div.controls
-							input#password2(type="password",name="password2", autocomplete="on", placeholder='Password')
-							input(type="hidden", name="token", id="token")
-							input(type="hidden", name="social", id="social")
-							input(type="hidden", name="fromSocial", id="fromSocial")
-					div.control-group.clearBoth
-						div.controls				
-							button.yakbtnLogin(type='submit', name='submit', id='submit2') Associer
-			div.clearBoth
+		div.modal-header
+			span#closeModal(type="button", data-dismiss="modal")
+			h4 Entrer le login et mot de passe du compte à associer:
+		div.modal-body	
+			div(style="text-align: center")
+				form(action='/session2', method='POST')
+					div.span6
+						div.control-group
+							div.controls
+								input#login2(type="text",name="login2", autocomplete="on", placeholder='Login')
+						div.control-group
+							div.controls
+								input#password2(type="password",name="password2", autocomplete="on", placeholder='Password')
+								input(type="hidden", name="token", id="token")
+								input(type="hidden", name="social", id="social")
+								input(type="hidden", name="fromSocial", id="fromSocial")
+						div.control-group.clearBoth
+							div.controls				
+								button.yakbtnLogin(type='submit', name='submit', id='submit2') Associer
+				div.clearBoth
+		div.modal-footer

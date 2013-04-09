@@ -1,8 +1,12 @@
 exports.GetImg = function(urlImg, destName, conf, mainConf){
 	var http = require('http')
+	, http = require('follow-redirects').http
+	, https = require('https')
+	, https = require('follow-redirects').https
 	, fs = require('fs')
 	, url = require('url');
 
+	
 	var theUrl = url.parse(urlImg);
 	var options = {
 		hostname: theUrl.hostname,

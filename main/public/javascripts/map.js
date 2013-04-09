@@ -921,7 +921,7 @@
 			postedBy.attr("class", "postedBy");
 
 			var onclickUser = "showUserProfile(this)";
-			
+			console.log(item);
 			if(typeof item.feed != 'undefined')
 				onclickUser = "setSearchFor(this);";
 

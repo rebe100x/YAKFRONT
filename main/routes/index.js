@@ -435,23 +435,20 @@ exports.session2 = function(req, res)
 			if(typeof(data.name) != 'undefined')
 				aGoogle.name = data.name.givenName + "." + data.name.familyName;
 
-			
+			console.log('data GOOGLE 1');
+			console.log(data);
+
 			if(typeof(data.image) != 'undefined'){
-				try
-				{
-					/*var drawTool = require('../mylib/drawlib.js');
-					var ts = new Date().getTime();
-					user.thumb = crypto.createHash('md5').update(ts.toString()).digest("hex")+'.jpeg';
-					drawTool.GetImg(data.image.url,user.thumb,conf,mainConf);*/
-					aGoogle.profile_image_url = data.image.url;
-				}	
-				catch(err)
-				{
-					user.thumb = "no-user.png";
-					console.log(err);
-				}				
-				
-			}
+				var drawTool = require('../mylib/drawlib.js');
+				var ts = new Date().getTime();
+				var crypto = require('crypto');
+				data.image.url = data.image.url.replace('?sz=50','?sz=300');
+				user.thumb = crypto.createHash('md5').update(ts.toString()).digest("hex")+'.jpeg';
+				drawTool.GetImg(data.image.url,user.thumb,conf,mainConf);
+				aGoogle.profile_image_url = data.image.url;
+			}else
+				user.thumb = "no-user.png";
+			
 
 			if(typeof(data.url) != 'undefined')
 				aGoogle.url = data.url;
@@ -495,24 +492,20 @@ exports.session2 = function(req, res)
 				aFacebook.name = data.name;
 
 			if(typeof(data.id) != 'undefined')
-				aFacebook.profile_image_url = 'https:/graph.facebook.com/'+data.id+'/picture/';
+				aFacebook.profile_image_url = 'https:/graph.facebook.com/'+data.id+'/picture/?type=large';
+
+			
+			console.log('data FB 2');
+			console.log(aFacebook);
 
 			if(typeof(aFacebook.profile_image_url) != 'undefined'){					
-				/*try
-				{
-					var drawTool = require('../mylib/drawlib.js');
-					var profileImg;
-					var ts = new Date().getTime();
-					user.thumb = crypto.createHash('md5').update(ts.toString()).digest("hex")+'.jpeg';
-					drawTool.GetImg(aFacebook.profile_image_url,user.thumb,conf,mainConf);	
-				}
-				catch(err)
-				{
-					console.log(err);
-					user.thumb = "no-user.png";
-				}*/
-				
-			}
+				var drawTool = require('../mylib/drawlib.js');
+				var profileImg;
+				var ts = new Date().getTime();
+				user.thumb = crypto.createHash('md5').update(ts.toString()).digest("hex")+'.jpeg';
+				drawTool.GetImg(aFacebook.profile_image_url,user.thumb,conf,mainConf);	
+			}else
+				user.thumb = "no-user.png";
 
 			if(typeof(data.link) != 'undefined')
 				aFacebook.url = data.link;
@@ -1586,28 +1579,24 @@ exports.auth_twitter_callback = function(req, res){
 				if(typeof(data.name) != 'undefined')
 					aTwitter.name = data.name;
 
-				
-				if(typeof(data.profile_image_url) != 'undefined'){					
-					try
-					{
-						/*var drawTool = require('../mylib/drawlib.js');
-						var profileImg;
-						// this line is only for Twitter to get a better image
-						data.profile_image_url = data.profile_image_url.replace('normal','bigger');
-						var ts = new Date().getTime();
-						user.thumb = crypto.createHash('md5').update(ts.toString()).digest("hex")+'.jpeg';
-						drawTool.GetImg(data.profile_image_url,user.thumb,conf,mainConf);*/
-						
-						aTwitter.profile_image_url = data.profile_image_url;	
-					}
-					catch(err)
-					{
-						console.log(err);
-						user.thumb = "no-user.png";
-					}
+				console.log('data TW');
+				console.log(data);
 
-					
-				}
+				if(typeof(data.profile_image_url) != 'undefined'){					
+					var drawTool = require('../mylib/drawlib.js');
+					var profileImg;
+					// this line is only for Twitter to get a better image
+					data.profile_image_url = data.profile_image_url.replace('normal','bigger');
+					var ts = new Date().getTime();
+					user.thumb = crypto.createHash('md5').update(ts.toString()).digest("hex")+'.jpeg';
+					drawTool.GetImg(data.profile_image_url,user.thumb,conf,mainConf);
+					aTwitter.profile_image_url = data.profile_image_url;	
+				
+				}else
+					user.thumb = "no-user.png";
+
+
+				
 
 					
 
@@ -1767,28 +1756,19 @@ exports.auth_twitter_callback2 = function(req, res){
 				if(typeof(data.name) != 'undefined')
 					aTwitter.name = data.name;
 
-				
+				console.log('data TW 2');
+				console.log(data);
 				if(typeof(data.profile_image_url) != 'undefined'){					
-					try
-					{
-						/*var drawTool = require('../mylib/drawlib.js');
-						var profileImg;
-						// this line is only for Twitter to get a better image
-						data.profile_image_url = data.profile_image_url.replace('normal','bigger');
-						var ts = new Date().getTime();
-						user.thumb = crypto.createHash('md5').update(ts.toString()).digest("hex")+'.jpeg';
-						drawTool.GetImg(data.profile_image_url,user.thumb,conf,mainConf);*/
-						
-						aTwitter.profile_image_url = data.profile_image_url;	
-					}
-					catch(err)
-					{
-						console.log(err);
-						user.thumb = "no-user.png";
-					}
-
-					
-				}
+					var drawTool = require('../mylib/drawlib.js');
+					var profileImg;
+					// this line is only for Twitter to get a better image
+					data.profile_image_url = data.profile_image_url.replace('normal','bigger');
+					var ts = new Date().getTime();
+					user.thumb = crypto.createHash('md5').update(ts.toString()).digest("hex")+'.jpeg';
+					drawTool.GetImg(data.profile_image_url,user.thumb,conf,mainConf);
+					aTwitter.profile_image_url = data.profile_image_url;	
+				}else
+					user.thumb = "no-user.png";
 
 					
 
@@ -1881,24 +1861,23 @@ exports.auth_facebook = function(req, res){
 		aFacebook.name = data.name;
 
 	if(typeof(data.id) != 'undefined')
-		aFacebook.profile_image_url = 'https:/graph.facebook.com/'+data.id+'/picture/';
+		aFacebook.profile_image_url = 'https://graph.facebook.com/'+data.id+'/picture/?type=large';
+
+	console.log('data FB 1');
+	console.log(aFacebook);
+	console.log(data);
+			
 
 	if(typeof(aFacebook.profile_image_url) != 'undefined'){					
-		/*try
-		{
-			var drawTool = require('../mylib/drawlib.js');
-			var profileImg;
-			var ts = new Date().getTime();
-			user.thumb = crypto.createHash('md5').update(ts.toString()).digest("hex")+'.jpeg';
-			drawTool.GetImg(aFacebook.profile_image_url,user.thumb,conf,mainConf);	
-		}
-		catch(err)
-		{
-			console.log(err);
-			user.thumb = "no-user.png";
-		}*/
+		var drawTool = require('../mylib/drawlib.js');
+		var profileImg;
+		var ts = new Date().getTime();
+		user.thumb = crypto.createHash('md5').update(ts.toString()).digest("hex")+'.jpeg';
+		drawTool.GetImg(aFacebook.profile_image_url,user.thumb,conf,mainConf);	
+	}else
+		user.thumb = "no-user.png";
 		
-	}
+	
 
 	if(typeof(data.link) != 'undefined')
 		aFacebook.url = data.link;
@@ -2042,23 +2021,18 @@ exports.auth_google = function(req, res){
 	if(typeof(data.name) != 'undefined')
 		aGoogle.name = data.name.givenName + "." + data.name.familyName;
 
-	
+	console.log('data GOOGLE 2');
+	console.log(data);
+			
 	if(typeof(data.image) != 'undefined'){
-		try
-		{
-			/*var drawTool = require('../mylib/drawlib.js');
-			var ts = new Date().getTime();
-			user.thumb = crypto.createHash('md5').update(ts.toString()).digest("hex")+'.jpeg';
-			drawTool.GetImg(data.image.url,user.thumb,conf,mainConf);*/
-			aGoogle.profile_image_url = data.image.url;
-		}	
-		catch(err)
-		{
-			user.thumb = "no-user.png";
-			console.log(err);
-		}				
-		
-	}
+		var drawTool = require('../mylib/drawlib.js');
+		var ts = new Date().getTime();
+		data.image.url = data.image.url.replace('?sz=50','?sz=300');
+		user.thumb = crypto.createHash('md5').update(ts.toString()).digest("hex")+'.jpeg';
+		drawTool.GetImg(data.image.url,user.thumb,conf,mainConf);
+		aGoogle.profile_image_url = data.image.url;
+	}else
+		user.thumb = "no-user.png";
 
 	if(typeof(data.url) != 'undefined')
 		aGoogle.url = data.url;
