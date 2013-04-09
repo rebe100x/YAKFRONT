@@ -207,7 +207,7 @@ exports.news = function(req, res){
 				//}
 				if(theYakType == 2){ // if type =2 ( agenda : by default push it in YAKCAT agenda )
 					yakCat.push(mongoose.Types.ObjectId("50923b9afa9a95d409000000")); 
-					yakCatName.push('Agenda');
+					yakCatName.push('Sortir');
 				}
 				if(theYakType == 3){ // if type =3 ( infos pratiques : by default push it in YAKCAT infos pratiques )
 					yakCat.push(mongoose.Types.ObjectId("50923b9afa9a95d409000001")); 
@@ -257,6 +257,8 @@ exports.news = function(req, res){
 				info.lastModifDate = now;
 				info.pubDate = now;
 				
+				res.cookie('dateFrom', 0, { expires: new Date(Date.now() + 90000000000) , httpOnly: false, path: '/'});
+
 				// event date for agenda
 				if(Math.floor(theYakType) == 2){
 					info.eventDate = {dateTimeFrom : new Date(req.body.eventDateFrom), dateTimeEnd : new Date(req.body.eventDateEnd)};
@@ -435,9 +437,6 @@ exports.session2 = function(req, res)
 			if(typeof(data.name) != 'undefined')
 				aGoogle.name = data.name.givenName + "." + data.name.familyName;
 
-			console.log('data GOOGLE 1');
-			console.log(data);
-
 			if(typeof(data.image) != 'undefined'){
 				var drawTool = require('../mylib/drawlib.js');
 				var ts = new Date().getTime();
@@ -495,9 +494,6 @@ exports.session2 = function(req, res)
 				aFacebook.profile_image_url = 'https:/graph.facebook.com/'+data.id+'/picture/?type=large';
 
 			
-			console.log('data FB 2');
-			console.log(aFacebook);
-
 			if(typeof(aFacebook.profile_image_url) != 'undefined'){					
 				var drawTool = require('../mylib/drawlib.js');
 				var profileImg;
@@ -810,7 +806,7 @@ exports.firstvisit = function(req,res){
 	formMessage = "";
 	var User = db.model('User');
 	if(req.session.user){	
-		console.log("Entered Here" + req.session.user);
+		//console.log("Entered Here" + req.session.user);
 		User.findById(req.session.user,function (err, docs){
 			var crypto = require('crypto');
 			var newcryptedPass = crypto.createHash('sha1').update(req.body.password+"yakwala@secure"+docs.salt).digest("hex");	
