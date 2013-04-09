@@ -689,7 +689,6 @@ width: 270px;
 
 /* Smartphones (portrait) ----------- */
 @media only screen and (max-width : 320px) {
-	body{background-color: :#FF0000;}
 	#blackBox:after, #blackBox:before { display: none}
 	#maplink { width: 26px; height: 26px; display: block; float: left; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 55px -62px; margin-top: 6px; margin-left: 6px; margin-bottom: 6px;}
 	#maplink:hover, #maplink.activated { background-position: 0px -63px;}

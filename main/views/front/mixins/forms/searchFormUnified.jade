@@ -199,10 +199,14 @@ mixin searchFormUnified(page)
 					}
 				});
 
+				/* this induce a refresh at clicking anywhere on the page when going from the search to a tag for ex.
 				$('#searchStr').blur(function(event){
 					$("#searchBtn").trigger('click');
 				});
+				*/
 
+				/* this induce a refresh at clicking anywhere on the page when going from the search to a tag for ex.
+				
 				$('#searchPlaceStr').blur(function(event){
 					if($(this).val()==''){
 						curPos.name = user.formatted_address;
@@ -215,7 +219,7 @@ mixin searchFormUnified(page)
 					}
 					$("#searchBtn").trigger('click');
 				});
-				
+				*/
 				
 				
 			/*slider time selector*/
