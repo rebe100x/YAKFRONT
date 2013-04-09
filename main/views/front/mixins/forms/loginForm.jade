@@ -15,8 +15,11 @@ mixin loginForm()
 			div.span4
 				div.control-group.clearBoth
 					div.controls
-						a(href="/auth/twitter")
-							img(src="/images/twiiterconnect.png")
+						//
+							a(href="/auth/twitter")
+								img(src="/images/twiiterconnect.png")
+						a(style="cursor: pointer", onclick="getOptionsTwitter()")
+								img(src="/images/twiiterconnect.png")
 			
 				div.control-group.clearBoth
 					div.controls
@@ -76,6 +79,22 @@ mixin loginForm()
 			FB.login(handleSessionResponse);
 		});
 
+		function getOptionsTwitter()
+		{
+			$(".Socialoptions").remove();
+			var Socialoptions = $("<div />");
+			Socialoptions.attr("class", "Socialoptions");
+			Socialoptions.html('<button class="yakbtnLogin" id="social_create">Login/Create</button>&nbsp;<button class="yakbtnLogin" id="social_associate">Associate</button>');
+			$(".myLogin").after(Socialoptions);
+			$("#social_associate").click(function(){
+				$("#fromSocial").val("1");
+				$('#loginPopUp').modal('show');
+			});
+			$("#social_create").click(function(){
+				window.location = "/auth/twitter";
+			});	
+		}
+
 		// handle a session response from any of the auth related calls
 		function handleSessionResponse() {
 			FB.api('/me', function(response) {
@@ -93,6 +112,7 @@ mixin loginForm()
 								{
 									
 									$("#fbloader").remove();
+									$(".Socialoptions").remove();
 									var Socialoptions = $("<div />");
 									Socialoptions.attr("class", "Socialoptions");
 									Socialoptions.html('<button class="yakbtnLogin" id="social_create">Create</button>&nbsp;<button class="yakbtnLogin" id="social_associate">Associate</button>');
@@ -263,6 +283,7 @@ mixin loginForm()
 					{
 						
 						$("#fbloader").remove();
+						$(".Socialoptions").remove();
 						var Socialoptions = $("<div />");
 						Socialoptions.attr("class", "Socialoptions");
 						Socialoptions.html('<button class="yakbtnLogin" id="social_create">Create</button>&nbsp;<button class="yakbtnLogin" id="social_associate">Associate</button>');

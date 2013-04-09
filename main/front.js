@@ -182,11 +182,14 @@ app.get('/docs/log', routes.docs_log);
 /**
 * routes / call to twitter
 */
+app.get('/auth/twitter/check', routes.auth_twitter_check);
 app.get('/auth/twitter', routes.auth_twitter);
+app.get('/auth/twitter/associate', routes.auth_twitter_associate);
 /**
 * routes / the call back after validation
 */
 app.get('/auth/twitter/callback', routes.auth_twitter_callback);
+app.get('/auth/twitter/callback2', routes.auth_twitter_callback2);
 
 /**
 routes / call to facebook
