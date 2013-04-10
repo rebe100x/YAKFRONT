@@ -7,7 +7,7 @@ exports.confs = {
 		"rangeDefault":80,
 		"typeDefault":'1,2,4',
 		"dateFromDefault":0,
-		"version":'1.1.2',
+		"version":'1.2',
 		"versionback":'0.0.1',
 		"favPlaces":[{'name':'Nice, France','location':{'lat':43.681343,'lng':7.232094},'range':100},{'name':'Marseille, France','location':{'lat':43.298198,'lng':5.370255},'range':100},{'name':'Paris, France','location':{'lat':48.851875,'lng':2.356374},'range':100}],
 		"fbAccessKeyId":"512425592148558",
