@@ -428,7 +428,6 @@ function setBlackBockPosition()
 	}
 }
 		
-/*READY FUNCTIONS*/	
 
 function correctPlaceholder()
 {
@@ -540,12 +539,7 @@ $(document).ready(function() {
     '/images/yakwala_sprite-medium.png'
 	]);*/
 	
-	if(typeof($(".ui-slider-handle").position()) != 'undefined')
-	{
-		var currElposition = $(".ui-slider-handle").position();	
-		//console.log(currElposition);
-		$("#blackBox").css("left", (currElposition.left - 87) + "px");
-	}
+
 
 	$("#newsfeedContent").mCustomScrollbar({
 		set_width:false, /*optional element width: boolean, pixels, percentage*/
