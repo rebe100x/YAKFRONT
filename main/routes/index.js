@@ -2003,17 +2003,42 @@ exports.auth_google_check = function(req, res){
 	var User = db.model('User');
 	var data = req.body.user;
 	var google_id = data.id;
+	var accessToken = req.body.accessToken;
+	//console.log(accessToken);
+	if(req.cookies.gpToken == accessToken)
+	{
 		User.findByGoogleId(google_id,function (err, theuser){
-		if(theuser != undefined && theuser != null ){
-			console.log('Google User Associated');
-			res.json({response: "1"});
-		}
-		else
-		{
-			console.log('No Google User Associated');
-			res.json({response: "0"});		
-		}
-	});
+			if(theuser != undefined && theuser != null ){
+				if(theuser.status == 1)
+				{
+					req.session.user = theuser._id;
+					User.update({"_id":theuser._id},{$set:{"lastLoginDate":new Date()}}, function(err){if (err) console.log(err);});
+					res.json({redirectUrl: '/news/map'});
+				}
+				else if(theuser.status == 4)
+				{
+					req.session.user = theuser._id;
+					User.update({"_id":theuser._id},{$set:{"lastLoginDate":new Date()}}, function(err){if (err) console.log(err);});
+					res.json({redirectUrl: '/settings/firstvisit'});
+				}
+				else if(theuser.status == 2)
+				{
+					req.session.message = 'Ce compte est en attente de validation';
+					res.json({redirectUrl: '/user/login'});
+				} 
+				else if(theuser.status == 3)
+				{
+					req.session.message = 'Ce compte est black listee';
+					res.json({redirectUrl: '/user/login'});
+				}
+			}
+			else
+			{
+				res.json({redirectUrl: "none"});
+			}
+		});
+	}
+		
 };
 
 exports.auth_google = function(req, res){
@@ -2057,12 +2082,12 @@ exports.auth_google = function(req, res){
 	console.log(data);
 			
 	if(typeof(data.image) != 'undefined'){
-		var drawTool = require('../mylib/drawlib.js');
+		/*var drawTool = require('../mylib/drawlib.js');
 		var ts = new Date().getTime();
 		data.image.url = data.image.url.replace('?sz=50','?sz=300');
 		var crypto = require('crypto');				
 		user.thumb = crypto.createHash('md5').update(ts.toString()).digest("hex")+'.jpeg';
-		drawTool.GetImg(data.image.url,user.thumb,conf,mainConf);
+		drawTool.GetImg(data.image.url,user.thumb,conf,mainConf); */
 		aGoogle.profile_image_url = data.image.url;
 	}else
 		user.thumb = "no-user.png";

@@ -752,7 +752,7 @@ User.statics.findByFacebookId = function (facebook_id,callback) {
 }
 
 User.statics.findByGoogleId = function (google_id,callback) {
-  return this.findOne({'social.google.google_id': google_id,'status':1}, callback);
+  return this.findOne({'social.google.google_id': google_id}, callback);
 }
 
 User.statics.findAll = function (callback) {

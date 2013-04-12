@@ -33,7 +33,7 @@ mixin loginForm()
 							img#customButton(src="/images/googleconnect.png", style="cursor: pointer")
 						//
 							span#signinButton
-								span.g-signin(data-callback="signinCallback", data-clientid="80128462314.apps.googleusercontent.com", data-cookiepolicy="single_host_origin", data-requestvisibleactions="http://schemas.google.com/AddActivity", data-scope="https://www.googleapis.com/auth/plus.login")
+								span.g-signin(data-callback="signinCallback", data-clientid=mainConf.gpKey+".apps.googleusercontent.com", data-cookiepolicy="single_host_origin", data-requestvisibleactions="http://schemas.google.com/AddActivity", data-scope="https://www.googleapis.com/auth/plus.login")
 						span#usergoogleinfo.userinfo
 
 			div.span6.innerSplitter
@@ -93,12 +93,45 @@ mixin loginForm()
 			});	
 		}
 
-
+		function handleGoogleClick(el, response, accessToken)
+		{
+			$.post("/auth/google/check", {user: response, accessToken : accessToken.access_token}, function(data){	
+				if(data.redirectUrl != "none")
+					window.location = conf.fronturl + data.redirectUrl;
+				else
+				{
+					$("#social").val(JSON.stringify(response));
+					$("#fromSocial").val("3");
+					$('#loginPopUp').modal('show');
+					$("#social_create").click(function(){
+						$.post("/auth/google", {user: response}, function(data){		
+								if(data.response == "4")
+								{
+									//console.log("fv");	
+									window.location = conf.fronturl + "/settings/firstvisit";
+								}
+									
+								else if(data.response == "1")
+								{
+									//console.log("map");	
+									window.location = conf.fronturl + "/news/map";
+								}
+									
+								else
+								{
+									//console.log("here");
+									$("#fbloader").remove();
+								}
+									
+							});						
+					});
+				}
+			});
+		}
 		function handleFacebookClick(el, response, accessToken)
 		{	
 			$.post("/auth/facebook/check", {user: response, accessToken : accessToken}, function(data){
-				//console.log(response);
-				//alert(data.response);
+				
 				if(data.redirectUrl != "none")
 					window.location = conf.fronturl + data.redirectUrl;
 				else
@@ -128,46 +161,6 @@ mixin loginForm()
 						});		
 					});
 				}
-
-				/* if(data.response == "0")
-					{
-						
-						$("#fbloader").remove();
-						$(".Socialoptions").remove();
-						var Socialoptions = $("<div />");
-						Socialoptions.attr("class", "Socialoptions");
-						Socialoptions.html('<button class="yakbtnLogin" id="social_create" title="Vous ne possédez pas de compte Yakwala ? Créer le à partir de votre compte Facebook, vous gagnerez du temps !">Créer</button>&nbsp;<button class="yakbtnLogin" id="social_associate" title="Vous possédez déjà un compte Yakwala ? Associez le avec votre compte Facebook! Vous gagnerez du temps !">Associer</button>');
-						$(".myLogin").after(Socialoptions);
-						$("#social_associate").click(function(){
-							$("#social").val(JSON.stringify(response));
-							$("#fromSocial").val("2");
-							$('#loginPopUp').modal('show');
-						});
-						$("#social_create").click(function(){
-							$.post("/auth/facebook", {user: response}, function(data){
-				
-								if(data.response == "4")
-								{
-									//console.log("fv");	
-									window.location = conf.fronturl + "/settings/firstvisit";
-								}
-									
-								else if(data.response == "1")
-								{
-									//console.log("map");	
-									window.location = conf.fronturl + "/news/map";
-								}
-									
-								else
-								{
-									//console.log("here");
-									$("#fbloader").remove();
-								}
-									
-							});		
-						});
-					}
-					*/
 			});	
 		}
 
@@ -196,13 +189,8 @@ mixin loginForm()
 						}
 					});
 				} else if (response.status === 'not_authorized') {
-				// the user is logged in to Facebook, 
-				// but has not authenticated your app
-					//alert("not authorized");
 
 				} else {
-				// the user isn't logged in to Facebook.
-					//alert("not logged in");
 				}
 			});
 		}
@@ -278,7 +266,7 @@ mixin loginForm()
 			// Successfully authorized
 			// Hide the sign-in button now that the user is authorized, for example:
 			document.getElementById('customBtn').setAttribute('style', 'display: none');
-			
+			$.cookie("gpToken",authResult['access_token'],{ expires: 10000, path : '/' });
 			gapi.client.load('plus', 'v1', function() {
 				var request = gapi.client.plus.people.get({
 				'userId': 'me'
@@ -298,11 +286,14 @@ mixin loginForm()
 		}
 
 		function createProfileResponse(resp) {
-			//console.log(resp);
-
+			//console.log(gapi.auth.getToken());
 			var googleinfo = "<img class='pull-left' src='"+resp.image.url+"' /><span class='pull-left'><a style='cursor: pointer' id='authenticategoogle'> Bienvenu  " + resp.displayName + "<br />" + " Login with google</a></span><span class='clearBoth'></span>";
 			$("#usergoogleinfo").html(googleinfo);
 			$("#authenticategoogle").click(function(){
+				handleGoogleClick($(this), resp, gapi.auth.getToken());
+			});			
+
+			/*$("#authenticategoogle").click(function(){
 				$(this).after("<img id='fbloader' class='loader' src='/images/loader.gif' />");
 
 				$.post("/auth/google/check", {user: resp}, function(data){	
@@ -369,7 +360,7 @@ mixin loginForm()
 				});				
 
 	
-			});
+			}); */
 		}
 		
 
