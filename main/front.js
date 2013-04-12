@@ -333,3 +333,19 @@ new compressor.minify({
 			console.log('YUI JS FEED compressor ok');
 	}	
 });
+
+// POST PAGE
+new compressor.minify({
+	type: 'yui-js',
+	fileIn: [
+	 __dirname+'/public/javascripts/lib/plugin/jquery-ui-timepicker-addon.js',
+	 __dirname+'/public/javascripts/post.js',
+	],
+	fileOut: __dirname+'/public/javascripts/minify/post-min-'+ mainConf.version+'.js',
+	callback: function(err){
+		if(err)
+			console.log(err);
+		else
+			console.log('YUI JS POST compressor ok');
+	}	
+});
