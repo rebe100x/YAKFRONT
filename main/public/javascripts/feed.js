@@ -11,98 +11,111 @@
 	
 	var filteredInfoArray = [];
 	var lastSearchString = null;
-	
+	var oldLocation = {lat:0,lng:0};
+		
 	setInterval(function() {silentUpdater();}, 10000);
 
 	/*READY FUNCTIONS*/
 	$(document).ready(function() {
 		/*control opener*/
-		$('#searchBtn').click(function(){
-
-				$.cookie("searchString",searchString,{ expires: 10000, path : '/' });
-
-				var str = encodeURIComponent($('#searchStr').val());
-				var placeName = $('#searchPlaceStr').val();
-				var location = JSON.stringify({lat:curPos.x,lng:curPos.y});	
-
-				if(location != ''){
-					changeLocation(location);
-					getAndPrintInfo();
-				}else{
-					if(placeName != ''){
-						
-						var addressQuery = {"address": placeName ,"region":"fr","language":"fr"};
-						var geocoder = new google.maps.Geocoder();
-						geocoder.geocode( addressQuery, function(results, status) {						
-						if (status == google.maps.GeocoderStatus.OK) {
-						
-							var placeGmap = getPlaceFromGmapResult((results[0]));
-							
-						}else{
-							var salt = new Date().getTime();
-							$('#searchStr').before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide</div>");
-							setTimeout(function() {
-								$("#alert"+salt).fadeOut();
-							}, 3000);
-							
-						} 
-						});
-					}
-				}
-
-				if(str != 'Quoi ?' && str != ''){
-					searchString = str;
-					filteredInfoArray = [];
-					cleanFeed();
-					$.each(infoArray,function(key,val){
-						str = decodeURIComponent(str);
-						var searchExactStr = new RegExp("(?:^| )(" + str + ")",'gi');
-						if(searchExactStr.test(val.title) 
-							|| searchExactStr.test(val.content) 
-							|| searchExactStr.test(val.yakCatName) 
-							|| searchExactStr.test(val.freeTag) 
-							|| searchExactStr.test(val.origin)  ){
-							filteredInfoArray.push(val);
-						}
-							
-					});
-					// print Map and Feed from the filtered array
-					printMapAndFeed(filteredInfoArray,1);
-				}else{ // if the search string is empty
-					cleanFeed();
-					searchString = null;
-					if(infoArray.length > 0) // if the info array is empty we get it from db else we print it.
-						printMapAndFeed(infoArray,1);
-					else
-						getAndPrintInfo();
-				}
-				
-			
-				
-				if( (lastSearchString == null || lastSearchString != str ) && str.length > 1 ){
-					$.cookie("searchString",searchString,{ expires: 10000, path : '/' });
-					var now = new Date();
-					var searchDate = now.setTime(now.getTime()+dateFrom*24*60*60*1000);
-					
-					var trackParams = 	{
-						"page":"feed",
-						"location":{
-							"lat":curPos.x.toString(),
-							"lng": curPos.y.toString(),
-						},
-						"dateFrom": searchDate.toString(),
-						"type": yakType.toString(),
-						"str": searchString
-					};
-
-					$.getJSON(conf.trackurl+'/track/user/'+user._id+'/'+'5'+'/'+encodeURIComponent(JSON.stringify(trackParams))); 
-				}	
-				lastSearchString = str;
-				$('#searchStr').removeClass('searching');
-			});
-
 		
 
+
+	$('#searchBtn').unbind("click").on('click',function(){
+				
+		filteredInfoArray = [];
+		var str = encodeURIComponent($('#searchStr').val());
+		//console.log('SEARCH CLICK='+str);
+		var placeName = $('#searchPlaceStr').val();
+		
+		if(placeName.length >= 2 ){
+			
+			var addressQuery = {"address": placeName ,"region":"fr","language":"fr"};
+			var geocoder = new google.maps.Geocoder();
+			geocoder.geocode( addressQuery, function(results, status) {						
+			if (status == google.maps.GeocoderStatus.OK) {
+				var placeGmap = getPlaceFromGmapResult((results[0]));
+				var location = JSON.stringify({lat:curPos.x,lng:curPos.y});				
+				changeLocation(location);
+		
+			}else{
+				/*var salt = new Date().getTime();
+				$('#searchStr').before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide</div>");
+				setTimeout(function() {
+					$("#alert"+salt).fadeOut();
+				}, 3000);
+				*/
+			} 
+			});
+		}
+		
+		var localSearchString = decodeURIComponent(str);
+		if(str != 'Quoi ?' && str != ''){
+			searchString = str;
+			cleanMarkers();
+			cleanFeed();
+			$.each(infoArray,function(key,val){
+				if(val.origin.charAt(0) == "@")
+					val.origin = val.origin.substring(1,val.origin.length);
+				if(localSearchString.charAt(0) == "@")
+					localSearchString = localSearchString.substring(1,str.length);
+				if(localSearchString.charAt(0) == "#")
+					localSearchString = localSearchString.substring(1,str.length);
+				var searchExactStr = new RegExp("(?:^| )(" + localSearchString + ")",'gi');
+				
+				if(searchExactStr.test(val.title) 
+					|| searchExactStr.test(val.content) 
+					|| searchExactStr.test(val.yakCatName.join(' ')) 
+					|| searchExactStr.test(val.freeTag.join(' ')) 
+					|| searchExactStr.test(val.origin) ){
+					filteredInfoArray.push(val);
+				}
+					
+			});
+			// print Map and Feed from the filtered array
+			printMapAndFeed(filteredInfoArray,1);
+		}else{ // if the search string is empty
+			cleanMarkers();
+			cleanFeed();
+			searchString = null;
+			if(infoArray.length > 0 && str !='') // if the info array is empty we get it from db else we print it.
+				printMapAndFeed(infoArray,1);
+			else
+				getAndPrintInfo();
+		}
+		
+	
+		
+		if( (lastSearchString == null || lastSearchString != str ) && str.length > 1 ){
+			var now = new Date();
+			var searchDate = now.setTime(now.getTime()+dateFrom*24*60*60*1000);
+			
+			var trackParams = 	{
+				"page":"feed",
+				"location":{
+					"lat":curPos.x.toString(),
+					"lng": curPos.y.toString(),
+				},
+				"dateFrom": searchDate.toString(),
+				"type": yakType.toString(),
+				"str": searchString
+			};
+
+			$.getJSON(conf.trackurl+'/track/user/'+user._id+'/'+'5'+'/'+encodeURIComponent(JSON.stringify(trackParams))); 
+		}	
+
+		$.cookie("searchString",searchString,{ expires: 10000, path : '/' });
+		lastSearchString = str;
+		$('#searchStr').removeClass('searching');
+	});
+
+
+	if(typeof($(".ui-slider-handle").position()) != 'undefined')
+	{
+		var currElposition = $(".ui-slider-handle").position();	
+		//console.log(currElposition);
+		$("#blackBox").css("left", (currElposition.left - 87) + "px");
+	}
 		//$('#newsfeedContent').mCustomScrollbar({mouseWheel:true,callbacks:{onTotalScroll:printArrayFeedItem},scrollButtons:{enable:true,scrollType:"continuous",},advanced:{autoExpandHorizontalScroll:true,updateOnContentResize: true,updateOnBrowserResize:true}});
 		//$('#newspostContent').mCustomScrollbar({mouseWheel:true,scrollButtons:{enable:true,scrollType:"continuous",},advanced:{autoExpandHorizontalScroll:true,updateOnContentResize: true,updateOnBrowserResize:true}});
 		
@@ -121,8 +134,12 @@
 
 	function changeLocation(location){
 		var locationObj = JSON.parse(location);
-		curPos.x = locationObj.lat;
-		curPos.y = locationObj.lng;
+		if(location != '' && oldLocation.lat != locationObj.lat && oldLocation.lng != locationObj.lng){
+			curPos.x = locationObj.lat;
+			curPos.y = locationObj.lng;
+			oldLocation = locationObj;
+			getAndPrintInfo();
+		}
 	}
 
 	function printMapAndFeed(data,flagFilter){
@@ -155,7 +172,7 @@
 		else	
 			apiUrl = '/api/geoinfos/'+curPos.x+'/'+curPos.y+'/'+rangeFromZ()+'/'+'null'+'/'+dateFrom+'/'+nowts+'/'+yakType.toString()+'/'+searchString+'/500';
 		
-		console.log('CALL DB '+apiUrl);
+		//console.log('CALL DB '+apiUrl);
 		$.getJSON(apiUrl,function(ajax) {	
 			if(typeof ajax.data != 'undefined'){
 				$.each(ajax.data.info, function(key,val) {
@@ -194,7 +211,7 @@
 		else	
 			apiUrl = '/api/geoinfos/'+curPos.x+'/'+curPos.y+'/'+rangeFromZ()+'/'+'null'+'/'+dateFrom+'/0/'+yakType.toString()+'/'+searchString+'/500';
 		
-		console.log('CALL DB '+apiUrl);
+		//console.log('CALL DB '+apiUrl);
 		$.getJSON(apiUrl,function(ajax) {	
 		
 
@@ -456,7 +473,7 @@ function printFeedItem(item,top,scrollTo){
 			
 			$.each(infoArray,function(key,val){
 				if(infoid == val._id){
-				console.log(val);
+				//console.log(val);
 				/*
 				if(val.user != undefined){
 					thumbImage = 	val.thumb;
@@ -721,3 +738,7 @@ function printFeedItem(item,top,scrollTo){
 	function zFromRange(){
 		//return (1-)/0.0096;
 	}
+
+	function cleanMarkers(){
+		//doing nothing !	
+	}	

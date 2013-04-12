@@ -29,7 +29,7 @@ block content
 	- if(JSON.parse(conf).env == 'DEV')		
 		script(src="/javascripts/feed.js")
 	-else	
-		script(src='/javascripts/minify/feed-min.js?v='+JSON.parse(mainConf).version)
+		script(src='/javascripts/minify/feed-min-'+JSON.parse(mainConf).version+'.js')
 	
 
 		

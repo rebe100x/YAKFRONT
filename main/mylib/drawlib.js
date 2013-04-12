@@ -29,7 +29,7 @@ exports.GetImg = function(urlImg, destName, conf, mainConf){
 				if (err) throw err
 				image.path = conf.uploadsDir+'originals/'+destName;
 				image.name = destName;
-				fs.stat(conf.uploadsDir+'originals\\'+image.name, function (err, stats) {
+				fs.stat(conf.uploadsDir+'originals/'+image.name, function (err, stats) {
 					image.size = stats.size;
 					var size = mainConf.imgSizeAvatar;
 					for(i=0;i<size.length;i++){

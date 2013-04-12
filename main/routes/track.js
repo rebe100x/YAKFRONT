@@ -17,7 +17,7 @@ exports.trak_user = function(req,res){
 	track.save(function (err) {
 		if (!err) 
 			{
-				console.log('Success!');
+				//console.log('Success!');
 				res.send("Success!");	
 			}
 		else

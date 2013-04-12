@@ -15,7 +15,7 @@ html
 			link(rel='stylesheet', href='/stylesheets/customSB.css')
 			link(rel='stylesheet', href='/stylesheets/style.css?v='+JSON.parse(mainConf).version)
 		- else
-			link(rel='stylesheet', href='/stylesheets/minify/front-min.css?v='+JSON.parse(mainConf).version)
+			link(rel='stylesheet', href='/stylesheets/minify/front-min-'+JSON.parse(mainConf).version+'.css')
 		
 
 		- if(JSON.parse(conf).env == 'DEV')	
@@ -34,7 +34,7 @@ html
 			script(src='/javascripts/customSB.js')
 		- else
 			script(src='https://maps.googleapis.com/maps/api/js?v=3.9&sensor=false&libraries=drawing&key='+JSON.parse(conf).gmapKey)		
-			script(src='/javascripts/minify/front-min.js?v='+JSON.parse(mainConf).version)
+			script(src='/javascripts/minify/front-min-'+JSON.parse(mainConf).version+'.js')
 
 		
 

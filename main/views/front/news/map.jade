@@ -42,5 +42,5 @@ block content
 	- if(JSON.parse(conf).env == 'DEV')	
 		script(src="/javascripts/map.js")
 	- else
-		script(src='/javascripts/minify/map-min.js?v='+JSON.parse(mainConf).version)
+		script(src='/javascripts/minify/map-min-'+JSON.parse(mainConf).version+'.js')
 	

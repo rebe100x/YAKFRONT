@@ -274,7 +274,7 @@ new compressor.minify({
 	, __dirname+'/public/javascripts/common.js'
 	, __dirname+'/public/javascripts/front_common.js'
 	],
-	fileOut: __dirname+'/public/javascripts/minify/front-min.js',
+	fileOut: __dirname+'/public/javascripts/minify/front-min-'+ mainConf.version+'.js',
 	callback: function(err){
 		if(err)
 			console.log(err);
@@ -295,7 +295,7 @@ new compressor.minify({
 	, __dirname+'/public/javascripts/lib/jquery/css/share.css'
 	, __dirname+'/public/stylesheets/style.css'
 	],
-	fileOut: __dirname+'/public/stylesheets/minify/front-min.css',
+	fileOut: __dirname+'/public/stylesheets/minify/front-min-'+ mainConf.version+'.css',
 	callback: function(err){
 		if(err)
 			console.log(err);
@@ -310,7 +310,7 @@ new compressor.minify({
 	fileIn: [
 	 __dirname+'/public/javascripts/map.js'
 	],
-	fileOut: __dirname+'/public/javascripts/minify/map-min.js',
+	fileOut: __dirname+'/public/javascripts/minify/map-min-'+ mainConf.version+'.js',
 	callback: function(err){
 		if(err)
 			console.log(err);
@@ -325,11 +325,27 @@ new compressor.minify({
 	fileIn: [
 	 __dirname+'/public/javascripts/feed.js'
 	],
-	fileOut: __dirname+'/public/javascripts/minify/feed-min.js',
+	fileOut: __dirname+'/public/javascripts/minify/feed-min-'+ mainConf.version+'.js',
 	callback: function(err){
 		if(err)
 			console.log(err);
 		else
 			console.log('YUI JS FEED compressor ok');
+	}	
+});
+
+// POST PAGE
+new compressor.minify({
+	type: 'yui-js',
+	fileIn: [
+	 __dirname+'/public/javascripts/lib/plugin/jquery-ui-timepicker-addon.js',
+	 __dirname+'/public/javascripts/post.js',
+	],
+	fileOut: __dirname+'/public/javascripts/minify/post-min-'+ mainConf.version+'.js',
+	callback: function(err){
+		if(err)
+			console.log(err);
+		else
+			console.log('YUI JS POST compressor ok');
 	}	
 });

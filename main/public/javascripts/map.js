@@ -23,9 +23,10 @@
 		var rule2 = new RegExp('[#]','g');
 		var postFlag = 0;
 		var listenerHandle = null;
-		//var feedOffsetW = 0; // this is the offset for recenter map on map's page due to the fil info on the right => set in the getMyBounds function
 		var filteredInfoArray = [];
 		var lastSearchString = null;
+		var oldLocation = {lat:0,lng:0};
+
 		var map = new google.maps.Map(document.getElementById('mymap'), {
 				mapTypeId: google.maps.MapTypeId.ROADMAP,
 				disableDefaultUI: true,
@@ -37,7 +38,7 @@
 				minZoom: 11,
 				disableDoubleClickZoom: true,
 			});
-		var oldLocation = {lat:0,lng:0};
+		
 
 		setInterval(function() {
 				silentUpdater();			
@@ -49,96 +50,103 @@
 				showPostForm();
 			
 				
-			$('#searchBtn').unbind("click").on('click',function(){
-				
-				filteredInfoArray = [];
-				var str = encodeURIComponent($('#searchStr').val());
-				console.log('SEARCH CLICK='+str);
-				var placeName = $('#searchPlaceStr').val();
-				var location = JSON.stringify({lat:curPos.x,lng:curPos.y});				
-				
-				changeLocation(location);
-				
-				if(placeName != ''){
-					
-					var addressQuery = {"address": placeName ,"region":"fr","language":"fr"};
-					var geocoder = new google.maps.Geocoder();
-					geocoder.geocode( addressQuery, function(results, status) {						
-					if (status == google.maps.GeocoderStatus.OK) {
-					
-						var placeGmap = getPlaceFromGmapResult((results[0]));
-						
-					}else{
-						var salt = new Date().getTime();
-						$('#searchStr').before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide</div>");
-						setTimeout(function() {
-							$("#alert"+salt).fadeOut();
-						}, 3000);
-						
-					} 
-					});
-				}
-				
-				var localSearchString = decodeURIComponent(str);
-				if(str != 'Quoi ?' && str != ''){
-					searchString = str;
-					cleanMarkers();
-					cleanFeed();
-					$.each(infoArray,function(key,val){
-						if(val.origin.charAt(0) == "@")
-							val.origin = val.origin.substring(1,val.origin.length);
-						if(localSearchString.charAt(0) == "@")
-							localSearchString = localSearchString.substring(1,str.length);
-						if(localSearchString.charAt(0) == "#")
-							localSearchString = localSearchString.substring(1,str.length);
-						var searchExactStr = new RegExp("(?:^| )(" + localSearchString + ")",'gi');
-						
-						if(searchExactStr.test(val.title) 
-							|| searchExactStr.test(val.content) 
-							|| searchExactStr.test(val.yakCatName.join(' ')) 
-							|| searchExactStr.test(val.freeTag.join(' ')) 
-							|| searchExactStr.test(val.origin) ){
-							filteredInfoArray.push(val);
-						}
-							
-					});
-					// print Map and Feed from the filtered array
-					printMapAndFeed(filteredInfoArray,1);
-				}else{ // if the search string is empty
-					cleanMarkers();
-					cleanFeed();
-					searchString = null;
-					if(infoArray.length > 0 && str !='') // if the info array is empty we get it from db else we print it.
-						printMapAndFeed(infoArray,1);
-					else
-						getAndPrintInfo();
-				}
-				
 			
-				
-				if( (lastSearchString == null || lastSearchString != str ) && str.length > 1 ){
-					var mapCenter =  map.getCenter();
-					var now = new Date();
-					var searchDate = now.setTime(now.getTime()+dateFrom*24*60*60*1000);
+
+		$('#searchBtn').unbind("click").on('click',function(){
 					
-					var trackParams = 	{
-						"page":"map",
-						"location":{
-							"lat": mapCenter.lat().toString(),
-							"lng": mapCenter.lng().toString(),
-						},
-						"dateFrom": searchDate.toString(),
-						"type": yakType.toString(),
-						"str": searchString
-					};
+			filteredInfoArray = [];
+			var str = encodeURIComponent($('#searchStr').val());
+			//console.log('SEARCH CLICK='+str);
+			var placeName = $('#searchPlaceStr').val();
+			
+			if(placeName.length >= 2 ){
+				
+				var addressQuery = {"address": placeName ,"region":"fr","language":"fr"};
+				var geocoder = new google.maps.Geocoder();
+				geocoder.geocode( addressQuery, function(results, status) {						
+				if (status == google.maps.GeocoderStatus.OK) {
+					var placeGmap = getPlaceFromGmapResult((results[0]));
+					var location = JSON.stringify({lat:curPos.x,lng:curPos.y});				
+					changeLocation(location);
+			
+				}else{
+					/*var salt = new Date().getTime();
+					$('#searchStr').before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide</div>");
+					setTimeout(function() {
+						$("#alert"+salt).fadeOut();
+					}, 3000);
+					*/
+				} 
+				});
+			}
+			
+			var localSearchString = decodeURIComponent(str);
+			if(str != 'Quoi ?' && str != ''){
+				searchString = str;
+				cleanMarkers();
+				cleanFeed();
+				$.each(infoArray,function(key,val){
+					if(val.origin.charAt(0) == "@")
+						val.origin = val.origin.substring(1,val.origin.length);
+					if(localSearchString.charAt(0) == "@")
+						localSearchString = localSearchString.substring(1,str.length);
+					if(localSearchString.charAt(0) == "#")
+						localSearchString = localSearchString.substring(1,str.length);
+					var searchExactStr = new RegExp("(?:^| )(" + localSearchString + ")",'gi');
+					
+					if(searchExactStr.test(val.title) 
+						|| searchExactStr.test(val.content) 
+						|| searchExactStr.test(val.yakCatName.join(' ')) 
+						|| searchExactStr.test(val.freeTag.join(' ')) 
+						|| searchExactStr.test(val.origin) ){
+						filteredInfoArray.push(val);
+					}
+						
+				});
+				// print Map and Feed from the filtered array
+				printMapAndFeed(filteredInfoArray,1);
+			}else{ // if the search string is empty
+				cleanMarkers();
+				cleanFeed();
+				searchString = null;
+				if(infoArray.length > 0 && str !='') // if the info array is empty we get it from db else we print it.
+					printMapAndFeed(infoArray,1);
+				else
+					getAndPrintInfo();
+			}
+			
+		
+			
+			if( (lastSearchString == null || lastSearchString != str ) && str.length > 1 ){
+				var mapCenter =  map.getCenter();
+				var now = new Date();
+				var searchDate = now.setTime(now.getTime()+dateFrom*24*60*60*1000);
+				
+				var trackParams = 	{
+					"page":"map",
+					"location":{
+						"lat": mapCenter.lat().toString(),
+						"lng": mapCenter.lng().toString(),
+					},
+					"dateFrom": searchDate.toString(),
+					"type": yakType.toString(),
+					"str": searchString
+				};
 
-					$.getJSON(conf.trackurl+'/track/user/'+user._id+'/'+'5'+'/'+encodeURIComponent(JSON.stringify(trackParams))); 
-				}	
-				$.cookie("searchString",searchString,{ expires: 10000, path : '/' });
-				lastSearchString = str;
-				$('#searchStr').removeClass('searching');
-			});
+				$.getJSON(conf.trackurl+'/track/user/'+user._id+'/'+'5'+'/'+encodeURIComponent(JSON.stringify(trackParams))); 
+			}	
+			$.cookie("searchString",searchString,{ expires: 10000, path : '/' });
+			lastSearchString = str;
+			$('#searchStr').removeClass('searching');
+		});
 
+
+		if(typeof($(".ui-slider-handle").position()) != 'undefined')
+		{
+			var currElposition = $(".ui-slider-handle").position();	
+			//console.log(currElposition);
+			$("#blackBox").css("left", (currElposition.left - 87) + "px");
+		}
 
 			zoom = rangeFromZ();
 			
@@ -415,7 +423,7 @@
 				
 				$('#searchStr').val(searchString);
 				//searchString = encodeURIComponent(searchString);
-				console.log('HASH');
+				//console.log('HASH');
 				getAndPrintInfo();
 			});
 			$("body").unbind("click").on('click','.userHashLink',function(event){
@@ -424,7 +432,7 @@
 				
 				$('#searchStr').val(searchString);
 				//searchString = encodeURIComponent(searchString);
-				console.log('HASHUSER');
+				//console.log('HASHUSER');
 				getAndPrintInfo();
 			});
 			
@@ -468,6 +476,9 @@
 				}, 3000);
 				map.panTo(latLng);
 				oldLocation = locationObj;
+				curPos.x = locationObj.lat;
+				curPos.y = locationObj.lng;
+				getAndPrintInfo();
 			}
 		}
 		function manageSearchBox(){
@@ -736,7 +747,7 @@
 				apiUrl = '/api/geoalerts/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/'+nowts+'/'+yakType.toString()+'/'+searchString+'/500';
 			else	
 				apiUrl = '/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/'+nowts+'/'+yakType.toString()+'/'+searchString+'/500';
-			console.log('CALL DB '+apiUrl);
+			//console.log('CALL DB '+apiUrl);
 
 			$.getJSON(apiUrl,function(ajax) {
 				if(typeof ajax.data == 'undefined')
@@ -774,6 +785,7 @@
 			drawNewsFeed();
 			
 			cleanMarkers();
+			cleanFeed();
 			//searchString = encodeURIComponent(searchString);
 			
 			if(typeof(yakType) == 'undefined' || yakType.length == 0){;
@@ -789,7 +801,7 @@
 				apiUrl = '/api/geoinfos/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/0/'+yakType.toString()+'/'+searchString+'/500';
 			}	
 				
-			console.log('CALL DB '+apiUrl);	
+			//console.log('CALL DB '+apiUrl);	
 			$.getJSON(apiUrl,function(ajax) {
 				// empty the news feed
 				cleanFeed();
@@ -921,7 +933,7 @@
 			postedBy.attr("class", "postedBy");
 
 			var onclickUser = "showUserProfile(this)";
-			console.log(item);
+			//console.log(item);
 			if(typeof item.feed != 'undefined')
 				onclickUser = "setSearchFor(this);";
 
