@@ -48,6 +48,7 @@ mixin searchFormUnified(page)
 		var yakType = ($.isEmptyObject($.cookie("yaktype")))?mainConf.typeDefault.split(','):$.cookie("yaktype").split(',');
 
 		var yakTypeStored = [];
+		
 		// unicity
 		yakType = yakType.filter(function (e, i, arr) {
 			return arr.lastIndexOf(e) === i;

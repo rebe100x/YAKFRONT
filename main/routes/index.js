@@ -498,6 +498,7 @@ exports.session2 = function(req, res)
 				var drawTool = require('../mylib/drawlib.js');
 				var profileImg;
 				var ts = new Date().getTime();
+				var crypto = require('crypto');				
 				user.thumb = crypto.createHash('md5').update(ts.toString()).digest("hex")+'.jpeg';
 				drawTool.GetImg(aFacebook.profile_image_url,user.thumb,conf,mainConf);	
 			}else
@@ -1583,6 +1584,7 @@ exports.auth_twitter_callback = function(req, res){
 					var profileImg;
 					// this line is only for Twitter to get a better image
 					data.profile_image_url = data.profile_image_url.replace('normal','bigger');
+					var crypto = require('crypto');				
 					var ts = new Date().getTime();
 					user.thumb = crypto.createHash('md5').update(ts.toString()).digest("hex")+'.jpeg';
 					drawTool.GetImg(data.profile_image_url,user.thumb,conf,mainConf);
@@ -1760,6 +1762,7 @@ exports.auth_twitter_callback2 = function(req, res){
 					// this line is only for Twitter to get a better image
 					data.profile_image_url = data.profile_image_url.replace('normal','bigger');
 					var ts = new Date().getTime();
+					var crypto = require('crypto');				
 					user.thumb = crypto.createHash('md5').update(ts.toString()).digest("hex")+'.jpeg';
 					drawTool.GetImg(data.profile_image_url,user.thumb,conf,mainConf);
 					aTwitter.profile_image_url = data.profile_image_url;	
@@ -1868,6 +1871,7 @@ exports.auth_facebook = function(req, res){
 		var drawTool = require('../mylib/drawlib.js');
 		var profileImg;
 		var ts = new Date().getTime();
+		var crypto = require('crypto');				
 		user.thumb = crypto.createHash('md5').update(ts.toString()).digest("hex")+'.jpeg';
 		drawTool.GetImg(aFacebook.profile_image_url,user.thumb,conf,mainConf);	
 	}else
@@ -2024,6 +2028,7 @@ exports.auth_google = function(req, res){
 		var drawTool = require('../mylib/drawlib.js');
 		var ts = new Date().getTime();
 		data.image.url = data.image.url.replace('?sz=50','?sz=300');
+		var crypto = require('crypto');				
 		user.thumb = crypto.createHash('md5').update(ts.toString()).digest("hex")+'.jpeg';
 		drawTool.GetImg(data.image.url,user.thumb,conf,mainConf);
 		aGoogle.profile_image_url = data.image.url;
