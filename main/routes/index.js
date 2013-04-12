@@ -1945,20 +1945,46 @@ exports.auth_facebook = function(req, res){
 	
 }
 
+function redirectToUrl(url, res)
+{
+	res.redirect(url);
+}
 exports.auth_facebook_check = function(req, res){
 	var User = db.model('User');
 	var data = req.body.user;
 	var facebook_id = data.id;
 		User.findByFacebookId(facebook_id,function (err, theuser){
-		if(theuser != undefined && theuser != null ){
-			console.log('Facebook User Associated');
-			res.json({response: "1"});
-		}
-		else
-		{
-			console.log('No Facebook User Associated');
-			res.json({response: "0"});		
-		}
+			if(theuser != undefined && theuser != null ){
+				
+				if(theuser.status == 1)
+				{
+					req.session.user = theuser._id;
+					User.update({"_id":theuser._id},{$set:{"lastLoginDate":new Date()}}, function(err){if (err) console.log(err);});
+					res.redirect('/news/map');
+				}
+				else if(theuser.status == 4)
+				{
+					req.session.user = theuser._id;
+					User.update({"_id":theuser._id},{$set:{"lastLoginDate":new Date()}}, function(err){if (err) console.log(err);});
+					redirectToUrl('/settings/firstvisit', res);
+				}
+				else if(theuser.status == 2)
+				{
+					req.session.message = 'Ce compte est en attente de validation';
+					res.redirect('/user/login');
+				} 
+				else if(theuser.status == 3)
+				{
+					req.session.message = 'Ce compte est black listee';
+					res.redirect('/user/login');
+				}
+
+			}
+			else
+			{
+				console.log('No Facebook User Associated');
+				res.json({response: "0"});		
+			}
 	});
 };
 
