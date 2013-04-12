@@ -94,17 +94,42 @@ mixin loginForm()
 		}
 
 
-		function handleFacebookClick(el, response)
+		function handleFacebookClick(el, response, accessToken)
 		{	
-			console.log(response);
-			//$("#social").val(JSON.stringify(response));
-			//$("#fromSocial").val("2");
-			//$('#loginPopUp').modal('show');
-			$.post("/auth/facebook/check", {user: response}, function(data){
+			$.post("/auth/facebook/check", {user: response, accessToken : accessToken}, function(data){
 				//console.log(response);
 				//alert(data.response);
-				return;
-				if(data.response == "0")
+				if(data.redirectUrl != "none")
+					window.location = conf.fronturl + data.redirectUrl;
+				else
+				{
+					$("#social").val(JSON.stringify(response));
+					$("#fromSocial").val("2");
+					$('#loginPopUp').modal('show');
+					$("#social_create").click(function(){
+						$.post("/auth/facebook", {user: response}, function(data){
+							if(data.response == "4")
+							{
+								//console.log("fv");	
+								window.location = conf.fronturl + "/settings/firstvisit";
+							}
+								
+							else if(data.response == "1")
+							{
+								//console.log("map");	
+								window.location = conf.fronturl + "/news/map";
+							}
+								
+							else
+							{
+								//console.log("here");
+								$("#fbloader").remove();
+							}
+						});		
+					});
+				}
+
+				/* if(data.response == "0")
 					{
 						
 						$("#fbloader").remove();
@@ -142,6 +167,7 @@ mixin loginForm()
 							});		
 						});
 					}
+					*/
 			});	
 		}
 
@@ -156,6 +182,8 @@ mixin loginForm()
 				// and signed request each expire
 					var uid = response.authResponse.userID;
 					var accessToken = response.authResponse.accessToken;
+					$.cookie("fbToken",accessToken,{ expires: 10000, path : '/' });
+					var tokrepsonse = response;
 					$("#loginFB").remove();
 					FB.api('/me', function(response) {
 						if(!response.error)
@@ -163,18 +191,18 @@ mixin loginForm()
 							var fbinfo = "<img class='pull-left' src='https:/graph.facebook.com/"+response.id+"/picture/' /><span class='pull-left'><a style='cursor: pointer' id='authenticatefb'> Bienvenue  " + response.name + "<br />" + " Login with facebook</a></span><span class='clearBoth'></span>";
 							$("#userinfo").html(fbinfo);
 							$("#authenticatefb").click(function(){
-								handleFacebookClick($(this), response);
+								handleFacebookClick($(this), response, accessToken);
 							});
 						}
 					});
 				} else if (response.status === 'not_authorized') {
 				// the user is logged in to Facebook, 
 				// but has not authenticated your app
-					alert("not authorized");
+					//alert("not authorized");
 
 				} else {
 				// the user isn't logged in to Facebook.
-					alert("not logged in");
+					//alert("not logged in");
 				}
 			});
 		}

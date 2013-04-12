@@ -1862,18 +1862,15 @@ exports.auth_facebook = function(req, res){
 	if(typeof(data.id) != 'undefined')
 		aFacebook.profile_image_url = 'https://graph.facebook.com/'+data.id+'/picture/?type=large';
 
-	console.log('data FB 1');
-	console.log(aFacebook);
-	console.log(data);
-			
 
 	if(typeof(aFacebook.profile_image_url) != 'undefined'){					
-		var drawTool = require('../mylib/drawlib.js');
+		/*var drawTool = require('../mylib/drawlib.js');
 		var profileImg;
 		var ts = new Date().getTime();
 		var crypto = require('crypto');				
 		user.thumb = crypto.createHash('md5').update(ts.toString()).digest("hex")+'.jpeg';
 		drawTool.GetImg(aFacebook.profile_image_url,user.thumb,conf,mainConf);	
+		*/
 	}else
 		user.thumb = "no-user.png";
 		
@@ -1956,40 +1953,49 @@ function redirectToUrl(url, res)
 exports.auth_facebook_check = function(req, res){
 	var User = db.model('User');
 	var data = req.body.user;
-	var facebook_id = data.id;
-		User.findByFacebookId(facebook_id,function (err, theuser){
-			if(theuser != undefined && theuser != null ){
-				
-				if(theuser.status == 1)
-				{
-					req.session.user = theuser._id;
-					User.update({"_id":theuser._id},{$set:{"lastLoginDate":new Date()}}, function(err){if (err) console.log(err);});
-					res.redirect('/news/map');
-				}
-				else if(theuser.status == 4)
-				{
-					req.session.user = theuser._id;
-					User.update({"_id":theuser._id},{$set:{"lastLoginDate":new Date()}}, function(err){if (err) console.log(err);});
-					redirectToUrl('/settings/firstvisit', res);
-				}
-				else if(theuser.status == 2)
-				{
-					req.session.message = 'Ce compte est en attente de validation';
-					res.redirect('/user/login');
-				} 
-				else if(theuser.status == 3)
-				{
-					req.session.message = 'Ce compte est black listee';
-					res.redirect('/user/login');
-				}
+	var accessToken = req.body.accessToken;
 
-			}
-			else
+	var facebook_id = data.id;
+	if(req.cookies.fbToken == accessToken)
+	{
+		User.findByFacebookId(facebook_id,function (err, theuser){
+		if(theuser != undefined && theuser != null ){
+			
+			if(theuser.status == 1)
 			{
-				console.log('No Facebook User Associated');
-				res.json({response: "0"});		
+				req.session.user = theuser._id;
+				User.update({"_id":theuser._id},{$set:{"lastLoginDate":new Date()}}, function(err){if (err) console.log(err);});
+				res.json({redirectUrl: '/news/map'});
 			}
-	});
+			else if(theuser.status == 4)
+			{
+				req.session.user = theuser._id;
+				User.update({"_id":theuser._id},{$set:{"lastLoginDate":new Date()}}, function(err){if (err) console.log(err);});
+				res.json({redirectUrl: '/settings/firstvisit'});
+			}
+			else if(theuser.status == 2)
+			{
+				req.session.message = 'Ce compte est en attente de validation';
+				res.json({redirectUrl: '/user/login'});
+			} 
+			else if(theuser.status == 3)
+			{
+				req.session.message = 'Ce compte est black listee';
+				res.json({redirectUrl: '/user/login'});
+			}
+
+		}
+		else
+		{
+			console.log('No Facebook User Associated');
+			res.json({redirectUrl: "none"});		
+		}
+		});
+	}
+	else
+	{
+		res.json({redirectUrl: "none"});
+	}
 };
 
 
