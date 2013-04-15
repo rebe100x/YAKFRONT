@@ -52,6 +52,17 @@ exports.static_image = function(req,res){
 		res.json({error:'file does not exist'});
 }
 
+
+exports.user_alertsLastCheck = function(req, res){
+	var User = db.model('User');
+	User.update({_id: req.session.user},{$set:{"alertsLastCheck":new Date()}}, function(err){
+			if(!err)
+				res.json("1");
+			else
+				res.json("0");
+	});
+}
+
 exports.set_user_alerts = function(req, res){
 	var User = db.model('User');
 	console.log(req.body.theuser._id);

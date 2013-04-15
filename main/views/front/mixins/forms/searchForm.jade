@@ -110,7 +110,10 @@ mixin searchForm(page)
 				
 				// search button
 				$('#searchBtn').click(function(){
-					$.cookie("searchString",searchString,{ expires: 10000, path : '/' });
+					var Cookiedate = new Date();
+					var timeRange = 3*60*60*1000;
+					Cookiedate.setTime(Cookiedate.getTime() + (timeRange));
+					$.cookie("searchString",searchString,{ expires: Cookiedate, path : '/' });
 
 					var str = encodeURIComponent($('#searchStr').val());
 					var placeName = $('#searchPlaceStr').val();

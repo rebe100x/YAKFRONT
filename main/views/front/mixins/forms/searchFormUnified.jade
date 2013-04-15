@@ -30,6 +30,8 @@ mixin searchFormUnified(page)
 			li.rightPull
 				span#btnDiscussion(title="Voir les Yassalas", type=4, onclick='setDiscussion(this)') 			
 				span#btnMesalertes(title="Passer en mode Alertes", type=5, onclick='setAlert(this)')
+					span#alertsNumber
+						|0
 
 	div#closehideSearch
 		img(src="/images/new/openClose.png", alt="Ouvrir, Fermer", title="Ouvrir, Fermer")
@@ -239,7 +241,10 @@ mixin searchFormUnified(page)
 					var x = ui.value;
 					dateFrom = getDaysFrom(x);
 					getAndPrintInfo();
-					$.cookie("dateFrom", dateFrom,{ expires: 10000, path : '/' });
+					var Cookiedate = new Date();
+					var timeRange = 3*60*60*1000;
+					Cookiedate.setTime(Cookiedate.getTime() + (timeRange));
+					$.cookie("dateFrom", dateFrom,{ expires: Cookiedate, path : '/' });
 				},
 				create: function(event, ui){
 					setBlackBockPosition();
@@ -504,7 +509,10 @@ mixin searchFormUnified(page)
 				$("#dayPrinter span").html($(this).find("a").html());
 				dateFrom = setTimeSliderText($(this).attr("value"));
 				getAndPrintInfo();
-				$.cookie("dateFrom", $(this).attr("value"),{ expires: 10000, path : '/' });
+				var Cookiedate = new Date();
+				var timeRange = 3*60*60*1000;
+				Cookiedate.setTime(Cookiedate.getTime() + (timeRange));
+				$.cookie("dateFrom", $(this).attr("value"),{ expires: Cookiedate, path : '/' });
 			});
 		}
 		*/
@@ -535,6 +543,10 @@ mixin searchFormUnified(page)
 				yakType.cleanArrayByName("5");
 				$.cookie("yaktype", yakType.join(','),{ expires: 10000, path : '/' });
 			}else{
+				$.post('/user/alertsLastCheck', function(res) {
+					
+				});
+				
 				$(el).addClass('active').attr('title','Passer en mode normal');
 				
 				yakType.push("5");

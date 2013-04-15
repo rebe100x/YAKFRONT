@@ -134,8 +134,12 @@
 				};
 
 				$.getJSON(conf.trackurl+'/track/user/'+user._id+'/'+'5'+'/'+encodeURIComponent(JSON.stringify(trackParams))); 
-			}	
-			$.cookie("searchString",searchString,{ expires: 10000, path : '/' });
+			}
+			var Cookiedate = new Date();
+			var timeRange = 3*60*60*1000;
+			Cookiedate.setTime(Cookiedate.getTime() + (timeRange));
+			
+			$.cookie("searchString",searchString,{ expires: Cookiedate, path : '/' });
 			lastSearchString = str;
 			$('#searchStr').removeClass('searching');
 		});
