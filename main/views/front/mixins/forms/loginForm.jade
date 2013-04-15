@@ -66,6 +66,11 @@ mixin loginForm()
 		div.clearBoth
 			
 	script(src="http://connect.facebook.net/fr_FR/all.js")
+	script(src='https://api.twitter.com/sessions/present.js?callback=twitterLoginStatus')
+	script
+		function twitterLoginStatus(state) {
+			alert(state);
+		}
 	script
 		var user = {};
 		var conf = !{conf};
