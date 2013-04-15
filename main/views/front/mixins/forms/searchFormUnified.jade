@@ -239,7 +239,10 @@ mixin searchFormUnified(page)
 					var x = ui.value;
 					dateFrom = getDaysFrom(x);
 					getAndPrintInfo();
-					$.cookie("dateFrom", dateFrom,{ expires: 10000, path : '/' });
+					var Cookiedate = new Date();
+					var timeRange = 3*60*60*1000;
+					Cookiedate.setTime(Cookiedate.getTime() + (timeRange));
+					$.cookie("dateFrom", dateFrom,{ expires: Cookiedate, path : '/' });
 				},
 				create: function(event, ui){
 					setBlackBockPosition();
@@ -504,7 +507,10 @@ mixin searchFormUnified(page)
 				$("#dayPrinter span").html($(this).find("a").html());
 				dateFrom = setTimeSliderText($(this).attr("value"));
 				getAndPrintInfo();
-				$.cookie("dateFrom", $(this).attr("value"),{ expires: 10000, path : '/' });
+				var Cookiedate = new Date();
+				var timeRange = 3*60*60*1000;
+				Cookiedate.setTime(Cookiedate.getTime() + (timeRange));
+				$.cookie("dateFrom", $(this).attr("value"),{ expires: Cookiedate, path : '/' });
 			});
 		}
 		*/
