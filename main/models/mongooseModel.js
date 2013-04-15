@@ -576,7 +576,8 @@ var User = new Schema({
 	, favplace : [Point]
 	, creationDate	: {type: Date, required: true, default: Date.now}		
 	, lastModifDate	: {type: Date, required: true, default: Date.now}		
-	, lastLoginDate	: {type: Date, required: true, default: Date.now}		
+	, lastLoginDate	: {type: Date, required: true, default: Date.now}	
+	, alertsLastCheck : {type: Date, required: true, default: Date.now}	
 	, status	: {type: Number,required: true, default: 2,index: true}	
 	, social: { 
 		twitter : {type: [Twitter],required: false},
@@ -647,7 +648,8 @@ User.statics.format = function (theuser) {
 		stats: theuser.stats,
 		createfrom_social: theuser.createfrom_social,
 		status: theuser.status,
-		illicite: theuser.illicite
+		illicite: theuser.illicite,
+		alertsLastCheck : theuser.alertsLastCheck
 	};
   return formattedUser;
 }
