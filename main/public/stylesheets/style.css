@@ -993,3 +993,5 @@ border-bottom: 1px solid #e5e5e5;}
 #blackBox:after { border-color: rgba(136, 183, 213, 0); border-bottom-color: #3c3c3c; border-width: 8px; left: 43%; margin-left: 2px; } 
 .arrow_box:before { border-color: rgba(194, 225, 245, 0); border-bottom-color: #c2e1f5; border-width: 36px; left: 50%; margin-left: -36px; }
 .icon-warning-sign {float: right; position: relative; top: -5px; right: 10px;}
+
+#alertsNumber { position: relative; left: 4px; top: 19px; color: red;  font-weight: bold; }

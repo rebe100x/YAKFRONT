@@ -30,6 +30,8 @@ mixin searchFormUnified(page)
 			li.rightPull
 				span#btnDiscussion(title="Voir les Yassalas", type=4, onclick='setDiscussion(this)') 			
 				span#btnMesalertes(title="Passer en mode Alertes", type=5, onclick='setAlert(this)')
+					span#alertsNumber
+						|0
 
 	div#closehideSearch
 		img(src="/images/new/openClose.png", alt="Ouvrir, Fermer", title="Ouvrir, Fermer")
