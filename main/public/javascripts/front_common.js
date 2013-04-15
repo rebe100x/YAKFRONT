@@ -1558,9 +1558,20 @@ function checkByWidth()
 				var theuser = data.user[0];
 				if(typeof theuser == 'undefined')
 				{
+					$("#userChooser p").hide();
+					$("#userChooser #closeModal").after("<p class='nonExist'>Ce compte n'existe plus</p>");
 					return;
 				}
 
+				if(theuser.status != 1)
+				{
+					$("#userChooser p").hide();
+					$("#userChooser #closeModal").after("<p class='nonExist'>Ce compte est actuellement désactivée</p>");
+					return;
+				}
+
+				$("#userChooser .nonExist").remove();
+				$("#userChooser p").show();
 				var userName = ""; var userBio = ""; var userThumb = ""; var userWeb = ""; var userLogin = "";
 					
 
