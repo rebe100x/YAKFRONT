@@ -174,7 +174,7 @@
 .mapHighlighterDetails{display:block;}
 ul#newsfeed{display:block;list-style-type:none;width:100%;margin:0px auto;padding:0px 0px;position:relative;opacity:1;z-index:2000;background:#FFFFFF;}
 ul#newsfeed li{width:100%;}
-ul#newsfeed li.highlighted .mapHighlighter{background-color:#F6F6F6; width: 99%; left: -2%; position: relative;}
+ul#newsfeed li.highlighted .mapHighlighter{background-color:#F6F6F6; width: 99%; left: 0%; position: relative;}
 
 ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: both; padding-left: 3px; padding-right: 3px;}
 .infowindow .myitem {clear: both; position: relative; top: 12px; text-align: justify; padding-left: 7px; padding-right: 12px;}
@@ -468,6 +468,9 @@ width: 270px;
    #dayPrinter .blackArrow { position: relative; top: -9px; left: 50%; float: left;}
    .searchYakwala #rangeSelectorTrigger, .searchYakwala #tagSelectorTrigger { margin-top: 10px;}
    #mymap { width: 68%;}
+   #newsfeedContainer { width: 103%; right: -1px}
+   #newsfeedContent .mCSB_scrollTools { right: -3px}
+
  }
 
  /*large screens*/
@@ -520,6 +523,8 @@ width: 270px;
    #dayPrinter .blackArrow { position: relative; top: -9px; left: 50%; float: left;}
    .searchYakwala #rangeSelectorTrigger, .searchYakwala #tagSelectorTrigger { margin-top: 10px;}
    #mymap { width: 68%;}
+   #newsfeedContainer { width: 103%; right: -1px}
+   #newsfeedContent .mCSB_scrollTools { right: -3px}
  }
 
  /*ipads portrail*/
@@ -572,6 +577,8 @@ width: 270px;
    .searchYakwala #timeContainer { position: relative; margin-left: 12px; margin-top: 10px;}
    .searchYakwala #searchStr, .searchYakwala #searchPlaceStr { height: 23px;}
    #mymap { width: 68%;}
+   #newsfeedContainer { width: 103%; right: -1px}
+   #newsfeedContent .mCSB_scrollTools { right: -3px}
  }
 
   /*ipads portrail*/
