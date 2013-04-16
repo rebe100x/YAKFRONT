@@ -469,8 +469,8 @@ width: 270px;
    .searchYakwala #rangeSelectorTrigger, .searchYakwala #tagSelectorTrigger { margin-top: 10px;}
    #mymap { width: 68%;}
    #newsfeedContainer { width: 103%; right: -1px}
-   #newsfeedContent .mCSB_scrollTools { right: -3px}
-
+   #newsfeedContent .mCSB_scrollTools { right: -4px}
+   #locationChooser {top:40%;}
  }
 
  /*large screens*/
@@ -524,7 +524,8 @@ width: 270px;
    .searchYakwala #rangeSelectorTrigger, .searchYakwala #tagSelectorTrigger { margin-top: 10px;}
    #mymap { width: 68%;}
    #newsfeedContainer { width: 103%; right: -1px}
-   #newsfeedContent .mCSB_scrollTools { right: -3px}
+   #newsfeedContent .mCSB_scrollTools { right: -4px}
+   #locationChooser {top:40%;}
  }
 
  /*ipads portrail*/
@@ -579,6 +580,7 @@ width: 270px;
    #mymap { width: 68%;}
    #newsfeedContainer { width: 103%; right: -1px}
    #newsfeedContent .mCSB_scrollTools { right: -3px}
+   #locationChooser {top:40%;}
  }
 
   /*ipads portrail*/
@@ -637,6 +639,7 @@ width: 270px;
    span.redAdd { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -205px -658px; position: relative; float: left; cursor: pointer; top: 16px; margin-right: 10px}
    span.redStars { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -176px -658px; position: relative; float: left; cursor: pointer; top: 0px; margin-right: 10px}
    .searchYakwala #timeContainer { position: relative; margin-left: 12px; margin-top: 10px;}
+   #locationChooser {top:7%;}
  }
 
  /*ipads portrail*/
@@ -692,6 +695,7 @@ width: 270px;
    span.redAdd { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -205px -658px; position: relative; float: left; cursor: pointer; top: 16px; margin-right: 10px}
    span.redStars { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -176px -658px; position: relative; float: left; cursor: pointer; top: 0px; margin-right: 10px}
    .searchYakwala #timeContainer { position: relative; margin-left: 12px; margin-top: 10px;}
+   #locationChooser {top:7%;}
  }
 
 
@@ -749,6 +753,7 @@ width: 270px;
 	span.redAdd { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -205px -658px; position: relative; float: left; cursor: pointer; top: 16px; margin-right: 10px}
 	span.redStars { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -176px -658px; position: relative; float: left; cursor: pointer; top: 0px; margin-right: 10px}
 	.searchYakwala #timeContainer { position: relative; margin-left: 12px; margin-top: 10px;}
+	#locationChooser {top:7%;}
 }
 
 /* Smartphones (landscape) ----------- */
@@ -804,6 +809,7 @@ width: 270px;
 	span.redAdd { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -205px -658px; position: relative; float: left; cursor: pointer; top: 16px; margin-right: 10px}
 	span.redStars { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -176px -658px; position: relative; float: left; cursor: pointer; top: 0px; margin-right: 10px}
 	.searchYakwala #timeContainer { position: relative; margin-left: 12px; margin-top: 10px;}
+	#locationChooser {top:7%;}
 }
 
 
@@ -858,7 +864,7 @@ width: 270px;
 
 
 /*location chooser */
-#locationChooser {top:40%;}
+
 #locationChooser .modal-body {max-height: 420px;}
 #locationChooser .redstar { position: relative; top: 3px; margin-right: 12px;}
 #locationChooser .plussign { position: relative; top: 17px; margin-right: 12px;}
