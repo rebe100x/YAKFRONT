@@ -539,7 +539,10 @@ $(document).ready(function() {
     '/images/yakwala_sprite-medium.png'
 	]);*/
 	
-
+	$(".myMedia a").click(function(){
+		var popup = $(this).attr("rel");
+		$('#' + popup).modal('show');
+	});
 
 	$("#newsfeedContent").mCustomScrollbar({
 		set_width:false, /*optional element width: boolean, pixels, percentage*/

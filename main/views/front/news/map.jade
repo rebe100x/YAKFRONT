@@ -4,10 +4,15 @@ block content
 	include ../mixins/locationChooser.jade
 	include ../mixins/userChooser.jade
 	include ../mixins/forms/postForm.jade
+	include ../mixins/post_picture.jade
+	include ../mixins/post_youtube.jade
+	include ../mixins/post_soundcloud.jade
 	mixin menu('map')
 	mixin locationChooser('map')
 	mixin userChooser
-
+	mixin post_picture
+	mixin post_youtube
+	mixin post_soundcloud
 
 	div.container-fluid
 		div.row-fluid

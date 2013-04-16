@@ -1,0 +1,73 @@
+mixin post_soundcloud
+
+	div.modal.hide.fade#post_soundcloud
+		div.modal-body
+			span#closeModal(type="button", data-dismiss="modal")
+			div.controls.clearBoth
+				span.mediaText.pull-left
+					|Recherche SoundCloud
+				br
+				br
+			div.controls.clearBoth
+				input#soundcloundAudios(type="hidden")
+				input#inputSoundCloud
+				button#searchSoundCloud Rechercher
+				img#loadingSoundClound(src="/images/loader.gif", style="display: none")
+			br
+
+			div#soundCloudResults.controls.clearBoth
+			br
+			br
+			br
+			br
+			br
+			br
+			br
+			br
+			br
+			br
+			br
+			br
+	script(src="http://connect.soundcloud.com/sdk.js")
+	script
+		SC.initialize({
+			client_id: 'd34264e304490c3447dcc5275739c8da'
+		});
+		$(document).ready(function(){
+			$("#searchSoundCloud").click(function(){
+				$("#loadingSoundClound").show();
+				$("#soundCloudResults").html("");
+				var scUrl = '/tracks';
+				SC.get('/tracks', { q: $("#inputSoundCloud").val(), license: 'cc-by-sa' }, function(tracks) {
+					showMyAudios(tracks);
+					$("#loadingSoundClound").hide();
+				});
+			});
+		});
+
+		function showMyAudios(data) {
+			var html = '<ul>';
+			for (var i = 0; i < data.length; i++) {
+			var entry = data[i];
+			
+			var title = entry.title;
+			var thumb = entry.artwork_url;
+			html += '<li>';
+			html += '<span class="yt_image">' + "<img src='" + thumb +"' />" + '</span>';
+			html += '<span class="yt_title">' + title + '</span>';
+
+			html += '</li>';
+
+			}
+			html += '</ul>';
+			$("#soundCloudResults").html(html);
+
+			$("#soundCloudResults ul li").click(function(){
+				$('#post_soundcloud').modal('hide');
+			});
+		} 
+		
+		// find all sounds of buskers licensed under 'creative commons share alike'
+		
+
+		
