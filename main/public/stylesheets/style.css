@@ -219,10 +219,10 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 
 .infowindow .postedBy { position: relative; left: 7px; padding-right: 12px; font-size: 0.91em;color:#c5c5c5;line-height:2em; padding-left: 0px; clear: both;}
 
-.infowindow .tags{float:left;margin-left:7px;text-align:left;font-style:italic;font-weight:bold;font-size:0.95em;line-height: 1.3em; clear: both; margin-top: 6px; margin-bottom: 3px;color:#5D5D5D;}
+.infowindow .tags{float:left;margin-left:7px;text-align:left;font-style:italic;font-weight:bold;font-size:0.95em;line-height: 1.3em; clear: both; margin-top: 0px; margin-bottom: 3px;color:#5D5D5D;}
 .infowindow .tags a{color:#5D5D5D;}
 
-.infowindow .infodetail{float:left;width:100%;font-style:italic;font-size:0.8em;line-height: 1.5em; clear: both; color: #c5c5c5; position: relative;left: 7px; }
+.infowindow .infodetail{float:left;width:100%;font-style:italic;font-size:0.8em;line-height: 1.5em; clear: both; color: #c5c5c5; position: relative;left: 7px; padding-bottom: 3px}
 .infowindow .infodetail a{color:#0C0C0C;}
 .infowindow .icon-remove { float: right; clear: both;  position: relative; right: 5px;top:5px; z-index: 11111;}
 
@@ -985,7 +985,7 @@ border-bottom: 1px solid #e5e5e5;}
 
 #searchElementContainer { width: 100%}
 
-.infowindow .myitem .yakSpam{font-size:11px;font-style:italic; position: relative; clear: both; width: auto; float: right; left: 0px; top: -33px; color: #E07C1C; cursor: pointer;}
+.infowindow .myitem .yakSpam{font-size:11px;font-style:italic; position: relative; clear: both; width: auto; float: right; left: 0px; top: -13px; color: #E07C1C; cursor: pointer;}
 .currentDetails .myitem .yakSpam{font-size:11px;font-style:italic; position: relative; clear: both; width: auto; float: right; left: 0px; top: -33px; color: #E07C1C; cursor: pointer;}
 
 #loginPageNavBar{background-color: #FFF;position:relative;}

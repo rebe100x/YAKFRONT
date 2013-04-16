@@ -819,7 +819,7 @@
 					printMapAndFeed(ajax.data.info,0);
 				
 				}
-				$("abbr.timeago").timeago();
+				//$("abbr.timeago").timeago();
 				$('#newsfeedContent').mCustomScrollbar("update");
 
 
