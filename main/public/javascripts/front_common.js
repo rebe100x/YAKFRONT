@@ -541,7 +541,10 @@ $(document).ready(function() {
 	
 	$(".myMedia a").click(function(){
 		var popup = $(this).attr("rel");
-		$('#' + popup).modal('show');
+		if(popup != "post_picture")
+			$('#' + popup).modal('show');
+		else
+			$("#post_yakpicture").slideToggle();
 	});
 
 	$("#newsfeedContent").mCustomScrollbar({
