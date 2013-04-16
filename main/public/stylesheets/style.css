@@ -941,6 +941,10 @@ color: #333333;
 border: 0;
 border-bottom: 1px solid #e5e5e5;}
 
+.myMedia a { margin-left: 10px; cursor: pointer; position: relative;}
+
+.myMedia a:hover { top: -2px;}
+
 #postForm button.btn.btn-large, input[type="submit"].btn.btn-large{background: #c20e16;color: #f9e7e8;}
 #postForm #yakTypeController label{margin-left:10%;}
 .clearBoth { clear: both;}
@@ -1008,3 +1012,17 @@ border-bottom: 1px solid #e5e5e5;}
 .icon-warning-sign {float: right; position: relative; top: -5px; right: 10px;}
 
 #alertsNumber { position: relative; left: 4px; top: 19px; color: red;  font-weight: bold; }
+
+#youtubeResults ul { list-style: none; padding: 0px; margin: 0px; }
+#youtubeResults ul li {  cursor: pointer; float: left; clear: both; width: 100%;}
+#youtubeResults ul li:hover { background: #cecece;}
+#youtubeResults ul li span { float: left; position: relative;}
+#youtubeResults ul li img {  width: 90px; height: 60px; }
+#youtubeResults ul li .yt_title {  font-weight: bold; width: 50%; }
+
+#soundCloudResults ul { list-style: none; padding: 0px; margin: 0px; }
+#soundCloudResults ul li {  cursor: pointer; float: left; clear: both; width: 100%;}
+#soundCloudResults ul li:hover { background: #cecece;}
+#soundCloudResults ul li span { float: left; position: relative;}
+#soundCloudResults ul li img {  width: 90px; height: 60px; }
+#soundCloudResults ul li .yt_title {  font-weight: bold; width: 50%; }

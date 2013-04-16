@@ -74,10 +74,22 @@ mixin postForm()
 						input#freetag.span12(type="text",data-provide="typeahead", name="freetag",placeholder='Mots clés', autocomplete='off')
 						span.postinfo
 							| ex: maisonavendre
-					div.controls
-						span.mediaText.pull-left Media
+					div.controls.myMedia
+						span.mediaText.pull-left Media:
+						a(title="Poster une photo pour cet info sur yakwala", rel="post_picture")
+							img(src="/images/media/yak.png")
+						a(title="Rechercher dans Youtube et poster votre video", rel="post_youtube")
+							img(src="/images/media/yt.png")
+						a(title="Rechercher dans SoundCloud et poster votre audio", rel="post_soundcloud")
+							img(src="/images/media/storify.png")
+					br
+					div#post_yakpicture.controls.clearBoth(style="display: none")
+						span.mediaText.pull-left
 						span#picturePreview
 						input.span6#picture(type="file",style="display:block",name="picture")
+					div#post_yakYoutube.controls.clearBoth
+					div#post_yakSoundCloud.controls.clearBoth
+					
 				br
 				h3.clearBoth A quel endroit ?
 				div.control-group
@@ -135,8 +147,9 @@ mixin postForm()
 					}
 
 				$.cookie("yaktype", yakType,{ expires: 10000, path : '/' });
+				var content = $("#postForm #content").val() + $("#post_yakYoutube").html() + $("#post_yakSoundCloud").html();
+				$("#postForm #content").val(content);
 				});
-
 			});
 	
 	

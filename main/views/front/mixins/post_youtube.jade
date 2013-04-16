@@ -1,0 +1,74 @@
+mixin post_youtube
+
+	div.modal.hide.fade#post_youtube
+		div.modal-body
+			span#closeModal(type="button", data-dismiss="modal")
+			div.controls.clearBoth
+				span.mediaText.pull-left
+					|Recherche Youtube
+				br
+				br
+			div.controls.clearBoth
+				input#youtubeVideos(type="hidden")
+				input#inputYoutube
+				button#searchYoutube Rechercher
+				img#loadingYoutube(src="/images/loader.gif", style="display: none")
+			br
+
+			div#youtubeResults.controls.clearBoth
+			br
+			br
+			br
+			br
+			br
+			br
+			br
+			br
+			br
+			br
+			br
+			br
+
+	script
+		$(document).ready(function(){
+			$("#searchYoutube").click(function(){
+				$("#loadingYoutube").show();
+				$("#youtubeResults").html("");
+				var youtubeUrl = 'http://gdata.youtube.com/feeds/api/videos?q=' + $("#inputYoutube").val() + '&orderby=viewCount&time=all_time&max-results=10&alt=json&fields=entry/id,entry/media:group/media:thumbnail,entry/title';
+				$.get(youtubeUrl, function(data){
+					showMyVideos(data);
+					$("#loadingYoutube").hide();
+				})
+			});
+		});
+		function showMyVideos(data) {
+			var feed = data.feed;
+			var entries = feed.entry || [];
+			var html = '<ul>';
+			for (var i = 0; i < entries.length; i++) {
+			var entry = entries[i];
+			var vid = entry.id.$t.replace("http://gdata.youtube.com/feeds/api/videos/", '');
+			var title = entry.title.$t;
+			var thumb = entry.media$group.media$thumbnail[0].url;
+			html += '<li rel="' + vid + '">';
+			//html += '<span class="yt_image">' + "<img src='" + thumb +"' />" + '</span>';
+			html += '<span class="yt_title">' + title + '</span>';
+			html += '<iframe  src="http://www.youtube.com/embed/'+vid+'" width="100%" frameborder="0" allowfullscreen></iframe>';
+			html += '</li>';
+
+			}
+			html += '</ul>';
+			$("#youtubeResults").html(html);
+
+			$("#youtubeResults ul li").click(function(){
+				var content = $("#postForm #content").val();
+				var frame = '<div><iframe  src="http://www.youtube.com/embed/'+$(this).attr("rel")+'" width="96%" frameborder="0" allowfullscreen></iframe><span style="cursor: pointer; position: relative; float: right" onclick="removeframe(this)">X</span><div>'
+				$("#post_yakYoutube").prepend(frame);
+				//$('#post_youtube').modal('hide');
+			});
+		} 
+
+		function removeframe(el)
+		{
+			$(el).parent().remove();
+		}
