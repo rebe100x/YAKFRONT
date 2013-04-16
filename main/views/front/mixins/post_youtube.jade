@@ -61,7 +61,6 @@ mixin post_youtube
 			$("#youtubeResults").html(html);
 
 			$("#youtubeResults ul li").click(function(){
-				var content = $("#postForm #content").val();
 				var frame = '<div><iframe  src="http://www.youtube.com/embed/'+$(this).attr("rel")+'" width="96%" frameborder="0" allowfullscreen></iframe><span style="cursor: pointer; position: relative; float: right" onclick="removeframe(this)">X</span><div>'
 				$("#post_yakYoutube").prepend(frame);
 				//$('#post_youtube').modal('hide');

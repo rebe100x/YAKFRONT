@@ -53,10 +53,12 @@ mixin post_soundcloud
 			
 			var title = entry.title;
 			var thumb = entry.artwork_url;
-			html += '<li>';
+			var sid = entry.id;
+			
+			html += '<li rel="'+sid+'">';
 			//html += '<span class="yt_image">' + "<img src='" + thumb +"' />" + '</span>';
 			html += '<span class="yt_title">' + title + '</span>';
-			html += '<iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F15203398"></iframe>';
+			html += '<iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F'+sid+'"></iframe>';
 			html += '</li>';
 
 			}
@@ -65,7 +67,7 @@ mixin post_soundcloud
 
 			$("#soundCloudResults ul li").click(function(){
 				
-				var frame = '<div><iframe width="96%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F15203398"></iframe><span style="cursor: pointer; position: relative; float: right" onclick="removeframe(this)">X</span><div>'
+				var frame = '<div><iframe width="96%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F'+$(this).attr("rel")+'"></iframe><span style="cursor: pointer; position: relative; float: right" onclick="removeframe(this)">X</span><div>';
 				$("#post_yakSoundCloud").prepend(frame);
 				//$('#post_soundcloud').modal('hide');
 			});
