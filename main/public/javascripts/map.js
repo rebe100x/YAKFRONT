@@ -1441,5 +1441,12 @@
 			setSpamSystem(yakSpam);
 			item.append(yakSpam);
 			}
+
+			var yakyakBlackList = $("<span />");
+			yakyakBlackList.attr("class", "yakBlackList");
+			yakyakBlackList.attr("rel", val._id);
+			setyakBlackListSystem(yakyakBlackList);
+			item.append(yakyakBlackList);
+
 			return item;	
 		}

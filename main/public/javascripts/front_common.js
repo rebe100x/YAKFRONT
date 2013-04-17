@@ -1256,6 +1256,24 @@ function setCommentText(len,item){
 
 }
 
+function setyakBlackListSystem(item)
+{
+	var infoid = item.attr("rel");
+
+	item.html("Casher(liste noire)");
+	item.click(function(){
+		$.post('/api/user/blacklist', {id : infoid, type : 'info'} , function(res){
+				if (res != "0")
+				{
+					user.listeNoire.info = user.listeNoire.info.concat(infoid);
+					item.parent().parent().parent().remove();
+				}
+
+		});
+
+	});
+}
+
 function setSpamSystem(item){
 	
 	//var url = '/getSpams/' + item.attr("rel") + '/' + user._id;
