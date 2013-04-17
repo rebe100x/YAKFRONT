@@ -1665,3 +1665,35 @@ function trackUser(userid, actionid, logparams)
 	console.log('---log:'+url);
 	request.get({url:url, json:true}, function (err) {if (err) console.log(err);})
 }
+
+
+exports.user_blacklist = function(req, res){
+ var User = db.model('User');
+ if(req.body.type == "user")
+ {
+ 	User.update({_id: req.session.user},{$push:{'listeNoire.user':req.body.id}}, function(err){
+			if(!err)
+				res.json("1");
+			else
+				res.json("0");
+	});
+ }
+ else if(req.body.type == "info")
+ {
+ 	User.update({_id: req.session.user},{$push:{'listeNoire.info':req.body.id}}, function(err){
+			if(!err)
+				res.json("1");
+			else
+				res.json("0");
+	});
+ }
+ else if(req.body.type == "feed")
+ {
+ 	User.update({_id: req.session.user},{$push:{'listeNoire.feed':req.body.id}}, function(err){
+			if(!err)
+				res.json("1");
+			else
+				res.json("0");
+	});
+ }
+}

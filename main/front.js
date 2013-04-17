@@ -163,6 +163,7 @@ app.get('/api/usersearchbyid2/:id', api.findUserById2);
 app.get('/api/countUserInfo/:id', api.countUserInfo);
 app.get('/api/countUserSubscribers/:id', api.countUserSubscribers);
 app.get('/api/user/feed/:userid', api.get_user_feed);
+app.post('/api/user/blacklist', routes.requiresLogin, api.user_blacklist);
 
 app.get('/api/findbylogin/:string', api.user_findbylogin);
 app.get('/api/findbymail/:string', api.user_findbymail);

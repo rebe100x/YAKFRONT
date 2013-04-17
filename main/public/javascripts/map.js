@@ -47,8 +47,14 @@
 
 		/*READY FUNCTIONS*/
 		$(document).ready(function() {
-			if(gup("post") == 1)
-				showPostForm();
+		//console.log(user);
+
+		//$.post("/api/user/blacklist", {id: '5168263a9a01583001000017', type : 'user'}, function(){});
+		//$.post("/api/user/blacklist", {id: '5168263a9a01583001000018', type : 'feed'}, function(){});
+		//$.post("/api/user/blacklist", {id: '5168263a9a01583001000019', type : 'info'}, function(){});
+
+		if(gup("post") == 1)
+			showPostForm();
 			
 				
 			
@@ -877,11 +883,15 @@
 			cleanFeed();
 			cleanMarkers();
 			$.each(data, function(key,val) {
-				if(flagFilter!=1)
-					infoArray.push(val);					
-				printMapItem(val,key,0);
-				if(key<10)
-					printFeedItem(val,0,0);	
+				//console.log(user);
+				if(!user.listeNoire.user.inArray(val.user) && !user.listeNoire.feed.inArray(val.feed) && !user.listeNoire.info.inArray(val._id))
+				{
+					if(flagFilter!=1)
+						infoArray.push(val);						
+					printMapItem(val,key,0);
+					if(key<10)
+						printFeedItem(val,0,0);	
+				}
 			});
 			printLoadingFeedItem();	
 		}

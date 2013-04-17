@@ -621,6 +621,11 @@ var User = new Schema({
 		cats: {type : Schema.Types.Mixed},
 		tags: {type : Schema.Types.Mixed},
 	}
+	,listeNoire : {
+		user: {type : [Schema.ObjectId]},
+		feed: {type : [Schema.ObjectId]},
+		info: {type : [Schema.ObjectId]},
+	}
 	, createfrom_social  :{ type : Number, default:0} // 0 yakwala, 1 twitter, 2 facebook, 3 google
 	, apiData	: { type: [{
 							apiClientId : {type: Schema.ObjectId,index: true}  
@@ -681,7 +686,8 @@ User.statics.format = function (theuser) {
 		createfrom_social: theuser.createfrom_social,
 		status: theuser.status,
 		illicite: theuser.illicite,
-		alertsLastCheck : theuser.alertsLastCheck
+		alertsLastCheck : theuser.alertsLastCheck,
+		listeNoire: theuser.listeNoire
 	};
   return formattedUser;
 }
