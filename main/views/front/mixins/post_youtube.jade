@@ -40,7 +40,11 @@ mixin post_youtube
 					$("#loadingYoutube").hide();
 				})
 			});
-		});
+			$("#inputYoutube").keyup(function(e){
+				if(e.keyCode == 13)
+					$("#searchYoutube").click();
+			});
+		});	
 		function showMyVideos(data) {
 			var feed = data.feed;
 			var entries = feed.entry || [];

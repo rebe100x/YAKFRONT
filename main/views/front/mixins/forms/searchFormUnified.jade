@@ -31,7 +31,6 @@ mixin searchFormUnified(page)
 				span#btnDiscussion(title="Voir les Yassalas", type=4, onclick='setDiscussion(this)') 			
 				span#btnMesalertes(title="Passer en mode Alertes", type=5, onclick='setAlert(this)')
 					span#alertsNumber
-						|0
 
 	div#closehideSearch
 		img(src="/images/new/openClose.png", alt="Ouvrir, Fermer", title="Ouvrir, Fermer")
@@ -79,21 +78,26 @@ mixin searchFormUnified(page)
 		$('#locationInput').val(JSON.stringify({lat:curPos.x,lng:curPos.y}));						
 
 
-		
-
 
 		$(document).ready(function(){
 
-				
+				setInterval('numAlertsSearch()', 10000);
 				
 				if(yakType.inArray("4"))
 					$("#btnDiscussion").addClass('active').attr('title','Cacher les Yassalas');
 					
-					
+				
+				
 
 				if(yakType.inArray("5")){
 					$("#btnMesalertes").addClass('active').attr('title','Passer en mode normal');
 					console.log('active ALerte');
+					$("#alertsNumber").html("");
+					$("#alertsNumber").hide();
+				}
+				else
+				{
+					$("#alertsNumber").show();
 				}
 					
 				//getHotTags(curPos,dateFrom);
@@ -542,9 +546,12 @@ mixin searchFormUnified(page)
 				$(el).removeClass('active').attr('title','Passer en mode Alertes');
 				yakType.cleanArrayByName("5");
 				$.cookie("yaktype", yakType.join(','),{ expires: 10000, path : '/' });
+				$("#alertsNumber").show();
 			}else{
+				$("#alertsNumber").hide();
+				$("#alertsNumber").html("");
 				$.post('/user/alertsLastCheck', function(res) {
-					
+					user.alertsLastCheck = new Date();
 				});
 				
 				$(el).addClass('active').attr('title','Passer en mode normal');

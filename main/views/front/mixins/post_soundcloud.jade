@@ -43,6 +43,10 @@ mixin post_soundcloud
 					$("#loadingSoundClound").hide();
 				});
 			});
+			$("#inputSoundCloud").keyup(function(e){
+				if(e.keyCode == 13)
+					$("#searchSoundCloud").click();
+			});
 		});
 
 		function showMyAudios(data) {

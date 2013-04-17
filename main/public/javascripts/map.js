@@ -12,6 +12,7 @@
 		var hashtagTmp = [];
 		var mediumImage;
 		var thumbImage;
+		var dateLastCheck;
 		//var markerClustererOptions = {gridSize:30,maxZoom: 17,styles: [{height: 28,width: 28,url: "/images/markers/m1.png"},{height: 38,width: 38,url: "/images/markers/m2.png"},{height: 55,width:55,url: "/images/markers/m3.png"},{height: 85,width: 85,url: "/images/markers/m4.png"},{height: 85,width: 85,url: "/images/markers/m5.png"}]};
 		//var markerCluster = null;
 		//var pinkParksStyles = [{featureType: "Water",stylers: [{ hue: "#006eff" },{ saturation:1 },{ lightness: -13 }]},{featureType: "Road",stylers: [{ hue: "#ff0000" },{ saturation: -100 },{ lightness: 31 }]},{featureType: "Landscape",stylers: [{ hue: "#ff0008" },{saturation: -90 },{ lightness: 66 }]}];
@@ -738,7 +739,25 @@
 			
 		}
 
-		
+		function numAlertsSearch()
+		{
+			if(!yakType.inArray("5")){
+				var alertsNumberUrl = '';
+				bounds = getMyBounds();
+				dateLastCheck = new Date(user.alertsLastCheck);
+				alertsNumberUrl = '/api/geoalertsNumber/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/'+dateLastCheck.getTime();
+				//console.log(alertsNumberUrl);
+				$.getJSON(alertsNumberUrl,function(ajax) {
+					//console.log(ajax.data.info);
+					if(ajax.data.info != '-1' && ajax.data.info != "0")
+						$("#alertsNumber").html(ajax.data.info);
+				});
+			}
+			
+		}
+
+
+
 		function silentUpdater(){
 			
 			//searchString = encodeURIComponent(searchString).replace(/%2520/g, ' ');		

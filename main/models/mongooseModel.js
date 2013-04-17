@@ -529,6 +529,38 @@ Info.statics.findAllGeoAlert = function (x1,y1,x2,y2,from,now,type,str,usersubs,
 }
 
 
+Info.statics.findAllGeoAlertNumber = function (x1,y1,x2,y2,from,lastcheck,callback) {
+	
+	
+	var DPUB = new Date();
+	var DEND = new Date();
+	var DLC = new Date();
+
+	var offset = 1000;
+	DPUB.setTime(DPUB.getTime()+from*1000-offset);
+	DEND.setTime(DEND.getTime()+from*1000);
+	var dateLastCheck = DLC.setTime(lastcheck);
+
+	var box = [[parseFloat(x1),parseFloat(y1)],[parseFloat(x2),parseFloat(y2)]];
+	
+	var res = null;
+
+	var cond = {
+				"print":1,
+				"status":1,
+				"location" : {$within:{"$box":box}},
+				"pubDate":{$lte:DPUB},
+				"pubDate":{$gte:dateLastCheck},
+				"dateEndPrint":{$gte:DEND}
+			};
+
+	var qInfo = this.find(cond).sort({'pubDate':-1});
+	
+	res = qInfo.count().exec(callback);
+	return res;
+}
+
+
 
 
 mongoose.model('Info', Info);

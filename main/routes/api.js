@@ -104,6 +104,20 @@ exports.geoalerts = function (req, res) {
 };
 
 
+exports.geoalertsNumber = function (req, res) {
+	var Info = db.model('Info');
+	
+	Info.findAllGeoAlertNumber(req.params.x1,req.params.y1,req.params.x2,req.params.y2,req.params.ago, req.params.lastcheck,function (err, docs){
+		if(!err){
+			res.json({meta:{code:200},data:{info:docs}});
+		}
+			
+		else
+			res.json({meta:{data: '-1', code:404,error_type:'operation failed',error_description:err.toString()}});
+	}); 
+};
+
+
 exports.geoinfos = function (req, res) {
 	
 	var Info = db.model('Info');
