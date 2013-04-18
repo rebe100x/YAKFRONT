@@ -966,9 +966,14 @@
 			postedBy.attr("class", "postedBy");
 
 			var onclickUser = "showUserProfile(this)";
+			var inputhidden = "<input type='hidden' value='" + item.user + "' />";
 			//console.log(item);
 			if(typeof item.feed != 'undefined')
-				onclickUser = "setSearchFor(this);";
+			{
+				onclickUser = "showFeedProfile(this);";
+				inputhidden = "<input type='hidden' value='" + item.feed + "' />";
+			}
+				
 
 			if(item.origin.indexOf('@') != 0)
 				item.origin ="@"+item.origin;
@@ -977,11 +982,11 @@
 
 			if(item.yakType !=2 )
 			{
-				postedBy.html("Posté par <a class='prevent-default' onclick='" + onclickUser +"'>"+item.origin+"</a><input type='hidden' value='" + item.user + "' />" + "<span class=\'date\'> - "+thedate+"</span>");
+				postedBy.html("Posté par <a class='prevent-default' onclick='" + onclickUser +"'>"+item.origin+"</a>" + inputhidden + "<span class=\'date\'> - "+thedate+"</span>");
 			}
 				
 			else{
-				postedBy.html("Posté par <a class='prevent-default' onclick='" + onclickUser + "'>"+item.origin+"</a><input type='hidden' value='" + item.user + "' />");
+				postedBy.html("Posté par <a class='prevent-default' onclick='" + onclickUser + "'>"+item.origin+"</a>" + inputhidden);
 				itemTitle.append(" - <span class=\'dateAgenda\'>"+thedate+"</span>");			
 			}
 				

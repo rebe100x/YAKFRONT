@@ -1,0 +1,47 @@
+extends ../layout
+block content
+
+	include ../mixins/menu.jade
+	include ../mixins/settingsMenu.jade
+	include ../mixins/locationChooser.jade
+
+	mixin menu('alerts')
+	mixin locationChooser()
+
+	div.container-fluid
+		div.row-fluid
+			div.span3.yak-sidebar
+				mixin settingsMenu('blacklist')
+
+						
+			div.span8
+				div.row-fluid				
+					- if (message)
+						each msg in message
+							div.alert.fade.in
+								button.close(type="button",data-dismiss="alert") x
+								strong= msg
+				div.row-fluid
+					div.content-header
+						div.header-inner
+							h2 Liste Noire
+				hr
+				div.row-fluid
+					p.subheader Liste des utilisateurs dans votre liste noire
+					- each blackuser in blackusers
+						p
+							div
+								i.icon-remove.icon-pointer
+								= blackuser.login
+				div.row-fluid
+					br 
+					br
+				div.row-fluid
+					p.subheader Liste des feeds dans votre liste noire
+					- each blackfeed in blackfeeds
+						p
+							div
+								i.icon-remove.icon-pointer
+								= blackfeed.login
+					
+				

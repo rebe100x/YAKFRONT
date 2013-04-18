@@ -24,6 +24,14 @@ mixin settingsMenu(active)
 			li
 				a(href="/settings/alerts",data-nav="alerts") Abonnements et Alertes
 					i.icon-chevron-right 		
+		- if (active == 'blacklist')		
+			li.active
+				a(href="/settings/blacklist",data-nav="blacklist") Liste Noire
+						i.icon-chevron-right 
+		- else
+			li
+				a(href="/settings/blacklist",data-nav="blacklist") Liste Noire
+					i.icon-chevron-right 		
 		- if (active == 'password')		
 			li.active
 				a(href="/settings/password",data-nav="password") Mot de passe

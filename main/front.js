@@ -115,6 +115,8 @@ app.post('/privateprofile',routes.requiresLogin, routes.privateprofile);
 
 app.get('/settings/alerts', routes.requiresLogin, routes.settings_alerts);
 
+app.get('/settings/blacklist', routes.requiresLogin, routes.settings_blacklist);
+
 app.post('/user/alertsLastCheck', routes.requiresLogin, routes.user_alertsLastCheck);
 app.post('/user/setUserAlerts', routes.requiresLogin, routes.set_user_alerts);
 app.post('/alerts',routes.requiresLogin,routes.alerts);
@@ -160,9 +162,11 @@ app.get('/api/places', api.places);
 app.get('/api/searchplaces/:str', api.searchplaces);
 app.get('/api/usersearch/:string', api.user_search);
 app.get('/api/usersearchbyid2/:id', api.findUserById2);
+app.get('/api/feedsearchbyid2/:id', api.findFeedById2);
 app.get('/api/countUserInfo/:id', api.countUserInfo);
 app.get('/api/countUserSubscribers/:id', api.countUserSubscribers);
 app.get('/api/user/feed/:userid', api.get_user_feed);
+app.get('/api/feed/feed/:feedid', api.get_feed_feed);
 app.post('/api/user/blacklist', routes.requiresLogin, api.user_blacklist);
 
 app.get('/api/findbylogin/:string', api.user_findbylogin);

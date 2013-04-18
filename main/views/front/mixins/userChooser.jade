@@ -20,6 +20,13 @@ mixin userChooser
 					br
 					b#subscribers_number
 						|0
+				span#uc_profile_yaks_options
+					a.profileOptions.dropdown-toggle(data-toggle="dropdown", alt="Options", title="Option", style="position: relative; top: 3px; left: 30px; cursor: pointer")
+						img(src="/images/dots.png")
+					ul#customOptionsMenu.dropdown-menu.pull-right(style="position: relative; top: -16px;")
+						li
+							a#uc_blacklist_user
+								|Cacher(liste noir)
 			P#uc_profile_tags
 				b
 					|Tags alertes 
@@ -29,3 +36,20 @@ mixin userChooser
 			p#uc_profile_tags
 				a#uc_profile_yaks_search
 					|Cliquer ici pour filtrer les infos publiées par cet utilisateur dans cette région
+
+	script
+		$(document).ready(function(){
+
+				$(".profileOptions").unbind("click").on('click',function(){
+									
+					if($("#customOptionsMenu").css("display") == "none")
+					{
+						$("#customOptionsMenu").show();
+					}
+					else
+					{
+						$("#customOptionsMenu").hide();
+					}
+					return false;		
+				});
+			});

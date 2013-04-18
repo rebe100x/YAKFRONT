@@ -296,6 +296,16 @@ exports.findUserById2 = function (req, res) {
 	});
 };
 
+exports.findFeedById2 = function (req, res) {
+	var Feed = db.model('Feed');
+	Feed.findOne( {'_id' : req.params.id}, function(err,docs){
+		 res.json({
+  			user: docs
+	  	});
+	});
+	
+};
+
 /*
 exports.getUsers = function (req, res) {
 	var Users = db.model('User');
@@ -751,6 +761,21 @@ USER FEED : POST , PUT DELETE, GET infos
 exports.get_user_feed = function (req, res) {
 	var Info = db.model('Info');
 	Info.findByUser(req.params.userid,req.query.limit,req.query.skip,function(err, docs){
+		if(!err){
+			var infosFormated = docs.map(function(item){
+				var Info = db.model('Info');
+				return Info.format(item);
+			});
+			res.json({meta:{code:200},data:infosFormated});
+		}
+		else
+			res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+	});
+}
+
+exports.get_feed_feed = function (req, res) {
+	var Info = db.model('Info');
+	Info.findByFeed(req.params.feedid,req.query.limit,req.query.skip,function(err, docs){
 		if(!err){
 			var infosFormated = docs.map(function(item){
 				var Info = db.model('Info');
@@ -1671,7 +1696,10 @@ exports.user_blacklist = function(req, res){
  var User = db.model('User');
  if(req.body.type == "user")
  {
- 	User.update({_id: req.session.user},{$push:{'listeNoire.user':req.body.id}}, function(err){
+ 	var blacklist = {};
+ 	blacklist._id = req.body.id;
+ 	blacklist.login = req.body.login;
+ 	User.update({_id: req.session.user},{$push:{'listeNoire.user':blacklist}}, function(err){
 			if(!err)
 				res.json("1");
 			else
@@ -1689,7 +1717,10 @@ exports.user_blacklist = function(req, res){
  }
  else if(req.body.type == "feed")
  {
- 	User.update({_id: req.session.user},{$push:{'listeNoire.feed':req.body.id}}, function(err){
+ 	var blacklist = {};
+ 	blacklist._id = req.body.id;
+ 	blacklist.login = req.body.login;
+ 	User.update({_id: req.session.user},{$push:{'listeNoire.feed':blacklist}}, function(err){
 			if(!err)
 				res.json("1");
 			else

@@ -305,6 +305,12 @@ Info.statics.findByUser = function (userid, count, from, callback) {
   return this.find({ user: userid,status :1 },{},{limit:limit,skip:skip,sort:{pudDate:-1}}, callback);
 }
 
+Info.statics.findByFeed = function (feedid, count, from, callback) {
+	var limit = (typeof(count) != 'undefined' && count > 0) ? count : 100;		
+	var skip = (typeof(from) != 'undefined' && from > 0) ? from : 0;	
+  return this.find({ feed: feedid,status :1 },{},{limit:limit,skip:skip,sort:{pudDate:-1}}, callback);
+}
+
 Info.statics.countUserInfo = function (userid, callback) {
   return this.find({ user: userid,status :1 },{},{sort:{pudDate:-1}}).count().exec(callback);
 }
@@ -622,9 +628,9 @@ var User = new Schema({
 		tags: {type : Schema.Types.Mixed},
 	}
 	,listeNoire : {
-		user: {type : [Schema.ObjectId]},
-		feed: {type : [Schema.ObjectId]},
-		info: {type : [Schema.ObjectId]},
+		user: {type : []},
+		feed: {type : []},
+		info: {type : []},
 	}
 	, createfrom_social  :{ type : Number, default:0} // 0 yakwala, 1 twitter, 2 facebook, 3 google
 	, apiData	: { type: [{

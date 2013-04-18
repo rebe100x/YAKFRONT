@@ -812,6 +812,26 @@ exports.settings_alerts = function(req, res){
 };
 
 
+exports.settings_blacklist = function(req, res){
+	delete req.session.message;
+	var User = db.model('User');
+	
+	var blackusers = res.locals.user.listeNoire.user;
+	var blackfeeds= res.locals.user.listeNoire.feed;
+
+	if(req.session.user){
+		
+		res.render('settings/blacklist', {blackusers:blackusers,blackfeeds:blackfeeds});
+		
+	}else{
+		req.session.message = "Erreur : vous devez être connecté pour gérer vos alertes";
+		res.redirect('/user/login?redir=settings/blacklist');
+	}
+	
+	
+};
+
+
 
 exports.firstvisit = function(req,res){
 	
