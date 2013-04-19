@@ -1,4 +1,6 @@
 /*VAR INIT COMMON VARIABLES*/
+var addAlert; 
+
 var yakImages = new Array ( 
 				"/images/yakfav.png", 
 				"/images/markers/type1.png", 
@@ -1570,6 +1572,40 @@ function checkByWidth()
 
 
 		}
+
+		function bindClickAlertFeed(id, humanName, name)
+		{
+			alert(addAlert);
+			var alertUser = {};
+			alertUser._id = id;
+			alertUser.humanName = humanName;
+			alertUser.name = name;
+
+			$.post('/user/setUserAlertsFeed', {'theuser':alertUser, 'addAlert' : addAlert, 'settype' : 'feed'},function(res) {
+				if(res == '1')
+				{
+					if(addAlert == 0)
+					{
+						currHtml = "<img src='images/uc_plus.png' />Ajouter a mes alertes";
+						$("#userChooser #uc_profile_yaks_alerts.mybtn").html(currHtml);		
+						$.each(user.feedsubs, function(i){
+								 if(user.feedsubs[i]._id === theuser._id) user.feedsubs.splice(i,1);
+						});
+						addAlert = 1;
+						
+					}
+					else
+					{
+						currHtml = "<img src='images/uc_minus.png' />Supprimer de mes alertes";
+						$("#userChooser #uc_profile_yaks_alerts.mybtn").html(currHtml);		
+						user.feedsubs = user.feedsubs.concat(alertUser);
+						addAlert = 0;
+					}
+					
+					
+				}
+			});
+		}
 		function showUserProfile(el)
 		{
 			var userid = $(el).parent().find("input").val();
@@ -1752,7 +1788,11 @@ function checkByWidth()
 			$('#userChooser').modal('show');
 
 			$.getJSON('/api/feedsearchbyid2/' + userid ,function(data) {
-				
+				if($.inArray(userid,user.feedsubs) && user.feedsubs.length > 0)
+					addAlert = 0;
+				else
+					addAlert = 1;
+
 				var theuser = data.user;
 				//console.log(theuser);
 				if(typeof theuser == 'undefined')
@@ -1814,52 +1854,22 @@ function checkByWidth()
 				//console.log(userid);
 				if($.inArray(userid,user.feedsubs) && user.feedsubs.length > 0)
 				{
-					var addAlert = 0;
+					addAlert = 0;
 					var currHtml  = "<img src='images/uc_minus.png' />Supprimer de mes alertes";
 					$("#userChooser #uc_profile_yaks_alerts.mybtn").html(currHtml);		
 					$("#userChooser #uc_profile_yaks_alerts.mybtn").click(function(){
-
-						var alertUser = {};
-						alertUser._id = theuser._id;
-						alertUser.humanName = theuser.humanName;
-						alertUser.name = theuser.name;
-
-						$.post('/user/setUserAlertsFeed', {'theuser':alertUser, 'addAlert' : addAlert, 'settype' : 'feed'},function(res) {
-							if(res == 1)
-							{
-								currHtml = "<img src='images/uc_plus.png' />Ajouter a mes alertes";
-								$("#userChooser #uc_profile_yaks_alerts.mybtn").html(currHtml);		
-								$.each(user.feedsubs, function(i){
-										 if(user.feedsubs[i]._id === theuser._id) user.feedsubs.splice(i,1);
-								});
-								addAlert = 1;
-								
-							}
-						});
+						bindClickAlertFeed(theuser.id, theuser.humanName, theuser.name);
 					});
 				}
 					
 				else
 				{
-					var addAlert = 1;
+					addAlert = 1;
 					var currHtml = "<img src='images/uc_plus.png' />Ajouter a mes alertes";
 					$("#userChooser #uc_profile_yaks_alerts.mybtn").html(currHtml);		
 					$("#userChooser #uc_profile_yaks_alerts.mybtn").click(function(){
-						var alertUser = {};
-						alertUser._id = theuser._id;
-						alertUser.humanName = theuser.humanName;
-						alertUser.name = theuser.name;
 						
-						$.post('/user/setUserAlertsFeed', {'theuser':alertUser, 'addAlert' : addAlert, 'settype' : 'feed'},function(res) {
-							if(res == 1)
-							{
-								currHtml = "<img src='images/uc_minus.png' />Supprimer de mes alertes";
-								$("#userChooser #uc_profile_yaks_alerts.mybtn").html(currHtml);		
-								user.feedsubs = user.feedsubs.concat(alertUser);
-								addAlert = 0;
-								
-							}
-						});
+						bindClickAlertFeed(theuser.id, theuser.humanName, theuser.name);
 					});
 				}
 			
