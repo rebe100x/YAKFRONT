@@ -1652,7 +1652,7 @@ function checkByWidth()
 							alertUser.details = userName + "(@" + userLogin + ")";
 							alertUser.thumb = userThumb;
 							console.log(alertUser);
-							$.post('/user/setUserAlerts', {'theuser':alertUser, 'addAlert' : 0},function(res) {
+							$.post('/user/setUserAlerts', {'theuser':alertUser, 'addAlert' : 0, 'settype' : 'user'},function(res) {
 								if(res == 1)
 								{
 									$("#userChooser #uc_profile_yaks_alerts.mybtn").html("<img src='images/uc_plus.png' />Ajouter a mes alertes");		
@@ -1675,7 +1675,7 @@ function checkByWidth()
 							alertUser.details = userName + "(@" + userLogin + ")";
 							alertUser.thumb = userThumb;
 							console.log(alertUser);
-							$.post('/user/setUserAlerts', {'theuser':alertUser, 'addAlert' : 1},function(res) {
+							$.post('/user/setUserAlerts', {'theuser':alertUser, 'addAlert' : 1, 'settype' : 'user'},function(res) {
 								if(res == 1)
 								{
 									$("#userChooser #uc_profile_yaks_alerts.mybtn").html("<img src='images/uc_minus.png' />Supprimer de mes alertes");		
@@ -1744,6 +1744,7 @@ function checkByWidth()
 
 		function showFeedProfile(el)
 		{
+
 			var userid = $(el).parent().find("input").val();
 
 			emptyUserChooser();
@@ -1813,22 +1814,26 @@ function checkByWidth()
 				//console.log(userid);
 				if($.inArray(userid,user.feedsubs) && user.feedsubs.length > 0)
 				{
-					$("#userChooser #uc_profile_yaks_alerts.mybtn").html("<img src='images/uc_minus.png' />Supprimer de mes alertes");		
+					var addAlert = 0;
+					var currHtml  = "<img src='images/uc_minus.png' />Supprimer de mes alertes";
+					$("#userChooser #uc_profile_yaks_alerts.mybtn").html(currHtml);		
 					$("#userChooser #uc_profile_yaks_alerts.mybtn").click(function(){
+
 						var alertUser = {};
 						alertUser._id = theuser._id;
-						alertUser.name = userName;
-						alertUser.login = userLogin;
-						alertUser.details = userName + "(@" + userLogin + ")";
-						alertUser.thumb = userThumb;
-						console.log(alertUser);
-						$.post('/user/setUserAlerts', {'theuser':alertUser, 'addAlert' : 0},function(res) {
+						alertUser.humanName = theuser.humanName;
+						alertUser.name = theuser.name;
+
+						$.post('/user/setUserAlertsFeed', {'theuser':alertUser, 'addAlert' : addAlert, 'settype' : 'feed'},function(res) {
 							if(res == 1)
 							{
-								$("#userChooser #uc_profile_yaks_alerts.mybtn").html("<img src='images/uc_plus.png' />Ajouter a mes alertes");		
-								$.each(user.usersubs, function(i){
-										 if(user.usersubs[i]._id === theuser._id) user.usersubs.splice(i,1);
+								currHtml = "<img src='images/uc_plus.png' />Ajouter a mes alertes";
+								$("#userChooser #uc_profile_yaks_alerts.mybtn").html(currHtml);		
+								$.each(user.feedsubs, function(i){
+										 if(user.feedsubs[i]._id === theuser._id) user.feedsubs.splice(i,1);
 								});
+								addAlert = 1;
+								
 							}
 						});
 					});
@@ -1836,20 +1841,23 @@ function checkByWidth()
 					
 				else
 				{
-					$("#userChooser #uc_profile_yaks_alerts.mybtn").html("<img src='images/uc_plus.png' />Ajouter a mes alertes");		
+					var addAlert = 1;
+					var currHtml = "<img src='images/uc_plus.png' />Ajouter a mes alertes";
+					$("#userChooser #uc_profile_yaks_alerts.mybtn").html(currHtml);		
 					$("#userChooser #uc_profile_yaks_alerts.mybtn").click(function(){
 						var alertUser = {};
 						alertUser._id = theuser._id;
-						alertUser.name = userName;
-						alertUser.login = userLogin;
-						alertUser.details = userName + "(@" + userLogin + ")";
-						alertUser.thumb = userThumb;
-						console.log(alertUser);
-						$.post('/user/setUserAlerts', {'theuser':alertUser, 'addAlert' : 1},function(res) {
+						alertUser.humanName = theuser.humanName;
+						alertUser.name = theuser.name;
+						
+						$.post('/user/setUserAlertsFeed', {'theuser':alertUser, 'addAlert' : addAlert, 'settype' : 'feed'},function(res) {
 							if(res == 1)
 							{
-								$("#userChooser #uc_profile_yaks_alerts.mybtn").html("<img src='images/uc_minus.png' />Supprimer de mes alertes");		
-								user.usersubs = user.usersubs.concat(alertUser);
+								currHtml = "<img src='images/uc_minus.png' />Supprimer de mes alertes";
+								$("#userChooser #uc_profile_yaks_alerts.mybtn").html(currHtml);		
+								user.feedsubs = user.feedsubs.concat(alertUser);
+								addAlert = 0;
+								
 							}
 						});
 					});

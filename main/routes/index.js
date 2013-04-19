@@ -65,16 +65,17 @@ exports.user_alertsLastCheck = function(req, res){
 
 exports.set_user_alerts = function(req, res){
 	var User = db.model('User');
-	console.log(req.body.theuser._id);
+	
 	if(req.body.addAlert == 1)
 	{
 		User.update({_id: req.session.user},{$push:{"usersubs":req.body.theuser}}, function(err){
-			if(!err)
-				res.json("1");
-			else
-				res.json("0");
-		});
-	}
+				if(!err)
+					res.json("1");
+				else
+					res.json("0");
+			});	
+	}	
+	
 	else
 	{
 		User.update({_id: req.session.user},{$pull:{'usersubs':{_id:req.body.theuser._id}}}, function(err){
@@ -82,10 +83,40 @@ exports.set_user_alerts = function(req, res){
 				res.json("1");
 			else
 				res.json("0");
-		});	
+		});		
+	
 	}
 		
 }
+
+
+exports.set_user_alerts_feed = function(req, res){
+	var User = db.model('User');
+	
+	if(req.body.addAlert == 1)
+	{
+		User.update({_id: req.session.user},{$push:{"feedsubs":req.body.theuser}}, function(err){
+				if(!err)
+					res.json("1");
+				else
+					res.json("0");
+			});	
+	}	
+	
+	
+	else
+	{
+		User.update({_id: req.session.user},{$pull:{'feedsubs':{_id:req.body.theuser._id}}}, function(err){
+			if(!err)
+				res.json("1");
+			else
+				res.json("0");
+		});		
+	
+	}
+		
+}
+
 
 exports.requiresLogin = function(req,res,next){
 	
@@ -815,13 +846,13 @@ exports.settings_alerts = function(req, res){
 exports.settings_blacklist = function(req, res){
 	delete req.session.message;
 	var User = db.model('User');
-	
 	var blackusers = res.locals.user.listeNoire.user;
 	var blackfeeds= res.locals.user.listeNoire.feed;
+	var blackinfos= res.locals.user.listeNoire.info;
 
 	if(req.session.user){
 		
-		res.render('settings/blacklist', {blackusers:blackusers,blackfeeds:blackfeeds});
+		res.render('settings/blacklist', {blackusers:blackusers,blackfeeds:blackfeeds, blackinfos: blackinfos});
 		
 	}else{
 		req.session.message = "Erreur : vous devez être connecté pour gérer vos alertes";

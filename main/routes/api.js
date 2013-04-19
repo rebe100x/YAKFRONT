@@ -1728,3 +1728,34 @@ exports.user_blacklist = function(req, res){
 	});
  }
 }
+
+exports.user_blacklist_remove = function(req, res){
+ var User = db.model('User');
+ if(req.body.type == "user")
+ {
+ 	User.update({_id: req.session.user},{$pull:{'listeNoire.user':{'_id' : req.body.id }}}, function(err){
+			if(!err)
+				res.json("1");
+			else
+				res.json("0");
+	});
+ }
+ else if(req.body.type == "info")
+ {
+ 	 User.update({_id: req.session.user},{$pull:{'listeNoire.info':{'_id' : req.body.id}}}, function(err){
+			if(!err)
+				res.json("1");
+			else
+				res.json("0");
+	});
+ }
+ else if(req.body.type == "feed")
+ {
+ 	 User.update({_id: req.session.user},{$pull:{'listeNoire.feed':{'_id' : req.body.id}}}, function(err){
+			if(!err)
+				res.json("1");
+			else
+				res.json("0");
+	});
+ }
+}

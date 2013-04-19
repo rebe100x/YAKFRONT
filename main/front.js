@@ -119,6 +119,8 @@ app.get('/settings/blacklist', routes.requiresLogin, routes.settings_blacklist);
 
 app.post('/user/alertsLastCheck', routes.requiresLogin, routes.user_alertsLastCheck);
 app.post('/user/setUserAlerts', routes.requiresLogin, routes.set_user_alerts);
+app.post('/user/setUserAlertsFeed', routes.requiresLogin, routes.set_user_alerts_feed);
+
 app.post('/alerts',routes.requiresLogin,routes.alerts);
 
 app.get('/settings/password', routes.requiresLogin, routes.settings_password);
@@ -168,6 +170,7 @@ app.get('/api/countUserSubscribers/:id', api.countUserSubscribers);
 app.get('/api/user/feed/:userid', api.get_user_feed);
 app.get('/api/feed/feed/:feedid', api.get_feed_feed);
 app.post('/api/user/blacklist', routes.requiresLogin, api.user_blacklist);
+app.post('/api/user/blacklist/remove', routes.requiresLogin, api.user_blacklist_remove);
 
 app.get('/api/findbylogin/:string', api.user_findbylogin);
 app.get('/api/findbymail/:string', api.user_findbymail);

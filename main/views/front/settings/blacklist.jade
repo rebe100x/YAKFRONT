@@ -31,7 +31,7 @@ block content
 					- each blackuser in blackusers
 						p
 							div
-								i.icon-remove.icon-pointer
+								i.icon-remove.icon-pointer(rel=blackuser._id, onclick="removeUser(this)")
 								= blackuser.login
 				div.row-fluid
 					br 
@@ -41,7 +41,39 @@ block content
 					- each blackfeed in blackfeeds
 						p
 							div
-								i.icon-remove.icon-pointer
+								i.icon-remove.icon-pointer(rel=blackfeed._id, onclick="removeFeed(this)")
 								= blackfeed.login
-					
-				
+				div.row-fluid
+					br 
+					br
+			
+	script
+		function removeUser(el)
+		{
+			var id = $(el).attr("rel");
+
+			$.post('/api/user/blacklist/remove', { id : id, type : 'user'}, function(res){
+				if(res == "1")
+					$(el).parent().remove();
+			});
+		}
+
+		function removeFeed(el)
+		{
+			var id = $(el).attr("rel");
+			
+			$.post('/api/user/blacklist/remove', { id : id, type : 'feed'}, function(res){
+				if(res == "1")
+					$(el).parent().remove();
+			});
+		}
+
+		function removeInfo(el)
+		{
+			var id = $(el).attr("rel");
+			
+			$.post('/api/user/blacklist/remove', { id : id, type : 'info'}, function(res){
+				if(res == "1")
+					$(el).parent().remove();
+			});
+		}
