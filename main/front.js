@@ -201,6 +201,8 @@ app.get('/auth/twitter/associate', routes.auth_twitter_associate);
 app.get('/auth/twitter/callback', routes.auth_twitter_callback);
 app.get('/auth/twitter/callback2', routes.auth_twitter_callback2);
 
+
+app.post('/user/settwitterFriend', routes.requiresLogin, routes.user_settwitterFriend);
 /**
 routes / call to facebook
 */

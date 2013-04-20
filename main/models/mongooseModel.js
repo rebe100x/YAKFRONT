@@ -72,6 +72,7 @@ var Twitter = new Schema({
 	, lang : { type : String}
 	, friends_count : { type : Number }
 	, created_at : { type : Date }
+	, friendsList : {type : Schema.Types.Mixed}
 });
 mongoose.model('Twitter', Twitter);
 

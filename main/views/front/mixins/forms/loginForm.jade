@@ -15,11 +15,8 @@ mixin loginForm()
 			div.span4
 				div.control-group.clearBoth
 					div.controls
-						//
-							a(href="/auth/twitter")
-								img(src="/images/twiiterconnect.png")
-						a(style="cursor: pointer", onclick="getOptionsTwitter()")
-								img(src="/images/twiiterconnect.png")
+						a(href="/auth/twitter")
+							img(src="/images/twiiterconnect.png")
 			
 				div.control-group.clearBoth
 					div.controls
@@ -31,9 +28,6 @@ mixin loginForm()
 					div.controls
 						div#customBtn.customGPlusSignIn
 							img#customButton(src="/images/googleconnect.png", style="cursor: pointer")
-						//
-							span#signinButton
-								span.g-signin(data-callback="signinCallback", data-clientid=mainConf.gpKey+".apps.googleusercontent.com", data-cookiepolicy="single_host_origin", data-requestvisibleactions="http://schemas.google.com/AddActivity", data-scope="https://www.googleapis.com/auth/plus.login")
 						span#usergoogleinfo.userinfo
 
 			div.span6.innerSplitter
@@ -67,6 +61,7 @@ mixin loginForm()
 			
 	script(src="http://connect.facebook.net/fr_FR/all.js")
 	script(src='https://api.twitter.com/sessions/present.js?callback=twitterLoginStatus')
+	script(src="/javascripts/lib/jquery/js/jquery.oauthpopup.js")
 	script
 		function twitterLoginStatus(state) {
 			alert(state);
@@ -222,7 +217,15 @@ mixin loginForm()
 		
 	
 		$(document).ready(function(){
-						
+				
+			$('#loginTwitter').click(function(){
+				$.oauthpopup({
+					path: '/auth/twitter',
+					callback: function(){
+						window.location.reload();
+					}
+				});
+			});		
 			$("#remember").change(function(){
 				if ($('#remember').attr('checked')) {
 					$("#rememberme").val("true");
@@ -319,79 +322,10 @@ mixin loginForm()
 
 			resp.friendsList = googlelist;
 			console.log(resp);
-			
+
 			$("#authenticategoogle").click(function(){
 				handleGoogleClick($(this), resp, gapi.auth.getToken());
 			});			
-
-			/*$("#authenticategoogle").click(function(){
-				$(this).after("<img id='fbloader' class='loader' src='/images/loader.gif' />");
-
-				$.post("/auth/google/check", {user: resp}, function(data){	
-					if(data.response == "0")
-					{
-						
-						$("#fbloader").remove();
-						$(".Socialoptions").remove();
-						var Socialoptions = $("<div />");
-						Socialoptions.attr("class", "Socialoptions");
-						Socialoptions.html('<button class="yakbtnLogin" id="social_create" title="Vous ne possédez pas de compte Yakwala ? Créer le à partir de votre compte Google Plus, vous gagnerez du temps !">Créer</button>&nbsp;<button class="yakbtnLogin" id="social_associate" title="Vous possédez déjà un compte Yakwala ? Associez le avec votre compte Google Plus! Vous gagnerez du temps !">Associer</button>');
-						$(".myLogin").after(Socialoptions);
-						$("#social_associate").click(function(){
-							$("#social").val(JSON.stringify(resp));
-							$("#fromSocial").val("3");
-							$('#loginPopUp').modal('show');
-						});
-						$("#social_create").click(function(){
-							$.post("/auth/google", {user: resp}, function(data){		
-								if(data.response == "4")
-								{
-									//console.log("fv");	
-									window.location = conf.fronturl + "/settings/firstvisit";
-								}
-									
-								else if(data.response == "1")
-								{
-									//console.log("map");	
-									window.location = conf.fronturl + "/news/map";
-								}
-									
-								else
-								{
-									//console.log("here");
-									$("#fbloader").remove();
-								}
-									
-							});						
-						});
-					}
-					else
-					{
-						$.post("/auth/google", {user: resp}, function(data){		
-							if(data.response == "4")
-							{
-								//console.log("fv");	
-								window.location = conf.fronturl + "/settings/firstvisit";
-							}
-								
-							else if(data.response == "1")
-							{
-								//console.log("map");	
-								window.location = conf.fronturl + "/news/map";
-							}
-								
-							else
-							{
-								//console.log("here");
-								$("#fbloader").remove();
-							}
-									
-						});						
-					}
-				});				
-
-	
-			}); */
 		}
 		
 

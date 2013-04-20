@@ -63,6 +63,16 @@ exports.user_alertsLastCheck = function(req, res){
 	});
 }
 
+exports.user_settwitterFriend = function(req, res){
+	var User = db.model('User');
+	User.update({_id: req.session.user},{$set:{'social.twitter.friendsList': req.body.friendsList}}, function(err){
+			if(!err)
+				res.json("1");
+			else
+				res.json(err);
+		});		
+}
+
 exports.set_user_alerts = function(req, res){
 	var User = db.model('User');
 	
@@ -508,7 +518,7 @@ exports.session2 = function(req, res)
 
 			if(typeof(data.friendsList) != 'undefined')
 				aGoogle.friendsList = data.friendsList;			
-			
+
 			user.social.google = aGoogle;
 			req.session.user = user._id;
 			User.update({"_id":user._id},{$set:{"lastLoginDate":new Date()}, $set:{"social.google":aGoogle}}, function(err){if (err) console.log(err);});
@@ -1644,7 +1654,7 @@ exports.auth_twitter_callback = function(req, res){
 					aTwitter.name = data.name;
 
 				console.log('data TW');
-				console.log(data);
+				
 
 				if(typeof(data.profile_image_url) != 'undefined'){					
 					var drawTool = require('../mylib/drawlib.js');
@@ -1697,6 +1707,10 @@ exports.auth_twitter_callback = function(req, res){
 
 				if(typeof(data.created_at) != 'undefined')
 					aTwitter.created_at = data.created_at;
+
+				var friendsList = {};
+				aTwitter.friendsList = friendsList;
+
 
 				user.social.twitter = aTwitter;
 

@@ -540,6 +540,26 @@ $(document).ready(function() {
     '/images/yakwala_sprite.png',
     '/images/yakwala_sprite-medium.png'
 	]);*/
+	if(typeof(user.social.twitter[0]) != 'undefined')
+	{
+		if(typeof(user.social.twitter[0].friendsList) == 'undefined')
+		{
+			(function($) {
+				var url = 'https://api.twitter.com/1/following/ids.json?cursor=-1&screen_name='+user.social.twitter[0].screen_name;
+				$.ajax({
+				type: 'GET',
+				url: url,
+				async: false,
+				contentType: "application/json",
+				dataType: 'jsonp',
+				success: function(data){ 
+					$.post('/user/settwitterFriend', { friendList : data.ids });
+				}
+				});
+			})(jQuery);	
+		}
+	}
+	
 	
 	$(".myMedia a").click(function(){
 		var popup = $(this).attr("rel");
