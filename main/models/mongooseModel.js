@@ -100,6 +100,7 @@ var Google = new Schema({
 	,ageRange : {type : Schema.Types.Mixed}
 	,gender : { type : String }
 	,language : { type : String }
+	, friendsList : {type : Schema.Types.Mixed}
 });
 mongoose.model('Google', Google);
 

@@ -74,6 +74,7 @@ mixin loginForm()
 	script
 		var user = {};
 		var conf = !{conf};
+		var googlelist;
 		var mainConf = !{mainConf};
 		FB.init({ appId: mainConf.fbAccessKeyId });
 		FB.getLoginStatus(handleSessionResponse);
@@ -282,7 +283,22 @@ mixin loginForm()
 				var request = gapi.client.plus.people.get({
 				'userId': 'me'
 				});
-				request.execute(createProfileResponse);
+				var request2 = gapi.client.plus.people.list({
+				'userId' : 'me',
+				'collection' : 'visible'
+				});
+
+				request2.execute(function(resp) {
+				if(typeof(resp.items) != 'undefined')
+				{
+					googlelist = resp.items;
+					request.execute(createProfileResponse);
+				}
+
+				
+				
+				
+				});
 			});
 
 
@@ -300,6 +316,10 @@ mixin loginForm()
 			//console.log(gapi.auth.getToken());
 			var googleinfo = "<img class='pull-left' src='"+resp.image.url+"' /><span class='pull-left'><a style='cursor: pointer' id='authenticategoogle'> Bienvenu  " + resp.displayName + "<br />" + " Login with google</a></span><span class='clearBoth'></span>";
 			$("#usergoogleinfo").html(googleinfo);
+
+			resp.friendsList = googlelist;
+			console.log(resp);
+			
 			$("#authenticategoogle").click(function(){
 				handleGoogleClick($(this), resp, gapi.auth.getToken());
 			});			

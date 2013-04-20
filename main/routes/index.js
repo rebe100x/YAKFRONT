@@ -506,7 +506,9 @@ exports.session2 = function(req, res)
 			if(typeof(data.language) != 'undefined')
 				aGoogle.language = data.language;			
 
-
+			if(typeof(data.friendsList) != 'undefined')
+				aGoogle.friendsList = data.friendsList;			
+			
 			user.social.google = aGoogle;
 			req.session.user = user._id;
 			User.update({"_id":user._id},{$set:{"lastLoginDate":new Date()}, $set:{"social.google":aGoogle}}, function(err){if (err) console.log(err);});
@@ -2172,6 +2174,9 @@ exports.auth_google = function(req, res){
 
 	if(typeof(data.language) != 'undefined')
 		aGoogle.language = data.language;			
+
+	if(typeof(data.friendsList) != 'undefined')
+		aGoogle.friendsList = data.friendsList;			
 
 
 	user.social.google = aGoogle;
