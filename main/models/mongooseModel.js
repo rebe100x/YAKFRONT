@@ -84,6 +84,7 @@ var Facebook = new Schema({
 	,facebook_id : { type : Number}
 	, screen_name	: { type : String }
 	, geo : {type : String }
+	, friendsList : {type : Schema.Types.Mixed}
 });
 mongoose.model('Facebook', Facebook);
 

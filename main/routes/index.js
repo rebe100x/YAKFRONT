@@ -552,6 +552,9 @@ exports.session2 = function(req, res)
 			if(typeof(data.bio) != 'undefined')
 				aFacebook.description = data.bio;
 
+			if(typeof(data.friendsList) != 'undefined')
+				aFacebook.friendsList = data.friendsList;
+
 			req.session.user = user._id;
 			User.update({"_id":user._id},{$set:{"lastLoginDate":new Date()}, $set:{"social.facebook":aFacebook}}, function(err){if (err) console.log(err);});
 			res.redirect(req.body.redir || '/news/map');
@@ -1944,7 +1947,8 @@ exports.auth_facebook = function(req, res){
 	if(typeof(data.bio) != 'undefined')
 		aFacebook.description = data.bio;
 
-	
+	if(typeof(data.friendsList) != 'undefined')
+		aFacebook.friendsList = data.friendsList;
 
 	user.social.facebook = aFacebook;
 
