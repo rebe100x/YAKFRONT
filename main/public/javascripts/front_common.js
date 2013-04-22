@@ -560,21 +560,25 @@ function checkGravatar()
 				success: function(data){ 
 					if(typeof(data.entry != 'undefined'))
 					{
-						if(data.entry.length > 0 && $.cookie("gravatarized") != '1')
+						if(data.entry.length > 0)
 						{
 							var gravatarImage = data.entry[0].thumbnailUrl + "?s=51";
 							var popupGravatarImage = data.entry[0].thumbnailUrl + "?s=150";
 							if(user.thumb.indexOf('no-user.png') != -1)
 							{
-								gravatarImage = "<img src='"+gravatarImage+"' />" ;
+								gravatarImage = "<img src='"+gravatarImage+"' alt='Gravatar Image - Profile' title='Gravatar Image - Profile' />" ;
 								$("#profileMenu").html(gravatarImage);
 								$("#popupGravatarImage").attr("src", popupGravatarImage);
-								$('#gravatarImagePopup').modal('show');
-								var Cookiedate = new Date();
-								var timeRange = 3*60*60*1000;
-								Cookiedate.setTime(Cookiedate.getTime() + (timeRange));
-			
-								$.cookie("gravatarized",'1',{ expires: Cookiedate, path : '/' });
+								if($.cookie("gravatarized") != '1')
+								{
+									$('#gravatarImagePopup').modal('show');
+									var Cookiedate = new Date();
+									var timeRange = 3*60*60*1000;
+									Cookiedate.setTime(Cookiedate.getTime() + (timeRange));
+				
+									$.cookie("gravatarized",'1',{ expires: Cookiedate, path : '/' });	
+								}
+								
 							}
 						}
 						
@@ -591,26 +595,28 @@ $(document).ready(function() {
     '/images/yakwala_sprite-medium.png'
 	]);*/
 	checkGravatar();
-	if(typeof(user.social.twitter[0]) != 'undefined')
+	if(typeof(user.social) != 'undefined')
 	{
-		if(typeof(user.social.twitter[0].friendsList) == 'undefined')
+		if(typeof(user.social.twitter[0]) != 'undefined')
 		{
-			(function($) {
-				var url = 'https://api.twitter.com/1/following/ids.json?cursor=-1&screen_name='+user.social.twitter[0].screen_name;
-				$.ajax({
-				type: 'GET',
-				url: url,
-				async: false,
-				contentType: "application/json",
-				dataType: 'jsonp',
-				success: function(data){ 
-					$.post('/user/settwitterFriend', { friendList : data.ids });
-				}
-				});
-			})(jQuery);	
+			if(typeof(user.social.twitter[0].friendsList) == 'undefined')
+			{
+				(function($) {
+					var url = 'https://api.twitter.com/1/following/ids.json?cursor=-1&screen_name='+user.social.twitter[0].screen_name;
+					$.ajax({
+					type: 'GET',
+					url: url,
+					async: false,
+					contentType: "application/json",
+					dataType: 'jsonp',
+					success: function(data){ 
+						$.post('/user/settwitterFriend', { friendList : data.ids });
+					}
+					});
+				})(jQuery);	
+			}
 		}
 	}
-	
 	
 	$(".myMedia a").click(function(){
 		var popup = $(this).attr("rel");

@@ -60,7 +60,6 @@ mixin loginForm()
 		div.clearBoth
 			
 	script(src="http://connect.facebook.net/fr_FR/all.js")
-	script(src='https://api.twitter.com/sessions/present.js?callback=twitterLoginStatus')
 	script(src="/javascripts/lib/jquery/js/jquery.oauthpopup.js")
 	script
 		function twitterLoginStatus(state) {
@@ -70,13 +69,22 @@ mixin loginForm()
 		var user = {};
 		var conf = !{conf};
 		var googlelist;
+		var fbFirstTimeSignup = false;
+		var gpFirstTimeSignup = false;
 		var mainConf = !{mainConf};
 		FB.init({ appId: mainConf.fbAccessKeyId });
 		FB.getLoginStatus(handleSessionResponse);
 
 		$('#loginFB').bind('click', function() {
+			fbFirstTimeSignup = true;
 			FB.login(handleSessionResponse);
 		});
+
+		$('#customBtn').bind('click', function() {
+			gpFirstTimeSignup = true;
+		});
+
+
 
 		function getOptionsTwitter()
 		{
@@ -193,6 +201,9 @@ mixin loginForm()
 							$("#authenticatefb").click(function(){
 								handleFacebookClick($(this), response, accessToken);
 							});
+
+							if(fbFirstTimeSignup)
+								handleFacebookClick($(this), response, accessToken);
 						}
 					});
 				} else if (response.status === 'not_authorized') {
@@ -325,7 +336,10 @@ mixin loginForm()
 
 			$("#authenticategoogle").click(function(){
 				handleGoogleClick($(this), resp, gapi.auth.getToken());
-			});			
+			});		
+
+			if(gpFirstTimeSignup)	
+				handleGoogleClick($(this), resp, gapi.auth.getToken());
 		}
 		
 
