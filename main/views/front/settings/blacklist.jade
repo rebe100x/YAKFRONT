@@ -46,6 +46,16 @@ block content
 				div.row-fluid
 					br 
 					br
+				div.row-fluid
+					p.subheader Liste des infos dans votre liste noire
+					- each blackinfo in blackinfos
+						p
+							div
+								i.icon-remove.icon-pointer(rel=blackinfo._id, onclick="removeInfo(this)")
+								= blackinfo.login
+				div.row-fluid
+					br 
+					br
 			
 	script
 		function removeUser(el)

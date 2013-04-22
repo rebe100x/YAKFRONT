@@ -535,11 +535,62 @@ function  hidePostForm()
 		drawNewsFeed();
 }
 
+
+
+function checkGravatar()
+{
+	var gravatarLink;
+	// get the email
+	if(typeof user.mail != 'undefined')
+	{
+		if(user.mail != null && user.mail != "")
+		{
+			var gravatarMail = $.trim(user.mail).toLowerCase();
+			gravatarLink = 'http://www.gravatar.com/' + $.md5(gravatarMail) + '.json';
+		}
+	}
+	(function($) {
+				var url = gravatarLink;
+				$.ajax({
+				type: 'GET',
+				url: url,
+				async: false,
+				contentType: "application/json",
+				dataType: 'jsonp',
+				success: function(data){ 
+					if(typeof(data.entry != 'undefined'))
+					{
+						if(data.entry.length > 0 && $.cookie("gravatarized") != '1')
+						{
+							var gravatarImage = data.entry[0].thumbnailUrl + "?s=51";
+							var popupGravatarImage = data.entry[0].thumbnailUrl + "?s=150";
+							if(user.thumb.indexOf('no-user.png') != -1)
+							{
+								gravatarImage = "<img src='"+gravatarImage+"' />" ;
+								$("#profileMenu").html(gravatarImage);
+								$("#popupGravatarImage").attr("src", popupGravatarImage);
+								$('#gravatarImagePopup').modal('show');
+								var Cookiedate = new Date();
+								var timeRange = 3*60*60*1000;
+								Cookiedate.setTime(Cookiedate.getTime() + (timeRange));
+			
+								$.cookie("gravatarized",'1',{ expires: Cookiedate, path : '/' });
+							}
+						}
+						
+					}
+				}
+				});
+			})(jQuery);	
+	
+	
+}
 $(document).ready(function() {
 	/*preload([
     '/images/yakwala_sprite.png',
     '/images/yakwala_sprite-medium.png'
 	]);*/
+	checkGravatar();
 	if(typeof(user.social.twitter[0]) != 'undefined')
 	{
 		if(typeof(user.social.twitter[0].friendsList) == 'undefined')
@@ -1282,13 +1333,20 @@ function setCommentText(len,item){
 function setyakBlackListSystem(item)
 {
 	var infoid = item.attr("rel");
+    
 
 	item.html("Casher(liste noire)");
 	item.click(function(){
-		$.post('/api/user/blacklist', {id : infoid, type : 'info'} , function(res){
+		var login = $(this).parent().parent().find('.itemTitle').text();
+		alert(login);
+		$.post('/api/user/blacklist', {id : infoid, type : 'info', login : login} , function(res){
 				if (res != "0")
 				{
-					user.listeNoire.info = user.listeNoire.info.concat(infoid);
+					var infoBL = {};
+					infoBL._id = infoid;
+					infoBL.login = login;
+
+					user.listeNoire.info = user.listeNoire.info.concat(infoBL);
 					item.parent().parent().parent().remove();
 				}
 
@@ -1693,7 +1751,10 @@ function checkByWidth()
 					$.post('/api/user/blacklist', {id : theuser._id, type : 'user', login: theuser.login} , function(res){
 							if (res != "0")
 							{
-								user.listeNoire.user = user.listeNoire.user.concat(theuser._id);
+								var blUser = {};
+								blUser._id = theuser._id;
+								blUser.login = theuser.login;
+								user.listeNoire.user = user.listeNoire.user.concat(blUser);
 								$('#userChooser').modal('hide');	
 								getAndPrintInfo();
 							}
@@ -1847,7 +1908,10 @@ function checkByWidth()
 					$.post('/api/user/blacklist', {id : theuser._id, type : 'feed', login: theuser.humanName} , function(res){
 							if (res != "0")
 							{
-								user.listeNoire.feed = user.listeNoire.feed.concat(theuser._id);
+								var blFeed = {};
+								blFeed._id = theuser._id;
+								blUser.login = theuser.humanName;
+								user.listeNoire.feed = user.listeNoire.feed.concat(blFeed);
 								$('#userChooser').modal('hide');	
 								getAndPrintInfo();
 							}

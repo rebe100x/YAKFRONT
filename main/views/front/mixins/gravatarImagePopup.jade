@@ -1,0 +1,24 @@
+mixin gravatarImagePopup
+
+	div.modal.hide.fade#gravatarImagePopup
+		div.modal-body
+			span#closeModal(type="button", data-dismiss="modal")
+			p.alertText 
+				table
+					tr
+						td(valign="top")
+							img#popupGravatarImage
+						td(valign="top")
+							strong
+								|Gravatar Profile Image
+							br
+							br
+							| Vous n'avez pas encore défini une image, cependant, nous avons affiché l'image de votre gravatar.
+							br
+							br
+							| Vous pouvez toujours mettre votre image préférée dans votre section 
+							a(href="/settings/profile")
+								| Mon profil
+
+				
+			

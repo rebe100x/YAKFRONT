@@ -1708,7 +1708,11 @@ exports.user_blacklist = function(req, res){
  }
  else if(req.body.type == "info")
  {
- 	User.update({_id: req.session.user},{$push:{'listeNoire.info':req.body.id}}, function(err){
+ 	var blacklist = {};
+ 	blacklist._id = req.body.id;
+ 	blacklist.login = req.body.login;
+ 	
+ 	User.update({_id: req.session.user},{$push:{'listeNoire.info':blacklist}}, function(err){
 			if(!err)
 				res.json("1");
 			else

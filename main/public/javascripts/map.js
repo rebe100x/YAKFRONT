@@ -882,10 +882,35 @@
 		function printMapAndFeed(data,flagFilter){
 			cleanFeed();
 			cleanMarkers();
+
+
+
+			
+
 			$.each(data, function(key,val) {
-				//console.log(user);
-				if(!user.listeNoire.user.inArray(val.user) && !user.listeNoire.feed.inArray(val.feed) && !user.listeNoire.info.inArray(val._id))
+
+				var isUserBL = false;
+				var isFeedBL = false;
+				var isInfoBL = false;
+
+				for (var i = user.listeNoire.user.length - 1; i >= 0; i--) {
+					if(val.user == user.listeNoire.user[i]._id)
+						isUserBL = true;
+				};
+				for (var i = user.listeNoire.feed.length - 1; i >= 0; i--) {
+					if(val.feed == user.listeNoire.feed[i]._id)
+						isFeedBL = true;
+				};
+
+				for (var i = user.listeNoire.info.length - 1; i >= 0; i--) {
+					if(val._id == user.listeNoire.info[i]._id)
+						isInfoBL = true;
+				};
+
+
+				if(!isUserBL && !isFeedBL && !isInfoBL)
 				{
+					console.log("here");
 					if(flagFilter!=1)
 						infoArray.push(val);						
 					printMapItem(val,key,0);
@@ -893,6 +918,8 @@
 						printFeedItem(val,0,0);	
 				}
 			});
+			if(infoArray.length == 0)
+				printEmptyFeedItem();
 			printLoadingFeedItem();	
 		}
 
