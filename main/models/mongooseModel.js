@@ -64,7 +64,7 @@ var Twitter = new Schema({
 	,url : { type : String }
 	,description : { type : String }
 	,screen_name : { type : String }
-	,twitter_id : { type : Number}
+	,twitter_id : { type : String}
 	, geo : {type : String }
 	, followers_count : { type : Number}
 	, time_zone : { type : String }
@@ -82,7 +82,7 @@ var Facebook = new Schema({
 	,url : { type : String }
 	,description : { type : String }
 	,screen_name : { type : String }
-	,facebook_id : { type : Number}
+	,facebook_id : { type : String}
 	, screen_name	: { type : String }
 	, geo : {type : String }
 	, friendsList : {type : Schema.Types.Mixed}
@@ -95,7 +95,7 @@ var Google = new Schema({
 	,url : { type : String }
 	,description : { type : String }
 	,screen_name : { type : String }
-	,google_id : { type : Number}
+	,google_id : { type : String}
 	, screen_name	: { type : String }
 	, geo : {type : String }
 	,ageRange : {type : Schema.Types.Mixed}

@@ -37,7 +37,91 @@ block content
 			var rule2 = new RegExp('[#]','g');
 			var tagArray = user.tag; 
 
+			function setName(el)
+			{
+				$("#formProfile #username").val($(el).text());
+			}
+
+			function setWeb(el)
+			{
+				$("#formProfile #web").val($(el).text());
+			}
+
+			function setBio(el)
+			{
+				$("#formProfile #bio").val($(el).text());
+			}
+
+			function getSuggestionsFromFacebook(){
+				var profile = user.social.facebook[0];
+				
+				if($("#formProfile #username").val() == "" || $("#formProfile #username").val() != profile.name)
+				{
+					var name = "<div><label class='clearBoth'></label><a onclick='setName(this)'>" + profile.name + "</a> ( Facebook Nom )</div>";
+					$("#formProfile #username").after(name);	
+				}
+
+				if($("#formProfile #web").val() == "" || $("#formProfile #web").val() != profile.url)
+				{
+					var web = "<div><label class='clearBoth'></label><a onclick='setWeb(this)'>" + profile.url + "</a> ( Facebook Web )</div>";
+					$("#formProfile #web").after(web);	
+				}
+
+				if($("#formProfile #bio").val() == "" || $("#formProfile #bio").val() != profile.description)
+				{
+					var description = "<div><label class='clearBoth'></label><a onclick='setBio(this)'>" + profile.description + "</a> ( Facebook Bio )</div>";
+					$("#formProfile #bio").after(description);	
+				}
+			}
+
+
+			function getSuggestionsFromTwitter(){
+				var profile = user.social.twitter[0];
+				
+				if($("#formProfile #username").val() == "" || $("#formProfile #username").val() != profile.name)
+				{
+					var name = "<div><label class='clearBoth'></label><a onclick='setName(this)'>" + profile.name + "</a> ( Twitter Nom )</div>";
+					$("#formProfile #username").after(name);	
+				}
+
+				if($("#formProfile #web").val() == "" || $("#formProfile #web").val() != profile.url)
+				{
+					var web = "<div><label class='clearBoth'></label><a onclick='setWeb(this)'>" + profile.url + "</a> ( Twitter Web )</div>";
+					$("#formProfile #web").after(web);	
+				}
+
+				if($("#formProfile #bio").val() == "" || $("#formProfile #bio").val() != profile.description)
+				{
+					var description = "<div><label class='clearBoth'></label><a onclick='setBio(this)'>" + profile.description + "</a> ( Twitter Bio )</div>";
+					$("#formProfile #bio").after(description);	
+				}
+			}
+
+			function getSuggestionsFromGoogle(){
+				var profile = user.social.google[0];
+				
+				if($("#formProfile #username").val() == "" || $("#formProfile #username").val() != profile.name)
+				{
+					var name = "<div><label class='clearBoth'></label><a onclick='setName(this)'>" + profile.name + "</a> ( Google Nom )</div>";
+					$("#formProfile #username").after(name);	
+				}
+
+				if($("#formProfile #web").val() == "" || $("#formProfile #web").val() != profile.url)
+				{
+					var web = "<div><label class='clearBoth'></label><a onclick='setWeb(this)'>" + profile.url + "</a> ( Google Web )</div>";
+					$("#formProfile #web").after(web);	
+				}
+
+				if($("#formProfile #bio").val() == "" || $("#formProfile #bio").val() != profile.description)
+				{
+					var description = "<div><label class='clearBoth'></label><a onclick='setBio(this)'>" + profile.description + "</a> ( Google Bio )</div>";
+					$("#formProfile #bio").after(description);	
+				}
+			}
+
 			$(document).ready(function() {
+
+			
 				
 				$('#tagInput').val(JSON.stringify(tagArray));
 			
@@ -170,6 +254,14 @@ block content
 						$(this).removeAttr("selected");
 				});
 
+				if($.cookie("loginFrom") == "1")
+					getSuggestionsFromTwitter();
+
+				if($.cookie("loginFrom") == "2")
+					getSuggestionsFromFacebook();
+
+				if($.cookie("loginFrom") == "3")
+					getSuggestionsFromGoogle();
 				
 			}); // END READY	
 
@@ -182,3 +274,5 @@ block content
 				});
 				//$("#submit").click();
 			}
+
+

@@ -157,8 +157,23 @@ exports.requiresLogin = function(req,res,next){
 
 /**NEWS */
 exports.news_map = function(req, res){
-	delete req.session.message;
-	res.render('news/map',{str:null});  
+	var User = db.model('User');
+
+	User.findOne({_id: req.session.user},{status:1}, function(err,theuser){
+		if(err)
+			res.redirect('/user/login');
+		else
+		{
+			if(theuser.status == 4)
+				res.redirect('/settings/firstvisit');
+			else
+			{
+				delete req.session.message;
+				res.render('news/map',{str:null});  
+			}			
+		}
+	});
+	
 };
 exports.news_map_search = function(req, res){	
 	res.render('news/map',{str:req.params.str});  
@@ -522,6 +537,7 @@ exports.session2 = function(req, res)
 			user.social.google = aGoogle;
 			req.session.user = user._id;
 			User.update({"_id":user._id},{$set:{"lastLoginDate":new Date()}, $set:{"social.google":aGoogle}}, function(err){if (err) console.log(err);});
+			res.cookie('loginFrom', '3', { expires: new Date(Date.now() + 90000000000) , httpOnly: false, path: '/'});
 			res.redirect(req.body.redir || '/news/map');
 
 			//track user
@@ -569,6 +585,7 @@ exports.session2 = function(req, res)
 
 			req.session.user = user._id;
 			User.update({"_id":user._id},{$set:{"lastLoginDate":new Date()}, $set:{"social.facebook":aFacebook}}, function(err){if (err) console.log(err);});
+			res.cookie('loginFrom', '2', { expires: new Date(Date.now() + 90000000000) , httpOnly: false, path: '/'});
 			res.redirect(req.body.redir || '/news/map');
 
 			//track user
@@ -607,7 +624,11 @@ exports.session = function(req, res){
 				
 				req.session.user = user._id;
 				User.update({"_id":user._id},{$set:{"lastLoginDate":new Date()}}, function(err){if (err) console.log(err);});
-				res.redirect(req.body.redir || '/news/map');
+				res.cookie('loginFrom', '0', { expires: new Date(Date.now() + 90000000000) , httpOnly: false, path: '/'});
+				if(user.status == 1)
+					res.redirect(req.body.redir || '/news/map');
+				else
+					res.redirect(req.body.redir || '/settings/firstvisit');
 
 				//track user
 				var trackParams = {"loginFrom": 0};
@@ -808,8 +829,24 @@ exports.settings_resetpassword = function(req,res){
 }	
 
 exports.settings_firstvisit = function(req,res){
-	delete req.session.message;
-	res.render('settings/firstvisit');
+	var User = db.model('User');
+
+	User.findOne({_id: req.session.user},{status:1}, function(err,theuser){
+		if(err)
+			res.redirect('/user/login');
+		else
+		{
+			if(theuser.status == 4)
+			{
+				delete req.session.message;
+				res.render('settings/firstvisit');
+			}
+			else
+			{
+				res.redirect('news/map');  
+			}			
+		}
+	});
 
 }	
 
@@ -1565,6 +1602,7 @@ exports.auth_twitter_check = function(req, res){
 									console.log('LOGGED IN');
 									req.session.user = theuser._id;
 									User.update({"_id":theuser._id},{$set:{"lastLoginDate":new Date()}}, function(err){if (err) console.log(err);});
+									res.cookie('loginFrom', '1', { expires: new Date(Date.now() + 90000000000) , httpOnly: false, path: '/'});
 									res.redirect('news/map');
 									var trackParams = {"loginFrom": 1};
 									trackUser(user._id, 3,  trackParams);
@@ -1671,6 +1709,7 @@ exports.auth_twitter_callback = function(req, res){
 						console.log('LOGGED IN');
 						req.session.user = theuser._id;
 						User.update({"_id":theuser._id},{$set:{"lastLoginDate":new Date()}}, function(err){if (err) console.log(err);});
+						res.cookie('loginFrom', '1', { expires: new Date(Date.now() + 90000000000) , httpOnly: false, path: '/'});
 						res.redirect('news/map');
 						var trackParams = {"loginFrom": 1};
 						trackUser(user._id, 3,  trackParams);
@@ -1851,6 +1890,7 @@ exports.auth_twitter_callback_create = function(req, res){
 					if (!err){
 						req.session.user = user._id;
 						User.update({"_id":user._id},{$set:{"lastLoginDate":new Date(), "status":4}}, function(err){if (err) console.log(err);});
+						res.cookie('loginFrom', '1', { expires: new Date(Date.now() + 90000000000) , httpOnly: false, path: '/'});
 						res.redirect('/settings/firstvisit');
 					} 
 					else console.log(err);
@@ -1978,6 +2018,7 @@ exports.auth_twitter_callback2 = function(req, res){
 					aTwitter.created_at = data.created_at;
 
 				User.update({"_id":req.session.user},{$set:{"lastLoginDate":new Date()}, $set:{"social.twitter":aTwitter}}, function(err){if (err) console.log(err);});
+				res.cookie('loginFrom', '1', { expires: new Date(Date.now() + 90000000000) , httpOnly: false, path: '/'});
 				var trackParams = {"loginFrom": 1};
 				trackUser(req.session.user, 3,  trackParams);
 				res.redirect('news/map');
@@ -2068,6 +2109,7 @@ exports.auth_facebook = function(req, res){
 	User.findByFacebookId(facebook_id,function (err, theuser){
 		if(theuser != undefined && theuser != null ){
 			console.log('LOGGED IN');
+			res.cookie('loginFrom', '2', { expires: new Date(Date.now() + 90000000000) , httpOnly: false, path: '/'});
 			req.session.user = theuser._id;
 			User.update({"_id":theuser._id},{$set:{"lastLoginDate":new Date()}}, function(err){if (err) console.log(err);});
 			res.json({response: "1"});
@@ -2088,6 +2130,7 @@ exports.auth_facebook = function(req, res){
 					user.save(function (err) {
 						if (!err){
 							req.session.user = user._id;
+							res.cookie('loginFrom', '2', { expires: new Date(Date.now() + 90000000000) , httpOnly: false, path: '/'});
 							User.update({"_id":user._id},{$set:{"lastLoginDate":new Date(), "status":4}}, function(err){if (err) console.log(err);});
 							res.json({response: "1"});
 						} 
@@ -2104,6 +2147,7 @@ exports.auth_facebook = function(req, res){
 					user.save(function (err) {
 					if (!err){
 						req.session.user = user._id;
+						res.cookie('loginFrom', '2', { expires: new Date(Date.now() + 90000000000) , httpOnly: false, path: '/'});
 						User.update({"_id":user._id},{$set:{"lastLoginDate":new Date(), "status":4}}, function(err){if (err) console.log(err);});
 						res.json({response: "4"});
 					} 
@@ -2139,12 +2183,14 @@ exports.auth_facebook_check = function(req, res){
 			{
 				req.session.user = theuser._id;
 				User.update({"_id":theuser._id},{$set:{"lastLoginDate":new Date()}}, function(err){if (err) console.log(err);});
+				res.cookie('loginFrom', '2', { expires: new Date(Date.now() + 90000000000) , httpOnly: false, path: '/'});
 				res.json({redirectUrl: '/news/map'});
 			}
 			else if(theuser.status == 4)
 			{
 				req.session.user = theuser._id;
 				User.update({"_id":theuser._id},{$set:{"lastLoginDate":new Date()}}, function(err){if (err) console.log(err);});
+				res.cookie('loginFrom', '2', { expires: new Date(Date.now() + 90000000000) , httpOnly: false, path: '/'});
 				res.json({redirectUrl: '/settings/firstvisit'});
 			}
 			else if(theuser.status == 2)
@@ -2187,12 +2233,14 @@ exports.auth_google_check = function(req, res){
 				{
 					req.session.user = theuser._id;
 					User.update({"_id":theuser._id},{$set:{"lastLoginDate":new Date()}}, function(err){if (err) console.log(err);});
+					res.cookie('loginFrom', '3', { expires: new Date(Date.now() + 90000000000) , httpOnly: false, path: '/'});
 					res.json({redirectUrl: '/news/map'});
 				}
 				else if(theuser.status == 4)
 				{
 					req.session.user = theuser._id;
 					User.update({"_id":theuser._id},{$set:{"lastLoginDate":new Date()}}, function(err){if (err) console.log(err);});
+					res.cookie('loginFrom', '3', { expires: new Date(Date.now() + 90000000000) , httpOnly: false, path: '/'});
 					res.json({redirectUrl: '/settings/firstvisit'});
 				}
 				else if(theuser.status == 2)
@@ -2318,6 +2366,7 @@ exports.auth_google = function(req, res){
 						if (!err){
 							req.session.user = user._id;
 							User.update({"_id":user._id},{$set:{"lastLoginDate":new Date(), "status":4}}, function(err){if (err) console.log(err);});
+							res.cookie('loginFrom', '3', { expires: new Date(Date.now() + 90000000000) , httpOnly: false, path: '/'});
 							res.json({response: "1"});
 						} 
 						else 
@@ -2334,6 +2383,7 @@ exports.auth_google = function(req, res){
 					if (!err){
 						req.session.user = user._id;
 						User.update({"_id":user._id},{$set:{"lastLoginDate":new Date(), "status":4}}, function(err){if (err) console.log(err);});
+						res.cookie('loginFrom', '3', { expires: new Date(Date.now() + 90000000000) , httpOnly: false, path: '/'});
 						res.json({response: "4"});
 					} 
 					else 

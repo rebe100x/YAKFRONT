@@ -1344,7 +1344,7 @@ function setyakBlackListSystem(item)
 	item.html("Casher(liste noire)");
 	item.click(function(){
 		var login = $(this).parent().parent().find('.itemTitle').text();
-		alert(login);
+		
 		$.post('/api/user/blacklist', {id : infoid, type : 'info', login : login} , function(res){
 				if (res != "0")
 				{

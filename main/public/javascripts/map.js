@@ -921,6 +921,7 @@
 			if(infoArray.length == 0)
 				printEmptyFeedItem();
 			printLoadingFeedItem();	
+			$("abbr.timeago").timeago();
 		}
 
 		function printMapItem(item,key,bounce){
