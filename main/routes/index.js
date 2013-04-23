@@ -1660,106 +1660,12 @@ exports.auth_twitter_callback = function(req, res){
 		        } else {
 
 				data = JSON.parse(data);
-				console.log(data);
 		        var crypto = require('crypto')
 		        var User = db.model('User');
 			    var user = new User();
 				var login = data.screen_name;
 				var twitter_id = data.id;
-				var salt = Math.round(new Date().valueOf() * Math.random());
-				var token = crypto.createHash('sha1').update("yakwala@secure"+salt).digest("hex");
-				var password = user.generatePassword(5);
-				var logo = conf.fronturl+"/static/images/yakwala-logo_petit.png";
 				
-				var randomnumber=Math.floor(Math.random()*101)
-				user.name=login+"_twitter";
-				user.login=login+"_twitter";
-				user.mail='yak_not_set@yakwala.fr';
-				user.token=token;
-				user.status=1;
-				user.hash= password;
-				user.password= password;
-				user.salt="1";
-				user.type=1;
-				user.twitter_id = twitter_id;
-				
-				var Twitter = db.model('Twitter');
-				var aTwitter = new Twitter();	
-
-				aTwitter.twitter_id = twitter_id;
-
-				if(typeof(data.name) != 'undefined')
-					aTwitter.name = data.name;
-
-				console.log('data TW');
-				
-
-				if(typeof(data.profile_image_url) != 'undefined'){					
-					var drawTool = require('../mylib/drawlib.js');
-					var profileImg;
-					// this line is only for Twitter to get a better image
-					data.profile_image_url = data.profile_image_url.replace('normal','bigger');
-					var crypto = require('crypto');				
-					var ts = new Date().getTime();
-					user.thumb = crypto.createHash('md5').update(ts.toString()).digest("hex")+'.jpeg';
-					drawTool.GetImg(data.profile_image_url,user.thumb,conf,mainConf);
-					aTwitter.profile_image_url = data.profile_image_url;	
-				
-				}else
-					user.thumb = "no-user.png";
-
-
-				
-
-					
-
-				if(typeof(data.url) != 'undefined')
-					aTwitter.url = data.url;
-
-				if(typeof(data.description) != 'undefined')
-					aTwitter.description = data.description;
-
-				if(typeof(data.screen_name) != 'undefined')
-					aTwitter.screen_name = data.screen_name;
-
-				if(typeof(data.twitter_id) != 'undefined')
-					aTwitter.twitter_id = data.twitter_id;
-
-				if(typeof(data.geo) != 'undefined')
-					aTwitter.geo = data.geo.coordinates;
-
-				if(typeof(data.followers_count) != 'undefined')
-					aTwitter.followers_count = data.followers_count;
-
-				if(typeof(data.time_zone) != 'undefined')
-					aTwitter.time_zone = data.time_zone;
-
-				if(typeof(data.statuses_count) != 'undefined')
-					aTwitter.statuses_count = data.statuses_count;
-
-				if(typeof(data.lang) != 'undefined')
-					aTwitter.lang = data.lang;
-
-				if(typeof(data.friends_count) != 'undefined')
-					aTwitter.friends_count = data.friends_count;
-
-				if(typeof(data.created_at) != 'undefined')
-					aTwitter.created_at = data.created_at;
-
-				var friendsList = {};
-				aTwitter.friendsList = friendsList;
-
-
-				user.social.twitter = aTwitter;
-
-				user.createfrom_social = 1;
-
-				if(!(typeof data.description  === 'undefined') && data.description  != null && data.description  != '')
-					user.bio = data.description;
-				if(!(typeof data.url  === 'undefined') && data.url  != null && data.url  != '')
-					user.web = data.url;
-				//user.favplace = [{'name':'Nice, France','location':{'lat':43.681343,'lng':7.232094},'range':100},{'name':'Marseille, France','location':{'lat':43.298198,'lng':5.370255},'range':100},{'name':'Paris, France','location':{'lat':48.851875,'lng':2.356374},'range':100}];
-				user.favplace = mainConf.favPlaces;
 				User.findByTwitterId(twitter_id,function (err, theuser){
 					if(theuser != undefined && theuser != null ){
 						console.log('LOGGED IN');
@@ -1772,38 +1678,7 @@ exports.auth_twitter_callback = function(req, res){
 
 						res.redirect('/user/login?twitter=1');
 
-						/*var trackParams = {"createdFrom": 1};
-						trackUser(user._id, 1,  trackParams);
-						var trackParams = {"loginFrom": 1};
-						trackUser(user._id, 3,  trackParams);	
-						User.findByLoginDuplicate(login, function(err, theuser){
-							if(theuser != undefined && theuser != null )
-							{
-								var randomnumber=(Math.floor(Math.random()*101)).toString();
-								user.name=login+randomnumber;
-								user.login=login+randomnumber;
-								user.save(function (err) {
-									if (!err){
-										req.session.user = user._id;
-										User.update({"_id":user._id},{$set:{"lastLoginDate":new Date(), "status":4}}, function(err){if (err) console.log(err);});
-										res.redirect('/settings/firstvisit');
-									} 
-									else console.log(err);
-								});	
-								
-							}
-							else
-							{
-								user.save(function (err) {
-								if (!err){
-									req.session.user = user._id;
-									User.update({"_id":user._id},{$set:{"lastLoginDate":new Date(), "status":4}}, function(err){if (err) console.log(err);});
-									res.redirect('/settings/firstvisit');
-								} 
-								else console.log(err);
-								});	
-							}
-						}) */
+						
 					}
 				});
 		        }  
@@ -1820,7 +1695,6 @@ exports.auth_twitter_callback = function(req, res){
 
 
 exports.auth_twitter_callback_create = function(req, res){
-	console.log("hrereererddddddddddddddddddddddddddddddddddddddddd");
 	if (req.session.oauth) {
 		
 		/**
@@ -1945,11 +1819,16 @@ exports.auth_twitter_callback_create = function(req, res){
 				if(typeof(data.created_at) != 'undefined')
 					aTwitter.created_at = data.created_at;
 
-				var friendsList = {};
-				aTwitter.friendsList = friendsList;
+				
+				
 
-
-				user.social.twitter = aTwitter;
+				oa.get("https://api.twitter.com/1.1/followers/list.json?cursor=-1&screen_name=sitestreams&skip_status=true&include_user_entities=false", req.session.oauth.access_token, req.session.oauth.access_token_secret, function (error, data, response) {
+					 if (error) {
+			          console.log(error);
+			         
+			        } else {
+			    		aTwitter.friendsList = JSON.parse(data);    	
+			    		user.social.twitter = aTwitter;
 
 				user.createfrom_social = 1;
 
@@ -1980,6 +1859,8 @@ exports.auth_twitter_callback_create = function(req, res){
 			        }  
 			      });
 
+			        }
+				});
 	     		}
 		});
 	} else
@@ -2156,13 +2037,13 @@ exports.auth_facebook = function(req, res){
 
 
 	if(typeof(aFacebook.profile_image_url) != 'undefined'){					
-		/*var drawTool = require('../mylib/drawlib.js');
+		var drawTool = require('../mylib/drawlib.js');
 		var profileImg;
 		var ts = new Date().getTime();
 		var crypto = require('crypto');				
 		user.thumb = crypto.createHash('md5').update(ts.toString()).digest("hex")+'.jpeg';
 		drawTool.GetImg(aFacebook.profile_image_url,user.thumb,conf,mainConf);	
-		*/
+		
 	}else
 		user.thumb = "no-user.png";
 		
@@ -2375,12 +2256,12 @@ exports.auth_google = function(req, res){
 	console.log(data);
 			
 	if(typeof(data.image) != 'undefined'){
-		/*var drawTool = require('../mylib/drawlib.js');
+		var drawTool = require('../mylib/drawlib.js');
 		var ts = new Date().getTime();
 		data.image.url = data.image.url.replace('?sz=50','?sz=300');
 		var crypto = require('crypto');				
 		user.thumb = crypto.createHash('md5').update(ts.toString()).digest("hex")+'.jpeg';
-		drawTool.GetImg(data.image.url,user.thumb,conf,mainConf); */
+		drawTool.GetImg(data.image.url,user.thumb,conf,mainConf); 
 		aGoogle.profile_image_url = data.image.url;
 	}else
 		user.thumb = "no-user.png";

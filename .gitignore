@@ -164,4 +164,5 @@ pip-log.txt
 
 #ignore confsecret
 confs_secret.js
-public/uploads/originals/
+#ignore uploads
+main/public/uploads/originals/
