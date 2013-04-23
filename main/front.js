@@ -195,10 +195,12 @@ app.get('/docs/log', routes.docs_log);
 app.get('/auth/twitter/check', routes.auth_twitter_check);
 app.get('/auth/twitter', routes.auth_twitter);
 app.get('/auth/twitter/associate', routes.auth_twitter_associate);
+app.get('/auth/twitter/create', routes.auth_twitter_create);
 /**
 * routes / the call back after validation
 */
 app.get('/auth/twitter/callback', routes.auth_twitter_callback);
+app.get('/auth/twitter/callback_create', routes.auth_twitter_callback_create);
 app.get('/auth/twitter/callback2', routes.auth_twitter_callback2);
 
 

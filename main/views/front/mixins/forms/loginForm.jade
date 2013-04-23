@@ -228,7 +228,18 @@ mixin loginForm()
 		
 	
 		$(document).ready(function(){
+			
+			if(gup("twitter") == "1")
+			{
+				$("#fromSocial").val("1");
+				$('#loginPopUp').modal('show');
+				$("#social_create").click(function(){
+					alert("herer");
+					window.location = "/auth/twitter/create";
+				});	
+			}
 				
+
 			$('#loginTwitter').click(function(){
 				$.oauthpopup({
 					path: '/auth/twitter',
