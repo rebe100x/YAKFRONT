@@ -169,6 +169,7 @@ app.get('/api/countUserInfo/:id', api.countUserInfo);
 app.get('/api/countUserSubscribers/:id', api.countUserSubscribers);
 app.get('/api/user/feed/:userid', api.get_user_feed);
 app.get('/api/feed/feed/:feedid', api.get_feed_feed);
+
 app.post('/api/user/blacklist', routes.requiresLogin, api.user_blacklist);
 app.post('/api/user/blacklist/remove', routes.requiresLogin, api.user_blacklist_remove);
 
@@ -180,6 +181,9 @@ app.get('/api/feedsearch/:string', api.feed_search);
 //app.get('/api/getUsers', api.getUsers);
 app.get('/api/getContentTitles', api.getContentTitles);
 app.get('/api/getHotTags/:x/:y/:z/:d/:print/:limit', api.getHotTags);
+app.get('/api/getTopLiked/:x1/:y1/:x2/:limit', api.getTopLiked);
+app.get('/api/getTopCommented/:x1/:y1/:x2/:limit', api.getTopCommented);
+app.get('/api/getTopHots/:x1/:y1/:x2/:limit', api.getTopHots);
 
 // DOCS
 app.get('/docs/api', routes.docs_api);

@@ -1351,7 +1351,6 @@ function setyakBlackListSystem(item)
 					var infoBL = {};
 					infoBL._id = infoid;
 					infoBL.login = login;
-
 					user.listeNoire.info = user.listeNoire.info.concat(infoBL);
 					item.parent().parent().parent().remove();
 				}

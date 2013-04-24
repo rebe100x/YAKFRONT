@@ -1032,3 +1032,13 @@ border-bottom: 1px solid #e5e5e5;}
 #soundCloudResults ul li span { float: left; position: relative;}
 #soundCloudResults ul li img {  width: 90px; height: 60px; }
 #soundCloudResults ul li .yt_title {  font-weight: bold; width: 50%; }
+
+
+.TheTops { list-style: disc;}
+.TheTops li { padding-top: 20px;}
+.TheTops li a { color: #B71105; }
+.TheTops li .topCounts { color: #c5c5c5; font-size: 0.8em}
+.TheTops li .topHeat { width: 30%; background: white; height: 15px;}
+.TheTops li .topHeat .heatLevel { background: red; height: 15px;}
+#topsContainer { background: #F6F6F6; margin-top: 30px;}
+#topsContainer .columnTitle { padding-left: 24px; padding-top: 20px; color: #5D5D5D; font-size: 1.2em}

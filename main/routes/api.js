@@ -1654,7 +1654,7 @@ exports.setComment = function(req, res){
 			acomment.date = new Date();
 			
 
-			Info.update({_id:infoId},{$push:{yakComments: acomment}, new:true}, function(err, result){
+			Info.update({_id:infoId},{$inc:{commentsCount : 1}, $push:{yakComments: acomment}, new:true}, function(err, result){
 				trackUser(req.session.user, 15, {infoId:infoId});
 				res.json({meta:{code:200, cid: acomment._id}});
 			})	
@@ -1672,7 +1672,7 @@ exports.del_comment = function (req, res) {
 		var commentId = req.body.commentId;
 		var infoId = req.body.infoId;
 
-		Info.update({_id:mongoose.Types.ObjectId(infoId)},{$pull:{yakComments:{_id: mongoose.Types.ObjectId(commentId)}}}, function(err,docs){
+		Info.update({_id:mongoose.Types.ObjectId(infoId)},{$inc:{commentsCount : -1},$pull:{yakComments:{_id: mongoose.Types.ObjectId(commentId)}}}, function(err,docs){
 			if(!err)
 				res.json({meta:{code:200}});
 			else
@@ -1762,4 +1762,58 @@ exports.user_blacklist_remove = function(req, res){
 				res.json("0");
 	});
  }
+}
+
+
+// tops 
+
+exports.getTopLiked = function(req, res){
+	var Info = db.model('Info');
+	console.log(req.params.limit);
+
+	Info.findTopLiked(req.params.x1,req.params.y1,req.params.x2,req.params.limit, function(err, docs){
+		if(!err){
+			var infosFormated = docs.map(function(item){
+				var Info = db.model('Info');
+				return Info.format(item);
+			});
+			res.json({meta:{code:200},data:infosFormated});
+		}
+		else
+			res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+	});
+}
+
+exports.getTopCommented = function(req, res){
+	var Info = db.model('Info');
+	console.log(req.params.limit);
+
+	Info.findTopCommented(req.params.x1,req.params.y1,req.params.x2,req.params.limit, function(err, docs){
+		if(!err){
+			var infosFormated = docs.map(function(item){
+				var Info = db.model('Info');
+				return Info.format(item);
+			});
+			res.json({meta:{code:200},data:infosFormated});
+		}
+		else
+			res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+	});
+}
+
+exports.getTopHots = function(req, res){
+	var Info = db.model('Info');
+	console.log(req.params.limit);
+
+	Info.findTopHots(req.params.x1,req.params.y1,req.params.x2,req.params.limit, function(err, docs){
+		if(!err){
+			var infosFormated = docs.map(function(item){
+				var Info = db.model('Info');
+				return Info.format(item);
+			});
+			res.json({meta:{code:200},data:infosFormated});
+		}
+		else
+			res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+	});
 }

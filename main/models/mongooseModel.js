@@ -155,6 +155,7 @@ var Info = new Schema({
   ,	placeId	: {type: Schema.ObjectId} 
   , likes	: {type: Number, default: 0}
   , unlikes	: {type: Number, default: 0}
+  , commentsCount	: {type: Number, default: 0}
   , yaklikeUsersIds : {type: [String]}
   , yakunlikeUsersIds : {type: [String]}
   , yakComments : {type : [Schema.Types.Comment]}
@@ -198,13 +199,15 @@ Info.statics.format = function (theinfo) {
 		placeId:theinfo.placeId,
 		origin:theinfo.origin,
 		likes:theinfo.likes,
+		commentsCount:theinfo.commentsCount,
 		unlikes:theinfo.unlikes,
 		yaklikeUsersIds:theinfo.yaklikeUsersIds,
 		yakunlikeUsersIds:theinfo.yakunlikeUsersIds,
 		yakComments:theinfo.yakComments,
 		outGoingLink:theinfo.outGoingLink,
 		user: theinfo.user,
-		feed: theinfo.feed
+		feed: theinfo.feed,
+		heat: theinfo.heat
 	};
   return formattedInfo;
 }
@@ -300,6 +303,60 @@ Info.statics.findAllByID = function (callback, id) {
 	},	
 	callback);
 
+}
+
+Info.statics.findTopLiked = function(x1, y1, x2, limit, callback)
+{
+	var DPUB = new Date();
+	var DEND = new Date();
+
+	var cond = {
+				"status":1,
+				"pubDate":{$lte:DPUB},
+				"dateEndPrint":{$gte:DEND}
+			};
+
+	if (!isNaN(x1)) {
+		cond["location"] = {$near:[parseFloat(x1),parseFloat(y1)],$maxDistance:parseFloat(x2)};
+	}	
+
+	return this.find(cond).sort({likes: -1}).limit(limit).exec(callback);
+}
+
+Info.statics.findTopCommented = function(x1, y1, x2, limit, callback)
+{
+	var DPUB = new Date();
+	var DEND = new Date();
+
+	var cond = {
+				"status":1,
+				"pubDate":{$lte:DPUB},
+				"dateEndPrint":{$gte:DEND}
+			};
+
+	if (!isNaN(x1)) {
+		cond["location"] = {$near:[parseFloat(x1),parseFloat(y1)],$maxDistance:parseFloat(x2)};
+	}	
+
+	return this.find(cond).sort({commentsCount: -1}).limit(limit).exec(callback);
+}
+
+Info.statics.findTopHots = function(x1, y1, x2, limit, callback)
+{
+	var DPUB = new Date();
+	var DEND = new Date();
+
+	var cond = {
+				"status":1,
+				"pubDate":{$lte:DPUB},
+				"dateEndPrint":{$gte:DEND}
+			};
+
+	if (!isNaN(x1)) {
+		cond["location"] = {$near:[parseFloat(x1),parseFloat(y1)],$maxDistance:parseFloat(x2)};
+	}	
+
+	return this.find(cond).sort({heat: -1}).limit(limit).exec(callback);
 }
 
 Info.statics.findByUser = function (userid, count, from, callback) {
@@ -551,17 +608,29 @@ Info.statics.findAllGeoAlertNumber = function (x1,y1,x2,y2,from,lastcheck,callba
 	var dateLastCheck = DLC.setTime(lastcheck);
 
 	var box = [[parseFloat(x1),parseFloat(y1)],[parseFloat(x2),parseFloat(y2)]];
-	
+	var location;
 	var res = null;
+
+	if(y2 == 'null'){		
+		var locationQuery = {$near:[parseFloat(x1),parseFloat(y1)],$maxDistance:parseFloat(x2)};
+	}else{
+		var box = [[parseFloat(x1),parseFloat(y1)],[parseFloat(x2),parseFloat(y2)]];
+		var locationQuery = {$within:{"$box":box}};
+	}
+
+	
 
 	var cond = {
 				"print":1,
 				"status":1,
-				"location" : {$within:{"$box":box}},
 				"pubDate":{$lte:DPUB},
 				"pubDate":{$gte:dateLastCheck},
 				"dateEndPrint":{$gte:DEND}
 			};
+
+	if (!isNaN(x1)) {
+		cond["location"] = locationQuery;
+	}		
 
 	var qInfo = this.find(cond).sort({'pubDate':-1});
 	

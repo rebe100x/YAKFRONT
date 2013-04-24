@@ -122,13 +122,20 @@
 		//$('#newspostContent').mCustomScrollbar({mouseWheel:true,scrollButtons:{enable:true,scrollType:"continuous",},advanced:{autoExpandHorizontalScroll:true,updateOnContentResize: true,updateOnBrowserResize:true}});
 		
 		
-		$('#newsfeed').delegate(".mapHighlighter",'click', function (e) {
-			
-			if(!$.contains($(this), e.target) && e.target.className != 'prevent-default'){
-				getItemDetails(this);
-			}
-			
-		});
+		$('#newsfeed').unbind("click").on('click',".mapHighlighter", function (e) {	
+				if(e.target.className != 'prevent-default'){
+					if($(this).find(".myitem").length == 0)
+					{
+						getItemDetails(this);
+					}
+					/*else if(!($.contains(this, e.target)) || $(this).find(".myitem").css("display") == "none")
+					{
+						//getItemDetails(this);
+					}*/
+					unhighlightInfo($(this),highlightInfo);	
+				}
+				
+			});
 
 		getAndPrintInfo();
 
@@ -145,14 +152,50 @@
 	}
 
 	function printMapAndFeed(data,flagFilter){
-		$.each(data, function(key,val) {
-			if(flagFilter!=1)
-				infoArray.push(val);					
-			if(key<10)
-				printFeedItem(val,0,0);	
-		});
-		printLoadingFeedItem();	
-	}
+
+			cleanFeed();
+			cleanMarkers();
+
+
+
+			
+
+			$.each(data, function(key,val) {
+
+				var isUserBL = false;
+				var isFeedBL = false;
+				var isInfoBL = false;
+
+				for (var i = user.listeNoire.user.length - 1; i >= 0; i--) {
+					if(val.user == user.listeNoire.user[i]._id)
+						isUserBL = true;
+				};
+				for (var i = user.listeNoire.feed.length - 1; i >= 0; i--) {
+					if(val.feed == user.listeNoire.feed[i]._id)
+						isFeedBL = true;
+				};
+
+				for (var i = user.listeNoire.info.length - 1; i >= 0; i--) {
+					if(val._id == user.listeNoire.info[i]._id)
+						isInfoBL = true;
+				};
+
+
+				if(!isUserBL && !isFeedBL && !isInfoBL)
+				{
+					console.log("here");
+					if(flagFilter!=1)
+						infoArray.push(val);						
+					printMapItem(val,key,0);
+					if(key<10)
+						printFeedItem(val,0,0);	
+				}
+			});
+			if(infoArray.length == 0)
+				printEmptyFeedItem();
+			printLoadingFeedItem();	
+			$("abbr.timeago").timeago();
+		}
 	
 	function unhighlightInfo(obj,callback){
 		markerHL.setAnimation(null);
@@ -194,9 +237,65 @@
 			}	
 		});
 	}
+
+	function getAndPrintTops()
+	{
+		//top liked
+		$("#topLiked").html("");
+		var apiUrlLiked = '/api/getTopLiked/'+curPos.x+'/'+curPos.y+'/'+rangeFromZ()+'/4';	
+		var ulLiked = "<ul class='TheTops'>";
+		$.getJSON(apiUrlLiked,function(ajax) {	
+			if(typeof(ajax.data) == 'undefined' || ajax.data.length == 0){
+				ulLiked+="<li>Pad d'info</li>";
+			}else{
+				$.each(ajax.data, function(key,val) {
+					ulLiked+="<li><a href='/news/feed?id="+val._id+"'>"+val.title+"</a><br /><span class='topCounts'>"+val.likes+"like(s)</span></li>";
+				});
+				
+			}
+			ulLiked += "</ul>";
+			$("#topLiked").html(ulLiked);	
+		});
+		
+
+		//top commented
+		$("#topCommented").html("");
+		var apiUrlCommented = '/api/getTopCommented/'+curPos.x+'/'+curPos.y+'/'+rangeFromZ()+'/4';	
+		var ulCommented = "<ul class='TheTops'>";
+		$.getJSON(apiUrlCommented,function(ajax) {	
+			if(typeof(ajax.data) == 'undefined' || ajax.data.length == 0){
+				ulCommented+="<li>Pad d'info</li>";
+			}else{
+				$.each(ajax.data, function(key,val) {
+					ulCommented+="<li><a href='/news/feed?id="+val._id+"'>"+val.title+"</a><br /><span class='topCounts'>"+val.commentsCount+"commentaire(s)</span></li>";
+				});
+				
+			}
+			ulCommented += "</ul>";
+			$("#topCommented").html(ulCommented);	
+		});
+
+		$("#topHots").html("");
+		var apiUrlHots = '/api/getTopHots/'+curPos.x+'/'+curPos.y+'/'+rangeFromZ()+'/4';	
+		var ulHots = "<ul class='TheTops'>";
+		$.getJSON(apiUrlHots,function(ajax) {	
+			if(typeof(ajax.data) == 'undefined' || ajax.data.length == 0){
+				ulHots+="<li>Pad d'info</li>";
+			}else{
+				$.each(ajax.data, function(key,val) {
+					ulHots+="<li><a href='/news/feed?id="+val._id+"'>"+val.title+"</a><br /><div class='topHeat'><div class='heatLevel' style='width: "+val.heat+"%'></div></div></li>";
+				});
+				
+			}
+			ulHots += "</ul>";
+			$("#topHots").html(ulHots);	
+		});
+		
+	}
 	
 	function getAndPrintInfo(){
 		//console.log('getAndPrintInfo');
+		getAndPrintTops();
 		getHotTags(curPos,dateFrom);
 		infoArray = [];
 		
@@ -225,11 +324,35 @@
 				printEmptyFeedItem();
 			}else{
 				$.each(ajax.data.info, function(key,val) {
-					infoArray.push(val);					
-					if(key<10)
-						printFeedItem(val,0,0);	
+					var isUserBL = false;
+					var isFeedBL = false;
+					var isInfoBL = false;
+
+					for (var i = user.listeNoire.user.length - 1; i >= 0; i--) {
+						if(val.user == user.listeNoire.user[i]._id)
+							isUserBL = true;
+					};
+					for (var i = user.listeNoire.feed.length - 1; i >= 0; i--) {
+						if(val.feed == user.listeNoire.feed[i]._id)
+							isFeedBL = true;
+					};
+
+					for (var i = user.listeNoire.info.length - 1; i >= 0; i--) {
+						if(val._id == user.listeNoire.info[i]._id)
+							isInfoBL = true;
+					};
+
+
+					if(!isUserBL && !isFeedBL && !isInfoBL)
+					{
+						infoArray.push(val);					
+						if(key<10)
+							printFeedItem(val,0,0);	
+					}
+					
 				});
-			
+				if(infoArray.length == 0)
+					printEmptyFeedItem();
 			printLoadingFeedItem();
 
 			if(gup("id") != null && gup("id") != ""){
@@ -317,20 +440,27 @@ function printFeedItem(item,top,scrollTo){
 			postedBy.attr("class", "postedBy");
 
 			var onclickUser = "showUserProfile(this)";
-			if(item.origin.indexOf('@') != 0)
+			var inputhidden = "<input type='hidden' value='" + item.user + "' />";
+			//console.log(item);
+			if(typeof item.feed != 'undefined')
 			{
-				item.origin ="@"+item.origin;
-				onclickUser = "setSearchFor(this);";
+				onclickUser = "showFeedProfile(this);";
+				inputhidden = "<input type='hidden' value='" + item.feed + "' />";
 			}
+				
+
+			if(item.origin.indexOf('@') != 0)
+				item.origin ="@"+item.origin;
+				
 			
 
 			if(item.yakType !=2 )
 			{
-				postedBy.html("Posté par <a class='prevent-default' onclick='" + onclickUser +"'>"+item.origin+"</a><input type='hidden' value='" + item.user + "' />" + "<span class=\'date\'> - "+thedate+"</span>");
+				postedBy.html("Posté par <a class='prevent-default' onclick='" + onclickUser +"'>"+item.origin+"</a>" + inputhidden + "<span class=\'date\'> - "+thedate+"</span>");
 			}
 				
 			else{
-				postedBy.html("Posté par <a class='prevent-default' onclick='" + onclickUser + "'>"+item.origin+"</a><input type='hidden' value='" + item.user + "' />");
+				postedBy.html("Posté par <a class='prevent-default' onclick='" + onclickUser + "'>"+item.origin+"</a>" + inputhidden);
 				itemTitle.append(" - <span class=\'dateAgenda\'>"+thedate+"</span>");			
 			}
 				
@@ -443,8 +573,9 @@ function printFeedItem(item,top,scrollTo){
 			$("#newsfeed .icon-remove").trigger('click');
 		}
 
-		function getItemDetails(el){
-			
+		
+function getItemDetails(el){
+				
 			
 			closeAllItems();
 			var currentItem = $(el);
@@ -475,16 +606,7 @@ function printFeedItem(item,top,scrollTo){
 			
 			$.each(infoArray,function(key,val){
 				if(infoid == val._id){
-				//console.log(val);
-				/*
-				if(val.user != undefined){
-					thumbImage = 	val.thumb;
-					mediumImage = 	thumbImage.replace('120_90', '512_0');
-				}else{
-					thumbImage = 	val.thumb;
-					mediumImage = 	thumbImage.replace('thumb', 'medium');
-				}*/
-
+				
 				thumbImage = val.thumb.replace('thumb/','');
 				//thumbImage = thumbImage.replace('//','/');
 				mediumImage = 	thumbImage.replace('120_90', '512_0');
@@ -539,6 +661,8 @@ function printFeedItem(item,top,scrollTo){
 			
 			
 		}
+
+
 
 	function closemyitem(el)
 		{
@@ -723,9 +847,15 @@ function printFeedItem(item,top,scrollTo){
 			setSpamSystem(yakSpam);
 			item.append(yakSpam);
 			}
+
+			var yakyakBlackList = $("<span />");
+			yakyakBlackList.attr("class", "yakBlackList");
+			yakyakBlackList.attr("rel", val._id);
+			setyakBlackListSystem(yakyakBlackList);
+			item.append(yakyakBlackList);
+
 			return item;	
 		}
-
 	function rangeFromZ(){
 		return (-1)*0.0096/1*(curPos.z)+1;
 	}
@@ -744,3 +874,21 @@ function printFeedItem(item,top,scrollTo){
 	function cleanMarkers(){
 		//doing nothing !	
 	}	
+
+	function numAlertsSearch()
+		{
+
+			if(!yakType.inArray("5")){
+				var alertsNumberUrl = '';
+				
+				dateLastCheck = new Date(user.alertsLastCheck);
+				alertsNumberUrl = '/api/geoalertsNumber/'+curPos.x+'/'+curPos.y+'/'+curPos.z+'/'+'null'+'/'+dateFrom+'/'+dateLastCheck.getTime();
+				//console.log(alertsNumberUrl);
+				$.getJSON(alertsNumberUrl,function(ajax) {
+					console.log(ajax);
+					if(ajax.data.info != '-1' && ajax.data.info != "0")
+						$("#alertsNumber").html(ajax.data.info);
+				});
+			}
+			
+		}
