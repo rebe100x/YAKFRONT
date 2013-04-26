@@ -124,19 +124,17 @@ mixin searchFormUnified(page)
 				$('#searchStr').unbind('keyup').on('keyup',function(event){
 					var clicked = $(this);
 					setdelay(function(){
-						if(clicked.val().length > 0){
+						if(clicked.val().length > 1){
 							clicked.addClass('searching');
 							searchString = encodeURIComponent($('#searchStr').val());
 						}else{
 							clicked.removeClass('searching');
 							searchString = null;
 						}
-							
-
+						
 						$('#searchBtn').trigger('click');
-						console.log('TRIGGERED');
-					
-					}, 400);
+						
+					}, 800);
 					
 				});
 

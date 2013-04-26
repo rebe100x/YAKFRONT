@@ -104,10 +104,6 @@
 	
 	/*MAP TOOLS CONTROLLERS*/
 
-#zoomnavigation {background-image: url(/images/styles.png);background-position: -112px -639px;bottom: 50px;height: 113px;margin-left: 0px;position: absolute;width: 65px;z-index: 200;}
-#zoomminus {background-image: url(/images/styles.png);background-position: -50px -866px;bottom: 25px;cursor: pointer;cursor: hand;display: block;height: 35px;margin-left: 11px;margin-top: 17px;width: 37px;z-index: 200;}
-#zoomplus {background-image: url(/images/styles.png);background-position: -45px -814px;bottom: 25px;display: block;height: 35px;margin-left: 11px;margin-top: 10px;width: 37px;z-index: 200;cursor: pointer;cursor: hand;}
-
 /*MAP TOP CONTROLLER*/
 #newsfeedContainer #boxOpener{position: relative;text-align: center; font-weight:bold;line-height:18px;color:white;background-color:#D8242B;cursor:pointer} 
 #newsfeedContainer{position:relative;overflow:auto;height:auto;margin: 14px -20px 0 0;opacity:0.95; overflow-x: hidden; background: white; width: 100%}
