@@ -1343,7 +1343,7 @@ function setyakBlackListSystem(item)
 	var infoid = item.attr("rel");
     
 
-	item.html("Casher(liste noire)");
+	item.html("Blacklister cette info");
 	item.click(function(){
 		var login = $(this).parent().parent().find('.itemTitle').text();
 		
@@ -1377,14 +1377,14 @@ function setSpamSystem(item){
 
 	if(!isSpammed)
 	{
-		item.html("Marquer comme spam");
+		item.html("Signaler cette info");
 
 		item.click(function(){
 			
 				$.post('/setSpams', {content_id : $(this).attr("rel"), content_type : 1} , function(res){
 						if (res != "0")
 						{
-							item.html("tu as marqué comme spam");
+							item.html("Vous avez déjà signalé cette info");
 							item.alertid = res;
 							user.illicite = user.illicite.concat(res)
 						}
@@ -1395,7 +1395,7 @@ function setSpamSystem(item){
 	}
 	else
 	{
-		item.html("déjà marqué comme spam");
+		item.html("Vous avez déjà signalé cette info");
 	}
 
 
@@ -1828,7 +1828,7 @@ function checkByWidth()
 				}	
 				else
 				{
-					$("#userChooser #uc_profile_yaks_alerts.mybtn").html("<img src='images/uc_plus.png' />C'est ton profile");		
+					$("#userChooser #uc_profile_yaks_alerts.mybtn").hide();		
 				}
 
 				var thetags = "";

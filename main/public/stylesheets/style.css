@@ -970,7 +970,7 @@ border-bottom: 1px solid #e5e5e5;}
 #userChooser #uc_profile_brief .theinfo .thelink a { font-size: 12px; line-height: 20px; width: 300px; display: block; color: #c2160d; margin-top: 12px; float: left; clear: both; margin-top: 12px}
 #userChooser #uc_newsfeed { border-top: 1px solid #cecece; float: left; width: 100%;}
 #userChooser #uc_profile_yaks_alerts { float: left; position: relative; bottom: 8px; background-color: #c5170e; padding: 10px; color: white; text-align: center; width: 130px;cursor:pointer;}
-#userChooser #uc_profile_yaks { background: #f6f6f6; padding-top: 15px; float: left; clear: both; display: block; width: 100%; border: 1px solid #cecece;}
+#userChooser #uc_profile_yaks { background: #f6f6f6; padding-top: 15px; padding-bottom: 15px;float: left; clear: both; display: block; width: 100%; border: 1px solid #cecece;}
 #userChooser #uc_profile_yaks b { font-size: 20px;}
 #userChooser #uc_profile_tags { padding-top: 0px; float: left; clear: both; display: block; width: 100%}
 
