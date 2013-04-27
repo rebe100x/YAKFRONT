@@ -549,47 +549,45 @@ function checkGravatar()
 			gravatarLink = 'http://www.gravatar.com/' + $.md5(gravatarMail) + '.json';
 		}
 	}
-	
-	var url = gravatarLink;
-	
-	$.ajax({
-		type: 'GET',
-		url: url,
-		async: true,
-		contentType: "application/json",
-		dataType: 'jsonp',
-		success: function(data){ 
-			console.log(data);
-			if(typeof(data.entry != 'undefined'))
-			{
-				if(data.entry.length > 0)
-				{
-					var gravatarImage = data.entry[0].thumbnailUrl + "?s=51";
-					var popupGravatarImage = data.entry[0].thumbnailUrl + "?s=150";
-					if(user.thumb.indexOf('no-user.png') != -1)
+	(function($) {
+				var url = gravatarLink;
+				$.ajax({
+				type: 'GET',
+				url: url,
+				async: false,
+				contentType: "application/json",
+				dataType: 'jsonp',
+				success: function(data){ 
+					if(typeof(data.entry != 'undefined'))
 					{
-						gravatarImage = "<img src='"+gravatarImage+"' alt='Gravatar Image - Profile' title='Gravatar Image - Profile' />" ;
-						$("#profileMenu").html(gravatarImage);
-						$("#popupGravatarImage").attr("src", popupGravatarImage);
-						if($.cookie("gravatarized") != '1')
+						if(data.entry.length > 0)
 						{
-							$('#gravatarImagePopup').modal('show');
-							var Cookiedate = new Date();
-							var timeRange = 3*60*60*1000;
-							Cookiedate.setTime(Cookiedate.getTime() + (timeRange));
-		
-							$.cookie("gravatarized",'1',{ expires: Cookiedate, path : '/' });	
+							var gravatarImage = data.entry[0].thumbnailUrl + "?s=51";
+							var popupGravatarImage = data.entry[0].thumbnailUrl + "?s=150";
+							if(user.thumb.indexOf('no-user.png') != -1)
+							{
+								gravatarImage = "<img src='"+gravatarImage+"' alt='Gravatar Image - Profile' title='Gravatar Image - Profile' />" ;
+								$("#profileMenu").html(gravatarImage);
+								$("#popupGravatarImage").attr("src", popupGravatarImage);
+								if($.cookie("gravatarized") != '1')
+								{
+									$('#gravatarImagePopup').modal('show');
+									var Cookiedate = new Date();
+									var timeRange = 3*60*60*1000;
+									Cookiedate.setTime(Cookiedate.getTime() + (timeRange));
+
+									$.cookie("gravatarized",'1',{ expires: Cookiedate, path : '/' });	
+								}
+
+							}
 						}
-						
+
 					}
 				}
-				
-			}
-		}
-});
-		
-	
-	
+				});
+			})(jQuery);	
+
+
 }
 $(document).ready(function() {
 	/*preload([
