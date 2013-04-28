@@ -153,9 +153,9 @@ var Info = new Schema({
   , userName	: {type: String}		
   , zone	: {type: Schema.ObjectId}
   ,	placeId	: {type: Schema.ObjectId} 
-  , likes	: {type: Number, default: 0}
-  , unlikes	: {type: Number, default: 0}
-  , commentsCount	: {type: Number, default: 0}
+  , likes	: {type: Number, default: 0,index:1}
+  , unlikes	: {type: Number, default: 0,index:1}
+  , commentsCount	: {type: Number, default: 0,index:1}
   , yaklikeUsersIds : {type: [String]}
   , yakunlikeUsersIds : {type: [String]}
   , yakComments : {type : [Schema.Types.Comment]}

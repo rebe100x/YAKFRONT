@@ -663,7 +663,7 @@ exports.user = function(req, res){
 			//console.log(theuser);
 			if(theuser.status == 1){
 				//console.log('STATUS1');
-				req.session.message = 'Cet utilisateur est déjà enregistré.';
+				req.session.message = 'Cet utilisateur est déjà enregistré. Vous pouvez réinitialiser <a href="/user/forgotpassword?email='+themail+'">votre mot de passe</a>.';
 				res.redirect('user/new');
 			
 			}
@@ -800,7 +800,7 @@ exports.user_new = function(req, res){
 
 exports.user_forgotpassword = function(req, res){
 	delete req.session.message;
-	res.render('user/forgotpassword');
+	res.render('user/forgotpassword',{email:req.query.email});
 	
 };
 

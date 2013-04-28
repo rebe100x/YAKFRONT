@@ -534,11 +534,13 @@
 			var scaleH = (top - bottom) / height ;
 									
 
-			feedOffsetW = pos.left * scaleW;
+			var feedOffsetW = pos.left * scaleW;
 			var feedOffsetH = pos.top * scaleH;
 			var borderOffsetW = 15 * scaleW;
 			var borderOffsetHTop = 140 * scaleH;
 			var borderOffsetHBottom = 10 * scaleH;
+			var borderOffsetVRight = 10 * scaleH;
+			var borderOffsetVLeft = 10 * scaleH;
 			
 			if(width>768){
 				var myBounds = {
@@ -547,8 +549,8 @@
 						b: bottom+borderOffsetHBottom,	
 					},
 					ea:{
-						f: left+feedOffsetW-borderOffsetW,
-						b: left+borderOffsetW,
+						f: left+borderOffsetVLeft,
+						b: right-borderOffsetVRight,
 					}
 				};
 			}else{

@@ -42,44 +42,34 @@ block content
 				$('#mail').val(user.mail);
 
 				var profileStats = $("<div />");
-				console.log(user.stats);
+				
 				if(typeof user.stats != 'undefined'){
 
 					var output = [];
+					var stats = {};
 					if(typeof  user.stats.tags != 'undefined'){
-						profileStats.append('Les tags qui vous intéressent:<br><ul>');
-						var tags = user.stats.tags;
-						output = [];
-						for (var key in tags)
-							output.push([key, tags[key],key+' (score='+tags[key]+')'])
-						output.sort(function(a, b) {return b[1] - a[1]})
-
-						
-						$.each(output,function(key,val){
-							profileStats.append('<li>'+val[2]+'</li>');
-						})
-						profileStats.append('</ul>');
-					}	
-					
-					if(typeof user.stats.cats != 'undefined'){
-						output = [];
-						profileStats.append('<br>Les catégories qui vous intéressent:<br><ul>');
-						var cats = user.stats.cats;
-						console.log(cats);
-						for (var key in cats)
-							output.push([key, cats[key],key+' (score='+cats[key]+')'])
-						output.sort(function(a, b) {return b[1] - a[1]})
-
-						
-						$.each(output,function(key,val){
-							profileStats.append('<li>'+val[2]+'</li>');
-						})
-						profileStats.append('</ul>');
-
-						
+						$.extend(stats,user.stats.tags);
 					}
-				}
-				$("#profilStats").append(profileStats);	
+
+					if(typeof user.stats.cats != 'undefined'){
+						$.extend(stats,user.stats.cats);
+
+					}
+
+					profileStats.append('Les tags qui vous intéressent:<br><ul>');
+					for (var key in stats)
+						if(stats[key] > 0)
+							output.push([key, stats[key],key+' (score='+stats[key]+')'])
+					output.sort(function(a, b) {return b[1] - a[1]})
+
+					
+					$.each(output,function(key,val){
+						profileStats.append('<li>'+val[2]+'</li>');
+					})
+					profileStats.append('</ul>');
+				}	
+					
+			$("#profilStats").append(profileStats);	
 				
 			}); // END READY	
 
