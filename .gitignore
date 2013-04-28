@@ -166,3 +166,4 @@ pip-log.txt
 confs_secret.js
 #ignore uploads
 main/public/uploads/originals/
+main/public/javascripts/minify/
