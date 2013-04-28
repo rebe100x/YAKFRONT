@@ -55,22 +55,19 @@ block content
 			function getSuggestionsFromFacebook(){
 				var profile = user.social.facebook[0];
 				
-				if($("#formProfile #username").val() == "" || $("#formProfile #username").val() != profile.name)
+				if($("#formProfile #username").val() == "")
 				{
-					var name = "<div><label class='clearBoth'></label><a onclick='setName(this)'>" + profile.name + "</a> ( Facebook Nom )</div>";
-					$("#formProfile #username").after(name);	
+					$("#formProfile #username").val(profile.name);
 				}
 
-				if($("#formProfile #web").val() == "" || $("#formProfile #web").val() != profile.url)
+				if($("#formProfile #web").val() == "")
 				{
-					var web = "<div><label class='clearBoth'></label><a onclick='setWeb(this)'>" + profile.url + "</a> ( Facebook Web )</div>";
-					$("#formProfile #web").after(web);	
+					$("#formProfile #web").val(profile.url);
 				}
 
-				if($("#formProfile #bio").val() == "" || $("#formProfile #bio").val() != profile.description)
+				if($("#formProfile #bio").val() == "")
 				{
-					var description = "<div><label class='clearBoth'></label><a onclick='setBio(this)'>" + profile.description + "</a> ( Facebook Bio )</div>";
-					$("#formProfile #bio").after(description);	
+					$("#formProfile #bio").val(profile.description);
 				}
 			}
 
@@ -78,44 +75,38 @@ block content
 			function getSuggestionsFromTwitter(){
 				var profile = user.social.twitter[0];
 				
-				if($("#formProfile #username").val() == "" || $("#formProfile #username").val() != profile.name)
+				if($("#formProfile #username").val() == "")
 				{
-					var name = "<div><label class='clearBoth'></label><a onclick='setName(this)'>" + profile.name + "</a> ( Twitter Nom )</div>";
-					$("#formProfile #username").after(name);	
+					$("#formProfile #username").val(profile.name);
 				}
 
-				if($("#formProfile #web").val() == "" || $("#formProfile #web").val() != profile.url)
+				if($("#formProfile #web").val() == "")
 				{
-					var web = "<div><label class='clearBoth'></label><a onclick='setWeb(this)'>" + profile.url + "</a> ( Twitter Web )</div>";
-					$("#formProfile #web").after(web);	
+					$("#formProfile #web").val(profile.url);
 				}
 
-				if($("#formProfile #bio").val() == "" || $("#formProfile #bio").val() != profile.description)
-				{
-					var description = "<div><label class='clearBoth'></label><a onclick='setBio(this)'>" + profile.description + "</a> ( Twitter Bio )</div>";
-					$("#formProfile #bio").after(description);	
+				if($("#formProfile #bio").val() == "")
+				{		
+					$("#formProfile #bio").val(profile.description);
 				}
 			}
 
 			function getSuggestionsFromGoogle(){
 				var profile = user.social.google[0];
 				
-				if($("#formProfile #username").val() == "" || $("#formProfile #username").val() != profile.name)
+				if($("#formProfile #username").val() == "")
 				{
-					var name = "<div><label class='clearBoth'></label><a onclick='setName(this)'>" + profile.name + "</a> ( Google Nom )</div>";
-					$("#formProfile #username").after(name);	
+					$("#formProfile #username").val(profile.name);
 				}
 
-				if($("#formProfile #web").val() == "" || $("#formProfile #web").val() != profile.url)
+				if($("#formProfile #web").val() == "" )
 				{
-					var web = "<div><label class='clearBoth'></label><a onclick='setWeb(this)'>" + profile.url + "</a> ( Google Web )</div>";
-					$("#formProfile #web").after(web);	
+					$("#formProfile #web").val(profile.url);
 				}
 
-				if($("#formProfile #bio").val() == "" || $("#formProfile #bio").val() != profile.description)
+				if($("#formProfile #bio").val() == "")
 				{
-					var description = "<div><label class='clearBoth'></label><a onclick='setBio(this)'>" + profile.description + "</a> ( Google Bio )</div>";
-					$("#formProfile #bio").after(description);	
+					$("#formProfile #bio").val(profile.description);
 				}
 			}
 

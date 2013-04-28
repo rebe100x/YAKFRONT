@@ -594,7 +594,7 @@ $(document).ready(function() {
     '/images/yakwala_sprite.png',
     '/images/yakwala_sprite-medium.png'
 	]);*/
-	checkGravatar();
+	
 	if(typeof(user.social) != 'undefined')
 	{
 		if(typeof(user.social.twitter[0]) != 'undefined')
@@ -1752,6 +1752,8 @@ function checkByWidth()
 					return;
 				}
 
+				if(userid != user._id)
+				{
 				$("#uc_blacklist_user").click(function(){
 					$.post('/api/user/blacklist', {id : theuser._id, type : 'user', login: theuser.login} , function(res){
 							if (res != "0")
@@ -1766,6 +1768,12 @@ function checkByWidth()
 
 					});
 				})
+				}
+				else
+				{
+					$("#uc_blacklist_user").remove();
+				}
+
 
 				$("#userChooser .nonExist").remove();
 				$("#userChooser p").show();
@@ -1881,6 +1889,9 @@ function checkByWidth()
 		function showFeedProfile(el)
 		{
 
+			$("#uc_profile_yaks_subscribed").remove();		
+			$("#userChooser #uc_profile_yaks #uc_profile_yaks_posts").css("width", "180px");
+
 			var userid = $(el).parent().find("input").val();
 
 			emptyUserChooser();
@@ -1909,20 +1920,22 @@ function checkByWidth()
 					return;
 				}
 
-				$("#uc_blacklist_user").click(function(){
-					$.post('/api/user/blacklist', {id : theuser._id, type : 'feed', login: theuser.humanName} , function(res){
-							if (res != "0")
-							{
-								var blFeed = {};
-								blFeed._id = theuser._id;
-								blUser.login = theuser.humanName;
-								user.listeNoire.feed = user.listeNoire.feed.concat(blFeed);
-								$('#userChooser').modal('hide');	
-								getAndPrintInfo();
-							}
+				
 
-					});
-				})
+					$("#uc_blacklist_user").click(function(){
+						$.post('/api/user/blacklist', {id : theuser._id, type : 'feed', login: theuser.humanName} , function(res){
+								if (res != "0")
+								{
+									var blFeed = {};
+									blFeed._id = theuser._id;
+									blUser.login = theuser.humanName;
+									user.listeNoire.feed = user.listeNoire.feed.concat(blFeed);
+									$('#userChooser').modal('hide');	
+									getAndPrintInfo();
+								}
+
+						});
+					})	
 
 				$("#userChooser .nonExist").remove();
 				$("#userChooser p").show();
@@ -1950,7 +1963,7 @@ function checkByWidth()
 				
 				$.getJSON('/api/countUserInfo/' + userid ,function(data) {
 					if(typeof data.count != 'undefined')
-						$("#userChooser #uc_profile_yaks_posts").html("Yassalas<br /><b>" + data.count + "<b>");		
+						$("#userChooser #uc_profile_yaks_posts").html("Cette Semaine<br /><b>" + data.count + "<b>");		
 				});
 
 			

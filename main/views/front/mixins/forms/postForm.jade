@@ -82,6 +82,8 @@ mixin postForm()
 							img(src="/images/media/yt.png")
 						a(title="Rechercher dans SoundCloud et poster votre audio", rel="post_soundcloud")
 							img(src="/images/media/storify.png")
+						a(title="Rechercher dans flickr et poster votre image", rel="post_flicker")
+							img(src="/images/media/flickr.png")
 					br
 					div#post_yakpicture.controls.clearBoth(style="display: none")
 						span.mediaText.pull-left
@@ -89,6 +91,7 @@ mixin postForm()
 						input.span6#picture(type="file",style="display:block",name="picture")
 					div#post_yakYoutube.controls.clearBoth
 					div#post_yakSoundCloud.controls.clearBoth
+					div#post_yakFlickr.controls.clearBoth
 					
 				br
 				h3.clearBoth A quel endroit ?
@@ -147,7 +150,7 @@ mixin postForm()
 					}
 
 				$.cookie("yaktype", yakType,{ expires: 10000, path : '/' });
-				var content = $("#postForm #content").val() + $("#post_yakYoutube").html() + $("#post_yakSoundCloud").html();
+				var content = $("#postForm #content").val() + $("#post_yakYoutube").html() + $("#post_yakSoundCloud").html() + $("#post_yakFlickr").html();
 				$("#postForm #content").val(content);
 				});
 			});

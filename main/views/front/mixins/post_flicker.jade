@@ -1,0 +1,87 @@
+mixin post_flicker
+
+	div.modal.hide.fade#post_flicker
+		div.modal-body
+			span#closeModal(type="button", data-dismiss="modal")
+			div.controls.clearBoth
+				span.mediaText.pull-left
+					|Recherche post_flicker
+				br
+				br
+			div.controls.clearBoth
+				input#flickerImages(type="hidden")
+				input#inputFlicker
+				button#searchFlicker Rechercher
+				img#loadingFlicker(src="/images/loader.gif", style="display: none")
+			br
+
+			div#FlickerResults.controls.clearBoth
+			br
+			br
+			br
+			br
+			br
+			br
+			br
+			br
+			br
+			br
+			br
+			br
+
+	script
+		$(document).ready(function(){
+			$("#searchFlicker").click(function(){
+				$("#loadingFlicker").show();
+				$("#flickerResults").html("");
+				var flickerUrl = 'http://api.flickr.com/services/feeds/photos_public.gne?tags='+$("#inputFlicker").val()+'&tagmode=any&format=json&jsoncallback=?';
+				(function($) {
+				
+				$.ajax({
+				type: 'GET',
+				url: flickerUrl,
+				async: false,
+				contentType: "application/json",
+				dataType: 'jsonp',
+				success: function(data){ 
+						showMyPictures(data);
+						$("#loadingYoutube").hide();
+					}
+				});
+			})(jQuery);	
+			});
+			$("#inputFlicker").keyup(function(e){
+				if(e.keyCode == 13)
+					$("#searchFlicker").click();
+			});
+		});	
+		function showMyPictures(data) {
+			var feed = data.items;
+			
+			
+			var html = '<ul>';
+			for (var i = 0; i < 10; i++) {
+			var entry = feed[i];
+			var link = entry.link;
+			var title = entry.title;
+			var src = entry.media.m;
+			
+			html += '<li>';
+			html += '<img src="'+src+'" width="100%" alt="'+title+'" style="cursor:pointer" title="'+title+'" />';
+			html += '</li>';
+
+			}
+			html += '</ul>';
+			$("#FlickerResults").html(html);
+
+			$("#FlickerResults ul li").click(function(){
+				var frame = '<div>' + $(this).html() + '<span style="cursor: pointer; position: relative; float: right" onclick="removeframe(this)">X</span></div>'
+				$("#post_yakFlickr").prepend(frame);
+				//$('#post_youtube').modal('hide');
+			});
+		} 
+
+		function removeframe(el)
+		{
+			$(el).parent().remove();
+		}

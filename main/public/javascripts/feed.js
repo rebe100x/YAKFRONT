@@ -118,7 +118,7 @@
 		//console.log(currElposition);
 		$("#blackBox").css("left", (currElposition.left - 87) + "px");
 	}
-		//$('#newsfeedContent').mCustomScrollbar({mouseWheel:true,callbacks:{onTotalScroll:printArrayFeedItem},scrollButtons:{enable:true,scrollType:"continuous",},advanced:{autoExpandHorizontalScroll:true,updateOnContentResize: true,updateOnBrowserResize:true}});
+		$('#newsfeedContent').mCustomScrollbar({mouseWheel:true,callbacks:{onTotalScroll:printArrayFeedItem},scrollButtons:{enable:true,scrollType:"continuous",},advanced:{autoExpandHorizontalScroll:true,updateOnContentResize: true,updateOnBrowserResize:true}});
 		//$('#newspostContent').mCustomScrollbar({mouseWheel:true,scrollButtons:{enable:true,scrollType:"continuous",},advanced:{autoExpandHorizontalScroll:true,updateOnContentResize: true,updateOnBrowserResize:true}});
 		
 		
@@ -249,7 +249,26 @@
 				ulLiked+="<li>Pad d'info</li>";
 			}else{
 				$.each(ajax.data, function(key,val) {
-					ulLiked+="<li><a href='/news/feed?id="+val._id+"'>"+val.title+"</a><br /><span class='topCounts'>"+val.likes+"like(s)</span></li>";
+					var isUserBL = false;
+						var isFeedBL = false;
+						var isInfoBL = false;
+
+						for (var i = user.listeNoire.user.length - 1; i >= 0; i--) {
+							if(val.user == user.listeNoire.user[i]._id)
+								isUserBL = true;
+						};
+						for (var i = user.listeNoire.feed.length - 1; i >= 0; i--) {
+							if(val.feed == user.listeNoire.feed[i]._id)
+								isFeedBL = true;
+						};
+
+						for (var i = user.listeNoire.info.length - 1; i >= 0; i--) {
+							if(val._id == user.listeNoire.info[i]._id)
+								isInfoBL = true;
+						};
+
+						if(!isUserBL && !isFeedBL && !isInfoBL)
+							ulLiked+="<li><a href='/news/feed?id="+val._id+"'>"+val.title+"</a><br /><span class='topCounts'>"+val.likes+"like(s)</span></li>";
 				});
 				
 			}
@@ -267,7 +286,26 @@
 				ulCommented+="<li>Pad d'info</li>";
 			}else{
 				$.each(ajax.data, function(key,val) {
-					ulCommented+="<li><a href='/news/feed?id="+val._id+"'>"+val.title+"</a><br /><span class='topCounts'>"+val.commentsCount+"commentaire(s)</span></li>";
+					var isUserBL = false;
+						var isFeedBL = false;
+						var isInfoBL = false;
+
+						for (var i = user.listeNoire.user.length - 1; i >= 0; i--) {
+							if(val.user == user.listeNoire.user[i]._id)
+								isUserBL = true;
+						};
+						for (var i = user.listeNoire.feed.length - 1; i >= 0; i--) {
+							if(val.feed == user.listeNoire.feed[i]._id)
+								isFeedBL = true;
+						};
+
+						for (var i = user.listeNoire.info.length - 1; i >= 0; i--) {
+							if(val._id == user.listeNoire.info[i]._id)
+								isInfoBL = true;
+						};
+
+						if(!isUserBL && !isFeedBL && !isInfoBL)
+							ulCommented+="<li><a href='/news/feed?id="+val._id+"'>"+val.title+"</a><br /><span class='topCounts'>"+val.commentsCount+"commentaire(s)</span></li>";
 				});
 				
 			}
@@ -283,7 +321,26 @@
 				ulHots+="<li>Pad d'info</li>";
 			}else{
 				$.each(ajax.data, function(key,val) {
-					ulHots+="<li><a href='/news/feed?id="+val._id+"'>"+val.title+"</a><br /><div class='topHeat'><div class='heatLevel' style='width: "+val.heat+"%'></div></div></li>";
+						var isUserBL = false;
+						var isFeedBL = false;
+						var isInfoBL = false;
+
+						for (var i = user.listeNoire.user.length - 1; i >= 0; i--) {
+							if(val.user == user.listeNoire.user[i]._id)
+								isUserBL = true;
+						};
+						for (var i = user.listeNoire.feed.length - 1; i >= 0; i--) {
+							if(val.feed == user.listeNoire.feed[i]._id)
+								isFeedBL = true;
+						};
+
+						for (var i = user.listeNoire.info.length - 1; i >= 0; i--) {
+							if(val._id == user.listeNoire.info[i]._id)
+								isInfoBL = true;
+						};
+
+						if(!isUserBL && !isFeedBL && !isInfoBL)
+							ulHots+="<li><a href='/news/feed?id="+val._id+"'>"+val.title+"</a><br /><div class='topHeat'><div class='heatLevel' style='width: "+val.heat+"%'></div></div></li>";
 				});
 				
 			}
@@ -537,6 +594,7 @@ function printFeedItem(item,top,scrollTo){
 	
 
 	function printLoadingFeedItem(){
+
 		$('.loadingfeeditem').hide();
 		if(skip < infoArray.length - 10){
 			infoContent = "<div class=\'infowindow loadingfeeditem\'></div>";					
@@ -892,3 +950,9 @@ function getItemDetails(el){
 			}
 			
 		}
+
+		$(window).scroll(function(){			
+			if (isScrolledIntoView($(".loadingfeeditem"))) {
+				printArrayFeedItem();
+			};
+		});
