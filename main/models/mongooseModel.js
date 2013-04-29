@@ -523,7 +523,7 @@ Info.statics.findAllGeoAlert = function (x1,y1,x2,y2,from,now,type,str,usersubs,
 				"dateEndPrint":{$gte:DEND},
 				"yakType" : {$in:type}
 			};
-	if(y2 == null){
+	if(y2 == 'null'){
 		cond["location"] = {$near:[parseFloat(x1),parseFloat(y1)],$maxDistance:parseFloat(x2)};
 	}else{
 		cond["print"]=1;
@@ -1023,7 +1023,7 @@ Tag.statics.getHotTags = function (x1,y1,x2,y2,d,limit,callback) {
 	DUSED.setTime((now.getTime()+d*24*60*60*1000)-offset);
 	DUSEDMAX.setTime(now.getTime()+d*24*60*60*1000);
 	console.log("x2="+x2);
-	if(y2 == 0)
+	if(y2 == 'null')
 		return this.find({usageDate:{$gte:DUSED,$lte:DUSEDMAX}, location:{$near:[parseFloat(x1),parseFloat(y1)],$maxDistance:parseFloat(x2)}},{},{sort:{numUsed:-1},limit:limit}, callback);
 	else{
 		var box = [[parseFloat(x1),parseFloat(y1)],[parseFloat(x2),parseFloat(y2)]];

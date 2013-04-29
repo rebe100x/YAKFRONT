@@ -365,7 +365,7 @@
 
 		var apiUrl = '';
 		if(yakType.inArray("5"))
-			apiUrl = '/api/geoalerts/'+curPos.x+'/'+curPos.y+'/'+rangeFromZ()+'/'+'null'+'/'+dateFrom+'/0/'+searchString+'/500';
+			apiUrl = '/api/geoalerts/'+curPos.x+'/'+curPos.y+'/'+rangeFromZ()+'/'+'null'+'/'+dateFrom+'/0/'+yakType.toString()+'/'+searchString+'/500';
 		else	
 			apiUrl = '/api/geoinfos/'+curPos.x+'/'+curPos.y+'/'+rangeFromZ()+'/'+'null'+'/'+dateFrom+'/0/'+yakType.toString()+'/'+searchString+'/500';
 		
@@ -958,7 +958,7 @@ function getItemDetails(el){
 		});
 
 	function getHotTags(curPos,dateFrom){
-		$.getJSON('/api/getHotTags/'+(curPos.x)+'/'+(curPos.y)+'/'+rangeFromZ()+'/0/'+dateFrom+'/10',function(ajax) {
+		$.getJSON('/api/getHotTags/'+(curPos.x)+'/'+(curPos.y)+'/'+rangeFromZ()+'/null/'+dateFrom+'/10',function(ajax) {
 			$('#dropdownTagSelector').html('');
 			if(ajax.data.tag.length > 0){
 				$.each(ajax.data.tag,function(key,val){
