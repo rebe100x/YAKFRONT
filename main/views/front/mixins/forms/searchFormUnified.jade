@@ -368,9 +368,13 @@ mixin searchFormUnified(page)
 						}
 						else{
 							var	print = 0
-							if('#{page}' == 'map')
-								print = 1;	
-							var currenturl = '/api/catsandtags/'+curPos.x+'/'+curPos.y+'/'+((-1)*0.0096/1*(curPos.z)+1)+'/'+dateFrom+'/'+print;						
+							if('#{page}' == 'map'){
+								bounds = getMyBounds();
+								var currenturl = '/api/catsandtags/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom;	
+							}
+							else
+								var currenturl = '/api/catsandtags/'+curPos.x+'/'+curPos.y+'/'+rangeFromZ()+'/0/'+dateFrom;		
+
 						}
 						encodeURIComponent(query);
 						if(query.length >= 2){

@@ -1022,7 +1022,6 @@ Tag.statics.getHotTags = function (x1,y1,x2,y2,d,limit,callback) {
 	var offset = 24*60*60*1000; // 1 day
 	DUSED.setTime((now.getTime()+d*24*60*60*1000)-offset);
 	DUSEDMAX.setTime(now.getTime()+d*24*60*60*1000);
-	console.log("x2="+x2);
 	if(y2 == 'null')
 		return this.find({usageDate:{$gte:DUSED,$lte:DUSEDMAX}, location:{$near:[parseFloat(x1),parseFloat(y1)],$maxDistance:parseFloat(x2)}},{},{sort:{numUsed:-1},limit:limit}, callback);
 	else{
