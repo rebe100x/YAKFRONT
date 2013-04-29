@@ -106,7 +106,7 @@
 
 /*MAP TOP CONTROLLER*/
 #newsfeedContainer #boxOpener{position: relative;text-align: center; font-weight:bold;line-height:18px;color:white;background-color:#D8242B;cursor:pointer} 
-#newsfeedContainer{position:relative;overflow:auto;height:auto;margin: 14px -20px 0 0;opacity:0.95; overflow-x: hidden; background: white; width: 100%}
+#newsfeedContainer{position:relative;overflow:auto;height:auto;margin: 0px 0px 0 0;opacity:0.95; overflow-x: hidden; background: white; width: 100%}
 
 #newsfeedMenu #searchBox { position: relative;text-align: center; height: 28px;}
 
@@ -465,7 +465,7 @@ width: 270px;
    .searchYakwala #rangeSelectorTrigger, .searchYakwala #tagSelectorTrigger { margin-top: 10px;}
    #mymap { width: 68%;}
    #newsfeedContainer { width: 103%; right: -1px}
-   #newsfeedContent .mCSB_scrollTools { right: -4px}
+   #newsfeedContent .mCSB_scrollTools { right: -3px}
    #locationChooser {top:40%;}
  }
 
@@ -520,7 +520,7 @@ width: 270px;
    .searchYakwala #rangeSelectorTrigger, .searchYakwala #tagSelectorTrigger { margin-top: 10px;}
    #mymap { width: 68%;}
    #newsfeedContainer { width: 103%; right: -1px}
-   #newsfeedContent .mCSB_scrollTools { right: -4px}
+   #newsfeedContent .mCSB_scrollTools { right: -3px}
    #locationChooser {top:40%;}
  }
 

@@ -537,8 +537,8 @@
 			var feedOffsetW = pos.left * scaleW;
 			var feedOffsetH = pos.top * scaleH;
 			var borderOffsetW = 15 * scaleW;
-			var borderOffsetHTop = 140 * scaleH;
-			var borderOffsetHBottom = 10 * scaleH;
+			var borderOffsetHTop = 40 * scaleH;
+			var borderOffsetHBottom = 15 * scaleH;
 			var borderOffsetVRight = 10 * scaleH;
 			var borderOffsetVLeft = 10 * scaleH;
 			
@@ -572,16 +572,19 @@
 
 		function drawNewsFeed(){	
 
-			var newsfeedContainerHeight = window.innerHeight-$('#newsfeedContainer').offset().top +'px';
-			
-			//console.log('newsfeedContainerHeight'+newsfeedContainerHeight);
-			$('#newsfeedContainer').css('height',newsfeedContainerHeight);
+			var newsfeedContainerHeight = window.innerHeight-$('#newsfeedContainer').offset().top ;
+			var headerYakwalaHeight = $('.headerYakwala').height();
+			var footerYakwalaHeight = $('#footer').height();
+			var mapHeight = window.innerHeight-headerYakwalaHeight-footerYakwalaHeight;
+			$('#newsfeedContainer').css('height',newsfeedContainerHeight+'px');
 			var width = $(window).width();
 			if(width < 767)
 				$('#newsfeedContainer').css('top','200px');
-			else
-				$('#newsfeedContainer').css('top','-15px');
-			
+			else{
+				$('#newsfeedContainer').css('top','0px');
+				$('#mymap').css('top',headerYakwalaHeight+'px');
+				$('#mymap').css('height',mapHeight+'px');
+			}
 			var newsfeedContentHeight = window.innerHeight-$('#newsfeedContent').offset().top-25+'px';
 			//console.log('newsfeedContentHeight'+newsfeedContentHeight);
 			$('#newsfeedContent').css('height',newsfeedContentHeight);
@@ -912,7 +915,6 @@
 
 				if(!isUserBL && !isFeedBL && !isInfoBL)
 				{
-					console.log("here");
 					if(flagFilter!=1)
 						infoArray.push(val);						
 					printMapItem(val,key,0);
