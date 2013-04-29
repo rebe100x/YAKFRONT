@@ -27,8 +27,11 @@ block content
 					input#tagInput(type='hidden', name='tagInput', value='')
 
 					div.control-group
+						div#gravatar.controls(style="display: none")
+							label.control-label.label-xlarge(for="gravatarImage") Voulez vous utliser ce gravatar ?:  
+								input(type="checkbox", name="gravatarStatus", value="1")
 						div.controls
-							label.control-label.label-xlarge(for="username") Choisissez un nom d'utilisateur ( au moins 4 caractères ):  
+							label.control-label.label-xlarge(for="username") Choisissez un nom d&#39;utilisateur ( au moins 4 caractères ):  
 							input.input-xlarge#username(type="text", name="username", autocomplete="off", placeholder="Votre nom d'utilisateur") 
 						div#emailContainer.controls
 							label.control-label.label-xlarge(for="email") Votre email :  
@@ -70,7 +73,7 @@ block content
 					div.controls
 						div.input-append 
 							label.control-label(for="tag") 
-								|Quelques mots clés pour définir vos centres d'intérêt:
+								|Quelques mots clés pour définir vos centres d&#39;intérêt:
 								br
 								|(ex: sport,musique) :
 							input#tag(type='text', name='tag')
@@ -79,14 +82,14 @@ block content
 					br				
 					div#alertCGU.alert.fade.in.hide
 						strong
-							| Veuillez accepter les <a href='/docs/cgu' target='_blank'>conditions générales d'utilisation</a>
+							| Veuillez accepter les <a href='/docs/cgu' target='_blank'>conditions générales d&#39;utilisation</a>
 					div.control-group
 						div.controls
 							label.checkbox
 								<input id="cgu" type="checkbox" name="cgu" value="1"> 
 								| J'ai lu et j'accepte 
 								a(href="/docs/cgu", target="_blank")
-									| les conditions générales d'utilisation
+									| les conditions générales d&#39;utilisation
 					br
 					div.control-group
 						div.controls

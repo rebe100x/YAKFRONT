@@ -535,7 +535,45 @@ function  hidePostForm()
 		drawNewsFeed();
 }
 
+function setGravatar()
+{
+var gravatarLink;
+	// get the email
+	if(typeof user.mail != 'undefined')
+	{
+		if(user.mail != null && user.mail != "")
+		{
+			var gravatarMail = $.trim(user.mail).toLowerCase();
+			gravatarLink = 'http://www.gravatar.com/' + $.md5(gravatarMail) + '.json';
+		}
+	}
+	(function($) {
+				var url = gravatarLink;
+				$.ajax({
+				type: 'GET',
+				url: url,
+				async: false,
+				contentType: "application/json",
+				dataType: 'jsonp',
+				success: function(data){ 
+					if(typeof(data.entry != 'undefined'))
+					{
+						if(data.entry.length > 0)
+						{
+							var gravatarImage = data.entry[0].thumbnailUrl + "?s=51";
 
+							gravatarImage = "<img class='gravatarImage' src='"+gravatarImage+"' alt='Gravatar Image - Profile' title='Gravatar Image - Profile' />" ;
+
+							$("#profileMenu").append(gravatarImage);
+						}
+
+					}
+				}
+				});
+			})(jQuery);	
+
+
+}
 
 function checkGravatar()
 {
@@ -562,24 +600,18 @@ function checkGravatar()
 					{
 						if(data.entry.length > 0)
 						{
-							var gravatarImage = data.entry[0].thumbnailUrl + "?s=51";
-							var popupGravatarImage = data.entry[0].thumbnailUrl + "?s=150";
-							if(user.thumb.indexOf('no-user.png') != -1)
+							var gravatarImage = data.entry[0].thumbnailUrl + "?s=150";
+
+							gravatarImage = "<img class='gravatarImage' src='"+gravatarImage+"' alt='Gravatar Image - Profile' title='Gravatar Image - Profile' />" ;
+
+
+							if(user.gravatarStatus == 2 && user.thumb.indexOf('no-user.png') != -1)
 							{
-								gravatarImage = "<img src='"+gravatarImage+"' alt='Gravatar Image - Profile' title='Gravatar Image - Profile' />" ;
-								$("#profileMenu").html(gravatarImage);
-								$("#popupGravatarImage").attr("src", popupGravatarImage);
-								if($.cookie("gravatarized") != '1')
-								{
-									$('#gravatarImagePopup').modal('show');
-									var Cookiedate = new Date();
-									var timeRange = 3*60*60*1000;
-									Cookiedate.setTime(Cookiedate.getTime() + (timeRange));
 
-									$.cookie("gravatarized",'1',{ expires: Cookiedate, path : '/' });	
-								}
-
+								$("#gravatar").show();
+								$("#gravatar").append(gravatarImage);
 							}
+
 						}
 
 					}
@@ -595,6 +627,10 @@ $(document).ready(function() {
     '/images/yakwala_sprite-medium.png'
 	]);*/
 	
+	if(user.gravatarStatus == 1)
+	{
+		setGravatar();
+	}
 	if(typeof(user.social) != 'undefined')
 	{
 		if(typeof(user.social.twitter[0]) != 'undefined')
@@ -1754,7 +1790,7 @@ function checkByWidth()
 
 				if(userid != user._id)
 				{
-				$("#uc_blacklist_user").click(function(){
+				$("#uc_blacklist_user").unbind('click').click(function(){
 					$.post('/api/user/blacklist', {id : theuser._id, type : 'user', login: theuser.login} , function(res){
 							if (res != "0")
 							{
@@ -1771,7 +1807,7 @@ function checkByWidth()
 				}
 				else
 				{
-					$("#uc_blacklist_user").remove();
+					$("#uc_blacklist_user").unbind('click');
 				}
 
 
@@ -1928,7 +1964,7 @@ function checkByWidth()
 								{
 									var blFeed = {};
 									blFeed._id = theuser._id;
-									blUser.login = theuser.humanName;
+									blFeed.login = theuser.humanName;
 									user.listeNoire.feed = user.listeNoire.feed.concat(blFeed);
 									$('#userChooser').modal('hide');	
 									getAndPrintInfo();

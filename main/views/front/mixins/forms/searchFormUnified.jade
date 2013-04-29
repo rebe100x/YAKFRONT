@@ -249,8 +249,12 @@ mixin searchFormUnified(page)
 					$.cookie("dateFrom", dateFrom,{ expires: Cookiedate, path : '/' });
 				},
 				create: function(event, ui){
-
-					setBlackBockPosition();
+					if(typeof($(".ui-slider-handle").position()) != 'undefined')
+						{
+							var currElposition = $(".ui-slider-handle").position();	
+							console.log(currElposition);
+							$("#blackBox").css("left", (currElposition.left - 78) + "px");
+						}
 				}
 			});
 			

@@ -116,7 +116,7 @@
 	{
 		var currElposition = $(".ui-slider-handle").position();	
 		//console.log(currElposition);
-		$("#blackBox").css("left", (currElposition.left - 87) + "px");
+		$("#blackBox").css("left", (currElposition.left - 78) + "px");
 	}
 		$('#newsfeedContent').mCustomScrollbar({mouseWheel:true,callbacks:{onTotalScroll:printArrayFeedItem},scrollButtons:{enable:true,scrollType:"continuous",},advanced:{autoExpandHorizontalScroll:true,updateOnContentResize: true,updateOnBrowserResize:true}});
 		//$('#newspostContent').mCustomScrollbar({mouseWheel:true,scrollButtons:{enable:true,scrollType:"continuous",},advanced:{autoExpandHorizontalScroll:true,updateOnContentResize: true,updateOnBrowserResize:true}});
@@ -425,7 +425,7 @@
 						$(".mapHighlighterDetails[infoid=" + gup("id") +"]").eq(0).attr("src", thumbsource);
 
 					}else{
-						var thumbsource = conf.batchurl + $(".mapHighlighterDetails[infoid=" + gup("id") +"]").eq(0).find(".thumbImage img").attr("src");
+						var thumbsource = $(".mapHighlighterDetails[infoid=" + gup("id") +"]").eq(0).find(".thumbImage img").attr("src");
 						$(".mapHighlighterDetails[infoid=" + gup("id") +"]").eq(0).find(".thumbImage img").attr("src", thumbsource);
 						
 					}

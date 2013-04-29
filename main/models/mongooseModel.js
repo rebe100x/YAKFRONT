@@ -688,6 +688,7 @@ var User = new Schema({
 	, lastModifDate	: {type: Date, required: true, default: Date.now}		
 	, lastLoginDate	: {type: Date, required: true, default: Date.now}	
 	, alertsLastCheck : {type: Date, required: true, default: Date.now}	
+	, gravatarStatus : { type : Number, default: 2} // 0 don't use, 1 use gravatar, 2 never use gravatar
 	, status	: {type: Number,required: true, default: 2,index: true}	
 	, social: { 
 		twitter : {type: [Twitter],required: false},
@@ -765,7 +766,8 @@ User.statics.format = function (theuser) {
 		status: theuser.status,
 		illicite: theuser.illicite,
 		alertsLastCheck : theuser.alertsLastCheck,
-		listeNoire: theuser.listeNoire
+		listeNoire: theuser.listeNoire,
+		gravatarStatus: theuser.gravatarStatus
 	};
   return formattedUser;
 }

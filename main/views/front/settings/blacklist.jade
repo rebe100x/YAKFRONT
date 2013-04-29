@@ -58,6 +58,10 @@ block content
 					br
 			
 	script
+		/*INIT*/	
+		var conf = !{conf};
+		var user =!{JSON.stringify(user)};
+
 		function removeUser(el)
 		{
 			var id = $(el).attr("rel");

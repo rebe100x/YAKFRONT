@@ -957,9 +957,13 @@ exports.firstvisit = function(req,res){
 					for(i=0;i<tag.length;i++){
 						tagArray.push(tag[i]);
 					}
-				}	
+				}
 
-				User.update({_id: req.session.user}, {hash : newcryptedPass,location:location, address: address, formatted_address: formatted_address, login: req.body.username, name: req.body.username, mail: req.body.email, tag:tagArray, status: 1}, {upsert: false}, function(err){
+				var gravatarStatus = 0;
+				if(req.body.gravatarStatus == "1")	
+					gravatarStatus = 1;
+
+				User.update({_id: req.session.user}, {hash : newcryptedPass,location:location, address: address, formatted_address: formatted_address, login: req.body.username, name: req.body.username, mail: req.body.email, tag:tagArray, gravatarStatus: gravatarStatus, status: 1}, {upsert: false}, function(err){
 				
 					if (err) console.log(err);
 					else{
