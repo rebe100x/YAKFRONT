@@ -895,19 +895,22 @@
 				var isFeedBL = false;
 				var isInfoBL = false;
 
-				for (var i = user.listeNoire.user.length - 1; i >= 0; i--) {
-					if(val.user == user.listeNoire.user[i]._id)
-						isUserBL = true;
-				};
-				for (var i = user.listeNoire.feed.length - 1; i >= 0; i--) {
-					if(val.feed == user.listeNoire.feed[i]._id)
-						isFeedBL = true;
-				};
+				if(typeof user.listeNoire.user != 'undefined')
+					for (var i = user.listeNoire.user.length - 1; i >= 0; i--) {
+						if(val.user == user.listeNoire.user[i]._id)
+							isUserBL = true;
+					};
+				if(typeof user.listeNoire.feed != 'undefined')	
+					for (var i = user.listeNoire.feed.length - 1; i >= 0; i--) {
+						if(val.feed == user.listeNoire.feed[i]._id)
+							isFeedBL = true;
+					};
 
-				for (var i = user.listeNoire.info.length - 1; i >= 0; i--) {
-					if(val._id == user.listeNoire.info[i]._id)
-						isInfoBL = true;
-				};
+				if(typeof user.listeNoire.info != 'undefined')	
+					for (var i = user.listeNoire.info.length - 1; i >= 0; i--) {
+						if(val._id == user.listeNoire.info[i]._id)
+							isInfoBL = true;
+					};
 
 
 				if(!isUserBL && !isFeedBL && !isInfoBL)
