@@ -537,8 +537,8 @@
 			var feedOffsetW = pos.left * scaleW;
 			var feedOffsetH = pos.top * scaleH;
 			var borderOffsetW = 15 * scaleW;
-			var borderOffsetHTop = 140 * scaleH;
-			var borderOffsetHBottom = 10 * scaleH;
+			var borderOffsetHTop = 40 * scaleH;
+			var borderOffsetHBottom = 15 * scaleH;
 			var borderOffsetVRight = 10 * scaleH;
 			var borderOffsetVLeft = 10 * scaleH;
 			
@@ -572,16 +572,19 @@
 
 		function drawNewsFeed(){	
 
-			var newsfeedContainerHeight = window.innerHeight-$('#newsfeedContainer').offset().top +'px';
-			
-			//console.log('newsfeedContainerHeight'+newsfeedContainerHeight);
-			$('#newsfeedContainer').css('height',newsfeedContainerHeight);
+			var newsfeedContainerHeight = window.innerHeight-$('#newsfeedContainer').offset().top ;
+			var headerYakwalaHeight = $('.headerYakwala').height();
+			var footerYakwalaHeight = $('#footer').height();
+			var mapHeight = window.innerHeight-headerYakwalaHeight-footerYakwalaHeight;
+			$('#newsfeedContainer').css('height',newsfeedContainerHeight+'px');
 			var width = $(window).width();
 			if(width < 767)
 				$('#newsfeedContainer').css('top','200px');
-			else
-				$('#newsfeedContainer').css('top','-15px');
-			
+			else{
+				$('#newsfeedContainer').css('top','0px');
+				$('#mymap').css('top',headerYakwalaHeight+'px');
+				$('#mymap').css('height',mapHeight+'px');
+			}
 			var newsfeedContentHeight = window.innerHeight-$('#newsfeedContent').offset().top-25+'px';
 			//console.log('newsfeedContentHeight'+newsfeedContentHeight);
 			$('#newsfeedContent').css('height',newsfeedContentHeight);
@@ -768,9 +771,6 @@
 
 		function silentUpdater(){
 			
-			//searchString = encodeURIComponent(searchString).replace(/%2520/g, ' ');		
-			
-			//bounds = map.getBounds();
 			bounds = getMyBounds();
 			var apiUrl = '';
 			var nowts = new Date().getTime();
@@ -895,24 +895,26 @@
 				var isFeedBL = false;
 				var isInfoBL = false;
 
-				for (var i = user.listeNoire.user.length - 1; i >= 0; i--) {
-					if(val.user == user.listeNoire.user[i]._id)
-						isUserBL = true;
-				};
-				for (var i = user.listeNoire.feed.length - 1; i >= 0; i--) {
-					if(val.feed == user.listeNoire.feed[i]._id)
-						isFeedBL = true;
-				};
+				if(typeof user.listeNoire.user != 'undefined')
+					for (var i = user.listeNoire.user.length - 1; i >= 0; i--) {
+						if(val.user == user.listeNoire.user[i]._id)
+							isUserBL = true;
+					};
+				if(typeof user.listeNoire.feed != 'undefined')	
+					for (var i = user.listeNoire.feed.length - 1; i >= 0; i--) {
+						if(val.feed == user.listeNoire.feed[i]._id)
+							isFeedBL = true;
+					};
 
-				for (var i = user.listeNoire.info.length - 1; i >= 0; i--) {
-					if(val._id == user.listeNoire.info[i]._id)
-						isInfoBL = true;
-				};
+				if(typeof user.listeNoire.info != 'undefined')	
+					for (var i = user.listeNoire.info.length - 1; i >= 0; i--) {
+						if(val._id == user.listeNoire.info[i]._id)
+							isInfoBL = true;
+					};
 
 
 				if(!isUserBL && !isFeedBL && !isInfoBL)
 				{
-					console.log("here");
 					if(flagFilter!=1)
 						infoArray.push(val);						
 					printMapItem(val,key,0);
@@ -1484,4 +1486,19 @@
 			item.append(yakyakBlackList);
 
 			return item;	
+		}
+
+		function getHotTags(curPos,dateFrom){
+			bounds = getMyBounds();
+			$.getJSON('/api/getHotTags/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/10',function(ajax) {
+				$('#dropdownTagSelector').html('');
+				if(ajax.data.tag.length > 0){
+					$.each(ajax.data.tag,function(key,val){
+						$('#dropdownTagSelector').append('<li>'+val.title+'</li>');
+					});
+				}else{
+					$('#dropdownTagSelector').html("<span style='cursor:default;'>No tag here</span>");
+				}
+				
+			});
 		}

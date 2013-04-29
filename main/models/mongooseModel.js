@@ -430,7 +430,7 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,from,now,type,str,thecount,thesk
 	/*mode update*/
 	if(now != 0){
 		var DCRE = new Date();
-		DCRE.setTime( now );
+		DCRE.setTime( now - 60000); // now minus one minute
 		qInfo.where('creationDate').gt(DCRE);
 	}
 		
@@ -511,27 +511,33 @@ Info.statics.findAllGeoAlert = function (x1,y1,x2,y2,from,now,type,str,usersubs,
 	DEND.setTime(DEND.getTime()+from*1000);
 
 
-	var box = [[parseFloat(x1),parseFloat(y1)],[parseFloat(x2),parseFloat(y2)]];
+	
 	var Yakcat = db.model('Yakcat');
 	var User = db.model('User');
 	var Tag = db.model('Tag');
 	var res = null;
 
 	var cond = {
-				"print":1,
 				"status":1,
-				"location" : {$within:{"$box":box}},
 				"pubDate":{$lte:DPUB},
 				"dateEndPrint":{$gte:DEND},
 				"yakType" : {$in:type}
 			};
+	if(y2 == 'null'){
+		cond["location"] = {$near:[parseFloat(x1),parseFloat(y1)],$maxDistance:parseFloat(x2)};
+	}else{
+		cond["print"]=1;
+		var box = [[parseFloat(x1),parseFloat(y1)],[parseFloat(x2),parseFloat(y2)]];
+		cond["location"] = {$within:{"$box":box}};
+	}
 
+				
 	var qInfo = this.find(cond).sort({'pubDate':-1}).limit(limit).skip(skip);
 	
 	/*mode update*/
 	if(now != 0){
 		var DCRE = new Date();
-		DCRE.setTime( now*1000 );
+		DCRE.setTime( now - 60000); // now minus one minute
 		qInfo.where('creationDate').gt(DCRE);
 	}
 	
@@ -607,27 +613,25 @@ Info.statics.findAllGeoAlertNumber = function (x1,y1,x2,y2,from,lastcheck,callba
 	DEND.setTime(DEND.getTime()+from*1000);
 	var dateLastCheck = DLC.setTime(lastcheck);
 
-	var box = [[parseFloat(x1),parseFloat(y1)],[parseFloat(x2),parseFloat(y2)]];
 	var location;
 	var res = null;
 
+	var cond = {
+		"status":1,
+		"pubDate":{$lte:DPUB},
+		"pubDate":{$gte:dateLastCheck},
+		"dateEndPrint":{$gte:DEND}
+	};
+
+	// request from the feed page
 	if(y2 == 'null'){		
 		var locationQuery = {$near:[parseFloat(x1),parseFloat(y1)],$maxDistance:parseFloat(x2)};
-	}else{
+	}else{ // from the map
 		var box = [[parseFloat(x1),parseFloat(y1)],[parseFloat(x2),parseFloat(y2)]];
 		var locationQuery = {$within:{"$box":box}};
+		cond["print"]=1;
 	}
-
 	
-
-	var cond = {
-				"print":1,
-				"status":1,
-				"pubDate":{$lte:DPUB},
-				"pubDate":{$gte:dateLastCheck},
-				"dateEndPrint":{$gte:DEND}
-			};
-
 	if (!isNaN(x1)) {
 		cond["location"] = locationQuery;
 	}		
@@ -1008,14 +1012,25 @@ Tag.statics.findAll = function (callback) {
   return this.find({},{},{sort:{numUsed:-1,usageDate:-1,title:1}}, callback);
 }
 
-Tag.statics.getHotTags = function (x,y,z,d,print,limit,callback) {
+/*
+	Get Hot tags geolocalized
+	if y2 == 0 : it comes form the feedpage => x1,y1 is the center and x2 is radius
+	else it comes from the map get the box (x1,y1), (x2,y2)
+*/
+Tag.statics.getHotTags = function (x1,y1,x2,y2,d,limit,callback) {
 	var now = new Date();
 	var DUSED = new Date();
 	var DUSEDMAX = new Date();
 	var offset = 24*60*60*1000; // 1 day
 	DUSED.setTime((now.getTime()+d*24*60*60*1000)-offset);
 	DUSEDMAX.setTime(now.getTime()+d*24*60*60*1000);
-	return this.find({usageDate:{$gte:DUSED,$lte:DUSEDMAX}, location:{$near:[parseFloat(x),parseFloat(y)],$maxDistance:parseFloat(z)},print:print},{},{sort:{numUsed:-1},limit:limit}, callback);
+	if(y2 == 'null')
+		return this.find({usageDate:{$gte:DUSED,$lte:DUSEDMAX}, location:{$near:[parseFloat(x1),parseFloat(y1)],$maxDistance:parseFloat(x2)}},{},{sort:{numUsed:-1},limit:limit}, callback);
+	else{
+		var box = [[parseFloat(x1),parseFloat(y1)],[parseFloat(x2),parseFloat(y2)]];
+		return this.find({usageDate:{$gte:DUSED,$lte:DUSEDMAX}, location:{$within:{"$box":box}},print:1},{},{sort:{numUsed:-1},limit:limit}, callback);
+	}
+		
 }
 
 

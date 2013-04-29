@@ -238,7 +238,7 @@ exports.catsandtags = function (req, res) {
 	var Tag = db.model('Tag');
 	var results =  new Array();
 	Yakcat.find({status:1},'title',function (err, cats){
-		Tag.getHotTags(req.params.x,req.params.y,req.params.z,req.params.d,req.params.print,1000,function (err, tags){
+		Tag.getHotTags(req.params.x1,req.params.y1,req.params.x2,req.params.y2,req.params.d,1000,function (err, tags){
 			results = tags.concat(cats);		
 			if(!err)
 				res.json({meta:{code:200},data:{catsandtags:results}});
@@ -338,7 +338,7 @@ exports.getContentTitles = function (req, res) {
 exports.getHotTags = function(req,res){
 	var Tag = db.model('Tag');
 	
-	Tag.getHotTags(req.params.x,req.params.y,req.params.z,req.params.d,req.params.print,req.params.limit,function (err, docs){
+	Tag.getHotTags(req.params.x1,req.params.y1,req.params.x2,req.params.y2,req.params.d,req.params.limit,function (err, docs){
 		if(!err)
 			res.json({meta:{code:200},data:{tag:docs}});
 		else
@@ -1699,9 +1699,13 @@ exports.user_blacklist = function(req, res){
  	var blacklist = {};
  	blacklist._id = req.body.id;
  	blacklist.login = req.body.login;
+ 	blacklist.date = new Date();
  	User.update({_id: req.session.user},{$push:{'listeNoire.user':blacklist}}, function(err){
-			if(!err)
+			if(!err){
 				res.json("1");
+				trackUser(req.session.user, 18, {userId:blacklist._id});
+			}
+				
 			else
 				res.json("0");
 	});
@@ -1711,10 +1715,12 @@ exports.user_blacklist = function(req, res){
  	var blacklist = {};
  	blacklist._id = req.body.id;
  	blacklist.login = req.body.login;
- 	
+ 	blacklist.date = new Date();
  	User.update({_id: req.session.user},{$push:{'listeNoire.info':blacklist}}, function(err){
-			if(!err)
+			if(!err){
 				res.json("1");
+				trackUser(req.session.user, 16, {infoId:blacklist._id});
+			}
 			else
 				res.json("0");
 	});
@@ -1724,9 +1730,12 @@ exports.user_blacklist = function(req, res){
  	var blacklist = {};
  	blacklist._id = req.body.id;
  	blacklist.login = req.body.login;
+ 	blacklist.date = new Date();
  	User.update({_id: req.session.user},{$push:{'listeNoire.feed':blacklist}}, function(err){
-			if(!err)
+			if(!err){
 				res.json("1");
+				trackUser(req.session.user, 17, {feedId:blacklist._id});
+			}
 			else
 				res.json("0");
 	});
@@ -1738,8 +1747,10 @@ exports.user_blacklist_remove = function(req, res){
  if(req.body.type == "user")
  {
  	User.update({_id: req.session.user},{$pull:{'listeNoire.user':{'_id' : req.body.id }}}, function(err){
-			if(!err)
+			if(!err){
 				res.json("1");
+				trackUser(req.session.user, 21, {userId:req.body.id});
+			}
 			else
 				res.json("0");
 	});
@@ -1747,8 +1758,10 @@ exports.user_blacklist_remove = function(req, res){
  else if(req.body.type == "info")
  {
  	 User.update({_id: req.session.user},{$pull:{'listeNoire.info':{'_id' : req.body.id}}}, function(err){
-			if(!err)
+			if(!err){
 				res.json("1");
+				trackUser(req.session.user, 19, {infoId:req.body.id});
+			}
 			else
 				res.json("0");
 	});
@@ -1756,8 +1769,10 @@ exports.user_blacklist_remove = function(req, res){
  else if(req.body.type == "feed")
  {
  	 User.update({_id: req.session.user},{$pull:{'listeNoire.feed':{'_id' : req.body.id}}}, function(err){
-			if(!err)
+			if(!err){
 				res.json("1");
+				trackUser(req.session.user, 20, {feedId:req.body.id});
+			}
 			else
 				res.json("0");
 	});

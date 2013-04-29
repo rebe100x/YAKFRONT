@@ -159,7 +159,8 @@ app.get('/api/geoalertsNumber/:x1/:y1/:x2/:y2/:ago/:lastcheck', api.geoalertsNum
 
 app.get('/api/zones/:x/:y', api.zones);
 app.get('/api/cats', api.cats);
-app.get('/api/catsandtags/:x/:y/:z/:d/:print', api.catsandtags);
+//app.get('/api/catsandtags/:x/:y/:z/:d/:print', api.catsandtags);
+app.get('/api/catsandtags/:x1/:y1/:x2/:y2/:d', api.catsandtags);
 app.get('/api/places', api.places);
 app.get('/api/searchplaces/:str', api.searchplaces);
 app.get('/api/usersearch/:string', api.user_search);
@@ -180,7 +181,7 @@ app.get('/api/feedusersearch/:string', api.feeduser_search);
 app.get('/api/feedsearch/:string', api.feed_search);
 //app.get('/api/getUsers', api.getUsers);
 app.get('/api/getContentTitles', api.getContentTitles);
-app.get('/api/getHotTags/:x/:y/:z/:d/:print/:limit', api.getHotTags);
+app.get('/api/getHotTags/:x1/:y1/:x2/:y2/:d/:limit', api.getHotTags);
 app.get('/api/getTopLiked/:x1/:y1/:x2/:limit', api.getTopLiked);
 app.get('/api/getTopCommented/:x1/:y1/:x2/:limit', api.getTopCommented);
 app.get('/api/getTopHots/:x1/:y1/:x2/:limit', api.getTopHots);
