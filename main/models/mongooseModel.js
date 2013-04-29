@@ -430,7 +430,7 @@ Info.statics.findAllGeo = function (x1,y1,x2,y2,from,now,type,str,thecount,thesk
 	/*mode update*/
 	if(now != 0){
 		var DCRE = new Date();
-		DCRE.setTime( now );
+		DCRE.setTime( now - 60000); // now minus one minute
 		qInfo.where('creationDate').gt(DCRE);
 	}
 		
@@ -511,27 +511,33 @@ Info.statics.findAllGeoAlert = function (x1,y1,x2,y2,from,now,type,str,usersubs,
 	DEND.setTime(DEND.getTime()+from*1000);
 
 
-	var box = [[parseFloat(x1),parseFloat(y1)],[parseFloat(x2),parseFloat(y2)]];
+	
 	var Yakcat = db.model('Yakcat');
 	var User = db.model('User');
 	var Tag = db.model('Tag');
 	var res = null;
 
 	var cond = {
-				"print":1,
 				"status":1,
-				"location" : {$within:{"$box":box}},
 				"pubDate":{$lte:DPUB},
 				"dateEndPrint":{$gte:DEND},
 				"yakType" : {$in:type}
 			};
+	if(y2 == null){
+		cond["location"] = {$near:[parseFloat(x1),parseFloat(y1)],$maxDistance:parseFloat(x2)};
+	}else{
+		cond["print"]=1;
+		var box = [[parseFloat(x1),parseFloat(y1)],[parseFloat(x2),parseFloat(y2)]];
+		cond["location"] = {$within:{"$box":box}};
+	}
 
+				
 	var qInfo = this.find(cond).sort({'pubDate':-1}).limit(limit).skip(skip);
 	
 	/*mode update*/
 	if(now != 0){
 		var DCRE = new Date();
-		DCRE.setTime( now*1000 );
+		DCRE.setTime( now - 60000); // now minus one minute
 		qInfo.where('creationDate').gt(DCRE);
 	}
 	
@@ -607,27 +613,25 @@ Info.statics.findAllGeoAlertNumber = function (x1,y1,x2,y2,from,lastcheck,callba
 	DEND.setTime(DEND.getTime()+from*1000);
 	var dateLastCheck = DLC.setTime(lastcheck);
 
-	var box = [[parseFloat(x1),parseFloat(y1)],[parseFloat(x2),parseFloat(y2)]];
 	var location;
 	var res = null;
 
+	var cond = {
+		"status":1,
+		"pubDate":{$lte:DPUB},
+		"pubDate":{$gte:dateLastCheck},
+		"dateEndPrint":{$gte:DEND}
+	};
+
+	// request from the feed page
 	if(y2 == 'null'){		
 		var locationQuery = {$near:[parseFloat(x1),parseFloat(y1)],$maxDistance:parseFloat(x2)};
-	}else{
+	}else{ // from the map
 		var box = [[parseFloat(x1),parseFloat(y1)],[parseFloat(x2),parseFloat(y2)]];
 		var locationQuery = {$within:{"$box":box}};
+		cond["print"]=1;
 	}
-
 	
-
-	var cond = {
-				"print":1,
-				"status":1,
-				"pubDate":{$lte:DPUB},
-				"pubDate":{$gte:dateLastCheck},
-				"dateEndPrint":{$gte:DEND}
-			};
-
 	if (!isNaN(x1)) {
 		cond["location"] = locationQuery;
 	}		

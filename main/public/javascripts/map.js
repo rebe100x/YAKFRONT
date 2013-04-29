@@ -771,9 +771,6 @@
 
 		function silentUpdater(){
 			
-			//searchString = encodeURIComponent(searchString).replace(/%2520/g, ' ');		
-			
-			//bounds = map.getBounds();
 			bounds = getMyBounds();
 			var apiUrl = '';
 			var nowts = new Date().getTime();
