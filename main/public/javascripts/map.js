@@ -1487,3 +1487,18 @@
 
 			return item;	
 		}
+
+		function getHotTags(curPos,dateFrom){
+			bounds = getMyBounds();
+			$.getJSON('/api/getHotTags/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/10',function(ajax) {
+				$('#dropdownTagSelector').html('');
+				if(ajax.data.tag.length > 0){
+					$.each(ajax.data.tag,function(key,val){
+						$('#dropdownTagSelector').append('<li>'+val.title+'</li>');
+					});
+				}else{
+					$('#dropdownTagSelector').html("<span style='cursor:default;'>No tag here</span>");
+				}
+				
+			});
+		}

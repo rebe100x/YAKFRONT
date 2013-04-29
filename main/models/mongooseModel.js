@@ -1006,14 +1006,26 @@ Tag.statics.findAll = function (callback) {
   return this.find({},{},{sort:{numUsed:-1,usageDate:-1,title:1}}, callback);
 }
 
-Tag.statics.getHotTags = function (x,y,z,d,print,limit,callback) {
+/*
+	Get Hot tags geolocalized
+	if y2 == 0 : it comes form the feedpage => x1,y1 is the center and x2 is radius
+	else it comes from the map get the box (x1,y1), (x2,y2)
+*/
+Tag.statics.getHotTags = function (x1,y1,x2,y2,d,limit,callback) {
 	var now = new Date();
 	var DUSED = new Date();
 	var DUSEDMAX = new Date();
 	var offset = 24*60*60*1000; // 1 day
 	DUSED.setTime((now.getTime()+d*24*60*60*1000)-offset);
 	DUSEDMAX.setTime(now.getTime()+d*24*60*60*1000);
-	return this.find({usageDate:{$gte:DUSED,$lte:DUSEDMAX}, location:{$near:[parseFloat(x),parseFloat(y)],$maxDistance:parseFloat(z)},print:print},{},{sort:{numUsed:-1},limit:limit}, callback);
+	console.log("x2="+x2);
+	if(y2 == 0)
+		return this.find({usageDate:{$gte:DUSED,$lte:DUSEDMAX}, location:{$near:[parseFloat(x1),parseFloat(y1)],$maxDistance:parseFloat(x2)}},{},{sort:{numUsed:-1},limit:limit}, callback);
+	else{
+		var box = [[parseFloat(x1),parseFloat(y1)],[parseFloat(x2),parseFloat(y2)]];
+		return this.find({usageDate:{$gte:DUSED,$lte:DUSEDMAX}, location:{$within:{"$box":box}},print:1},{},{sort:{numUsed:-1},limit:limit}, callback);
+	}
+		
 }
 
 

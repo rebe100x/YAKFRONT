@@ -956,3 +956,17 @@ function getItemDetails(el){
 				printArrayFeedItem();
 			};
 		});
+
+	function getHotTags(curPos,dateFrom){
+		$.getJSON('/api/getHotTags/'+(curPos.x)+'/'+(curPos.y)+'/'+rangeFromZ()+'/0/'+dateFrom+'/10',function(ajax) {
+			$('#dropdownTagSelector').html('');
+			if(ajax.data.tag.length > 0){
+				$.each(ajax.data.tag,function(key,val){
+					$('#dropdownTagSelector').append('<li>'+val.title+'</li>');
+				});
+			}else{
+				$('#dropdownTagSelector').html("<span style='cursor:default;'>No tag here</span>");
+			}
+			
+		});
+	}
