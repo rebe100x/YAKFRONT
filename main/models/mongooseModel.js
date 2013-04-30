@@ -1002,6 +1002,7 @@ mongoose.model('Yakcat', Yakcat);
 var Tag = new Schema({
     title     : { type: String, required: true, index:true}
   , usageDate       : { type:Date , default: Date.now, index:true}
+  , creationDate       : { type:Date , index:true}
   , numUsed :{type:Number}
   , location	: { type : { lat: Number, lng: Number }, index : '2d'}
   , print :{type:Number,require: true, index: true, default: 0}	

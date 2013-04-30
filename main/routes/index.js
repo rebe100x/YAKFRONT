@@ -370,6 +370,7 @@ exports.news = function(req, res){
 								tag.numUsed = 1;
 								tag.location = info.location;
 								tag.print = 1;
+								tag.creationDate = now;
 								tag.save();
 							}
 							else{
