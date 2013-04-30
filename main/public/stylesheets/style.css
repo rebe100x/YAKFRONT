@@ -467,6 +467,7 @@ width: 270px;
    #newsfeedContainer { width: 103%; right: -1px}
    #newsfeedContent .mCSB_scrollTools { right: -3px}
    #locationChooser {top:40%;}
+   #userChooser { top: 40%;}
  }
 
  /*large screens*/
@@ -522,6 +523,8 @@ width: 270px;
    #newsfeedContainer { width: 103%; right: -1px}
    #newsfeedContent .mCSB_scrollTools { right: -3px}
    #locationChooser {top:40%;}
+   #userChooser { top: 40%;}
+
  }
 
  /*ipads portrail*/
@@ -577,6 +580,7 @@ width: 270px;
    #newsfeedContainer { width: 103%; right: -1px}
    #newsfeedContent .mCSB_scrollTools { right: -3px}
    #locationChooser {top:40%;}
+   #userChooser { top: 40%;}
  }
 
   /*ipads portrail*/
@@ -635,7 +639,8 @@ width: 270px;
    span.redAdd { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -205px -658px; position: relative; float: left; cursor: pointer; top: 16px; margin-right: 10px}
    span.redStars { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -176px -658px; position: relative; float: left; cursor: pointer; top: 0px; margin-right: 10px}
    .searchYakwala #timeContainer { position: relative; margin-left: 12px; margin-top: 10px;}
-   #locationChooser {top:7%;}
+   #locationChooser {top:40%;}
+   #userChooser { top: 40%;}
  }
 
  /*ipads portrail*/
@@ -691,7 +696,8 @@ width: 270px;
    span.redAdd { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -205px -658px; position: relative; float: left; cursor: pointer; top: 16px; margin-right: 10px}
    span.redStars { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -176px -658px; position: relative; float: left; cursor: pointer; top: 0px; margin-right: 10px}
    .searchYakwala #timeContainer { position: relative; margin-left: 12px; margin-top: 10px;}
-   #locationChooser {top:7%;}
+   #locationChooser {top:40%;}
+   #userChooser { top: 40%;}
  }
 
 
@@ -749,6 +755,7 @@ width: 270px;
 	span.redStars { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -176px -658px; position: relative; float: left; cursor: pointer; top: 0px; margin-right: 10px}
 	.searchYakwala #timeContainer { position: relative; margin-left: 12px; margin-top: 10px;}
 	#locationChooser {top:7%;}
+	#userChooser {top:7%;}
 }
 
 /* Smartphones (portrait) ----------- */
@@ -805,6 +812,7 @@ width: 270px;
 	span.redStars { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -176px -658px; position: relative; float: left; cursor: pointer; top: 0px; margin-right: 10px}
 	.searchYakwala #timeContainer { position: relative; margin-left: 12px; margin-top: 10px;}
 	#locationChooser {top:7%;}
+	#userChooser {top:7%;}
 }
 
 
@@ -957,26 +965,27 @@ border-bottom: 1px solid #e5e5e5;}
 .userinfo .loader { width: 15px; top: 3px; left: 9px; position: relative;}
 #connectedas { background: #D1161E; color: white; font-weight: bold}
 
-#userChooser { width: 50%;}
+
+
 #userChooser #thealerts a{cursor : pointer;}
 #uc_Name { color: #d51820; font-size: 18px; font-weight: bold; float: left;}
 #userChooser #uc_profile_brief { background: white; line-height: 25px; color: black; font-size: 14px; clear: both; float: left;}
 #userChooser .modal-body {max-height: 450px;}
-#userChooser #uc_profile_brief .theimage { float: left; width: 150px; height: 150px; background-color: #c2160d; text-align: center;}
-#userChooser #uc_profile_brief .theinfo { float: left; position: relative; left: 24px}
+#userChooser #uc_profile_brief .theimage { background-color: #c2160d; text-align: center;}
 #userChooser #uc_profile_brief .theinfo .thename { font-size: 24px; font-weight: bold;}
 #userChooser #uc_profile_brief .theinfo .thelogin { font-size: 18px; color: #aeaeae;}
-#userChooser #uc_profile_brief .theinfo .thebio { font-size: 12px; line-height: 20px; width: 300px; display: block; margin-top: 12px;}
-#userChooser #uc_profile_brief .theinfo .thelink a { font-size: 12px; line-height: 20px; width: 300px; display: block; color: #c2160d; margin-top: 12px; float: left; clear: both; margin-top: 12px}
+#userChooser #uc_profile_brief .theinfo .thebio { font-size: 12px; line-height: 20px; display: block; margin-top: 12px;}
+#userChooser #uc_profile_brief .theinfo .thelink a { font-size: 12px; line-height: 20px; display: block; color: #c2160d; margin-top: 12px; clear: both; margin-top: 12px}
 #userChooser #uc_newsfeed { border-top: 1px solid #cecece; float: left; width: 100%;}
-#userChooser #uc_profile_yaks_alerts { float: left; position: relative; bottom: 8px; background-color: #c5170e; padding: 10px; color: white; text-align: center; width: 130px;cursor:pointer;}
-#userChooser #uc_profile_yaks { background: #f6f6f6; padding-top: 15px; padding-bottom: 15px;float: left; clear: both; display: block; width: 100%; border: 1px solid #cecece;}
+#userChooser #uc_profile_yaks_alerts { float: left; position: relative; bottom: 8px; background-color: #c5170e; padding: 10px; color: white; text-align: center;cursor:pointer;}
+#userChooser #uc_profile_yaks { background: #f6f6f6; padding-top: 15px; float: left; clear: both; display: block; width: 100%; border: 1px solid #cecece;}
 #userChooser #uc_profile_yaks b { font-size: 20px;}
 #userChooser #uc_profile_tags { padding-top: 0px; float: left; clear: both; display: block; width: 100%}
 
-#userChooser #uc_profile_yaks #uc_profile_yaks_posts { position: relative; padding:0 20px; float: left; text-align: center; font-size: 13px; margin-top: -3px; display: block;border-right: 1px solid #cecece; width: 70px}
-#userChooser #uc_profile_yaks #uc_profile_yaks_subscribed { position: relative; padding:0 20px; float: left; text-align: center; font-size: 13px; margin-top: -3px; display: block; border-right: 1px solid #cecece; width: 70px}
-#userChooser #uc_profile_yaks #uc_profile_yaks_subscribers { position: relative; padding:0 20px; float: left; text-align: center; font-size: 13px; margin-top: -3px; display: block;  border-right: 1px solid #cecece; width: 70px}
+#userChooser #uc_profile_yaks #uc_profile_yaks_posts { position: relative; padding:0 20px; float: left; text-align: center; font-size: 13px; margin-top: -3px; display: block;border-right: 1px solid #cecece; }
+#userChooser #uc_profile_yaks #uc_profile_yaks_subscribed { position: relative; padding:0 20px; float: left; text-align: center; font-size: 13px; margin-top: -3px; display: block; border-right: 1px solid #cecece;}
+#userChooser #uc_profile_yaks #uc_profile_yaks_subscribers { position: relative; padding:0 20px; float: left; text-align: center; font-size: 13px; margin-top: -3px; display: block;  border-right: 1px solid #cecece;}
+#userChooser #uc_profile_yaks #uc_profile_yaks_option { position: relative; padding:0 20px; float: left; text-align: center; font-size: 13px; margin-top: -3px; display: block;  border-right: 1px solid #cecece;}
 #userChooser #uc_profile_yaks_search { cursor: pointer;}
 #userChooser #uc_profile_yaks_search a {color: #c2160d}
 #userChooser #uc_profile_tags a { color: #656565; font-weight: bold; padding-left: 6px; }

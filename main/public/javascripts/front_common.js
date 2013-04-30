@@ -1833,7 +1833,23 @@ function checkByWidth()
 				if(typeof theuser.login != 'undefined')
 					userLogin = theuser.login;
 
-					$("#userChooser #uc_profile_brief").html("<span class='theimage'><img src='" + userThumb +"' /></span><span class='theinfo'><span class='thename' id='uc_username'>" + userName + "</span><br />" + "<span class='thelogin'>@"+ userLogin+ "</span><br /><span class='thebio'>" + userBio + "</span><span class='thelink'><a href='" + userWeb +"' target='_blank'>" + userWeb + "</a></span></span>");
+				var thetags = "";
+
+				for(i=0; i<theuser.tagsubs.length; i++)
+				{
+					thetags += "<a onclick='setSearchForTag(this)'>#" + theuser.tagsubs[i] + "</a> ";
+				}	
+
+				for(i=0; i<theuser.tag.length; i++)
+				{
+					thetags += "<a onclick='setSearchForTag(this)'>#" + theuser.tag[i] + "</a> ";
+				}	
+
+				if(thetags != '')
+					thetags = "<b>Tags alertes: </b>"+thetags;
+
+
+				$("#userChooser #uc_profile_brief").html("<span class='theimage span5'><img src='" + userThumb +"' /></span><span class='theinfo span7'><div class='thename' id='uc_username'>" + userName + "</div>" + "<div class='thelogin '>@"+ userLogin+ "</div><div class='thebio'>" + userBio + "</div><div class='thelink'><a href='" + userWeb +"' target='_blank'>" + userWeb + "</a></div><div id='thealerts'>"+thetags+"</div></span>");
 				
 				$.getJSON('/api/countUserInfo/' + userid ,function(data) {
 					if(typeof data.count != 'undefined')
@@ -1843,6 +1859,7 @@ function checkByWidth()
 				
 				if(userid != user._id)
 				{
+					$("#userChooser #uc_profile_yaks_alerts.mybtn").show();			
 					//console.log(userid);
 					if($.inArray(userid,user.usersubs) && user.usersubs.length > 0)
 					{
@@ -1873,21 +1890,7 @@ function checkByWidth()
 					$("#userChooser #uc_profile_yaks_alerts.mybtn").hide();		
 				}
 
-				var thetags = "";
-
-				for(i=0; i<theuser.tagsubs.length; i++)
-				{
-					thetags += "<a onclick='setSearchForTag(this)'>#" + theuser.tagsubs[i] + "</a> ";
-				}	
-
-				for(i=0; i<theuser.tag.length; i++)
-				{
-					thetags += "<a onclick='setSearchForTag(this)'>#" + theuser.tag[i] + "</a> ";
-				}	
-
-
-				$("#userChooser #uc_profile_tags #thealerts").html(thetags);
-
+				
 				var subscribed_number = 0;
 
 				if(typeof theuser.tagsubs != 'undefined')
@@ -1995,7 +1998,7 @@ function checkByWidth()
 				if(typeof theuser.name != 'undefined')
 					userLogin = theuser.name;
 
-				$("#userChooser #uc_profile_brief").html("<span class='theimage'><img src='" + userThumb +"' /></span><span class='theinfo'><span class='thename' id='uc_username'>" + userName + "</span><br />" + "<span class='thelogin'>@"+ userLogin+ "</span><br /><br /><br /><span class='thebio'>" + userBio + "</span><span class='thelink'><a href='" + userWeb +"' target='_blank'>" + userWeb + "</a></span></span>");
+				$("#userChooser #uc_profile_brief").html("<span class='theimage'><img src='" + userThumb +"' /></span><span class='theinfo'><span class='thename' id='uc_username'>" + userName + "</span><br />" + "<span class='thelogin'>@"+ userLogin+ "</span><br /><br /><br /><span class='thebio'>" + userBio + "</span><span class='thelink'><a href='" + userWeb +"' target='_blank'>" + userWeb + "</a></span>");
 				
 				$.getJSON('/api/countUserInfo/' + userid ,function(data) {
 					if(typeof data.count != 'undefined')

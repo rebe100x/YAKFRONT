@@ -7,27 +7,27 @@ mixin locationChooser(page)
 			h2 Endroits favoris: 
 		div.modal-body
 			p.alertText 
-				ul#myPlaces.favplacelist.unstyled
-					
-					- if(locals.user.favplace)
-							- each favplace in locals.user.favplace
-								li.zoneLoc(pointId=favplace._id, lat=favplace.location.lat, lng=favplace.location.lng, pointname=favplace.name)
-									span.redStars
-									span.pull-left(data-dismiss="modal")= favplace.name
-									span.closePlace(type="button", data-dismiss="modal", onclick='removefavPlace($(this));')
-									//
-										div.theslider(title=favplace.range, alt=favplace._id)
-										span.localnessPrinter Local
-									span.mylocalnessPrinter(style="display: none")
-									select.pull-left.dropdownRangeSelector(alt=favplace._id, range=favplace.range)
-										option(value="70", rangeText="Local")
-											|Local
-										option(value="80", rangeText="Très Local")
-											|Très Local
-										option(value="100", rangeText="Super Local")
-											|Super Local
-										option(value="120", rangeText="Hyper Local")
-											|Hyper Local
+			ul#myPlaces.favplacelist.unstyled
+				
+				- if(locals.user.favplace)
+						- each favplace in locals.user.favplace
+							li.zoneLoc(pointId=favplace._id, lat=favplace.location.lat, lng=favplace.location.lng, pointname=favplace.name)
+								span.redStars
+								span.pull-left(data-dismiss="modal")= favplace.name
+								span.closePlace(type="button", data-dismiss="modal", onclick='removefavPlace($(this));')
+								//
+									div.theslider(title=favplace.range, alt=favplace._id)
+									span.localnessPrinter Local
+								span.mylocalnessPrinter(style="display: none")
+								select.pull-left.dropdownRangeSelector(alt=favplace._id, range=favplace.range)
+									option(value="70", rangeText="Local")
+										|Local
+									option(value="80", rangeText="Très Local")
+										|Très Local
+									option(value="100", rangeText="Super Local")
+										|Super Local
+									option(value="120", rangeText="Hyper Local")
+										|Hyper Local
 											
 		div.modal-footer									
 				- if(session)

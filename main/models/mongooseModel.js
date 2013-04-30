@@ -705,9 +705,9 @@ var User = new Schema({
 		tags: {type : Schema.Types.Mixed},
 	}
 	,listeNoire : {
-		user: {type : []},
-		feed: {type : []},
-		info: {type : []},
+		user: {type : [Schema.Types.Mixed]},
+		feed: {type : [Schema.Types.Mixed]},
+		info: {type : [Schema.Types.Mixed]},
 	}
 	, createfrom_social  :{ type : Number, default:0} // 0 yakwala, 1 twitter, 2 facebook, 3 google
 	, apiData	: { type: [{

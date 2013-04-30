@@ -1,41 +1,43 @@
 mixin userChooser
 
 	div.modal.hide.fade#userChooser
-		div.modal-body
+		div.modal-header
 			span#closeModal(type="button", data-dismiss="modal")
+			br
+		div.modal-body
 			p.alertText 
 				img(src="/images/loader_big.gif")
-			p#uc_profile_brief
-			P#uc_profile_yaks
-				span#uc_profile_yaks_alerts.mybtn
-				span#uc_profile_yaks_posts
-					|0
-				span#uc_profile_yaks_subscribed
-					| Suit
-					br
-					b#subscribed_number
+			div.row-fluid 	
+				span.span12#uc_profile_brief
+			div.row-fluid 	
+				span.span12#uc_profile_yaks
+					span.span3#uc_profile_yaks_alerts.mybtn
+					span.span3#uc_profile_yaks_posts
 						|0
-				span#uc_profile_yaks_subscribers
-					| Suivi par
-					br
-					b#subscribers_number
-						|0
-				span#uc_profile_yaks_options
-					a.profileOptions.dropdown-toggle(data-toggle="dropdown", alt="Options", title="Option", style="position: relative; top: 3px; left: 30px; cursor: pointer")
-						img(src="/images/dots.png")
-					ul#customOptionsMenu.dropdown-menu.pull-right(style="position: relative; top: -16px;")
-						li
-							a#uc_blacklist_user
-								|Cacher(liste noir)
-			P#uc_profile_tags
-				b
-					|Tags alertes 
-				span#thealerts
-					|#dany #dany
-			p#uc_newsfeed
-			p#uc_profile_tags
-				a#uc_profile_yaks_search
-					|Cliquer ici pour filtrer les infos publiées par cet utilisateur dans cette région
+						span.span3#uc_profile_yaks_subscribed
+						| Suit
+						br
+						b#subscribed_number
+							|0
+					span.span3#uc_profile_yaks_subscribers
+						| Suivi par
+						br
+						b#subscribers_number
+							|0
+					span.span3#uc_profile_yaks_options
+						a.profileOptions.dropdown-toggle(data-toggle="dropdown", alt="Options", title="Option", style="position: relative; top: 3px; left: 30px; cursor: pointer")
+							img(src="/images/dots.png")
+						ul#customOptionsMenu.dropdown-menu.pull-right(style="position: relative; top: 0px;left: 0px;")
+							li
+								a#uc_blacklist_user
+									|Blacklister cet utilisateur
+			
+			div.row-fluid 	
+				span10#uc_newsfeed
+			div.row-fluid 	
+				span10#uc_profile_tags
+					a#uc_profile_yaks_search
+						|Cliquer ici pour filtrer les infos publiées par cet utilisateur dans cette région
 
 	script
 		$(document).ready(function(){
