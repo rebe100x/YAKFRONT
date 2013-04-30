@@ -259,61 +259,8 @@ function serCurrentSearchInfo()
 	$(".searchingDays").html($("#dayPrinter").html());
 
 }
-//var socket = io.connect('http://localhost:3000');
-function setLocalnessSliderText(x, elid){	
-	
-	var sliderText = 'Localness';
-	switch(x){
-		case 0:
-			sliderText = "Mondial";
-		break;
-		case 10:
-			sliderText = "Mondial";
-		break;
-		case 20:
-			sliderText = "National";
-		break;
-		case 30:
-			sliderText = "National";
-		break;
-		case 40:
-			sliderText = "Régional";
-		break;	
-		case 50:
-			sliderText = "Régional";
-		break;	
-		case 60:
-			sliderText = "Régional";
-		break;	
-		case 70:
-			sliderText = "Local";
-		break;	
-		case 80:
-			sliderText = "Très Local";
-		break;	
-		case 90:
-			sliderText = "Super Local";
-		break;	
-		case 100:
-			sliderText = "Super local";
-			break;
-		case 120:
-			sliderText = "Hyper local";
-			break;
-		default:
-			sliderText = "Local";
-		break;			
-	}
-	if (typeof(elid) === 'undefined') {
-		$("#localnessPrinter").html(sliderText);
-	}
-	else
-	{
-		$(elid).html(sliderText);
-	}
-	return sliderText;
-	
-}
+
+
 
 
 function setLocalnessSliderTextMinified(x, elid){	
@@ -846,13 +793,13 @@ $(document).ready(function() {
 				step:10,
 				value: 20,
 				slide: function(event,ui){
-					setLocalnessSliderText(ui.value, $(this).parent().find(".localnessPrinter"));
+					setLocalnessSliderTextMinified(ui.value, $(this).parent().find(".localnessPrinter"));
 				},
 				change:function(event, ui){
 					
 				},
 				create:function(event, ui){
-					setLocalnessSliderText(parseInt($(this).attr("title")), $(this).parent().find(".localnessPrinter"));
+					setLocalnessSliderTextMinified(parseInt($(this).attr("title")), $(this).parent().find(".localnessPrinter"));
 					$(this).slider( "value", parseInt($(this).attr("title") ) );
 					$("#newLI").removeAttr("id");
 				}
@@ -1773,7 +1720,7 @@ function checkByWidth()
 			$.getJSON('/api/usersearchbyid2/' + userid ,function(data) {
 
 				var theuser = data.user[0];
-				console.log(theuser);
+				
 				if(typeof theuser == 'undefined')
 				{
 					$("#userChooser p").hide();
@@ -1784,32 +1731,69 @@ function checkByWidth()
 				if(theuser.status != 1)
 				{
 					$("#userChooser p").hide();
-					$("#userChooser #closeModal").after("<p class='nonExist'>Ce compte est actuellement désactivée</p>");
+					$("#userChooser #closeModal").after("<p class='nonExist'>Ce compte est actuellement désactivé</p>");
 					return;
 				}
 
-				if(userid != user._id)
-				{
-				$("#uc_blacklist_user").unbind('click').click(function(){
-					$.post('/api/user/blacklist', {id : theuser._id, type : 'user', login: theuser.login} , function(res){
-							if (res != "0")
-							{
-								var blUser = {};
-								blUser._id = theuser._id;
-								blUser.login = theuser.login;
-								user.listeNoire.user = user.listeNoire.user.concat(blUser);
-								$('#userChooser').modal('hide');	
-								getAndPrintInfo();
-							}
+				if(userid != user._id){
+					$("#uc_blacklist_user").unbind('click').click(function(){
+						$.post('/api/user/blacklist', {id : theuser._id, type : 'user', login: theuser.login} , function(res){
+								if (res != "0")
+								{
+									var blUser = {};
+									blUser._id = theuser._id;
+									blUser.login = theuser.login;
+									user.listeNoire.user = user.listeNoire.user.concat(blUser);
+									$('#userChooser').modal('hide');	
+									getAndPrintInfo();
+								}
+
+						});
+					});
+
+					$("#uc_filter_user, #uc_profile_yaks_search").unbind('click').on('click',function(){
+						setSearchForUser('@'+theuser.humanName);
+						$('#userChooser').modal('hide');
+
+						$("#userChooser #uc_profile_yaks_alerts.mybtn").show();			
+						//console.log(userid);
+						if($.inArray(userid,user.usersubs) && user.usersubs.length > 0)
+						{
+							addAlert = 0;
+							var currHtml  = "<img src='images/uc_minus.png' />Supprimer de mes alertes";
+							$("#userChooser #uc_profile_yaks_alerts.mybtn").html(currHtml);	
+
+							$("#userChooser #uc_profile_yaks_alerts.mybtn").unbind('click').click(function(){
+								bindClickAlertUser(theuser._id, userName, userLogin, userThumb);
+							});
+						}
+							
+						else
+						{
+							addAlert = 1;
+							var currHtml = "<img src='images/uc_plus.png' />Ajouter a mes alertes";
+							$("#userChooser #uc_profile_yaks_alerts.mybtn").html(currHtml);		
+							$("#userChooser #uc_profile_yaks_alerts.mybtn").unbind('click').click(function(){
+								bindClickAlertUser(theuser._id, userName, userLogin, userThumb);
+							});
+						}
 
 					});
-				})
-				}
-				else
-				{
-					$("#uc_blacklist_user").unbind('click');
+
+					$("#uc_filter_user, #uc_profile_yaks_search").unbind('click').on('click',function(){
+					setSearchForUser('@'+userName);
+					$('#userChooser').modal('hide');
+
+				});
+					
+				} else {
+
+					$("#uc_blacklist_user, #uc_filter_user, #uc_profile_yaks_search").unbind('click').hide();
+					$("#userChooser #uc_profile_yaks_alerts.mybtn").hide();		
 				}
 
+
+				
 
 				$("#userChooser .nonExist").remove();
 				$("#userChooser p").show();
@@ -1846,7 +1830,7 @@ function checkByWidth()
 				}	
 
 				if(thetags != '')
-					thetags = "<b>Tags alertes: </b>"+thetags;
+					thetags = "<b>Tags: </b>"+thetags;
 
 
 				$("#userChooser #uc_profile_brief").html("<span class='theimage span5'><img src='" + userThumb +"' /></span><span class='theinfo span7'><div class='thename' id='uc_username'>" + userName + "</div>" + "<div class='thelogin '>@"+ userLogin+ "</div><div class='thebio'>" + userBio + "</div><div class='thelink'><a href='" + userWeb +"' target='_blank'>" + userWeb + "</a></div><div id='thealerts'>"+thetags+"</div></span>");
@@ -1857,38 +1841,7 @@ function checkByWidth()
 				});
 
 				
-				if(userid != user._id)
-				{
-					$("#userChooser #uc_profile_yaks_alerts.mybtn").show();			
-					//console.log(userid);
-					if($.inArray(userid,user.usersubs) && user.usersubs.length > 0)
-					{
-						addAlert = 0;
-						var currHtml  = "<img src='images/uc_minus.png' />Supprimer de mes alertes";
-						$("#userChooser #uc_profile_yaks_alerts.mybtn").html(currHtml);	
-
-						$("#userChooser #uc_profile_yaks_alerts.mybtn").click(function(){
-							bindClickAlertUser(theuser._id, userName, userLogin, userThumb);
-						});
-					}
-						
-					else
-					{
-						addAlert = 1;
-						var currHtml = "<img src='images/uc_plus.png' />Ajouter a mes alertes";
-						$("#userChooser #uc_profile_yaks_alerts.mybtn").html(currHtml);		
-						$("#userChooser #uc_profile_yaks_alerts.mybtn").unbind('click').click(function(){
-							bindClickAlertUser(theuser._id, userName, userLogin, userThumb);
-						});
-					}
-						
-
-					
-				}	
-				else
-				{
-					$("#userChooser #uc_profile_yaks_alerts.mybtn").hide();		
-				}
+				
 
 				
 				var subscribed_number = 0;
@@ -1929,7 +1882,6 @@ function checkByWidth()
 		{
 
 			$("#uc_profile_yaks_subscribed").remove();		
-			$("#userChooser #uc_profile_yaks #uc_profile_yaks_posts").css("width", "180px");
 
 			var userid = $(el).parent().find("input").val();
 
@@ -1961,21 +1913,28 @@ function checkByWidth()
 
 				
 
-					$("#uc_blacklist_user").click(function(){
-						$.post('/api/user/blacklist', {id : theuser._id, type : 'feed', login: theuser.humanName} , function(res){
-								if (res != "0")
-								{
-									var blFeed = {};
-									blFeed._id = theuser._id;
-									blFeed.login = theuser.humanName;
-									user.listeNoire.feed = user.listeNoire.feed.concat(blFeed);
-									$('#userChooser').modal('hide');	
-									getAndPrintInfo();
-								}
+				$("#uc_blacklist_user").unbind('click').click(function(){
+					$.post('/api/user/blacklist', {id : theuser._id, type : 'feed', login: theuser.humanName} , function(res){
+							if (res != "0")
+							{
+								var blFeed = {};
+								blFeed._id = theuser._id;
+								blFeed.login = theuser.humanName;
+								user.listeNoire.feed = user.listeNoire.feed.concat(blFeed);
+								$('#userChooser').modal('hide');	
+								getAndPrintInfo();
+							}
 
-						});
-					})	
+					});
+				})	
 
+					
+				$("#uc_filter_user, #uc_profile_yaks_search").unbind('click').on('click',function(){
+					setSearchForUser('@'+theuser.humanName);
+					$('#userChooser').modal('hide');
+
+				});
+					
 				$("#userChooser .nonExist").remove();
 				$("#userChooser p").show();
 				var userName = ""; var userBio = ""; var userThumb = ""; var userWeb = ""; var userLogin = "";
@@ -1998,7 +1957,16 @@ function checkByWidth()
 				if(typeof theuser.name != 'undefined')
 					userLogin = theuser.name;
 
-				$("#userChooser #uc_profile_brief").html("<span class='theimage'><img src='" + userThumb +"' /></span><span class='theinfo'><span class='thename' id='uc_username'>" + userName + "</span><br />" + "<span class='thelogin'>@"+ userLogin+ "</span><br /><br /><br /><span class='thebio'>" + userBio + "</span><span class='thelink'><a href='" + userWeb +"' target='_blank'>" + userWeb + "</a></span>");
+				var thetags = "";
+
+				for(i=0; i<theuser.yakCatNameArray.length; i++){
+					thetags += "<a onclick='setSearchForTag(this)'>#" + theuser.yakCatNameArray[i] + "</a> ";
+				}	
+				if(thetags != '')
+					thetags = '<b>Tags :</b>'+thetags;
+
+
+				$("#userChooser #uc_profile_brief").html("<span class='theimage'><img src='" + userThumb +"' /></span><span class='theinfo'><div class='thename' id='uc_username'>" + userName + "</div>" + "<div class='thelogin'>@"+ userLogin+ "</div><div class='thebio'>" + userBio + "</div><div class='thelink'><a href='" + userWeb +"' target='_blank'>" + userWeb + "</a></div><div id='thealerts'>"+thetags+"</div></span>");
 				
 				$.getJSON('/api/countUserInfo/' + userid ,function(data) {
 					if(typeof data.count != 'undefined')
@@ -2029,17 +1997,6 @@ function checkByWidth()
 				}
 			
 
-				var thetags = "";
-
-				
-
-				for(i=0; i<theuser.yakCatNameArray.length; i++)
-				{
-					thetags += "<a onclick='setSearchForTag(this)'>#" + theuser.yakCatNameArray[i] + "</a> ";
-				}	
-
-
-				$("#userChooser #uc_profile_tags #thealerts").html(thetags);
 
 				var subscribed_number = 0;
 
@@ -2056,10 +2013,7 @@ function checkByWidth()
 				});
 
 
-				$("#uc_profile_yaks_search").unbind('click').on('click',function(){
-					setSearchForUser(theuser.humanName);
-					$('#userChooser').modal('hide');
-				});
+				
 
 				var uri = '/api/feed/feed/' + theuser._id;
 				

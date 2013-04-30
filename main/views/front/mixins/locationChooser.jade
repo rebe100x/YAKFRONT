@@ -53,14 +53,14 @@ mixin locationChooser(page)
 			step:10,
 			value: 20,
 			slide: function(event,ui){
-				setLocalnessSliderText(ui.value, $(this).parent().find(".localnessPrinter"));
+				setLocalnessSliderTextMinified(ui.value, $(this).parent().find(".localnessPrinter"));
 			},
 			change:function(event, ui){
 				var favPlaceId = changePlaceRange($(this).attr("alt"), $(this).parent().attr("lat"), $(this).parent().attr("lng"), $(this).parent().attr("pointname"), ui.value);
 				$(this).attr("alt", favPlaceId);
 			},
 			create:function(event, ui){
-				setLocalnessSliderText(parseInt($(this).attr("title")), $(this).parent().find(".localnessPrinter"));
+				setLocalnessSliderTextMinified(parseInt($(this).attr("title")), $(this).parent().find(".localnessPrinter"));
 				//$(this).slider( "value", parseInt($(this).attr("title") ) );
 				$(this).find("a.ui-slider-handle").css("left", $(this).attr("title") + "%");
 				$(this).find("div.ui-slider-range").css("width", $(this).attr("title") + "%");

@@ -327,9 +327,10 @@ width: 270px;
 	padding:5px;
 }
 
-/* bootsrap override
+/* bootsrap override*/
+.dropdown-menu a {cursor:pointer;}
 
-*/
+
 .yakbtn { background-color: #b6070f; width: 140px; padding-top: 6px; padding-bottom: 6px; color: #ffffff; text-transform: uppercase; border: 0px; font-weight: bold; margin-bottom: 50px;}
 .yakbtn:hover { background-color: #fae8e8; color: #cd131b}
 

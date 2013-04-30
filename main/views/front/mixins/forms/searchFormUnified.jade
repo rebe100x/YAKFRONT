@@ -113,7 +113,7 @@ mixin searchFormUnified(page)
 
 				setTimeSliderText(dateFrom);
 
-				setLocalnessSliderText(curPos.z);
+				setLocalnessSliderTextMinified(curPos.z);
 		
 				/*search info and place*/
 				if(searchString != null)
@@ -266,7 +266,7 @@ mixin searchFormUnified(page)
 				step:10,
 				value: curPos.z,
 				slide: function(event,ui){
-					setLocalnessSliderText(ui.value);
+					setLocalnessSliderTextMinified(ui.value);
 				},
 				change:function(event, ui){
 					curPos.z =  ui.value;
@@ -557,7 +557,7 @@ mixin searchFormUnified(page)
 			var lasttext = '';
 			var currtext = '';
 			
-			$("#localnessPrinter").html(setLocalnessSliderText(curPos.z));
+			$("#localnessPrinter").html(setLocalnessSliderTextMinified(curPos.z));
 			$("#dropdownRangeSelector li").unbind("click").on('click',function(){
 
 				$("#localnessPrinter").html($(this).html());

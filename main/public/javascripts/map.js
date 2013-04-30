@@ -170,7 +170,7 @@
 					curPos.y =  user.location.lng;
 					curPos.z = user.addressZoom;
 					$("#searchPlaceStr").val(curPos.name);
-					setLocalnessSliderText(curPos.z);
+					setLocalnessSliderTextMinified(curPos.z);
 					$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
 					changeRange();
 					moveMap();
@@ -656,7 +656,7 @@
 		};
 		function changeZoom(){
 			curPos.z  = zFromRange();
-			setLocalnessSliderText(curPos.z);	
+			setLocalnessSliderTextMinified(curPos.z);	
 			$("#rangeSelector").val(curPos.z).slider('value',curPos.z);
 			$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
 		};
