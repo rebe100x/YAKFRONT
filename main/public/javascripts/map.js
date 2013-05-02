@@ -756,12 +756,14 @@
 				var alertsNumberUrl = '';
 				bounds = getMyBounds();
 				dateLastCheck = new Date(user.alertsLastCheck);
-				alertsNumberUrl = '/api/geoalertsNumber/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/'+dateLastCheck.getTime();
+				alertsNumberUrl = '/api/geoalertsNumber/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/'+dateLastCheck.getTime()+'/'+yakType.toString()+'/'+searchString;
 				//console.log(alertsNumberUrl);
 				$.getJSON(alertsNumberUrl,function(ajax) {
 					//console.log(ajax.data.info);
 					if(ajax.data.info != '-1' && ajax.data.info != "0")
 						$("#alertsNumber").html(ajax.data.info);
+					else
+						$("#alertsNumber").html('');
 				});
 			}
 			
@@ -771,6 +773,8 @@
 
 		function silentUpdater(){
 			
+			numAlertsSearch();
+
 			bounds = getMyBounds();
 			var apiUrl = '';
 			var nowts = new Date().getTime();
@@ -807,8 +811,9 @@
 		}
 		
 		function getAndPrintInfo(){
-			//console.log('getAndPrintInfo');
 			getHotTags(curPos,dateFrom);
+			numAlertsSearch();
+		
 
 			infoArray = [];
 			bounds = getMyBounds();

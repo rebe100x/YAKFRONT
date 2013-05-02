@@ -155,7 +155,7 @@ app.get('/api/geoinfos/:x1/:y1/:x2/:y2/:ago/:now/:type/:str/:limit/:skip', api.g
 app.get('/api/geoalerts/:x1/:y1/:x2/:y2/:ago/:now/:type/:str', routes.requiresLogin, api.geoalerts);
 app.get('/api/geoalerts/:x1/:y1/:x2/:y2/:ago/:now/:type/:str/:limit', routes.requiresLogin, api.geoalerts);
 app.get('/api/geoalerts/:x1/:y1/:x2/:y2/:ago/:now/:type/:str/:limit/:skip', routes.requiresLogin, api.geoalerts);
-app.get('/api/geoalertsNumber/:x1/:y1/:x2/:y2/:ago/:lastcheck', api.geoalertsNumber);
+app.get('/api/geoalertsNumber/:x1/:y1/:x2/:y2/:ago/:lastcheck/:type/:str', routes.requiresLogin, api.geoalertsNumber);
 
 app.get('/api/zones/:x/:y', api.zones);
 app.get('/api/cats', api.cats);

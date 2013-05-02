@@ -528,12 +528,14 @@ function checkGravatar()
 	// get the email
 	if(typeof user.mail != 'undefined')
 	{
+		console.log(user);	
 		if(user.mail != null && user.mail != "")
 		{
 			var gravatarMail = $.trim(user.mail).toLowerCase();
 			gravatarLink = 'http://www.gravatar.com/' + $.md5(gravatarMail) + '.json';
 		}
 	}
+	console.log('TRIGGED');
 	(function($) {
 				var url = gravatarLink;
 				$.ajax({
@@ -545,6 +547,7 @@ function checkGravatar()
 				success: function(data){ 
 					if(typeof(data.entry != 'undefined'))
 					{
+						console.log(data);	
 						if(data.entry.length > 0)
 						{
 							var gravatarImage = data.entry[0].thumbnailUrl + "?s=150";
@@ -565,7 +568,6 @@ function checkGravatar()
 				}
 				});
 			})(jQuery);	
-
 
 }
 $(document).ready(function() {

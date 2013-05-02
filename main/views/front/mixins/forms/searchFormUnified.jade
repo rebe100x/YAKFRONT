@@ -81,7 +81,7 @@ mixin searchFormUnified(page)
 
 		$(document).ready(function(){
 
-				setInterval('numAlertsSearch()', 10000);
+				//setInterval('numAlertsSearch()', 10000);
 				
 				if(yakType.inArray("4"))
 					$("#btnDiscussion").addClass('active').attr('title','Cacher les Yassalas');
@@ -543,7 +543,7 @@ mixin searchFormUnified(page)
 
 				if(user.feedsubs.length == 0 && user.usersubs.length == 0 && user.tagsubs.length == 0)
 				{
-					$('#newsfeed').html('<li class="mapHighlighterDetails"><div class="infowindow emptyfeeditem">vous n avez pas choisi vos <a href="/settings/alerts">alertes</a></div></li>');
+					$('#newsfeed').html("<li class='mapHighlighterDetails'><div class='infowindow emptyfeeditem'>Il n'y pas d'info à afficher car vous n'avez pas défini vos <a href='/settings/alerts'>alertes</a> !</div></li>");
 					return;
 				}
 				

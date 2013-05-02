@@ -96,9 +96,7 @@ exports.geoalerts = function (req, res) {
 					return Info.format(item);
 				});
 			res.json({meta:{code:200},data:{info:infosFormated}});
-		}
-			
-		else
+		}else
 			res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 	}); 
 };
@@ -106,13 +104,16 @@ exports.geoalerts = function (req, res) {
 
 exports.geoalertsNumber = function (req, res) {
 	var Info = db.model('Info');
-	
-	Info.findAllGeoAlertNumber(req.params.x1,req.params.y1,req.params.x2,req.params.y2,req.params.ago, req.params.lastcheck,function (err, docs){
+	var usersubs= res.locals.user.usersubs;
+	var tagsubs= res.locals.user.tagsubs;
+	var feedsubs = res.locals.user.feedsubs;
+	var type = [];
+	type = req.params.type.split(',');
+
+	Info.findAllGeoAlertNumber(req.params.x1,req.params.y1,req.params.x2,req.params.y2,req.params.ago, req.params.lastcheck,type,req.params.str,usersubs,tagsubs,feedsubs,function (err, docs){
 		if(!err){
 			res.json({meta:{code:200},data:{info:docs}});
-		}
-			
-		else
+		}else
 			res.json({meta:{data: '-1', code:404,error_type:'operation failed',error_description:err.toString()}});
 	}); 
 };
@@ -1687,7 +1688,7 @@ function trackUser(userid, actionid, logparams)
 {
 	var request = require('request');
 	var url = conf.trackurl + '/track/user/'+userid+'/'+actionid+'/'+encodeURIComponent(JSON.stringify(logparams));
-	console.log('---log:'+url);
+	//console.log('---log:'+url);
 	request.get({url:url, json:true}, function (err) {if (err) console.log(err);})
 }
 
@@ -1784,8 +1785,6 @@ exports.user_blacklist_remove = function(req, res){
 
 exports.getTopLiked = function(req, res){
 	var Info = db.model('Info');
-	console.log(req.params.limit);
-
 	Info.findTopLiked(req.params.x1,req.params.y1,req.params.x2,req.params.limit, function(err, docs){
 		if(!err){
 			var infosFormated = docs.map(function(item){
@@ -1801,8 +1800,6 @@ exports.getTopLiked = function(req, res){
 
 exports.getTopCommented = function(req, res){
 	var Info = db.model('Info');
-	console.log(req.params.limit);
-
 	Info.findTopCommented(req.params.x1,req.params.y1,req.params.x2,req.params.limit, function(err, docs){
 		if(!err){
 			var infosFormated = docs.map(function(item){
@@ -1818,8 +1815,6 @@ exports.getTopCommented = function(req, res){
 
 exports.getTopHots = function(req, res){
 	var Info = db.model('Info');
-	console.log(req.params.limit);
-
 	Info.findTopHots(req.params.x1,req.params.y1,req.params.x2,req.params.limit, function(err, docs){
 		if(!err){
 			var infosFormated = docs.map(function(item){

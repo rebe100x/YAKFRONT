@@ -210,6 +210,8 @@
 	
 	function silentUpdater(){
 		
+		numAlertsSearch();
+
 		var nowts = new Date().getTime();
 		var apiUrl = '';
 		if(yakType.inArray("5"))
@@ -354,6 +356,8 @@
 		//console.log('getAndPrintInfo');
 		getAndPrintTops();
 		getHotTags(curPos,dateFrom);
+		numAlertsSearch();
+		
 		infoArray = [];
 		
 		
@@ -940,12 +944,13 @@ function getItemDetails(el){
 				var alertsNumberUrl = '';
 				
 				dateLastCheck = new Date(user.alertsLastCheck);
-				alertsNumberUrl = '/api/geoalertsNumber/'+curPos.x+'/'+curPos.y+'/'+curPos.z+'/'+'null'+'/'+dateFrom+'/'+dateLastCheck.getTime();
-				//console.log(alertsNumberUrl);
+				alertsNumberUrl = '/api/geoalertsNumber/'+curPos.x+'/'+curPos.y+'/'+rangeFromZ()+'/'+'null'+'/'+dateFrom+'/'+dateLastCheck.getTime()+'/'+yakType.toString()+'/'+searchString;
 				$.getJSON(alertsNumberUrl,function(ajax) {
 					console.log(ajax);
 					if(ajax.data.info != '-1' && ajax.data.info != "0")
 						$("#alertsNumber").html(ajax.data.info);
+					else
+						$("#alertsNumber").html('');
 				});
 			}
 			

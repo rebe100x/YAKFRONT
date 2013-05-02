@@ -601,7 +601,7 @@ Info.statics.findAllGeoAlert = function (x1,y1,x2,y2,from,now,type,str,usersubs,
 }
 
 
-Info.statics.findAllGeoAlertNumber = function (x1,y1,x2,y2,from,lastcheck,callback) {
+Info.statics.findAllGeoAlertNumber = function (x1,y1,x2,y2,from,lastcheck,type,str,usersubs,tagsubs,feedsubs,callback) {
 	
 	
 	var DPUB = new Date();
@@ -618,10 +618,11 @@ Info.statics.findAllGeoAlertNumber = function (x1,y1,x2,y2,from,lastcheck,callba
 
 	var cond = {
 		"status":1,
-		"pubDate":{$lte:DPUB},
 		"pubDate":{$gte:dateLastCheck},
-		"dateEndPrint":{$gte:DEND}
+		"dateEndPrint":{$gte:DEND},
+		"yakType" : {$in:type}
 	};
+
 
 	// request from the feed page
 	if(y2 == 'null'){		
@@ -636,9 +637,68 @@ Info.statics.findAllGeoAlertNumber = function (x1,y1,x2,y2,from,lastcheck,callba
 		cond["location"] = locationQuery;
 	}		
 
-	var qInfo = this.find(cond).sort({'pubDate':-1});
+
+	var qInfo = this.find(cond);
+
+
+	if( (typeof(usersubs) != 'undefined' && usersubs != 'null') || (typeof(tagsubs) != 'undefined' && tagsubs != 'null' ) || (typeof(feedsubs) != 'undefined' && feedsubs != 'null' )){
+		if(typeof(usersubs) != 'undefined' && usersubs != 'null' ){
+			var usersubsId =  usersubs.map(function(item){return item._id});
+			qInfo.or([ {"user":{$in:usersubsId}}]);
+		}
+		if(typeof(feedsubs) != 'undefined' && feedsubs != 'null' ){
+			var feedName =  feedsubs.map(function(item){return item.humanName});
+			qInfo.or([ {"origin":{$in:feedName}}]);
+		}
+		if(typeof(tagsubs) != 'undefined' && tagsubs != 'null' )
+			qInfo.or([{"freeTag": {$in:tagsubs}}]);
+	}
+
+
+	if(str != 'null' && str.length > 0){  // STRING SEARCH
+		var firstChar = str.substr(0,1);
+		var strClean = str.replace(/@/g,'').replace(/#/g,'').replace(/%23/g,'').replace(/%40/g,'');
+		var searchStr = new RegExp(strClean,'gi');
+		var searchExactStr = new RegExp("^"+strClean+"$",'gi');
+		if(firstChar=='#'){
+			Yakcat.findOne({'title': {$regex:searchStr}}).exec(function(err,theyakcat){
+				if(theyakcat == null){
+					qInfo.or([{"freeTag": {$regex:searchExactStr}}]);
+				}else{
+					qInfo.or([{"freeTag": {$regex:searchExactStr}},{"yakCat": {$in:[theyakcat._id]}}]);
+				}
+				res = qInfo.count().exec(callback);
+			});
+		}else if(firstChar=='@'){
+			User.findOne({'login':{$regex:searchExactStr}}).exec(function(err,theuser){
+				if(theuser != null){
+					qInfo.or([  {'user':theuser._id} ]);
+				}
+				res = qInfo.count().exec(callback);
+			});
+		}else{
+			Yakcat.findOne({'title': {$regex:searchExactStr}}).exec(function(err,theyakcat){
+				if(theyakcat == null){
+					User.findOne({'login':{$regex:searchExactStr}}).exec(function(err,theuser){
+						if(theuser == null){ // NO TAG, NO YAKCAT, NO USER
+							qInfo.or([ {'title': {$regex:searchStr}}, {'content': {$regex:searchStr}} , {"freeTag": {$regex:searchExactStr}} ]);
+						}else{
+							qInfo.or([ {'title': {$regex:searchStr}}, {'content': {$regex:searchStr}} , {"freeTag": {$regex:searchExactStr}} , {'user':theuser._id}]);
+						}
+						res = qInfo.count().exec(callback);
+					});
+				}else{
+					qInfo.or([ {'title': {$regex:searchStr}}, {'content': {$regex:searchStr}} , {"freeTag": {$regex:searchExactStr}} ,{"yakCat": {$in:[theyakcat._id]}}]);
+					res = qInfo.count().exec(callback);
+				}
+			});
+		}
+	}else{  // NO STRING SEARCH
+		res = qInfo.count().exec(callback);
+	}
+
 	
-	res = qInfo.count().exec(callback);
+	
 	return res;
 }
 
