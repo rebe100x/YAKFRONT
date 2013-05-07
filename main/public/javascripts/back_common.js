@@ -4,13 +4,6 @@ $(document).ready(function() {
 
 	
 	/* Detect browser */
-	/*
-	$.browser.chrome = /chrom(e|ium)/.test(navigator.userAgent.toLowerCase());
-	if(!$.browser.chrome){
-		$("#alertInfo").show();
-		$("#alertInfo span.alertText").html("Cette interface est omptimisée pour <a target='_blank' href='https://www.google.com/intl/fr/chrome/browser/?hl=fr'>Chrome</a>.");
-	}*/
-
 	var isChrome = window.chrome;
 	if(!isChrome) {
 
@@ -23,25 +16,6 @@ $(document).ready(function() {
 
 
 
-Array.prototype.cleanArrayByName=function(str){
-	for(i=0;i<this.length;i++)
-		if(str==this[i]) 
-			this.splice(i, 1);
-}
-Array.prototype.cleanArray=function(id){
-	//console.log(id);
-	for(i=0;i<this.length;i++)
-		if(id==this[i]._id) 
-			this.splice(i, 1);
-}
-
-Array.prototype.cleanArrayByLocation=function(lng,lat){
-	for(i=0;i<this.length;i++){
-		//console.log(this[i].location.lng+"="+lng);
-		if(lng==this[i].location.lng && lat==this[i].location.lat) 
-			this.splice(i, 1);
-	}
-}
 
 
 function moveMap(lat,lng){
@@ -100,63 +74,9 @@ function getHTML5Pos(position) {
 	y = position.coords.longitude;
 	z = 13;
 	
-	geolocalized = 1;
-	
-	//paris => redirect to Paris
-	//x = 48.857939;
-	//y = 2.352448;
-	//mtpellier => redirect to Montpellier
-	//x = 43.610352;
-	//y = 3.877144;
-	//nimes => redirect to Montpellier
-	//x = 43.834527;
-	//y = 4.372559;
-	//Limoges => no redirect
-	//x = 45.844108;
-	//y =1.274414;
-	//Troies => redirect to Paris
-	//x = 48.297812;
-	//y = 4.086914;
-	
 	curPos = {'x':x,'y':y,'z':z};
 	
-	$.getJSON('/api/zones/'+x+'/'+y,function(data) {
-	
-		//TODO : if there are info visible where the user is, dont print the alert, just let him surf
-		// we are very far from any zone
-		if(data.zone.length == 0){
-			console.log('not near area');
-			
-		}else{ // a zone is not far
-			var zone = new Object(data.zone[0]);
-			
-			//console.log(zone.box.br.lat);
-			//console.log(x +'>'+ zone.box.tl.lat+' && '+x +'<'+ zone.box.br.lat +'&&'+ y +'<'+ zone.box.tl.lng +'&&'+ y +'>'+ zone.box.br.lng);
-			
-			// if we are inside the zone, we take the user location
-			if(x < zone.box.tl.lat && x > zone.box.br.lat && y > zone.box.tl.lng && y < zone.box.br.lng ){
-				//console.log('inside');
-				curPos = {'x':x,'y':y,'z':16};
-			}else{ // we are not far the zone but still out of it : we take the zone center location
-				//console.log('outside');
-				curPos = {'x':zone.location.lat,'y':zone.location.lng,'z':13};
-				
-			}
-			
-			
-			//socket.emit('position', curPos);
-		
-		
-			//if($('#mymap').length > 0)	
-			//	google.maps.event.addDomListener(window, 'load', initialize(curPos.x,curPos.y,curPos.z)); 
-			
-		}
-	
-			
-		if($('#mymap').length > 0)
-				google.maps.event.addDomListener(window, 'load', initialize(curPos.x,curPos.y,curPos.z)); 	
-		
-	});
+	google.maps.event.addDomListener(window, 'load', initialize(curPos.x,curPos.y,curPos.z)); 	
 	
 }
 
@@ -241,21 +161,6 @@ function deletePlaceHTML(placeArray,results,self){
 	
 	
 }
-Array.prototype.inArray=function(needle){
-	var length = this.length;
-    for(var i = 0; i < length; i++) {
-        if(this[i] == needle) return true;
-    }
-    return false;
-}
-
-Array.prototype.inArrayId=function(id){
-	var length = this.length;
-    for(var i = 0; i < length; i++) {
-        if(this[i]._id == id) return true;
-    }
-    return false;
-}
 
 
 function getPlaceFromGmapResult(result){
@@ -309,17 +214,3 @@ function getPlaceFromGmapResult(result){
 	return placeGmap;
 }	
 
-String.prototype.addslashes=function () {
-var str=this.replace(/\\/g,'\\\\');
-str=str.replace(/\'/g,'\\\'');
-str=str.replace(/\"/g,'\\"');
-str=str.replace(/\0/g,'\\0');
-return str;
-}
-String.prototype.stripslashes=function () {
-var str=this.replace(/\\'/g,'\'');
-str=str.replace(/\\"/g,'"');
-str=str.replace(/\\0/g,'\0');
-str=str.replace(/\\\\/g,'\\');
-return str;
-}

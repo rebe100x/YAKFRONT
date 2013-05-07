@@ -14,6 +14,17 @@
 .searchInput{background-repeat:no-repeat;background-position: 0px 5px;padding-left:0px;background-image: none;}
 
 
+/*bootsrap fixes*/
+@media (max-width: 979px) {
+  .navbar-fixed-top {
+    margin-bottom: 0px;
+  }
+}
+.row-fluid [class*="span"] {
+  min-height: 1px;
+}
+
+
 /*FORMS*/
 legend.mainlegend{color:#d51820;font-weight:bold;}
 .fuelux .btn .caret {margin-top: 8px;margin-left: 8px;}
@@ -82,7 +93,7 @@ legend.mainlegend{color:#d51820;font-weight:bold;}
 
 
 	/*MAP TAB CONTENT*/
-#newsfeedContainer{height:auto;background-color:#FFF;opacity:1;position:relative;margin-top:5px;}
+#newsfeedContainer{height:auto;background-color:#FFF;opacity:1;position:relative;margin-top:0px;}
 .tabContent{
 width:100%;
 display: none;

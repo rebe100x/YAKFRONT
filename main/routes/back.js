@@ -53,7 +53,7 @@ exports.requiresLogin = function(req,res,next){
 	if(req.session.user){
 		var User = db.model('User');
 		User.findById(req.session.user,function (err, theuser){
-			if(theuser != undefined && theuser != null ){
+			if(theuser != undefined && theuser != null && theuser.type >= 10){
 				res.locals.user = User.format(theuser);
 				//console.log(res.locals.user);
 				//console.log(theuser);
@@ -630,7 +630,7 @@ exports.session = function(req, res){
 	}
 	User.authenticate(req.body.login,req.body.password, req.body.token, function(err, user) {
 		if( (!(typeof(user) == 'undefined' || user === null || user === ''))){
-			if(user.type > 1){
+			if(user.type >= 10){
 				if(user.status == 1){ 
 					if (req.body.rememberme == "true") {res.cookie('token', user.token, { expires: new Date(Date.now() + 90000000000) , httpOnly: false, path: '/'});}
 					else {res.cookie('token', null);}
@@ -642,7 +642,7 @@ exports.session = function(req, res){
 					req.session.message = 'Compte non validé.';
 				}	
 			}else{
-				req.session.message = "Ce compte n'est pas admin.";	
+				req.session.message = "Ce compte n'est pas autorisé à accéder à cette interface.";	
 				res.redirect('user/login?redir='+req.body.redir);
 			}
 			
