@@ -867,10 +867,10 @@ String.prototype.linkify = function(myurl, ajaxified) {
  }*/
 
 String.prototype.linkify = function() {
-	var res = this;
+	var res = this;	
 	var hash = res.replace(/(^|\s)@([A-Za-z0-9àáâãäåçèéêëìíîïðòóôõöùúûüýÿ\.]+)/gi, "$1<a class=\"userHashLink prevent-default\" href=\"$2\">@$2</a>");
 	res = hash.replace(/(^|\s)#([A-Za-z0-9àáâãäåçèéêëìíîïðòóôõöùúûüýÿ]+)/gi, "$1<a class=\"tagHashLink prevent-default\" onclick=\"setSearchFor(this)\">#$2</a>");
-	res = res.replace(/(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/, "<a target=\"_blank\" class=\"externalLink\" href=\"http://$3\">$3</a>");
+	res = res.replace(/(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/g, "<a target=\"_blank\" class=\"externalLink\" href=\"http://$3\">$3</a>");
 	return res;
  }
 

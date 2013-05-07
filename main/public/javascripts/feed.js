@@ -758,7 +758,7 @@ function getItemDetails(el){
 			/*create the content element*/
 			content = $("<div />");
 			content.attr("class", "content");
-			content.html("<div class='theContent'>" + val.content + "</div>");
+			content.html("<div class='theContent'>" + val.content.linkify() + "</div>");
 			
 			content.append("<br />");
 			

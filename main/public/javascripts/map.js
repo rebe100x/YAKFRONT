@@ -424,7 +424,6 @@
 			});
 
 				
-			/*linkify*/
 			
 
 			$("body").unbind("click").on('click','.tagHashLink',function(event){
@@ -1097,92 +1096,7 @@
 			
 		}
 
-		function printFeedItemold(item,top,scrollTo){
-			
-			if(item.yakCatName.length > 0){
-				var yakCatNameArray = item.yakCatName.map(function(item){
-					if(item.substr(0,1)!="#")
-						item = "#"+item;
-					return item.linkify();
-				});	
-				yakCatNameArray = yakCatNameArray.slice(0,3);
-			}else
-				var yakCatNameArray = new Array();
 		
-			if(typeof(item.freeTag[0]) != 'undefined' && item.freeTag[0].length > 0){
-				var tagNameArray = item.freeTag.map(function(item){
-					if(item.substr(0,1)!="#")
-						item = "#"+item;
-					return item.linkify();
-				});
-				tagNameArray = tagNameArray.slice(0,3);
-			}else
-				var tagNameArray = new Array();
-				
-			var dateTmp = new Date(item.pubDate);
-			var pubDate = dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
-			dateTmp = new Date(item.dateEndPrint);
-			var dateTmp2 = new Date(item.dateEndPrint);
-			var dateEndPrint = dateTmp2.getDate()+'/'+(dateTmp2.getMonth()+1)+'/'+dateTmp2.getFullYear();
-
-			infoContent = "<div class=\'infowindow mapHighlighter\' infoId='"+item._id+"'>";					
-			
-			if(!(typeof item.thumb === 'undefined') && item.thumb != '' && item.thumb != null)
-				infoContent += "<img src=\'"+item.thumb+"\' />";
-
-			infoContent += "<div class=\'title\'> <img class='yakTypeImg' src=\'/images/markers/type"+item.yakType+".png\' />";
-			
-
-			thedate = buildItemDate(item);
-				
-			
-			infoContent += "<span class=\'date\'>"+thedate+"</span>";
-			
-			infoContent += item.title.linkify()+"</div>";
-
-			infoContent += "<div class=\'tags\'>";					
-				
-			if(item.yakCatName.length > 0)
-				infoContent += yakCatNameArray.join(', ');
-
-			if(tagNameArray.length > 0){
-				if(item.yakCatName.length > 0)
-					infoContent += ', ';
-				infoContent += tagNameArray.join(', ');
-			}
-			infoContent += "</div>";
-
-			infoContent += "<div class=\'links\'>";					
-				if(item.origin && item.origin !=  'undefined'){
-					if(item.origin.substring(0,1) == '@')
-						infoContent += "<div class=\'\'>Posté par <a href='/news/map/search/"+encodeURIComponent(item.origin)+"'>"+item.origin+"</a></div>";
-					else
-						infoContent += "<div class=\'\'>Posté par <a target='_blank' href='"+item.outGoingLink+"'>"+item.origin+"</a></div>";
-				}
-			if(typeof(item.address) != 'undefined' && item.address != 'null' && item.address != '')
-					infoContent += "<div class=\'infodetail\'>"+item.address+"</div>";
-					if(user.login == 'renaud.bessieres' || user.login == 'dany.srour') /// this is debug
-						infoContent += "<div class=\'infodetail\'>"+pubDate+" >> "+dateEndPrint+"</div>";
-			infoContent += "</div>";	
-			//infoContent += "<div class=\'content\'>"+item.content.substring(0,250).linkify()+"...</div>";
-			
-			infoContent += "</div>";
-			/*PRINT ON THE FEED*/
-			//$('#newsfeed').append('<li class=\'mapHighlighter\' infoId=\''+item._id+'\'><i class=\'icon-eye-open\' ></i> '+item.title+'</li>')
-			if(top==1)
-				$('#newsfeed').prepend('<li class=\'mapHighlighterDetails\' infoId=\''+item._id+'\' >'+infoContent+'</li>');
-			else	
-				$('#newsfeed').append('<li class=\'mapHighlighterDetails\' infoId=\''+item._id+'\' >'+infoContent+'</li>');
-			
-			
-
-			if (scrollTo==1) {  
-				//$('#newsfeedContent').mCustomScrollbar("update");
-				//$('#newsfeedContent').mCustomScrollbar("scrollTo","ul#newsfeed");
-
-			}  
-		}
-
 		function printLoadingFeedItem(){
 			$('.loadingfeeditem').hide();
 			if(skip < infoArray.length - 10){
@@ -1220,8 +1134,6 @@
 			closeAllItems();
 			var currentItem = $(el);
 
-
-
 			var infoid = currentItem.attr("infoid");
 
 			/* PLEASE DO IT LIKE THIS
@@ -1240,8 +1152,6 @@
 				return;
 			}
 
-
-			
 			currentItem.append('<img src="images/loader_big.gif" class="loadingMore">');
 			
 			$.each(infoArray,function(key,val){
@@ -1332,7 +1242,7 @@
 			/*create the content element*/
 			content = $("<div />");
 			content.attr("class", "content");
-			content.html("<div class='theContent'>" + val.content + "</div>");
+			content.html("<div class='theContent'>" + val.content.linkify() + "</div>");
 			
 			content.append("<br />");
 			
