@@ -10,7 +10,7 @@ exports.db = function(conf){
 };
 
 exports.back_default = function(req, res){
-  	res.render('dashboard/dashboard');
+  	res.render('dashboard/index');
 };	
 
 exports.picture = function(req,res){
@@ -363,7 +363,7 @@ exports.place_add = function(req, res){
 
 exports.place_list = function(req, res){
 	delete req.session.message;
-	res.render('place/list');
+	res.render('place/index');
 };
 
 exports.place = function(req, res){

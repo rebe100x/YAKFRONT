@@ -1,17 +1,18 @@
 extends ../layout
 block content
 	include ../mixins/menu.jade
-	include ../mixins/map.jade
+	include ../../front/mixins/locationChooser.jade	
 	include list.jade
-	include ../mixins/forms/feedForm.jade
 
-	mixin menu('feed')
-	mixin locationChooser()
+
+
+	mixin menu('dashboard')
+	//mixin locationChooser()
 
 	div.container-fluid
 		div.row-fluid
 			div.span4
-				mixin map()
+			
 			div.span8
 				div.fuelux
 					- if (message)
@@ -21,6 +22,4 @@ block content
 								strong= msg
 
 					div#newsfeedContainer
-						mixin list()
-						mixin feedForm()
 						

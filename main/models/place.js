@@ -30,7 +30,7 @@ var Place = new Schema({
 					}
 ,	heat : {type:Number}
 ,	yakCat	: {type: [Schema.Types.ObjectId],index:1}
-,	yakcatName: [String]
+,	yakCatName: [String]
 ,	freeTag	: {type: [String],index:1}		
 ,	contact : {type : {
 						tel: String,

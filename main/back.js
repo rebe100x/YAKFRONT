@@ -14,8 +14,9 @@ var express = require('express'),
   S = require('string'),
   crypto = require('crypto'),
   nodemailer = require("nodemailer"),
-  AWS = require('aws-sdk')
-  config_secret = require('./confs_secret.js');
+  AWS = require('aws-sdk'),
+  config_secret = require('./confs_secret.js'),
+  compressor = require('node-minify')
   ;
   
   
@@ -129,5 +130,62 @@ app.get('*', back.index);
 // Start server
 app.listen(conf.backport,conf.backdns, function(){
  console.log("Express server %s listening on port %d in %s mode", conf.backdns, conf.backport, app.settings.env);
+});
+
+
+// Uglify with node-minify : https://github.com/srod/node-minify
+new compressor.minify({
+  type: 'yui-js',
+  fileIn: [
+  
+   __dirname+'/public/javascripts/lib/jquery/js/jquery-1.8.2.min.js'
+  , __dirname+'/public/javascripts/lib/jquery/js/jquery-ui-1.8.24.custom.min.js'
+  
+  , __dirname+'/public/javascripts/lib/plugin/jquery.form.js'
+  , __dirname+'/public/javascripts/lib/toastr/toastr.js'
+  , __dirname+'/public/javascripts/lib/jquery/js/timeago.js'
+  , __dirname+'/public/javascripts/lib/plugin/happy.js'
+  , __dirname+'/public/javascripts/lib/jquery/js/jquery.ui.widget.js'
+  , __dirname+'/public/javascripts/lib/jquery/js/jquery.iframe-transport.js'
+  , __dirname+'/public/javascripts/lib/jquery/js/jquery.fileupload.js'
+  , __dirname+'/public/javascripts/lib/fuelux/lib/require.js'
+  , __dirname+'/public/javascripts/lib/fuelux/dist/loader.min.js'
+  , __dirname+'/public/javascripts/lib/bootstrap/js/bootstrap.min.js'
+  , __dirname+'/public/javascripts/lib/bootstrap/js/bootstrap-typeahead.js'
+  , __dirname+'/public/javascripts/lib/plugin/jquery.cookie.js'
+  , __dirname+'/public/javascripts/lib/plugin/jquery.mousewheel.min.js'
+  , __dirname+'/public/javascripts/lib/plugin/jquery.mCustomScrollbar.min.js'
+   , __dirname+'/public/javascripts/common.js'
+  , __dirname+'/public/javascripts/back_common.js'
+  ],
+  fileOut: __dirname+'/public/javascripts/minify/back-min-'+ mainConf.versionback+'.js',
+  callback: function(err){
+    if(err)
+      console.log(err);
+    else
+      console.log('YUI JS BACK compressor ok');
+  } 
+});
+
+new compressor.minify({
+  type: 'yui-css',
+  fileIn: [
+  
+   __dirname+'/public/javascripts/lib/bootstrap/css/bootstrap.css'
+  , __dirname+'/public/javascripts/lib/bootstrap/css/bootstrap-responsive.css'
+  , __dirname+'/public/javascripts/lib/jquery/css/custom-theme/jquery-ui-1.8.24.custom.css'
+  , __dirname+'/public/javascripts/lib/jquery/css/jquery.mCustomScrollbar.css'
+  , __dirname+'/public/javascripts/lib/fuelux/dist/css/fuelux.css'
+  , __dirname+'/public/javascripts/lib/toastr/toastr.css'
+  , __dirname+'/public/stylesheets/common.css'
+  , __dirname+'/public/stylesheets/backstyle.css'
+  ],
+  fileOut: __dirname+'/public/stylesheets/minify/back-min-'+ mainConf.versionback+'.css',
+  callback: function(err){
+    if(err)
+      console.log(err);
+    else
+      console.log('YUI CSS BACK compressor ok');
+  } 
 });
 

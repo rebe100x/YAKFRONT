@@ -14,7 +14,7 @@ mixin menu(active)
 				a#logoLink(href="/news/map", alt="Yakwala", title="Yakwala")
 
 				- if (locals.user && active != "firstvisit")
-					a#zoneLocButton(alt="Favoris", title="Favoris")
+					a#zoneLocButton(alt="Vos endroits favoris", title="Vos Endroits Favoris")
 					a#profileMenu.customprofile.dropdown-toggle(href="#",data-toggle="dropdown", alt="Profile", title="Profile")
 						//					
 							img.yak-mainMenu-hide(id="userThumb", src=locals.user.thumbsmall)
@@ -180,7 +180,8 @@ mixin menu(active)
 					$("#addLink").remove();
 				});
 
-		// this should be done in the erver side:		
+		// this should be done in the erver side:
+		/*		
 		if(active != 'firstvisit')
 			script
 				$(document).ready(function(){
@@ -195,6 +196,7 @@ mixin menu(active)
 						if(user.status != 4)
 							window.location = "/news/map";
 				});
+		*/
 
 		script
 			$(document).ready(function(){

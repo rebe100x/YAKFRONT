@@ -1,4 +1,5 @@
 mixin menu(active)
+	include ../../front/mixins/locationChooser.jade	
 	if(active != "login")
 		div.navbar.navbar-fixed-top
 			div.navbar-inner
@@ -12,11 +13,11 @@ mixin menu(active)
 						div.btn-group.pull-right
 							a.customprofile(href="/user/logout",title=locals.user.login)
 								img.avatar(id="userThumb", src=locals.user.thumbsmall)
-						- if (active == 'dashboard' || active == 'post')
+						- if (active != 'dashboard' && active != 'login')
 							div.btn-group.pull-right
 								&nbsp;&nbsp;&nbsp;
 								span
-									span.btn#zoneLocButton(title="Mes favoris")
+									span.btn#zoneLocButton(title="Mes endroits favoris")
 										i.icon-star
 										&nbsp;Mes endroits favoris
 								&nbsp;&nbsp;&nbsp;
@@ -82,26 +83,31 @@ mixin menu(active)
 		div#alertInfo.alert.alert-info
 			button.close(type="button",data-dismiss="alert") x
 			span.alertText								
-	script
 
-		$(document).ready(function() {
-			$.getJSON('/api/validinfos', function(data) {
-				if (data.info != 0)
-					$('#infonumber').addClass('badge badge-important').html(data.info);
-			});
+		script
 
-			$.getJSON('/api/validusers', function(data) {
-				if (data.info != 0)
-					$('#usernumber').addClass('badge badge-important').html(data.info);
-			});
+			var user =!{JSON.stringify(user)};
+			var conf = !{conf};
+			var mainConf = !{mainConf};	
 
-			$.getJSON('/api/validcats', function(data) {
-				if (data.info != 0)
-					$('#catnumber').addClass('badge badge-important').html(data.info);
-			});
+			$(document).ready(function() {
+				$.getJSON('/api/validinfos', function(data) {
+					if (data.info != 0)
+						$('#infonumber').addClass('badge badge-important').html(data.info);
+				});
 
-			$.getJSON('/api/validplaces', function(data) {
-				if (data.info != 0)
-					$('#placenumber').addClass('badge badge-important').html(data.info);
+				$.getJSON('/api/validusers', function(data) {
+					if (data.info != 0)
+						$('#usernumber').addClass('badge badge-important').html(data.info);
+				});
+
+				$.getJSON('/api/validcats', function(data) {
+					if (data.info != 0)
+						$('#catnumber').addClass('badge badge-important').html(data.info);
+				});
+
+				$.getJSON('/api/validplaces', function(data) {
+					if (data.info != 0)
+						$('#placenumber').addClass('badge badge-important').html(data.info);
+				});
 			});
-		});

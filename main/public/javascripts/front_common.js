@@ -720,10 +720,8 @@ $(document).ready(function() {
 	$('#zoneLocButton').click(function(){
 			$('#locationChooser .modal-body p.alertText').html("");
 			$('#locationChooser').modal('show');
-		});
-	/*locator pop up links*/	
-	//$('.zoneLoc').click(updateXY);
-
+	});
+	
 	
 	
 	$('#favplace,#favplace2').typeahead({
@@ -807,11 +805,6 @@ $(document).ready(function() {
 				}
 			});
 			});
-			
-			//var placeGmap = getPlaceFromGmapResult(obj);
-			
-			//$('#location').val(JSON.stringify(placeGmap.location));
-			//$('#address').val(JSON.stringify(placeGmap.address));
 		}
 	});
 	

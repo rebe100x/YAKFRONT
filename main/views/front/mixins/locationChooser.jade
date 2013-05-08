@@ -15,9 +15,6 @@ mixin locationChooser(page)
 								span.redStars
 								span.pull-left(data-dismiss="modal")= favplace.name
 								span.closePlace(type="button", data-dismiss="modal", onclick='removefavPlace($(this));')
-								//
-									div.theslider(title=favplace.range, alt=favplace._id)
-									span.localnessPrinter Local
 								span.mylocalnessPrinter(style="display: none")
 								select.pull-left.dropdownRangeSelector(alt=favplace._id, range=favplace.range)
 									option(value="70", rangeText="Local")
@@ -42,31 +39,7 @@ mixin locationChooser(page)
 		
 	
 	script
-		/*slider range selector*/
-		//console.log(user);
-		var starter = 1;
-
-		$( ".theslider" ).slider({
-			range: "min",
-			min: 0,
-			max: 100,
-			step:10,
-			value: 20,
-			slide: function(event,ui){
-				setLocalnessSliderTextMinified(ui.value, $(this).parent().find(".localnessPrinter"));
-			},
-			change:function(event, ui){
-				var favPlaceId = changePlaceRange($(this).attr("alt"), $(this).parent().attr("lat"), $(this).parent().attr("lng"), $(this).parent().attr("pointname"), ui.value);
-				$(this).attr("alt", favPlaceId);
-			},
-			create:function(event, ui){
-				setLocalnessSliderTextMinified(parseInt($(this).attr("title")), $(this).parent().find(".localnessPrinter"));
-				//$(this).slider( "value", parseInt($(this).attr("title") ) );
-				$(this).find("a.ui-slider-handle").css("left", $(this).attr("title") + "%");
-				$(this).find("div.ui-slider-range").css("width", $(this).attr("title") + "%");
-				
-			}
-		});
+		
 	- if(page == 'map')
 		script
 			/*endroits favoris*/
@@ -96,8 +69,8 @@ mixin locationChooser(page)
 					dataType: "json"
 				});
 
-			});	
-	- if(page == 'feed')
+			});
+	- else if(page == 'feed')
 		script
 			/*endroits favoris*/
 			$('ul.favplacelist').delegate("li.zoneLoc span",'click', function () {
@@ -123,8 +96,21 @@ mixin locationChooser(page)
 					dataType: "json"
 				});
 			});	
-		
+	- else // for the back
+		script
+			/*endroits favoris*/
+			$('ul.favplacelist').delegate("li.zoneLoc span",'click', function () {
+				
+				curPos.name = $(this).parent().find("span").eq(1).text();
+				curPos.x =  $(this).parent().attr("lat");
+				curPos.y =  $(this).parent().attr("lng");
+				curPos.z =  $(this).parent().find(".dropdownRangeSelector").val();
 
+				$("#searchPlaceStr").val(curPos.name);
+				
+				moveMap();
+				changeRange();
+			});		
 	script
 			function sortUnorderedList(ul, sortDescending) {
 				if(typeof ul == "string")

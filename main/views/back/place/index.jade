@@ -3,9 +3,10 @@ block content
 	include ../mixins/menu.jade
 	include ../mixins/map.jade
 	include list.jade
-	include ../mixins/forms/feedForm.jade
+	include ../mixins/forms/placeForm.jade
 
-	mixin menu('feed')
+
+	mixin menu('place')
 	mixin locationChooser()
 
 	div.container-fluid
@@ -22,5 +23,5 @@ block content
 
 					div#newsfeedContainer
 						mixin list()
-						mixin feedForm()
+						mixin placeForm()
 						

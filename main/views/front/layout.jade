@@ -30,10 +30,11 @@ html
 			script(src='/javascripts/lib/plugin/happy.js')
 			script(src='/javascripts/lib/plugin/jquery.scrollTo-min.js')
 			script(src="/javascripts/lib/jquery/js/timeago.js")
-			script(src='/javascripts/common.js?v='+JSON.parse(mainConf).version)
-			script(src='/javascripts/front_common.js?v='+JSON.parse(mainConf).version)
 			script(src='/javascripts/customSB.js')
 			script(src="/javascripts/lib/jquery/js/jquery.md5.min.js")
+			script(src='/javascripts/common.js?v='+JSON.parse(mainConf).version)
+			script(src='/javascripts/front_common.js?v='+JSON.parse(mainConf).version)
+
 		- else
 			script(src='https://maps.googleapis.com/maps/api/js?v=3.9&sensor=false&libraries=drawing&key='+JSON.parse(conf).gmapKey)		
 			script(src='/javascripts/minify/front-min-'+JSON.parse(mainConf).version+'.js')

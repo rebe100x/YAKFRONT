@@ -25,6 +25,22 @@
 }
 
 
+/*location chooser */
+#locationChooser{top:40%;}
+#locationChooser .modal-body {max-height: 420px;}
+#locationChooser .redstar { position: relative; top: 3px; margin-right: 12px;}
+#locationChooser .plussign { position: relative; top: 17px; margin-right: 12px;}
+#locationChooser .icon-home { position: relative; top: 3px; margin-right: 12px; }
+#locationChooser .icon-pointer { float: right;}
+#locationChooser .searchInput { position: relative; top: 10px}
+#locationChooser .zoneLoc{cursor:pointer;}
+#locationChooser .zoneLoc:hover{text-decoration : underline;}
+.dropdownRangeSelector {width: 33%; background: #f6f6f6; border: 0px; float: right; position: relative; right: 18%; }
+.favplacelist li { padding:10px 0px; border-bottom: 1px solid #cecece;  width: 100%;height:25px; cursor: default;}
+.favplacelist li span { cursor: pointer;}
+
+
+
 /*FORMS*/
 legend.mainlegend{color:#d51820;font-weight:bold;}
 .fuelux .btn .caret {margin-top: 8px;margin-left: 8px;}
@@ -94,13 +110,7 @@ legend.mainlegend{color:#d51820;font-weight:bold;}
 
 	/*MAP TAB CONTENT*/
 #newsfeedContainer{height:auto;background-color:#FFF;opacity:1;position:relative;margin-top:0px;}
-.tabContent{
-width:100%;
-display: none;
-background: white;
-float: left;
-padding: 0px 0px;
-}
+.tabContent{width:100%;display: none;background: white;float: left;padding: 0px 0px;}
 .mCSB_scrollTools .mCSB_draggerRail {width: 7px;}
 .mCSB_scrollTools .mCSB_buttonUp {background-position: -80px 0;}
 .mCSB_scrollTools .mCSB_buttonDown {background-position: -80px -20px;}

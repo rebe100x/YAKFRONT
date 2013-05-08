@@ -11,11 +11,99 @@ $(document).ready(function() {
 		$("#alertInfo span.alertText").html("Cette interface est omptimisée pour <a target='_blank' href='https://www.google.com/intl/fr/chrome/browser/?hl=fr'>Chrome</a>.");
 	
 	}
+
+	/*top locator button which pops up the locatorChooser popup*/
+	$('#zoneLocButton').click(function(){
+			$('#locationChooser .modal-body p.alertText').html("");
+			$('#locationChooser').modal('show');
+	});
 });
 /*END READY FUNCTIONS*/
 
 
+$('#favplace,#favplace2').typeahead({
+		minLength : 3,							
+		source: function (typeahead, query) {
+			
+			if(query.length > 3){
+				$(this).addClass('searching');
+				/*
+				var urlgmap = "http://maps.googleapis.com/maps/api/geocode/json?address=%C3%A9gh%C3%A9z%C3%A9e&sensor=false";
+				$.post(urlgmap,function(data){
+					var results = JSON.parse(data);
+					if(results.status == 'OK')
+						typeahead.process(data);
+				});*/
+				
+				
+				var addressQuery = {"address": query ,"region":"fr","language":"fr"};
+				var geocoder = new google.maps.Geocoder();
+				geocoder.geocode( addressQuery, function(results, status) {
+				
+					if (status == google.maps.GeocoderStatus.OK) {
+						typeahead.process(results);
+					} 
+					
+					if(status == google.maps.GeocoderStatus.ZERO_RESULTS){}
+						
+					if( status == google.maps.GeocoderStatus.INVALID_REQUEST 
+						|| status == google.maps.GeocoderStatus.REQUEST_DENIED  
+						|| status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT){
+						var salt = new Date().getTime();
+						$(this).before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide ("+status+")</div>");
+						setTimeout(function() {
+							$("#alert"+salt).fadeOut();
+						}, 3000);
+						$(this).select();
+					}
+				});
+			}
+		},
+		property: "formatted_address",
+		onselect: function(obj) {
 
+			$('#favplace,#favplace2').removeClass('searching');
+			var placeGmap = getPlaceFromGmapResult(obj);
+
+			var liLnLat = $('.favplacelist li[lat="'+placeGmap.location.lat+'"][lng="'+placeGmap.location.lng+'"]');
+			if (liLnLat.length > 0)
+			{
+				liLnLat.addClass("highlightedLi");
+				setTimeout('removeHighlightLi()', '3000');
+				return;
+			}
+				
+
+			var point = new Object();
+			
+			point.name = placeGmap.title;
+			point.location = placeGmap.location;
+			$.post('/favplace', {'place':point},function(id) {
+				var mydropdown = '<select onchange="changemyrange()" alt="' + id + '" range="80" class="dropdownRangeSelector"><option value="70" rangetext="Local">Local</option><option value="80" rangetext="Très Local" selected="selected">Très Local</option><option value="100" rangetext="Super Local">Super Local</option><option value="120" rangetext="Hyper Local">Hyper Local</option></select>';
+				$('.favplacelist').append("<li id='newLI' pointname='" + placeGmap.title + "' location='" + JSON.stringify(placeGmap.location) +"' pointId='"+id+"' lat='"+placeGmap.location.lat+"' lng='"+placeGmap.location.lng+"' class='zoneLoc'><span class='redStars'></span><span> "+obj.formatted_address+"</span><span class='closePlace'  onclick='removefavPlace($(this));'></span><span style='display: none' class='mylocalnessPrinter'></span>" + mydropdown +"</li>");
+
+				$('#favplace,#favplace2').val('').focus();
+				$('#newLI').find(".theslider").slider({
+				range: "min",
+				min: 0,
+				max: 100,
+				step:10,
+				value: 20,
+				slide: function(event,ui){
+					setLocalnessSliderTextMinified(ui.value, $(this).parent().find(".localnessPrinter"));
+				},
+				change:function(event, ui){
+					
+				},
+				create:function(event, ui){
+					setLocalnessSliderTextMinified(parseInt($(this).attr("title")), $(this).parent().find(".localnessPrinter"));
+					$(this).slider( "value", parseInt($(this).attr("title") ) );
+					$("#newLI").removeAttr("id");
+				}
+			});
+			});
+		}
+	});
 
 
 function moveMap(lat,lng){
