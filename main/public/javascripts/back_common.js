@@ -109,7 +109,7 @@ $('#favplace,#favplace2').typeahead({
 function moveMap(lat,lng){
 	curPos.x = lat;
 	curPos.y = lng;
-	$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000 });
+	$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000 ,path : '/' });
 	var latLng = new google.maps.LatLng(lat,lng);
 	if($('#mymap').length > 0){ // only for the map page
 		google.maps.event.addDomListener(window, 'load', initialize(lat,lng,10)); 

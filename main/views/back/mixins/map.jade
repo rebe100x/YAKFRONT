@@ -1,12 +1,14 @@
 mixin map()
 	div#mymap
+	div#searchPlaceInput
+		input.search-query.customInput#searchPlaceStr(type="search",placeholder="Où ?",autocomplete="off", data-provide="typeahead")
 	script
 
 		/*INIT*/
 		var conf = !{conf};
 		var logged = 0;
 
-		var curPos = {'x':0,'y':0,'z':0};
+		var curPos = ($.isEmptyObject($.cookie("geoloc")))?{'x':user.location.lat,'y':user.location.lng,'z':mainConf.rangeDefault,'name':user.formatted_address}:JSON.parse($.cookie("geoloc"));
 		var geolocalized = 0;
 		var infowindow = null;
 		var bounds = new Array();
@@ -32,10 +34,138 @@ mixin map()
 			minZoom: 5,
 		});
 
+		var psClick = 0;
+		var oldLocation = {lat:0,lng:0};
+
 		/*READY FUNCTIONS*/
 		$(document).ready(function() {
 
-			
+			/*SEARCH LOCATION INPUT*/
+			$('#searchPlaceStr').val(curPos.name);
+			$('#searchPlaceStr').unbind("click").on('click',function(){
+					$(this).select();
+			});
+
+			$('#searchPlaceStr').keyup(function(event){
+				var query = $("#searchPlaceStr").val();
+				if(query.length < 3)
+				{
+					$("#searchPlaceStr").removeClass('searching');
+				}
+				psClick = 0;
+				if (event.which == 13) {
+					
+					if(query==''){
+						curPos.name = user.formatted_address;
+						curPos.x = user.location.lat;
+						curPos.y = user.location.lng;
+						//curPos.z = mainConf.rangeDefault;
+						$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
+						$('#searchPlaceStr').val(curPos.name);	
+
+					}
+					else
+					{
+						
+						if(query.length >= 3){
+							encodeURIComponent(query);
+							$("#searchPlaceStr").addClass('searching');
+							var addressQuery = {"address": query ,"region":"fr","language":"fr"};
+							var geocoder = new google.maps.Geocoder();
+							geocoder.geocode( addressQuery, function(results, status) {						
+							if (status == google.maps.GeocoderStatus.OK) {
+								if(results.length > 0)
+								{
+									$("#searchPlaceStr").removeClass('searching');
+									curPos.x = results[0].geometry.location.Ya;
+									curPos.y = results[0].geometry.location.Za;
+									curPos.name = results[0].formatted_address;
+									$("#searchPlaceStr").val(curPos.name);
+									$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
+									
+									var location = JSON.stringify({lat:curPos.x,lng:curPos.y});				
+									var locationObj = JSON.parse(location);
+									if(location != '' && oldLocation.lat != locationObj.lat && oldLocation.lng != locationObj.lng){
+										var latLng = new google.maps.LatLng(locationObj.lat,locationObj.lng);
+										markerHL.setPosition(new google.maps.LatLng(locationObj.lat,locationObj.lng));
+										markerHL.setVisible(true);
+										markerHL.setMap(map);
+										markerHL.setOptions({icon:"/images/markers/target3.png"});
+										setTimeout(function() {
+											markerHL.setMap(null);
+										}, 3000);
+										map.panTo(latLng);
+										oldLocation = locationObj;
+										curPos.x = locationObj.lat;
+										curPos.y = locationObj.lng;
+									}
+								}
+								else
+								{
+									//$("#searchPlaceStr").removeClass('searching');
+									//alert("No Places Found...");
+								}
+							} 
+							else
+							{
+								//$("#searchPlaceStr").removeClass('searching');
+								//alert("No Places Found...");
+							}
+							});
+						}
+					}
+					$('#searchBtn').trigger('click');
+				}
+			});
+
+			// autocomplete Place
+			$('#searchPlaceStr').typeahead({
+				minLength : 3,							
+				source: function (typeahead, query) {
+					if(query.length >= 3){
+						encodeURIComponent(query);
+						$("#searchPlaceStr").addClass('searching');
+						var addressQuery = {"address": query ,"region":"fr","language":"fr"};
+						var geocoder = new google.maps.Geocoder();
+						geocoder.geocode( addressQuery, function(results, status) {						
+						if (status == google.maps.GeocoderStatus.OK) {
+							typeahead.process(results);
+							$("#searchPlaceStr").removeClass('searching');
+						} 
+						});
+					}
+				},
+				property: "formatted_address",
+				onselect: function(obj) { 
+					psClick = 1;
+					$("#searchPlaceStr").removeClass('searching');
+					var placeGmap = getPlaceFromGmapResult(obj);
+					
+					curPos.x = placeGmap.location.lat;
+					curPos.y = placeGmap.location.lng;
+					curPos.name = placeGmap.formatted_address;
+					var location = JSON.stringify({lat:curPos.x,lng:curPos.y});				
+					$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
+					var locationObj = JSON.parse(location);
+					if(location != '' && oldLocation.lat != locationObj.lat && oldLocation.lng != locationObj.lng){
+						var latLng = new google.maps.LatLng(locationObj.lat,locationObj.lng);
+						markerHL.setPosition(new google.maps.LatLng(locationObj.lat,locationObj.lng));
+						markerHL.setVisible(true);
+						markerHL.setMap(map);
+						markerHL.setOptions({icon:"/images/markers/target3.png"});
+						setTimeout(function() {
+							markerHL.setMap(null);
+						}, 3000);
+						map.panTo(latLng);
+						oldLocation = locationObj;
+						curPos.x = locationObj.lat;
+						curPos.y = locationObj.lng;
+						
+					}
+		
+				}
+			});
+				/*END SEARCH LOCATION INPUT*/
 
 			$('#mymap').css('width',($(window).width() - $('#newsfeedContainer').width())-20);
 
@@ -84,7 +214,7 @@ mixin map()
 		function initialize(x,y,z){
 
 			// set user cookies
-			$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000 });
+			$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/'  });
 			//console.log(JSON.parse($.cookie("geoloc")));
 
 			var center = new google.maps.LatLng(x,y);

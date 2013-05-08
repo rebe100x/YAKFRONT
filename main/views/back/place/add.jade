@@ -116,7 +116,7 @@ block content
 		function initialize(x,y,z) {
 			
 			// set user cookie ( when user comes back he is located where he stopped browsing )
-			$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000 });
+			$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000 ,  path : '/'});
 				
 				
 			var center = new google.maps.LatLng(x,y);
@@ -146,14 +146,14 @@ block content
 				center = this.getCenter();
 				curPos.x = center.lat();
 				curPos.y = center.lng();
-				$.cookie("geoloc", JSON.stringify(curPos));
+				$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
 				getAndPrintInfo();
 			});
 				
 			google.maps.event.addListener(map, 'zoom_changed', function() {
 				bounds = this.getBounds();	
 				curPos.z = this.getZoom();
-				$.cookie("geoloc", JSON.stringify(curPos));
+				$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
 				getAndPrintInfo();
 			});
 				
