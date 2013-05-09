@@ -21,6 +21,19 @@ $(document).ready(function() {
 /*END READY FUNCTIONS*/
 
 
+function setGravatar()
+{
+
+	if(typeof user.mail != 'undefined' && user.mail != null && user.mail != "")
+	{
+		console.log('e');	
+		var gravatarMail = $.trim(user.mail).toLowerCase();
+		var gravatarLink = 'http://www.gravatar.com/avatar/' + $.md5(gravatarMail) + "?s=51";
+		gravatarImage = "<img class='gravatarImage' src='"+gravatarLink+"' alt='Gravatar Image - Profile' title='Gravatar Image - Profile' />" ;
+		$("#profileMenu").attr('src',gravatarLink);
+	}
+}
+
 $('#favplace,#favplace2').typeahead({
 		minLength : 3,							
 		source: function (typeahead, query) {
