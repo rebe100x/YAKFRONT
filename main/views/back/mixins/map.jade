@@ -248,13 +248,15 @@ mixin map()
 				center = this.getCenter();
 				curPos.x = center.lat();
 				curPos.y = center.lng();
-				$.cookie("geoloc", JSON.stringify(curPos));
+				
 				var geocoder = new google.maps.Geocoder();
 				var curLatLng = new google.maps.LatLng(curPos.x, curPos.y);
 				geocoder.geocode( {'latLng': curLatLng}, function(results, status) {						
 					if (status == google.maps.GeocoderStatus.OK) {
 						var placeGmap = getPlaceFromGmapResult((results[0]));
 						$("#searchPlaceStr").val(placeGmap.address.city + ", " + placeGmap.address.country);
+						curPos.name = placeGmap.address.city + ", " + placeGmap.address.country;
+						$.cookie("geoloc", JSON.stringify(curPos));
 					}
 				});
 			});
