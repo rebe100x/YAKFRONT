@@ -214,47 +214,7 @@ function getErrHTML5Pos(error) {
 }
 
 
-function placeMarker(location,mk) {
-  	
-	$('#latitude').val(location.lat());	
-	$('#longitude').val(location.lng());	
 
-	
-	mk.setVisible(true);
-	mk.setPosition(location);
-	
-	//getformattedAddress(location);
-	
-	
-}
-
-function getformattedAddress(position){
-	
-	var geoQuery = {"location": position};
-		var geocoder = new google.maps.Geocoder();
-		geocoder.geocode( geoQuery, function(results, status) {
-			if (status == google.maps.GeocoderStatus.OK) {
-				//$('#place').val(results[0].formatted_address).select();
-				var placeGmap = getPlaceFromGmapResult(results[0]);
-				//console.log(results);
-				placeArray = placeGmap;
-				$("#placeForm #placeInput").val(JSON.stringify(placeArray));
-				console.log(placeGmap.address.state);
-				$('#placeSearch').val(placeGmap.address.state+', '+placeGmap.address.area);
-				$('#placeLabel').first().remove();
-				$('#btn-place-adder').parent().before("<div id='placeLabel'><i class='icon-remove' onclick='placeArray=null;$(\"#placeInput\").val(JSON.stringify(placeArray));$(this).parent().remove();'></i> "+results[0].formatted_address+"</div>");
-			} else {
-				var salt = new Date().getTime();
-				$('#btn-place-adder').parent().before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide ("+status+")</div>");
-				setTimeout(function() {
-					$("#alert"+salt).fadeOut();
-				}, 3000);
-				$('#place').select();
-			}
-		});
-		//$("#place").val('').select();
-
-}
 
 
 function deletePlaceHTML(placeArray,results,self){

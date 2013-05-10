@@ -85,7 +85,7 @@ mixin feedForm()
 				.col
 					label(for='defaultPlaceName') Localisation du flux:
 					.input-append
-						input(type="text",data-provide="typeahead", id="defaultPlaceName", name="defaultPlaceName", autocomplete="off", placeholder="Chercher une ville, département, ou région")
+						input(type="text",data-provide="typeahead", id="defaultPlaceName", name="defaultPlaceName", autocomplete="off", placeholder="Chercher...")
 				.col
 					label Si l'info n'est pas géolocalisée...	
 					select.big#defaultPrintFlag
@@ -212,6 +212,8 @@ mixin feedForm()
 		var fileSource = new Array();
 
 		$(document).ready(function() {
+
+			
 
 			$('#alertFeedType').hide();
 			$('#feedType').on('change',function(){
@@ -345,31 +347,24 @@ mixin feedForm()
 
 			/*Place autocomplete*/
 			var input = document.getElementById('defaultPlaceName');
-			$('#defaultPlaceName').on('focus',function(){$(this).val('');});
+			//$('#defaultPlaceName').on('focus',function(){$(this).val('');});
 			var autocomplete = new google.maps.places.Autocomplete(input);
 			autocomplete.bindTo('bounds', map);
 			google.maps.event.addListener(autocomplete, 'place_changed', function() {
-				var place = autocomplete.getPlace();
+				var place = autocomplete.getPlace();				
 				if (!place.geometry) {
 					return;
 				}
 				
 				var formattedPlace = getPlaceFromGmapResult(place);
-				$('#defaultPlaceSearchName').val(formattedPlace.address.state+', '+formattedPlace.address.area);
-				// If the place has a geometry, then present it on a map.
-				if (place.geometry.viewport) {
-					map.fitBounds(place.geometry.viewport);
-				} else {
-
-					map.setCenter(place.geometry.location);
-					map.setZoom(17);  // Why 17? Because it looks good.					
-					$("#feedform #longitude").val(place.geometry.location.Za);
-					$("#feedform #latitude").val(place.geometry.location.Ya);
-					$("#feedform #address").val(place.formatted_address);
+				$('#defaultPlaceSearchName').val(formattedPlace.address.state+', '+formattedPlace.address.area);				
+				map.setCenter(place.geometry.location);
+				$("#feedform #longitude").val(place.geometry.location.Za);
+				$("#feedform #latitude").val(place.geometry.location.Ya);
+				$("#feedform #address").val(place.formatted_address);
 					
-				}
 				markerLocation.setPosition(place.geometry.location);
-
+				markerLocation.setVisible(true);
 			});
 
 
