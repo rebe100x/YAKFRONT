@@ -84,7 +84,7 @@ legend.mainlegend{color:#d51820;font-weight:bold;}
 /* MAP
 -------------------------------------------------- */
   /*TOP SEARCH LOCATION BOX*/
-  #searchPlaceStr { height: 26px;z-index:300000;position:relative;top:5px;left:-15px;}
+  #searchPlaceStr { height: 26px;position:relative;top:5px;left:-15px;}
 
 	/*MAP TOP CONTROLLER*/
 #newsfeedMenu{margin:10px auto;padding:10px;text-align:center;width:100%;float:left;opacity:0.85;background:#FFFFFF;}

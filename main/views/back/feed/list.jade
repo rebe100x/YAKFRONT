@@ -66,6 +66,10 @@ mixin list()
 			this._columns = options.columns;
 		};
 
+		$("#pillYakcat").show();
+		$("#pillFreetag").show();
+		$("#pillSourceLink").show();
+
 		ApiDataSource.prototype = {
 
 			columns: function () {
@@ -305,6 +309,9 @@ mixin list()
 				$('#feedform').clearForm();
 			});
 
+
+
+			/*INIT FORM FOR EDITION*/
 			$("#feedform").show();
 			$("#feedform legend.mainlegend").html("Modifier un flux");
 			$(".catLabel").remove();
@@ -338,15 +345,18 @@ mixin list()
 					$("#feedform #licence").val(feed.licence);
 					$("#feedform #link").val(feed.link);
 					$('#feedform #persistDays input').val($('#feedform #persistDays').find('li[data-value='+feed.persistDays+']').text());
-					feed.yakcat.forEach(function(cat){
-						$("#pillYakcat").show();
-						$("#pillYakcat ul").append("<li class='yakcat-val status-important' data-value='"+cat._id+"'>"+cat.name+"</li>");
-						yakcatIds.push(cat._id);
+					feed.yakCatId.forEach(function(cat){
+						$.get('/api/cats/'+cat,function(data){
+							console.log(data);
+							$("#pillYakcat ul").append("<li class='yakcat-val status-important' data-value='"+data.cats._id+"'>"+data.cats.title+"</li>");
+							yakCatIds.push(data._id);
+							yakCatNames.push(data.name);	
+						});
+						
 					});
 					$("#feedform #yakcatIdsHidden").val(yakcatIds.join(','));
 					
 					feed.tag.forEach(function(tag){
-						$("#pillFreetag").show();
 						$("#pillFreetag ul").append("<li class='freetag-val status-info' data-value='"+tag+"'>"+tag+"</li>");
 						tags.push(tag);
 					});
@@ -383,6 +393,7 @@ mixin list()
 							sourceFile.push(source);
 						}
 					});
+
 					$("#feedform #sourceFileHidden").val(sourceFile.join(','));	
 					
 					feed.linkSource.forEach(function(source){

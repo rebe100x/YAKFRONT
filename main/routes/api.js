@@ -357,6 +357,21 @@ exports.tags = function (req, res) {
 	});
 };
 
+
+/********************************************
+* YAKNE : NAMED ENTITIES
+***********************************************/
+
+exports.yakNE = function (req, res) {
+	var YakNE = db.model('YakNE');
+	YakNE.find(function (err, docs){
+	  if(!err)
+	  	res.json({meta:{code:200},data:{yakne:docs}});
+	  else
+	  	res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+	});
+};
+
 /*********************************************
 *FAVPLACE
 *ADD, DELETE and LIST user's favorite places

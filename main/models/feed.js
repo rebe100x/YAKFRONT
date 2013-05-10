@@ -38,13 +38,14 @@ var Feed = new Schema({
 		}
 	}
 	,licence : String
-	,yakCatNameArray : [String]
+	,yakCatName : [String]
 	,yakCatId : [String]
 	,tag : [String]
 	,persistDays : Number
 	,defaultPlaceId : Schema.ObjectId
-	,location	: { type : { lat: Number, lng: Number }, index : '2d',required: true}
+	,defaultPlaceLocation	: { type : { lat: Number, lng: Number }, index : '2d',required: true}
 	,defaultPlaceSearchName : String
+	,defaultPlaceName : String
 	,yakType : Number
 	,defaultPrintFlag : Number
 	,creationDate : {type: Date, required: true, default: Date.now}
