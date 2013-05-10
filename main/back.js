@@ -155,7 +155,7 @@ new compressor.minify({
   , __dirname+'/public/javascripts/lib/plugin/jquery.cookie.js'
   , __dirname+'/public/javascripts/lib/plugin/jquery.mousewheel.min.js'
   , __dirname+'/public/javascripts/lib/plugin/jquery.mCustomScrollbar.min.js'
-  , __dirname+'/public/javascripts/lib/plugin/js/jquery.md5.min.js'
+  , __dirname+'/public/javascripts/lib/jquery/js/jquery.md5.min.js'
    , __dirname+'/public/javascripts/common.js'
   , __dirname+'/public/javascripts/back_common.js'
   ],
