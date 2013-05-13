@@ -1154,4 +1154,8 @@ mongoose.model('Client', Client);
 
 require('./place.js');
 require('./feed.js');
+<<<<<<< HEAD
 require('./user.js');
+=======
+require('./yakNE.js');
+>>>>>>> 8b58d8bb3cfd51025d9e96b33a02882bcc05fc5b

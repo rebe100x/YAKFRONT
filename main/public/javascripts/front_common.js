@@ -482,44 +482,17 @@ function  hidePostForm()
 		drawNewsFeed();
 }
 
+
+
 function setGravatar()
 {
-var gravatarLink;
-	// get the email
-	if(typeof user.mail != 'undefined')
+	if(typeof user.mail != 'undefined' && user.mail != null && user.mail != "")
 	{
-		if(user.mail != null && user.mail != "")
-		{
-			var gravatarMail = $.trim(user.mail).toLowerCase();
-			gravatarLink = 'http://www.gravatar.com/' + $.md5(gravatarMail) + '.json';
-		}
+		var gravatarMail = $.trim(user.mail).toLowerCase();
+		var gravatarLink = 'http://www.gravatar.com/avatar/' + $.md5(gravatarMail) + "?s=51";
+		gravatarImage = "<img class='gravatarImage' src='"+gravatarLink+"' alt='Gravatar Image - Profile' title='Gravatar Image - Profile' />" ;
+		$("#profileMenu").append(gravatarImage);
 	}
-	(function($) {
-				var url = gravatarLink;
-				$.ajax({
-				type: 'GET',
-				url: url,
-				async: false,
-				contentType: "application/json",
-				dataType: 'jsonp',
-				success: function(data){ 
-					if(typeof(data.entry != 'undefined'))
-					{
-						if(data.entry.length > 0)
-						{
-							var gravatarImage = data.entry[0].thumbnailUrl + "?s=51";
-
-							gravatarImage = "<img class='gravatarImage' src='"+gravatarImage+"' alt='Gravatar Image - Profile' title='Gravatar Image - Profile' />" ;
-
-							$("#profileMenu").append(gravatarImage);
-						}
-
-					}
-				}
-				});
-			})(jQuery);	
-
-
 }
 
 function checkGravatar()
@@ -528,14 +501,12 @@ function checkGravatar()
 	// get the email
 	if(typeof user.mail != 'undefined')
 	{
-		console.log(user);	
 		if(user.mail != null && user.mail != "")
 		{
 			var gravatarMail = $.trim(user.mail).toLowerCase();
 			gravatarLink = 'http://www.gravatar.com/' + $.md5(gravatarMail) + '.json';
 		}
 	}
-	console.log('TRIGGED');
 	(function($) {
 				var url = gravatarLink;
 				$.ajax({

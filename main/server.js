@@ -32,7 +32,7 @@ var theconf = config.confs.devrenaud;
             uploadDir: __dirname + '/public/uploads/files',
             uploadUrl: '/uploads/files/',
             maxPostSize: 11000000000, // 11 GB
-            minFileSize: 1,
+            minFileSize: 0,
             maxFileSize: 10000000000, // 10 GB
             acceptFileTypes: /.+/i,
             // Files not matched by this regular expression force a download dialog,
@@ -196,7 +196,7 @@ var theconf = config.confs.devrenaud;
                 var stats = fs.statSync(options.uploadDir + '/' + name),
                     fileInfo;
                 if (stats.isFile()) {
-                    fileInfo = new FileInfo({
+					fileInfo = new FileInfo({
                         name: name,
                         size: stats.size
                     });
@@ -238,7 +238,7 @@ var theconf = config.confs.devrenaud;
         }).on('file', function (name, file) {
             var fileInfo = map[path.basename(file.path)];
             fileInfo.size = file.size;
-            if (!fileInfo.validate()) {
+			if (!fileInfo.validate()) {
                 fs.unlink(file.path);
                 return;
             }

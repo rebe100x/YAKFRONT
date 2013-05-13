@@ -66,6 +66,10 @@ mixin list()
 			this._columns = options.columns;
 		};
 
+		$("#pillYakcat").show();
+		$("#pillFreetag").show();
+		$("#pillSourceLink").show();
+
 		ApiDataSource.prototype = {
 
 			columns: function () {
@@ -305,6 +309,9 @@ mixin list()
 				$('#feedform').clearForm();
 			});
 
+
+
+			/*INIT FORM FOR EDITION*/
 			$("#feedform").show();
 			$("#feedform legend.mainlegend").html("Modifier un flux");
 			$(".catLabel").remove();
@@ -327,9 +334,6 @@ mixin list()
 				success: function (response)
 				{
 					/*FORM INITIALISATION*/
-
-					
-
 					var feed = response.feed;
 					
 					$("#feedform #objid").val(this.id);
@@ -338,15 +342,17 @@ mixin list()
 					$("#feedform #licence").val(feed.licence);
 					$("#feedform #link").val(feed.link);
 					$('#feedform #persistDays input').val($('#feedform #persistDays').find('li[data-value='+feed.persistDays+']').text());
-					feed.yakcat.forEach(function(cat){
-						$("#pillYakcat").show();
-						$("#pillYakcat ul").append("<li class='yakcat-val status-important' data-value='"+cat._id+"'>"+cat.name+"</li>");
-						yakcatIds.push(cat._id);
+					feed.yakCatId.forEach(function(cat){
+						$.get('/api/cats/'+cat,function(data){
+							$("#pillYakcat ul").append("<li class='yakcat-val status-important' data-value='"+data.cats._id+"'>"+data.cats.title+"</li>");
+							yakCatIds.push(data._id);
+							yakCatNames.push(data.name);	
+						});
+						
 					});
 					$("#feedform #yakcatIdsHidden").val(yakcatIds.join(','));
 					
 					feed.tag.forEach(function(tag){
-						$("#pillFreetag").show();
 						$("#pillFreetag ul").append("<li class='freetag-val status-info' data-value='"+tag+"'>"+tag+"</li>");
 						tags.push(tag);
 					});
@@ -361,8 +367,10 @@ mixin list()
 						$("#feedform #address").val(feed.defaultPlaceSearchName);
 						$("#feedform #place").val(feed.defaultPlaceSearchName);
 					}
-					$('#placeSearch').val(feed.defaultPlaceSearchName);
-					
+
+					$('#defaultPlaceSearchName').val(feed.defaultPlaceSearchName);
+					$('#defaultPlaceName').val(feed.defaultPlaceName);
+
 
 					$("#feedform #defaultPrintFlag").val(feed.defaultPrintFlag);
 					
@@ -370,6 +378,7 @@ mixin list()
 					if(feed.feedType=='CSV'){
 						$('#alertFeedType').show().children('span.alertText').html('Le fichier doit être sauvé en UTF8, séparation point virgule (;) et textes délimités par des guillemets doubles ("). ');
 					}
+
 
 					$('#feedform input:radio[name=yakType][value='+feed.yakType+']').attr("checked", true).trigger("change").button('refresh');
 					
@@ -383,6 +392,7 @@ mixin list()
 							sourceFile.push(source);
 						}
 					});
+
 					$("#feedform #sourceFileHidden").val(sourceFile.join(','));	
 					
 					feed.linkSource.forEach(function(source){
@@ -430,23 +440,6 @@ mixin list()
 		$("#btnAdd").click(function()
 		{
 
-			var user = !{JSON.stringify(user)};
-			
-			event.preventDefault();
-			listenerHandle = google.maps.event.addListener(map, 'click', function(event) {
-				getformattedAddress(event.latLng);
-				$('#feedform #latitude').val(position.lat());
-				$('#feedform #longitude').val(position.lng());
-			});
-			listenerHandleDrag = google.maps.event.addListener(markerLocation, 'dragend', function() {
-				var position = markerLocation.getPosition();
-				getformattedAddress(position);
-				$('#feedform #latitude').val(position.lat());
-				$('#feedform #longitude').val(position.lng());
-
-				
-			});
-
 			$("#MyGrid").hide();
 			$("#feedform")[0].reset();
 			// We remove the error class when we open a form for creating a new feed
@@ -465,12 +458,7 @@ mixin list()
 			$("#pillYakcat ul").empty();
 			$('#err').hide();
 			$("#feedform #title").focus();
-			$("#feedform #hiddenOrigin").val(user.login);
-			$("#feedform #origine").val(user.login);
-			$("#feedform #origine").prop('disabled', true);
-			yakcatIds = new Array();
-			tags = new Array();
-			//yakcatNames = new Array();
+			
 		});
 
 

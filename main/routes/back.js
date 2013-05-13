@@ -162,196 +162,76 @@ exports.gridFeeds = function (req, res) {
 };
 
 exports.feed = function(req, res){
-/*
+
 	var formMessage = new Array();
 	delete req.session.message;
 	var Feed = db.model('Feed');
 	var Yakcat = db.model('Yakcat');
 	mongoose.set('debug', true);
 	var obj_id = req.body.objid;
-	var edit = false;
 	console.log(obj_id);
 	console.log(req.body);
 	feed = new Feed();
-	{ yakcatInput: '',
-  yakcatNames: '',
-  address: 'Provence-Alpes-Côte-d\'Azur',
-  latitude: '43.935175',
-  longitude: '6.067918',
-  update: '0',
-  objid: '50fd24f3fa9a955c0b00016b',
-  humanName: 'CCIMP',
-  link: 'http://opendata.regionpaca.fr/donnees/detail/signataires-de-la-charte-e
-sprit-client-de-la-ccimp.html',
-  licence: 'Open',
-  yakType: '',
-  yakcat: '',
-  freetag: '',
-  place: 'Provence-Alpes-Côte-d\'Azur',
-  source: '',
-  status: '',
-  submit: 'Enregistrer',
-  infoTitle: '#YKL2 est signataire de la charte Esprit Client 2013 de la CCIMP',
+	
+	feed.XLconnector = 'parser';
 
-  infoContent: 'content',
-  infoAddress: '#YKL3 #YKL4 #YKL5 #YKL6 #YKL7, FRANCE',
-  infoLatitude: '#YKL15',
-  infoLongitude: '#YKL14',
-  infoLink: 'http://www.espritclient.ccimp.com/',
-  infoThumb: 'thumb',
-  infoCat: 'ctas',
-  infoTag: '#YKL13',
-  infoPlace: '#YKL2',
-  infoEventDate: 'eventDate',
-  infoPubDate: '2013-01-01T00:00:00+0100',
-  infoTel: '#YKL10',
-  infoTransportation: 'transportation',
-  infoOpening: 'opening',
-  infoWeb: 'web',
-  infoMail: 'mail' }
+	feed.humanName = req.body.humanName;
+	var strLib = require("string");
+	feed.name = strLib(feed.humanName).slugify();
+	feed.linkSource = req.body.linkSource;
+	feed.yakCatId = req.body.yakCatIdsHidden.split(',');
+	feed.yakCatName = req.body.yakCatNamesHidden.split(',');
+	feed.tag = req.body.tagsHidden.split(',');
+	feed.defaultPlaceLocation.lat = req.body.Latitude;
+	feed.defaultPlaceLocation.lng = req.body.Longitude;
+	feed.defaultPlaceName = req.body.defaultPlaceName;
+	feed.defaultPlaceSearchName = req.body.defaultPlaceSearchName;
+	feed.defaultPrintFlag = req.body.defaultPrintFlag;
+	feed.link = req.body.link;
+	feed.licence = req.body.licence;
+	feed.yakType = req.body.yakType;
+	feed.feedType = req.body.feedType;
+	feed.fileSource = req.body.fileSource.split(',');
+	feed.linkSource = req.body.linkSource.split(',');
+	feed.persistDays = req.body.persistDays;
+	feed.status = req.body.status;
 
+	feed.parsingTemplate = {
+		title: req.body.infoTitle,
+		content: req.body.infoContent,
+		address: req.body.infoAddress,
+		latitude: req.body.infoLatitude,
+		longitude: req.body.infoLongitude,
+		outGoingLink: req.body.infoLink,
+		thumb: req.body.infoThumb,
+		yakCats: req.body.infoCat,
+		tag: req.body.infoTag,
+		place: req.body.infoPlace,
+		eventDate: req.body.infoEventDate,
+		pubDate: req.body.infoPubDate,
+		telephone: req.body.infoTel,
+		transportation: req.body.infoTransportation,
+		opening: req.body.infoOpening,
+		web: req.body.infoWeb,
+		mail: req.body.infoMail
+	};
+
+	console.log(feed);
+	
 	feed.save(function (err){
+		if (!err)
+			formMessage.push("Nouveau flux sauvegardé.");
+		else{
+			formMessage.push("Erreur pendant la sauvegarde du flux !");
+			console.log(err);
+		}
+		req.session.message = formMessage;
+		res.redirect('feed/list');
 
 	});
-	/*
-	if(req.body.placeInput && req.body.title && req.session.user)
-	{
-		Place.findById(obj_id, function (err, place)
-		{
-			if (err || place == null)
-			{
-				console.log("Place not found by id: creating a new place");
-				edit = false;
-				place = new Place();
-			}
-			else
-			{
-				console.log("Place found by id: updating");
-				edit = true;
-			}
 
-			var placeThumb = new Object();
-			if (req.files.picture) {
-				if(req.files.picture.size && req.files.picture.size > 0 && req.files.picture.size < 1048576*5)
-				{
-					var drawTool = require('../mylib/drawlib.js');
-					var size = [{"width":120,"height":90},{"width":512,"height":0}];
-					placeThumb = drawTool.StoreImg(req.files.picture,size,conf);
-					place.thumb = placeThumb.name;
-				}
-			}
-			else
-				placeThumb.err = 0;
-
-
-			if(placeThumb.err == 0)
-			{
-				if(req.body.yakcatInput.length > 0)
-				{
-					var yak = eval('('+req.body.yakcatInput+')');
-					var yakN = eval('('+req.body.yakcatNames+')');
-					place.yakCat = yak;
-					place.yakcatName = yakN;
-				}
-				place.title = req.body.title;
-				place.content = req.body.content;
-
-				// NOTE : in the query below, order is important : in DB we have lat, lng but need to insert in reverse order : lng,lat  (=> bug mongoose ???)
-				place.formatted_address = JSON.parse(req.body.placeInput).title;
-				place.location = {lng:parseFloat(req.body.longitude),lat:parseFloat(req.body.latitude)};
-
-				if (!edit)
-					place.creationDate = new Date();
-				place.lastModifDate = new Date();
-				place.origin = req.body.hiddenOrigin;
-				place.outGoingLink = req.body.outgoinglink;
-
-				place.status = req.body.status;
-
-				place.access = 1;
-				place.licence = req.body.licence;
-				place.freeTag = req.body.freetag.split(',');
-
-				var contact = {
-						'tel' : req.body.tel,
-						'mobile' : req.body.mobile,
-						'mail' : req.body.mail,
-						'transportation' : req.body.transportation,
-						'web' : req.body.web,
-						'opening' : req.body.opening,
-						'closing' : req.body.closing,
-						'special_opening' : req.body.special
-					};
-
-				place.contact = contact;
-
-				Zone.findNear(place.location.lat, place.location.lng, function(err, zone)
-				{
-					if (!err)
-					{
-						//place.zone = zone[0]._id;
-						place.zone = zone[0].num;
-						// security against unidentified users
-						if(req.session.user)
-						{
-							if (!edit)
-								place.user = req.session.user._id;
-							place.save(function (err)
-							{
-								if (!err)
-								{
-									if (place.status == 1)
-										formMessage.push("Le lieu a été validé.");
-									else if (place.status == 3)
-										formMessage.push("Le lieu a été rejeté.");
-									else
-									{
-										if (edit)
-											formMessage.push("Le lieu a été modifié et est en attente de validation.");
-										else
-											formMessage.push("Le lieu a été ajouté et est en attente de validation.");
-									}
-									console.log('Success!');
-								}
-								else
-								{
-									formMessage.push("Une erreur est survenue lors de l'ajout du lieu (Doublon...etc).");
-									console.log(err);
-								}
-								req.session.message = formMessage;
-
-
-								res.redirect('place/list');
-
-							});
-						}
-					}
-					else
-					{
-						console.log(err);
-					}
-				});
-			}
-			else
-			{
-				formMessage.push("Erreur dans l'image uploadée: Le lieu n'est pas sauvegardé.");
-				console.log("Erreur dans l'image uploadée: Le lieu n'est pas sauvegardé.");
-				req.session.message = formMessage;
-				res.redirect('place/list');
-			}
-		});
-	}
-	else
-	{
-		if(!req.session.user)
-			formMessage.push("Veuillez vous identifier pour ajouter un lieu");
-		if(!req.body.title)
-			formMessage.push("Erreur: définissez le titre du lieu");
-		if(!req.body.placeInput)
-			formMessage.push("Erreur: définissez une géolocalisation du lieu");
-		req.session.message = formMessage;
-		res.redirect('place/list');
-	}*/
+	
+	
 };
 
 /******* 
@@ -682,6 +562,16 @@ exports.cats = function (req, res) {
 	Yakcat.findAll(function (err, docs){
 	  if(!err)
 	  	res.json({meta:{code:200},data:{cats:docs}});
+	  else
+	  	res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+	});
+};
+
+exports.catsById = function (req, res) {
+	var Yakcat = db.model('Yakcat');
+	Yakcat.findOne({_id:req.params.id},function (err, docs){
+	  if(!err)
+	  	res.json({meta:{code:200},cats:docs});
 	  else
 	  	res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 	});

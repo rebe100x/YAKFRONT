@@ -102,7 +102,12 @@ app.get('/api/feed/:id', back.findFeedById);
 app.get('/api/cats/:id', back.catsById);
 app.get('/api/cats', api.cats);
 app.get('/api/tags', api.tags);
+
 app.get('/api/users', back.gridUsers);
+
+app.get('/api/yakNE', api.yakNE);
+app.get('/api/places', back.places);
+
 app.get('/api/places/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status', back.gridPlaces);
 app.get('/api/places/:id', back.findPlaceById);
 app.get('/api/feeds/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status/:type', back.gridFeeds);
@@ -156,6 +161,7 @@ new compressor.minify({
   , __dirname+'/public/javascripts/lib/plugin/jquery.cookie.js'
   , __dirname+'/public/javascripts/lib/plugin/jquery.mousewheel.min.js'
   , __dirname+'/public/javascripts/lib/plugin/jquery.mCustomScrollbar.min.js'
+  , __dirname+'/public/javascripts/lib/jquery/js/jquery.md5.min.js'
    , __dirname+'/public/javascripts/common.js'
   , __dirname+'/public/javascripts/back_common.js'
   ],
