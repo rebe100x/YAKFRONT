@@ -25,7 +25,278 @@ var Address = new Schema({
 });
 mongoose.model('Address', Address);	
 */
+var UserLight = new Schema({
+	  name : String
+	, location	: { type : { lat: Number, lng: Number }}
+	, formatted_address : String
+});
+mongoose.model('UserLight', UserLight);
+/******************************USERS*/
 
+var User = new Schema({
+	name	: { type: String, index: true}
+	, bio	: { type: String}
+    , mail	: { type: String, required: false, index: true}
+	, web	: { type: String}
+	, tag	: { type: [String], index: true}
+	, thumb	: { type: String, default:'no-user.png'}
+	, type	: { type: Number, required: true, index: true}
+	, login     : { type: String, lowercase: true, required: true, index: { unique: true }}
+	, hash      : { type: String ,required: true, index: true}
+	, salt      : { type: String ,required: true, index: true}
+	, token     : { type: String ,required: true, index: true}
+	, usersubs	: { type: [User],ref: 'User',  index: true}
+	, feedsubs	: { type: [],ref: 'Feed',  index: true}
+	, tagsubs	: { type: [String], index: true}
+	, placesubs	: { type: [Schema.Types.ObjectId], index: true}
+	, location	: { type : { lat: Number, lng: Number }, index : '2d'}	
+	, formatted_address : { type: String }
+	, addressZoom: { type: Number, default:80}
+	, addressZoomText: { type: String, default:'Très Local'}
+	, address	: { type : { 
+								street_number: String,
+								street: String,
+								arr: String,
+								city: String,
+								state: String,
+								area: String,
+								country: String,
+								zip: String
+							}
+					}
+	, favplace : [Point]
+	, creationDate	: {type: Date, required: true, default: Date.now}		
+	, lastModifDate	: {type: Date, required: true, default: Date.now}		
+	, lastLoginDate	: {type: Date, required: true, default: Date.now}	
+	, alertsLastCheck : {type: Date, required: true, default: Date.now}	
+	, gravatarStatus : { type : Number, default: 2} // 0 don't use, 1 use gravatar, 2 never use gravatar
+	, status	: {type: Number,required: true, default: 2,index: true}	
+	, social: { 
+		twitter : {type: [Twitter],required: false},
+		facebook : {type: [Facebook],required: false},
+		google : {type: [Google],required: false}
+	 },
+	 illicite : {type: [contenuIllicite],required: false}
+	, stats: { 
+		cats: {type : Schema.Types.Mixed},
+		tags: {type : Schema.Types.Mixed},
+	}
+	,listeNoire : {
+		user: {type : [Schema.Types.Mixed]},
+		feed: {type : [Schema.Types.Mixed]},
+		info: {type : [Schema.Types.Mixed]},
+	}
+	, createfrom_social  :{ type : Number, default:0} // 0 yakwala, 1 twitter, 2 facebook, 3 google
+	, apiData	: { type: [{
+							apiClientId : {type: Schema.ObjectId,index: true}  
+							, apiStatus	: {type: Number, required: true, default: 2,index: true}
+							, apiCode       : { type: String ,index: true}
+							, apiCodeCreationDate     :  {type: Date,index: true}		
+							, apiToken     :  {type: String , index: true}		
+							, apiTokenCreationDate     :  {type: Date,index: true}	
+						}]
+					}
+}, { collection: 'user' });
+
+User.index({"social.twitter.twitter_id":1});
+User.index({"social.facebook.facebook_id":1});
+User.index({"social.google.google_id":1});
+
+User.statics.countUserSubscribers = function (usersubs, callback) {
+  return this.find({ usersubs: { $in : usersubs } },{},{sort:{pudDate:-1}}).count().exec(callback);
+}
+
+
+User.statics.format = function (theuser) {
+	if(theuser.thumb && theuser.thumb!= 'no-user.png'){
+		var thethumb = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/128_128/'+theuser.thumb;
+		var thethumbsmall = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/48_48/'+theuser.thumb;
+		//var thethumb = 	conf.fronturl+'/pictures/128_128/'+theuser.thumb;
+		//var thethumbsmall = 	conf.fronturl+'/pictures/48_48/'+theuser.thumb;
+	}
+	else{
+		var thethumb = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucketstatic+'/128_128/no-user.png';
+		var thethumbsmall = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucketstatic+'/48_48/no-user.png';
+	}
+		
+
+	var formattedUser = {
+		_id:theuser._id,
+		name:theuser.name,
+		bio:theuser.bio,
+		thumb:thethumb,
+		thumbsmall:thethumbsmall,
+		web:theuser.web,
+		login:theuser.login,
+		type:theuser.type,
+		mail:theuser.mail,
+		lastLoginDate:theuser.lastLoginDate,
+		location:theuser.location,
+		address:theuser.address,
+		formatted_address:theuser.formatted_address,
+		addressZoom: theuser.addressZoom,
+		addressZoomText: theuser.addressZoomText,
+		favplace:theuser.favplace,
+		usersubs:theuser.usersubs,
+		feedsubs:theuser.feedsubs,
+		tagsubs:theuser.tagsubs,
+		tag:theuser.tag,
+		social: theuser.social,
+		stats: theuser.stats,
+		createfrom_social: theuser.createfrom_social,
+		status: theuser.status,
+		illicite: theuser.illicite,
+		alertsLastCheck : theuser.alertsLastCheck,
+		listeNoire: theuser.listeNoire,
+		gravatarStatus: theuser.gravatarStatus
+	};
+  return formattedUser;
+}
+
+User.statics.formatLight = function (theuser) {
+	if(theuser.thumb && theuser.thumb!= 'no-user.png'){
+		var thethumb = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/128_128/'+theuser.thumb;
+		var thethumbsmall = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/48_48/'+theuser.thumb;
+	}else{
+		var thethumb = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucketstatic+'/128_128/no-user.png';
+		var thethumbsmall = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucketstatic+'/48_48/no-user.png';
+	}
+
+	var formattedUser = {
+		_id:theuser._id,
+		name:theuser.name,
+		login:theuser.login,
+		userdetails:theuser.name+'(@'+theuser.login+')',
+		thumb:thethumb,
+		thumbsmall:thethumbsmall,
+	};
+  return formattedUser;
+}
+
+User.statics.formatLight2 = function (theuser) {
+	
+	var formattedUser = {
+		_id:theuser._id,
+		title:theuser.name+'(@'+theuser.login+')',
+		name: theuser.name,
+	};
+  return formattedUser;
+}
+
+User.statics.FormatProfile = function (theuser) {
+
+
+	if(theuser.thumb && theuser.thumb!= 'no-user.png'){
+		var thethumb = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/128_128/'+theuser.thumb;
+		var thethumbsmall = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/48_48/'+theuser.thumb;
+	}else{
+		var thethumb = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucketstatic+'/128_128/no-user.png';
+		var thethumbsmall = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucketstatic+'/48_48/no-user.png';
+	}
+
+
+	var formattedUser = {
+		_id:theuser._id,
+		name: theuser.name,
+		login: theuser.login,
+		formatted_address : theuser.formatted_address,
+		bio: theuser.bio,
+		creationDate : theuser.creationDate,
+		thumb:thethumb,
+		thumbsmall:thethumbsmall,
+		web: theuser.web,
+
+	};
+  return formattedUser;
+}
+
+User.statics.countUnvalidated = function (callback) {
+	return this.count( {'status': { $in: [2, 10]}}, callback );
+}
+
+User.statics.findByLogin = function (login,callback) {
+  return this.find({login:login,status:1}, callback);
+}
+
+User.statics.findbyMail = function (mail,callback) {
+  return this.find({'mail':mail}, callback);
+}
+
+User.statics.findByLoginDuplicate = function (login,callback) {
+  return this.findOne({'login': login}, callback);
+}
+
+User.statics.findByIds = function (ids,callback) {
+  return this.find({'_id': { $in: ids}}, callback);
+}
+User.statics.identifyByToken = function (token,userid,callback) {
+  return this.findOne({'_id':userid,'apiData.apiToken': token,'status':1}, callback);
+}
+User.statics.findById = function (id,callback) {
+  return this.findOne({'_id': id}, callback);
+}
+User.statics.findById2 = function (id,callback) {
+  return this.find({'_id': id}, callback);
+}
+User.statics.PublicProfileFindById = function (id,callback) {
+  return this.findOne({'_id': id},{_id:1,address:1,bio:1,location:1,login:1,mail:1,name:1,thumb:1,type:1,web:1,lastLoginDate:1,favplace:1,placesubs:1,tagsubs:1,usersubs:1, feedsubs:1,tags:1}, callback);
+}
+User.statics.findByToken = function (token,callback) {
+  return this.findOne({'token': token,'status':2}, callback);
+}
+User.statics.findByTwitterId = function (twitter_id,callback) {
+  return this.findOne({'social.twitter.twitter_id': twitter_id,'status':1}, callback);
+}
+
+User.statics.findByFacebookId = function (facebook_id,callback) {
+  return this.findOne({'social.facebook.facebook_id': facebook_id}, callback);
+}
+
+User.statics.findByGoogleId = function (google_id,callback) {
+  return this.findOne({'social.google.google_id': google_id}, callback);
+}
+
+User.statics.findAll = function (callback) {
+  return this.find({},{},{sort:{name:1}}, callback);
+}
+User.statics.search = function(string,count,from,sensitive,callback){
+	var limit = (typeof(count) != 'undefined' && count > 0) ? count : 100;		
+	var skip = (typeof(from) != 'undefined' && from > 0) ? from : 0;	
+	var case_sensitive = (typeof(sensitive) != 'undefined' && sensitive > 0) ? 'g' : 'gi';	
+	var input = new RegExp(string,case_sensitive);
+	return this.find(
+	{	$or:[ {'login': {$regex:input}}, {'name': {$regex:input}} , {"tag": {$regex:input}} ],
+		
+	"status":1,
+	},
+	{_id:1,address:1,bio:1,location:1,login:1,mail:1,name:1,thumb:1,type:1,web:1,lastLoginDate:1,favplace:1,placesubs:1,tagsubs:1,usersubs:1, feedsubs:1 ,tags:1},
+	{
+		
+		skip:skip, // Starting Row
+		limit:limit, // Ending Row
+		sort:{
+			lastLoginDate: -1 //Sort by Date Added DESC
+		}
+	}).exec(callback);
+}
+
+
+
+User.statics.findByNameorLogin = function(string,callback){
+	
+	return this.findOne(
+	{	$or:[ {'login': string}, {'name': string}], "status":1 },
+	'_id,name,login',
+	{},
+	callback);
+}
+
+
+
+var auth = require('../mylib/basicAuth');
+User.plugin(auth);
+
+mongoose.model('User', User);
 
 
 var Point = new Schema({
@@ -104,13 +375,6 @@ var Google = new Schema({
 	, friendsList : {type : Schema.Types.Mixed}
 });
 mongoose.model('Google', Google);
-
-var UserLight = new Schema({
-	  name : String
-	, location	: { type : { lat: Number, lng: Number }}
-	, formatted_address : String
-});
-mongoose.model('UserLight', UserLight);
 
 /**
  * Schema InfoTitles
@@ -714,272 +978,6 @@ mongoose.model('Info', Info);
 
 
 
-/******************************USERS*/
-
-var User = new Schema({
-	name	: { type: String, index: true}
-	, bio	: { type: String}
-    , mail	: { type: String, required: false, index: true}
-	, web	: { type: String}
-	, tag	: { type: [String], index: true}
-	, thumb	: { type: String, default:'no-user.png'}
-	, type	: { type: Number, required: true, index: true}
-	, login     : { type: String, lowercase: true, required: true, index: { unique: true }}
-	, hash      : { type: String ,required: true, index: true}
-	, salt      : { type: String ,required: true, index: true}
-	, token     : { type: String ,required: true, index: true}
-	, usersubs	: { type: [User],ref: 'User',  index: true}
-	, feedsubs	: { type: [],ref: 'Feed',  index: true}
-	, tagsubs	: { type: [String], index: true}
-	, placesubs	: { type: [Schema.Types.ObjectId], index: true}
-	, location	: { type : { lat: Number, lng: Number }, index : '2d'}	
-	, formatted_address : { type: String }
-	, addressZoom: { type: Number, default:80}
-	, addressZoomText: { type: String, default:'Très Local'}
-	, address	: { type : { 
-								street_number: String,
-								street: String,
-								arr: String,
-								city: String,
-								state: String,
-								area: String,
-								country: String,
-								zip: String
-							}
-					}
-	, favplace : [Point]
-	, creationDate	: {type: Date, required: true, default: Date.now}		
-	, lastModifDate	: {type: Date, required: true, default: Date.now}		
-	, lastLoginDate	: {type: Date, required: true, default: Date.now}	
-	, alertsLastCheck : {type: Date, required: true, default: Date.now}	
-	, gravatarStatus : { type : Number, default: 2} // 0 don't use, 1 use gravatar, 2 never use gravatar
-	, status	: {type: Number,required: true, default: 2,index: true}	
-	, social: { 
-		twitter : {type: [Twitter],required: false},
-		facebook : {type: [Facebook],required: false},
-		google : {type: [Google],required: false}
-	 },
-	 illicite : {type: [contenuIllicite],required: false}
-	, stats: { 
-		cats: {type : Schema.Types.Mixed},
-		tags: {type : Schema.Types.Mixed},
-	}
-	,listeNoire : {
-		user: {type : [Schema.Types.Mixed]},
-		feed: {type : [Schema.Types.Mixed]},
-		info: {type : [Schema.Types.Mixed]},
-	}
-	, createfrom_social  :{ type : Number, default:0} // 0 yakwala, 1 twitter, 2 facebook, 3 google
-	, apiData	: { type: [{
-							apiClientId : {type: Schema.ObjectId,index: true}  
-							, apiStatus	: {type: Number, required: true, default: 2,index: true}
-							, apiCode       : { type: String ,index: true}
-							, apiCodeCreationDate     :  {type: Date,index: true}		
-							, apiToken     :  {type: String , index: true}		
-							, apiTokenCreationDate     :  {type: Date,index: true}	
-						}]
-					}
-}, { collection: 'user' });
-
-User.index({"social.twitter.twitter_id":1});
-User.index({"social.facebook.facebook_id":1});
-User.index({"social.google.google_id":1});
-
-User.statics.countUserSubscribers = function (usersubs, callback) {
-  return this.find({ usersubs: { $in : usersubs } },{},{sort:{pudDate:-1}}).count().exec(callback);
-}
-
-
-User.statics.format = function (theuser) {
-	if(theuser.thumb && theuser.thumb!= 'no-user.png'){
-		var thethumb = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/128_128/'+theuser.thumb;
-		var thethumbsmall = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/48_48/'+theuser.thumb;
-		//var thethumb = 	conf.fronturl+'/pictures/128_128/'+theuser.thumb;
-		//var thethumbsmall = 	conf.fronturl+'/pictures/48_48/'+theuser.thumb;
-	}
-	else{
-		var thethumb = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucketstatic+'/128_128/no-user.png';
-		var thethumbsmall = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucketstatic+'/48_48/no-user.png';
-	}
-		
-
-	var formattedUser = {
-		_id:theuser._id,
-		name:theuser.name,
-		bio:theuser.bio,
-		thumb:thethumb,
-		thumbsmall:thethumbsmall,
-		web:theuser.web,
-		login:theuser.login,
-		type:theuser.type,
-		mail:theuser.mail,
-		lastLoginDate:theuser.lastLoginDate,
-		location:theuser.location,
-		address:theuser.address,
-		formatted_address:theuser.formatted_address,
-		addressZoom: theuser.addressZoom,
-		addressZoomText: theuser.addressZoomText,
-		favplace:theuser.favplace,
-		usersubs:theuser.usersubs,
-		feedsubs:theuser.feedsubs,
-		tagsubs:theuser.tagsubs,
-		tag:theuser.tag,
-		social: theuser.social,
-		stats: theuser.stats,
-		createfrom_social: theuser.createfrom_social,
-		status: theuser.status,
-		illicite: theuser.illicite,
-		alertsLastCheck : theuser.alertsLastCheck,
-		listeNoire: theuser.listeNoire,
-		gravatarStatus: theuser.gravatarStatus
-	};
-  return formattedUser;
-}
-
-User.statics.formatLight = function (theuser) {
-	if(theuser.thumb && theuser.thumb!= 'no-user.png'){
-		var thethumb = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/128_128/'+theuser.thumb;
-		var thethumbsmall = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/48_48/'+theuser.thumb;
-	}else{
-		var thethumb = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucketstatic+'/128_128/no-user.png';
-		var thethumbsmall = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucketstatic+'/48_48/no-user.png';
-	}
-
-	var formattedUser = {
-		_id:theuser._id,
-		name:theuser.name,
-		login:theuser.login,
-		userdetails:theuser.name+'(@'+theuser.login+')',
-		thumb:thethumb,
-		thumbsmall:thethumbsmall,
-	};
-  return formattedUser;
-}
-
-User.statics.formatLight2 = function (theuser) {
-	
-	var formattedUser = {
-		_id:theuser._id,
-		title:theuser.name+'(@'+theuser.login+')',
-		name: theuser.name,
-	};
-  return formattedUser;
-}
-
-User.statics.FormatProfile = function (theuser) {
-
-
-	if(theuser.thumb && theuser.thumb!= 'no-user.png'){
-		var thethumb = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/128_128/'+theuser.thumb;
-		var thethumbsmall = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/48_48/'+theuser.thumb;
-	}else{
-		var thethumb = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucketstatic+'/128_128/no-user.png';
-		var thethumbsmall = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucketstatic+'/48_48/no-user.png';
-	}
-
-
-	var formattedUser = {
-		_id:theuser._id,
-		name: theuser.name,
-		login: theuser.login,
-		formatted_address : theuser.formatted_address,
-		bio: theuser.bio,
-		creationDate : theuser.creationDate,
-		thumb:thethumb,
-		thumbsmall:thethumbsmall,
-		web: theuser.web,
-
-	};
-  return formattedUser;
-}
-
-User.statics.countUnvalidated = function (callback) {
-	return this.count( {'status': { $in: [2, 10]}}, callback );
-}
-
-User.statics.findByLogin = function (login,callback) {
-  return this.find({login:login,status:1}, callback);
-}
-
-User.statics.findbyMail = function (mail,callback) {
-  return this.find({'mail':mail}, callback);
-}
-
-User.statics.findByLoginDuplicate = function (login,callback) {
-  return this.findOne({'login': login}, callback);
-}
-
-User.statics.findByIds = function (ids,callback) {
-  return this.find({'_id': { $in: ids}}, callback);
-}
-User.statics.identifyByToken = function (token,userid,callback) {
-  return this.findOne({'_id':userid,'apiData.apiToken': token,'status':1}, callback);
-}
-User.statics.findById = function (id,callback) {
-  return this.findOne({'_id': id}, callback);
-}
-User.statics.findById2 = function (id,callback) {
-  return this.find({'_id': id}, callback);
-}
-User.statics.PublicProfileFindById = function (id,callback) {
-  return this.findOne({'_id': id},{_id:1,address:1,bio:1,location:1,login:1,mail:1,name:1,thumb:1,type:1,web:1,lastLoginDate:1,favplace:1,placesubs:1,tagsubs:1,usersubs:1, feedsubs:1,tags:1}, callback);
-}
-User.statics.findByToken = function (token,callback) {
-  return this.findOne({'token': token,'status':2}, callback);
-}
-User.statics.findByTwitterId = function (twitter_id,callback) {
-  return this.findOne({'social.twitter.twitter_id': twitter_id,'status':1}, callback);
-}
-
-User.statics.findByFacebookId = function (facebook_id,callback) {
-  return this.findOne({'social.facebook.facebook_id': facebook_id}, callback);
-}
-
-User.statics.findByGoogleId = function (google_id,callback) {
-  return this.findOne({'social.google.google_id': google_id}, callback);
-}
-
-User.statics.findAll = function (callback) {
-  return this.find({},{},{sort:{name:1}}, callback);
-}
-User.statics.search = function(string,count,from,sensitive,callback){
-	var limit = (typeof(count) != 'undefined' && count > 0) ? count : 100;		
-	var skip = (typeof(from) != 'undefined' && from > 0) ? from : 0;	
-	var case_sensitive = (typeof(sensitive) != 'undefined' && sensitive > 0) ? 'g' : 'gi';	
-	var input = new RegExp(string,case_sensitive);
-	return this.find(
-	{	$or:[ {'login': {$regex:input}}, {'name': {$regex:input}} , {"tag": {$regex:input}} ],
-		
-	"status":1,
-	},
-	{_id:1,address:1,bio:1,location:1,login:1,mail:1,name:1,thumb:1,type:1,web:1,lastLoginDate:1,favplace:1,placesubs:1,tagsubs:1,usersubs:1, feedsubs:1 ,tags:1},
-	{
-		
-		skip:skip, // Starting Row
-		limit:limit, // Ending Row
-		sort:{
-			lastLoginDate: -1 //Sort by Date Added DESC
-		}
-	}).exec(callback);
-}
-
-
-
-User.statics.findByNameorLogin = function(string,callback){
-	
-	return this.findOne(
-	{	$or:[ {'login': string}, {'name': string}], "status":1 },
-	'_id,name,login',
-	{},
-	callback);
-}
-
-
-
-var auth = require('../mylib/basicAuth');
-User.plugin(auth);
-
-mongoose.model('User', User);
 
 
 
@@ -1156,3 +1154,4 @@ mongoose.model('Client', Client);
 
 require('./place.js');
 require('./feed.js');
+require('./user.js');

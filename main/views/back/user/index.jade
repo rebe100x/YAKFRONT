@@ -1,0 +1,27 @@
+extends ../layout
+block content
+	include ../mixins/menu.jade
+	include ../mixins/map.jade
+	include list.jade
+	include ../mixins/forms/placeForm.jade
+
+
+	mixin menu('user')
+	mixin locationChooser()
+
+	div.container-fluid
+		div.row-fluid
+			div.span4
+				mixin map()
+			div.span8
+				div.fuelux
+					- if (message)
+						each msg in message
+							div.alert.fade.in#alert
+								button.close(type="button",data-dismiss="alert") x
+								strong= msg
+
+					div#newsfeedContainer
+						mixin list()
+						mixin placeForm()
+						

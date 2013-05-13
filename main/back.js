@@ -80,7 +80,7 @@ app.post('/session',back.session);
 
 app.get('/place/list', back.requiresLogin, back.place_list);
 app.get('/feed/list', back.requiresLogin, back.feed_list);
-
+app.get('/user/list',back.requiresLogin, back.user_list);
 
 app.post('/feed', back.requiresLogin, back.feed);
 app.post('/place', back.requiresLogin, back.place);
@@ -102,7 +102,7 @@ app.get('/api/feed/:id', back.findFeedById);
 app.get('/api/cats/:id', back.catsById);
 app.get('/api/cats', api.cats);
 app.get('/api/tags', api.tags);
-app.get('/api/places', back.places);
+app.get('/api/users', back.gridUsers);
 app.get('/api/places/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status', back.gridPlaces);
 app.get('/api/places/:id', back.findPlaceById);
 app.get('/api/feeds/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status/:type', back.gridFeeds);
@@ -134,6 +134,7 @@ app.listen(conf.backport,conf.backdns, function(){
 
 
 // Uglify with node-minify : https://github.com/srod/node-minify
+/*
 new compressor.minify({
   type: 'yui-js',
   fileIn: [
@@ -187,5 +188,5 @@ new compressor.minify({
     else
       console.log('YUI CSS BACK compressor ok');
   } 
-});
+}); */
 

@@ -612,6 +612,12 @@ exports.gridPlaces = function (req, res) {
 /******* 
 #USER 
 ******/
+
+exports.user_list = function(req, res){
+	delete req.session.message;
+	res.render('user/index');
+};
+
 exports.user_login = function(req, res){
 	delete req.session.message;
 	res.render('user/login',{locals:{redir:req.query.redir}});

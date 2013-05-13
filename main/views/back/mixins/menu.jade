@@ -74,11 +74,11 @@ mixin menu(active)
 											span1#catnumber
 								- if (active == 'user')
 									li.active
-										a(href="") Utilisateurs
+										a(href="/user/list") Utilisateurs
 											span1#usernumber
 								- else
 									li
-										a(href="") Utilisateurs
+										a(href="/user/list") Utilisateurs
 											span1#usernumber
 		div#alertInfo.alert.alert-info
 			button.close(type="button",data-dismiss="alert") x
