@@ -237,21 +237,6 @@ mixin list()
 		}
 
 
-		$('a.centerMap').live('click', function(event) {
-			event.preventDefault();
-			var latlng = new google.maps.LatLng($(this).attr('lat'), $(this).attr('lng'));
-			//getformattedAddress(latlng);
-			placeMarker(latlng,markerLocation);
-			map.setCenter(latlng);
-		});
-
-
-		// Refresh on sort selection
-		$('#sortPlaces').live('change', function() {
-			refreshDatagrid();
-		});
-		
-
 	
 		function refreshDatagrid () {
 			// Temporary refresh method for datagrid
@@ -267,53 +252,31 @@ mixin list()
 			event.preventDefault();
 			event.stopPropagation();
 			
-			listenerHandle = google.maps.event.addListener(map, 'click', function(event) {
-				placeMarker(event.latLng,markerLocation);
-				getformattedAddress(event.latLng);
-				$('#feedform #latitude').val(event.latLng.lat());
-				$('#feedform #longitude').val(event.latLng.lng());
-			});
-
-			listenerHandleDrag = google.maps.event.addListener(markerLocation, 'dragend', function() {
-				
-				var position = markerLocation.getPosition();
-				getformattedAddress(position);
-				$('#feedform #latitude').val(position.lat());
-				$('#feedform #longitude').val(position.lng());
-
-			});
-
-
-
-
+			
 
 			$("#MyGrid").hide();
 			
 
 			// We remove the error class when we open a form for editing a place
-			$('#feedform #titleGroup').removeClass("error");
-			$('#feedform #contentGroup').removeClass("error");
-			$('#feedform #licenceGroup').removeClass("error");
-			$('#feedform #origineGroup').removeClass("error");
-			$('#feedform #adresseGroup').removeClass("error");
-
+			$('#feedForm').removeClass("error");
+			
 			$("#btnBack").show().unbind('click').on('click',function(){
-				$("#feedform").hide();
+				$("#feedForm").hide();
 				$("#MyGrid").show();
 				$("#pillSource ul").html('');
 				$("#pillYakcat ul").html('');
 				$("#pillFreetag ul").html('');
 				google.maps.event.removeListener(listenerHandle);
 				markerLocation.setVisible(false);					
-				$("#feedform input[type=hidden]").val('');
-				$('#feedform').clearForm();
+				$("#feedForm input[type=hidden]").val('');
+				$('#feedForm').clearForm();
 			});
 
 
 
 			/*INIT FORM FOR EDITION*/
-			$("#feedform").show();
-			$("#feedform legend.mainlegend").html("Modifier un flux");
+			$("#feedForm").show();
+			$("#feedForm legend.mainlegend").html("Modifier un flux");
 			$(".catLabel").remove();
 			$("#pillYakcat ul").empty();
 			$('#err').hide();
@@ -335,55 +298,54 @@ mixin list()
 				{
 					/*FORM INITIALISATION*/
 					var feed = response.feed;
-					
-					$("#feedform #objid").val(this.id);
+					console.log(feed);
+					$("#feedForm #objid").val(this.id);
 
-					$("#feedform #humanName").val(feed.humanName);
-					$("#feedform #licence").val(feed.licence);
-					$("#feedform #link").val(feed.link);
-					$('#feedform #persistDays input').val($('#feedform #persistDays').find('li[data-value='+feed.persistDays+']').text());
+					$("#feedForm #humanName").val(feed.humanName);
+					$("#feedForm #licence").val(feed.licence);
+					$("#feedForm #link").val(feed.link);
+					$('#feedForm #persistDays input').val($('#feedForm #persistDays').find('li[data-value='+feed.persistDays+']').text());
 					feed.yakCatId.forEach(function(cat){
 						$.get('/api/cats/'+cat,function(data){
 							$("#pillYakcat ul").append("<li class='yakcat-val status-important' data-value='"+data.cats._id+"'>"+data.cats.title+"</li>");
 							yakCatIds.push(data._id);
 							yakCatNames.push(data.name);	
 						});
+						console.log(yakCatNames);
 						
 					});
-					$("#feedform #yakcatIdsHidden").val(yakcatIds.join(','));
+					$("#feedForm #yakcatIdsHidden").val(yakcatIds.join(','));
 					
 					feed.tag.forEach(function(tag){
 						$("#pillFreetag ul").append("<li class='freetag-val status-info' data-value='"+tag+"'>"+tag+"</li>");
 						tags.push(tag);
 					});
-					$("#feedform #tagsHidden").val(tags.join(','));
+					$("#feedForm #tagsHidden").val(tags.join(','));
 					
 					if(typeof feed.defaultPlaceLocation != 'undefined'){
 						var latlng = new google.maps.LatLng(feed.defaultPlaceLocation.lat, feed.defaultPlaceLocation.lng);
 						placeMarker(latlng,markerLocation);
 						map.setCenter(markerLocation.getPosition());
-						$("#feedform #longitude").val(feed.defaultPlaceLocation.lng);
-						$("#feedform #latitude").val(feed.defaultPlaceLocation.lat);
-						$("#feedform #address").val(feed.defaultPlaceSearchName);
-						$("#feedform #place").val(feed.defaultPlaceSearchName);
+						$("#feedForm #longitude").val(feed.defaultPlaceLocation.lng);
+						$("#feedForm #latitude").val(feed.defaultPlaceLocation.lat);
+						$("#feedForm #place").val(feed.defaultPlaceSearchName);
 					}
 
 					$('#defaultPlaceSearchName').val(feed.defaultPlaceSearchName);
 					$('#defaultPlaceName').val(feed.defaultPlaceName);
 
 
-					$("#feedform #defaultPrintFlag").val(feed.defaultPrintFlag);
+					$("#feedForm #defaultPrintFlag").val(feed.defaultPrintFlag);
 					
-					$("#feedform #feedType").val(feed.feedType);
+					$("#feedForm #feedType").val(feed.feedType);
 					if(feed.feedType=='CSV'){
 						$('#alertFeedType').show().children('span.alertText').html('Le fichier doit être sauvé en UTF8, séparation point virgule (;) et textes délimités par des guillemets doubles ("). ');
 					}
 
 
-					$('#feedform input:radio[name=yakType][value='+feed.yakType+']').attr("checked", true).trigger("change").button('refresh');
+					$('#feedForm input:radio[name=yakType][value='+feed.yakType+']').attr("checked", true).trigger("change").button('refresh');
 					
 					var tmpArr = new Array();
-					console.log(feed);
 					tmpArr = feed.fileSource;
 					tmpArr.forEach(function(source){ 
 						if(source.length>0){	
@@ -393,7 +355,7 @@ mixin list()
 						}
 					});
 
-					$("#feedform #sourceFileHidden").val(sourceFile.join(','));	
+					$("#feedForm #sourceFileHidden").val(sourceFile.join(','));	
 					
 					feed.linkSource.forEach(function(source){
 						if(source.length>0){
@@ -402,65 +364,63 @@ mixin list()
 							sourceLink.push(source);
 						}						
 					});
-					$("#feedform #sourceLinkHidden").val(sourceLink.join(','));
+					$("#feedForm #sourceLinkHidden").val(sourceLink.join(','));
 
-					$('#feedform input:radio[name=status][value='+feed.status+']').attr("checked", true).trigger("change").button('refresh');
+					$('#feedForm input:radio[name=status][value='+feed.status+']').attr("checked", true).trigger("change").button('refresh');
 
 
 
-					$("#feedform #humanName").focus();
+					$("#feedForm #humanName").focus();
 					
 
 					
 					if (feed.parsingTemplate)
 					{
-						$("#feedform #infoTitle").val(feed.parsingTemplate.title);	
-						$("#feedform #infoContent").val(feed.parsingTemplate.content);	
-						$("#feedform #infoAddress").val(feed.parsingTemplate.address);	
-						$("#feedform #infoLatitude").val(feed.parsingTemplate.latitude);	
-						$("#feedform #infoLongitude").val(feed.parsingTemplate.longitude);	
-						$("#feedform #infoLink").val(feed.parsingTemplate.outGoingLink);	
-						$("#feedform #infoThumb").val(feed.parsingTemplate.thumb);	
-						$("#feedform #infoCat").val(feed.parsingTemplate.yakCats);	
-						$("#feedform #infoTag").val(feed.parsingTemplate.tag);	
-						$("#feedform #infoPlace").val(feed.parsingTemplate.place);	
-						$("#feedform #infoEventDate").val(feed.parsingTemplate.eventDate);	
-						$("#feedform #infoPubDate").val(feed.parsingTemplate.pubDate);	
-						$("#feedform #infoTel").val(feed.parsingTemplate.telephone);
-						$("#feedform #infoMail").val(feed.parsingTemplate.mail);
-						$("#feedform #infoTransportation").val(feed.parsingTemplate.transportation);
-						$("#feedform #infoWeb").val(feed.parsingTemplate.web);
-						$("#feedform #infoOpening").val(feed.parsingTemplate.opening);
+						$("#feedForm #infoTitle").val(feed.parsingTemplate.title);	
+						$("#feedForm #infoContent").val(feed.parsingTemplate.content);	
+						$("#feedForm #infoAddress").val(feed.parsingTemplate.address);	
+						$("#feedForm #infoLatitude").val(feed.parsingTemplate.latitude);	
+						$("#feedForm #infoLongitude").val(feed.parsingTemplate.longitude);	
+						$("#feedForm #infoLink").val(feed.parsingTemplate.outGoingLink);	
+						$("#feedForm #infoThumb").val(feed.parsingTemplate.thumb);	
+						$("#feedForm #infoCat").val(feed.parsingTemplate.yakCats);	
+						$("#feedForm #infoTag").val(feed.parsingTemplate.tag);	
+						$("#feedForm #infoPlace").val(feed.parsingTemplate.place);	
+						$("#feedForm #infoEventDate").val(feed.parsingTemplate.eventDate);	
+						$("#feedForm #infoPubDate").val(feed.parsingTemplate.pubDate);	
+						$("#feedForm #infoTel").val(feed.parsingTemplate.telephone);
+						$("#feedForm #infoMail").val(feed.parsingTemplate.mail);
+						$("#feedForm #infoTransportation").val(feed.parsingTemplate.transportation);
+						$("#feedForm #infoWeb").val(feed.parsingTemplate.web);
+						$("#feedForm #infoOpening").val(feed.parsingTemplate.opening);
 					}
 				}
 			});
 		});
 
 		// Add Feed function
-		$("#btnAdd").click(function()
-		{
-
+		$("#btnAdd").click(function(){
 			$("#MyGrid").hide();
-			$("#feedform")[0].reset();
+			$("#feedForm")[0].reset();
 			// We remove the error class when we open a form for creating a new feed
-			$('#feedform #titleGroup').removeClass("error");
-			$('#feedform #contentGroup').removeClass("error");
-			$('#feedform #licenceGroup').removeClass("error");
-			$('#feedform #origineGroup').removeClass("error");
-			$('#feedform #adresseGroup').removeClass("error");
-			$('#feedform #content').val("");
+			$('#feedForm #titleGroup').removeClass("error");
+			$('#feedForm #contentGroup').removeClass("error");
+			$('#feedForm #licenceGroup').removeClass("error");
+			$('#feedForm #origineGroup').removeClass("error");
+			$('#feedForm #adresseGroup').removeClass("error");
+			$('#feedForm #content').val("");
 			$('#placeLabel').first().remove();
 			$("#btnBack").fadeIn();
-			$("#feedform").fadeIn();
-			$("#feedform legendmainlegend").html("Ajouter un lieu");
-			$("#feedform #objid").val("");
+			$("#feedForm").fadeIn();
+			$("#feedForm legendmainlegend").html("Ajouter un lieu");
+			$("#feedForm #objid").val("");
 			$(".catLabel").remove();
 			$("#pillYakcat ul").empty();
 			$('#err').hide();
-			$("#feedform #title").focus();
-			
+			$("#feedForm #title").focus();
 		});
 
+		
 
 		
 

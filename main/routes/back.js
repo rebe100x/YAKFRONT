@@ -256,8 +256,7 @@ exports.place = function(req, res){
 	//mongoose.set('debug', true);
 	var obj_id = req.body.objid;
 	var edit = false;
-	console.log(obj_id);
-
+	
 	// we need a title, a location and a user
 	if(req.body.placeInput && req.body.title && req.session.user)
 	{

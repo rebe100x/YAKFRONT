@@ -17,16 +17,26 @@ $(document).ready(function() {
 			$('#locationChooser .modal-body p.alertText').html("");
 			$('#locationChooser').modal('show');
 	});
+
+	//Enabe alert dismissal
+	//$(".alert").alert()
+
 });
 /*END READY FUNCTIONS*/
 
+function removeError(objId){	
+	//$(objId).prev('.alert').hide();
+}
+
+function setError(objId,str){	
+	$(objId).before('<div class="alert alert-error"><a href="#" class="close" data-dismiss="alert">&times;</a><strong>Erreur: </strong> '+str+'</div>').focus();
+	$('#newsfeedContainer').mCustomScrollbar("scrollTo",$(objId).offset().top -120);
+}
 
 function setGravatar()
 {
 
-	if(typeof user.mail != 'undefined' && user.mail != null && user.mail != "")
-	{
-		console.log('e');	
+	if(typeof user.mail != 'undefined' && user.mail != null && user.mail != ""){
 		var gravatarMail = $.trim(user.mail).toLowerCase();
 		var gravatarLink = 'http://www.gravatar.com/avatar/' + $.md5(gravatarMail) + "?s=51";
 		gravatarImage = "<img class='gravatarImage' src='"+gravatarLink+"' alt='Gravatar Image - Profile' title='Gravatar Image - Profile' />" ;
@@ -224,54 +234,5 @@ function deletePlaceHTML(placeArray,results,self){
 }
 
 
-function getPlaceFromGmapResult(result){
-	
-	var addressGmap = {
-		"street_number":""
-		,"street":""
-		,"arr":""
-		,"city":""
-		,"state":""
-		,"area":""
-		,"country":""
-		,"zip":""
-	};
 
-	result.address_components.forEach(function(item) { 
-		if(item.types.inArray('street_number'))
-			addressGmap.street_number = item.long_name;
-		if(item.types.inArray('route'))
-			addressGmap.street = item.long_name;
-		if(item.types.inArray('	sublocality'))
-			addressGmap.arr = item.long_name;
-		if(item.types.inArray('locality'))
-			addressGmap.city = item.long_name;
-		if(item.types.inArray('administrative_area_level_2'))
-			addressGmap.state = item.long_name;
-		if(item.types.inArray('administrative_area_level_1'))
-			addressGmap.area = item.long_name;
-		if(item.types.inArray('country'))
-			addressGmap.country = item.long_name;
-		if(item.types.inArray('postal_code'))
-			addressGmap.zip = item.long_name;
-	});
-	//console.log((result.geometry.location.Xa));
-	var placeGmap = {
-		"title":result.formatted_address
-		,"content":""
-		,"thumb":""
-		,"origin":"gmap"
-		,"access":2
-		,"licence":"gmap"
-		,"outGoingLink":""
-		,"yakCat":["504d89f4fa9a958808000001"]
-		,"creationDate":new Date()
-		,"lastModifDate":new Date()
-		,"location":{"lng":parseFloat(result.geometry.location.Ya),"lat":parseFloat(result.geometry.location.Xa)}
-		,"status":2 // need validation
-		,"address": addressGmap
-		};
-		
-	return placeGmap;
-}	
 

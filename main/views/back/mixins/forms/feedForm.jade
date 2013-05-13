@@ -1,151 +1,155 @@
 mixin feedForm()
 	button.btn#btnBack(style='display:none')
 		i.icon-chevron-left
-	form#feedform.yakForm(action='/feed', method='POST', enctype='multipart/form-data', style='display:none')
+	form#feedForm.yakForm(action='/feed', method='POST', enctype='multipart/form-data', style='display:none')
 		input#yakCatIdsHidden(type='hidden', name='yakCatIdsHidden', value='')
 		input#yakCatNamesHidden(type='hidden', name='yakCatNamesHidden', value='')
 		input#tagsHidden(type='hidden', name='tagsHidden', value='')
 		input#linkSource(type='hidden', name='linkSource', value='')
-		input#fileSource(type='hidden', name='fileSource', value='')
-		input#address(type='hidden', name='address', value='')
+		input#fileSource(type='hidden', name='fileSource', value='')		
 		input#latitude(type="hidden", name="latitude")
 		input#longitude(type="hidden", name="longitude")
 		input#update(type="hidden", name="update", value='0')
 		input#objid(type="hidden", name="objid", value='0')
 		
 
-		legend.mainlegend Ajouter un flux
 		div.control-group.error
 				div.controls
 					label.alert#err(type="text", id="err", name="err", style='display:none') Les champs en rouge sont obligatoires.
-		div.control-group#titleGroup
-			div.controls
-				.col
-					label Nom:
-					input(type='text', name='humanName', id='humanName', placeholder='Le nom du flux')
-				.col
-					label Lien externe:
-					input(type='text', name='link', id='link', placeholder='Lien vers la source de la donnée')
-				.col	
-					label Licence:
-					input(type='text', name='licence', id='licence', placeholder='Licence')
-				.col
-					label Combien de jours l info restera sur le front ?
-					div.input-append.dropdown.combobox#persistDays
-						input(type='text', placeholder="Jours de persistence", name="persistDays")
-						button.btn(data-toggle="dropdown")
-							i.caret
-						ul.dropdown-menu
-							li(data-value="1")
-								a(href="") 1
-							li(data-value="2")
-								a(href="") 2
-							li(data-value="3")
-								a(href="") 3
-							li(data-value="7")
-								a(href="") 7
-							li(data-value="30")
-								a(href="") 30
-							li(data-value="90")
-								a(href="") 90
-							li(data-value="365")
-								a(href="") 365
 		
-		legend Metadata:		
-		div.control-group#statusGroup.clearBoth
-			.col
-				label.radio.inline Actu
-					input(type="radio", name="yakType", value="1")
-				label.radio.inline Agenda
-					input(type="radio", name="yakType", value="2")
-				label.radio.inline Info pratiques
-					input(type="radio", name="yakType", value="3")
-			
-		div.control-group#dataGroup.clearBoth
-			div.controls	
-				.col
-					label(for='category') Catégories
-					input#yakcat(type="text", data-provide="typeahead", name="yakcat", autocomplete="off", placeholder='Chercher une catégorie...')
-					.pillbox#pillYakcat(style="display:none")
-						ul
-				.col
-					label Tags
-					.input-append
-						input#freetag(type="text", data-provide="typeahead", name="freetag", autocomplete="off", placeholder='Entrer un tag...')
-						button.btn#btn-freetag-adder(type="button") Ajouter	
-					.pillbox#pillFreetag(style="display:none")
-						ul						
-			br
-			br		
-
-			
-		legend Localisation:						
-		div.control-group#locationGroup.clearBoth
-			div.controls.clearBoth	
-				.col
-					label(for='defaultPlaceName') Localisation du flux:
-					.input-append
-						input(type="text",data-provide="typeahead", id="defaultPlaceName", name="defaultPlaceName", autocomplete="off", placeholder="Chercher...")
-				.col
-					label Si l'info n'est pas géolocalisée...	
-					select.big#defaultPrintFlag
-						option(value="0") ... ne pas afficher sur la carte mais afficher sur le fil info
-						option(value="1") ... afficher sur la carte + fil info
-						option(value="3") ... ne pas afficher l info du tout
-						option(value="2") ... ne pas faire de géoloc et la placer au point par défaut
-			div.controls.clearBoth	
-				label(for='defaultPlaceSearchName') Texte de recherche sur Google Map:
-				input(type="text", id="defaultPlaceSearchName", name="defaultPlaceSearchName", autocomplete="off", placeholder="Texte de recherche sur google map.")
-			br
-			br
-			br			
-		legend Sources
-		div.control-group#locationGroup.clearBoth	
-			div.controls.clearBoth		
-				.col					
-					label Uploader un fichier : 
-					input(type="file", id="fileupload", name="files[]", data-url="http://localhost:"+JSON.parse(conf).fileport, multiple)
-					div#progress
-						div.bar.alert.alert-success(style="width: 0%;")
-							span.alertText 0%
-					.pillbox#pillSourceFile(style="display:none")
-						ul
-				.col
-					label Source(s) web
-					.input-append	
-						input.big(type='text', name='source', id='source', placeholder='http://...')
-						button.btn#btn-source-adder(type="button") Ajouter
-					.pillbox#pillSourceLink(style="display:none")
-						ul	
-
-		br
-		br			
-		legend Parsing:
-		div.control-group#parsingGroup.clearBoth
-			div.controls.clearBoth
-				.col
-					label Type de flux : 
-					select#feedType(name='feedType')
-						option(value="RSS") RSS
-						option(value="CSV") CSV
-						option(value="YAKMADE") YAKMADE
-					div#alertFeedType.alert.alert-info
-						button.close(type="button", data-dismiss="alert") x
-						span.alertText
-				.col
-					label &nbsp;
-					button.btn.btn-primary.btn-warning(type='button', name='parsing', id='parsing') Définir le parsing
-
-		div.control-group#parsingGroup.clearBoth
+		legend.mainlegend Ajouter un flux
+		
+		div.row-fluid
+			legend Infos générales:
+			div.control-group#titleGroup
+				div.controls
+					div.row-fluid
+						.span6
+							label Nom*:
+							input(type='text', name='humanName', id='humanName', placeholder='Le nom du flux')
+						.span6
+							label Imagette:
+							span#picturePreview
+							input.span6#picture(type="file",style="display:block",name="picture")
+					div.row-fluid
+						.span6
+							label Licence*:
+							input(type='text', name='licence', id='licence', placeholder='Licence')
+						.span6
+							label Lien externe:
+							input(type='text', name='link', id='link', placeholder='Lien vers la source de la donnée')
+					div.row-fluid
+						.span6
+							label Combien de jours l info restera sur le front ?*
+							div.input-append.dropdown.combobox#persistDays
+								input(type='text', placeholder="Jours de persistence", name="persistDays")
+								button.btn(data-toggle="dropdown")
+									i.caret
+								ul.dropdown-menu
+									li(data-value="1")
+										a(href="") 1
+									li(data-value="2")
+										a(href="") 2
+									li(data-value="3")
+										a(href="") 3
+									li(data-value="7")
+										a(href="") 7
+									li(data-value="30")
+										a(href="") 30
+									li(data-value="90")
+										a(href="") 90
+									li(data-value="365")
+										a(href="") 365
+		div.row-fluid
+			legend Metadata:		
+			div.control-group#yakType.row-fluid
+				.span12
+					label Type info:
+					label.radio.inline Actu
+						input(type="radio", name="yakType", value="1")
+					label.radio.inline Agenda
+						input(type="radio", name="yakType", value="2")
+					label.radio.inline Info pratiques
+						input(type="radio", name="yakType", value="3")
 				
-		legend Désactiver
-		div.control-group
-			div.controls
-				label.radio.inline Actif
-					input(type="radio", name="status", value="1", checked)
-				label.radio.inline Inactif
-					input(type="radio", name="status", value="0")	
-						
+			div.control-group
+				div.controls.row-fluid
+					.span6
+						label(for='category') Catégories
+						input#yakcat(type="text", data-provide="typeahead", name="yakcat", autocomplete="off", placeholder='Chercher une catégorie...')
+						.pillbox#pillYakcat(style="display:none")
+							ul
+					.span6
+						label Tags
+						.input-append
+							input#freetag(type="text", data-provide="typeahead", name="freetag", autocomplete="off", placeholder='Entrer un tag...')
+							button.btn#btn-freetag-adder(type="button") Ajouter	
+						.pillbox#pillFreetag(style="display:none")
+							ul						
+		div.row-fluid
+			legend Localisation:						
+			div.control-group#locationGroup.clearBoth
+				div.controls.row-fluid	
+					.span6
+						label(for='defaultPlaceName') Localisation du flux:
+						input(type="text",data-provide="typeahead", id="defaultPlaceName", name="defaultPlaceName", autocomplete="off", placeholder="Chercher...")
+					.span6
+						label Si l'info n'est pas géolocalisée...	
+						select.big#defaultPrintFlag
+							option(value="0") ... ne pas afficher sur la carte mais afficher sur le fil info
+							option(value="1") ... afficher sur la carte + fil info
+							option(value="3") ... ne pas afficher l info du tout
+							option(value="2") ... ne pas faire de géoloc et la placer au point par défaut
+				div.controls.row-fluid	
+					.span6
+						label(for='defaultPlaceSearchName') Texte de recherche sur Google Map:
+						input(type="text", id="defaultPlaceSearchName", name="defaultPlaceSearchName", autocomplete="off", placeholder="Texte de recherche sur google map.")
+		div.row-fluid
+			legend Sources des données:
+			div.control-group.clearBoth#dataSource
+				div.controls.row-fluid		
+					.span6			
+						label Uploader un fichier : 
+						input(type="file", id="fileupload", name="files[]", data-url="http://localhost:"+JSON.parse(conf).fileport, multiple)
+						div#progress
+							div.bar.alert.alert-success(style="width: 0%;")
+								span.alertText 0%
+						.pillbox#pillSourceFile(style="display:none")
+							ul
+					.span6
+						label Source(s) web
+						.input-append	
+							input.big(type='text', name='source', id='source', placeholder='http://...')
+							button.btn#btn-source-adder(type="button") Ajouter
+						.pillbox#pillSourceLink(style="display:none")
+							ul	
+		div.row-fluid
+			legend Parsing:
+			div.control-group#parsingGroup.clearBoth
+				div.controls.row-fluid
+					.span6
+						label Type de flux : 
+						select#feedType(name='feedType')
+							option(value="RSS") RSS
+							option(value="CSV") CSV
+							option(value="YAKMADE") YAKMADE
+						div#alertFeedType.alert.alert-info
+							button.close(type="button", data-dismiss="alert") x
+							span.alertText
+					.span6
+						label &nbsp;
+						button.btn.btn-primary.btn-warning(type='button', name='parsing', id='parsing') Définir le parsing
+
+		div.row-fluid
+			div.control-group#parsingGroup.clearBoth
+			legend Désactiver
+			div.control-group
+				div.controls
+					label.radio.inline Actif
+						input(type="radio", name="status", value="1", checked)
+					label.radio.inline Inactif
+						input(type="radio", name="status", value="0")	
+							
 		br				
 		div.control-group
 			div.controls
@@ -200,7 +204,7 @@ mixin feedForm()
 			div.modal-footer
 				button.btn.btn-primary.btn-warning(type="button", data-dismiss="modal", aria-hidden="true") OK
 
-	
+			
 
 	
 	script
@@ -211,9 +215,20 @@ mixin feedForm()
 		var linkSource = new Array();
 		var fileSource = new Array();
 
+		
 		$(document).ready(function() {
 
 			
+			listenerHandle = google.maps.event.addListener(map, 'click', function(event) {
+				placeMarker(event.latLng,markerLocation);
+				getformattedAddress(event.latLng);
+			});
+
+			listenerHandleDrag = google.maps.event.addListener(markerLocation, 'dragend', function() {
+				var position = markerLocation.getPosition();
+				getformattedAddress(position);
+
+			});
 
 			$('#alertFeedType').hide();
 			$('#feedType').on('change',function(){
@@ -223,6 +238,26 @@ mixin feedForm()
 					$('#alertFeedType').hide();
 			});
 
+			/*THUMB*/
+			$('#picture').live('change', function () {
+
+				if ( window.FileReader ) {
+					var fileList = this.files;
+					var file = fileList[0];
+					var r = new FileReader();
+					r.onload = function () {
+						var binimage = r.result;
+						binimage1 = binimage.replace('data:'+file.type+';base64,', '');
+						var imag = "<img class='img-rounded' " + "src='" + 
+						"data:"+file.type+";base64," + binimage1 + "' style='width:100px'/>";
+						$("#picturePreview").html(imag);
+					};
+					r.readAsDataURL(file);
+				
+				}
+			});
+				
+			/*DATA FILE UPLOAD*/	
 			$('#fileupload').fileupload({
 				dataType: 'json',
 				done: function (e, data) {
@@ -345,9 +380,18 @@ mixin feedForm()
 			});
 			
 
-			/*Place autocomplete*/
+			/*CLEAN LOCATION*/
+			$('#defaultPlaceName').unbind('blur').on('blur',function(){
+				if($(this).val() == ''){
+					$("#feedForm #longitude").val('');
+					$("#feedForm #latitude").val('');
+					markerLocation.setVisible(false);
+				}
+
+			});
+			
+			//Place autocomplete
 			var input = document.getElementById('defaultPlaceName');
-			//$('#defaultPlaceName').on('focus',function(){$(this).val('');});
 			var autocomplete = new google.maps.places.Autocomplete(input);
 			autocomplete.bindTo('bounds', map);
 			google.maps.event.addListener(autocomplete, 'place_changed', function() {
@@ -359,23 +403,100 @@ mixin feedForm()
 				var formattedPlace = getPlaceFromGmapResult(place);
 				$('#defaultPlaceSearchName').val(formattedPlace.address.state+', '+formattedPlace.address.area);				
 				map.setCenter(place.geometry.location);
-				$("#feedform #longitude").val(place.geometry.location.Za);
-				$("#feedform #latitude").val(place.geometry.location.Ya);
-				$("#feedform #address").val(place.formatted_address);
-					
+				$("#feedForm #longitude").val(place.geometry.location.Za);
+				$("#feedForm #latitude").val(place.geometry.location.Ya);
+
 				markerLocation.setPosition(place.geometry.location);
 				markerLocation.setVisible(true);
 			});
 
 
-			$('#feedForm').ajaxForm(function() {
+			/*EXTERNAL SOURCE LINK COMPLETION*/
+			$('#link').on('blur',function(){
+				if($(this).val() != '' && $(this).val().slice(0,7) != "http://")
+					$(this).val('http://'+$(this).val());
+			});	
+				
+
+				
+		});
+		
+
+
+		/*PROCESS FORM*/
+		$('#feedForm').ajaxForm(
+			function() {
+				alert('validated');
 				$("#MyGrid").fadeIn();
 				$("#feedForm").hide();
 				$("#btnBack").hide();
 				google.maps.event.removeListener(listenerHandle);
 				markerLocation.setVisible(false);
 				refreshDatagrid();
-			});
+			}
+		);
 
+		
+		
+		/*Form custom validation*/
+		$('#feedForm').unbind('submit').on('submit',function(){
+			var err = false;
+			if($('#humanName').val() == ""){
+				setError('#humanName','Entrer un nom pour ce flux');
+				err = true;
+			}else
+				removeError('#humanName');
 
-		});
+			
+			if($('#link').val() != "" && !$('#link').val().isUrl()){
+				setError('#link','Entrer une url valide');
+				err = true;
+			}else
+				removeError('#link');
+			
+			if($('#licence').val() == ""){
+				setError('#licence','Entrer un nom de licence');
+				err = true;
+			}else
+				removeError('#licence');
+
+			if($('#persistDays input').val() == "" || !$('#persistDays input').val().isInt()){
+				setError('#persistDays','Entrer un chiffre');
+				err = true;
+			}else
+				removeError('#persistDays');
+			
+			if(typeof $('input:radio[name=yakType]:checked').val() == "undefined" ){
+				setError('#yakType','Choisir un type info');
+				err = true;
+			}else
+				removeError('#yakType');
+			
+			if($('#defaultPlaceName').val() == ""){
+				setError('#defaultPlaceName','Définir une géoloc par défaut');
+				err = true;
+			}else
+				removeError('#defaultPlaceName');
+			
+			if($('#defaultPlaceSearchName').val() == ""){
+				setError('#defaultPlaceSearchName','Définir un texte de recherche par défaut');
+				err = true;
+			}else
+				removeError('#defaultPlaceSearchName');
+
+			if($('#linkSource').val() == "" && $('#fileSource').val() == "" ){
+				setError('#dataSource','Définir soit un fichier source, soit une url source');
+				err = true;
+			}else
+				removeError('#dataSource');		
+				
+			if (err){
+				$('#err').show();
+				return false;
+			}else
+				return true;
+		});	
+		
+		
+
+		

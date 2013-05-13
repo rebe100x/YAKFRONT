@@ -1008,57 +1008,6 @@ function getformattedAddress(position){
 
 
 
-function getPlaceFromGmapResult(result){
-	
-	var addressGmap = {
-		"street_number":""
-		,"street":""
-		,"arr":""
-		,"city":""
-		,"state":""
-		,"area":""
-		,"country":""
-		,"zip":""
-	};
-
-	result.address_components.forEach(function(item) { 
-		if(item.types.inArray('street_number'))
-			addressGmap.street_number = item.long_name;
-		if(item.types.inArray('route') || item.types.inArray('transit_station'))
-			addressGmap.street = item.long_name;
-		if(item.types.inArray('	sublocality'))
-			addressGmap.arr = item.long_name;
-		if(item.types.inArray('locality'))
-			addressGmap.city = item.long_name;
-		if(item.types.inArray('administrative_area_level_2'))
-			addressGmap.state = item.long_name;
-		if(item.types.inArray('administrative_area_level_1'))
-			addressGmap.area = item.long_name;
-		if(item.types.inArray('country'))
-			addressGmap.country = item.long_name;
-		if(item.types.inArray('postal_code'))
-			addressGmap.zip = item.long_name;
-	});
-	//console.log((result.geometry.location));
-	var placeGmap = {
-		"title":result.formatted_address
-		,"content":""
-		,"thumb":""
-		,"origin":"gmap"
-		,"access":2
-		,"licence":"gmap"
-		,"outGoingLink":""
-		,"yakCat":["504d89f4fa9a958808000001"]
-		,"creationDate":new Date()
-		,"lastModifDate":new Date()
-		,"location":{"lng":parseFloat(result.geometry.location.Za),"lat":parseFloat(result.geometry.location.Ya)}
-		,"status":2 // need validation
-		,"address": addressGmap
-		,"formatted_address":result.formatted_address
-		};
-		
-	return placeGmap;
-}	
 
 
 
