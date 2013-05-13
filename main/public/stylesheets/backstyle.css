@@ -13,6 +13,7 @@
 .searching{background-image:url('images/loader.gif');padding-left:20px;}
 .searchInput{background-repeat:no-repeat;background-position: 0px 5px;padding-left:0px;background-image: none;}
 
+input.error{background-color:#FF0000;}
 
 /*bootsrap fixes*/
 @media (max-width: 979px) {
@@ -23,6 +24,7 @@
 .row-fluid [class*="span"] {
   min-height: 1px;
 }
+.fuelux .datagrid thead .datagrid-header-left .search{margin-left: 0px;}
 
 
 /*location chooser */
@@ -43,7 +45,7 @@
 
 
 /*FORMS*/
-legend.mainlegend{color:#d51820;font-weight:bold;}
+legend.mainlegend{color:#d51820;font-weight:bold;border-bottom:0px;}
 .fuelux .btn .caret {margin-top: 8px;margin-left: 8px;}
 .fuelux .modal.big {width:75%;top:50%;left:25%;}
 .fuelux .modal.fade.in {top: 50%;}
@@ -51,19 +53,21 @@ legend.mainlegend{color:#d51820;font-weight:bold;}
 .bar {height: 18px;background: green;}
 /*HEADER*/
 .customprofile img.avatar{height:24px;}
-
-/* Place */
+#picturePreview{float:left;margin-right:3px;width:48px;}
+.fuelux .radio.inline{padding-top:0px;padding-bottom:5px;}
 .fuelux .yakForm{margin-left:5%;}
 .fuelux .yakForm .control-group { margin: 0;}
 .fuelux .yakForm label { font-size: smaller; font-weight: bold; color: #666666; margin-top: 5px;}
 .fuelux .yakForm .clearBoth {clear: both;}
-.fuelux .yakForm .col {display: block; float: left; margin-right: 10px;width: 45%;}
-.fuelux .yakForm input[type=text] { width: 370px; }
+.fuelux .yakForm .clearRight {clear: right;}
+.fuelux .yakForm .col {display: block; float: left; margin-right: 10px;width: 48%;min-height: 70px}
+.fuelux .input-append{width:90%;}
+.fuelux .yakForm input[type=text] { width: 90%;}
 .fuelux .yakForm input[type=text].big { width: 85%; }
 .fuelux .yakForm input[type=text].small { width: 25%; }
 .fuelux .yakForm label.radio.inline { margin-right: 10px; }
 .fuelux .yakForm textarea {width: 85%;}
-.fuelux .yakForm legend { padding-left: 35px; margin-top: -35px; padding-bottom: 0px;}
+.fuelux .yakForm legend { padding-left: 15px; margin-top: 0px; padding-bottom: 0px;}
 .fuelux .yakForm .btn.btn-large {margin-top: 20px;}
 #MyGrid thead tr.headerControle {background: url(../images/texture.png) repeat; border: none;}
 #MyGrid thead td {border-top: none;}

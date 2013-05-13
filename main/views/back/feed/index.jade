@@ -28,17 +28,12 @@ block content
 		$(document).ready(function() {
 			google.maps.event.addListener(map, 'click', function(event) {
 				var position = event.latLng;
-				$('#feedform #latitude').val(position.lat());
-				$('#feedform #longitude').val(position.lng());
 				getformattedAddress(event.latLng);
 				placeMarker(event.latLng,markerLocation);
 			});
 			
 			google.maps.event.addListener(markerLocation, 'dragend', function() {
 				var position = markerLocation.getPosition();
-				getformattedAddress(position);
-				$('#feedform #latitude').val(position.lat());
-				$('#feedform #longitude').val(position.lng());
 				getformattedAddress(position);
 				placeMarker(position,markerLocation);
 			});
@@ -62,9 +57,13 @@ block content
 				geocoder.geocode( geoQuery, function(results, status) {
 					if (status == google.maps.GeocoderStatus.OK) {
 						var placeGmap = getPlaceFromGmapResult(results[0]);
-						placeArray = placeGmap;
+						//placeArray = placeGmap;
 						$('#defaultPlaceName').val(placeGmap.title);
 						$('#defaultPlaceSearchName').val(placeGmap.address.state+', '+placeGmap.address.area);
+						console.log(placeGmap);
+						$("#feedForm #longitude").val(placeGmap.location.lng);
+						$("#feedForm #latitude").val(placeGmap.location.lat);
+
 					} else {
 						var salt = new Date().getTime();
 						$('#defaultPlaceName').parent().before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide ("+status+")</div>");
