@@ -60,6 +60,9 @@ mixin feedForm()
 										a(href="") 90
 									li(data-value="365")
 										a(href="") 365
+						.span6
+							label Description:
+							textarea#description.span12.hashtagMaker(name='description', placeholder='Texte: vous pouvez utiliser des hashtags dans votre texte ( #maisonavendre )',rows='3')
 		div.row-fluid
 			legend Metadata:		
 			div.control-group#yakType.row-fluid
@@ -214,6 +217,8 @@ mixin feedForm()
 		var freeTags = new Array();
 		var linkSource = new Array();
 		var fileSource = new Array();
+		var rule = new RegExp('#([^\\s]*)','g');
+		var rule2 = new RegExp('[#]','g');
 
 		
 		$(document).ready(function() {
@@ -236,6 +241,20 @@ mixin feedForm()
 					$('#alertFeedType').show().children('span.alertText').html('Le fichier doit être sauvé en UTF8, séparation point virgule et textes délimités par des guillemets doubles. ');
 				}else
 					$('#alertFeedType').hide();
+			});
+
+			// hashtag creation from title field
+			$(".hashtagMaker").keyup(function(event) {
+				hashtagTmp = [];
+					var inputStrArray = $('#description').val().split(' ');
+					for(i = 0; i< inputStrArray.length;i++){
+						if(inputStrArray[i].match(rule)){
+							hashtagTmp.push(inputStrArray[i]);
+							freeTags.push(inputStrArray[i]);
+							$('#freetag').val(hashtagTmp.toString().replace(rule2,''));
+						}
+					}
+				
 			});
 
 			/*THUMB*/
