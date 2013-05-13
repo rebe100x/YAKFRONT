@@ -1,4 +1,6 @@
 mixin list()
+	style
+		.fuelux select, .fuelux input { width: auto; max-width: 120px;} 
 	table#MyGrid.table.table-bordered.datagrid
 		thead
 			tr.headerControle
@@ -8,14 +10,15 @@ mixin list()
 							input#search.input-medium(type='text', placeholder='Recherche', data-provide="typeahead", autocomplete="off")
 							button.btn
 								i.icon-search
-						a.showSearchPanel(href="/place/list/#") Filtrer les résultats
-							i.icon-chevron-right#iconSearchPanel
+						//		
+							a.showSearchPanel(href="/place/list/#") Filtrer les résultats
+								i.icon-chevron-right#iconSearchPanel
 					.datagrid-header-right
 						button.btn#btnAdd
 							i.icon-plus
 							span Ajouter
 				tr.headerControle.advancedSearch
-					td.searchPanel(colspan=5, style="display:none")
+					td.searchPanel(colspan=6, style="display:none")
 						.yakCatFilter
 							input#yakCat.typeahead(type="text", data-provide="typeahead", autocomplete="off", placeholder="Filtrer par thème")
 							.pillbox#yakCatFilter(style="display:none")
@@ -25,26 +28,42 @@ mixin list()
 							.pillbox#userFilter(style="display:none")
 								ul
 			tr.headerControle
-				td(colspan=5)
+				td(colspan=6)
 					.btn-group.batchActions
-						button.btn.btn-small.validerPlaces(title="Valider les lieux")
+						button.btn.btn-small.validerPlaces(title="Valider les utilisateurs")
 							i.icon-ok-sign
-						button.btn.btn-small.disabled.enattentePlaces(title="Mettre les lieux en attente")
+						button.btn.btn-small.disabled.enattentePlaces(title="Mettre les utilisateurs en attente")
 							i.icon-time
-						button.btn.btn-small.supprimerPlaces(title="Supprimer les lieux")
+						button.btn.btn-small.supprimerPlaces(title="Supprimer les utilisateurs")
 							i.icon-ban-circle
 					select#filterStatus
 						option(value="2") En attente
 						option(value="1") Validés
 						option(value="3") Rejetés
-						option(value="4") Tous les lieux
+						option(value="4") Tous les utilisateurs
+					select#filterType
+						option(value="1") 1
+						option(value="2") 2
+						option(value="3") 3
+						option(value="4") 4
+						option(value="5") 5
+						option(value="6") 6
+						option(value="7") 7
+						option(value="8") 8
+						option(value="9") 9
+						option(value="10") 10
+						option(value="11") 11
+						option(value="12") 12
+						option(value="13") 13
+						option(value="14") 14
 					.dateSort.datagrid-header-right
 						.input-prepend
 							span.add-on Ordonner par
 							select#sortPlaces
 								option(value="creationDate")	Date de création
-								option(value="pubDate") 		Date de publication
-								option(value="lastModifDate")	Date de modification
+								option(value="nom") 		Nom
+								option(value="status")	Status
+								option(value="type")	Type
 		tfoot
 			tr
 				th
@@ -137,30 +156,8 @@ mixin list()
 				//  - Passed as query to allow for null
 				var queryChar = '?';
 
-				// Filter by yakCats
-				var catPillboxItems = $(".pillbox#yakCatFilter").pillbox("items");
-				if (catPillboxItems.length) {
-					var apiCatArray = [];
-
-					$(catPillboxItems).each(function() {
-						apiCatArray.push(this.value);
-					});
-
-					url += queryChar + "yakcats=" + apiCatArray.join();
-					queryChar = '&';
-				}
-
-				// Filter by users
-				var userPillboxItems = $(".pillbox#userFilter").pillbox("items");
-				if (userPillboxItems.length) {
-					var userArray = [];
-
-					$(userPillboxItems).each(function() {
-						userArray.push(this.value);
-					});
-
-					url += queryChar + "users=" + userArray.join();
-				}
+				
+				
 
 				$.ajax(url, {
 					type: 'GET'
@@ -174,7 +171,7 @@ mixin list()
 					}
 
 					// Prepare data to return to Datagrid
-					var data = response.place;
+					var data = response.user;
 					var count = response.count;
 					var startIndex = (response.pageIndex - 1) * response.pageSize;
 					var endIndex = parseInt(startIndex) + parseInt(response.pageSize);
@@ -195,22 +192,27 @@ mixin list()
 			dataSource: new ApiDataSource({
 				columns: [{
 					property: 'checked',
-					label: '<input id="selectAllPlaces" type="checkbox" />',
+					label: '<input id="selectAllUsers" type="checkbox" />',
 					sortable: false
 				},
 				{
-					property: 'thumbnail',
-					label: '',
-					sortable: false
+					property: 'thumb',
+					label: 'Thumb',
+					sortable: true
 				},
 				{
 					property: 'name',
-					label: 'Name',
+					label: 'Nom',
 					sortable: true
 				},
 				{
 					property: 'type',
 					label: 'Type',
+					sortable: true
+				},
+				{
+					property: 'status',
+					label: 'Status',
 					sortable: true
 				},
 				{
@@ -221,9 +223,11 @@ mixin list()
 				formatter: function (items) {
 					$.each(items, function (index, item) {
 						item.checked = makeCheckBox(item);
-						item.title = fillContent(item);
-						item.origin = formatOrigin(item);
+						item.name = makeNameTextBox(item);
+						item.status = makeStatusDropDown(item);
+						item.thumb = makeUserThumb(item);
 						item.creationDate = formatDate(item.creationDate);
+						item.type = makeTypeDropDown(item);
 					});
 				}
 			})
@@ -235,8 +239,81 @@ mixin list()
 			return "Origine inconnue";
 		}
 
+		function makeUserThumb(item){
+			return '<img src="'+item.thumbsmall+'" class="userThumb" width="48" height="48" />'
+		}
+
+		function makeNameTextBox(item){
+			return '<input onkeypress="setNewName(this, event)" type="text" class="user_name" rel="'+item._id+'" value="' + item.name + '"/>';
+		}
+
 		function makeCheckBox(item) {
-			return '<input type="checkbox" class="selectYakPlace" value="' + item._id + '"/>';
+			return '<input type="checkbox" class="selectYakUser" value="' + item._id + '"/>';
+		}
+
+		function setNewName(el, e)
+		{
+			if(e.keyCode == 13){
+				$(el).attr("disabled", "disabled");
+				$(el).after("<span class='updateStatus'>loading...</span>");
+				$.post("/user/setName", {name: $(el).val(), _id : $(el).attr("rel")}, function(data){
+					if(data.meta.code == "200")
+					{
+						$(el).removeAttr("disabled");
+						$(el).parent().find(".updateStatus").remove();
+					}
+				});
+			}
+			return false;
+		}
+		function setNewStatus(el)
+		{
+			var _id = $(el).attr("rel");
+			$(el).after("<span class='updateStatus'>loading...</span>");
+			$(el).attr("disabled", "disabled");
+			$.post("/user/setStatus", {status: $(el).val(), _id : $(el).attr("rel")}, function(data){
+					if(data.meta.code == "200")
+					{
+						$(el).removeAttr("disabled");
+						$(el).parent().find(".updateStatus").remove();
+					}
+				});
+		}
+
+		function setNewType(el)
+		{
+			var _id = $(el).attr("rel");
+			$(el).after("<span class='updateStatus'>loading...</span>");
+			$(el).attr("disabled", "disabled");
+			$.post("/user/setType", {type: $(el).val(), _id : $(el).attr("rel")}, function(data){
+					if(data.meta.code == "200")
+					{
+						$(el).removeAttr("disabled");
+						$(el).parent().find(".updateStatus").remove();
+					}
+				});
+		}
+
+		function makeStatusDropDown(item){
+			var select = $("<div />");
+			select.attr("class", "selectStatus");
+			select.html('<select onchange="setNewStatus(this)" class="selectStatus" rel="'+item._id+'"><option value="2">En attente</option><option value="1">Validés</option><option value="3">Rejetés</option></select>');
+			select.find("option").each(function(){
+				if($(this).attr("value") == item.status)
+					$(this).attr("selected", "selected");
+			});
+			return select.html();
+		}
+
+		function makeTypeDropDown(item){
+			var select = $("<div />");
+			select.attr("class", "selectType");
+			select.html('<select onchange="setNewType(this)" class="selectType" rel="'+item._id+'"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option></select>');
+			select.find("option").each(function(){
+				if($(this).attr("value") == item.type)
+					$(this).attr("selected", "selected");
+			});
+			return select.html();
 		}
 
 		function fillContent(item) {

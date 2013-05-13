@@ -106,6 +106,42 @@ User.statics.countUserSubscribers = function (usersubs, callback) {
   return this.find({ usersubs: { $in : usersubs } },{},{sort:{pudDate:-1}}).count().exec(callback);
 }
 
+User.statics.findGridUsers = function (pageIndex, pageSize, searchTerm, sortProperties, sortDirections, status, callback) {
+
+	var conditions = {
+		"name" : new RegExp(searchTerm, 'i')
+	};
+
+	var sortBy = {};
+
+	for (index in sortProperties) {
+		var desc = 1;
+		if (sortDirections[index] == "desc")
+			desc = -1;
+		sortBy[sortProperties[index]] = desc;
+	}
+
+	if (status == 2) {
+		conditions["status"] = { $in: [2,10] };
+	}
+	else if (status != 4) {
+		conditions["status"] = status;
+	}
+
+	return this.find(
+		conditions,
+		'thumb name type status creationDate',
+		{
+			skip:
+			(pageIndex -1)*pageSize,
+			limit:
+			pageSize,
+			sort:
+			sortBy
+		},
+		callback);
+}
+
 
 User.statics.format = function (theuser) {
 	if(theuser.thumb && theuser.thumb!= 'no-user.png'){
@@ -169,6 +205,29 @@ User.statics.formatLight = function (theuser) {
 		userdetails:theuser.name+'(@'+theuser.login+')',
 		thumb:thethumb,
 		thumbsmall:thethumbsmall,
+	};
+  return formattedUser;
+}
+
+User.statics.formatLightBack = function (theuser) {
+	if(theuser.thumb && theuser.thumb!= 'no-user.png'){
+		var thethumb = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/128_128/'+theuser.thumb;
+		var thethumbsmall = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/48_48/'+theuser.thumb;
+	}else{
+		var thethumb = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucketstatic+'/128_128/no-user.png';
+		var thethumbsmall = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucketstatic+'/48_48/no-user.png';
+	}
+
+	var formattedUser = {
+		_id:theuser._id,
+		name:theuser.name,
+		login:theuser.login,
+		userdetails:theuser.name+'(@'+theuser.login+')',
+		thumb:thethumb,
+		thumbsmall:thethumbsmall,
+		creationDate: theuser.creationDate,
+		type: theuser.type,
+		status: theuser.status,
 	};
   return formattedUser;
 }
@@ -1154,8 +1213,5 @@ mongoose.model('Client', Client);
 
 require('./place.js');
 require('./feed.js');
-<<<<<<< HEAD
-require('./user.js');
-=======
 require('./yakNE.js');
->>>>>>> 8b58d8bb3cfd51025d9e96b33a02882bcc05fc5b
+

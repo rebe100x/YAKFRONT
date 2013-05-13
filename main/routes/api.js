@@ -481,7 +481,6 @@ exports.add_subs_user = function (req, res) {
 		res.json({meta:{code:404,error_type:'missing parameter',error_description:'usersubsid not set: usersubs:[string]'}});
 };
 
-
 exports.put_subs_user = function (req, res) {
 	var User = db.model('User');
 	if(typeof(req.body.usersubs) != 'undefined'){

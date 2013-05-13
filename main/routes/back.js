@@ -539,6 +539,68 @@ exports.session = function(req, res){
 	});
 };
 
+exports.user_setname = function (req, res){
+	var User = db.model('User');
+	User.update({"_id":req.body._id},{$set:{"name":req.body.name}}, function(err){
+		if(!err)
+			res.json({meta:{code:200}});
+		else
+			res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+	});
+}
+
+exports.user_setstatus = function (req, res){
+	var User = db.model('User');
+	User.update({"_id":req.body._id},{$set:{"status":req.body.status}}, function(err){
+		if(!err)
+			res.json({meta:{code:200}});
+		else
+			res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+	});
+}
+
+exports.user_settype = function (req, res){
+	var User = db.model('User');
+	User.update({"_id":req.body._id},{$set:{"type":req.body.type}}, function(err){
+		if(!err)
+			res.json({meta:{code:200}});
+		else
+			res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+	});
+}
+
+
+exports.gridUsers = function (req, res) {
+    var User = db.model('User');
+
+    var sortProperties = [];
+    if (req.params.sortBy) {
+        sortProperties = req.params.sortBy.split(',');
+    }
+
+    var sortDirections = [];
+    if (req.params.sortDirection) {
+        sortDirections = req.params.sortDirection.split(',');
+    }
+
+	User.findGridUsers(req.params.pageIndex,req.params.pageSize,
+		req.params.searchTerm,sortProperties,sortDirections,
+        req.params.status, function (err, user){
+
+		var data = {};
+		var usersFormated = user.map(function(item){
+			return User.formatLightBack(item);
+		});
+
+        data['user'] = usersFormated;
+		data['pageIndex'] = req.params.pageIndex;
+		data['pageSize'] = req.params.pageSize;
+		data['count'] = user.length;
+		res.json(data);
+ 		
+	});
+};
+
 
 
 exports.user = function(req, res){
