@@ -170,7 +170,7 @@ mixin feedForm()
 					span.alertText
 				div.control-group#titleGroup
 					div.controls
-						label Titre de l info:
+						label Titre de l info:*
 						input(type='text', name='infoTitle', id='infoTitle', placeholder="Titre")
 						label Corps de l info:
 						input(type='text', name='infoContent', id='infoContent', placeholder="Corps")
@@ -508,7 +508,19 @@ mixin feedForm()
 				err = true;
 			}else
 				removeError('#dataSource');		
+			
+			if($('#infoTitle').val() == ""){
+				setError('#infoTitle','Définir le champ contenant le titre de la news.');
+				setError('#parsing','Définir le champ contenant le titre de la news.');
+				err = true;
+			}else{
+				removeError('#infoTitle');
+				removeError('#parsing');
+			}
 				
+			
+			
+
 			if (err){
 				$('#err').show();
 				return false;
