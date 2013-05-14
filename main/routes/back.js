@@ -124,10 +124,10 @@ exports.feed_add = function(req, res){
 
 exports.findFeedById = function (req, res) {
 	var Feed = db.model('Feed');
-   	Feed.findById(req.params.id, function (err, docs){
-  	  res.json({
-  		feed: docs
-	  });
+   	Feed.findById(req.params.id, function (err, thefeed){
+		res.json({
+			feed: Feed.format(thefeed)
+		});
 	});
 };
 
@@ -178,12 +178,17 @@ exports.feed = function(req, res){
 	feed.humanName = req.body.humanName;
 	var strLib = require("string");
 	feed.name = strLib(feed.humanName).slugify();
-	feed.linkSource = req.body.linkSource;
+	if(req.body.linkSource == '' && req.body.source != '')
+		feed.linkSource = req.body.source;
+	else if(req.body.linkSource != '')
+		feed.linkSource = req.body.linkSource;
 	feed.yakCatId = req.body.yakCatIdsHidden.split(',');
 	feed.yakCatName = req.body.yakCatNamesHidden.split(',');
-	feed.tag = req.body.tagsHidden.split(',');
-	feed.defaultPlaceLocation.lat = req.body.Latitude;
-	feed.defaultPlaceLocation.lng = req.body.Longitude;
+	if(req.body.tagsHidden == '' && req.body.freetag != '')
+		feed.tag = req.body.freetag.split(',');
+	else if(req.body.tagsHidden != '')		
+		feed.tag = req.body.tagsHidden.split(',');
+	feed.defaultPlaceLocation = {lng:parseFloat(req.body.longitude),lat : parseFloat(req.body.latitude)};
 	feed.defaultPlaceName = req.body.defaultPlaceName;
 	feed.defaultPlaceSearchName = req.body.defaultPlaceSearchName;
 	feed.defaultPrintFlag = req.body.defaultPrintFlag;
@@ -215,6 +220,22 @@ exports.feed = function(req, res){
 		web: req.body.infoWeb,
 		mail: req.body.infoMail
 	};
+
+	var feedThumb = new Object();
+	if(req.files.picture.size && req.files.picture.size > 0 && req.files.picture.size < 1048576*5){
+		var drawTool = require('../mylib/drawlib.js');
+		var size = mainConf.imgSizeAvatar;
+		var crypto = require('crypto');
+		var destFile = crypto.createHash('md5').update(req.files.picture.name).digest("hex")+'.jpeg';
+				
+		for(i=0;i<size.length;i++){
+			feedThumb = drawTool.StoreImg(req.files.picture,destFile,{w:size[i].width,h:size[i].height},conf);
+		}
+	}
+	else
+		feedThumb.err = 0;
+	
+	feed.thumb = feedThumb.name;
 
 	console.log(feed);
 	

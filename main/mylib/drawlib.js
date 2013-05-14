@@ -67,7 +67,7 @@ exports.StoreImg = function(file,destName,size,conf){
 		srcPath = srcPathTmp.replace('.jpg', '.jpeg');
 		srcPath = srcPathTmp.replace('.jpeg', '-new.jpeg');
 		// convert to jpeg
-		//console.log(srcPathTmp+','+srcPath);
+		console.log(srcPathTmp+','+srcPath);
 		im.convert([srcPathTmp,srcPath],function(err,stdout){
 			// if convertion ok, we begin to build the small images
 			if(!err){

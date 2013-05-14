@@ -24,13 +24,11 @@ $(document).ready(function() {
 });
 /*END READY FUNCTIONS*/
 
-function removeError(objId){	
-	//$(objId).prev('.alert').hide();
-}
+
 
 function setError(objId,str){	
 	$(objId).before('<div class="alert alert-error"><a href="#" class="close" data-dismiss="alert">&times;</a><strong>Erreur: </strong> '+str+'</div>').focus();
-	$('#newsfeedContainer').mCustomScrollbar("scrollTo",$(objId).offset().top -120);
+	$('#newsfeedContainer').mCustomScrollbar("scrollTo","err");
 }
 
 function setGravatar()

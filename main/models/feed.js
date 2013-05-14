@@ -37,6 +37,7 @@ var Feed = new Schema({
 		opening : String,
 		}
 	}
+	,thumb : String
 	,licence : String
 	,yakCatName : [String]
 	,yakCatId : [String]
@@ -76,6 +77,16 @@ Feed.statics.formatLight2 = function (thefeed) {
 
 Feed.statics.format = function (thefeed) {
 	var formattedFeed = thefeed;
+
+	if(thefeed.thumb && typeof thefeed.thumb!= 'undefined'){
+		var thethumb = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/128_128/'+thefeed.thumb;
+		var thethumbsmall = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/48_48/'+thefeed.thumb;
+	}else{
+		var thethumb = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucketstatic+'/128_128/no-user.png';
+		var thethumbsmall = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucketstatic+'/48_48/no-user.png';
+	}
+	formattedFeed.thumb = thethumb;
+
   return formattedFeed;
 }  
 
