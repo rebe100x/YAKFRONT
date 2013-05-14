@@ -169,10 +169,9 @@ exports.feed = function(req, res){
 	var Yakcat = db.model('Yakcat');
 	mongoose.set('debug', true);
 	var obj_id = req.body.objid;
-	console.log(obj_id);
 	console.log(req.body);
 	feed = new Feed();
-	
+
 	feed.XLconnector = 'parser';
 
 	feed.humanName = req.body.humanName;
@@ -199,6 +198,7 @@ exports.feed = function(req, res){
 	feed.fileSource = req.body.fileSource.split(',');
 	feed.linkSource = req.body.linkSource.split(',');
 	feed.persistDays = req.body.persistDays;
+	feed.description = req.body.description;
 	feed.status = req.body.status;
 
 	feed.parsingTemplate = {
@@ -239,17 +239,35 @@ exports.feed = function(req, res){
 
 	console.log(feed);
 	
-	feed.save(function (err){
-		if (!err)
-			formMessage.push("Nouveau flux sauvegardé.");
-		else{
-			formMessage.push("Erreur pendant la sauvegarde du flux !");
-			console.log(err);
-		}
-		req.session.message = formMessage;
-		res.redirect('feed/list');
 
-	});
+	if(typeof obj_id != 'undefined' && obj_id != ''){
+		//delete feed._id;
+		console.log(feed);
+		console.log('UPDATE');
+		feed.update( function (err){
+			if (!err)
+				formMessage.push("Flux Sauvegardé.");
+			else{
+				formMessage.push("Erreur pendant la sauvegarde du flux !");
+				console.log(err);
+			}
+			req.session.message = formMessage;
+			res.redirect('feed/list')
+		});	
+	}else{
+		feed.save(function (err){
+			if (!err)
+				formMessage.push("Nouveau flux sauvegardé.");
+			else{
+				formMessage.push("Erreur pendant la sauvegarde du flux !");
+				console.log(err);
+			}
+			req.session.message = formMessage;
+			res.redirect('feed/list')
+		});	
+	}
+
+	
 
 	
 	

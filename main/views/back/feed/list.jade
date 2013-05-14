@@ -270,6 +270,7 @@ mixin list()
 				markerLocation.setVisible(false);					
 				$("#feedForm input[type=hidden]").val('');
 				$('#feedForm').clearForm();
+				$("#picturePreview").remove();
 			});
 
 
@@ -299,7 +300,7 @@ mixin list()
 					/*FORM INITIALISATION*/
 					var feed = response.feed;
 					console.log(feed);
-					$("#feedForm #objid").val(this.id);
+					$("#feedForm #objid").val(feed._id);
 
 					$("#feedForm #humanName").val(feed.humanName);
 					if(feed.thumb != '' && typeof feed.thumb != 'undefined'){
@@ -308,9 +309,8 @@ mixin list()
 					}
 					$("#feedForm #licence").val(feed.licence);
 					$("#feedForm #link").val(feed.link);
-					console.log($('#feedForm #persistDays').find('li[data-value='+feed.persistDays+']').text());
-					$('#feedForm #persistDays input').val($('#feedForm #persistDays').find('li[data-value='+feed.persistDays+']').text());
-					$("#feedForm #description").val(feed.description);
+					$('#feedForm #persistDaysValue').val(feed.persistDays);
+					$("#feedForm #description").text(feed.description);
 					if(feed.yakCatId.length > 0)
 						feed.yakCatId.forEach(function(cat){
 							$.get('/api/cats/'+cat,function(data){
@@ -327,14 +327,13 @@ mixin list()
 						tags.push(tag);
 					});
 					$("#feedForm #tagsHidden").val(tags.join(','));
-					
+					$("#feedForm #defaultPrintFlag").val(feed.defaultPrintFlag);
 					if(typeof feed.defaultPlaceLocation != 'undefined'){
 						var latlng = new google.maps.LatLng(feed.defaultPlaceLocation.lat, feed.defaultPlaceLocation.lng);
 						placeMarker(latlng,markerLocation);
 						map.setCenter(markerLocation.getPosition());
 						$("#feedForm #longitude").val(feed.defaultPlaceLocation.lng);
 						$("#feedForm #latitude").val(feed.defaultPlaceLocation.lat);
-						$("#feedForm #place").val(feed.defaultPlaceSearchName);
 					}
 
 					$('#defaultPlaceSearchName').val(feed.defaultPlaceSearchName);
@@ -357,20 +356,20 @@ mixin list()
 						if(source.length>0){	
 							$("#pillSourceFile").show();
 							$("#pillSourceFile ul").append("<li class='source-val status-success' data-value='"+source+"'>"+source+"</li>");
-							sourceFile.push(source);
+							fileSource.push(source);
 						}
 					});
 
-					$("#feedForm #sourceFileHidden").val(sourceFile.join(','));	
+					$("#feedForm #fileSource").val(fileSource.join(','));	
 					
 					feed.linkSource.forEach(function(source){
 						if(source.length>0){
 							$("#pillSourceLink").show();
 							$("#pillSourceLink ul").append("<li class='source-val status-warning' data-value='"+source+"'>"+source+"</li>");
-							sourceLink.push(source);
+							linkSource.push(source);
 						}						
 					});
-					$("#feedForm #sourceLinkHidden").val(sourceLink.join(','));
+					$("#feedForm #linkSource").val(linkSource.join(','));
 
 					$('#feedForm input:radio[name=status][value='+feed.status+']').attr("checked", true).trigger("change").button('refresh');
 

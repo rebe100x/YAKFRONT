@@ -42,7 +42,7 @@ mixin feedForm()
 						.span6
 							label Combien de jours l info restera sur le front ?*
 							div.input-append.dropdown.combobox#persistDays
-								input(type='text', placeholder="Jours de persistence", name="persistDays")
+								input(type='text', placeholder="Jours de persistence", name="persistDays", id="persistDaysValue")
 								button.btn(data-toggle="dropdown", tabindex="-1")
 									i.caret
 								ul.dropdown-menu
@@ -98,7 +98,7 @@ mixin feedForm()
 						input(type="text",data-provide="typeahead", id="defaultPlaceName", name="defaultPlaceName", autocomplete="off", placeholder="Chercher...")
 					.span6
 						label Si l'info n'est pas géolocalisée...	
-						select.big#defaultPrintFlag(name='feedType')
+						select.big#defaultPrintFlag(name='defaultPrintFlag')
 							option(value="0") ... ne pas afficher sur la carte mais afficher sur le fil info
 							option(value="1") ... afficher sur la carte + fil info
 							option(value="3") ... ne pas afficher l info du tout

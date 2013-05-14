@@ -37,6 +37,7 @@ var Feed = new Schema({
 		opening : String,
 		}
 	}
+	,description : String
 	,thumb : String
 	,licence : String
 	,yakCatName : [String]
