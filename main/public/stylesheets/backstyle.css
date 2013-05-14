@@ -17,15 +17,11 @@ input.error{background-color:#FF0000;}
 
 /*bootsrap fixes*/
 @media (max-width: 979px) {
-  .navbar-fixed-top {
-    margin-bottom: 0px;
-  }
+  .navbar-fixed-top {margin-bottom: 0px;}
 }
-.row-fluid [class*="span"] {
-  min-height: 1px;
-}
+.row-fluid [class*="span"] {min-height: 1px;}
 .fuelux .datagrid thead .datagrid-header-left .search{margin-left: 0px;}
-
+.fuelux .grid-pager input{line-height: 30px;margin-top: 0px;height: 30px;}
 
 /*location chooser */
 #locationChooser{top:40%;}
@@ -54,14 +50,14 @@ legend.mainlegend{color:#d51820;font-weight:bold;border-bottom:0px;}
 /*HEADER*/
 .customprofile img.avatar{height:24px;}
 #picturePreview{float:left;margin-right:3px;width:48px;}
-.fuelux .radio.inline{padding-top:0px;padding-bottom:5px;}
+.fuelux .yakForm .radio.inline{padding-top:0px;padding-bottom:5px;}
 .fuelux .yakForm{margin-left:5%;}
 .fuelux .yakForm .control-group { margin: 0;}
 .fuelux .yakForm label { font-size: smaller; font-weight: bold; color: #666666; margin-top: 5px;}
 .fuelux .yakForm .clearBoth {clear: both;}
 .fuelux .yakForm .clearRight {clear: right;}
 .fuelux .yakForm .col {display: block; float: left; margin-right: 10px;width: 48%;min-height: 70px}
-.fuelux .input-append{width:90%;}
+.fuelux .yakForm .input-append{width:90%;}
 .fuelux .yakForm input[type=text] { width: 90%;}
 .fuelux .yakForm input[type=text].big { width: 85%; }
 .fuelux .yakForm input[type=text].small { width: 25%; }
