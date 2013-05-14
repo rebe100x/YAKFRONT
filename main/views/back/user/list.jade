@@ -1,6 +1,8 @@
 mixin list()
 	style
-		.fuelux select, .fuelux input { width: auto; max-width: 120px;} 
+		.fuelux select { width: auto; max-width: 120px;} 
+		.fuelux .datagrid tfoot .datagrid-footer-right .grid-pager .combobox { width: auto;}
+		
 	table#MyGrid.table.table-bordered.datagrid
 		thead
 			tr.headerControle
@@ -13,10 +15,11 @@ mixin list()
 						//		
 							a.showSearchPanel(href="/place/list/#") Filtrer les résultats
 								i.icon-chevron-right#iconSearchPanel
-					.datagrid-header-right
-						button.btn#btnAdd
-							i.icon-plus
-							span Ajouter
+					//
+						.datagrid-header-right
+							button.btn#btnAdd
+								i.icon-plus
+								span Ajouter
 				tr.headerControle.advancedSearch
 					td.searchPanel(colspan=6, style="display:none")
 						.yakCatFilter
@@ -29,33 +32,28 @@ mixin list()
 								ul
 			tr.headerControle
 				td(colspan=6)
-					.btn-group.batchActions
-						button.btn.btn-small.validerPlaces(title="Valider les utilisateurs")
-							i.icon-ok-sign
-						button.btn.btn-small.disabled.enattentePlaces(title="Mettre les utilisateurs en attente")
-							i.icon-time
-						button.btn.btn-small.supprimerPlaces(title="Supprimer les utilisateurs")
-							i.icon-ban-circle
+					//
+						.btn-group.batchActions
+							button.btn.btn-small.validerPlaces(title="Valider les utilisateurs")
+								i.icon-ok-sign
+							button.btn.btn-small.disabled.enattentePlaces(title="Mettre les utilisateurs en attente")
+								i.icon-time
+							button.btn.btn-small.supprimerPlaces(title="Supprimer les utilisateurs")
+								i.icon-ban-circle
 					select#filterStatus
 						option(value="2") En attente
 						option(value="1") Validés
 						option(value="3") Rejetés
 						option(value="4") Tous les utilisateurs
 					select#filterType
-						option(value="1") 1
-						option(value="2") 2
-						option(value="3") 3
-						option(value="4") 4
-						option(value="5") 5
-						option(value="6") 6
-						option(value="7") 7
-						option(value="8") 8
-						option(value="9") 9
-						option(value="10") 10
-						option(value="11") 11
-						option(value="12") 12
-						option(value="13") 13
-						option(value="14") 14
+						option(value="0") Tous les types
+						option(value="1") Normal
+						option(value="2") Media
+						option(value="3") Association
+						option(value="4") Entreprise
+						option(value="5") Institution
+						option(value="10") Operator
+						option(value="11") Super Admin
 					.dateSort.datagrid-header-right
 						.input-prepend
 							span.add-on Ordonner par
@@ -223,7 +221,7 @@ mixin list()
 				formatter: function (items) {
 					$.each(items, function (index, item) {
 						item.checked = makeCheckBox(item);
-						item.name = makeNameTextBox(item);
+						//item.name = makeNameTextBox(item);
 						item.status = makeStatusDropDown(item);
 						item.thumb = makeUserThumb(item);
 						item.creationDate = formatDate(item.creationDate);
@@ -308,7 +306,7 @@ mixin list()
 		function makeTypeDropDown(item){
 			var select = $("<div />");
 			select.attr("class", "selectType");
-			select.html('<select onchange="setNewType(this)" class="selectType" rel="'+item._id+'"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option></select>');
+			select.html('<select onchange="setNewType(this)" class="selectType" rel="'+item._id+'"><option value="1">Normal</option><option value="2">Media</option><option value="3">Association</option><option value="4">Entreprise</option><option value="5">Institution</option><option value="10">Operator</option><option value="11">Super Admin</option></select>');
 			select.find("option").each(function(){
 				if($(this).attr("value") == item.type)
 					$(this).attr("selected", "selected");
@@ -662,7 +660,7 @@ mixin list()
 		});
 
 		// Edit Place function
-		$(".editPlace").live('click', function()
+		$(".editPlace").live('click', function(event)
 		{
 			event.preventDefault();
 
@@ -764,7 +762,7 @@ mixin list()
 		});
 
 		// Add Place function
-		$("#btnAdd").click(function()
+		$("#btnAdd").click(function(event)
 		{
 
 			var user = !{JSON.stringify(user)};

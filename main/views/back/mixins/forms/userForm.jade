@@ -1,0 +1,85 @@
+mixin userForm()
+	button.btn#btnBack(style='display:none')
+		i.icon-chevron-left
+	form.yakForm#placeForm(action='/place', method='POST', enctype='multipart/form-data', style='display:none')
+		input#yakcatInput(type='hidden', name='yakcatInput', value='')
+		input#yakcatNames(type='hidden', name='yakcatNames', value='')
+		input#placeInput(type='hidden', name='placeInput', value='')
+		input#latitude(type="hidden",data-provide="typeahead", name="latitude")
+		input#longitude(type="hidden",data-provide="typeahead", name="longitude")
+		input#update(type="hidden",data-provide="typeahead", name="update", value='0')
+		input#objid(type="hidden",data-provide="typeahead", name="objid", value='0')
+		input#hiddenOrigin(type="hidden",data-provide="typeahead", name="hiddenOrigin", value='0')
+
+		legend Ajouter un utilisateur
+		div.control-group.error
+				div.controls
+					label.alert#err(type="text", id="err", name="err", style='display:none') Les champs en rouge sont obligatoires.
+		div.control-group#nameGroup
+			div.controls
+				label Nom
+				input.big.hashtagMaker(type='text', name='name', id='name', placeholder='Nom utilisateur')
+		div.control-group#loginGroup
+			div.controls
+				label Login
+				input.big.hashtagMaker(type='text', name='login', id='login', placeholder='Login utilisateur')
+		div.control-group#emailGroup
+			div.controls
+				label Courrier electronic
+				input.big.hashtagMaker(type='text', name='email', id='email', placeholder='Courrier electronic')
+		div.control-group#passGroup
+			div.controls
+				label Mot de passe
+				input.big.hashtagMaker(type='password', name='password', id='password', placeholder='Mot de passe')
+		div.control-group#pass2Group
+			div.controls
+				label Confirmer mot de passe
+				input.big.hashtagMaker(type='password', name='passwordconfirm', id='passwordconfirm', placeholder='Confirmer')
+		div.control-group#bioGroup
+			div.controls
+				label Biographie
+				textarea.hashtagMaker(type='text', id='bio', name='bio', placeholder="Quelques détails sur la biographie", rows='3')
+		div.control-group#typeGroup
+			div.controls
+					label Tye
+					select(name="userType", id="userType")
+						option(value="1") 1
+						option(value="2") 2
+						option(value="3") 3
+						option(value="4") 4
+						option(value="5") 5
+						option(value="6") 6
+						option(value="7") 7
+						option(value="8") 8
+						option(value="9") 9
+						option(value="10") 10
+						option(value="11") 11
+						option(value="12") 12
+						option(value="13") 13
+						option(value="14") 14
+		div.control-group#statusGroup
+			div.controls
+					label Status
+					select(name="userStatus", id="userStatus")
+						option(value="1") 1
+						option(value="2") 2
+						option(value="3") 3
+			div.control-group
+				div.controls
+					button.btn.btn-large.btn-inverse(type='submit', name='submit', id='submit', value='Enregistrer') Enregistrer
+
+					//button.btn.btn-large.btn-inverse#enregistrer(value='Enregistrer') Enregistrer
+
+script
+
+	$(document).ready(function() {
+		// bind 'myForm' and provide a simple callback function
+		$('#placeForm').ajaxForm(function() {
+			$("#MyGrid").fadeIn();
+			$("#placeForm").hide();
+			$("#btnBack").hide();
+			google.maps.event.removeListener(listenerHandle);
+			markerLocation.setVisible(false);
+			refreshDatagridAndMenu();
+		});
+	});

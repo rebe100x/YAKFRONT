@@ -3,7 +3,7 @@ block content
 	include ../mixins/menu.jade
 	include ../mixins/map.jade
 	include list.jade
-	include ../mixins/forms/placeForm.jade
+	include ../mixins/forms/userForm.jade
 
 
 	mixin menu('user')
@@ -23,5 +23,5 @@ block content
 
 					div#newsfeedContainer
 						mixin list()
-						mixin placeForm()
+						mixin userForm()
 						
