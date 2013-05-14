@@ -241,20 +241,22 @@ exports.feed = function(req, res){
 	
 
 	if(typeof obj_id != 'undefined' && obj_id != ''){
-		//delete feed._id;
-		console.log(feed);
-		console.log('UPDATE');
-		feed.update( function (err){
-			if (!err)
-				formMessage.push("Flux Sauvegardé.");
-			else{
-				formMessage.push("Erreur pendant la sauvegarde du flux !");
-				console.log(err);
-			}
-			req.session.message = formMessage;
-			res.redirect('feed/list')
-		});	
+		Feed.findById(obj_id, function (err, thefeed){
+			delete feed._id;
+			thefeed = feed;
+			thefeed.save(function (err){
+				if (!err)
+					formMessage.push("Flux sauvegardé.");
+				else{
+					formMessage.push("Erreur pendant la sauvegarde du flux !");
+					console.log(err);
+				}
+				req.session.message = formMessage;
+				res.redirect('feed/list')
+			});	
+		});
 	}else{
+		delete feed._id;
 		feed.save(function (err){
 			if (!err)
 				formMessage.push("Nouveau flux sauvegardé.");
