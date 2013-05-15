@@ -202,6 +202,7 @@ exports.feed = function(req, res){
 	feed.link = req.body.link;
 	feed.licence = req.body.licence;
 	feed.yakType = req.body.yakType;
+	
 	feed.feedType = req.body.feedType;
 	feed.fileSource = req.body.fileSource.split(',');
 	feed.linkSource = req.body.linkSource.split(',');
@@ -209,6 +210,9 @@ exports.feed = function(req, res){
 	feed.description = req.body.description;
 	feed.status = parseInt(req.body.status);
 	feed.lastModifDate = now;
+
+	feed.rootElement = req.body.rootElement;
+	feed.lineToBegin = parseInt(req.body.lineToBegin);
 
 	feed.parsingTemplate = {
 		title: req.body.infoTitle,

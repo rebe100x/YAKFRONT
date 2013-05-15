@@ -140,6 +140,10 @@ mixin feedForm()
 						div#alertFeedType.alert.alert-info
 							button.close(type="button", data-dismiss="alert") x
 							span.alertText
+						div#parsingParam
+							input#rootElement(type="text",name="rootElement",placeholder="Root du fichier RSS",,value='/rss/channel/item')	
+							input#lineToBegin(type="text",name="lineToBegin",placeholder="Ligne de début du parsing",value="0")	
+							
 					.span6
 						label &nbsp;
 						button.btn.btn-primary.btn-warning(type='button', name='parsing', id='parsing') Définir le parsing
