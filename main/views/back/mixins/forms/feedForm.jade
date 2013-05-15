@@ -30,6 +30,7 @@ mixin feedForm()
 						.span6
 							label Imagette:
 							span#picturePreview
+								img.img-rounded(style='width:100px;display:none;')
 							input.span6#picture(type="file",style="display:block",name="picture")
 					div.row-fluid
 						.span6
@@ -254,9 +255,8 @@ mixin feedForm()
 					r.onload = function () {
 						var binimage = r.result;
 						binimage1 = binimage.replace('data:'+file.type+';base64,', '');
-						var imag = "<img class='img-rounded' " + "src='" + 
-						"data:"+file.type+";base64," + binimage1 + "' style='width:100px'/>";
-						$("#picturePreview").html(imag);
+						var src = "data:"+file.type+";base64," + binimage1;
+						$("#picturePreview img").attr('src',src).show();
 					};
 					r.readAsDataURL(file);
 				

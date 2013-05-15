@@ -92,6 +92,7 @@ Feed.statics.format = function (thefeed) {
 		var thethumbsmall = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucketstatic+'/48_48/no-user.png';
 	}
 	formattedFeed.thumb = thethumb;
+	formattedFeed.thumbSmall = thethumbsmall;
 
   return formattedFeed;
 }  
