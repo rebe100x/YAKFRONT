@@ -142,7 +142,6 @@ User.statics.findGridUsers = function (pageIndex, pageSize, searchTerm, sortProp
 		callback);
 }
 
-
 User.statics.format = function (theuser) {
 	if(theuser.thumb && theuser.thumb!= 'no-user.png'){
 		var thethumb = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/128_128/'+theuser.thumb;
@@ -486,6 +485,42 @@ var Info = new Schema({
 
 //Info.index({location : '2d',pubDate:-1,yakType:1,print:1,status:1});
 //Info.index({location : '2d'});
+Info.statics.findGridComments = function (pageIndex, pageSize, searchTerm, sortProperties, sortDirections, status, callback) {
+
+	var conditions = {
+		/*"name" : new RegExp(searchTerm, 'i')*/
+	};
+
+	var sortBy = {};
+
+	for (index in sortProperties) {
+		var desc = 1;
+		if (sortDirections[index] == "desc")
+			desc = -1;
+		sortBy[sortProperties[index]] = desc;
+	}
+
+	/*if (status == 2) {
+		conditions["status"] = { $in: [2,10] };
+	}
+	else if (status != 4) {
+		conditions["status"] = status;
+	}*/
+
+	return this.find(
+		{},
+		'title yakComments',
+		{
+			skip:
+			(pageIndex -1)*pageSize,
+			limit:
+			pageSize,
+			sort:
+			sortBy
+		},
+		callback);
+}
+
 
 Info.statics.format = function (theinfo) {
 	if(theinfo.thumb != undefined && theinfo.thumb != '')

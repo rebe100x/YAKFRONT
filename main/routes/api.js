@@ -1407,7 +1407,7 @@ exports.feeduser_search = function (req, res) {
 			return User.formatLight2(item);
 		});
 		var Feed = db.model('Feed');	
-			Feed.findByName(req.params.string, function (err, docs){
+			Feed.searchByName(req.params.string, function (err, docs){
 				var feedFormated = docs.map(function(item){
 					var Feed = db.model('Feed');
 					return Feed.formatLight2(item);
@@ -1424,7 +1424,7 @@ exports.feeduser_search = function (req, res) {
 
 exports.feed_search = function (req, res) {
 	var Feed = db.model('Feed');	
-	Feed.findByName(req.params.string, function (err, docs){
+	Feed.searchByName(req.params.string, function (err, docs){
 		res.json({
 				feeduser: docs
 		  	});

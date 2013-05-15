@@ -1,0 +1,29 @@
+extends ../layout
+block content
+
+	include ../mixins/menu.jade
+	include ../mixins/forms/loginForm.jade
+	
+	mixin menu('login')
+	div.navbar.navbar-fixed-top
+		div.container-fluid
+			div.row-fluid
+				div.span4
+				div.span3(style="text-align:center;margin:25px;")
+					a(href="/news/map")
+						img(src="/images/new/logo.png")
+				div.span4
+	
+		
+	div.container-fluid
+		div.row-fluid
+			div.span4
+			div.span3
+				mixin loginForm() 
+			div.span4
+				
+	script
+		$(document).ready(function() {
+			$('#login').focus();
+		});
+

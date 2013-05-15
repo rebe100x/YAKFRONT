@@ -122,12 +122,21 @@ exports.feed_add = function(req, res){
 	res.render('feed/add');
 };
 
+exports.findFeedByName = function (req, res) {
+	var Feed = db.model('Feed');
+   	Feed.findByName(req.params.name, function (err, thefeed){
+   		res.json({
+			feed: thefeed
+		});
+	});
+};
+
 exports.findFeedById = function (req, res) {
 	var Feed = db.model('Feed');
-   	Feed.findById(req.params.id, function (err, docs){
-  	  res.json({
-  		feed: docs
-	  });
+   	Feed.findById(req.params.id, function (err, thefeed){
+		res.json({
+			feed: Feed.format(thefeed)
+		});
 	});
 };
 
@@ -167,23 +176,26 @@ exports.feed = function(req, res){
 	delete req.session.message;
 	var Feed = db.model('Feed');
 	var Yakcat = db.model('Yakcat');
-	mongoose.set('debug', true);
 	var obj_id = req.body.objid;
-	console.log(obj_id);
 	console.log(req.body);
-	feed = new Feed();
-	
+	var feed = new Object();
+	var now = new Date();
 	feed.XLconnector = 'parser';
 
 	feed.humanName = req.body.humanName;
 	var strLib = require("string");
-	feed.name = strLib(feed.humanName).slugify();
-	feed.linkSource = req.body.linkSource;
+	feed.name = strLib(feed.humanName).slugify().s;
+	if(req.body.linkSource == '' && req.body.source != '')
+		feed.linkSource = req.body.source;
+	else if(req.body.linkSource != '')
+		feed.linkSource = req.body.linkSource;
 	feed.yakCatId = req.body.yakCatIdsHidden.split(',');
 	feed.yakCatName = req.body.yakCatNamesHidden.split(',');
-	feed.tag = req.body.tagsHidden.split(',');
-	feed.defaultPlaceLocation.lat = req.body.Latitude;
-	feed.defaultPlaceLocation.lng = req.body.Longitude;
+	if(req.body.tagsHidden == '' && req.body.freetag != '')
+		feed.tag = req.body.freetag.split(',');
+	else if(req.body.tagsHidden != '')		
+		feed.tag = req.body.tagsHidden.split(',');
+	feed.defaultPlaceLocation = {lng:parseFloat(req.body.longitude),lat : parseFloat(req.body.latitude)};
 	feed.defaultPlaceName = req.body.defaultPlaceName;
 	feed.defaultPlaceSearchName = req.body.defaultPlaceSearchName;
 	feed.defaultPrintFlag = req.body.defaultPrintFlag;
@@ -194,7 +206,9 @@ exports.feed = function(req, res){
 	feed.fileSource = req.body.fileSource.split(',');
 	feed.linkSource = req.body.linkSource.split(',');
 	feed.persistDays = req.body.persistDays;
-	feed.status = req.body.status;
+	feed.description = req.body.description;
+	feed.status = parseInt(req.body.status);
+	feed.lastModifDate = now;
 
 	feed.parsingTemplate = {
 		title: req.body.infoTitle,
@@ -216,19 +230,48 @@ exports.feed = function(req, res){
 		mail: req.body.infoMail
 	};
 
+	var feedThumb = new Object();
+	if(req.files.picture.size && req.files.picture.size > 0 && req.files.picture.size < 1048576*5){
+		var drawTool = require('../mylib/drawlib.js');
+		var size = mainConf.imgSizeAvatar;
+		var crypto = require('crypto');
+		var destFile = crypto.createHash('md5').update(req.files.picture.name).digest("hex")+'.jpeg';
+				
+		for(i=0;i<size.length;i++){
+			feedThumb = drawTool.StoreImg(req.files.picture,destFile,{w:size[i].width,h:size[i].height},conf);
+		}
+		feed.thumb = feedThumb.name;
+	}
+	else{
+		feedThumb.err = 0;
+	}
+		
+	
+	
+
 	console.log(feed);
 	
-	feed.save(function (err){
+
+	if(typeof obj_id != 'undefined' && obj_id != ''){
+		var cond = {_id:obj_id};
+	}else{
+		feed.creationDate = now;
+		var cond = {name:"anameimpossibletochoose007"};
+	}
+		
+
+	Feed.update(cond,feed,{upsert:true},function (err){
 		if (!err)
-			formMessage.push("Nouveau flux sauvegardé.");
+			formMessage.push("Flux sauvegardé.");
 		else{
 			formMessage.push("Erreur pendant la sauvegarde du flux !");
 			console.log(err);
 		}
 		req.session.message = formMessage;
-		res.redirect('feed/list');
-
+		res.redirect('feed/list')
 	});
+
+	
 
 	
 	
@@ -485,8 +528,13 @@ exports.gridPlaces = function (req, res) {
 };
 
 
-
-
+/******
+#COMMENT
+******/
+exports.comment_list = function(req, res){
+	delete req.session.message;
+	res.render('comment/index');
+};
 
 /******* 
 #USER 
@@ -595,6 +643,48 @@ exports.gridUsers = function (req, res) {
 		data['pageIndex'] = req.params.pageIndex;
 		data['pageSize'] = req.params.pageSize;
 		data['count'] = user.length;
+		res.json(data);
+ 		
+	});
+};
+
+exports.gridComments = function (req, res) {
+    var Info = db.model('Info');
+
+    var sortProperties = [];
+    if (req.params.sortBy) {
+        sortProperties = req.params.sortBy.split(',');
+    }
+
+    var sortDirections = [];
+    if (req.params.sortDirection) {
+        sortDirections = req.params.sortDirection.split(',');
+    }
+
+	Info.findGridComments(req.params.pageIndex,req.params.pageSize,
+		req.params.searchTerm,sortProperties,sortDirections,
+        req.params.status, function (err, comment){
+
+        var allComments = [];
+        var k = 0;
+        for (var i = 0; i < comment.length; i++) {
+        	var acomment = {};
+        	acomment = comment[i].yakComments;
+        	for (var j = 0; j < acomment.length; j++) {
+        		allComments[k] = acomment[j];
+        		allComments[k].info_id = comment[i]._id;
+        		allComments[k].info_title = comment[i].title;
+        		allComments[k].delete = "";
+        		k++;
+        	};
+        	
+        };
+
+		var data = {};
+        data['comment'] = allComments;
+		data['pageIndex'] = req.params.pageIndex;
+		data['pageSize'] = req.params.pageSize;
+		data['count'] = allComments.length;
 		res.json(data);
  		
 	});

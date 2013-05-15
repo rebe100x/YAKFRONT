@@ -54,11 +54,11 @@ mixin menu(active)
 										a(href="feed/list") Flux					
 								- if (active == 'comment')
 									li.active
-										a(href="") Commentaires
+										a(href="/comment/list") Commentaires
 											span1#commentnumber
 								- else
 									li
-										a(href="") Commentaires
+										a(href="/comment/list") Commentaires
 											span1#commentnumber
 								- if (active == 'yakcat')
 									li.active

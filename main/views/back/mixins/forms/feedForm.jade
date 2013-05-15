@@ -30,6 +30,7 @@ mixin feedForm()
 						.span6
 							label Imagette:
 							span#picturePreview
+								img.img-rounded(style='width:100px;display:none;')
 							input.span6#picture(type="file",style="display:block",name="picture")
 					div.row-fluid
 						.span6
@@ -42,8 +43,8 @@ mixin feedForm()
 						.span6
 							label Combien de jours l info restera sur le front ?*
 							div.input-append.dropdown.combobox#persistDays
-								input(type='text', placeholder="Jours de persistence", name="persistDays")
-								button.btn(data-toggle="dropdown")
+								input(type='text', placeholder="Jours de persistence", name="persistDays", id="persistDaysValue")
+								button.btn(data-toggle="dropdown", tabindex="-1")
 									i.caret
 								ul.dropdown-menu
 									li(data-value="1")
@@ -62,7 +63,7 @@ mixin feedForm()
 										a(href="") 365
 						.span6
 							label Description:
-							textarea#description.span12.hashtagMaker(name='description', placeholder='Texte: vous pouvez utiliser des hashtags dans votre texte ( #maisonavendre )',rows='3')
+							textarea#description.span12(name='description', placeholder='Description',rows='3')
 		div.row-fluid
 			legend Metadata:		
 			div.control-group#yakType.row-fluid
@@ -98,7 +99,7 @@ mixin feedForm()
 						input(type="text",data-provide="typeahead", id="defaultPlaceName", name="defaultPlaceName", autocomplete="off", placeholder="Chercher...")
 					.span6
 						label Si l'info n'est pas géolocalisée...	
-						select.big#defaultPrintFlag
+						select.big#defaultPrintFlag(name='defaultPrintFlag')
 							option(value="0") ... ne pas afficher sur la carte mais afficher sur le fil info
 							option(value="1") ... afficher sur la carte + fil info
 							option(value="3") ... ne pas afficher l info du tout
@@ -243,19 +244,6 @@ mixin feedForm()
 					$('#alertFeedType').hide();
 			});
 
-			// hashtag creation from title field
-			$(".hashtagMaker").keyup(function(event) {
-				hashtagTmp = [];
-					var inputStrArray = $('#description').val().split(' ');
-					for(i = 0; i< inputStrArray.length;i++){
-						if(inputStrArray[i].match(rule)){
-							hashtagTmp.push(inputStrArray[i]);
-							freeTags.push(inputStrArray[i]);
-							$('#freetag').val(hashtagTmp.toString().replace(rule2,''));
-						}
-					}
-				
-			});
 
 			/*THUMB*/
 			$('#picture').live('change', function () {
@@ -267,9 +255,8 @@ mixin feedForm()
 					r.onload = function () {
 						var binimage = r.result;
 						binimage1 = binimage.replace('data:'+file.type+';base64,', '');
-						var imag = "<img class='img-rounded' " + "src='" + 
-						"data:"+file.type+";base64," + binimage1 + "' style='width:100px'/>";
-						$("#picturePreview").html(imag);
+						var src = "data:"+file.type+";base64," + binimage1;
+						$("#picturePreview img").attr('src',src).show();
 					};
 					r.readAsDataURL(file);
 				
@@ -352,8 +339,11 @@ mixin feedForm()
 			
 			$('#btn-freetag-adder').unbind('click').on('click',function(event){
 				event.preventDefault();
-				$("#pillFreetag ul").append("<li class='freetag-val' data-value='"+$('#freetag').val()+"'>"+$('#freetag').val()+"</li>");
-				freeTags.push($('#freetag').val());
+				var tags = $('#freetag').val().split(',');
+				for(i = 0; i< tags.length;i++){
+					$("#pillFreetag ul").append("<li class='freetag-val' data-value='"+tags[i].trim()+"'>"+tags[i].trim()+"</li>");
+					freeTags.push(tags[i].trim());
+				}
 				$('#tagsHidden').val(freeTags.join(','));
 				$('#freetag').val('').focus();
 				return false;
@@ -409,6 +399,7 @@ mixin feedForm()
 
 			});
 			
+			/*
 			//Place autocomplete
 			var input = document.getElementById('defaultPlaceName');
 			var autocomplete = new google.maps.places.Autocomplete(input);
@@ -428,7 +419,36 @@ mixin feedForm()
 				markerLocation.setPosition(place.geometry.location);
 				markerLocation.setVisible(true);
 			});
-
+			*/
+			$('#defaultPlaceName').typeahead({
+				minLength : 3,							
+				source: function (typeahead, query) {
+					if(query.length >= 3){
+						encodeURIComponent(query);
+						$("#defaultPlaceName").addClass('searching');
+						var addressQuery = {"address": query ,"region":"fr","language":"fr"};
+						var geocoder = new google.maps.Geocoder();
+						geocoder.geocode( addressQuery, function(results, status) {						
+						if (status == google.maps.GeocoderStatus.OK) {
+							typeahead.process(results);
+							$("#defaultPlaceName").removeClass('searching');
+						} 
+						});
+					}
+				},
+				property: "formatted_address",
+				onselect: function(obj) { 
+					$("#defaultPlaceName").removeClass('searching');
+					var placeGmap = getPlaceFromGmapResult(obj);
+					$('#defaultPlaceName').val(placeGmap.title);
+					$('#defaultPlaceSearchName').val(placeGmap.address.state+', '+placeGmap.address.area);
+					$("#feedForm #longitude").val(placeGmap.location.lng);
+					$("#feedForm #latitude").val(placeGmap.location.lat);
+					var latLng = new google.maps.LatLng(placeGmap.location.lat,placeGmap.location.lng);
+					map.panTo(latLng);
+					placeMarker(latLng,markerLocation);
+				}
+			});
 
 			/*EXTERNAL SOURCE LINK COMPLETION*/
 			$('#link').on('blur',function(){
@@ -460,64 +480,58 @@ mixin feedForm()
 		/*Form custom validation*/
 		$('#feedForm').unbind('submit').on('submit',function(){
 			var err = false;
+
+			$('.alert-error').hide();
 			if($('#humanName').val() == ""){
 				setError('#humanName','Entrer un nom pour ce flux');
 				err = true;
-			}else
-				removeError('#humanName');
+			}else{
+				var feedName = S($('#humanName').val()).slugify();
+				$.get('/api/feedExist/'+feedName,function(data){
+					if(data.feed){
+						setError('#humanName','Ce flux existe déjà: '+data.feed.humanName+' / '+data.feed.name+'.xml');
+						err=true;
+					}else
+						$('#humanName').append(' File : '+feedName+'.xml');
+						
+				});
+			}
 
 			
 			if($('#link').val() != "" && !$('#link').val().isUrl()){
 				setError('#link','Entrer une url valide');
 				err = true;
-			}else
-				removeError('#link');
+			}				
 			
 			if($('#licence').val() == ""){
 				setError('#licence','Entrer un nom de licence');
 				err = true;
-			}else
-				removeError('#licence');
-
+			}
 			if($('#persistDays input').val() == "" || !$('#persistDays input').val().isInt()){
 				setError('#persistDays','Entrer un chiffre');
 				err = true;
-			}else
-				removeError('#persistDays');
-			
+			}
 			if(typeof $('input:radio[name=yakType]:checked').val() == "undefined" ){
 				setError('#yakType','Choisir un type info');
 				err = true;
-			}else
-				removeError('#yakType');
-			
+			}
 			if($('#defaultPlaceName').val() == ""){
 				setError('#defaultPlaceName','Définir une géoloc par défaut');
 				err = true;
-			}else
-				removeError('#defaultPlaceName');
-			
+			}
 			if($('#defaultPlaceSearchName').val() == ""){
 				setError('#defaultPlaceSearchName','Définir un texte de recherche par défaut');
 				err = true;
-			}else
-				removeError('#defaultPlaceSearchName');
-
+			}
 			if($('#linkSource').val() == "" && $('#fileSource').val() == "" ){
 				setError('#dataSource','Définir soit un fichier source, soit une url source');
 				err = true;
-			}else
-				removeError('#dataSource');		
-			
+			}
 			if($('#infoTitle').val() == ""){
 				setError('#infoTitle','Définir le champ contenant le titre de la news.');
 				setError('#parsing','Définir le champ contenant le titre de la news.');
 				err = true;
-			}else{
-				removeError('#infoTitle');
-				removeError('#parsing');
-			}
-				
+			}	
 			
 			
 
