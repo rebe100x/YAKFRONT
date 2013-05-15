@@ -102,6 +102,7 @@ app.post('/api/users', back.users);
 app.get('/api/users', back.users);
 
 app.get('/api/feed/:id', back.findFeedById);
+app.get('/api/feedExist/:name', back.findFeedByName);
 app.get('/api/cats/:id', back.catsById);
 app.get('/api/cats', api.cats);
 app.get('/api/tags', api.tags);
@@ -168,6 +169,7 @@ new compressor.minify({
   , __dirname+'/public/javascripts/lib/plugin/jquery.mousewheel.min.js'
   , __dirname+'/public/javascripts/lib/plugin/jquery.mCustomScrollbar.min.js'
   , __dirname+'/public/javascripts/lib/jquery/js/jquery.md5.min.js'
+  , __dirname+'/public/javascripts/lib/plugin/string.min.js'
    , __dirname+'/public/javascripts/common.js'
   , __dirname+'/public/javascripts/back_common.js'
   ],

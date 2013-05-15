@@ -9,7 +9,7 @@ var mongoose = require('mongoose')
 var Feed = new Schema({
 	XLconnector	: String
 	,humanName	: String
-	,name	: String
+	,name	: {type:String,required:true,unique:true}
 	,linkSource	:[String]
 	,link	: String 
 	,feedType	: String 
@@ -58,12 +58,17 @@ var Feed = new Schema({
 },{ collection: 'feed' });
 
 
-Feed.statics.findByName = function (str,callback) {
+Feed.statics.searchByName = function (str,callback) {
   searchStr = new RegExp(str,'i');
   var cond = {
 	$or:[ {'humanName': {$regex:searchStr}}, {'name': {$regex:searchStr}} ]
 };
   return this.find( cond,{humanName:1, _id: 1, name: 1}, callback );
+}
+
+Feed.statics.findByName = function (str,callback) {
+  var cond = {'name': str};
+  return this.findOne( cond, callback );
 }
 
 Feed.statics.formatLight2 = function (thefeed) {

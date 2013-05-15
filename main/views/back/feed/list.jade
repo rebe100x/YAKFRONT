@@ -280,6 +280,7 @@ mixin list()
 			$("#feedForm legend.mainlegend").html("Modifier un flux");
 			$(".catLabel").remove();
 			$("#pillYakcat ul").empty();
+			
 			$('#err').hide();
 			yakcatIds = new Array();
 			tags = new Array();
@@ -315,18 +316,18 @@ mixin list()
 						feed.yakCatId.forEach(function(cat){
 							$.get('/api/cats/'+cat,function(data){
 								$("#pillYakcat ul").append("<li class='yakcat-val status-important' data-value='"+data.cats._id+"'>"+data.cats.title+"</li>");
-								yakCatIds.push(data._id);
-								console.log('e');
-								yakCatNames.push(data.name);	
+								yakCatIds.push(data.cats._id);
+								yakCatNames.push(data.cats.title);	
+								$("#yakCatIdsHidden").val(yakCatIds.join(','));
 							});
 						});	
-					$("#feedForm #yakcatIdsHidden").val(yakcatIds.join(','));
 					
 					feed.tag.forEach(function(tag){
 						$("#pillFreetag ul").append("<li class='freetag-val status-info' data-value='"+tag+"'>"+tag+"</li>");
 						tags.push(tag);
+						$("#feedForm #tagsHidden").val(tags.join(','));	
 					});
-					$("#feedForm #tagsHidden").val(tags.join(','));
+					
 					$("#feedForm #defaultPrintFlag").val(feed.defaultPrintFlag);
 					if(typeof feed.defaultPlaceLocation != 'undefined'){
 						var latlng = new google.maps.LatLng(feed.defaultPlaceLocation.lat, feed.defaultPlaceLocation.lng);
@@ -349,7 +350,8 @@ mixin list()
 
 
 					$('#feedForm input:radio[name=yakType][value='+feed.yakType+']').attr("checked", true).trigger("change").button('refresh');
-					
+					$('#feedForm input:radio[name=yakType]').val(feed.yakType);
+
 					var tmpArr = new Array();
 					tmpArr = feed.fileSource;
 					tmpArr.forEach(function(source){ 
@@ -371,8 +373,8 @@ mixin list()
 					});
 					$("#feedForm #linkSource").val(linkSource.join(','));
 
-					$('#feedForm input:radio[name=status][value='+feed.status+']').attr("checked", true).trigger("change").button('refresh');
-
+					$('#feedForm input:radio[name=status][value='+feed.status+']').click();
+					
 
 
 					$("#feedForm #humanName").focus();
@@ -403,7 +405,7 @@ mixin list()
 			});
 		});
 
-		// Add Feed function
+		// Add New Feed
 		$("#btnAdd").click(function(){
 			$("#MyGrid").hide();
 			$("#feedForm")[0].reset();
@@ -423,6 +425,8 @@ mixin list()
 			$("#pillYakcat ul").empty();
 			$('#err').hide();
 			$("#feedForm #title").focus();
+			$('#feedForm input:radio[name=status][value=1]').click();
+
 		});
 
 		

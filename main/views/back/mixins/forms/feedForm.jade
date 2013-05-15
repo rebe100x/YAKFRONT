@@ -485,7 +485,18 @@ mixin feedForm()
 			if($('#humanName').val() == ""){
 				setError('#humanName','Entrer un nom pour ce flux');
 				err = true;
+			}else{
+				var feedName = S($('#humanName').val()).slugify();
+				$.get('/api/feedExist/'+feedName,function(data){
+					if(data.feed){
+						setError('#humanName','Ce flux existe déjà: '+data.feed.humanName+' / '+data.feed.name+'.xml');
+						err=true;
+					}else
+						$('#humanName').append(' File : '+feedName+'.xml');
+						
+				});
 			}
+
 			
 			if($('#link').val() != "" && !$('#link').val().isUrl()){
 				setError('#link','Entrer une url valide');

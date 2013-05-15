@@ -122,6 +122,15 @@ exports.feed_add = function(req, res){
 	res.render('feed/add');
 };
 
+exports.findFeedByName = function (req, res) {
+	var Feed = db.model('Feed');
+   	Feed.findByName(req.params.name, function (err, thefeed){
+   		res.json({
+			feed: thefeed
+		});
+	});
+};
+
 exports.findFeedById = function (req, res) {
 	var Feed = db.model('Feed');
    	Feed.findById(req.params.id, function (err, thefeed){
@@ -167,16 +176,15 @@ exports.feed = function(req, res){
 	delete req.session.message;
 	var Feed = db.model('Feed');
 	var Yakcat = db.model('Yakcat');
-	mongoose.set('debug', true);
 	var obj_id = req.body.objid;
 	console.log(req.body);
-	feed = new Feed();
-
+	var feed = new Object();
+	var now = new Date();
 	feed.XLconnector = 'parser';
 
 	feed.humanName = req.body.humanName;
 	var strLib = require("string");
-	feed.name = strLib(feed.humanName).slugify();
+	feed.name = strLib(feed.humanName).slugify().s;
 	if(req.body.linkSource == '' && req.body.source != '')
 		feed.linkSource = req.body.source;
 	else if(req.body.linkSource != '')
@@ -199,7 +207,8 @@ exports.feed = function(req, res){
 	feed.linkSource = req.body.linkSource.split(',');
 	feed.persistDays = req.body.persistDays;
 	feed.description = req.body.description;
-	feed.status = req.body.status;
+	feed.status = parseInt(req.body.status);
+	feed.lastModifDate = now;
 
 	feed.parsingTemplate = {
 		title: req.body.infoTitle,
@@ -231,43 +240,36 @@ exports.feed = function(req, res){
 		for(i=0;i<size.length;i++){
 			feedThumb = drawTool.StoreImg(req.files.picture,destFile,{w:size[i].width,h:size[i].height},conf);
 		}
+		feed.thumb = feedThumb.name;
 	}
-	else
+	else{
 		feedThumb.err = 0;
+	}
+		
 	
-	feed.thumb = feedThumb.name;
+	
 
 	console.log(feed);
 	
 
 	if(typeof obj_id != 'undefined' && obj_id != ''){
-		Feed.findById(obj_id, function (err, thefeed){
-			delete feed._id;
-			thefeed = feed;
-			thefeed.save(function (err){
-				if (!err)
-					formMessage.push("Flux sauvegardé.");
-				else{
-					formMessage.push("Erreur pendant la sauvegarde du flux !");
-					console.log(err);
-				}
-				req.session.message = formMessage;
-				res.redirect('feed/list')
-			});	
-		});
+		var cond = {_id:obj_id};
 	}else{
-		delete feed._id;
-		feed.save(function (err){
-			if (!err)
-				formMessage.push("Nouveau flux sauvegardé.");
-			else{
-				formMessage.push("Erreur pendant la sauvegarde du flux !");
-				console.log(err);
-			}
-			req.session.message = formMessage;
-			res.redirect('feed/list')
-		});	
+		feed.creationDate = now;
+		var cond = {name:"anameimpossibletochoose007"};
 	}
+		
+
+	Feed.update(cond,feed,{upsert:true},function (err){
+		if (!err)
+			formMessage.push("Flux sauvegardé.");
+		else{
+			formMessage.push("Erreur pendant la sauvegarde du flux !");
+			console.log(err);
+		}
+		req.session.message = formMessage;
+		res.redirect('feed/list')
+	});
 
 	
 
