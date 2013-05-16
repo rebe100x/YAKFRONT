@@ -359,17 +359,13 @@ mixin feedForm()
 						$('.tableParsing').contextmenu({
 							target:'#context-menu', 
 							before: function(e,element) {
-								// execute code before context menu if shown
-								//$('#context-menu').html('<ul><li><a tabindex="-1" href="#">Action</a></li></ul>');
-								console.log(element.attr('key'));
-								console.log($(this));
+								$('#context-menu ul li a').attr('target',element.attr('key'));
 								$(this).attr('target',element.attr('key'));
 								return true;	
 							},
 							onItem: function(e, element) {
 								event.preventDefault();
-								console.log(element.attr('key'));
-								console.log($(this).html());
+								$('#'+element.attr('key')).val('#YKL'+element.attr('target'));
 								return false;
 							}
 						})
