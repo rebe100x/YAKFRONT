@@ -223,7 +223,7 @@ exports.feed = function(req, res){
 		outGoingLink: req.body.infoLink,
 		thumb: req.body.infoThumb,
 		yakCats: req.body.infoCat,
-		tag: req.body.infoTag,
+		freeTag: req.body.infoTag,
 		place: req.body.infoPlace,
 		eventDate: req.body.infoEventDate,
 		pubDate: req.body.infoPubDate,
