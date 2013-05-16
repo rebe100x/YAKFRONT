@@ -222,8 +222,29 @@ function getErrHTML5Pos(error) {
 }
 
 
+/*Creates a clickable html table from the data json*/
+function createTableParsing(data){
+	var dataObj = JSON.parse(data);
+	var table = '<table class="table table-striped table-bordered table-condensed">';
+	var header = '<thead><tr>';
+	var body = '';
+	$.each(dataObj[0], function(key, val) {
+		header += '<td>'+key+'</td>';
+	}); 
 
+	header += '<tr>';
 
+	dataObj.forEach(function(item) {
+		body += '<tr>';	
+		$.each(item, function(key, val) {
+			body += '<td class="tableParsing" key="'+key+'">'+val+'</td>';			
+		}); 
+		body += '</tr>';
+	});
+	table += header + body + '</table>';
+	console.log(table);
+	return table;
+}
 
 function deletePlaceHTML(placeArray,results,self){
 	

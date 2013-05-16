@@ -49,46 +49,55 @@ exports.static_image = function(req,res){
 
 
 exports.getFileSample = function(req,res){
+	var output = new Array();
 	var fs = require('fs');
-	var thepath = conf.uploadsDir+'files/'+req.body.file;
-	if (fs.existsSync(thepath)) {
-		//var data = fs.readFileSync(thepath);
-		switch(req.body.type){
-			case 'CSV':
-				var csv = require('csv-stream');
-				var request = require('request');
-
-				// All of these arguments are optional.
-				var options = {
-				delimiter : ',', // default is ,
-				endLine : '\n', // default is \n,
-				escapeChar : '"', // default is an empty string
-				enclosedChar : '"' // default is an empty string
-				}
-
-				var csvStream = csv.createStream(options);
-				request(thepath).pipe(csvStream)
-				.on('error',function(err){
+	var csv = require('csv-stream');
+	var options = {delimiter : ';', endLine : '\n', escapeChar : '"', enclosedChar : '"'}
+	var csvStream = csv.createStream(options);
+	if(req.body.isLink == 1 ){
+		var request = require('request');
+		var thepath = req.body.file;
+		var data = request(thepath).pipe(csvStream);
+	}else{
+		var thepath = conf.uploadsDir+'files/'+req.body.file;
+		var data = fs.createReadStream(thepath).pipe(csvStream);
+	}
+		
+	switch(req.body.type){
+		case 'CSV':
+			data.on('error',function(err){
 				console.error(err);
-				})
-				.on('data',function(data){
-				// outputs an object containing a set of key/value pair representing a line found in the csv file.
-				console.log(data);
-				})
-				.on('column',function(key,value){
-				// outputs the column name associated with the value found
-				console.log('#' + key +' = ' + value);
-				})
-			break;
-			case 'RSS':
-			break;
-			case 'JSON':
-			break;
-		}
-		//res.writeHead(200, {'Content-Type': 'text/plain' });
-		//res.end(data, 'binary');
-	}else
-		res.json({code:400,error:'File does not exist '+req.body.file});
+				res.json({code:400,error:'File does not exist '+req.body.file});
+			})
+			.on('data',function(data){
+			// outputs an object containing a set of key/value pair representing a line found in the csv file.
+			//console.log(data);
+			//var sample = data.slice(0,9);
+			output.push(data);
+			console.log('---------------DATA------------------');
+			console.log(output);
+			//res.writeHead(200, {'Content-Type': 'text/plain' });
+			//res.end(JSON.stringify(sample), 'binary');
+			
+			})
+			.on('column',function(key,value){
+			console.log('---------------COLUMN------------------');
+			// outputs the column name associated with the value found
+			console.log('#' + key +' = ' + value);
+			})
+			.on('end',function(){
+
+				console.log('**************end*************');
+				console.log(output);
+				res.json(JSON.stringify(output.slice(0,9)));	
+			});
+		break;
+		case 'RSS':
+		break;
+		case 'JSON':
+		break;
+	}
+	
 	
 }
 exports.requiresLogin = function(req,res,next){
@@ -196,7 +205,6 @@ exports.gridFeeds = function (req, res) {
         sortDirections = req.params.sortDirection.split(',');
     }
 
-
    
 
 	Feed.findGridFeeds(req.params.pageIndex,req.params.pageSize,
@@ -207,6 +215,8 @@ exports.gridFeeds = function (req, res) {
 			var feedFormated = feed.map(function(item){
 				return Feed.format(item);
 			});
+			console.log(feedFormated[0].thumb);
+			console.log(feedFormated[0].thumbSmall);
 			data['feed'] = feedFormated;
 			data['pageIndex'] = req.params.pageIndex;
 			data['pageSize'] = req.params.pageSize;

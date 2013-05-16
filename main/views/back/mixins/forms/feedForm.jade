@@ -183,26 +183,26 @@ mixin feedForm()
 							input(type='text', name='infoTitle', id='infoTitle', placeholder="Titre")
 							label Corps de l info:
 							input(type='text', name='infoContent', id='infoContent', placeholder="Corps")
+							label Lien web vers l info:
+							input(type='text', name='infoLink', id='infoLink', placeholder="Lien web vers l'info")
+							label Tags:
+							input(type='text', name='infoTag', id='infoTag', placeholder="Tags")
+							label Date de publication:
+							input(type='text', name='infoPubDate', id='infoPubDate', placeholder="Date de publication")
+							label Date de l évènement:
+							input(type='text', name='infoEventDate', id='infoEventDate', placeholder="Date de l'évènement")
+							label Lieu:
+							input(type='text', name='infoPlace', id='infoPlace', placeholder="Le lieu")
 							label Adresse:
 							input(type='text', name='infoAddress', id='infoAddress', placeholder="Adresse")
 							label Latitude:
 							input(type='text', name='infoLatitude', id='infoLatitude', placeholder="Latitude")
 							label Longitude:
 							input(type='text', name='infoLongitude', id='infoLongitude', placeholder="Longitude")
-							label Lien web vers l info:
-							input(type='text', name='infoLink', id='infoLink', placeholder="Lien web vers l'info")
 							label Imagette:
 							input(type='text', name='infoThumb', id='infoThumb', placeholder="Imagette")
 							label Catégories Yakwala:
 							input(type='text', name='infoCat', id='infoCat', placeholder="Catégories Yakwala")
-							label Tags:
-							input(type='text', name='infoTag', id='infoTag', placeholder="Tags")
-							label Lieu:
-							input(type='text', name='infoPlace', id='infoPlace', placeholder="Le lieu")
-							label Date de l évènement:
-							input(type='text', name='infoEventDate', id='infoEventDate', placeholder="Date de l'évènement")
-							label Date de publication:
-							input(type='text', name='infoPubDate', id='infoPubDate', placeholder="Date de publication")
 							label Téléphone:
 							input(type='text', name='infoTel', id='infoTel', placeholder="Téléphone")
 							label Moyen de transports:
@@ -214,6 +214,14 @@ mixin feedForm()
 							label Mail:
 							input(type='text', name='infoMail', id='infoMail', placeholder="Mail")
 						.span6
+							div#context-menu
+								ul.dropdown-menu(role="menu")
+									li
+										a(tabindex="-1", href="#", key='infoTitle') Action
+									li.divider
+									li
+										a(tabindex="-1", href="#", key='infoContent') Action2
+
 							div#parsingEditor
 			div.modal-footer
 				button.btn.btn-primary.btn-warning(type="button", data-dismiss="modal", aria-hidden="true") OK
@@ -335,17 +343,42 @@ mixin feedForm()
 				$('#parsingModal').modal('show');
 				var thesource = '';
 				if(typeof fileSource[0] != 'undefined' || typeof linkSource[0] != 'undefined'){
-					if(typeof fileSource[0] != 'undefined')
+					if(typeof fileSource[0] != 'undefined'){
 						thesource = fileSource[0];
-					if(typeof linkSource[0] != 'undefined')
+						isLink = 0;
+					}
+						
+					if(typeof linkSource[0] != 'undefined'){
 						thesource = linkSource[0];	
+						isLink = 1;
+					}
 					$('#parsingEditor').html(thesource);	
-					$.post('/api/getFileSample', {file:thesource,type:$('#feedType').val()}, function(data){
-						$('#parsingEditor').html(data);	
+					$.post('/api/getFileSample', {file:thesource,type:$('#feedType').val(),isLink:isLink}, function(data){
+						var tableParsing = createTableParsing(data);
+						$('#parsingEditor').html(tableParsing);	
+						$('.tableParsing').contextmenu({
+							target:'#context-menu', 
+							before: function(e,element) {
+								// execute code before context menu if shown
+								//$('#context-menu').html('<ul><li><a tabindex="-1" href="#">Action</a></li></ul>');
+								console.log(element.attr('key'));
+								console.log($(this));
+								$(this).attr('target',element.attr('key'));
+								return true;	
+							},
+							onItem: function(e, element) {
+								event.preventDefault();
+								console.log(element.attr('key'));
+								console.log($(this).html());
+								return false;
+							}
+						})
 					});
 				}else
 					$('#parsingEditor').html('Veuillez définir une source ( Fichier ou Lien )');	
 			});
+
+			
 
 			$('#yakcat').typeahead({
 				minLength : 3,

@@ -178,6 +178,7 @@ new compressor.minify({
   , __dirname+'/public/javascripts/lib/plugin/jquery.mCustomScrollbar.min.js'
   , __dirname+'/public/javascripts/lib/jquery/js/jquery.md5.min.js'
   , __dirname+'/public/javascripts/lib/plugin/string.min.js'
+  , __dirname+'/public/javascripts/lib/bootstrap/js/bootstrap-contextmenu.js'
    , __dirname+'/public/javascripts/common.js'
   , __dirname+'/public/javascripts/back_common.js'
   ],

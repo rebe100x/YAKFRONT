@@ -128,7 +128,6 @@ mixin list()
 						$('th[data-property="name"]').append('<i class="icon-chevron-down"></i>');
 						firstLoad = false;
 					}
-					console.log(response);
 					// Prepare data to return to Datagrid
 					var data = response.feed;
 					var count = response.count;
@@ -172,8 +171,6 @@ mixin list()
 				}],
 				formatter: function (items) {
 					$.each(items, function (index, item) {
-						if(item.thumb)
-							item.thumbSmall = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/24_24/'+item.thumb;
 						item.name = fillContent(item);
 						item.creationDate = formatDate(item.creationDate);
 						
@@ -211,8 +208,7 @@ mixin list()
 				res += '<a class="centerMap" id="' + item._id + '" lat="' + item.defaultPlaceLocation.lat + '" lng="' + item.defaultPlaceLocation.lng + '"   href="#">';
 			res += '<i class = "icon-map-marker" title="Localiser"></i>';
 			res += '</a>';
-
-				}	
+			}	
 			
 			res += "</div>";
 
@@ -227,8 +223,7 @@ mixin list()
 				title_icon = "Rejetée";
 			}
 
-			if (item.thumb)
-				item.humanName = '<img src=\''+ item.thumbSmall + '\'/> '+ item.humanName;	
+			item.humanName = '<img src=\''+ item.thumbSmall + '\'/> '+ item.humanName;	
 
 			res += 	'<div class="text-info"><i class="' + icon + ' status" title="' + title_icon + '" ></i>' + item.humanName + '</div>';
 
@@ -324,7 +319,7 @@ mixin list()
 
 					$("#feedForm #humanName").val(feed.humanName);
 					if(feed.thumb != '' && typeof feed.thumb != 'undefined'){
-						$("#picturePreview img").attr('src',feed.thumb).show();
+						$("#picturePreview img").attr('src',feed.thumbMedium).show();
 					}
 					$("#feedForm #licence").val(feed.licence);
 					$("#feedForm #link").val(feed.link);

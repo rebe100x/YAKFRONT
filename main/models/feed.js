@@ -39,6 +39,9 @@ var Feed = new Schema({
 	}
 	,description : String
 	,thumb : String
+	,thumbSmall : String
+	,thumbMedium : String
+	,thumbBig : String
 	,licence : String
 	,yakCatName : [String]
 	,yakCatId : [String]
@@ -93,11 +96,12 @@ Feed.statics.format = function (thefeed) {
 		var thethumbmedium = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucketstatic+'/48_48/no-user.png';
 		var thethumbsmall = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucketstatic+'/24_24/no-user.png';
 	}
-	formattedFeed.thumbBig = thethumbbig;
-	formattedFeed.thumbMedium = thethumbmedium;
-	formattedFeed.thumbSmall = thethumbsmall;
+	thefeed.thumbBig = thethumbbig;
+	thefeed.thumbMedium = thethumbmedium;
+	thefeed.thumbSmall = thethumbsmall;
 
-  return formattedFeed;
+
+  return thefeed;
 }  
 
   
