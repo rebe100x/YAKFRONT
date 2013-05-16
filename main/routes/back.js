@@ -636,7 +636,7 @@ exports.gridUsers = function (req, res) {
 
 	User.findGridUsers(req.params.pageIndex,req.params.pageSize,
 		req.params.searchTerm,sortProperties,sortDirections,
-        req.params.status, function (err, user){
+        req.params.status, req.params.type, req.session.user, function (err, user){
 
 		var data = {};
 		var usersFormated = user.map(function(item){

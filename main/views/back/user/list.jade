@@ -43,8 +43,8 @@ mixin list()
 					select#filterStatus
 						option(value="2") En attente
 						option(value="1") Validés
-						option(value="3") Rejetés
-						option(value="4") Tous les utilisateurs
+						option(value="3") Blacklistés
+						option(value="4", "selected"="selected") Tous les utilisateurs
 					select#filterType
 						option(value="0") Tous les types
 						option(value="1") Normal
@@ -150,6 +150,10 @@ mixin list()
 				var status = $('#filterStatus :selected').val();
 				url += '/' + status;
 
+				// Filter by type
+				var type = $('#filterType :selected').val();
+				url += '/' + type;
+
 				// Optional filters: Yakcats, Users
 				//  - Passed as query to allow for null
 				var queryChar = '?';
@@ -238,7 +242,7 @@ mixin list()
 		}
 
 		function makeUserThumb(item){
-			return '<img src="'+item.thumbsmall+'" class="userThumb" width="48" height="48" />'
+			return '<img src="'+item.thumbsmall+'" class="userThumb" width="24" height="424" />'
 		}
 
 		function makeNameTextBox(item){
@@ -295,7 +299,7 @@ mixin list()
 		function makeStatusDropDown(item){
 			var select = $("<div />");
 			select.attr("class", "selectStatus");
-			select.html('<select onchange="setNewStatus(this)" class="selectStatus" rel="'+item._id+'"><option value="2">En attente</option><option value="1">Validés</option><option value="3">Rejetés</option></select>');
+			select.html('<select onchange="setNewStatus(this)" class="selectStatus" rel="'+item._id+'"><option value="2">En attente</option><option value="1">Validés</option><option value="3">Blacklistés</option></select>');
 			select.find("option").each(function(){
 				if($(this).attr("value") == item.status)
 					$(this).attr("selected", "selected");
@@ -511,6 +515,10 @@ mixin list()
 			refreshDatagridAndMenu();
 		});
 
+		$('#filterType').live('change', function() {
+			refreshDatagridAndMenu();
+		});
+
 		//Autocomplete on title (search input)
 		$('input#search').typeahead({
 			source: function (typeahead, query) {
@@ -637,11 +645,6 @@ mixin list()
 			var $gridsearch = jQuery('#MyGrid').find('.search');
 			var search = $gridsearch.find('input').val();
 			$gridsearch.trigger('searched', search);
-			$.getJSON('/api/validplaces', function(data) {
-				$('#placenumber').removeClass('badge badge-important');
-				if (data.info != 0)
-					$('#placenumber').addClass('badge badge-important').html(data.info);
-			});
 		}
 
 		// Remove pillbox if empty, refresh datagrid everytime an object is removed

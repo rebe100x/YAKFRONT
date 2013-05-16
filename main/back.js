@@ -118,7 +118,7 @@ app.get('/api/places', back.places);
 app.get('/api/places/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status', back.gridPlaces);
 app.get('/api/places/:id', back.findPlaceById);
 
-app.get('/api/users/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status', back.gridUsers);
+app.get('/api/users/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status/:type', back.gridUsers);
 app.get('/api/comments/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status', back.gridComments);
 
 app.get('/api/feeds/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status/:type', back.gridFeeds);
