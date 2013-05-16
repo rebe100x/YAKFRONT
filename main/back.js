@@ -93,7 +93,7 @@ app.post('/news', back.requiresLogin, back.news);
 app.post('/alerts', back.requiresLogin, back.alerts);
 app.post('/profile', back.requiresLogin, back.profile);
 
-// api
+// ajax
 app.get('/api/infos', back.infos);
 app.get('/api/validinfos', back.countUnvalidatedInfos);
 app.get('/api/geoinfos/:x1/:y1/:x2/:y2/:heat/:type', back.geoinfos);
@@ -103,11 +103,11 @@ app.post('/api/users', back.users);
 app.get('/api/users', back.users);
 app.get('/api/comments', back.comments);
 
-app.get('/api/feed/:id', back.findFeedById);
-app.get('/api/feedExist/:name', back.findFeedByName);
-app.get('/api/cats/:id', back.catsById);
-app.get('/api/cats', api.cats);
-app.get('/api/tags', api.tags);
+app.get('/api/feed/:id',back.requiresLogin, back.findFeedById);
+app.get('/api/feedExist/:name',back.requiresLogin, back.findFeedByName);
+app.get('/api/cats/:id',back.requiresLogin, back.catsById);
+app.get('/api/cats',back.requiresLogin, api.cats);
+app.get('/api/tags',back.requiresLogin, api.tags);
 
 app.get('/api/users', back.gridUsers);
 app.get('/api/comments', back.gridComments);
@@ -118,10 +118,10 @@ app.get('/api/places', back.places);
 app.get('/api/places/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status', back.gridPlaces);
 app.get('/api/places/:id', back.findPlaceById);
 
-app.get('/api/users/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status', back.gridUsers);
-app.get('/api/comments/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status', back.gridComments);
+app.get('/api/users/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status',back.requiresLogin, back.gridUsers);
+app.get('/api/comments/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status',back.requiresLogin, back.gridComments);
+app.get('/api/feeds/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status/:type',back.requiresLogin, back.gridFeeds);
 
-app.get('/api/feeds/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status/:type', back.gridFeeds);
 app.get('/api/usersearch/:string', back.usersearch);
 app.get('/api/findCatById', back.findCatById);
 app.get('/api/user/:id', back.findUserById);
@@ -136,6 +136,10 @@ app.get('/api/places/wait/:ids', back.waitPlaces);
 
 app.post('/api/favplace', back.addfavplace);
 app.post('/api/delfavplace', back.delfavplace);
+
+app.get('/api/places/validate/:ids', back.validatePlaces);
+
+app.post('/api/getFileSample', back.getFileSample);
 
 // redirect all others to the index (HTML5 history)
 app.get('*', back.index);

@@ -136,13 +136,16 @@ mixin feedForm()
 						select#feedType(name='feedType')
 							option(value="RSS") RSS
 							option(value="CSV") CSV
+							option(value="JSON") JSON
 							option(value="YAKMADE") YAKMADE
 						div#alertFeedType.alert.alert-info
 							button.close(type="button", data-dismiss="alert") x
 							span.alertText
 						div#parsingParam
-							input#rootElement(type="text",name="rootElement",placeholder="Root du fichier RSS",,value='/rss/channel/item')	
-							input#lineToBegin(type="text",name="lineToBegin",placeholder="Ligne de début du parsing",value="0")	
+							label.rootElementGroup Root Element:
+							input.rootElementGroup#rootElement(type="text",name="rootElement",placeholder="Root du fichier RSS",,value='/rss/channel/item')	
+							label.lineToBeginGroup Commencer à la ligne numéro:
+							input.lineToBeginGroup#lineToBegin(type="text",name="lineToBegin",placeholder="Ligne de début du parsing",value="0")	
 							
 					.span6
 						label &nbsp;
@@ -174,41 +177,44 @@ mixin feedForm()
 					button.close(type="button", data-dismiss="alert") x
 					span.alertText
 				div.control-group#titleGroup
-					div.controls
-						label Titre de l info:*
-						input(type='text', name='infoTitle', id='infoTitle', placeholder="Titre")
-						label Corps de l info:
-						input(type='text', name='infoContent', id='infoContent', placeholder="Corps")
-						label Adresse:
-						input(type='text', name='infoAddress', id='infoAddress', placeholder="Adresse")
-						label Latitude:
-						input(type='text', name='infoLatitude', id='infoLatitude', placeholder="Latitude")
-						label Longitude:
-						input(type='text', name='infoLongitude', id='infoLongitude', placeholder="Longitude")
-						label Lien web vers l info:
-						input(type='text', name='infoLink', id='infoLink', placeholder="Lien web vers l'info")
-						label Imagette:
-						input(type='text', name='infoThumb', id='infoThumb', placeholder="Imagette")
-						label Catégories Yakwala:
-						input(type='text', name='infoCat', id='infoCat', placeholder="Catégories Yakwala")
-						label Tags:
-						input(type='text', name='infoTag', id='infoTag', placeholder="Tags")
-						label Lieu:
-						input(type='text', name='infoPlace', id='infoPlace', placeholder="Le lieu")
-						label Date de l évènement:
-						input(type='text', name='infoEventDate', id='infoEventDate', placeholder="Date de l'évènement")
-						label Date de publication:
-						input(type='text', name='infoPubDate', id='infoPubDate', placeholder="Date de publication")
-						label Téléphone:
-						input(type='text', name='infoTel', id='infoTel', placeholder="Téléphone")
-						label Moyen de transports:
-						input(type='text', name='infoTransportation', id='infoTransportation', placeholder="Moyens de transports")
-						label Heures d ouverture:
-						input(type='text', name='infoOpening', id='infoOpening', placeholder="Heures d'ouverture")
-						label Site web:
-						input(type='text', name='infoWeb', id='infoWeb', placeholder="Site web")
-						label Mail:
-						input(type='text', name='infoMail', id='infoMail', placeholder="Mail")
+					div.controls.row-fluid	
+						.span6
+							label Titre de l info:*
+							input(type='text', name='infoTitle', id='infoTitle', placeholder="Titre")
+							label Corps de l info:
+							input(type='text', name='infoContent', id='infoContent', placeholder="Corps")
+							label Adresse:
+							input(type='text', name='infoAddress', id='infoAddress', placeholder="Adresse")
+							label Latitude:
+							input(type='text', name='infoLatitude', id='infoLatitude', placeholder="Latitude")
+							label Longitude:
+							input(type='text', name='infoLongitude', id='infoLongitude', placeholder="Longitude")
+							label Lien web vers l info:
+							input(type='text', name='infoLink', id='infoLink', placeholder="Lien web vers l'info")
+							label Imagette:
+							input(type='text', name='infoThumb', id='infoThumb', placeholder="Imagette")
+							label Catégories Yakwala:
+							input(type='text', name='infoCat', id='infoCat', placeholder="Catégories Yakwala")
+							label Tags:
+							input(type='text', name='infoTag', id='infoTag', placeholder="Tags")
+							label Lieu:
+							input(type='text', name='infoPlace', id='infoPlace', placeholder="Le lieu")
+							label Date de l évènement:
+							input(type='text', name='infoEventDate', id='infoEventDate', placeholder="Date de l'évènement")
+							label Date de publication:
+							input(type='text', name='infoPubDate', id='infoPubDate', placeholder="Date de publication")
+							label Téléphone:
+							input(type='text', name='infoTel', id='infoTel', placeholder="Téléphone")
+							label Moyen de transports:
+							input(type='text', name='infoTransportation', id='infoTransportation', placeholder="Moyens de transports")
+							label Heures d ouverture:
+							input(type='text', name='infoOpening', id='infoOpening', placeholder="Heures d'ouverture")
+							label Site web:
+							input(type='text', name='infoWeb', id='infoWeb', placeholder="Site web")
+							label Mail:
+							input(type='text', name='infoMail', id='infoMail', placeholder="Mail")
+						.span6
+							div#parsingEditor
 			div.modal-footer
 				button.btn.btn-primary.btn-warning(type="button", data-dismiss="modal", aria-hidden="true") OK
 
@@ -242,10 +248,29 @@ mixin feedForm()
 
 			$('#alertFeedType').hide();
 			$('#feedType').on('change',function(){
-				if($(this).val()=='CSV'){
-					$('#alertFeedType').show().children('span.alertText').html('Le fichier doit être sauvé en UTF8, séparation point virgule et textes délimités par des guillemets doubles. ');
-				}else
-					$('#alertFeedType').hide();
+				switch($(this).val()){
+					case 'CSV':
+							$('.lineToBeginGroup').show();
+							$('.rootElementGroup').hide();
+							$('#alertFeedType').show().children('span.alertText').html('Le fichier doit être sauvé en UTF8, séparation point virgule et textes délimités par des guillemets doubles. ');
+						break;
+						case 'RSS':
+							$('.lineToBeginGroup').hide();
+							$('.rootElementGroup').show();
+							$('#alertFeedType').hide();
+						break;
+						case 'JSON':
+							$('.lineToBeginGroup').hide();
+							$('.rootElementGroup').show();
+							$('#alertFeedType').hide();
+						break;
+						case 'YAKMADE':
+							$('.lineToBeginGroup').hide();
+							$('.rootElementGroup').hide();
+							$('#alertFeedType').hide();
+						break;
+				}
+					
 			});
 
 
@@ -308,9 +333,19 @@ mixin feedForm()
 			$('#parsing').unbind('click').click(function(){
 				$('#parsingModal .modal-body span.alertText').html('');
 				$('#parsingModal').modal('show');
+				var thesource = '';
+				if(typeof fileSource[0] != 'undefined' || typeof linkSource[0] != 'undefined'){
+					if(typeof fileSource[0] != 'undefined')
+						thesource = fileSource[0];
+					if(typeof linkSource[0] != 'undefined')
+						thesource = linkSource[0];	
+					$('#parsingEditor').html(thesource);	
+					$.post('/api/getFileSample', {file:thesource,type:$('#feedType').val()}, function(data){
+						$('#parsingEditor').html(data);	
+					});
+				}else
+					$('#parsingEditor').html('Veuillez définir une source ( Fichier ou Lien )');	
 			});
-
-			
 
 			$('#yakcat').typeahead({
 				minLength : 3,

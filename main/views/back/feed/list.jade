@@ -276,8 +276,7 @@ mixin list()
 
 		
 		// Edit Feed function
-		$("#MyGrid").unbind("click").on('click','.editFeed', function(event)
-		{
+		$("#MyGrid").unbind("click").on('click','.editFeed', function(event){
 			event.preventDefault();
 			event.stopPropagation();
 			
@@ -296,9 +295,10 @@ mixin list()
 			/*INIT FORM FOR EDITION*/
 			$("#feedForm").show();
 			$("#feedForm legend.mainlegend").html("Modifier un flux");
-			$("#pillSource ul").html('');
+			$("#pillSourceLink ul").html('');
 			$("#pillYakcat ul").html('');
 			$("#pillFreetag ul").html('');
+			$("#pillSourceFile ul").html('');
 			$("#feedForm input[type=hidden]").val('');
 			$('#feedForm').clearForm();	
 			$('#err').hide();
@@ -362,8 +362,27 @@ mixin list()
 					$("#feedForm #defaultPrintFlag").val(feed.defaultPrintFlag);
 					
 					$("#feedForm #feedType").val(feed.feedType);
-					if(feed.feedType=='CSV'){
-						$('#alertFeedType').show().children('span.alertText').html('Le fichier doit être sauvé en UTF8, séparation point virgule (;) et textes délimités par des guillemets doubles ("). ');
+					switch(feed.feedType){
+						case 'CSV':
+							$('.lineToBeginGroup').show();
+							$('.rootElementGroup').hide();
+							$('#alertFeedType').show().children('span.alertText').html('Le fichier doit être sauvé en UTF8, séparation point virgule et textes délimités par des guillemets doubles. ');
+						break;
+						case 'RSS':
+							$('.lineToBeginGroup').hide();
+							$('.rootElementGroup').show();
+							$('#alertFeedType').hide();
+						break;
+						case 'JSON':
+							$('.lineToBeginGroup').hide();
+							$('.rootElementGroup').show();
+							$('#alertFeedType').hide();
+						break;
+						case 'YAKMADE':
+							$('.lineToBeginGroup').hide();
+							$('.rootElementGroup').hide();
+							$('#alertFeedType').hide();
+						break;
 					}
 
 
@@ -372,7 +391,7 @@ mixin list()
 
 					var tmpArr = new Array();
 					tmpArr = feed.fileSource;
-					tmpArr.forEach(function(source){ 
+					tmpArr.forEach(function(source){
 						if(source.length>0){	
 							$("#pillSourceFile").show();
 							$("#pillSourceFile ul").append("<li class='source-val status-success' data-value='"+source+"'>"+source+"</li>");
@@ -380,14 +399,14 @@ mixin list()
 						}
 					});
 
-					$("#feedForm #fileSource").val(fileSource.join(','));	
+					$("#feedForm #fileSource").val(fileSource.join(','));
 					
 					feed.linkSource.forEach(function(source){
 						if(source.length>0){
 							$("#pillSourceLink").show();
 							$("#pillSourceLink ul").append("<li class='source-val status-warning' data-value='"+source+"'>"+source+"</li>");
 							linkSource.push(source);
-						}						
+						}
 					});
 					$("#feedForm #linkSource").val(linkSource.join(','));
 
@@ -443,21 +462,8 @@ mixin list()
 			$("#pillYakcat ul").empty();
 			$('#err').hide();
 			$("#feedForm #title").focus();
-<<<<<<< HEAD
 		});
-=======
+			
 			$('#feedForm input:radio[name=status][value=1]').click();
 
-		});
-
 		
-
-		
-
-
-
-
-
-
-	
->>>>>>> 752a7946bc4f18e60912b786f5a8c3ebca64bc6f

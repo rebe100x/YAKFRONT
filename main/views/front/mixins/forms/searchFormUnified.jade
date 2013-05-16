@@ -81,150 +81,129 @@ mixin searchFormUnified(page)
 
 		$(document).ready(function(){
 
-				//setInterval('numAlertsSearch()', 10000);
+			//setInterval('numAlertsSearch()', 10000);
+			
+			if(yakType.inArray("4"))
+				$("#btnDiscussion").addClass('active').attr('title','Cacher les Yassalas');
 				
-				if(yakType.inArray("4"))
-					$("#btnDiscussion").addClass('active').attr('title','Cacher les Yassalas');
-					
-				
-				
+			
+			
 
-				if(yakType.inArray("5")){
-					$("#btnMesalertes").addClass('active').attr('title','Passer en mode normal');
-					console.log('active ALerte');
-					$("#alertsNumber").html("");
-					$("#alertsNumber").hide();
-				}
-				else
-				{
-					$("#alertsNumber").show();
-				}
-					
-				//getHotTags(curPos,dateFrom);
+			if(yakType.inArray("5")){
+				$("#btnMesalertes").addClass('active').attr('title','Passer en mode normal');
+				console.log('active ALerte');
+				$("#alertsNumber").html("");
+				$("#alertsNumber").hide();
+			}
+			else
+			{
+				$("#alertsNumber").show();
+			}
+				
+			//getHotTags(curPos,dateFrom);
 
-				$('#dropdownTagSelector').unbind("click").on('click','li', function (e) {
-					searchString = "#"+$(this).html();
-					$('#searchStr').val(decodeURIComponent(searchString.replace('%2520', ' ')));
-					$('#searchStr').focus();
-					$('#searchStr').select();
+			$('#dropdownTagSelector').unbind("click").on('click','li', function (e) {
+				searchString = "#"+$(this).html();
+				$('#searchStr').val(decodeURIComponent(searchString.replace('%2520', ' ')));
+				$('#searchStr').focus();
+				$('#searchStr').select();
+				$('#searchBtn').trigger('click');
+				changeRange();
+			});
+
+			setTimeSliderText(dateFrom);
+
+			setLocalnessSliderTextMinified(curPos.z);
+	
+			/*search info and place*/
+			if(searchString != null)
+				$('#searchStr').val(decodeURIComponent(searchString.replace('%2520', ' ')));
+
+			
+			
+			$('#searchStr').unbind('keyup').on('keyup',function(event){
+				var clicked = $(this);
+				setdelay(function(){
+					if(clicked.val().length > 1){
+						clicked.addClass('searching');
+						searchString = encodeURIComponent($('#searchStr').val());
+					}else{
+						clicked.removeClass('searching');
+						searchString = null;
+					}
+					
 					$('#searchBtn').trigger('click');
-					changeRange();
-				});
-
-				setTimeSliderText(dateFrom);
-
-				setLocalnessSliderTextMinified(curPos.z);
-		
-				/*search info and place*/
-				if(searchString != null)
-					$('#searchStr').val(decodeURIComponent(searchString.replace('%2520', ' ')));
-
-				
-				
-				$('#searchStr').unbind('keyup').on('keyup',function(event){
-					var clicked = $(this);
-					setdelay(function(){
-						if(clicked.val().length > 1){
-							clicked.addClass('searching');
-							searchString = encodeURIComponent($('#searchStr').val());
-						}else{
-							clicked.removeClass('searching');
-							searchString = null;
-						}
-						
-						$('#searchBtn').trigger('click');
-						
-					}, 800);
 					
-				});
-
-
-				$('#searchPlaceStr').unbind("click").on('click',function(){
-					$(this).select();
-				});
-
-				// reset
-				$('#searchStr').unbind("click").on('click',function(){
-					$(this).select();
-				});
+				}, 800);
 				
-				$('#searchPlaceStr').keyup(function(event){
-					var query = $("#searchPlaceStr").val();
-					if(query.length < 3)
-					{
-						$("#searchPlaceStr").removeClass('searching');
-					}
-					psClick = 0;
-					if (event.which == 13) {
-						
-						if(query==''){
-							curPos.name = user.formatted_address;
-							curPos.x = user.location.lat;
-							curPos.y = user.location.lng;
-							//curPos.z = mainConf.rangeDefault;
-							$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
-							$('#searchPlaceStr').val(curPos.name);	
+			});
 
-						}
-						else
-						{
-							
-							if(query.length >= 3){
-								encodeURIComponent(query);
-								$("#searchPlaceStr").addClass('searching');
-								var addressQuery = {"address": query ,"region":"fr","language":"fr"};
-								var geocoder = new google.maps.Geocoder();
-								geocoder.geocode( addressQuery, function(results, status) {						
-								if (status == google.maps.GeocoderStatus.OK) {
-									if(results.length > 0)
-									{
-										$("#searchPlaceStr").removeClass('searching');
-										curPos.x = results[0].geometry.location.Ya;
-										curPos.y = results[0].geometry.location.Za;
-										curPos.name = results[0].formatted_address;
-										$("#searchPlaceStr").val(curPos.name);
-										$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
-										$("#searchBtn").trigger('click');
-									}
-									else
-									{
-										//$("#searchPlaceStr").removeClass('searching');
-										//alert("No Places Found...");
-									}
-								} 
-								else
-								{
-									//$("#searchPlaceStr").removeClass('searching');
-									//alert("No Places Found...");
-								}
-								});
-							}
-						}
-						$('#searchBtn').trigger('click');
-					}
-				});
 
-				/* this induce a refresh at clicking anywhere on the page when going from the search to a tag for ex.
-				$('#searchStr').blur(function(event){
-					$("#searchBtn").trigger('click');
-				});
-				*/
+			$('#searchPlaceStr').unbind("click").on('click',function(){
+				$(this).select();
+			});
 
-				/* this induce a refresh at clicking anywhere on the page when going from the search to a tag for ex.
-				
-				$('#searchPlaceStr').blur(function(event){
-					if($(this).val()==''){
+			// reset
+			$('#searchStr').unbind("click").on('click',function(){
+				$(this).select();
+			});
+			
+			$('#searchPlaceStr').keyup(function(event){
+				var query = $("#searchPlaceStr").val();
+				if(query.length < 3)
+				{
+					$("#searchPlaceStr").removeClass('searching');
+				}
+				psClick = 0;
+				if (event.which == 13) {
+					
+					if(query==''){
 						curPos.name = user.formatted_address;
 						curPos.x = user.location.lat;
 						curPos.y = user.location.lng;
 						//curPos.z = mainConf.rangeDefault;
 						$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
-						$('#searchPlaceStr').val(curPos.name);
-						
+						$('#searchPlaceStr').val(curPos.name);	
+
 					}
-					$("#searchBtn").trigger('click');
-				});
-				*/
+					else
+					{
+						
+						if(query.length >= 3){
+							encodeURIComponent(query);
+							$("#searchPlaceStr").addClass('searching');
+							var addressQuery = {"address": query ,"region":"fr","language":"fr"};
+							var geocoder = new google.maps.Geocoder();
+							geocoder.geocode( addressQuery, function(results, status) {						
+							if (status == google.maps.GeocoderStatus.OK) {
+								if(results.length > 0)
+								{
+									$("#searchPlaceStr").removeClass('searching');
+									curPos.x = results[0].geometry.location.Ya;
+									curPos.y = results[0].geometry.location.Za;
+									curPos.name = results[0].formatted_address;
+									$("#searchPlaceStr").val(curPos.name);
+									$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
+									$("#searchBtn").trigger('click');
+								}
+								else
+								{
+									//$("#searchPlaceStr").removeClass('searching');
+									//alert("No Places Found...");
+								}
+							} 
+							else
+							{
+								//$("#searchPlaceStr").removeClass('searching');
+								//alert("No Places Found...");
+							}
+							});
+						}
+					}
+					$('#searchBtn').trigger('click');
+				}
+			});
+
 				
 				
 			/*slider time selector*/
@@ -284,54 +263,7 @@ mixin searchFormUnified(page)
 			});
 
 			
-			/*type selector*/
-			/*
-			$('#newsfeedMenu span.btn').unbind("click").on('click',function(){
-				var curtype = $(this).attr('type');
-				if(curtype == 5){
-					$('#newsfeedMenu span.btn').removeClass('active');
-					$(this).addClass('active');
-					yakType = [5];
-				}else{
-					if($("#btnMesalertes").hasClass('active'))
-						$("#btnMesalertes").removeClass('active');
-					else
-						$("#btnMesalertes").addClass('active');
-					$('#newsfeedMenu span.btn[type="5"]').removeClass('active');
-					$('#newsfeedMenu span.btn[type="3"]').removeClass('active');
-					yakType.cleanArrayByName(3);	
-					yakType.cleanArrayByName(5);	
-					if($(this).hasClass('active')){
-						$(this).removeClass('active');
-						yakType.cleanArrayByName(curtype);	
-					}
-					else{
-						$(this).addClass('active');
-						yakType.push(curtype);
-					}
-
-					if(yakType.length == 0)
-						yakType = [];
-					else
-					{
-						//for testing reasons only on discussions
-						if($(this).hasClass('active')){
-							yakType = ["1", "2", "4"];
-						}
-						else
-						{
-							yakType = ["1", "2"];	
-						}
-						
-
-					}
-				}
-				$.cookie("yaktype", yakType.join(','),{ expires: 10000, path : '/' });
-
-				getAndPrintInfo();
-			});
-			*/
-
+			
 			// autocomplete Place
 			$('#searchPlaceStr').typeahead({
 				minLength : 3,							
@@ -402,41 +334,7 @@ mixin searchFormUnified(page)
 					}
 				});
 			
-				//console.log($('#searchStr')["__proto__"]["typeahead"]);
-
-			/*
-			$("#filterTypes").on('click',function(){
-				if($("#typeContainer").css("display") == "none")
-				{
-					$(this).find("span").html("Fermer");
-					$(this).find(".icon-chevron-right").hide();
-					$(this).find(".icon-chevron-left").show();
-					$("#typeContainer").show();
-				}
-				else
-				{
-					$(this).find("span").html("Filter");
-					$(this).find(".icon-chevron-left").hide();
-					$(this).find(".icon-chevron-right").show();
-					$("#typeContainer").hide();
-				}
-					
-			});
-			*/
-
-			/*
-			$("#heatModuleTrigger").on('click',function(){
-				if($("#dropdownTimeSelector").css("display") == "none")
-				{
-					$("#dropdownTimeSelector").show();
-				}
-				else
-				{
-					$("#dropdownTimeSelector").hide();
-				}
-					
-			});
-			*/
+				
 
 			$("#rangeSelectorTrigger").unbind("click").on('click',function(){
 				$("#dropdownTagSelector").hide();
@@ -471,35 +369,6 @@ mixin searchFormUnified(page)
 		});
 
 		
-
-		/*
-		function setTimeSelectorDropDown()
-		{
-			var lasttext = '';
-			var currtext = '';
-			for(i=-15; i<=100; i++)
-			{
-				lasttext = setTimeSliderText(i, 1);
-				if(currtext != lasttext)
-				{
-					$("#dropdownTimeSelector").append("<li value='" + i + "' df='" + dateFrom + "'><a>" + lasttext + "</a></li>");
-					currtext = lasttext;
-				}
-			}
-			$("#dayPrinter span").html(setTimeSliderText($.cookie("dateFrom"), 1));
-			
-			/*$("#dropdownTimeSelector li").click(function(){
-				$("#dayPrinter span").html($(this).find("a").html());
-				dateFrom = setTimeSliderText($(this).attr("value"));
-				getAndPrintInfo();
-				var Cookiedate = new Date();
-				var timeRange = 3*60*60*1000;
-				Cookiedate.setTime(Cookiedate.getTime() + (timeRange));
-				$.cookie("dateFrom", $(this).attr("value"),{ expires: Cookiedate, path : '/' });
-			});
-		}
-		*/
-
 		function setDiscussion(el){
 
 			if($(el).hasClass('active')){

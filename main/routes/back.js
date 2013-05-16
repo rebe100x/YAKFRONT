@@ -48,6 +48,49 @@ exports.static_image = function(req,res){
 }
 
 
+exports.getFileSample = function(req,res){
+	var fs = require('fs');
+	var thepath = conf.uploadsDir+'files/'+req.body.file;
+	if (fs.existsSync(thepath)) {
+		//var data = fs.readFileSync(thepath);
+		switch(req.body.type){
+			case 'CSV':
+				var csv = require('csv-stream');
+				var request = require('request');
+
+				// All of these arguments are optional.
+				var options = {
+				delimiter : ',', // default is ,
+				endLine : '\n', // default is \n,
+				escapeChar : '"', // default is an empty string
+				enclosedChar : '"' // default is an empty string
+				}
+
+				var csvStream = csv.createStream(options);
+				request(thepath).pipe(csvStream)
+				.on('error',function(err){
+				console.error(err);
+				})
+				.on('data',function(data){
+				// outputs an object containing a set of key/value pair representing a line found in the csv file.
+				console.log(data);
+				})
+				.on('column',function(key,value){
+				// outputs the column name associated with the value found
+				console.log('#' + key +' = ' + value);
+				})
+			break;
+			case 'RSS':
+			break;
+			case 'JSON':
+			break;
+		}
+		//res.writeHead(200, {'Content-Type': 'text/plain' });
+		//res.end(data, 'binary');
+	}else
+		res.json({code:400,error:'File does not exist '+req.body.file});
+	
+}
 exports.requiresLogin = function(req,res,next){
 	
 	if(req.session.user){
@@ -153,22 +196,25 @@ exports.gridFeeds = function (req, res) {
         sortDirections = req.params.sortDirection.split(',');
     }
 
+
+   
+
 	Feed.findGridFeeds(req.params.pageIndex,req.params.pageSize,
 		req.params.searchTerm,sortProperties,sortDirections,
         req.params.status,req.params.type, function (err, feed){
 
-		var data = {};
-
-        data['feed'] = feed;
-		data['pageIndex'] = req.params.pageIndex;
-		data['pageSize'] = req.params.pageSize;
-
-		Feed.countSearch(req.params.searchTerm, req.params.status,req.params.type, function (err, count){
-			data['count'] = count;
+			var data = {};
+			var feedFormated = feed.map(function(item){
+				return Feed.format(item);
+			});
+			data['feed'] = feedFormated;
+			data['pageIndex'] = req.params.pageIndex;
+			data['pageSize'] = req.params.pageSize;
+			data['count'] = feed.length;
 			res.json(data);
+			
 		});
-	});
-};
+	};
 
 exports.feed = function(req, res){
 
