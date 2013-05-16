@@ -84,6 +84,7 @@ app.post('/user/setType', back.requiresLogin, back.user_settype);
 app.get('/place/list', back.requiresLogin, back.place_list);
 app.get('/feed/list', back.requiresLogin, back.feed_list);
 app.get('/user/list',back.requiresLogin, back.user_list);
+app.get('/comment/list',back.requiresLogin, back.comment_list);
 
 app.post('/feed', back.requiresLogin, back.feed);
 app.post('/place', back.requiresLogin, back.place);
@@ -100,6 +101,7 @@ app.get('/api/zones/:x/:y', back.zones);
 app.get('/api/zones/:id', back.findZoneById);
 app.post('/api/users', back.users);
 app.get('/api/users', back.users);
+app.get('/api/comments', back.comments);
 
 app.get('/api/feed/:id', back.findFeedById);
 app.get('/api/feedExist/:name', back.findFeedByName);
@@ -108,6 +110,7 @@ app.get('/api/cats', api.cats);
 app.get('/api/tags', api.tags);
 
 app.get('/api/users', back.gridUsers);
+app.get('/api/comments', back.gridComments);
 
 app.get('/api/yakNE', api.yakNE);
 app.get('/api/places', back.places);
@@ -116,6 +119,7 @@ app.get('/api/places/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:st
 app.get('/api/places/:id', back.findPlaceById);
 
 app.get('/api/users/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status', back.gridUsers);
+app.get('/api/comments/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status', back.gridComments);
 
 app.get('/api/feeds/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status/:type', back.gridFeeds);
 app.get('/api/usersearch/:string', back.usersearch);

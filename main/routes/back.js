@@ -532,8 +532,13 @@ exports.gridPlaces = function (req, res) {
 };
 
 
-
-
+/******
+#COMMENT
+******/
+exports.comment_list = function(req, res){
+	delete req.session.message;
+	res.render('comment/index');
+};
 
 /******* 
 #USER 
@@ -642,6 +647,48 @@ exports.gridUsers = function (req, res) {
 		data['pageIndex'] = req.params.pageIndex;
 		data['pageSize'] = req.params.pageSize;
 		data['count'] = user.length;
+		res.json(data);
+ 		
+	});
+};
+
+exports.gridComments = function (req, res) {
+    var Info = db.model('Info');
+
+    var sortProperties = [];
+    if (req.params.sortBy) {
+        sortProperties = req.params.sortBy.split(',');
+    }
+
+    var sortDirections = [];
+    if (req.params.sortDirection) {
+        sortDirections = req.params.sortDirection.split(',');
+    }
+
+	Info.findGridComments(req.params.pageIndex,req.params.pageSize,
+		req.params.searchTerm,sortProperties,sortDirections,
+        req.params.status, function (err, comment){
+
+        var allComments = [];
+        var k = 0;
+        for (var i = 0; i < comment.length; i++) {
+        	var acomment = {};
+        	acomment = comment[i].yakComments;
+        	for (var j = 0; j < acomment.length; j++) {
+        		allComments[k] = acomment[j];
+        		allComments[k].info_id = comment[i]._id;
+        		allComments[k].info_title = comment[i].title;
+        		allComments[k].delete = "";
+        		k++;
+        	};
+        	
+        };
+
+		var data = {};
+        data['comment'] = allComments;
+		data['pageIndex'] = req.params.pageIndex;
+		data['pageSize'] = req.params.pageSize;
+		data['count'] = allComments.length;
 		res.json(data);
  		
 	});
