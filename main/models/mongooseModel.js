@@ -106,7 +106,7 @@ User.statics.countUserSubscribers = function (usersubs, callback) {
   return this.find({ usersubs: { $in : usersubs } },{},{sort:{pudDate:-1}}).count().exec(callback);
 }
 
-User.statics.findGridUsers = function (pageIndex, pageSize, searchTerm, sortProperties, sortDirections, status, callback) {
+User.statics.findGridUsers = function (pageIndex, pageSize, searchTerm, sortProperties, sortDirections, status, type, currUser, callback) {
 
 	var conditions = {
 		"name" : new RegExp(searchTerm, 'i')
@@ -121,12 +121,17 @@ User.statics.findGridUsers = function (pageIndex, pageSize, searchTerm, sortProp
 		sortBy[sortProperties[index]] = desc;
 	}
 
+	conditions["_id"] = { $ne: currUser };
+
 	if (status == 2) {
 		conditions["status"] = { $in: [2,10] };
 	}
 	else if (status != 4) {
 		conditions["status"] = status;
 	}
+
+	if(type != 0)
+		conditions["type"] = type;
 
 	return this.find(
 		conditions,
@@ -211,10 +216,10 @@ User.statics.formatLight = function (theuser) {
 User.statics.formatLightBack = function (theuser) {
 	if(theuser.thumb && theuser.thumb!= 'no-user.png'){
 		var thethumb = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/128_128/'+theuser.thumb;
-		var thethumbsmall = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/48_48/'+theuser.thumb;
+		var thethumbsmall = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/24_24/'+theuser.thumb;
 	}else{
 		var thethumb = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucketstatic+'/128_128/no-user.png';
-		var thethumbsmall = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucketstatic+'/48_48/no-user.png';
+		var thethumbsmall = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucketstatic+'/24_24/no-user.png';
 	}
 
 	var formattedUser = {
