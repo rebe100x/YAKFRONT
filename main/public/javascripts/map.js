@@ -516,22 +516,28 @@
 			var height = $(window).height();
 			var pos = $("#newsfeedContainer").position();
 			
-			//console.log(thebounds);
-			
+			var theboundsArray = thebounds.toUrlValue().split(','); // lat.bottomLeft, Lng.bottomLeft , Lat.topRight, Lng.topRight
+
 			//var scaleW = (parseFloat(thebounds.ea.f) - parseFloat(thebounds.ea.b)) / width ;
 			//var scaleH = (parseFloat(thebounds.ca.f) - parseFloat(thebounds.ca.b)) / height ;
 			
 			//var scaleW = (parseFloat(thebounds.ca.d) - parseFloat(thebounds.ca.b)) / width ;
 			//var scaleH = (parseFloat(thebounds.Z.d) - parseFloat(thebounds.Z.b)) / height ;
 			
-			var left = parseFloat(thebounds.ca.b); // thebounds.ea.b
-			var right = parseFloat(thebounds.ca.d); // thebounds.ea.f
-			var top = parseFloat(thebounds.Z.d); // thebounds.ca.f
-			var bottom = parseFloat(thebounds.Z.b); // thebounds.ca.b
+			//var left = parseFloat(thebounds.ca.b); // thebounds.ea.b
+			//var right = parseFloat(thebounds.ca.d); // thebounds.ea.f
+			//var top = parseFloat(thebounds.Z.d); // thebounds.ca.f
+			//var bottom = parseFloat(thebounds.Z.b); // thebounds.ca.b
+
+			var left = parseFloat(theboundsArray[1]); 
+			var right = parseFloat(theboundsArray[3]); 
+			var top = parseFloat(theboundsArray[2]);
+			var bottom = parseFloat(theboundsArray[0]); 
+
 
 			var scaleW = (right - left) / width ;
 			var scaleH = (top - bottom) / height ;
-									
+			
 
 			var feedOffsetW = pos.left * scaleW;
 			var feedOffsetH = pos.top * scaleH;
@@ -1407,7 +1413,7 @@
 			bounds = getMyBounds();
 			$.getJSON('/api/getHotTags/'+bounds.ca.b+'/'+bounds.ea.b+'/'+bounds.ca.f+'/'+bounds.ea.f+'/'+dateFrom+'/10',function(ajax) {
 				$('#dropdownTagSelector').html('');
-				if(ajax.data.tag.length > 0){
+				if(typeof ajax.data != 'undefined' && ajax.data.tag.length > 0){
 					$.each(ajax.data.tag,function(key,val){
 						$('#dropdownTagSelector').append('<li>'+val.title+'</li>');
 					});
