@@ -7,6 +7,9 @@
  * New options added by @jeremyhubble for javascript launching
  *  $('#elem').contextmenu({target:'#menu',before:function(e) { return true; } });
  *   
+ * Modified by rebe100x 17/5/2013 : 
+ * - add left click reacts as right click
+ * - unbind events
  *
  * Twitter Bootstrap (http://twitter.github.com/bootstrap).
  */
@@ -89,13 +92,13 @@
 		,listen: function () {
 			var _this = this;
 			this.$element
-					.on('contextmenu.context.data-api',  $.proxy(this.show, this));
+					.unbind('contextmenu.context.data-api').on('contextmenu.context.data-api',  $.proxy(this.show, this)).on('click.context.data-api',  $.proxy(this.show, this));
 			$('html')
-					.on('click.context.data-api', $.proxy(this.closemenu, this));
+					.unbind('click.context.data-api').on('click.context.data-api', $.proxy(this.closemenu, this));
 
 			var $target = $(this.$element.attr('data-target'));
 
-			$target.on('click.context.data-api', function (e) {
+			$target.unbind('click.context.data-api').on('click.context.data-api', function (e) {
 				_this.onItem.call(this,e,$(e.target));
 			});
 
@@ -176,7 +179,10 @@
 	 * =================================== */
 
 	$(document)
-		.on('contextmenu.context.data-api', '[data-toggle=context]', function(e) {
+		.unbind('contextmenu.context.data-api').on('contextmenu.context.data-api', '[data-toggle=context]', function(e) {
+				$(this).contextmenu('show',e);
+				e.preventDefault();
+		}).unbind('click.context.data-api').on('click.context.data-api', '[data-toggle=context]', function(e) {
 				$(this).contextmenu('show',e);
 				e.preventDefault();
 		});

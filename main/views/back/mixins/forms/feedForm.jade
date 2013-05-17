@@ -143,7 +143,7 @@ mixin feedForm()
 							span.alertText
 						div#parsingParam
 							label.rootElementGroup Root Element:
-							input.rootElementGroup#rootElement(type="text",name="rootElement",placeholder="Root du fichier RSS",,value='/rss/channel/item')	
+							input.rootElementGroup#rootElement(type="text",name="rootElement",placeholder="Root du fichier",,value='/rss/channel/item')	
 							label.lineToBeginGroup Commencer à la ligne numéro:
 							input.lineToBeginGroup#lineToBegin(type="text",name="lineToBegin",placeholder="Ligne de début du parsing",value="0")	
 							
@@ -179,19 +179,22 @@ mixin feedForm()
 				div.control-group#titleGroup
 					div.controls.row-fluid	
 						.span6
-							label Titre de l info:*
+							label Titre de l&rsquo;info:*
 							input(type='text', name='infoTitle', id='infoTitle', placeholder="Titre")
-							label Corps de l info:
+							label Corps de l&rsquo; info:
 							input(type='text', name='infoContent', id='infoContent', placeholder="Corps")
-							label Lien web vers l info:
+							label Lien web vers l&rsquo;info:*
 							input(type='text', name='infoLink', id='infoLink', placeholder="Lien web vers l'info")
-							label Tags:
-							input(type='text', name='infoTag', id='infoTag', placeholder="Tags")
+							legend Paramètres optionels:
+							label Imagette:
+							input(type='text', name='infoThumb', id='infoThumb', placeholder="Imagette")
 							label Date de publication:
 							input(type='text', name='infoPubDate', id='infoPubDate', placeholder="Date de publication")
-							label Date de l évènement:
+							label Tags:
+							input(type='text', name='infoTag', id='infoTag', placeholder="Tags")
+							label Date de l&rsquo;évènement:
 							input(type='text', name='infoEventDate', id='infoEventDate', placeholder="Date de l'évènement")
-							label Lieu:
+							label Lieu ( pour recherche sémantique de géoloc ):
 							input(type='text', name='infoPlace', id='infoPlace', placeholder="Le lieu")
 							label Adresse:
 							input(type='text', name='infoAddress', id='infoAddress', placeholder="Adresse")
@@ -199,9 +202,7 @@ mixin feedForm()
 							input(type='text', name='infoLatitude', id='infoLatitude', placeholder="Latitude")
 							label Longitude:
 							input(type='text', name='infoLongitude', id='infoLongitude', placeholder="Longitude")
-							label Imagette:
-							input(type='text', name='infoThumb', id='infoThumb', placeholder="Imagette")
-							label Catégories Yakwala:
+							label Catégories Yakwala (format: id#id#id):
 							input(type='text', name='infoCat', id='infoCat', placeholder="Catégories Yakwala")
 							label Téléphone:
 							input(type='text', name='infoTel', id='infoTel', placeholder="Téléphone")
@@ -217,10 +218,41 @@ mixin feedForm()
 							div#context-menu
 								ul.dropdown-menu(role="menu")
 									li
-										a(tabindex="-1", href="#", key='infoTitle') Action
+										a(tabindex="-1", href="#", key='infoTitle') Titre de l&rsquo;info
+									li
+										a(tabindex="-1", href="#", key='infoContent') Corps de l&rsquo; info
+									li
+										a(tabindex="-1", href="#", key='infoLink') Lien web vers l&rsquo;info
 									li.divider
 									li
-										a(tabindex="-1", href="#", key='infoContent') Action2
+										a(tabindex="-1", href="#", key='infoThumb') Imagette
+									li
+										a(tabindex="-1", href="#", key='infoPubDate') Date de publication	
+									li
+										a(tabindex="-1", href="#", key='infoTag') Tags
+									li
+										a(tabindex="-1", href="#", key='infoEventDate') Date de l&rsquo;évènement
+									li
+										a(tabindex="-1", href="#", key='infoPlace') Lieu ( pour recherche sémantique de géoloc )
+									li
+										a(tabindex="-1", href="#", key='infoAddress') Adresse
+									li
+										a(tabindex="-1", href="#", key='infoLatitude') Latitude
+									li
+										a(tabindex="-1", href="#", key='infoLongitude') Longitude
+									li
+										a(tabindex="-1", href="#", key='infoCat') Catégories Yakwala (format: id#id#id):
+									li
+										a(tabindex="-1", href="#", key='infoTel') Téléphone
+									li
+										a(tabindex="-1", href="#", key='infoTransportation') Moyen de transports
+									li
+										a(tabindex="-1", href="#", key='infoOpening') Horaires d&rsquo;ouverture
+									li
+										a(tabindex="-1", href="#", key='infoWeb') Site web
+									li
+										a(tabindex="-1", href="#", key='infoMail') Mail
+									
 
 							div#parsingEditor
 			div.modal-footer
@@ -352,29 +384,48 @@ mixin feedForm()
 						thesource = linkSource[0];	
 						isLink = 1;
 					}
-					$('#parsingEditor').html(thesource);	
+					$('#parsingEditor').html('<span class="alert alert-info"><img src ="images/loader_big.gif" /> Chargement du fichier <i>'+thesource+'</i></span>');	
 					$.post('/api/getFileSample', {file:thesource,type:$('#feedType').val(),isLink:isLink}, function(data){
-						var tableParsing = createTableParsing(data);
-						$('#parsingEditor').html(tableParsing);	
-						$('.tableParsing').contextmenu({
-							target:'#context-menu', 
-							before: function(e,element) {
-								$('#context-menu ul li a').attr('target',element.attr('key'));
-								$(this).attr('target',element.attr('key'));
-								return true;	
-							},
-							onItem: function(e, element) {
-								event.preventDefault();
-								$('#'+element.attr('key')).val('#YKL'+element.attr('target'));
-								return false;
-							}
-						})
+						console.log(data);
+						var sample = JSON.parse(data.fileSample);
+						if(typeof data != 'undefined' && data.code == 200){
+							var tableParsing = createTableParsing(sample);
+							$('#parsingEditor').html(tableParsing);	
+							$('.tableParsing').unbind('hover').hover(
+								function(){$('.col_'+$(this).attr('key')).addClass('colTableParsingOn');},
+								function(){$('.col_'+$(this).attr('key')).removeClass('colTableParsingOn');
+							});
+							$('.tableParsing').contextmenu({
+								target:'#context-menu', 
+								before: function(e,element) {
+									if($('#feedType').val() == 'CSV'){
+										var target = element.attr('num');
+									}else{
+										var target = element.attr('key');
+									}
+									$('#context-menu ul li a').attr('target',target);
+									$(this).attr('target',element.attr('key'));
+									return true;	
+								},
+								onItem: function(e, element) {
+									event.preventDefault();
+									
+									if( $('#'+element.attr('key')).val() != '')
+										$('#'+element.attr('key')).val( $('#'+element.attr('key')).val() +' #YKL'+element.attr('target'));
+									else
+										$('#'+element.attr('key')).val('#YKL'+element.attr('target'));	
+									return false;
+								}
+							})
+						}else
+							$('#parsingEditor').html('<span class="alert alert-error">Erreur : '+data.err+'</span>');	
+
 					});
 				}else
-					$('#parsingEditor').html('Veuillez définir une source ( Fichier ou Lien )');	
+					$('#parsingEditor').html('<span class="alert alert-error">Veuillez définir une source ( Fichier ou Lien )</span>');	
 			});
 
-			
+
 
 			$('#yakcat').typeahead({
 				minLength : 3,

@@ -51,48 +51,59 @@ exports.static_image = function(req,res){
 exports.getFileSample = function(req,res){
 	var output = new Array();
 	var fs = require('fs');
-	var csv = require('csv-stream');
-	var options = {delimiter : ';', endLine : '\n', escapeChar : '"', enclosedChar : '"'}
-	var csvStream = csv.createStream(options);
-	if(req.body.isLink == 1 ){
-		var request = require('request');
-		var thepath = req.body.file;
-		var data = request(thepath).pipe(csvStream);
-	}else{
-		var thepath = conf.uploadsDir+'files/'+req.body.file;
-		var data = fs.createReadStream(thepath).pipe(csvStream);
-	}
-		
 	switch(req.body.type){
 		case 'CSV':
+			var csv = require('csv-stream');
+			var options = {delimiter : ';', endLine : '\n', escapeChar : '"', enclosedChar : '"',encoding:'utf8'}
+			var csvStream = csv.createStream(options);
+			if(req.body.isLink == 1 ){
+				var request = require('request');
+				var thepath = req.body.file;
+				var data = request(thepath).pipe(csvStream);
+			}else{
+				var thepath = conf.uploadsDir+'files/'+req.body.file;
+				var data = fs.createReadStream(thepath).pipe(csvStream);
+			}
 			data.on('error',function(err){
-				console.error(err);
-				res.json({code:400,error:'File does not exist '+req.body.file});
+				res.json({code:400,error:'Erreur '+err});
 			})
 			.on('data',function(data){
-			// outputs an object containing a set of key/value pair representing a line found in the csv file.
-			//console.log(data);
-			//var sample = data.slice(0,9);
-			output.push(data);
-			console.log('---------------DATA------------------');
-			console.log(output);
-			//res.writeHead(200, {'Content-Type': 'text/plain' });
-			//res.end(JSON.stringify(sample), 'binary');
-			
-			})
-			.on('column',function(key,value){
-			console.log('---------------COLUMN------------------');
-			// outputs the column name associated with the value found
-			console.log('#' + key +' = ' + value);
+				//console.log(data);
+				output.push(data);
 			})
 			.on('end',function(){
-
-				console.log('**************end*************');
-				console.log(output);
-				res.json(JSON.stringify(output.slice(0,9)));	
+				res.json({code:200,fileSample:JSON.stringify(output.slice(0,9))});	
 			});
 		break;
 		case 'RSS':
+			var sax = require("sax");
+			var strict = true; // set to false for html-mode
+			var options = {};
+			//var parser = sax.parser(strict);
+			var xmlStream = sax.createStream(strict,options);
+			if(req.body.isLink == 1 ){
+				var request = require('request');
+				var thepath = req.body.file;
+				var data = request(thepath).pipe(xmlStream);
+			}else{
+				var thepath = conf.uploadsDir+'files/'+req.body.file;
+				var data = fs.createReadStream(thepath).pipe(xmlStream);
+			}
+			data.on("error", function (e) {
+				// unhandled errors will throw, since this is a proper node
+				// event emitter.
+				console.error("error!", e)
+				// clear the error
+				this._parser.error = null
+				this._parser.resume()
+			})
+			.on("opentag", function (node) {
+				console.log(node.name);
+				output.push(node.name);
+			})
+			.on('end',function(){
+				res.json({code:200,fileSample:JSON.stringify(output.slice(0,9))});	
+			});
 		break;
 		case 'JSON':
 		break;

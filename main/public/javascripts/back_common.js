@@ -224,25 +224,28 @@ function getErrHTML5Pos(error) {
 
 /*Creates a clickable html table from the data json*/
 function createTableParsing(data){
-	var dataObj = JSON.parse(data);
-	var table = '<table class="table table-striped table-bordered table-condensed">';
+	var dataObj = data;
+	var table = '<table class="table table-nohover table-condensed">';
 	var header = '<thead><tr>';
-	var body = '';
+	var body = '<tbody>';
+	var num = 0;
 	$.each(dataObj[0], function(key, val) {
-		header += '<td>'+key+'</td>';
+		header += '<th class="col_'+S(key).slugify()+' tableParsing"  key="'+S(key).slugify()+'" num="'+num+'">'+key+'</th>';
+		num ++;
 	}); 
 
-	header += '<tr>';
+	header += '</tr></thead>';
 
 	dataObj.forEach(function(item) {
 		body += '<tr>';	
+		num = 0;
 		$.each(item, function(key, val) {
-			body += '<td class="tableParsing" key="'+key+'">'+val+'</td>';			
+			body += '<td class="col_'+S(key).slugify()+' tableParsing" key="'+S(key).slugify()+'"" num="'+num+'">'+val+'</td>';	
+			num ++;		
 		}); 
-		body += '</tr>';
+		body += '</tr></tbody>';
 	});
 	table += header + body + '</table>';
-	console.log(table);
 	return table;
 }
 
