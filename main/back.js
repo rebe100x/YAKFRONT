@@ -115,14 +115,10 @@ app.get('/api/places', back.places);
 app.get('/api/places/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status', back.gridPlaces);
 app.get('/api/places/:id', back.findPlaceById);
 
-<<<<<<< HEAD
 app.get('/api/users/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status/:type', back.gridUsers);
-app.get('/api/illicites/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection', back.gridIllicites);
-=======
->>>>>>> c5552994600aaadaabe55867ccd573f6c3264f53
+app.get('/api/illicites/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:type', back.gridIllicites);
 
 app.get('/api/users/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status/:type',back.requiresLogin, back.gridUsers);
-app.get('/api/comments/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status',back.requiresLogin, back.gridComments);
 app.get('/api/feeds/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status/:type',back.requiresLogin, back.gridFeeds);
 
 app.get('/api/usersearch/:string', back.usersearch);

@@ -40,28 +40,20 @@ mixin list()
 								i.icon-time
 							button.btn.btn-small.supprimerPlaces(title="Supprimer les utilisateurs")
 								i.icon-ban-circle
-					select#filterStatus
-						option(value="2") En attente
-						option(value="1") Validés
-						option(value="3") Rejetés
-						option(value="4") Tous les utilisateurs
+					
 					select#filterType
 						option(value="0") Tous les types
-						option(value="1") Normal
-						option(value="2") Media
-						option(value="3") Association
-						option(value="4") Entreprise
-						option(value="5") Institution
-						option(value="10") Operator
-						option(value="11") Super Admin
+						option(value="1") Info
+						option(value="2") Commentaire
+						option(value="3") Utilisateur
 					.dateSort.datagrid-header-right
 						.input-prepend
 							span.add-on Ordonner par
 							select#sortPlaces
-								option(value="creationDate")	Date de création
-								option(value="nom") 		Nom
-								option(value="status")	Status
-								option(value="type")	Type
+								option(value="last_date_mark")	Last date marked
+								option(value="type") Type
+								option(value="content")	Contenu
+								option(value="count")	Count
 		tfoot
 			tr
 				th
@@ -118,7 +110,7 @@ mixin list()
 
 			data: function (options, callback) {
 
-				var url = '/api/comments';
+				var url = '/api/illicites';
 				var self = this;
 
 				if (!options.search) {
@@ -148,8 +140,10 @@ mixin list()
 
 				// Filter by status
 				var status = $('#filterStatus :selected').val();
-				url += '/' + status;
-
+				//url += '/' + status;
+				// Filter by type
+				var type = $('#filterType :selected').val();
+				url += '/' + type;
 				// Optional filters: Yakcats, Users
 				//  - Passed as query to allow for null
 				var queryChar = '?';
@@ -169,7 +163,7 @@ mixin list()
 					}
 
 					// Prepare data to return to Datagrid
-					var data = response.comment;
+					var data = response.illicites;
 					var count = response.count;
 					var startIndex = (response.pageIndex - 1) * response.pageSize;
 					var endIndex = parseInt(startIndex) + parseInt(response.pageSize);
@@ -195,18 +189,23 @@ mixin list()
 				},
 				
 				{
-					property: 'info_title',
-					label: 'Info',
+					property: 'content',
+					label: 'Contenu',
 					sortable: true
 				},
 				{
-					property: 'username',
-					label: 'User',
+					property: 'content_type',
+					label: 'Type',
 					sortable: true
 				},
 				{
-					property: 'date',
-					label: 'Comment date',
+					property: 'last_date_mark',
+					label: 'Last Date Marked',
+					sortable: true
+				},
+				{
+					property: 'count',
+					label: 'Count',
 					sortable: true
 				},
 				{
@@ -219,12 +218,39 @@ mixin list()
 					$.each(items, function (index, item) {
 						item.checked = makeCheckBox(item);
 						item.delete = makeDeleteOption(item);
-						item.date = formatDate(item.date);
+						item.last_date_mark = formatDate(item.last_date_mark);
+						item.content_type = makeContentType(item.content_type);
 					});
 				}
 			})
 		});
 
+		function makeContentType(type)
+		{
+			switch(type)
+			{
+				case 1 : 
+				{
+					return "Info";
+					break;
+				}
+				case 2 : 
+				{
+					return "Commentaire";
+					break;
+				}
+				case 3 : 
+				{
+					return "Utilisateur";
+					break;
+				}
+				default :
+				{
+					return "";
+					break;
+				}
+			}
+		}
 		function formatOrigin(item) {
 			if (item.origin)
 				return item.origin
@@ -537,7 +563,9 @@ mixin list()
 			if ($(this).prop('checked') == false)
 				$("#selectAllPlaces").prop('checked', false);
 		});
-
+		$('#filterType').live('change', function() {
+			refreshDatagridAndMenu();
+		});
 		$("#selectAllPlaces").change(function() {
 			$(".selectYakPlace").prop('checked', $(this).prop('checked'));
 		});

@@ -390,10 +390,10 @@ contenuIllicite.statics.findByUserInfoType = function (content_id, content_type,
  	return this.findOne({'content_id': content_id, 'content_type' : content_type}, callback);
 }
 
-contenuIllicite.statics.findGridIllicites = function (pageIndex, pageSize, searchTerm, sortProperties, sortDirections, callback) {
+contenuIllicite.statics.findGridIllicites = function (pageIndex, pageSize, searchTerm, sortProperties, sortDirections, type, callback) {
 
 	var conditions = {
-		/*"name" : new RegExp(searchTerm, 'i')*/
+		"content" : new RegExp(searchTerm, 'i')
 	};
 
 	var sortBy = {};
@@ -412,8 +412,11 @@ contenuIllicite.statics.findGridIllicites = function (pageIndex, pageSize, searc
 		conditions["status"] = status;
 	}*/
 
+	if(type != 0)
+		conditions["content_type"] = type;
+
 	return this.find(
-		{},
+		conditions,
 		'',
 		{
 			skip:

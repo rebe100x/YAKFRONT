@@ -808,7 +808,7 @@ exports.gridIllicites = function (req, res) {
     }
 
 	contenuIllicite.findGridIllicites(req.params.pageIndex,req.params.pageSize,
-		req.params.searchTerm,sortProperties,sortDirections, function (err, illicites){
+		req.params.searchTerm,sortProperties,sortDirections, req.params.type, function (err, illicites){
 
 		var data = {};
 		
