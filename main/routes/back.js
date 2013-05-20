@@ -48,6 +48,144 @@ exports.static_image = function(req,res){
 }
 
 
+exports.getFileSample = function(req,res){
+	var output = new Array();
+	var fs = require('fs');
+	switch(req.body.type){
+		case 'CSV':
+			var csv = require('csv-stream');
+			var options = {delimiter : ';', endLine : '\n', escapeChar : '"', enclosedChar : '"',encoding:'utf8'}
+			var csvStream = csv.createStream(options);
+			if(req.body.isLink == 1 ){
+				var request = require('request');
+				var thepath = req.body.file;
+				var data = request(thepath).pipe(csvStream);
+			}else{
+				var thepath = conf.uploadsDir+'files/'+req.body.file;
+				var data = fs.createReadStream(thepath).pipe(csvStream);
+			}
+			data.on('error',function(err){
+				res.json({code:400,error:'Erreur '+err});
+			})
+			.on('data',function(data){
+				//console.log(data);
+				output.push(data);
+			})
+			.on('end',function(){
+				res.json({code:200,fileSample:JSON.stringify(output.slice(0,9))});	
+			});
+		break;
+		case 'RSS':
+			// var sax = require("sax");
+			// var strict = true; // set to false for html-mode
+			// var options = {};
+			// //var parser = sax.parser(strict);
+			// var xmlKey = '';
+			// var xmlVal = '';
+			// var line = {};
+			// var xmlStream = sax.createStream(strict,options);
+			// if(req.body.isLink == 1 ){
+			// 	var request = require('request');
+			// 	var thepath = req.body.file;
+			// 	var data = request(thepath).pipe(xmlStream);
+			// }else{
+			// 	var thepath = conf.uploadsDir+'files/'+req.body.file;
+			// 	var data = fs.createReadStream(thepath).pipe(xmlStream);
+			// }
+			// data.on("error", function (e) {
+			// 	// unhandled errors will throw, since this is a proper node
+			// 	// event emitter.
+			// 	console.error("error!", e)
+			// 	// clear the error
+			// 	this._parser.error = null
+			// 	this._parser.resume()
+			// })
+			// .on("opentag", function (node) {
+				
+			// 	console.log('OPEN'+node.name);
+			// 	if(node.name == 'item'){
+			// 		output.push(line);
+			// 		line = new Array();
+			// 	}else
+			// 		xmlKey = node.name
+			// })
+			// .on("text",function (t) {
+			// 	xmlVal = t;
+			// })
+			// .on("closetag",function(tag){
+			// 	console.log('CLOSE'+xmlKey);
+			// 	if(xmlKey != 'item'){
+			// 		line[xmlKey]=xmlVal;
+			// 	}
+					
+			// })
+			// .on('end',function(){
+			// 	res.json({code:200,fileSample:JSON.stringify(output.slice(0,9))});	
+			// });
+			
+			var itemKey = '';
+			var itemVal = '';
+			var line = {};
+			var item = new Object();
+			var output = [];
+			var htmlparser = require("htmlparser2");
+			var parser = new htmlparser.Parser({
+				onopentag: function(name, attribs){
+					console.log(name);
+					if(name === "item")
+						item = new Object();
+					else
+						itemKey = name;
+				
+				},
+				ontext: function(text){
+				//var S = require('string');	
+				//itemVal = S(text).stripTags();
+				itemVal = text;
+				console.log("-->", text);
+				},
+				onclosetag: function(tagname){
+					if(tagname == "item"){
+						output.push(item);
+						console.log("---------------");
+					}else
+						item[itemKey] = itemVal;
+				}
+			});
+
+			if(req.body.isLink == 1 ){
+				var request = require('request');
+				var thepath = req.body.file;
+				var data = request(thepath,function(error, response, data){
+					parser.write(data.toString('utf8'));
+					parser.end();
+					res.json({code:200,fileSample:JSON.stringify(output.slice(0,9))});
+				});
+			}else{
+				var thepath = conf.uploadsDir+'files/'+req.body.file;
+				var data = fs.createReadStream(thepath);
+				data.setEncoding('utf8');
+				data.on('data',function(data){
+					parser.write(data.toString('utf8'));
+					parser.end();
+					res.json({code:200,fileSample:JSON.stringify(output.slice(0,9))});
+				});	
+			}
+
+
+			//parser.write(data.toString('utf8'));
+			//parser.end();
+			
+					
+				
+			
+		break;
+		case 'JSON':
+		break;
+	}
+	
+	
+}
 exports.requiresLogin = function(req,res,next){
 	
 	if(req.session.user){
@@ -153,22 +291,26 @@ exports.gridFeeds = function (req, res) {
         sortDirections = req.params.sortDirection.split(',');
     }
 
+   
+
 	Feed.findGridFeeds(req.params.pageIndex,req.params.pageSize,
 		req.params.searchTerm,sortProperties,sortDirections,
         req.params.status,req.params.type, function (err, feed){
 
-		var data = {};
-
-        data['feed'] = feed;
-		data['pageIndex'] = req.params.pageIndex;
-		data['pageSize'] = req.params.pageSize;
-
-		Feed.countSearch(req.params.searchTerm, req.params.status,req.params.type, function (err, count){
-			data['count'] = count;
+			var data = {};
+			var feedFormated = feed.map(function(item){
+				return Feed.format(item);
+			});
+			console.log(feedFormated[0].thumb);
+			console.log(feedFormated[0].thumbSmall);
+			data['feed'] = feedFormated;
+			data['pageIndex'] = req.params.pageIndex;
+			data['pageSize'] = req.params.pageSize;
+			data['count'] = feed.length;
 			res.json(data);
+			
 		});
-	});
-};
+	};
 
 exports.feed = function(req, res){
 
