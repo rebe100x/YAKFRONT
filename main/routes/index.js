@@ -1420,6 +1420,7 @@ exports.setSpams = function(req, res){
 	aspamAlert.content_id = req.body.content_id;
 	aspamAlert.user_id = req.session.user;
 	aspamAlert.content_type = req.body.content_type;
+	aspamAlert.content = req.body.content;
 
 	if(req.session.user){
 			contenuIllicite.findByUserInfoType(req.body.content_id, req.body.content_type, function (err, thealert){

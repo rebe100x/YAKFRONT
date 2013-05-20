@@ -1277,7 +1277,7 @@ function setSpamSystem(item){
 
 		item.click(function(){
 			
-				$.post('/setSpams', {content_id : $(this).attr("rel"), content_type : 1} , function(res){
+				$.post('/setSpams', {content_id : $(this).attr("rel"), content_type : 1, content: $(this).parent().parent().find(".itemTitle").html()} , function(res){
 						if (res != "0")
 						{
 							item.html("Vous avez déjà signalé cette info");

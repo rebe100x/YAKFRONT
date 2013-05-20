@@ -535,9 +535,9 @@ exports.gridPlaces = function (req, res) {
 /******
 #COMMENT
 ******/
-exports.comment_list = function(req, res){
+exports.illicites = function(req, res){
 	delete req.session.message;
-	res.render('comment/index');
+	res.render('illicites/index');
 };
 
 /******* 
@@ -652,8 +652,8 @@ exports.gridUsers = function (req, res) {
 	});
 };
 
-exports.gridComments = function (req, res) {
-    var Info = db.model('Info');
+exports.gridIllicites = function (req, res) {
+    var contenuIllicite = db.model('contenuIllicite');
 
     var sortProperties = [];
     if (req.params.sortBy) {
@@ -665,30 +665,15 @@ exports.gridComments = function (req, res) {
         sortDirections = req.params.sortDirection.split(',');
     }
 
-	Info.findGridComments(req.params.pageIndex,req.params.pageSize,
-		req.params.searchTerm,sortProperties,sortDirections,
-        req.params.status, function (err, comment){
-
-        var allComments = [];
-        var k = 0;
-        for (var i = 0; i < comment.length; i++) {
-        	var acomment = {};
-        	acomment = comment[i].yakComments;
-        	for (var j = 0; j < acomment.length; j++) {
-        		allComments[k] = acomment[j];
-        		allComments[k].info_id = comment[i]._id;
-        		allComments[k].info_title = comment[i].title;
-        		allComments[k].delete = "";
-        		k++;
-        	};
-        	
-        };
+	contenuIllicite.findGridIllicites(req.params.pageIndex,req.params.pageSize,
+		req.params.searchTerm,sortProperties,sortDirections, function (err, illicites){
 
 		var data = {};
-        data['comment'] = allComments;
+		
+        data['illicites'] = illicites;
 		data['pageIndex'] = req.params.pageIndex;
 		data['pageSize'] = req.params.pageSize;
-		data['count'] = allComments.length;
+		data['count'] = illicites.length;
 		res.json(data);
  		
 	});
