@@ -656,13 +656,95 @@ exports.gridPlaces = function (req, res) {
 };
 
 
+/************
+#categories
+************/
+
+exports.categories = function(req, res){
+	delete req.session.message;
+	res.render('categories/index');
+};
+
+
 /******
-#COMMENT
+#illicite
 ******/
 exports.illicites = function(req, res){
 	delete req.session.message;
 	res.render('illicites/index');
 };
+
+exports.deleteIllicite = function(req, res){
+	var content_type = req.body.content_type;
+	var content_id = req.body.content_id;
+	var _id = req.body._id;
+
+	switch(content_type){
+		case "1": {
+			var Info = db.model("Info");
+			Info.find({_id:content_id}).remove(function(err){
+				if(!err)
+				{
+					var Illicite = db.model("contenuIllicite");
+					Illicite.find({_id : _id}).remove(function(err){
+						if(!err)
+							res.json({meta:{code:200}});
+						else
+							res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});			
+					});
+					
+				}
+					
+				else
+					res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+			});
+			break;
+		}
+		case "2": {
+			var Info = db.model("Info");
+			Info.update({_id:mongoose.Types.ObjectId(req.body.info_id)},{$inc:{commentsCount : -1},$pull:{yakComments:{_id: mongoose.Types.ObjectId(content_id)}}}, function(err,docs){
+				if(!err)
+				{
+					var Illicite = db.model("contenuIllicite");
+					Illicite.find({_id : _id}).remove(function(err){
+						if(!err)
+							res.json({meta:{code:200}});
+						else
+							res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});			
+					});
+					
+				}
+					
+				else
+					res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+			});
+			break;
+		}
+		case "3": {
+			User.update({_id: content_id},{$set:{'status':3}}, function(err){
+				if(!err)
+				{
+					var Illicite = db.model("contenuIllicite");
+					Illicite.find({_id : _id}).remove(function(err){
+						if(!err)
+							res.json({meta:{code:200}});
+						else
+							res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});			
+					});
+					
+				}
+					
+				else
+					res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+			});
+			break;
+		}
+		default:{
+			res.send("none");
+			break;
+		}
+	}
+}
 
 /******* 
 #USER 
@@ -798,6 +880,44 @@ exports.gridIllicites = function (req, res) {
 		data['pageIndex'] = req.params.pageIndex;
 		data['pageSize'] = req.params.pageSize;
 		data['count'] = illicites.length;
+		res.json(data);
+ 		
+	});
+};
+
+
+exports.yakcat_setstatus = function (req, res){
+	var Yakcat = db.model('Yakcat');
+	Yakcat.update({"_id":req.body._id},{$set:{"status":req.body.status}}, function(err){
+		if(!err)
+			res.json({meta:{code:200}});
+		else
+			res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+	});
+}
+
+exports.gridYakcats = function (req, res) {
+    var Yakcat = db.model('Yakcat');
+
+    var sortProperties = [];
+    if (req.params.sortBy) {
+        sortProperties = req.params.sortBy.split(',');
+    }
+
+    var sortDirections = [];
+    if (req.params.sortDirection) {
+        sortDirections = req.params.sortDirection.split(',');
+    }
+
+	Yakcat.findGridYakcats(req.params.pageIndex,req.params.pageSize,
+		req.params.searchTerm,sortProperties,sortDirections, req.params.status, function (err, yakcats){
+
+		var data = {};
+		
+        data['yakcats'] = yakcats;
+		data['pageIndex'] = req.params.pageIndex;
+		data['pageSize'] = req.params.pageSize;
+		data['count'] = yakcats.length;
 		res.json(data);
  		
 	});

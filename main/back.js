@@ -81,11 +81,15 @@ app.post('/user/setName', back.requiresLogin, back.user_setname);
 app.post('/user/setStatus', back.requiresLogin, back.user_setstatus);
 app.post('/user/setType', back.requiresLogin, back.user_settype);
 
+app.post('/yakcat/setStatus', back.requiresLogin, back.yakcat_setstatus);
+
 app.get('/place/list', back.requiresLogin, back.place_list);
 app.get('/feed/list', back.requiresLogin, back.feed_list);
 app.get('/user/list',back.requiresLogin, back.user_list);
 app.get('/illicites/list',back.requiresLogin, back.illicites);
+app.get('/categories/list',back.requiresLogin, back.categories);
 
+app.post('/deleteIllicite', back.requiresLogin, back.deleteIllicite);
 app.post('/feed', back.requiresLogin, back.feed);
 app.post('/place', back.requiresLogin, back.place);
 app.post('/user', back.requiresLogin, back.user);
@@ -118,6 +122,8 @@ app.get('/api/places/:id', back.findPlaceById);
 
 app.get('/api/users/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status/:type', back.gridUsers);
 app.get('/api/illicites/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:type', back.gridIllicites);
+
+app.get('/api/yakcats/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status', back.gridYakcats);
 
 app.get('/api/users/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status/:type',back.requiresLogin, back.gridUsers);
 app.get('/api/feeds/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status/:type',back.requiresLogin, back.gridFeeds);

@@ -41,19 +41,18 @@ mixin list()
 							button.btn.btn-small.supprimerPlaces(title="Supprimer les utilisateurs")
 								i.icon-ban-circle
 					
-					select#filterType
-						option(value="0") Tous les types
-						option(value="1") Info
-						option(value="2") Commentaire
-						option(value="3") Utilisateur
+					select#filterStatus
+						option(value="-1") Tous les status
+						option(value="1") Actived
+						option(value="0") Inactives
 					.dateSort.datagrid-header-right
 						.input-prepend
 							span.add-on Ordonner par
 							select#sortPlaces
-								option(value="last_date_mark")	Last date marked
-								option(value="type") Type
-								option(value="content")	Contenu
-								option(value="count")	Count
+								option(value="title")	Title
+								option(value="pathN") PathN
+								option(value="creationDate")	Creation Date
+								option(value="status")	Status
 		tfoot
 			tr
 				th
@@ -110,7 +109,7 @@ mixin list()
 
 			data: function (options, callback) {
 
-				var url = '/api/illicites';
+				var url = '/api/yakcats';
 				var self = this;
 
 				if (!options.search) {
@@ -140,9 +139,8 @@ mixin list()
 
 				// Filter by status
 				var status = $('#filterStatus :selected').val();
-				//url += '/' + status;
-				// Filter by type
-				var type = $('#filterType :selected').val();
+				url += '/' + status;
+				
 				url += '/' + type;
 				// Optional filters: Yakcats, Users
 				//  - Passed as query to allow for null
@@ -163,7 +161,7 @@ mixin list()
 					}
 
 					// Prepare data to return to Datagrid
-					var data = response.illicites;
+					var data = response.yakcats;
 					var count = response.count;
 					var startIndex = (response.pageIndex - 1) * response.pageSize;
 					var endIndex = parseInt(startIndex) + parseInt(response.pageSize);
@@ -189,37 +187,31 @@ mixin list()
 				},
 				
 				{
-					property: 'content',
-					label: 'Contenu',
+					property: 'title',
+					label: 'Title',
 					sortable: true
 				},
 				{
-					property: 'content_type',
-					label: 'Type',
+					property: 'pathN',
+					label: 'pathN',
 					sortable: true
 				},
 				{
-					property: 'last_date_mark',
-					label: 'Last Date Marked',
+					property: 'creationDate',
+					label: 'Creation Date',
 					sortable: true
 				},
 				{
-					property: 'count',
-					label: 'Count',
-					sortable: true
-				},
-				{
-					property: 'delete',
-					label: '<i class="icon-delete"></i>',
+					property: 'status',
+					label: 'Status',
 					sortable: true
 				}
 				],
 				formatter: function (items) {
 					$.each(items, function (index, item) {
 						item.checked = makeCheckBox(item);
-						item.delete = makeDeleteOption(item);
-						item.last_date_mark = formatDate(item.last_date_mark);
-						item.content_type = makeContentType(item.content_type);
+						item.creationDate = formatDate(item.creationDate);
+						item.status = makeStatus(item.status, item._id);
 						item.content = makeContent(item);
 					});
 				}
@@ -232,23 +224,18 @@ mixin list()
 			return content;
 		}
 	
-		function makeContentType(type)
+		function makeStatus(status, _id)
 		{
-			switch(type)
+			switch(status)
 			{
 				case 1 : 
 				{
-					return "Info";
+					return "<select rel='"+_id+"' onchange='setNewStatus(this)'><option value='0'>Inactive</option><option value='1' selected='selected'>Active</option></select>";
 					break;
 				}
-				case 2 : 
+				case 0 : 
 				{
-					return "Commentaire";
-					break;
-				}
-				case 3 : 
-				{
-					return "Utilisateur";
+					return "<select rel='"+_id+"' onchange='setNewStatus(this)'><option value='0' selected='selected'>Inactive</option><option value='1'>Active</option></select>";
 					break;
 				}
 				default :
@@ -318,7 +305,7 @@ mixin list()
 			var _id = $(el).attr("rel");
 			$(el).after("<span class='updateStatus'>loading...</span>");
 			$(el).attr("disabled", "disabled");
-			$.post("/user/setStatus", {status: $(el).val(), _id : $(el).attr("rel")}, function(data){
+			$.post("/yakcat/setStatus", {status: $(el).val(), _id : $(el).attr("rel")}, function(data){
 					if(data.meta.code == "200")
 					{
 						$(el).removeAttr("disabled");

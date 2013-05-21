@@ -1,14 +1,41 @@
 extends ../layout
 block content
-    include ../mixins/menu.jade
-   
-    mixin menu('dashboard')
-   
+	include ../mixins/menu.jade
 
-    div.container-fluid
-        div.row-fluid
-            div.span8
-                div#dashBoardContainer
-                    p hello
+	mixin menu('dashboard')
 
-    
+
+	div.container-fluid
+		div.row-fluid
+			div.span8
+				div#dashBoardContainer
+					div.span8
+						h2 Welcome to YAKWALA Administration
+						div.span12
+							div.span4
+								a(href="/place/list", title="Manage Places")
+									img(src="/images/back/places.jpg")
+							div.span4
+								a(href="/info/list", title="Manage Infos")
+									img(src="/images/back/news.jpg")
+							div.span4
+								a(href="/feed/list", title="Manage Feeds")
+									img(src="/images/back/feed.jpg")
+
+						div.span12
+							br
+							br
+							br
+							br
+							br
+
+						div.span12
+							div.span4
+								a(href="/illicites/list", title="Manage Illicite")
+									img(src="/images/back/spam.jpg")
+							div.span4
+								a(href="/categories/list", title="Manage Yakcats")
+									img(src="/images/back/cats.jpg")
+							div.span4
+								a(href="/user/list", title="Manage Users")
+									img(src="/images/back/user.jpg")
