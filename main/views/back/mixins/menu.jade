@@ -52,7 +52,7 @@ mixin menu(active)
 								- else
 									li
 										a(href="feed/list") Flux					
-								- if (active == 'comment')
+								- if (active == 'illicite')
 									li.active
 										a(href="/illicites/list") Illicites
 											span1#commentnumber
@@ -62,11 +62,11 @@ mixin menu(active)
 											span1#commentnumber
 								- if (active == 'yakcat')
 									li.active
-										a(href="") Catégories
+										a(href="/categories/list") Catégories
 											span1#catnumber
 								- else
 									li
-										a(href="") Catégories
+										a(href="/categories/list") Catégories
 											span1#catnumber
 								- if (active == 'user')
 									li.active

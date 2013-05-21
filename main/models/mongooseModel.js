@@ -1159,6 +1159,38 @@ Yakcat.statics.search = function(string,count,from,sensitive,callback){
 	}).exec(callback);
 }
 
+Yakcat.statics.findGridYakcats = function (pageIndex, pageSize, searchTerm, sortProperties, sortDirections, status, callback) {
+
+	var conditions = {
+		"title" : new RegExp(searchTerm, 'i')
+	};
+
+	var sortBy = {};
+
+	for (index in sortProperties) {
+		var desc = 1;
+		if (sortDirections[index] == "desc")
+			desc = -1;
+		sortBy[sortProperties[index]] = desc;
+	}
+
+	if(status != -1)
+		conditions["status"] = status;
+
+	return this.find(
+		conditions,
+		'',
+		{
+			skip:
+			(pageIndex -1)*pageSize,
+			limit:
+			pageSize,
+			sort:
+			sortBy
+		},
+		callback);
+}
+
 mongoose.model('Yakcat', Yakcat);
 
 
