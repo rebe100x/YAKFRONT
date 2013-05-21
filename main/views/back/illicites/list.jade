@@ -220,11 +220,18 @@ mixin list()
 						item.delete = makeDeleteOption(item);
 						item.last_date_mark = formatDate(item.last_date_mark);
 						item.content_type = makeContentType(item.content_type);
+						item.content = makeContent(item);
 					});
 				}
 			})
 		});
 
+	
+		function makeContent(item){
+			var content = "<label>"+item.content+"<lable>";
+			return content;
+		}
+	
 		function makeContentType(type)
 		{
 			switch(type)
@@ -270,9 +277,26 @@ mixin list()
 		}
 
 		function makeDeleteOption(item){
-			return '<i class="icon-remove" class="deleteAcomment" value="'+item._id+'"></i>';
+			var removeIcon = $("<i />");
+			removeIcon.attr("class", "icon-remove deleteAcomment");
+			removeIcon.css("cursor", "pointer");
+			removeIcon.attr("onclick", "deleteAnIllicite(this)");
+			var content = "";
+			content+="<input type='hidden' id='val_content_id' value='"+item.content_id+"' />";
+			content+="<input type='hidden' id='val_content_type' value='"+item.content_type+"' />";
+			content+="<input type='hidden' id='val_id' value='"+item._id+"' />";
+			return removeIcon[0].outerHTML + content;
 		}
 
+		function deleteAnIllicite(el)
+		{
+			var content_type = $(el).parent().find("#val_content_type").val();
+			var content_id = $(el).parent().find("#val_content_id").val();
+			var _id = $(el).parent().find("#val_id").val();
+			$.post("/deleteIllicite", {content_id: content_id, content_type: content_type, _id: _id}, function(data){
+				refreshDatagridAndMenu();
+			});
+		}
 
 		function setNewName(el, e)
 		{

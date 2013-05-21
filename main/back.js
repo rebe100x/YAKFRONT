@@ -85,7 +85,7 @@ app.get('/place/list', back.requiresLogin, back.place_list);
 app.get('/feed/list', back.requiresLogin, back.feed_list);
 app.get('/user/list',back.requiresLogin, back.user_list);
 app.get('/illicites/list',back.requiresLogin, back.illicites);
-
+app.post('/deleteIllicite', back.requiresLogin, back.deleteIllicite);
 app.post('/feed', back.requiresLogin, back.feed);
 app.post('/place', back.requiresLogin, back.place);
 app.post('/user', back.requiresLogin, back.user);
