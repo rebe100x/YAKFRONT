@@ -686,6 +686,7 @@ exports.deleteIllicite = function(req, res){
 	var content_type = req.body.content_type;
 	var content_id = req.body.content_id;
 	var _id = req.body._id;
+
 	switch(content_type){
 		case "1": {
 			var Info = db.model("Info");
@@ -708,11 +709,42 @@ exports.deleteIllicite = function(req, res){
 			break;
 		}
 		case "2": {
-			res.send("Commentaire");
+			var Info = db.model("Info");
+			Info.update({_id:mongoose.Types.ObjectId(req.body.info_id)},{$inc:{commentsCount : -1},$pull:{yakComments:{_id: mongoose.Types.ObjectId(content_id)}}}, function(err,docs){
+				if(!err)
+				{
+					var Illicite = db.model("contenuIllicite");
+					Illicite.find({_id : _id}).remove(function(err){
+						if(!err)
+							res.json({meta:{code:200}});
+						else
+							res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});			
+					});
+					
+				}
+					
+				else
+					res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+			});
 			break;
 		}
 		case "3": {
-			res.send("Utilisateur");
+			User.update({_id: content_id},{$set:{'status':3}}, function(err){
+				if(!err)
+				{
+					var Illicite = db.model("contenuIllicite");
+					Illicite.find({_id : _id}).remove(function(err){
+						if(!err)
+							res.json({meta:{code:200}});
+						else
+							res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});			
+					});
+					
+				}
+					
+				else
+					res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+			});
 			break;
 		}
 		default:{
