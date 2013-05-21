@@ -91,7 +91,12 @@ var setdelay = (function(){
 
 
 function getPlaceFromGmapResult(result){
-	
+
+	var loctmp = result.geometry.location.toString();
+	var latlng = loctmp.replace('(','').replace(')','').split(',');
+	var thelat = latlng[0];
+	var thelng = latlng[1];
+
 	var addressGmap = {
 		"street_number":""
 		,"street":""
@@ -133,12 +138,11 @@ function getPlaceFromGmapResult(result){
 		,"yakCat":["504d89f4fa9a958808000001"]
 		,"creationDate":new Date()
 		,"lastModifDate":new Date()
-		,"location":{"lng":parseFloat(result.geometry.location.Za),"lat":parseFloat(result.geometry.location.Ya)}
+		,"location":{"lng":parseFloat(result.geometry.location.ib),"lat":parseFloat(result.geometry.location.hb)}
 		,"status":2 // need validation
 		,"address": addressGmap
 		,"formatted_address":result.formatted_address
-		};
-		
+	};
 	return placeGmap;
 }	
 

@@ -518,7 +518,7 @@ function checkGravatar()
 				success: function(data){ 
 					if(typeof(data.entry != 'undefined'))
 					{
-						console.log(data);	
+						//console.log(data);	
 						if(data.entry.length > 0)
 						{
 							var gravatarImage = data.entry[0].thumbnailUrl + "?s=150";
@@ -735,7 +735,6 @@ $(document).ready(function() {
 		},
 		property: "formatted_address",
 		onselect: function(obj) {
-
 			$('#favplace,#favplace2').removeClass('searching');
 			var placeGmap = getPlaceFromGmapResult(obj);
 

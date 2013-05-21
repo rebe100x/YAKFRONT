@@ -148,6 +148,7 @@ mixin searchFormUnified(page)
 				$(this).select();
 			});
 			
+			/*
 			$('#searchPlaceStr').keyup(function(event){
 				var query = $("#searchPlaceStr").val();
 				if(query.length < 3)
@@ -173,11 +174,13 @@ mixin searchFormUnified(page)
 							encodeURIComponent(query);
 							$("#searchPlaceStr").addClass('searching');
 							var addressQuery = {"address": query ,"region":"fr","language":"fr"};
+							console.log(addressQuery);
 							var geocoder = new google.maps.Geocoder();
 							geocoder.geocode( addressQuery, function(results, status) {						
 							if (status == google.maps.GeocoderStatus.OK) {
 								if(results.length > 0)
 								{
+									console.log(results[0].toString());
 									$("#searchPlaceStr").removeClass('searching');
 									curPos.x = results[0].geometry.location.Ya;
 									curPos.y = results[0].geometry.location.Za;
@@ -202,7 +205,7 @@ mixin searchFormUnified(page)
 					}
 					$('#searchBtn').trigger('click');
 				}
-			});
+			});*/
 
 				
 				
@@ -231,7 +234,7 @@ mixin searchFormUnified(page)
 					if(typeof($(".ui-slider-handle").position()) != 'undefined')
 						{
 							var currElposition = $(".ui-slider-handle").position();	
-							console.log(currElposition);
+							//console.log(currElposition);
 							$("#blackBox").css("left", (currElposition.left - 78) + "px");
 						}
 				}
@@ -286,12 +289,16 @@ mixin searchFormUnified(page)
 					psClick = 1;
 					$("#searchPlaceStr").removeClass('searching');
 					var placeGmap = getPlaceFromGmapResult(obj);
-					$('#locationInput').val(JSON.stringify(placeGmap.location));
+
 					curPos.x = placeGmap.location.lat;
 					curPos.y = placeGmap.location.lng;
 					curPos.name = placeGmap.formatted_address;
+					var location = JSON.stringify({lat:curPos.x,lng:curPos.y});	
+					$('#locationInput').val(location);			
 					$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
-					$("#searchBtn").trigger('click');
+					changeLocation(location);
+					//$("#searchBtn").trigger('click');
+					getAndPrintInfo();
 				}
 			});
 			
