@@ -1225,11 +1225,11 @@ function deleteComment(el)
 
 function setCommentText(len,item){
 	if( len== 0)
-		item.html("Poster un commentaire");
+		item.html("<i class='commentLogo'></i>Poster un commentaire");
 	else if(len == 1)
-		item.html("Il y a 1 commentaire");
+		item.html("<i class='commentLogo'></i>Il y a 1 commentaire");
 	else
-		item.html("Il y a " + len + " commentaires");
+		item.html("<i class='commentLogo'></i>Il y a " + len + " commentaires");
 
 }
 
@@ -1238,7 +1238,7 @@ function setyakBlackListSystem(item)
 	var infoid = item.attr("rel");
     
 
-	item.html("Blacklister cette info");
+	item.html("<i class='illiciteIcon'></i>Blacklister cette info");
 	item.click(function(){
 		var login = $(this).parent().parent().find('.itemTitle').text();
 		
@@ -1272,7 +1272,7 @@ function setSpamSystem(item){
 
 	if(!isSpammed)
 	{
-		item.html("Signaler cette info");
+		item.html("<i class='signalerIcon'></i>Signaler cette info");
 
 		item.click(function(){
 			
