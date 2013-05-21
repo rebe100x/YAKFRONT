@@ -108,6 +108,11 @@ mixin feedForm()
 					.span6
 						label(for='defaultPlaceSearchName') Texte de recherche sur Google Map:
 						input(type="text", id="defaultPlaceSearchName", name="defaultPlaceSearchName", autocomplete="off", placeholder="Texte de recherche sur google map.")
+				div.controls.row-fluid	
+					.span6
+						label(for='zone') Zone:
+						select.big#zone(name='zone')
+
 		div.row-fluid
 			legend Sources des données:
 			div.control-group.clearBoth#dataSource
@@ -287,6 +292,16 @@ mixin feedForm()
 			});
 
 			$('#alertFeedType').hide();
+
+			/*Set zone select button*/
+			$.get('api/zones/all',function(data){
+				$.each(data.zone, function (key,val) {
+					$('#zone').append('<option value ="'+val.num+'">'+val.name+'</option>');
+				});	
+			});
+			
+
+			/*feedtype : CSV , RSS , JSON, YAKMADE*/
 			$('#feedType').on('change',function(){
 				switch($(this).val()){
 					case 'CSV':
@@ -566,6 +581,7 @@ mixin feedForm()
 					var latLng = new google.maps.LatLng(placeGmap.location.lat,placeGmap.location.lng);
 					map.panTo(latLng);
 					placeMarker(latLng,markerLocation);
+					reduceZoneOptions(latLng.lat(),latLng.lng(),null);
 				}
 			});
 
@@ -650,8 +666,15 @@ mixin feedForm()
 				setError('#infoTitle','Définir le champ contenant le titre de la news.');
 				setError('#parsing','Définir le champ contenant le titre de la news.');
 				err = true;
+			}
+			if($('#rootElement').val() == "" && $('#feedType').val() == 'RSS'){
+				setError('#rootElement','Pour un flux RSS, définir un élément racine');
+				err = true;
 			}	
-			
+			if($('#lineToBegin').val() == "" && $('#feedType').val() == 'CSV'){
+				setError('#lineToBegin','Pour un flux CSV, indiquez la première ligne à prendre en compte.');
+				err = true;
+			}
 			
 
 			if (err){
@@ -663,4 +686,13 @@ mixin feedForm()
 		
 		
 
-		
+		function reduceZoneOptions(lat,lng,zone){
+			$.get('api/zones/'+lat+'/'+lng,function(data){
+				$('#zone').html('');	
+				$.each(data.zones, function (key,val) {
+					$('#zone').append('<option value ="'+val.num+'">'+val.name+'</option>');
+				});
+				if(typeof zone)
+					$("#feedForm #zone").val(zone);
+			});
+		}

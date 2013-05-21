@@ -342,19 +342,21 @@ mixin list()
 					});
 					
 					$("#feedForm #defaultPrintFlag").val(feed.defaultPrintFlag);
+					
 					if(typeof feed.defaultPlaceLocation != 'undefined'){
 						var latlng = new google.maps.LatLng(feed.defaultPlaceLocation.lat, feed.defaultPlaceLocation.lng);
 						placeMarker(latlng,markerLocation);
 						map.setCenter(markerLocation.getPosition());
 						$("#feedForm #longitude").val(feed.defaultPlaceLocation.lng);
 						$("#feedForm #latitude").val(feed.defaultPlaceLocation.lat);
+						reduceZoneOptions(feed.defaultPlaceLocation.lat,feed.defaultPlaceLocation.lng,feed.zone);
+						
 					}
 
 					$('#defaultPlaceSearchName').val(feed.defaultPlaceSearchName);
 					$('#defaultPlaceName').val(feed.defaultPlaceName);
+					
 
-
-					$("#feedForm #defaultPrintFlag").val(feed.defaultPrintFlag);
 					
 					$("#feedForm #feedType").val(feed.feedType);
 					switch(feed.feedType){
@@ -424,7 +426,7 @@ mixin list()
 						$("#feedForm #infoLink").val(feed.parsingTemplate.outGoingLink);	
 						$("#feedForm #infoThumb").val(feed.parsingTemplate.thumb);	
 						$("#feedForm #infoCat").val(feed.parsingTemplate.yakCats);	
-						$("#feedForm #infoTag").val(feed.parsingTemplate.tag);	
+						$("#feedForm #infoTag").val(feed.parsingTemplate.freeTag);	
 						$("#feedForm #infoPlace").val(feed.parsingTemplate.place);	
 						$("#feedForm #infoEventDate").val(feed.parsingTemplate.eventDate);	
 						$("#feedForm #infoPubDate").val(feed.parsingTemplate.pubDate);	

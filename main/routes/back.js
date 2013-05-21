@@ -76,54 +76,8 @@ exports.getFileSample = function(req,res){
 			});
 		break;
 		case 'RSS':
-			// var sax = require("sax");
-			// var strict = true; // set to false for html-mode
-			// var options = {};
-			// //var parser = sax.parser(strict);
-			// var xmlKey = '';
-			// var xmlVal = '';
-			// var line = {};
-			// var xmlStream = sax.createStream(strict,options);
-			// if(req.body.isLink == 1 ){
-			// 	var request = require('request');
-			// 	var thepath = req.body.file;
-			// 	var data = request(thepath).pipe(xmlStream);
-			// }else{
-			// 	var thepath = conf.uploadsDir+'files/'+req.body.file;
-			// 	var data = fs.createReadStream(thepath).pipe(xmlStream);
-			// }
-			// data.on("error", function (e) {
-			// 	// unhandled errors will throw, since this is a proper node
-			// 	// event emitter.
-			// 	console.error("error!", e)
-			// 	// clear the error
-			// 	this._parser.error = null
-			// 	this._parser.resume()
-			// })
-			// .on("opentag", function (node) {
-				
-			// 	console.log('OPEN'+node.name);
-			// 	if(node.name == 'item'){
-			// 		output.push(line);
-			// 		line = new Array();
-			// 	}else
-			// 		xmlKey = node.name
-			// })
-			// .on("text",function (t) {
-			// 	xmlVal = t;
-			// })
-			// .on("closetag",function(tag){
-			// 	console.log('CLOSE'+xmlKey);
-			// 	if(xmlKey != 'item'){
-			// 		line[xmlKey]=xmlVal;
-			// 	}
-					
-			// })
-			// .on('end',function(){
-			// 	res.json({code:200,fileSample:JSON.stringify(output.slice(0,9))});	
-			// });
-			
 			var itemKey = '';
+			var oldItemKey = '';
 			var itemVal = '';
 			var line = {};
 			var item = new Object();
@@ -134,22 +88,30 @@ exports.getFileSample = function(req,res){
 					console.log(name);
 					if(name === "item")
 						item = new Object();
-					else
+					else{
+						oldItemKey = itemKey;
 						itemKey = name;
+					}
+						
 				
 				},
 				ontext: function(text){
-				//var S = require('string');	
-				//itemVal = S(text).stripTags();
-				itemVal = text;
-				console.log("-->", text);
+				var S = require('string');	
+				itemVal = S(text).stripTags().s;
+
+				console.log("-->", itemVal);
 				},
 				onclosetag: function(tagname){
 					if(tagname == "item"){
 						output.push(item);
 						console.log("---------------");
-					}else
-						item[itemKey] = itemVal;
+					}else{
+						if(oldItemKey == itemKey)
+							item[itemKey] += '#'+itemVal;
+						else
+							item[itemKey] = itemVal;
+					}
+						
 				}
 			});
 
@@ -350,6 +312,7 @@ exports.feed = function(req, res){
 	feed.linkSource = req.body.linkSource.split(',');
 	feed.persistDays = req.body.persistDays;
 	feed.description = req.body.description;
+	feed.zone = req.body.zone;
 	feed.status = parseInt(req.body.status);
 	feed.lastModifDate = now;
 
@@ -421,6 +384,25 @@ exports.feed = function(req, res){
 
 	
 	
+};
+
+/*******
+#ZONE
+********/
+exports.findAllZone = function(req, res){
+	var Zone = db.model('Zone');
+    Zone.find({},{},{sort:{name:1}},function (err, docs){
+      res.json({
+        zone: docs
+      });
+    });
+};
+
+exports.findAllZoneNear = function (req, res) {
+	var Zone = db.model('Zone');
+	Zone.findAllNear(req.params.x,req.params.y,function (err, docs){
+		res.json({zones:docs});
+	}); 
 };
 
 /******* 
