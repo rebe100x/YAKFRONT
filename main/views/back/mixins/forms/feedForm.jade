@@ -389,59 +389,69 @@ mixin feedForm()
 				$('#parsingModal .modal-body span.alertText').html('');
 				$('#parsingModal').modal('show');
 				var thesource = '';
-				if(typeof fileSource[0] != 'undefined' || typeof linkSource[0] != 'undefined'){
-					if(typeof fileSource[0] != 'undefined'){
-						thesource = fileSource[0];
-						isLink = 0;
-					}
-						
-					if(typeof linkSource[0] != 'undefined'){
-						thesource = linkSource[0];	
-						isLink = 1;
-					}
-					$('#parsingEditor').html('<span class="alert alert-info"><img src ="images/loader_big.gif" /> Chargement du fichier <i>'+thesource+'</i></span>');	
-					if($('#feedType').val() == 'CSV')
-						var param = $('#lineToBegin').val();
-					if($('#feedType').val() == 'RSS' || $('#feedType').val() == 'JSON')
-						var param = $('#rootElement').val();
-					$.post('/api/getFileSample', {file:thesource,type:$('#feedType').val(),isLink:isLink,param:param}, function(data){
-						console.log(data);
-						var sample = JSON.parse(data.fileSample);
-						if(typeof data != 'undefined' && data.code == 200){
-							var tableParsing = createTableParsing(sample);
-							$('#parsingEditor').html(tableParsing);	
-							$('.tableParsing').unbind('hover').hover(
-								function(){$('.col_'+$(this).attr('key')).addClass('colTableParsingOn');},
-								function(){$('.col_'+$(this).attr('key')).removeClass('colTableParsingOn');
-							});
-							$('.tableParsing').contextmenu({
-								target:'#context-menu', 
-								before: function(e,element) {
-									if($('#feedType').val() == 'CSV'){
-										var target = element.attr('num');
-									}else{
-										var target = element.attr('key');
+				
+					if( !( ($('#feedType').val() == 'CSV' && $('#lineToBegin').val() == '' )  ||  ( ($('#feedType').val() == 'RSS' || $('#feedType').val() == 'JSON') && $('#rootElement').val() == '' ) ) ){
+					if(typeof fileSource[0] != 'undefined' || typeof linkSource[0] != 'undefined'){
+						if(typeof fileSource[0] != 'undefined'){
+							thesource = fileSource[0];
+							isLink = 0;
+						}
+							
+						if(typeof linkSource[0] != 'undefined'){
+							thesource = linkSource[0];	
+							isLink = 1;
+						}
+						$('#parsingEditor').html('<span class="alert alert-info"><img src ="images/loader_big.gif" /> Chargement du fichier <i>'+thesource+'</i></span>');	
+						if($('#feedType').val() == 'CSV')
+							var param = $('#lineToBegin').val();
+						if($('#feedType').val() == 'RSS' || $('#feedType').val() == 'JSON')
+							var param = $('#rootElement').val();
+						$.post('/api/getFileSample', {file:thesource,type:$('#feedType').val(),isLink:isLink,param:param}, function(data){
+							console.log(data);
+							var sample = JSON.parse(data.fileSample);
+							if(typeof data != 'undefined' && data.code == 200){
+								var tableParsing = createTableParsing(sample);
+								$('#parsingEditor').html(tableParsing);	
+								$('.tableParsing').unbind('hover').hover(
+									function(){$('.col_'+$(this).attr('key')).addClass('colTableParsingOn');},
+									function(){$('.col_'+$(this).attr('key')).removeClass('colTableParsingOn');
+								});
+								$('.tableParsing').contextmenu({
+									target:'#context-menu', 
+									before: function(e,element) {
+										if($('#feedType').val() == 'CSV'){
+											var target = element.attr('num');
+										}else{
+											var target = element.attr('key');
+										}
+										$('#context-menu ul li a').attr('target',target);
+										$(this).attr('target',element.attr('key'));
+										return true;	
+									},
+									onItem: function(e, element) {
+										event.preventDefault();
+										
+										if( $('#'+element.attr('key')).val() != '')
+											$('#'+element.attr('key')).val( $('#'+element.attr('key')).val() +' #YKL'+element.attr('target'));
+										else
+											$('#'+element.attr('key')).val('#YKL'+element.attr('target'));	
+										return false;
 									}
-									$('#context-menu ul li a').attr('target',target);
-									$(this).attr('target',element.attr('key'));
-									return true;	
-								},
-								onItem: function(e, element) {
-									event.preventDefault();
-									
-									if( $('#'+element.attr('key')).val() != '')
-										$('#'+element.attr('key')).val( $('#'+element.attr('key')).val() +' #YKL'+element.attr('target'));
-									else
-										$('#'+element.attr('key')).val('#YKL'+element.attr('target'));	
-									return false;
-								}
-							})
-						}else
-							$('#parsingEditor').html('<span class="alert alert-error">Erreur : '+data.err+'</span>');	
+								})
+							}else
+								$('#parsingEditor').html('<span class="alert alert-error">Erreur : '+data.err+'</span>');	
 
-					});
-				}else
-					$('#parsingEditor').html('<span class="alert alert-error">Veuillez définir une source ( Fichier ou Lien )</span>');	
+						});
+					}else{
+						$('#parsingEditor').html('<span class="alert alert-error">Veuillez définir une source ( Fichier ou Lien )</span>');	
+					}
+				}else{
+					if($('#feedType').val() == 'CSV')
+						$('#parsingEditor').html('<span class="alert alert-error">Veuillez définir une linge de début.</span>');		
+					if($('#feedType').val() == 'RSS' || $('#feedType').val() == 'JSON')
+						$('#parsingEditor').html('<span class="alert alert-error">Veuillez définir un élément racine.</span>');		
+				}	
+					
 			});
 
 

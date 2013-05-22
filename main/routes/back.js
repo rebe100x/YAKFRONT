@@ -75,7 +75,7 @@ exports.getFileSample = function(req,res){
 				
 			})
 			.on('end',function(){
-				res.json({code:200,fileSample:JSON.stringify(output.slice(0,9))});	
+				res.json({code:200,fileSample:JSON.stringify(output.slice(0,4))});	
 			});
 		break;
 		case 'RSS':
@@ -134,7 +134,7 @@ exports.getFileSample = function(req,res){
 				var data = request(thepath,function(error, response, data){
 					parser.write(data.toString('utf8'));
 					parser.end();
-					res.json({code:200,fileSample:JSON.stringify(output.slice(0,9))});
+					res.json({code:200,fileSample:JSON.stringify(output.slice(0,4))});
 				});
 			}else{
 				var thepath = conf.uploadsDir+'files/'+req.body.file;
@@ -143,7 +143,7 @@ exports.getFileSample = function(req,res){
 				data.on('data',function(data){
 					parser.write(data.toString('utf8'));
 					parser.end();
-					res.json({code:200,fileSample:JSON.stringify(output.slice(0,9))});
+					res.json({code:200,fileSample:JSON.stringify(output.slice(0,4))});
 				});	
 			}
 
@@ -159,7 +159,7 @@ exports.getFileSample = function(req,res){
 					dataObj[req.body.param].forEach(function(item){
 						output.push(item);
 					});
-					res.json({code:200,fileSample:JSON.stringify(output.slice(0,9))});
+					res.json({code:200,fileSample:JSON.stringify(output.slice(0,4))});
 				});
 			}else{
 				var thepath = conf.uploadsDir+'files/'+req.body.file;
@@ -170,7 +170,7 @@ exports.getFileSample = function(req,res){
 					dataObj[req.body.param].forEach(function(item){
 						output.push(item);
 					});
-					res.json({code:200,fileSample:JSON.stringify(output.slice(0,9))});
+					res.json({code:200,fileSample:JSON.stringify(output.slice(0,4))});
 				});	
 			}
 
