@@ -1263,6 +1263,7 @@
 			yakComments.attr("rel", val._id);
 			setCommentText(val.yakComments.length,yakComments);
 			
+			
 
 			yakComments.unbind("click").on('click',function(){
 				if ($(this).parent().find(".commentBox").length > 0)
@@ -1272,6 +1273,7 @@
 					
 				var currEleComment = $(this);
 				var divComment = $("<div />");
+
 				divComment.attr("class", "commentBox");
 				$(this).append('<img class="loadingMore" src="images/loader_big.gif">');
 				
@@ -1333,7 +1335,7 @@
 		
 			});
 
-			var thumbsUp = "<i class='icon-thumbs-up'></i>&nbsp;";
+			var thumbsUp = "<span class='btn newYaklike'>Like</span>&nbsp;";
 			var thumbsDown = "<i class='icon-thumbs-down'></i>";
 			if($.inArray(user._id, val.yaklikeUsersIds) > -1)
 			{
@@ -1384,12 +1386,13 @@
 			more.html(" plus de détails...");
 			
 			
-			content.append("<div class='shareMe' userid='"+user._id+"'><i style='background: none' class='icon-share' title=''><img src='/images/ftg.png' class='ftgIcon' /> </i></div>");
+			content.append("<div class='shareMe' userid='"+user._id+"'><i style='background: none' class='icon-share' title=''><div class='ftgIcon'></div></i></div>");
 			
 			if(typeof(val.outGoingLink) != 'undefined')
 				content.find(".theContent").append(more);
 			item.append(content);
 			item.append(yakLikes);
+
 			item.append(yakComments);
 
 			if(val.origin.indexOf('@') == 0)
