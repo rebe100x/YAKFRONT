@@ -230,7 +230,7 @@ function createTableParsing(data){
 	var body = '<tbody>';
 	var num = 0;
 	$.each(dataObj[0], function(key, val) {
-		header += '<th class="col_'+S(key).slugify()+' tableParsing"  key="'+S(key).slugify()+'" num="'+num+'">'+key+'</th>';
+		header += '<th class="col_'+S(key).slugify()+' tableParsing"  key="'+key+'" num="'+num+'">'+key+'</th>';
 		num ++;
 	}); 
 
@@ -240,7 +240,7 @@ function createTableParsing(data){
 		body += '<tr>';	
 		num = 0;
 		$.each(item, function(key, val) {
-			body += '<td class="col_'+S(key).slugify()+' tableParsing" key="'+S(key).slugify()+'"" num="'+num+'">'+val+'</td>';	
+			body += '<td class="col_'+S(key).slugify()+' tableParsing" key="'+key+'"" num="'+num+'">'+val+'</td>';	
 			num ++;		
 		}); 
 		body += '</tr></tbody>';

@@ -40,6 +40,7 @@ table.table-nohover tbody tr td:hover,  table.table-nohover thead tr th:hover {b
 
 /*FEED FORM*/
 .colTableParsingOn{background-color:#f89406;color:#FFF;}
+#parsingEditor{font-size:10px;}
 
 /*FORMS*/
 legend.mainlegend{color:#d51820;font-weight:bold;border-bottom:0px;}

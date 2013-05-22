@@ -85,6 +85,7 @@ exports.getFileSample = function(req,res){
 			var line = {};
 			var item = new Object();
 			var output = [];
+			var attribute = [];
 			var htmlparser = require("htmlparser2");
 			var parser = new htmlparser.Parser({
 				onopentag: function(name, attribs){
@@ -99,14 +100,30 @@ exports.getFileSample = function(req,res){
 				var S = require('string');	
 				itemVal = S(text).stripTags().s;
 				},
+				onattribute: function(attr,val){
+				console.log(oldItemKey+' '+itemKey+' '+attr+' '+val);
+					if(val != ''){
+						attribute.push({attr:attr,val:val});
+					}
+						
+				},
 				onclosetag: function(tagname){
-					if(tagname == req.body.param){
+					var itemToLoopOnArray = req.body.param.split('/');
+					var itemToLoopOn = itemToLoopOnArray[itemToLoopOnArray.length-1];
+					if(tagname == itemToLoopOn){
 						output.push(item);
 					}else{
 						if(oldItemKey == itemKey)
 							item[itemKey] += '#'+itemVal;
 						else
 							item[itemKey] = itemVal;
+						if(attribute.length>0){
+							attribute.forEach(function(obj){
+								item[itemKey+'->'+obj['attr']] = obj['val'];
+							});
+							attribute = [];
+						}
+							
 					}
 				}
 			});
@@ -150,7 +167,9 @@ exports.getFileSample = function(req,res){
 				data.setEncoding('utf8');
 				data.on('data',function(data){
 					var dataObj = JSON.parse(data.toString('utf8'));
-
+					dataObj[req.body.param].forEach(function(item){
+						output.push(item);
+					});
 					res.json({code:200,fileSample:JSON.stringify(output.slice(0,9))});
 				});	
 			}
