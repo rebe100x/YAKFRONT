@@ -56,6 +56,7 @@ exports.getFileSample = function(req,res){
 			var csv = require('csv-stream');
 			var options = {delimiter : ';', endLine : '\n', escapeChar : '"', enclosedChar : '"',encoding:'utf8'}
 			var csvStream = csv.createStream(options);
+			var line = 1;
 			if(req.body.isLink == 1 ){
 				var request = require('request');
 				var thepath = req.body.file;
@@ -68,8 +69,10 @@ exports.getFileSample = function(req,res){
 				res.json({code:400,error:'Erreur '+err});
 			})
 			.on('data',function(data){
-				//console.log(data);
-				output.push(data);
+				if(line >= req.body.param)
+					output.push(data);
+				line ++;
+				
 			})
 			.on('end',function(){
 				res.json({code:200,fileSample:JSON.stringify(output.slice(0,9))});	
@@ -85,33 +88,26 @@ exports.getFileSample = function(req,res){
 			var htmlparser = require("htmlparser2");
 			var parser = new htmlparser.Parser({
 				onopentag: function(name, attribs){
-					console.log(name);
 					if(name === "item")
 						item = new Object();
 					else{
 						oldItemKey = itemKey;
 						itemKey = name;
 					}
-						
-				
 				},
 				ontext: function(text){
 				var S = require('string');	
 				itemVal = S(text).stripTags().s;
-
-				console.log("-->", itemVal);
 				},
 				onclosetag: function(tagname){
-					if(tagname == "item"){
+					if(tagname == req.body.param){
 						output.push(item);
-						console.log("---------------");
 					}else{
 						if(oldItemKey == itemKey)
 							item[itemKey] += '#'+itemVal;
 						else
 							item[itemKey] = itemVal;
 					}
-						
 				}
 			});
 
@@ -134,15 +130,31 @@ exports.getFileSample = function(req,res){
 				});	
 			}
 
-
-			//parser.write(data.toString('utf8'));
-			//parser.end();
-			
-					
-				
+	
 			
 		break;
 		case 'JSON':
+			if(req.body.isLink == 1 ){
+				var request = require('request');
+				var thepath = req.body.file;
+				var data = request(thepath,function(error, response, data){
+					var dataObj = JSON.parse(data.toString('utf8'));
+					dataObj[req.body.param].forEach(function(item){
+						output.push(item);
+					});
+					res.json({code:200,fileSample:JSON.stringify(output.slice(0,9))});
+				});
+			}else{
+				var thepath = conf.uploadsDir+'files/'+req.body.file;
+				var data = fs.createReadStream(thepath);
+				data.setEncoding('utf8');
+				data.on('data',function(data){
+					var dataObj = JSON.parse(data.toString('utf8'));
+
+					res.json({code:200,fileSample:JSON.stringify(output.slice(0,9))});
+				});	
+			}
+
 		break;
 	}
 	
@@ -293,12 +305,16 @@ exports.feed = function(req, res){
 		feed.linkSource = req.body.source;
 	else if(req.body.linkSource != '')
 		feed.linkSource = req.body.linkSource;
+	
 	feed.yakCatId = req.body.yakCatIdsHidden.split(',');
 	feed.yakCatName = req.body.yakCatNamesHidden.split(',');
 	if(req.body.tagsHidden == '' && req.body.freetag != '')
 		feed.tag = req.body.freetag.split(',');
 	else if(req.body.tagsHidden != '')		
 		feed.tag = req.body.tagsHidden.split(',');
+	else
+		feed.tag = [];
+
 	feed.defaultPlaceLocation = {lng:parseFloat(req.body.longitude),lat : parseFloat(req.body.latitude)};
 	feed.defaultPlaceName = req.body.defaultPlaceName;
 	feed.defaultPlaceSearchName = req.body.defaultPlaceSearchName;

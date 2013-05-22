@@ -151,7 +151,7 @@ mixin feedForm()
 							input.rootElementGroup#rootElement(type="text",name="rootElement",placeholder="Root du fichier",,value='/rss/channel/item')	
 							label.lineToBeginGroup Commencer à la ligne numéro:
 							input.lineToBeginGroup#lineToBegin(type="text",name="lineToBegin",placeholder="Ligne de début du parsing",value="0")	
-							
+
 					.span6
 						label &nbsp;
 						button.btn.btn-primary.btn-warning(type='button', name='parsing', id='parsing') Définir le parsing
@@ -400,7 +400,11 @@ mixin feedForm()
 						isLink = 1;
 					}
 					$('#parsingEditor').html('<span class="alert alert-info"><img src ="images/loader_big.gif" /> Chargement du fichier <i>'+thesource+'</i></span>');	
-					$.post('/api/getFileSample', {file:thesource,type:$('#feedType').val(),isLink:isLink}, function(data){
+					if($('#feedType').val() == 'CSV')
+						var param = $('#lineToBegin').val();
+					if($('#feedType').val() == 'RSS' || $('#feedType').val() == 'JSON')
+						var param = $('#rootElement').val();
+					$.post('/api/getFileSample', {file:thesource,type:$('#feedType').val(),isLink:isLink,param:param}, function(data){
 						console.log(data);
 						var sample = JSON.parse(data.fileSample);
 						if(typeof data != 'undefined' && data.code == 200){
@@ -473,13 +477,15 @@ mixin feedForm()
 			
 			$('#btn-freetag-adder').unbind('click').on('click',function(event){
 				event.preventDefault();
-				var tags = $('#freetag').val().split(',');
-				for(i = 0; i< tags.length;i++){
-					$("#pillFreetag ul").append("<li class='freetag-val' data-value='"+tags[i].trim()+"'>"+tags[i].trim()+"</li>");
-					freeTags.push(tags[i].trim());
+				if($('#freetag').val() != ''){
+					var tags = $('#freetag').val().split(',');
+					for(i = 0; i< tags.length;i++){
+						$("#pillFreetag ul").append("<li class='freetag-val' data-value='"+tags[i].trim()+"'>"+tags[i].trim()+"</li>");
+						freeTags.push(tags[i].trim());
+					}
+					$('#tagsHidden').val(freeTags.join(','));
+					$('#freetag').val('').focus();
 				}
-				$('#tagsHidden').val(freeTags.join(','));
-				$('#freetag').val('').focus();
 				return false;
 			});	
 
@@ -510,7 +516,11 @@ mixin feedForm()
 
 			$('#btn-source-adder').unbind('click').on('click',function(){
 				$("#pillSourceLink").show();
-				$("#pillSourceLink ul").append("<li class='source-val status-warning' data-value='"+$('#source').val()+"'>"+$('#source').val()+"</li>");
+				if($('#source').val().length > 40)
+					var linkText = $('#source').val().substring(0,40)+'...';
+				else
+					var linkText = $('#source').val();
+				$("#pillSourceLink ul").append("<li class='source-val status-warning' data-value='"+$('#source').val()+"'>"+linkText+"</li>");
 				$('#pillSourceLink').val('').focus();
 				linkSource.push($('#source').val());
 				$("#linkSource").val(linkSource.join(','));

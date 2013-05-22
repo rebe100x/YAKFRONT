@@ -328,7 +328,7 @@ mixin list()
 					if(feed.yakCatId.length > 0)
 						feed.yakCatId.forEach(function(cat){
 							$.get('/api/cats/'+cat,function(data){
-								$("#pillYakcat ul").append("<li class='yakcat-val status-important' data-value='"+data.cats._id+"'>"+data.cats.title+"</li>");
+								$("#pillYakcat ul").append("<li class='yakcat-val status-important' data-id='"+data.cats._id+"'>"+data.cats.title+"</li>");
 								yakCatIds.push(data.cats._id);
 								yakCatNames.push(data.cats.title);	
 								$("#yakCatIdsHidden").val(yakCatIds.join(','));
@@ -401,7 +401,11 @@ mixin list()
 					feed.linkSource.forEach(function(source){
 						if(source.length>0){
 							$("#pillSourceLink").show();
-							$("#pillSourceLink ul").append("<li class='source-val status-warning' data-value='"+source+"'>"+source+"</li>");
+							if(source.length > 40)
+								var sourceText = source.substring(0,40)+'...';
+							else
+								var sourceText = source;
+							$("#pillSourceLink ul").append("<li class='source-val status-warning' data-value='"+source+"'>"+sourceText+"</li>");
 							linkSource.push(source);
 						}
 					});
