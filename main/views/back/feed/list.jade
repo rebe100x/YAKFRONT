@@ -482,7 +482,6 @@ mixin list()
 			$('#feedForm #origineGroup').removeClass("error");
 			$('#feedForm #adresseGroup').removeClass("error");
 			$('#feedForm #content').val("");
-			$('#placeLabel').first().remove();
 			$("#btnBack").fadeIn();
 			$("#feedForm").fadeIn();
 			$("#feedForm legendmainlegend").html("Ajouter un lieu");
@@ -490,7 +489,7 @@ mixin list()
 			$("#pillYakcat ul").empty();
 			$('#err').hide();
 			$("#feedForm #title").focus();
-			
+
 		});
 			
 		$('#feedForm input:radio[name=status][value=1]').click();

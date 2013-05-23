@@ -1,85 +1,160 @@
 mixin zoneForm()
 	button.btn#btnBack(style='display:none')
 		i.icon-chevron-left
-	form.yakForm#placeForm(action='/place', method='POST', enctype='multipart/form-data', style='display:none')
-		input#yakcatInput(type='hidden', name='yakcatInput', value='')
-		input#yakcatNames(type='hidden', name='yakcatNames', value='')
-		input#placeInput(type='hidden', name='placeInput', value='')
+	form.yakForm#zoneForm(action='/zone', method='POST', enctype='multipart/form-data', style='display:none')
+		input#addressInput(type='hidden', name='addressInput', value='')
 		input#latitude(type="hidden",data-provide="typeahead", name="latitude")
 		input#longitude(type="hidden",data-provide="typeahead", name="longitude")
-		input#update(type="hidden",data-provide="typeahead", name="update", value='0')
 		input#objid(type="hidden",data-provide="typeahead", name="objid", value='0')
-		input#hiddenOrigin(type="hidden",data-provide="typeahead", name="hiddenOrigin", value='0')
-
-		legend Ajouter un utilisateur
+		
+		legend Ajouter une zone
 		div.control-group.error
 				div.controls
 					label.alert#err(type="text", id="err", name="err", style='display:none') Les champs en rouge sont obligatoires.
-		div.control-group#nameGroup
-			div.controls
-				label Nom
-				input.big.hashtagMaker(type='text', name='name', id='name', placeholder='Nom utilisateur')
-		div.control-group#loginGroup
-			div.controls
-				label Login
-				input.big.hashtagMaker(type='text', name='login', id='login', placeholder='Login utilisateur')
-		div.control-group#emailGroup
-			div.controls
-				label Courrier electronic
-				input.big.hashtagMaker(type='text', name='email', id='email', placeholder='Courrier electronic')
-		div.control-group#passGroup
-			div.controls
-				label Mot de passe
-				input.big.hashtagMaker(type='password', name='password', id='password', placeholder='Mot de passe')
-		div.control-group#pass2Group
-			div.controls
-				label Confirmer mot de passe
-				input.big.hashtagMaker(type='password', name='passwordconfirm', id='passwordconfirm', placeholder='Confirmer')
-		div.control-group#bioGroup
-			div.controls
-				label Biographie
-				textarea.hashtagMaker(type='text', id='bio', name='bio', placeholder="Quelques détails sur la biographie", rows='3')
-		div.control-group#typeGroup
-			div.controls
-					label Tye
-					select(name="userType", id="userType")
-						option(value="1") 1
-						option(value="2") 2
-						option(value="3") 3
-						option(value="4") 4
-						option(value="5") 5
-						option(value="6") 6
-						option(value="7") 7
-						option(value="8") 8
-						option(value="9") 9
-						option(value="10") 10
-						option(value="11") 11
-						option(value="12") 12
-						option(value="13") 13
-						option(value="14") 14
-		div.control-group#statusGroup
-			div.controls
-					label Status
-					select(name="userStatus", id="userStatus")
-						option(value="1") 1
-						option(value="2") 2
-						option(value="3") 3
+		div.row-fluid		
+			div.control-group#nameGroup
+				div.controls
+					.span6
+						label Nom
+						input.big(type='text', name='name', id='name', placeholder='Nom')
+		div.row-fluid		
+			div.control-group#addressGroup
+				div.controls
+					.span6
+						label(for='address') Centre de la zone:
+						input(type="text",data-provide="typeahead", id="address", name="address", autocomplete="off", placeholder="Chercher...")
+		div.row-fluid		
+			div.control-group#TLGroup
+				div.controls
+					.span6
+						label(for='TL') Top Left de la zone: (Nord Ouest)
+						input(type="text",data-provide="typeahead", id="TL", name="TL", autocomplete="off", placeholder="Chercher...")
+		
+		div.row-fluid		
+			div.control-group#BRGroup
+				div.controls
+					.span6
+						label(for='BR') Bottom Right de la zone: (Sud Est)
+						input(type="text",data-provide="typeahead", id="BR", name="BR", autocomplete="off", placeholder="Chercher...")
+					
+		div.row-fluid				
+			div.control-group#statusGroup
+				div.controls
+						label Status
+						select(name="zoneStatus", id="zoneStatus")
+							option(value="1") Validée
+							option(value="3") Blacklistée
+							
+		div.row-fluid		
 			div.control-group
 				div.controls
 					button.btn.btn-large.btn-inverse(type='submit', name='submit', id='submit', value='Enregistrer') Enregistrer
 
-					//button.btn.btn-large.btn-inverse#enregistrer(value='Enregistrer') Enregistrer
 
-script
+	script
+	
+		$(document).ready(function() {
 
-	$(document).ready(function() {
-		// bind 'myForm' and provide a simple callback function
-		$('#placeForm').ajaxForm(function() {
-			$("#MyGrid").fadeIn();
-			$("#placeForm").hide();
-			$("#btnBack").hide();
-			google.maps.event.removeListener(listenerHandle);
-			markerLocation.setVisible(false);
-			refreshDatagridAndMenu();
+			listenerHandle = google.maps.event.addListener(map, 'click', function(event) {
+				placeMarker(event.latLng,markerLocation);
+				getformattedAddress(event.latLng);
+			});
+
+			listenerHandleDrag = google.maps.event.addListener(markerLocation, 'dragend', function() {
+				var position = markerLocation.getPosition();
+				getformattedAddress(position);
+
+			});
+
+			
+			/*CLEAN LOCATION*/
+			$('#address').unbind('blur').on('blur',function(){
+				if($(this).val() == ''){
+					$("#zoneForm #longitude").val('');
+					$("#zoneForm #latitude").val('');
+					markerLocation.setVisible(false);
+				}
+			});
+			
+			
+			$('#address').typeahead({
+				minLength : 3,							
+				source: function (typeahead, query) {
+					if(query.length >= 3){
+						encodeURIComponent(query);
+						$("#address").addClass('searching');
+						var addressQuery = {"address": query ,"region":"fr","language":"fr"};
+						var geocoder = new google.maps.Geocoder();
+						geocoder.geocode( addressQuery, function(results, status) {						
+						if (status == google.maps.GeocoderStatus.OK) {
+							typeahead.process(results);
+							$("#address").removeClass('searching');
+						} 
+						});
+					}
+				},
+				property: "formatted_address",
+				onselect: function(obj) { 
+					$("#address").removeClass('searching');
+					var placeGmap = getPlaceFromGmapResult(obj);
+					$('#address').val(placeGmap.title);
+					$("#zoneForm #longitude").val(placeGmap.location.lng);
+					$("#zoneForm #latitude").val(placeGmap.location.lat);
+					var latLng = new google.maps.LatLng(placeGmap.location.lat,placeGmap.location.lng);
+					map.panTo(latLng);
+					placeMarker(latLng,markerLocation);
+				}
+			});	
 		});
-	});
+		
+
+		
+		/*Form custom validation*/
+		$('#zoneForm').unbind('submit').on('submit',function(){
+			var err = false;
+			$('.alert-error').hide();
+			if($('#name').val() == ""){
+				setError('#name','Entrer un nom cette zone');
+				err = true;
+			}else{
+				$.get('/api/zone/maxnum',function(data){
+					if(!data.num){
+						$('#name').append(' Numéro : '+data.num);
+					}else
+						err = true;
+				});
+			}
+			
+			if($('#address').val() != ""){
+				setError('#link','Entrer un centre pour cette zone');
+				err = true;
+			}
+			if($('#TL').val() != ""){
+				setError('#TL','Entrer un coin Top Left');
+				err = true;
+			}
+			if($('#BR').val() != ""){
+				setError('#BR','Entrer un coint Bottom Right');
+				err = true;
+			}				
+			
+
+			if (err){
+				$('#err').show();
+				return false;
+			}else
+				return true;
+		});	
+		
+		
+
+		function reduceZoneOptions(lat,lng,zone){
+			$.get('api/zones/'+lat+'/'+lng,function(data){
+				$('#zone').html('');	
+				$.each(data.zones, function (key,val) {
+					$('#zone').append('<option value ="'+val.num+'">'+val.name+'</option>');
+				});
+				if(typeof zone)
+					$("#zoneForm #zone").val(zone);
+			});
+		}

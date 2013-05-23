@@ -635,21 +635,6 @@ mixin feedForm()
 				
 		});
 		
-
-
-		/*PROCESS FORM*/
-		$('#feedForm').ajaxForm(
-			function() {
-				alert('validated');
-				$("#MyGrid").fadeIn();
-				$("#feedForm").hide();
-				$("#btnBack").hide();
-				google.maps.event.removeListener(listenerHandle);
-				markerLocation.setVisible(false);
-				refreshDatagrid();
-			}
-		);
-
 		
 		
 		/*Form custom validation*/

@@ -245,7 +245,25 @@ mixin list()
 
 		}
 
-		
+		function refreshDatagrid () {
+			// Temporary refresh method for datagrid
+			var $gridsearch = jQuery('#MyGrid').find('.search');
+			var search = $gridsearch.find('input').val();
+			$gridsearch.trigger('searched', search);
+		}
+
+		$("#btnBack").unbind('click').on('click',function(){
+			$("#zoneForm").hide();
+			$("#MyGrid").show();
+			google.maps.event.removeListener(listenerHandle);
+			markerLocation.setVisible(false);					
+			$("#zoneForm input[type=hidden]").val('');
+			$('#zoneForm').clearForm();
+			$('#err').hide();
+			$("#btnBack").hide();
+		});
+
+
 		/*bind form edition on the loaded datagrid event to avoid double loading*/
 		$('#MyGrid').unbind('loaded').on('loaded',function(){
 				// Edit Feed function
@@ -273,41 +291,6 @@ mixin list()
 		});
 		
 
-
-		// Refresh on sort selection
-		$('#sortZones').live('change', function() {
-			refreshDatagridAndMenu();
-		});
-		// Refresh on sort selection
-		$('#filterStatus').live('change', function() {
-			var currentSelection = $('#filterStatus :selected').val();
-			if (currentSelection == 1) {
-				$('.validerPlaces').addClass('disabled');
-				$('.supprimerPlaces').removeClass('disabled');
-				$('.enattentePlaces').removeClass('disabled');
-			}
-			else if (currentSelection == 3) {
-				$('.validerPlaces').removeClass('disabled');
-				$('.enattentePlaces').removeClass('disabled');
-				$('.supprimerPlaces').addClass('disabled');
-			}
-			else if (currentSelection == 2) {
-				$('.validerPlaces').removeClass('disabled');
-				$('.enattentePlaces').addClass('disabled');
-				$('.supprimerPlaces').removeClass('disabled');
-			}
-			else {
-				$('.validerPlaces').removeClass('disabled');
-				$('.enattentePlaces').removeClass('disabled');
-				$('.supprimerPlaces').removeClass('disabled');
-			}
-
-			refreshDatagridAndMenu();
-		});
-
-
-
-
 		function refreshDatagridAndMenu () {
 			// Temporary refresh method for datagrid
 			var $gridsearch = jQuery('#MyGrid').find('.search');
@@ -318,53 +301,32 @@ mixin list()
 		
 		// Add ZOne function
 		$("#btnAdd").click(function(event){
-			var user = !{JSON.stringify(user)};
-			event.preventDefault();
-			listenerHandle = google.maps.event.addListener(map, 'click', function(event) {
-				getformattedAddress(event.latLng);
-				placeMarker(event.latLng,markerLocation);
-			});
-			listenerHandleDrag = google.maps.event.addListener(markerLocation, 'dragend', function() {
-				var position = markerLocation.getPosition();
-				$('#placeForm #latitude').val(position.lat());
-				$('#placeForm #longitude').val(position.lng());
-
-				getformattedAddress(position);
-			});
-
 			$("#MyGrid").hide();
-			$("#placeForm")[0].reset();
+			$("#zoneForm")[0].reset();
 			// We remove the error class when we open a form for creating a new place
-			$('#placeForm #titleGroup').removeClass("error");
-			$('#placeForm #contentGroup').removeClass("error");
-			$('#placeForm #licenceGroup').removeClass("error");
-			$('#placeForm #origineGroup').removeClass("error");
-			$('#placeForm #adresseGroup').removeClass("error");
-			$('#placeForm #content').val("");
-			$('#placeLabel').first().remove();
+			$('#zoneForm #nameGroup').removeClass("error");
+			$('#zoneForm #addressGroup').removeClass("error");
+			$('#zoneForm #TLGroup').removeClass("error");
+			$('#zoneForm #BRGroup').removeClass("error");
 			$("#btnBack").fadeIn();
-			$("#placeForm").fadeIn();
-			$("#placeForm legend").html("Ajouter un lieu");
-			$("#placeForm #objid").val("");
-			$(".catLabel").remove();
-			$("#pillYakcat ul").empty();
+			$("#zoneForm").fadeIn();
+			$("#zoneForm legend").html("Ajouter une zone");
+			$("#zoneForm #objid").val("");
 			$('#err').hide();
-			$("#placeForm #title").focus();
-			$("#placeForm #hiddenOrigin").val(user.login);
-			$("#placeForm #origine").val(user.login);
-			$("#placeForm #origine").prop('disabled', true);
-			yakcatArray = new Array();
-			yakcatNames = new Array();
+			$("#zoneForm #name").focus();
 		});
 
 
 		// Function to go back from adding/editing form to the grid
 		$("#btnBack").click(function() {
 			$("#MyGrid").fadeIn();
-			$("#placeForm").hide();
+			$("#zoneForm").hide();
 			$("#btnBack").hide();
 			google.maps.event.removeListener(listenerHandle);
-			markerLocation.setVisible(false);
+			markerLocation.setVisible(false);					
+			$("#zoneForm input[type=hidden]").val('');
+			$('#zoneForm').clearForm();
+			$('#err').hide();
 		});
 
 		
@@ -381,8 +343,8 @@ mixin list()
 			});
 			listenerHandleDrag = google.maps.event.addListener(markerLocation, 'dragend', function() {
 				var position = markerLocation.getPosition();
-				$('#placeForm #latitude').val(position.lat());
-				$('#placeForm #longitude').val(position.lng());
+				$('#zoneForm #latitude').val(position.lat());
+				$('#zoneForm #longitude').val(position.lng());
 
 				getformattedAddress(position);
 			});
@@ -390,84 +352,37 @@ mixin list()
 
 			$("#MyGrid").hide();
 			// We remove the error class when we open a form for editing a place
-			$('#placeForm #titleGroup').removeClass("error");
-			$('#placeForm #contentGroup').removeClass("error");
-			$('#placeForm #licenceGroup').removeClass("error");
-			$('#placeForm #origineGroup').removeClass("error");
-			$('#placeForm #adresseGroup').removeClass("error");
+			$('#zoneForm #nameGroup').removeClass("error");
+			$('#zoneForm #addressGroup').removeClass("error");
+			$('#zoneForm #TLGroup').removeClass("error");
+			$('#zoneForm #BRGroup').removeClass("error");
 			$("#btnBack").fadeIn();
-			$("#placeForm").fadeIn();
-			$(".catLabel").remove();
-			$("#pillYakcat ul").empty();
+			$("#zoneForm").fadeIn();
 			$('#err').hide();
-			yakcatArray = new Array();
-			yakcatNames = new Array();
+			$("#zoneForm legend").html("Editer une zone");
+			$("#zoneForm #objid").val(this.id);
 
-			$("#placeForm legend").html("Editer un lieu");
-			$("#placeForm #objid").val(this.id);
+			var url = '/api/zone/'+this.id;
 
-			var url = '/api/places/'+this.id;
-
-			// We search for the place in mongo and we fill the form with the place's values
+			// We search for the zone in mongo and we fill the form with the zone's values
 			$.ajax({
 				url: url,
 				type: 'GET',
 				async: false,
 				success: function (response)
 				{
-					var place = response.place;
+					var zone = response.zone;
 
-					var latlng = new google.maps.LatLng(place.location.lat, place.location.lng);
+					var latlng = new google.maps.LatLng(zone.location.lat, zone.location.lng);
 					getformattedAddress(latlng);
 					placeMarker(latlng,markerLocation);
 					map.setCenter(markerLocation.getPosition());
-					$("#placeForm #licence").val(place.licence);
-					$("#placeForm #origine").val(place.origin);
-					$("#placeForm #hiddenOrigin").val(place.origin);
-					$("#placeForm #origine").prop('disabled', true);
-					$("#placeForm #outgoinglink").val(place.outGoingLink);
-					$("#placeForm #title").val(place.title);
-					$("#placeForm #content").val(place.content);
-					$("#placeForm #freetag").val(place.freeTag);
-
-					for (var i = 0; i < place.yakCat.length; i++)
-					{
-						var url = '/api/cats/'+place.yakCat[i];
-						$.ajax({
-							url: url,
-							type: 'GET',
-							async: false,
-							success: function (response)
-							{
-								var yakcat = response.cat;
-								$("#pillYakcat").show();
-								$("#pillYakcat ul").append("<li class='yakcat-val' data-value="+yakcat._id+">"+yakcat.title+"</li>");
-								$('#placeForm #yakcat').val('').focus();
-							}
-						});
-					}
-
-					$('input:radio[name=status][value='+place.status+']').click();
-					$("#placeForm #title").focus();
-					$("#placeForm #place").val('');
-
-					// loading the thumb
-					var imag = "<img class='img-rounded' " + "src=\'/uploads/pictures/512_0/" + place.thumb +"\' style='width:100px'/>";
-					$("#placeForm #picturePreview").html(imag);
-
-					$("#placeForm #freetag").val(place.freeTag.join(","));
-
-					if (place.contact)
-					{
-						$("#placeForm #tel").val(place.contact.tel);
-						$("#placeForm #mobile").val(place.contact.mobile);
-						$("#placeForm #mail").val(place.contact.mail);
-						$("#placeForm #transportation").val(place.contact.transportation);
-						$("#placeForm #web").val(place.contact.web);
-						$("#placeForm #opening").val(place.contact.opening);
-						$("#placeForm #closing").val(place.contact.closing);
-						$("#placeForm #special").val(place.contact.special_opening);
-					}
+					$("#zoneForm #address").val(zone.formated_address);
+					$("#zoneForm #name").val(zone.name);
+					$("#zoneForm #TL").val(zone.box.tl.formatted_address);
+					$("#zoneForm #BR").val(zone.box.br.formatted_address);
+					$('input:radio[name=status][value='+zone.status+']').click();
+					$("#zoneForm #name").focus();
 				}
 			});
 

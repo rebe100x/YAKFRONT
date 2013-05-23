@@ -25,3 +25,53 @@ block content
 						mixin list()
 						mixin zoneForm()
 						
+	script					
+		$(document).ready(function() {
+			
+			google.maps.event.addListener(map, 'click', function(event) {
+				var position = event.latLng;
+				getformattedAddress(event.latLng);
+				placeMarker(event.latLng,markerLocation);
+			});
+			
+			google.maps.event.addListener(markerLocation, 'dragend', function() {
+				var position = markerLocation.getPosition();
+				getformattedAddress(position);
+				placeMarker(position,markerLocation);
+			});
+
+			
+		});
+		
+
+		function placeMarker(location,mk) {
+				$('#latitude').val(location.lat());	
+				$('#longitude').val(location.lng());	
+				mk.setVisible(true);
+				mk.setPosition(location);
+			}
+			
+
+
+		function getformattedAddress(position){
+			var geoQuery = {"location": position};
+				var geocoder = new google.maps.Geocoder();
+				geocoder.geocode( geoQuery, function(results, status) {
+					if (status == google.maps.GeocoderStatus.OK) {
+						var placeGmap = getPlaceFromGmapResult(results[0]);
+						//placeArray = placeGmap;
+						$('#address').val(placeGmap.title);
+						$("#zoneForm #longitude").val(placeGmap.location.lng);
+						$("#zoneForm #latitude").val(placeGmap.location.lat);
+
+					} else {
+						var salt = new Date().getTime();
+						$('#address').parent().before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide ("+status+")</div>");
+						setTimeout(function() {
+							$("#alert"+salt).fadeOut();
+						}, 1000);
+						$('#address').select();
+					}
+				});
+
+		}					
