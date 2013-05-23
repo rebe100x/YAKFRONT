@@ -175,13 +175,13 @@ ul#newsfeed li.highlighted .mapHighlighter{background-color:#F6F6F6; width: 99%;
 ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: both; padding-left: 3px; padding-right: 3px; position: absolute; left: -119px; top: 5px}
 .infowindow .myitem {clear: both; position: relative; top: 12px; text-align: justify; padding-left: 7px; padding-right: 12px;}
 .infowindow .myitem .shareMe { width: auto; float: right; clear: both; top: -17px; position: relative; right: 85px;}
-.infowindow .myitem .ftgIcon { height: 21px; position: absolute; top: 7px; float: left; clear: both; background: url('/images/yakwala_sprite.png') -135px -227px; left: -83px; width: 183px; display: block; z-index: 11111}
-.infowindow .myitem .btn.newYaklike { width: 64px; height: 17px; background: url('/images/yakwala_sprite.png') -176px -261px; font-size: 12px; font-weight: bold; text-indent: 8px; padding-top: 5px;}
+.infowindow .myitem .ftgIcon { height: 21px; position: absolute; top: 7px; float: left; clear: both; background: #F5881F; left: -83px; width: 183px; display: block; z-index: 11111}
+.infowindow .myitem .btn.newYaklike { width: 45px; height: 17px; background: url('/images/yakwala_sprite.png') -306px -292px; font-size: 12px; font-weight: bold; text-indent: 8px; padding-top: 5px;}
 .infowindow .myitem .yakLikes {top: -33px; position: relative; float: left; clear: both; }
 .infowindow .myitem .buttons { z-index:  11;}
 .infowindow .myitem .yakLikes{font-size:12px;font-style:italic; position: relative; clear: both; width: auto; float: left; color: #000000; display: block; width: 100%; padding-bottom: 6px; border-bottom: 1px solid #d1d1d1;}
-.infowindow .myitem .yakComments{font-size:14px;font-style:italic; position: relative; clear: both; width: auto; float: left; left: 0px; top: -28px; color: #D71920; cursor: pointer; width: 100%; border-bottom: 1px solid #d1d1d1}
-.infowindow .myitem .yakComments .commentLogo {width: 28px; height: 28px; float: left; margin-right: 6px; background: url('/images/yakwala_sprite.png') -113px -266px}
+.infowindow .myitem .yakComments{font-size:14px; position: relative; clear: both; width: auto; float: left; left: 0px; top: -28px; color: #D71920; cursor: pointer; width: 100%; border-bottom: 1px solid #d1d1d1}
+.infowindow .myitem .yakComments .commentLogo {width: 28px; height: 22px; float: left; margin-right: 6px; background: url('/images/yakwala_sprite.png') -126px -253px}
 .infowindow .myitem .theContent { border-bottom: 1px solid #d1d1d1; padding-bottom: 6px;}
 .infowindow .myitem .commentBox .aComment { clear:  both; padding-bottom: 12px;}
 .infowindow .myitem .commentBox .timeago{ margin-left:5px;}
@@ -1015,12 +1015,12 @@ border-bottom: 1px solid #e5e5e5;}
 
 #searchElementContainer { width: 100%}
 
-.infowindow .myitem .yakSpam{font-size:11px;font-style:italic; position: relative; clear: both; width: auto; float: right; left: 0px; top: -13px; cursor: pointer;}
-.infowindow .myitem .yakSpam .signalerIcon { width: 24px; height: 24px; background: url('/images/yakwala_sprite.png') -284px -265px; float: left;}
+.infowindow .myitem .yakSpam{font-size:11px;font-style:italic; position: relative; clear: both; width: auto; float: right; left: 0px; top: -6px; cursor: pointer;}
+.infowindow .myitem .yakSpam .signalerIcon { width: 24px; height: 24px; background: url('/images/yakwala_sprite.png') -306px -319px; float: left;}
 .currentDetails .myitem .yakSpam{font-size:11px;font-style:italic; position: relative; clear: both; width: auto; float: right; left: 0px; top: -33px; color: #E07C1C; cursor: pointer;}
 
-.infowindow .myitem .yakBlackList{font-size:11px;font-style:italic; position: relative; clear: both; width: auto; float: left; left: 0px; top: -33px; cursor: pointer;}
-.infowindow .myitem .yakBlackList .illiciteIcon { width: 24px; height: 24px; background: url('/images/yakwala_sprite.png') -155px -265px; float: left;}
+.infowindow .myitem .yakBlackList{font-size:11px;font-style:italic; position: relative; clear: both; width: auto; float: right; right:117px; top: -29px; cursor: pointer;}
+.infowindow .myitem .yakBlackList .illiciteIcon { width: 24px; height: 18px; background: url('/images/yakwala_sprite.png') -303px -274px; float: left;}
 .currentDetails .myitem .yakBlackList{font-size:11px;font-style:italic; position: relative; clear: both; width: auto; float: left; left: 0px; top: -33px; color: #E07C1C; cursor: pointer;}
 
 #loginPageNavBar{background-color: #FFF;position:relative;}
