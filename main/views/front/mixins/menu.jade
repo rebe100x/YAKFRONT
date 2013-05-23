@@ -14,7 +14,13 @@ mixin menu(active)
 				a#logoLink(href="/news/map", alt="Yakwala", title="Yakwala")
 
 				- if (locals.user && active != "firstvisit")
-					a#zoneLocButton(alt="Vos endroits favoris", title="Vos Endroits Favoris")
+					span#alertsModeText	
+						|Passe en
+						br
+						|mode alertes
+					a#ZoneMesalertes(alt="Mes Alertes", title="Mes Alertes", onclick="setAlert(this)")
+						span#alertsNumber
+					a#zoneLocButton(alt="Mes endroits favoris", title="Mes Endroits Favoris")
 					a#profileMenu.customprofile.dropdown-toggle(href="#",data-toggle="dropdown", alt="Profile", title="Profile")
 						//					
 							img.yak-mainMenu-hide(id="userThumb", src=locals.user.thumbsmall)
