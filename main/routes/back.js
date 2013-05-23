@@ -429,7 +429,12 @@ exports.feed = function(req, res){
 /*******
 #ZONE
 ********/
-exports.findAllZone = function(req, res){
+exports.zone_list = function(req, res){
+	delete req.session.message;
+	res.render('zone/index');
+};
+
+exports.zones = function(req, res){
 	var Zone = db.model('Zone');
     Zone.find({},{},{sort:{name:1}},function (err, docs){
       res.json({
@@ -696,96 +701,6 @@ exports.gridPlaces = function (req, res) {
 };
 
 
-/************
-#categories
-************/
-
-exports.categories = function(req, res){
-	delete req.session.message;
-	res.render('categories/index');
-};
-
-
-/******
-#illicite
-******/
-exports.illicites = function(req, res){
-	delete req.session.message;
-	res.render('illicites/index');
-};
-
-exports.deleteIllicite = function(req, res){
-	var content_type = req.body.content_type;
-	var content_id = req.body.content_id;
-	var _id = req.body._id;
-
-	switch(content_type){
-		case "1": {
-			var Info = db.model("Info");
-			Info.find({_id:content_id}).remove(function(err){
-				if(!err)
-				{
-					var Illicite = db.model("contenuIllicite");
-					Illicite.find({_id : _id}).remove(function(err){
-						if(!err)
-							res.json({meta:{code:200}});
-						else
-							res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});			
-					});
-					
-				}
-					
-				else
-					res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
-			});
-			break;
-		}
-		case "2": {
-			var Info = db.model("Info");
-			Info.update({_id:mongoose.Types.ObjectId(req.body.info_id)},{$inc:{commentsCount : -1},$pull:{yakComments:{_id: mongoose.Types.ObjectId(content_id)}}}, function(err,docs){
-				if(!err)
-				{
-					var Illicite = db.model("contenuIllicite");
-					Illicite.find({_id : _id}).remove(function(err){
-						if(!err)
-							res.json({meta:{code:200}});
-						else
-							res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});			
-					});
-					
-				}
-					
-				else
-					res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
-			});
-			break;
-		}
-		case "3": {
-			User.update({_id: content_id},{$set:{'status':3}}, function(err){
-				if(!err)
-				{
-					var Illicite = db.model("contenuIllicite");
-					Illicite.find({_id : _id}).remove(function(err){
-						if(!err)
-							res.json({meta:{code:200}});
-						else
-							res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});			
-					});
-					
-				}
-					
-				else
-					res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
-			});
-			break;
-		}
-		default:{
-			res.send("none");
-			break;
-		}
-	}
-}
-
 /******* 
 #USER 
 ******/
@@ -898,6 +813,107 @@ exports.gridUsers = function (req, res) {
 	});
 };
 
+
+
+
+
+
+exports.user = function(req, res){
+
+	var User = db.model('User');
+
+
+	User.Authenticate(req.body.login, req.body.password, function(err,user){
+		if(!(typeof(user) == 'undefined' || user === null || user === '')){
+			req.session.user = user;
+			res.redirect(req.body.redir || '/place/list');
+		}else{
+			req.session.message = 'Wrong login or password:';
+			res.redirect('user/login?redir='+req.body.redir);
+		}
+	});
+};
+
+/*******
+# ILLICITE
+********/
+exports.illicites = function(req, res){
+	delete req.session.message;
+	res.render('illicites/index');
+};
+
+exports.deleteIllicite = function(req, res){
+	var content_type = req.body.content_type;
+	var content_id = req.body.content_id;
+	var _id = req.body._id;
+
+	switch(content_type){
+		case "1": {
+			var Info = db.model("Info");
+			Info.find({_id:content_id}).remove(function(err){
+				if(!err)
+				{
+					var Illicite = db.model("contenuIllicite");
+					Illicite.find({_id : _id}).remove(function(err){
+						if(!err)
+							res.json({meta:{code:200}});
+						else
+							res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});			
+					});
+					
+				}
+					
+				else
+					res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+			});
+			break;
+		}
+		case "2": {
+			var Info = db.model("Info");
+			Info.update({_id:mongoose.Types.ObjectId(req.body.info_id)},{$inc:{commentsCount : -1},$pull:{yakComments:{_id: mongoose.Types.ObjectId(content_id)}}}, function(err,docs){
+				if(!err)
+				{
+					var Illicite = db.model("contenuIllicite");
+					Illicite.find({_id : _id}).remove(function(err){
+						if(!err)
+							res.json({meta:{code:200}});
+						else
+							res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});			
+					});
+					
+				}
+					
+				else
+					res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+			});
+			break;
+		}
+		case "3": {
+			User.update({_id: content_id},{$set:{'status':3}}, function(err){
+				if(!err)
+				{
+					var Illicite = db.model("contenuIllicite");
+					Illicite.find({_id : _id}).remove(function(err){
+						if(!err)
+							res.json({meta:{code:200}});
+						else
+							res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});			
+					});
+					
+				}
+					
+				else
+					res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+			});
+			break;
+		}
+		default:{
+			res.send("none");
+			break;
+		}
+	}
+}
+
 exports.gridIllicites = function (req, res) {
     var contenuIllicite = db.model('contenuIllicite');
 
@@ -926,15 +942,34 @@ exports.gridIllicites = function (req, res) {
 };
 
 
-exports.yakcat_setstatus = function (req, res){
+/******* 
+#YAKCAT 
+******/
+
+exports.categories = function(req, res){
+	delete req.session.message;
+	res.render('categories/index');
+};
+
+exports.cats = function (req, res) {
 	var Yakcat = db.model('Yakcat');
-	Yakcat.update({"_id":req.body._id},{$set:{"status":req.body.status}}, function(err){
-		if(!err)
-			res.json({meta:{code:200}});
-		else
-			res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+	Yakcat.findAll(function (err, docs){
+	  if(!err)
+	  	res.json({meta:{code:200},data:{cats:docs}});
+	  else
+	  	res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 	});
-}
+};
+
+exports.catsById = function (req, res) {
+	var Yakcat = db.model('Yakcat');
+	Yakcat.findOne({_id:req.params.id},function (err, docs){
+	  if(!err)
+	  	res.json({meta:{code:200},cats:docs});
+	  else
+	  	res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+	});
+};
 
 exports.gridYakcats = function (req, res) {
     var Yakcat = db.model('Yakcat');
@@ -963,40 +998,12 @@ exports.gridYakcats = function (req, res) {
 	});
 };
 
-
-
-exports.user = function(req, res){
-
-	var User = db.model('User');
-
-
-	User.Authenticate(req.body.login, req.body.password, function(err,user){
-		if(!(typeof(user) == 'undefined' || user === null || user === '')){
-			req.session.user = user;
-			res.redirect(req.body.redir || '/place/list');
-		}else{
-			req.session.message = 'Wrong login or password:';
-			res.redirect('user/login?redir='+req.body.redir);
-		}
-	});
-};
-
-exports.cats = function (req, res) {
+exports.yakcat_setstatus = function (req, res){
 	var Yakcat = db.model('Yakcat');
-	Yakcat.findAll(function (err, docs){
-	  if(!err)
-	  	res.json({meta:{code:200},data:{cats:docs}});
-	  else
-	  	res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+	Yakcat.update({"_id":req.body._id},{$set:{"status":req.body.status}}, function(err){
+		if(!err)
+			res.json({meta:{code:200}});
+		else
+			res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 	});
-};
-
-exports.catsById = function (req, res) {
-	var Yakcat = db.model('Yakcat');
-	Yakcat.findOne({_id:req.params.id},function (err, docs){
-	  if(!err)
-	  	res.json({meta:{code:200},cats:docs});
-	  else
-	  	res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
-	});
-};
+}

@@ -51,7 +51,13 @@ mixin menu(active)
 										a(href="feed/list") Flux
 								- else
 									li
-										a(href="feed/list") Flux					
+										a(href="feed/list") Flux
+								- if (active == 'zone')
+									li.active
+										a(href="zone/list") Zones
+								- else
+									li
+										a(href="zone/list") Zones							
 								- if (active == 'illicite')
 									li.active
 										a(href="/illicites/list") Illicites

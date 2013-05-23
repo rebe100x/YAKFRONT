@@ -298,7 +298,7 @@ mixin feedForm()
 			$('#alertFeedType').hide();
 
 			/*Set zone select button*/
-			$.get('api/zones/all',function(data){
+			$.get('api/zones',function(data){
 				$.each(data.zone, function (key,val) {
 					$('#zone').append('<option value ="'+val.num+'">'+val.name+'</option>');
 				});	

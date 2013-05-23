@@ -86,6 +86,7 @@ app.post('/yakcat/setStatus', back.requiresLogin, back.yakcat_setstatus);
 app.get('/place/list', back.requiresLogin, back.place_list);
 app.get('/feed/list', back.requiresLogin, back.feed_list);
 app.get('/user/list',back.requiresLogin, back.user_list);
+app.get('/zone/list',back.requiresLogin, back.zone_list);
 app.get('/illicites/list',back.requiresLogin, back.illicites);
 app.get('/categories/list',back.requiresLogin, back.categories);
 
@@ -103,8 +104,8 @@ app.get('/api/validinfos', back.countUnvalidatedInfos);
 app.get('/api/geoinfos/:x1/:y1/:x2/:y2/:heat/:type', back.geoinfos);
 app.get('/api/zones/:x/:y', back.findAllZoneNear);
 app.get('/api/zones/:id', back.findZoneById);
-app.get('/api/zones/all', back.findAllZone);
-app.post('/api/users', back.users);
+app.get('/api/zones', back.zones);
+//app.post('/api/users', back.users);
 app.get('/api/users', back.users);
 app.get('/api/illicites', back.illicites);
 
