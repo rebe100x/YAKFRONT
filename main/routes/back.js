@@ -450,6 +450,45 @@ exports.findAllZoneNear = function (req, res) {
 	}); 
 };
 
+exports.gridZones = function (req, res) {
+    var Zone = db.model('Zone');
+
+    var sortProperties = [];
+    if (req.params.sortBy) {
+        sortProperties = req.params.sortBy.split(',');
+    }
+
+    var sortDirections = [];
+    if (req.params.sortDirection) {
+        sortDirections = req.params.sortDirection.split(',');
+    }
+
+	Zone.findGridZones(req.params.pageIndex,req.params.pageSize,
+		req.params.searchTerm,sortProperties,sortDirections,
+        req.params.status, req.session.user, function (err, zones){
+			var data = {};
+			console.log(zones);
+			data['zone'] = zones;
+			data['pageIndex'] = req.params.pageIndex;
+			data['pageSize'] = req.params.pageSize;
+			data['count'] = zones.length;
+			res.json(data);
+ 		
+	});
+};
+
+exports.zone_setstatus = function (req, res){
+	var Zone = db.model('Zone');
+	Zone.update({"_id":req.body._id},{$set:{"status":req.body.status}}, function(err){
+		if(!err)
+			res.json({meta:{code:200}});
+		else
+			res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+	});
+}
+
+
+
 /******* 
 #PLACE 
 *******/

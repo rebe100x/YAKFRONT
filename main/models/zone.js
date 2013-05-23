@@ -37,5 +37,41 @@ Zone.statics.findAllNear = function (x,y,callback) {
 Zone.statics.findAll = function (callback) {
   return this.find({}, callback);
 }
+
+Zone.statics.findGridZones = function (pageIndex, pageSize, searchTerm, sortProperties, sortDirections, status, currUser, callback) {
+console.log('elo');
+	var conditions = {
+		"name" : new RegExp(searchTerm, 'i')
+	};
+
+	var sortBy = {};
+
+	for (index in sortProperties) {
+		var desc = 1;
+		if (sortDirections[index] == "desc")
+			desc = -1;
+		sortBy[sortProperties[index]] = desc;
+	}
+
+	conditions["_id"] = { $ne: currUser };
+
+	if (status == 2) {
+		conditions["status"] = { $in: [2,10] };
+	}
+	else if (status != 4) {
+		conditions["status"] = status;
+	}
+
+	
+	return this.find(
+		conditions,
+		{},
+		{
+			skip:(pageIndex -1)*pageSize,
+			limit:pageSize,
+			sort:sortBy
+		},
+		callback);
+}
 mongoose.model('Zone', Zone);
 

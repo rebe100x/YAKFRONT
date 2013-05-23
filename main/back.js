@@ -82,6 +82,7 @@ app.post('/user/setStatus', back.requiresLogin, back.user_setstatus);
 app.post('/user/setType', back.requiresLogin, back.user_settype);
 
 app.post('/yakcat/setStatus', back.requiresLogin, back.yakcat_setstatus);
+app.post('/zone/setStatus', back.requiresLogin, back.zone_setstatus);
 
 app.get('/place/list', back.requiresLogin, back.place_list);
 app.get('/feed/list', back.requiresLogin, back.feed_list);
@@ -121,6 +122,7 @@ app.get('/api/places', back.places);
 app.get('/api/places/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status', back.gridPlaces);
 app.get('/api/places/:id', back.findPlaceById);
 
+app.get('/api/zones/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status', back.gridZones);
 app.get('/api/users/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status/:type', back.gridUsers);
 app.get('/api/illicites/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:type', back.gridIllicites);
 
