@@ -223,14 +223,18 @@ function getErrHTML5Pos(error) {
 
 
 /*Creates a clickable html table from the data json*/
-function createTableParsing(data){
+function createTableParsing(data,type){
 	var dataObj = data;
 	var table = '<table class="table table-nohover table-condensed">';
 	var header = '<thead><tr>';
 	var body = '<tbody>';
 	var num = 0;
 	$.each(dataObj[0], function(key, val) {
-		header += '<th class="col_'+S(key).slugify()+' tableParsing"  key="'+key+'" num="'+num+'">'+key+'</th>';
+		if(type == 'CSV')
+			var checkedIcon = addCheckIconToTH(num);
+		else
+			var checkedIcon = addCheckIconToTH(key);
+		header += '<th class="col_'+S(key).slugify()+' tableParsing"  key="'+key+'" num="'+num+'">'+checkedIcon+key+'</th>';
 		num ++;
 	}); 
 
@@ -249,6 +253,16 @@ function createTableParsing(data){
 	return table;
 }
 
+function addCheckIconToTH(key){
+	var checkedIcon = '';
+		$('#infoParsingForm input').each(function(){
+			var inputVal = $(this).val(); 
+			if(inputVal.indexOf("#YKL"+key)>=0)
+				checkedIcon = '<i title="mapped" class="icon-check"></i>';		
+		});
+	return checkedIcon;	
+
+}
 function deletePlaceHTML(placeArray,results,self){
 	
 	

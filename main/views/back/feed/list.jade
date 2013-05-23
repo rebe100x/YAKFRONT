@@ -19,9 +19,9 @@ mixin list()
 						option(value="0") Inactifs
 					select#filterType
 						option(value="all") Tous les types
-						option(value="RSS") RSS
+						option(value="XML") XML
 						option(value="CSV") CSV
-						option(value="YAKMADE") YAKMADE
+						option(value="JSON") JSON
 					
 		tfoot
 			tr
@@ -179,6 +179,32 @@ mixin list()
 			})
 		});
 
+		/*bind form edition on the loaded datagrid event to avoid double loading*/
+		$('#MyGrid').unbind('loaded').on('loaded',function(){
+				// Edit Feed function
+			$("#MyGrid .editFeed").one('click', function(event){
+				event.preventDefault();
+				event.stopPropagation();
+				editFeed(this.id,0);
+				
+			});
+
+			$("#MyGrid a.centerMap").one('click', function(event){
+				event.preventDefault();
+				event.stopPropagation();
+				var latlng = new google.maps.LatLng($(this).attr('lat'), $(this).attr('lng'));
+				getformattedAddress(latlng);
+				placeMarker(latlng,markerLocation);
+				map.panTo(markerLocation.getPosition());
+			});	
+			
+			$("#MyGrid a.duplicateItem").one('click', function(event){
+				event.preventDefault();
+				event.stopPropagation();
+				editFeed(this.id,1);
+			});
+		});
+		
 
 		$('#filterStatus').live('change', function() {
 			var currentSelection = $('#filterStatus :selected').val();
@@ -195,17 +221,18 @@ mixin list()
 			var icon = "icon-time";
 			var title_icon = "En attente";
 			var title_title = "";
-
 			
 			res += '<div class="liens">';
-			
+			res += '<a href="'+conf.batchurl.replace('BACKEND','BATCH')+'parser.php?q='+item.name+'" target="_blank" class="testItem listIcon" title="Tester"><i class="icon-play"></i></a>';
+			res += '<a href="#" id="'+item._id+'" class="duplicateItem listIcon" title="Dupliquer"><i class="icon-random"></i></a>';
+
 			if (item.link)
-				res += '<a href=\''+ item.link + '\' target="_blank" title="Lien externe"><i class="icon-share-alt "></i></a>';	
+				res += '<a href=\''+ item.link + '\' target="_blank" class="listIcon" title="Lien externe"><i class="icon-share-alt "></i></a>';	
 
 			if (typeof item.defaultPlaceLocation != 'undefined'
 				&& typeof item.defaultPlaceLocation.lat != 'undefined'
 				&& typeof item.defaultPlaceLocation.lng != 'undefined' ){
-				res += '<a class="centerMap" id="' + item._id + '" lat="' + item.defaultPlaceLocation.lat + '" lng="' + item.defaultPlaceLocation.lng + '"   href="#">';
+				res += '<a class="centerMap listIcon" id="' + item._id + '" lat="' + item.defaultPlaceLocation.lat + '" lng="' + item.defaultPlaceLocation.lng + '"   href="#">';
 			res += '<i class = "icon-map-marker" title="Localiser"></i>';
 			res += '</a>';
 			}	
@@ -239,14 +266,7 @@ mixin list()
 		}
 
 
-		$('a.centerMap').live('click', function() {
-			event.preventDefault();
-			event.stopPropagation();
-			var latlng = new google.maps.LatLng($(this).attr('lat'), $(this).attr('lng'));
-			getformattedAddress(latlng);
-			placeMarker(latlng,markerLocation);
-			map.setCenter(markerLocation.getPosition());
-		});
+		
 
 		function refreshDatagrid () {
 			// Temporary refresh method for datagrid
@@ -255,6 +275,7 @@ mixin list()
 			$gridsearch.trigger('searched', search);
 		}
 
+		
 		$("#btnBack").unbind('click').on('click',function(){
 			$("#feedForm").hide();
 			$("#MyGrid").show();
@@ -270,26 +291,21 @@ mixin list()
 		});
 
 		
-		// Edit Feed function
-		$("#MyGrid").unbind("click").on('click','.editFeed', function(event){
-			event.preventDefault();
-			event.stopPropagation();
-			
-			
+		
+
+		/* get data and edit feed in the form
+			flagDuplicate = 1 for duplicating the feed
+		*/
+		function editFeed(id,flagDuplicate){
 			$("#btnBack").show();
 			$("#MyGrid").hide();
 			
-
 			// We remove the error class when we open a form for editing a place
 			$('#feedForm').removeClass("error");
-			
-			
-
-
 
 			/*INIT FORM FOR EDITION*/
 			$("#feedForm").show();
-			$("#feedForm legend.mainlegend").html("Modifier un flux");
+			
 			$("#pillSourceLink ul").html('');
 			$("#pillYakcat ul").html('');
 			$("#pillFreetag ul").html('');
@@ -297,14 +313,14 @@ mixin list()
 			$("#feedForm input[type=hidden]").val('');
 			$('#feedForm').clearForm();	
 			$('#err').hide();
-			yakcatIds = new Array();
+			yakCatIds = new Array();
 			yakCatNames = new Array();
 			freeTags = new Array();
 			linkSource = new Array();
 			fileSource = new Array();
 			
 			
-			var url = '/api/feed/'+this.id;
+			var url = '/api/feed/'+id;
 			
 			// We search for the feed in mongo and we fill the form with the feed's values
 			$.ajax({
@@ -315,9 +331,22 @@ mixin list()
 				{
 					/*FORM INITIALISATION*/
 					var feed = response.feed;
-					$("#feedForm #objid").val(feed._id);
 
-					$("#feedForm #humanName").val(feed.humanName);
+					
+
+					if(flagDuplicate == 1){
+						$("#feedForm legend.mainlegend").html("Dupliquer un flux");
+						$("#feedForm #humanName").val(feed.humanName+'_copy').focus();
+						$("#feedForm #objid").val('');
+					}	
+					else{	
+						$("#feedForm legend.mainlegend").html("Modifier un flux");
+						$("#feedForm #objid").val(feed._id);
+						$("#feedForm #humanName").val(feed.humanName).focus();
+					}	
+						
+
+					
 					if(feed.thumb != '' && typeof feed.thumb != 'undefined'){
 						$("#picturePreview img").attr('src',feed.thumbMedium).show();
 					}
@@ -365,7 +394,7 @@ mixin list()
 							$('.rootElementGroup').hide();
 							$('#alertFeedType').show().children('span.alertText').html('Le fichier doit être sauvé en UTF8, séparation point virgule et textes délimités par des guillemets doubles. ');
 						break;
-						case 'RSS':
+						case 'XML':
 							$('.lineToBeginGroup').hide();
 							$('.rootElementGroup').show();
 							$('#alertFeedType').hide();
@@ -375,10 +404,6 @@ mixin list()
 							$('.rootElementGroup').show();
 							$('#alertFeedType').hide();
 						break;
-						case 'YAKMADE':
-							$('.lineToBeginGroup').hide();
-							$('.rootElementGroup').hide();
-							$('#alertFeedType').hide();
 						break;
 					}
 
@@ -425,6 +450,7 @@ mixin list()
 						$("#feedForm #infoTitle").val(feed.parsingTemplate.title);	
 						$("#feedForm #infoContent").val(feed.parsingTemplate.content);	
 						$("#feedForm #infoAddress").val(feed.parsingTemplate.address);	
+						$("#feedForm #infoGeolocation").val(feed.parsingTemplate.geolocation);	
 						$("#feedForm #infoLatitude").val(feed.parsingTemplate.latitude);	
 						$("#feedForm #infoLongitude").val(feed.parsingTemplate.longitude);	
 						$("#feedForm #infoLink").val(feed.parsingTemplate.outGoingLink);	
@@ -442,7 +468,8 @@ mixin list()
 					}
 				}
 			});
-		});
+		}
+		
 
 		// Add New Feed
 		$("#btnAdd").click(function(){
@@ -463,8 +490,10 @@ mixin list()
 			$("#pillYakcat ul").empty();
 			$('#err').hide();
 			$("#feedForm #title").focus();
+			
 		});
 			
-			$('#feedForm input:radio[name=status][value=1]').click();
+		$('#feedForm input:radio[name=status][value=1]').click();
+
 
 		

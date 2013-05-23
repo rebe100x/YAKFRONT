@@ -78,7 +78,7 @@ exports.getFileSample = function(req,res){
 				res.json({code:200,fileSample:JSON.stringify(output.slice(0,4))});	
 			});
 		break;
-		case 'RSS':
+		case 'XML':
 			var itemKey = '';
 			var oldItemKey = '';
 			var itemVal = '';
@@ -352,12 +352,17 @@ exports.feed = function(req, res){
 	feed.lastModifDate = now;
 
 	feed.rootElement = req.body.rootElement;
-	feed.lineToBegin = parseInt(req.body.lineToBegin);
+	console.log(req.body.lineToBegin);
+	if(req.body.lineToBegin != '' && typeof req.body.lineToBegin != 'undefined' )
+		feed.lineToBegin = parseInt(req.body.lineToBegin);
+	else
+		feed.lineToBegin = 1;
 
 	feed.parsingTemplate = {
 		title: req.body.infoTitle,
 		content: req.body.infoContent,
 		address: req.body.infoAddress,
+		geolocation: req.body.infoGeolocation,
 		latitude: req.body.infoLatitude,
 		longitude: req.body.infoLongitude,
 		outGoingLink: req.body.infoLink,

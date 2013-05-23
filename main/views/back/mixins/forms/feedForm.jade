@@ -139,7 +139,7 @@ mixin feedForm()
 					.span6
 						label Type de flux : 
 						select#feedType(name='feedType')
-							option(value="RSS") RSS
+							option(value="XML") XML
 							option(value="CSV") CSV
 							option(value="JSON") JSON
 							option(value="YAKMADE") YAKMADE
@@ -183,7 +183,7 @@ mixin feedForm()
 					span.alertText
 				div.control-group#titleGroup
 					div.controls.row-fluid	
-						.span6
+						.span6#infoParsingForm
 							label Titre de l&rsquo;info:*
 							input(type='text', name='infoTitle', id='infoTitle', placeholder="Titre")
 							label Corps de l&rsquo; info:
@@ -203,6 +203,8 @@ mixin feedForm()
 							input(type='text', name='infoPlace', id='infoPlace', placeholder="Le lieu")
 							label Adresse:
 							input(type='text', name='infoAddress', id='infoAddress', placeholder="Adresse")
+							label Géolocation ( latitude#longitude ou latitude longitude ):
+							input(type='text', name='infoGeolocation', id='infoGeolocation', placeholder="Géolocation")
 							label Latitude:
 							input(type='text', name='infoLatitude', id='infoLatitude', placeholder="Latitude")
 							label Longitude:
@@ -241,6 +243,8 @@ mixin feedForm()
 										a(tabindex="-1", href="#", key='infoPlace') Lieu ( pour recherche sémantique de géoloc )
 									li
 										a(tabindex="-1", href="#", key='infoAddress') Adresse
+									li
+										a(tabindex="-1", href="#", key='infoGeolocation') Géolocation
 									li
 										a(tabindex="-1", href="#", key='infoLatitude') Latitude
 									li
@@ -301,7 +305,7 @@ mixin feedForm()
 			});
 			
 
-			/*feedtype : CSV , RSS , JSON, YAKMADE*/
+			/*feedtype : CSV , XML , JSON, YAKMADE*/
 			$('#feedType').on('change',function(){
 				switch($(this).val()){
 					case 'CSV':
@@ -309,7 +313,7 @@ mixin feedForm()
 							$('.rootElementGroup').hide();
 							$('#alertFeedType').show().children('span.alertText').html('Le fichier doit être sauvé en UTF8, séparation point virgule et textes délimités par des guillemets doubles. ');
 						break;
-						case 'RSS':
+						case 'XML':
 							$('.lineToBeginGroup').hide();
 							$('.rootElementGroup').show();
 							$('#alertFeedType').hide();
@@ -347,7 +351,7 @@ mixin feedForm()
 				}
 			});
 				
-			/*DATA FILE UPLOAD*/	
+			/*SOURCE FILE : DATA FILE UPLOAD*/
 			$('#fileupload').fileupload({
 				dataType: 'json',
 				done: function (e, data) {
@@ -360,9 +364,14 @@ mixin feedForm()
 							$("#pillSourceFile ul").append("<li class='source-val status-success' data-value='"+file.name+"'>"+file.name+"</li>");
 							fileSource.push(file.name);
 							$("#fileSource").val(fileSource.join(','));
+							/*
 							if(file.name.split('.').pop().toLowerCase() == 'csv'){
 								$('#feedType').val('CSV');
-							}
+							}*/
+							/*empty the link source*/
+							linkSource = [];
+							$("#linkSource").val('');
+							$("#pillSourceLink ul").html('');
 						}
 					});
 				},
@@ -379,18 +388,41 @@ mixin feedForm()
 	
 			});
 			
+			/*SOURCE LINK*/
+			$('#btn-source-adder').unbind('click').on('click',function(){
+				$("#pillSourceLink").show();
+				if($('#source').val().length > 40)
+					var linkText = $('#source').val().substring(0,40)+'...';
+				else
+					var linkText = $('#source').val();
+				$("#pillSourceLink ul").append("<li class='source-val status-warning' data-value='"+$('#source').val()+"'>"+linkText+"</li>");
+				$('#pillSourceLink').val('').focus();
+				linkSource.push($('#source').val());
+				$("#linkSource").val(linkSource.join(','));
+				/*empty the sourcefile*/
+				fileSource = [];
+				$("#fileSource").val('');
+				$("#pillSourceFile ul").html('');							
+			});
+
+			$("#pillSourceLink ul").unbind('click').on('click','li',function(){
+				linkSource.cleanArrayByName($(this).attr('data-value'));
+				$('#linkSource').val(linkSource.join(','));
+			});
+
 
 			$("#pillSourceFile ul").unbind('click').on('click','li',function(){
 				fileSource.cleanArrayByName($(this).attr('data-value'));
 				$('#fileSource').val(fileSource.join(','));
 			});
 
+
 			$('#parsing').unbind('click').click(function(){
 				$('#parsingModal .modal-body span.alertText').html('');
 				$('#parsingModal').modal('show');
 				var thesource = '';
 				
-					if( !( ($('#feedType').val() == 'CSV' && $('#lineToBegin').val() == '' )  ||  ( ($('#feedType').val() == 'RSS' || $('#feedType').val() == 'JSON') && $('#rootElement').val() == '' ) ) ){
+					if( !( ($('#feedType').val() == 'CSV' && $('#lineToBegin').val() == '' )  ||  ( ($('#feedType').val() == 'XML' || $('#feedType').val() == 'JSON') && $('#rootElement').val() == '' ) ) ){
 					if(typeof fileSource[0] != 'undefined' || typeof linkSource[0] != 'undefined'){
 						if(typeof fileSource[0] != 'undefined'){
 							thesource = fileSource[0];
@@ -404,13 +436,12 @@ mixin feedForm()
 						$('#parsingEditor').html('<span class="alert alert-info"><img src ="images/loader_big.gif" /> Chargement du fichier <i>'+thesource+'</i></span>');	
 						if($('#feedType').val() == 'CSV')
 							var param = $('#lineToBegin').val();
-						if($('#feedType').val() == 'RSS' || $('#feedType').val() == 'JSON')
+						if($('#feedType').val() == 'XML' || $('#feedType').val() == 'JSON')
 							var param = $('#rootElement').val();
 						$.post('/api/getFileSample', {file:thesource,type:$('#feedType').val(),isLink:isLink,param:param}, function(data){
-							console.log(data);
 							var sample = JSON.parse(data.fileSample);
 							if(typeof data != 'undefined' && data.code == 200){
-								var tableParsing = createTableParsing(sample);
+								var tableParsing = createTableParsing(sample,$('#feedType').val());
 								$('#parsingEditor').html(tableParsing);	
 								$('.tableParsing').unbind('hover').hover(
 									function(){$('.col_'+$(this).attr('key')).addClass('colTableParsingOn');},
@@ -435,6 +466,11 @@ mixin feedForm()
 											$('#'+element.attr('key')).val( $('#'+element.attr('key')).val() +' #YKL'+element.attr('target'));
 										else
 											$('#'+element.attr('key')).val('#YKL'+element.attr('target'));	
+										var checkedIcon = '<i title="mapped" class="icon-check"></i>';
+										if($('#feedType').val() == 'CSV')
+											$('#parsingEditor table thead tr th[num='+element.attr('target')+']').append(checkedIcon);
+										else
+											$('#parsingEditor table thead tr th[key='+element.attr('target')+']').append(checkedIcon);
 										return false;
 									}
 								})
@@ -448,7 +484,7 @@ mixin feedForm()
 				}else{
 					if($('#feedType').val() == 'CSV')
 						$('#parsingEditor').html('<span class="alert alert-error">Veuillez définir une linge de début.</span>');		
-					if($('#feedType').val() == 'RSS' || $('#feedType').val() == 'JSON')
+					if($('#feedType').val() == 'XML' || $('#feedType').val() == 'JSON')
 						$('#parsingEditor').html('<span class="alert alert-error">Veuillez définir un élément racine.</span>');		
 				}	
 					
@@ -524,23 +560,7 @@ mixin feedForm()
 			});
 
 
-			$('#btn-source-adder').unbind('click').on('click',function(){
-				$("#pillSourceLink").show();
-				if($('#source').val().length > 40)
-					var linkText = $('#source').val().substring(0,40)+'...';
-				else
-					var linkText = $('#source').val();
-				$("#pillSourceLink ul").append("<li class='source-val status-warning' data-value='"+$('#source').val()+"'>"+linkText+"</li>");
-				$('#pillSourceLink').val('').focus();
-				linkSource.push($('#source').val());
-				$("#linkSource").val(linkSource.join(','));
-							
-			});
-
-			$("#pillSourceLink ul").unbind('click').on('click','li',function(){
-				linkSource.cleanArrayByName($(this).attr('data-value'));
-				$('#linkSource').val(linkSource.join(','));
-			});
+			
 			
 
 			/*CLEAN LOCATION*/
@@ -687,8 +707,8 @@ mixin feedForm()
 				setError('#parsing','Définir le champ contenant le titre de la news.');
 				err = true;
 			}
-			if($('#rootElement').val() == "" && $('#feedType').val() == 'RSS'){
-				setError('#rootElement','Pour un flux RSS, définir un élément racine');
+			if($('#rootElement').val() == "" && $('#feedType').val() == 'XML'){
+				setError('#rootElement','Pour un flux XML, définir un élément racine');
 				err = true;
 			}	
 			if($('#lineToBegin').val() == "" && $('#feedType').val() == 'CSV'){

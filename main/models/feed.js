@@ -23,6 +23,7 @@ var Feed = new Schema({
 		outGoingLink : String,
 		latitude : String,
 		longitude : String,
+		geolocation : String,
 		thumb : String,
 		yakCats : String,
 		freeTag : String,
