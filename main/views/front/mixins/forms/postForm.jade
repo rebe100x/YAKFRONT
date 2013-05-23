@@ -64,18 +64,43 @@ mixin postForm()
 				div.control-group
 					div.controls
 						input.span12.hashtagMaker(type='text', name='title', id='title', placeholder='Titre', autocomplete='off')
-						span.postinfo
-							| Vous pouvez utiliser des hashtags dans le titre
+						//
+							span.postinfo
+								| Vous pouvez utiliser des hashtags dans le titre
 						textarea#content.span12.hashtagMaker(name='content', placeholder='Texte',rows='3')
-						span.postinfo
-							| Vous pouvez utiliser des hashtags dans votre texte
+						//
+							span.postinfo
+								| Vous pouvez utiliser des hashtags dans votre texte
 				div.control-group
 					div.controls
 						input#freetag.span12(type="text",data-provide="typeahead", name="freetag",placeholder='Mots clés', autocomplete='off')
-						span.postinfo
-							| ex: maisonavendre
+						//
+							span.postinfo
+								| ex: maisonavendre
+				
+				hr
+				h3.clearBoth A quel endroit ?
+				div.control-group
+					label(for='Place') Clicker sur la carte ou bien entrer une adresse:<br>
+					div.controls
+						div.input-append.clearBoth
+							input#place(type="text",data-provide="typeahead", name="place", autocomplete="off", placeholder='Rechercher...') 
+							button.btn#btn-place-adder(type="button") Add
+							//
+								br
+								br
+
+								span.postinfo
+									| Ajoutez plusieurs adresses et faites apparaître votre info à<br /> plusieurs endroits !
+				br
+				div.controls#yakTypeController(style="display: none;")
+					label.radio.inline Actu
+						input#option1(type="radio", name="yakType", value="4" , checked) 
+				
+				hr
+				div.control-group
+					h3 Ajouter un media
 					div.controls.myMedia
-						span.mediaText.pull-left Media:
 						a(title="Poster une photo pour cet info sur yakwala", rel="post_picture")
 							img(src="/images/media/yak.png")
 						a(title="Rechercher dans Youtube et poster votre video", rel="post_youtube")
@@ -92,28 +117,10 @@ mixin postForm()
 					div#post_yakYoutube.controls.clearBoth
 					div#post_yakSoundCloud.controls.clearBoth
 					div#post_yakFlickr.controls.clearBoth
-					
+				hr
 				br
-				h3.clearBoth A quel endroit ?
-				div.control-group
-					label(for='Place') Clicker sur la carte ou bien entrer une adresse:<br>
-					div.controls
-						div.input-append.clearBoth
-							input#place(type="text",data-provide="typeahead", name="place", autocomplete="off", placeholder='Rechercher...') 
-							button.btn#btn-place-adder(type="button") Add
-							br
-							br
-							span.postinfo
-								| Ajoutez plusieurs adresses et faites apparaître votre info à<br /> plusieurs endroits !
-				br
-				div.controls#yakTypeController(style="display: none;")
-					label.radio.inline Actu
-						input#option1(type="radio", name="yakType", value="4" , checked) 
 				div(style="text-align: center; width: 100%")
 					button.yakbtn(type='submit', name='submit', id='submit', value='Envoyer') POSTER
-				br
-				br
-
 	- else
 		mixin loginForm() 
 

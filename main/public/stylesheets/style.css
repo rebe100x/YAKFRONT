@@ -282,11 +282,15 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 
 /*#newsPostContainer{overflow:auto;height:auto;}
 #newsPostContainer #newsPostForm{margin:0px auto;padding:10px;text-align:left;opacity:0.95;background:#FFFFFF;}*/
-#postForm {position:relative;opacity:1;z-index:2000;background:#FFFFFF;display: block;height:auto;width: 93%;padding: 0px;margin: 0px 0px 1% 2%;}
+#postForm {position:relative;opacity:1;z-index:2000;background:#FFFFFF;display: block;height:auto;width: 93%;padding: 0px;margin: 30px 0px 1% 2%;}
+
 #postForm legend{font-size: 18px;line-height: 28px;color: #333333;border: 0;border-bottom: 1px solid #e5e5e5;}
 #postForm #eventDateController{display: none;}
 #postForm span#picturePreview{float:left;margin:3px;}
 #postForm input#picture{float:left;}
+#postForm h3 { font-size: 18px; color: #7f7f7f; margin-top: 6px; margin-bottom: 6px; font-weight: normal;} 
+#postForm hr { border: 2px solid #e6e6e6; margin: 10px 0 0 0; padding: 0;}
+#postForm .yakbtn { margin-bottom: 25px}
 #ui-datepicker-div{font-size:0.9em;}
 #newspostContent{display:none;position:relative;height:0px;width:100%;}
 
@@ -1067,3 +1071,4 @@ border-bottom: 1px solid #e5e5e5;}
 .TheTops li .topHeat .heatLevel { background: red; height: 15px;}
 #topsContainer { background: #F6F6F6; margin-top: 30px;}
 #topsContainer .columnTitle { padding-left: 24px; padding-top: 20px; color: #5D5D5D; font-size: 1.2em}
+
