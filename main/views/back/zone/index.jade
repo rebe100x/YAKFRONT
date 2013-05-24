@@ -72,11 +72,6 @@ block content
 			
 			drawRect();
 
-			markerLocationBL.setVisible(true);
-			markerLocationTR.setVisible(true);
-			rect.setVisible(true);
-			
-
 			google.maps.event.addListener(markerLocationTR, 'dragend', function() {
 				var center = drawRect();
 				$("#zoneForm #latTR").val(markerLocationTR.getPosition().lat());

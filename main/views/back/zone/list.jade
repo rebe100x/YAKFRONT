@@ -336,6 +336,7 @@ mixin list()
 			$('#err').hide();
 			$("#zoneForm legend").html("Editer une zone");
 			
+			
 			var url = '/api/zone/'+id;
 
 			// We search for the zone in mongo and we fill the form with the zone's values
@@ -360,7 +361,10 @@ mixin list()
 					$("#zoneForm #lngTR").val(zone.box.tr.lng);
 					$("#zoneForm #latBL").val(zone.box.bl.lat);
 					$("#zoneForm #lngBL").val(zone.box.bl.lng);
-					$("#zoneForm #objid").val(zone._id);
+					if(flagDuplicate==1)
+						$("#objid").val("");
+					else	
+						$("#zoneForm #objid").val(zone._id);
 					$('input:radio[name=status][value='+zone.status+']').click();
 					$("#zoneForm #name").focus();
 

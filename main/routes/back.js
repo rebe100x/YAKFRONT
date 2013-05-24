@@ -441,44 +441,51 @@ exports.zone = function(req, res){
 	var now = new Date();
 	
 	zone.name = req.body.name;
-	zone.num = 1212;
-	
-	zone.location = {lng:parseFloat(req.body.lngCT),lat : parseFloat(req.body.latCT)};
-	var box = new Object();
-	box.tr = {lng:parseFloat(req.body.lngTR),lat : parseFloat(req.body.latTR)};
-	box.bl = {lng:parseFloat(req.body.lngBL),lat : parseFloat(req.body.latBL)};
+	Zone.findOne({},{},{sort:{num:-1}},function (err, docs){
+    	
 
-	zone.box = box;
-	zone.status = parseInt(req.body.status);
-	zone.lastModifDate = now;
+ 		
+ 		zone.location = {lng:parseFloat(req.body.lngCT),lat : parseFloat(req.body.latCT)};
+		var box = new Object();
+		box.tr = {lng:parseFloat(req.body.lngTR),lat : parseFloat(req.body.latTR)};
+		box.bl = {lng:parseFloat(req.body.lngBL),lat : parseFloat(req.body.latBL)};
+
+		zone.box = box;
+		zone.status = parseInt(req.body.status);
+		zone.lastModifDate = now;
 
 
-	console.log(zone);
-	
-
-	if(typeof obj_id != 'undefined' && obj_id != ''){
-		var cond = {_id:obj_id};
-	}else{
-		zone.creationDate = now;
-		var cond = {name:"anameimpossibletochoose007"};
-	}
+		console.log(zone);
 		
 
-	Zone.update(cond,zone,{upsert:true},function (err){
-		if (!err)
-			formMessage.push("Zone sauvegardée.");
-		else{
-			formMessage.push("Erreur pendant la sauvegarde de la zone !");
-			console.log(err);
+		if(typeof obj_id != 'undefined' && obj_id != ''){
+			var cond = {_id:obj_id};
+		}else{
+			zone.creationDate = now;
+			var cond = {name:"anameimpossibletochoose007"};
+			zone.num = docs.num+1;
 		}
-		req.session.message = formMessage;
-		res.redirect('zone/list')
-	});
+			
+
+		Zone.update(cond,zone,{upsert:true},function (err){
+			if (!err)
+				formMessage.push("Zone sauvegardée.");
+			else{
+				formMessage.push("Erreur pendant la sauvegarde de la zone !");
+				console.log(err);
+			}
+			req.session.message = formMessage;
+			res.redirect('zone/list')
+		});
+    });
+	
+	
+	
 };
 	
 exports.findZoneMaxnum = function(req, res){
 	var Zone = db.model('Zone');
-    Zone.findOne({},{},{sort:{name:1}},function (err, docs){
+    Zone.findOne({},{},{sort:{num:-1}},function (err, docs){
       res.json({
         num: docs.num
       });
