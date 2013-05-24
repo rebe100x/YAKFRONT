@@ -43,7 +43,8 @@ mixin map()
 		/*READY FUNCTIONS*/
 		$(document).ready(function() {
 
-			/*SEARCH LOCATION INPUT*/
+			
+				/*SEARCH LOCATION INPUT*/
 			$('#searchPlaceStr').val(curPos.name);
 			$('#searchPlaceStr').unbind("click").on('click',function(){
 					$(this).select();
@@ -72,7 +73,7 @@ mixin map()
 					psClick = 1;
 					$("#searchPlaceStr").removeClass('searching');
 					var placeGmap = getPlaceFromGmapResult(obj);
-					
+
 					curPos.x = placeGmap.location.lat;
 					curPos.y = placeGmap.location.lng;
 					curPos.name = placeGmap.formatted_address;
@@ -92,9 +93,9 @@ mixin map()
 						oldLocation = locationObj;
 						curPos.x = locationObj.lat;
 						curPos.y = locationObj.lng;
-						
+
 					}
-		
+
 				}
 			});
 				/*END SEARCH LOCATION INPUT*/
@@ -170,8 +171,6 @@ mixin map()
 
 			google.maps.event.addListenerOnce(map, 'idle', function(){
 				bounds = this.getBounds();
-				//getAndPrintInfo();
-
 			});
 
 

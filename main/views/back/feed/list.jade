@@ -182,14 +182,14 @@ mixin list()
 		/*bind form edition on the loaded datagrid event to avoid double loading*/
 		$('#MyGrid').unbind('loaded').on('loaded',function(){
 				// Edit Feed function
-			$("#MyGrid .editFeed").one('click', function(event){
+			$("#MyGrid .editFeed").on('click', function(event){
 				event.preventDefault();
 				event.stopPropagation();
 				editFeed(this.id,0);
 				
 			});
 
-			$("#MyGrid a.centerMap").one('click', function(event){
+			$("#MyGrid a.centerMap").on('click', function(event){
 				event.preventDefault();
 				event.stopPropagation();
 				var latlng = new google.maps.LatLng($(this).attr('lat'), $(this).attr('lng'));
@@ -198,7 +198,7 @@ mixin list()
 				map.panTo(markerLocation.getPosition());
 			});	
 			
-			$("#MyGrid a.duplicateItem").one('click', function(event){
+			$("#MyGrid a.duplicateItem").on('click', function(event){
 				event.preventDefault();
 				event.stopPropagation();
 				editFeed(this.id,1);

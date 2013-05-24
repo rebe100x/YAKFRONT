@@ -15,9 +15,8 @@ mixin list()
 			tr.headerControle
 				td(colspan=6)
 					select#filterStatus
-						option(value="2") En attente
-						option(value="1") Validés
-						option(value="3") Blacklistées
+						option(value="0") Désactivées
+						option(value="1") Actives
 						option(value="4", "selected"="selected") Toutes les zones
 					
 		tfoot
@@ -188,7 +187,7 @@ mixin list()
 		function makeStatusDropDown(item){
 			var select = $("<div />");
 			select.attr("class", "selectStatus");
-			select.html('<select onchange="setNewStatus(this)" class="selectStatus" rel="'+item._id+'"><option value="2">En attente</option><option value="1">Validée</option><option value="3">Blacklistée</option></select>');
+			select.html('<select onchange="setNewStatus(this)" class="selectStatus" rel="'+item._id+'"><option value="1">Activée</option><option value="0">Désactivée</option></select>');
 			select.find("option").each(function(){
 				if($(this).attr("value") == item.status)
 					$(this).attr("selected", "selected");
@@ -220,11 +219,11 @@ mixin list()
 
 			if (item.status == 1) {
 				icon = 'icon-ok-sign';
-				title_icon = "Validée";
+				title_icon = "Active";
 			}
-			else if (item.status == 3) {
+			else if (item.status == 0) {
 				icon = 'icon-ban-circle';
-				title_icon = "Blacklistée";
+				title_icon = "Désactivée";
 			}
 			
 			if(item.name.length > 50) {
@@ -256,7 +255,10 @@ mixin list()
 			$("#zoneForm").hide();
 			$("#MyGrid").show();
 			google.maps.event.removeListener(listenerHandle);
-			markerLocation.setVisible(false);					
+			markerLocation.setVisible(false);
+			markerLocationBL.setVisible(false);
+			markerLocationTR.setVisible(false);
+			rect.setVisible(false);					
 			$("#zoneForm input[type=hidden]").val('');
 			$('#zoneForm').clearForm();
 			$('#err').hide();
@@ -267,23 +269,23 @@ mixin list()
 		/*bind form edition on the loaded datagrid event to avoid double loading*/
 		$('#MyGrid').unbind('loaded').on('loaded',function(){
 				// Edit Feed function
-			$("#MyGrid .editZone").one('click', function(event){
+			$("#MyGrid .editZone").on('click', function(event){
 				event.preventDefault();
 				event.stopPropagation();
 				editZone(this.id,0);
 				
 			});
 
-			$("#MyGrid a.centerMap").one('click', function(event){
+			$("#MyGrid a.centerMap").on('click', function(event){
 				event.preventDefault();
 				event.stopPropagation();
-				var latlng = new google.maps.LatLng($(this).attr('lat'), $(this).attr('lng'));
-				getformattedAddress(latlng);
-				placeMarker(latlng,markerLocation);
-				map.panTo(markerLocation.getPosition());
+				var latLng = new google.maps.LatLng($(this).attr('lat'), $(this).attr('lng'));
+				map.panTo(latLng);
+				markerLocation.setVisible(true);
+				markerLocation.setPosition(latLng);
 			});	
 			
-			$("#MyGrid a.duplicateItem").one('click', function(event){
+			$("#MyGrid a.duplicateItem").on('click', function(event){
 				event.preventDefault();
 				event.stopPropagation();
 				editZone(this.id,1);
@@ -306,63 +308,35 @@ mixin list()
 			// We remove the error class when we open a form for creating a new place
 			$('#zoneForm #nameGroup').removeClass("error");
 			$('#zoneForm #addressGroup').removeClass("error");
-			$('#zoneForm #TLGroup').removeClass("error");
-			$('#zoneForm #BRGroup').removeClass("error");
+			$('#zoneForm #TRGroup').removeClass("error");
+			$('#zoneForm #BLGroup').removeClass("error");
 			$("#btnBack").fadeIn();
 			$("#zoneForm").fadeIn();
 			$("#zoneForm legend").html("Ajouter une zone");
 			$("#zoneForm #objid").val("");
 			$('#err').hide();
 			$("#zoneForm #name").focus();
+			markerLocationBL.setVisible(true);
+			markerLocationTR.setVisible(true);
+			rect.setVisible(true);
+			drawRect();
 		});
 
-
-		// Function to go back from adding/editing form to the grid
-		$("#btnBack").click(function() {
-			$("#MyGrid").fadeIn();
-			$("#zoneForm").hide();
-			$("#btnBack").hide();
-			google.maps.event.removeListener(listenerHandle);
-			markerLocation.setVisible(false);					
-			$("#zoneForm input[type=hidden]").val('');
-			$('#zoneForm').clearForm();
-			$('#err').hide();
-		});
 
 		
-
-
-
 
 		function editZone(id,flagDuplicate){
 			event.preventDefault();
 
-			listenerHandle = google.maps.event.addListener(map, 'click', function(event) {
-				getformattedAddress(event.latLng);
-				placeMarker(event.latLng,markerLocation);
-			});
-			listenerHandleDrag = google.maps.event.addListener(markerLocation, 'dragend', function() {
-				var position = markerLocation.getPosition();
-				$('#zoneForm #latitude').val(position.lat());
-				$('#zoneForm #longitude').val(position.lng());
-
-				getformattedAddress(position);
-			});
-
-
 			$("#MyGrid").hide();
 			// We remove the error class when we open a form for editing a place
 			$('#zoneForm #nameGroup').removeClass("error");
-			$('#zoneForm #addressGroup').removeClass("error");
-			$('#zoneForm #TLGroup').removeClass("error");
-			$('#zoneForm #BRGroup').removeClass("error");
 			$("#btnBack").fadeIn();
 			$("#zoneForm").fadeIn();
 			$('#err').hide();
 			$("#zoneForm legend").html("Editer une zone");
-			$("#zoneForm #objid").val(this.id);
-
-			var url = '/api/zone/'+this.id;
+			
+			var url = '/api/zone/'+id;
 
 			// We search for the zone in mongo and we fill the form with the zone's values
 			$.ajax({
@@ -372,17 +346,36 @@ mixin list()
 				success: function (response)
 				{
 					var zone = response.zone;
-
+					console.log(zone);
+					
 					var latlng = new google.maps.LatLng(zone.location.lat, zone.location.lng);
-					getformattedAddress(latlng);
-					placeMarker(latlng,markerLocation);
-					map.setCenter(markerLocation.getPosition());
-					$("#zoneForm #address").val(zone.formated_address);
+					map.setCenter(latlng);
 					$("#zoneForm #name").val(zone.name);
-					$("#zoneForm #TL").val(zone.box.tl.formatted_address);
-					$("#zoneForm #BR").val(zone.box.br.formatted_address);
+					$('#zoneForm #numero').html('<br><b>Numéro : </b>'+zone.num);
+					
+
+					$("#zoneForm #latCT").val(zone.location.lat);
+					$("#zoneForm #lngCT").val(zone.location.lng);
+					$("#zoneForm #latTR").val(zone.box.tr.lat);
+					$("#zoneForm #lngTR").val(zone.box.tr.lng);
+					$("#zoneForm #latBL").val(zone.box.bl.lat);
+					$("#zoneForm #lngBL").val(zone.box.bl.lng);
+					$("#zoneForm #objid").val(zone._id);
 					$('input:radio[name=status][value='+zone.status+']').click();
 					$("#zoneForm #name").focus();
+
+					var BLlatLng = new google.maps.LatLng(zone.box.bl.lat,zone.box.bl.lng);
+					markerLocationBL.setPosition(BLlatLng);
+					markerLocationBL.setVisible(true);
+
+					var TRlatLng = new google.maps.LatLng(zone.box.tr.lat,zone.box.tr.lng);
+					markerLocationTR.setPosition(TRlatLng);
+					markerLocationTR.setVisible(true);
+					
+					rect.setVisible(true);
+					drawRect();
+
+
 				}
 			});
 

@@ -360,6 +360,61 @@ mixin list()
 			return false;
 		});
 
+		/*SEARCH LOCATION INPUT*/
+			$('#searchPlaceStr').val(curPos.name);
+			$('#searchPlaceStr').unbind("click").on('click',function(){
+					$(this).select();
+			});
+
+
+			// autocomplete Place
+			$('#searchPlaceStr').typeahead({
+				minLength : 3,							
+				source: function (typeahead, query) {
+					if(query.length >= 3){
+						encodeURIComponent(query);
+						$("#searchPlaceStr").addClass('searching');
+						var addressQuery = {"address": query ,"region":"fr","language":"fr"};
+						var geocoder = new google.maps.Geocoder();
+						geocoder.geocode( addressQuery, function(results, status) {						
+						if (status == google.maps.GeocoderStatus.OK) {
+							typeahead.process(results);
+							$("#searchPlaceStr").removeClass('searching');
+						} 
+						});
+					}
+				},
+				property: "formatted_address",
+				onselect: function(obj) { 
+					psClick = 1;
+					$("#searchPlaceStr").removeClass('searching');
+					var placeGmap = getPlaceFromGmapResult(obj);
+					
+					curPos.x = placeGmap.location.lat;
+					curPos.y = placeGmap.location.lng;
+					curPos.name = placeGmap.formatted_address;
+					var location = JSON.stringify({lat:curPos.x,lng:curPos.y});				
+					$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
+					var locationObj = JSON.parse(location);
+					if(location != '' && oldLocation.lat != locationObj.lat && oldLocation.lng != locationObj.lng){
+						var latLng = new google.maps.LatLng(locationObj.lat,locationObj.lng);
+						markerHL.setPosition(new google.maps.LatLng(locationObj.lat,locationObj.lng));
+						markerHL.setVisible(true);
+						markerHL.setMap(map);
+						markerHL.setOptions({icon:"/images/markers/target3.png"});
+						setTimeout(function() {
+							markerHL.setMap(null);
+						}, 3000);
+						map.panTo(latLng);
+						oldLocation = locationObj;
+						curPos.x = locationObj.lat;
+						curPos.y = locationObj.lng;
+						
+					}
+		
+				}
+			});
+
 		// Searchpanel yakcat input
 		$('input#yakCat').typeahead({
 			source: function (typeahead, query) {

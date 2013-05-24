@@ -98,13 +98,15 @@ app.post('/user', back.requiresLogin, back.user);
 app.post('/news', back.requiresLogin, back.news);
 app.post('/alerts', back.requiresLogin, back.alerts);
 app.post('/profile', back.requiresLogin, back.profile);
+app.post('/zone', back.requiresLogin, back.zone);
 
 // ajax
 app.get('/api/infos', back.infos);
 app.get('/api/validinfos', back.countUnvalidatedInfos);
 app.get('/api/geoinfos/:x1/:y1/:x2/:y2/:heat/:type', back.geoinfos);
 app.get('/api/zones/:x/:y', back.findAllZoneNear);
-app.get('/api/zones/:id', back.findZoneById);
+app.get('/api/zone/:id', back.findZoneById);
+app.get('/api/zoneMaxnum', back.findZoneMaxnum);
 app.get('/api/zones', back.zones);
 //app.post('/api/users', back.users);
 app.get('/api/users', back.users);

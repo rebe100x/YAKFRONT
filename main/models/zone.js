@@ -6,7 +6,7 @@ var Zone = new Schema({
     name     : { type: String, required : true, index : true}
   , location       : { lat: {type: Number},lng:{type:Number} }
   , num : {type : Number}
-  , formatted_address : {type : String}
+  , status : {type : Number}
   , address		: { type : { 
 								arr: String,
 								city: String,
@@ -18,7 +18,10 @@ var Zone = new Schema({
 					}
 	, creationDate	: {type: Date, required: true, default: Date.now}		
 	, lastModifDate	: {type: Date, required: true, default: Date.now}		
-	, box : { type : Schema.Types.Mixed}					
+	, box : { type : {
+						bl: {lat : Number, lng: Number},
+    					tr : {lat : Number, lng: Number},
+	}}					
 }, { collection: 'zone' });
 
 
@@ -39,7 +42,6 @@ Zone.statics.findAll = function (callback) {
 }
 
 Zone.statics.findGridZones = function (pageIndex, pageSize, searchTerm, sortProperties, sortDirections, status, currUser, callback) {
-console.log('elo');
 	var conditions = {
 		"name" : new RegExp(searchTerm, 'i')
 	};

@@ -2,9 +2,12 @@ mixin zoneForm()
 	button.btn#btnBack(style='display:none')
 		i.icon-chevron-left
 	form.yakForm#zoneForm(action='/zone', method='POST', enctype='multipart/form-data', style='display:none')
-		input#addressInput(type='hidden', name='addressInput', value='')
-		input#latitude(type="hidden",data-provide="typeahead", name="latitude")
-		input#longitude(type="hidden",data-provide="typeahead", name="longitude")
+		input#latCT(type="hidden",data-provide="typeahead", name="latCT")
+		input#lngCT(type="hidden",data-provide="typeahead", name="lngCT")
+		input#latTR(type="hidden",data-provide="typeahead", name="latTR")
+		input#lngTR(type="hidden",data-provide="typeahead", name="lngTR")
+		input#latBL(type="hidden",data-provide="typeahead", name="latBL")
+		input#lngBL(type="hidden",data-provide="typeahead", name="lngBL")
 		input#objid(type="hidden",data-provide="typeahead", name="objid", value='0')
 		
 		legend Ajouter une zone
@@ -17,33 +20,17 @@ mixin zoneForm()
 					.span6
 						label Nom
 						input.big(type='text', name='name', id='name', placeholder='Nom')
-		div.row-fluid		
-			div.control-group#addressGroup
-				div.controls
-					.span6
-						label(for='address') Centre de la zone:
-						input(type="text",data-provide="typeahead", id="address", name="address", autocomplete="off", placeholder="Chercher...")
-		div.row-fluid		
-			div.control-group#TLGroup
-				div.controls
-					.span6
-						label(for='TL') Top Left de la zone: (Nord Ouest)
-						input(type="text",data-provide="typeahead", id="TL", name="TL", autocomplete="off", placeholder="Chercher...")
+						span#numero
 		
-		div.row-fluid		
-			div.control-group#BRGroup
-				div.controls
-					.span6
-						label(for='BR') Bottom Right de la zone: (Sud Est)
-						input(type="text",data-provide="typeahead", id="BR", name="BR", autocomplete="off", placeholder="Chercher...")
-					
 		div.row-fluid				
 			div.control-group#statusGroup
-				div.controls
-						label Status
-						select(name="zoneStatus", id="zoneStatus")
-							option(value="1") Validée
-							option(value="3") Blacklistée
+				legend Désactiver
+				div.control-group
+					div.controls
+						label.radio.inline Actif
+							input(type="radio", name="status", value="1", checked)
+						label.radio.inline Inactif
+							input(type="radio", name="status", value="0")	
 							
 		div.row-fluid		
 			div.control-group
@@ -55,56 +42,7 @@ mixin zoneForm()
 	
 		$(document).ready(function() {
 
-			listenerHandle = google.maps.event.addListener(map, 'click', function(event) {
-				placeMarker(event.latLng,markerLocation);
-				getformattedAddress(event.latLng);
-			});
-
-			listenerHandleDrag = google.maps.event.addListener(markerLocation, 'dragend', function() {
-				var position = markerLocation.getPosition();
-				getformattedAddress(position);
-
-			});
-
-			
-			/*CLEAN LOCATION*/
-			$('#address').unbind('blur').on('blur',function(){
-				if($(this).val() == ''){
-					$("#zoneForm #longitude").val('');
-					$("#zoneForm #latitude").val('');
-					markerLocation.setVisible(false);
-				}
-			});
-			
-			
-			$('#address').typeahead({
-				minLength : 3,							
-				source: function (typeahead, query) {
-					if(query.length >= 3){
-						encodeURIComponent(query);
-						$("#address").addClass('searching');
-						var addressQuery = {"address": query ,"region":"fr","language":"fr"};
-						var geocoder = new google.maps.Geocoder();
-						geocoder.geocode( addressQuery, function(results, status) {						
-						if (status == google.maps.GeocoderStatus.OK) {
-							typeahead.process(results);
-							$("#address").removeClass('searching');
-						} 
-						});
-					}
-				},
-				property: "formatted_address",
-				onselect: function(obj) { 
-					$("#address").removeClass('searching');
-					var placeGmap = getPlaceFromGmapResult(obj);
-					$('#address').val(placeGmap.title);
-					$("#zoneForm #longitude").val(placeGmap.location.lng);
-					$("#zoneForm #latitude").val(placeGmap.location.lat);
-					var latLng = new google.maps.LatLng(placeGmap.location.lat,placeGmap.location.lng);
-					map.panTo(latLng);
-					placeMarker(latLng,markerLocation);
-				}
-			});	
+				
 		});
 		
 
@@ -116,27 +54,7 @@ mixin zoneForm()
 			if($('#name').val() == ""){
 				setError('#name','Entrer un nom cette zone');
 				err = true;
-			}else{
-				$.get('/api/zone/maxnum',function(data){
-					if(!data.num){
-						$('#name').append(' Numéro : '+data.num);
-					}else
-						err = true;
-				});
 			}
-			
-			if($('#address').val() != ""){
-				setError('#link','Entrer un centre pour cette zone');
-				err = true;
-			}
-			if($('#TL').val() != ""){
-				setError('#TL','Entrer un coin Top Left');
-				err = true;
-			}
-			if($('#BR').val() != ""){
-				setError('#BR','Entrer un coint Bottom Right');
-				err = true;
-			}				
 			
 
 			if (err){
@@ -147,14 +65,3 @@ mixin zoneForm()
 		});	
 		
 		
-
-		function reduceZoneOptions(lat,lng,zone){
-			$.get('api/zones/'+lat+'/'+lng,function(data){
-				$('#zone').html('');	
-				$.each(data.zones, function (key,val) {
-					$('#zone').append('<option value ="'+val.num+'">'+val.name+'</option>');
-				});
-				if(typeof zone)
-					$("#zoneForm #zone").val(zone);
-			});
-		}

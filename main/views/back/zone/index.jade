@@ -25,33 +25,93 @@ block content
 						mixin list()
 						mixin zoneForm()
 						
-	script					
+	script				
+		var markerLocationTR = null;
+		var markerLocationBL = null;
+		var rect = new google.maps.Rectangle({
+			visible:false,
+			strokeColor: '#ff0000',
+			strokeOpacity: 0.8,
+			strokeWeight: 2,
+			fillColor: '#ff0000',
+			fillOpacity: 0.35,
+			draggable:false,
+		});
+
 		$(document).ready(function() {
 			
-			google.maps.event.addListener(map, 'click', function(event) {
-				var position = event.latLng;
-				getformattedAddress(event.latLng);
-				placeMarker(event.latLng,markerLocation);
+			rect.setMap(map);
+			
+			markerLocationBL = new google.maps.Marker({
+				visible:false,
+				map:map,
+				draggable:true,
+				raiseOnDrag:false,
+				crossOnDrag:false,
+				flat:true,
+				icon:{url:'/images/back/bl.png',anchor:new google.maps.Point(5,37)}
+			});
+
+			markerLocationTR = new google.maps.Marker({
+				visible:false,
+				map:map,
+				draggable:true,
+				raiseOnDrag:false,
+				crossOnDrag:false,
+				flat:true,
+				icon:{url:'/images/back/tr.png',anchor:new google.maps.Point(26,5)}
 			});
 			
-			google.maps.event.addListener(markerLocation, 'dragend', function() {
-				var position = markerLocation.getPosition();
-				getformattedAddress(position);
-				placeMarker(position,markerLocation);
+			var mapCenter = map.getCenter();
+			
+			var BLlatLng = new google.maps.LatLng(mapCenter.lat()-0.01,mapCenter.lng()-0.01);
+			markerLocationBL.setPosition(BLlatLng);
+			
+			var TRlatLng = new google.maps.LatLng(mapCenter.lat()+0.01,mapCenter.lng()+0.01);
+			markerLocationTR.setPosition(TRlatLng);
+			
+			drawRect();
+
+			markerLocationBL.setVisible(true);
+			markerLocationTR.setVisible(true);
+			rect.setVisible(true);
+			
+
+			google.maps.event.addListener(markerLocationTR, 'dragend', function() {
+				var center = drawRect();
+				$("#zoneForm #latTR").val(markerLocationTR.getPosition().lat());
+				$("#zoneForm #lngTR").val(markerLocationTR.getPosition().lng());
+				$("#zoneForm #latCT").val(center.lat());
+				$("#zoneForm #lngCT").val(center.lng());
+				
+			});
+
+			google.maps.event.addListener(markerLocationBL, 'dragend', function() {
+				var center = drawRect();
+				$("#zoneForm #latBL").val(markerLocationBL.getPosition().lat());
+				$("#zoneForm #lngBL").val(markerLocationBL.getPosition().lng());
+				$("#zoneForm #latCT").val(center.lat());
+				$("#zoneForm #lngCT").val(center.lng());
 			});
 
 			
 		});
 		
+		function drawRect(){
+			var latLngBounds = new google.maps.LatLngBounds(markerLocationBL.getPosition(),markerLocationTR.getPosition());
+			rect.setBounds(latLngBounds);
+			return latLngBounds.getCenter();
+		}
 
-		function placeMarker(location,mk) {
-				$('#latitude').val(location.lat());	
-				$('#longitude').val(location.lng());	
-				mk.setVisible(true);
-				mk.setPosition(location);
-			}
+	
 			
+		function getZoneCT(placeGmap){
+			$('#CT').val(placeGmap.title);
+			$("#zoneForm #latCT").val(placeGmap.location.lat);
+			$("#zoneForm #lngCT").val(placeGmap.location.lng);
+		}
 
+		
 
 		function getformattedAddress(position){
 			var geoQuery = {"location": position};
@@ -59,11 +119,7 @@ block content
 				geocoder.geocode( geoQuery, function(results, status) {
 					if (status == google.maps.GeocoderStatus.OK) {
 						var placeGmap = getPlaceFromGmapResult(results[0]);
-						//placeArray = placeGmap;
-						$('#address').val(placeGmap.title);
-						$("#zoneForm #longitude").val(placeGmap.location.lng);
-						$("#zoneForm #latitude").val(placeGmap.location.lat);
-
+						return placeGmap;
 					} else {
 						var salt = new Date().getTime();
 						$('#address').parent().before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide ("+status+")</div>");

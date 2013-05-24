@@ -90,12 +90,12 @@ var setdelay = (function(){
 })();
 
 
-function getPlaceFromGmapResult(result){
-
+function getPlaceFromGmapResult(result){	
 	var loctmp = result.geometry.location.toString();
 	var latlng = loctmp.replace('(','').replace(')','').split(',');
 	var thelat = latlng[0];
 	var thelng = latlng[1];
+
 
 	var addressGmap = {
 		"street_number":""
@@ -142,7 +142,9 @@ function getPlaceFromGmapResult(result){
 		,"status":2 // need validation
 		,"address": addressGmap
 		,"formatted_address":result.formatted_address
+		,"bounds":result['geometry']['bounds']
 	};
+	//results[0]['geometry']['location'].lat()
 	return placeGmap;
 }	
 

@@ -369,11 +369,7 @@ var Point = new Schema({
 });
 mongoose.model('Point', Point);
 
-var Box = new Schema({
-	  tl: { type: {lat : Number, lng: Number} }
-    , br : { type : {lat : Number, lng: Number} }
-});
-mongoose.model('Box', Box);
+
 
 
 var contenuIllicite = new Schema({
