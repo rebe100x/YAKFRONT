@@ -1072,3 +1072,13 @@ border-bottom: 1px solid #e5e5e5;}
 #topsContainer { background: #F6F6F6; margin-top: 30px;}
 #topsContainer .columnTitle { padding-left: 24px; padding-top: 20px; color: #5D5D5D; font-size: 1.2em}
 
+h3 .posterInfo {width: 18px; height: 18px; background-image: url('/images/yakwala_sprite.png'); background-position: -136px 0px; display: block; float: left;margin-top: 4px; margin-right: 12px;}
+h3 .quelEndroit{width: 18px; height: 24px; background-image: url('/images/yakwala_sprite.png'); background-position: -121px -27px; display: block; float: left;margin-top: 4px; margin-right: 12px;}
+h3 .ajouterMedia{width: 24px; height: 24px; background-image: url('/images/yakwala_sprite.png'); background-position: -146px -27px; display: block; float: left;margin-top: 4px; margin-right: 6px;}
+.yakPosterLogo {width: 32px; height: 32px; background-image: url('/images/yakwala_sprite.png'); background-position: -43px 152px; display: block; float: left;margin-top: 4px; margin-right: 6px;}
+.ytPosterLogo {width: 32px; height: 32px; background-image: url('/images/yakwala_sprite.png'); background-position: -7px 152px; display: block; float: left;margin-top: 4px; margin-right: 6px;}
+.scPosterLogo {width: 32px; height: 32px; background-image: url('/images/yakwala_sprite.png'); background-position: -114px 152px; display: block; float: left;margin-top: 4px; margin-right: 6px;}
+.flPosterLogo {width: 32px; height: 32px; background-image: url('/images/yakwala_sprite.png'); background-position: -78px 152px; display: block; float: left;margin-top: 4px; margin-right: 6px;}
+
+
+

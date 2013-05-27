@@ -59,7 +59,9 @@ mixin postForm()
 				input#longitude(type="hidden",data-provide="typeahead", name="longitude")
 				input#postFormRange(type="hidden",name="postFormRange")
 				input#username(type="hidden", name="username",value=locals.user.login)
-				h3 Poster une info:
+				h3
+					span.posterInfo
+					| Poster une info:
 					img(src="/images/new/posterinfo.png", style="float: right; position: relative; top: -29px;  left: 20px;")
 				div.control-group
 					div.controls
@@ -79,7 +81,9 @@ mixin postForm()
 								| ex: maisonavendre
 				
 				hr
-				h3.clearBoth A quel endroit ?
+				h3.clearBoth 
+					span.quelEndroit
+					|A quel endroit ?
 				div.control-group
 					label(for='Place') Clicker sur la carte ou bien entrer une adresse:<br>
 					div.controls
@@ -99,16 +103,18 @@ mixin postForm()
 				
 				hr
 				div.control-group
-					h3 Ajouter un media
+					h3 
+						span.ajouterMedia
+						|Ajouter un media
 					div.controls.myMedia
 						a(title="Poster une photo pour cet info sur yakwala", rel="post_picture")
-							img(src="/images/media/yak.png")
+							span.yakPosterLogo
 						a(title="Rechercher dans Youtube et poster votre video", rel="post_youtube")
-							img(src="/images/media/yt.png")
+							span.ytPosterLogo
 						a(title="Rechercher dans SoundCloud et poster votre audio", rel="post_soundcloud")
-							img(src="/images/media/storify.png")
+							span.scPosterLogo
 						a(title="Rechercher dans flickr et poster votre image", rel="post_flicker")
-							img(src="/images/media/flickr.png")
+							span.flPosterLogo
 					br
 					div#post_yakpicture.controls.clearBoth(style="display: none")
 						span.mediaText.pull-left
