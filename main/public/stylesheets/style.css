@@ -965,7 +965,7 @@ width: 270px;
 line-height: 28px;
 color: #333333;
 border: 0;
-border-bottom: 1px solid #e5e5e5;}
+border-bottom: 1px solid #e5e5e5; width: 100%}
 
 .myMedia a { margin-left: 10px; cursor: pointer; position: relative;}
 
@@ -1051,16 +1051,21 @@ border-bottom: 1px solid #e5e5e5;}
 #youtubeResults ul { list-style: none; padding: 0px; margin: 0px; }
 #youtubeResults ul li {  cursor: pointer; float: left; clear: both; width: 100%;}
 #youtubeResults ul li:hover { background: #cecece;}
-#youtubeResults ul li span { float: left; position: relative;}
-#youtubeResults ul li img {  width: 90px; height: 60px; }
-#youtubeResults ul li .yt_title {  font-weight: bold; width: 50%; }
+#youtubeResults ul li .yt_title {  font-weight: bold; width: 60%; float: left; color: black}
+
+#youtubeResults ul li .yt_image {  font-weight: bold; width: 30%; float: left; position: relative;}
+#youtubeResults ul li .yt_image img {  width: 100%; height: auto; position: relative;}
+#youtubeResults ul li .yt_add {  width: 6%;float: left;position: relative;left: 5px;top: 31px;}
+
 
 #soundCloudResults ul { list-style: none; padding: 0px; margin: 0px; }
 #soundCloudResults ul li {  cursor: pointer; float: left; clear: both; width: 100%;}
 #soundCloudResults ul li:hover { background: #cecece;}
 #soundCloudResults ul li span { float: left; position: relative;}
-#soundCloudResults ul li img {  width: 90px; height: 60px; }
-#soundCloudResults ul li .yt_title {  font-weight: bold; width: 50%; }
+
+#soundCloudResults ul li .yt_title {  font-weight: bold; width: 50%; float: left; position: relative; }
+#soundCloudResults ul li .yt_image {  font-weight: bold; width: 30%; float: left; position: relative;}
+#soundCloudResults ul li .yt_image img {  width: 100%; height: auto; position: relative;}
 
 
 .TheTops { list-style: disc;}
@@ -1079,6 +1084,8 @@ h3 .ajouterMedia{width: 24px; height: 24px; background-image: url('/images/yakwa
 .ytPosterLogo {width: 32px; height: 32px; background-image: url('/images/yakwala_sprite.png'); background-position: -7px 152px; display: block; float: left;margin-top: 4px; margin-right: 6px;}
 .scPosterLogo {width: 32px; height: 32px; background-image: url('/images/yakwala_sprite.png'); background-position: -114px 152px; display: block; float: left;margin-top: 4px; margin-right: 6px;}
 .flPosterLogo {width: 32px; height: 32px; background-image: url('/images/yakwala_sprite.png'); background-position: -78px 152px; display: block; float: left;margin-top: 4px; margin-right: 6px;}
-
-
-
+.rechercheYoutube{width: 32px; height: 32px; background-image: url('/images/yakwala_sprite.png'); background-position: -7px 152px; display: block; float: left; margin-right: 12px;}
+.hint { font-size: 12px; color: #cecece;}
+.mediaBoxContainer { float: left; width: 100%; border: 1px solid #cecece;}
+.mediaBoxContainer .input {border: 1px solid #cecece;height: 25px;margin-left: 12px;margin-top: 12px;}
+.mediaBoxContainer .btn {margin-top: 10px;}

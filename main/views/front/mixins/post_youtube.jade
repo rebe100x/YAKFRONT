@@ -5,29 +5,35 @@ mixin post_youtube
 			span#closeModal(type="button", data-dismiss="modal")
 			div.controls.clearBoth
 				span.mediaText.pull-left
+					span.rechercheYoutube
 					|Recherche Youtube
-				br
-				br
-			div.controls.clearBoth
-				input#youtubeVideos(type="hidden")
-				input#inputYoutube
-				button#searchYoutube Rechercher
-				img#loadingYoutube(src="/images/loader.gif", style="display: none")
-			br
+					br
+					span.hint
+						|Chercher un video sur Youtube et integrez-la dans votre Yassala
 
-			div#youtubeResults.controls.clearBoth
-			br
-			br
-			br
-			br
-			br
-			br
-			br
-			br
-			br
-			br
-			br
-			br
+				br
+				br
+			div.mediaBoxContainer
+				div.controls.clearBoth
+					input#youtubeVideos(type="hidden")
+					input#inputYoutube.input
+					button#searchYoutube.btn Trouver
+					img#loadingYoutube(src="/images/loader.gif", style="display: none")
+				br
+
+				div#youtubeResults.controls.clearBoth
+				br
+				br
+				br
+				br
+				br
+				br
+				br
+				br
+				br
+				br
+				br
+				br
 
 	script
 		$(document).ready(function(){
@@ -55,20 +61,22 @@ mixin post_youtube
 			var title = entry.title.$t;
 			var thumb = entry.media$group.media$thumbnail[0].url;
 			html += '<li rel="' + vid + '">';
-			//html += '<span class="yt_image">' + "<img src='" + thumb +"' />" + '</span>';
-			html += '<span class="yt_title">' + title + '</span>';
-			html += '<iframe  src="http://www.youtube.com/embed/'+vid+'" width="100%" frameborder="0" allowfullscreen></iframe>';
+			html += '<a target="_blank" href="http://www.youtube.com/watch?v='+vid+'" class="yt_title" rel="'+vid+'">' + title + '</a>';
+			html += '<a target="_blank" href="http://www.youtube.com/watch?v='+vid+'" class="yt_image" rel="'+vid+'">' + "<img src='" + thumb +"' />" + '</a>';
+			html += '<span class="yt_add yakPosterLogo" rel="'+vid+'"></span>';
+			//html += '<iframe  src="http://www.youtube.com/embed/'+vid+'" width="100%" frameborder="0" allowfullscreen></iframe>';
 			html += '</li>';
 
 			}
 			html += '</ul>';
 			$("#youtubeResults").html(html);
 
-			$("#youtubeResults ul li").click(function(){
+			$("#youtubeResults ul li .yt_add").click(function(){
 				var frame = '<div><iframe  src="http://www.youtube.com/embed/'+$(this).attr("rel")+'" width="96%" frameborder="0" allowfullscreen></iframe><span style="cursor: pointer; position: relative; float: right" onclick="removeframe(this)">X</span><div>'
 				$("#post_yakYoutube").prepend(frame);
 				//$('#post_youtube').modal('hide');
 			});
+
 		} 
 
 		function removeframe(el)
