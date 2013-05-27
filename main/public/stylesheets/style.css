@@ -175,7 +175,7 @@ ul#newsfeed li.highlighted .mapHighlighter{background-color:#F6F6F6; width: 99%;
 ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: both; padding-left: 3px; padding-right: 3px; position: absolute; left: -119px; top: 5px}
 .infowindow .myitem {clear: both; position: relative; top: 12px; text-align: justify; padding-left: 7px; padding-right: 12px;}
 .infowindow .myitem .shareMe { width: auto; float: right; clear: both; top: -17px; position: relative; right: 85px;}
-.infowindow .myitem .ftgIcon { height: 21px; position: absolute; top: 7px; float: left; clear: both; background: #F5881F; left: -83px; width: 183px; display: block; z-index: 11111}
+.infowindow .myitem .ftgIcon { height: 21px; position: absolute; top: 7px; float: left; clear: both; background: url('/images/yakwala_sprite.png') -349px -759px; left: -83px; width: 177px; display: block; z-index: 11111}
 .infowindow .myitem .btn.newYaklike { width: 45px; height: 17px; background: url('/images/yakwala_sprite.png') -306px -292px; font-size: 12px; font-weight: bold; text-indent: 8px; padding-top: 5px;}
 .infowindow .myitem .yakLikes {top: -33px; position: relative; float: left; clear: both; }
 .infowindow .myitem .buttons { z-index:  11;}
@@ -186,7 +186,7 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 .infowindow .myitem .commentBox .aComment { clear:  both; padding-bottom: 12px;}
 .infowindow .myitem .commentBox .timeago{ margin-left:5px;}
 .infowindow .myitem .commentBox {font-style:italic; position: relative; clear: both; width: auto; float: left; left: 0px; top: -30px; color: #D71920; cursor: pointer; background: #F1F2F6; width: 100%; margin-bottom: 10px;}
-.infowindow .myitem .commentBox .username { color: #3B5998; }
+.infowindow .myitem .commentBox .username { color: black; font-weight: bold; }
 .infowindow .myitem .commentBox .username:hover { text-decoration: underline;}
 .infowindow .myitem .commentBox .userthumb { height: 50px; width: 50px; float: left; margin-right: 6px;}
 .infowindow .myitem .commentBox .comment { color: black; margin-bottom: 12px;}
