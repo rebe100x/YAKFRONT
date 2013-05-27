@@ -1277,3 +1277,4 @@ require('./place.js');
 require('./feed.js');
 require('./yakNE.js');
 require('./zone.js');
+require('./stat.js');

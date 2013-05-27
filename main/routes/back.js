@@ -426,6 +426,56 @@ exports.feed = function(req, res){
 	
 };
 
+
+/*******
+#DASHBOARD
+********/
+
+exports.dashboard_list = function(req, res){
+	delete req.session.message;
+	res.render('dashboard/index');
+};
+exports.dashboard_stats= function(req,res){
+	var Stat = db.model('Stat');
+	Stat.findFromDate(req.params.msts,function(err,stats){
+		if(!err){
+			/*
+			keys = [];
+			data = {};
+			stats.forEach(function(element, index, array){
+				var el = JSON.parse(JSON.stringify(element))
+				keys = Object.keys(el);
+				keys.forEach(function(d){
+					if(typeof data[d] == 'undefined')
+						data[d] = new Array();						
+					data[d].push(el[d]);
+
+				});
+				
+				 
+			});
+			console.log(data);
+			*/
+			data = new Array();
+			
+			stats.forEach(function(element){
+				subdata = new Array();
+				var el = JSON.parse(JSON.stringify(element))
+				keys = Object.keys(el);
+				keys.forEach(function(d){
+					subdata.push(el[d]);	
+				});
+				data.push(subdata);
+			});
+			//data.unshift(keys);
+			res.json({
+				stats: data
+			});
+		}
+			
+	});
+};
+
 /*******
 #ZONE
 ********/
@@ -505,6 +555,8 @@ exports.zone_list = function(req, res){
 	delete req.session.message;
 	res.render('zone/index');
 };
+
+
 
 exports.zones = function(req, res){
 	var Zone = db.model('Zone');

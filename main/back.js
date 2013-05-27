@@ -88,8 +88,10 @@ app.get('/place/list', back.requiresLogin, back.place_list);
 app.get('/feed/list', back.requiresLogin, back.feed_list);
 app.get('/user/list',back.requiresLogin, back.user_list);
 app.get('/zone/list',back.requiresLogin, back.zone_list);
+app.get('/dashboard/list',back.requiresLogin, back.dashboard_list);
 app.get('/illicites/list',back.requiresLogin, back.illicites);
 app.get('/categories/list',back.requiresLogin, back.categories);
+
 
 app.post('/deleteIllicite', back.requiresLogin, back.deleteIllicite);
 app.post('/feed', back.requiresLogin, back.feed);
@@ -111,6 +113,9 @@ app.get('/api/zones', back.zones);
 //app.post('/api/users', back.users);
 app.get('/api/users', back.users);
 app.get('/api/illicites', back.illicites);
+
+app.get('/api/dashboard/stats/:msts',back.requiresLogin, back.dashboard_stats);
+
 
 app.get('/api/feed/:id',back.requiresLogin, back.findFeedById);
 app.get('/api/feedExist/:name',back.requiresLogin, back.findFeedByName);

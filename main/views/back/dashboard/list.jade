@@ -1,41 +1,43 @@
-extends ../layout
-block content
-	include ../mixins/menu.jade
+mixin list()
+	div.span6.raphael
+		div#chart_div(style="width: 900px; height: 500px;")	
 
-	mixin menu('dashboard')
+	div.span6 elo
+				
+	script
+		window.onload = function () {
+			
+			
+			
+		};
+		var last10Days = new Date() - 10*24*60*60*1000;
+			
+		google.load("visualization", "1", {packages:["corechart"]});
+		google.setOnLoadCallback(drawChart);
+		function drawChart() {
+			
+			
+			//console.log(data);	
+			$.get('/api/dashboard/stats/'+last10Days,function(data){
+				console.log(data.stats);
+				var data = google.visualization.arrayToDataTable(data.stats);
+				var data = google.visualization.arrayToDataTable([
+					['Year', 'Sales', 'Expenses'],
+					['2004',  1000,      400],
+					['2005',  1170,      460],
+					['2006',  660,       1120],
+					['2007',  1030,      540]
+					]);
+				var options = {
+					title: 'Company Performance',
+					hAxis: {title: 'Year',  titleTextStyle: {color: 'red'}, format:'MMM d, y'}
+				};
 
+				var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+				chart.draw(data, options);
+			});
 
-	div.container-fluid
-		div.row-fluid
-			div.span8
-				div#dashBoardContainer
-					div.span8
-						h2 Welcome to YAKWALA Administration
-						div.span12
-							div.span4
-								a(href="/place/list", title="Manage Places")
-									img(src="/images/back/places.jpg")
-							div.span4
-								a(href="/info/list", title="Manage Infos")
-									img(src="/images/back/news.jpg")
-							div.span4
-								a(href="/feed/list", title="Manage Feeds")
-									img(src="/images/back/feed.jpg")
+			
+		}
 
-						div.span12
-							br
-							br
-							br
-							br
-							br
-
-						div.span12
-							div.span4
-								a(href="/illicites/list", title="Manage Illicite")
-									img(src="/images/back/spam.jpg")
-							div.span4
-								a(href="/categories/list", title="Manage Yakcats")
-									img(src="/images/back/cats.jpg")
-							div.span4
-								a(href="/user/list", title="Manage Users")
-									img(src="/images/back/user.jpg")
+		
