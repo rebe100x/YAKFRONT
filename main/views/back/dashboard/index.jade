@@ -4,17 +4,17 @@ block content
 	include ../../front/mixins/locationChooser.jade	
 	include list.jade
 
+	mixin menu('dashboard')
+	mixin locationChooser()
+
 	div.container-fluid
 		div.row-fluid
-			div.span4
-			
-			div.span8
+			div.span12
 				div.fuelux
 					- if (message)
 						each msg in message
 							div.alert.fade.in#alert
 								button.close(type="button",data-dismiss="alert") x
 								strong= msg
-
-					div#newsfeedContainer
-						
+		div.row-fluid#dashBoardContainer
+			mixin list()				
