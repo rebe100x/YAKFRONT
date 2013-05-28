@@ -294,8 +294,6 @@ exports.gridFeeds = function (req, res) {
 			var feedFormated = feed.map(function(item){
 				return Feed.format(item);
 			});
-			console.log(feedFormated[0].thumb);
-			console.log(feedFormated[0].thumbSmall);
 			data['feed'] = feedFormated;
 			data['pageIndex'] = req.params.pageIndex;
 			data['pageSize'] = req.params.pageSize;
@@ -435,42 +433,49 @@ exports.dashboard_list = function(req, res){
 	delete req.session.message;
 	res.render('dashboard/index');
 };
-exports.dashboard_stats= function(req,res){
-	var Stat = db.model('Stat');
-	Stat.findFromDate(req.params.msts,function(err,stats){
-		if(!err){
-			/*
-			keys = [];
-			data = {};
-			stats.forEach(function(element, index, array){
-				var el = JSON.parse(JSON.stringify(element))
-				keys = Object.keys(el);
-				keys.forEach(function(d){
-					if(typeof data[d] == 'undefined')
-						data[d] = new Array();						
-					data[d].push(el[d]);
 
-				});
-				
-				 
-			});
-			console.log(data);
-			*/
-			data = new Array();
+exports.dashboard_statsByDate= function(req,res){
+	var Stat = db.model('Stat');
+	var type = req.params.type;
+	Stat.findFromDate(req.params.msts,function(err,stats){
+		//console.log(stats);
+		if(!err){
+			var rows = {};
+			switch(type){
+				case 'user':
+					var statFormated = stats.map(function(item){
+						return Stat.formatByUser(item);
+					});
+				break;
+				case 'info':
+					var statFormated = stats.map(function(item){
+						return Stat.formatByInfo(item);
+					});
+				break;
+				case 'place':
+					var statFormated = stats.map(function(item){
+						return Stat.formatByPlace(item);
+					});
+				break;
+			}			
 			
-			stats.forEach(function(element){
-				subdata = new Array();
-				var el = JSON.parse(JSON.stringify(element))
-				keys = Object.keys(el);
-				keys.forEach(function(d){
-					subdata.push(el[d]);	
-				});
-				data.push(subdata);
+			rows = statFormated;
+			res.json(rows);
+		}
+	});
+};
+
+exports.dashboard_statsByZone= function(req,res){
+	var Stat = db.model('Stat');
+	Stat.findToday(req.params.msts,function(err,stats){
+		var statsObj = stats;
+		if(!err){
+			var rows = {};			
+			var statFormated = stats.zone.map(function(item){
+				return Stat.formatByZone(item);
 			});
-			//data.unshift(keys);
-			res.json({
-				stats: data
-			});
+			rows = statFormated;
+			res.json(rows);
 		}
 			
 	});
@@ -486,14 +491,11 @@ exports.zone = function(req, res){
 	delete req.session.message;
 	var Zone = db.model('Zone');
 	var obj_id = req.body.objid;
-	console.log(req.body);
 	var zone = new Object();
 	var now = new Date();
 	
 	zone.name = req.body.name;
 	Zone.findOne({},{},{sort:{num:-1}},function (err, docs){
-    	
-
  		
  		zone.location = {lng:parseFloat(req.body.lngCT),lat : parseFloat(req.body.latCT)};
 		var box = new Object();
@@ -503,10 +505,6 @@ exports.zone = function(req, res){
 		zone.box = box;
 		zone.status = parseInt(req.body.status);
 		zone.lastModifDate = now;
-
-
-		console.log(zone);
-		
 
 		if(typeof obj_id != 'undefined' && obj_id != ''){
 			var cond = {_id:obj_id};
@@ -528,9 +526,6 @@ exports.zone = function(req, res){
 			res.redirect('zone/list')
 		});
     });
-	
-	
-	
 };
 	
 exports.findZoneMaxnum = function(req, res){
@@ -609,6 +604,8 @@ exports.zone_setstatus = function (req, res){
 			res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 	});
 }
+
+
 
 
 

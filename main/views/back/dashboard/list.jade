@@ -1,43 +1,94 @@
 mixin list()
-	div.span6.raphael
-		div#chart_div(style="width: 900px; height: 500px;")	
-
-	div.span6 elo
-				
+	div.span6
+		legend Géolocalisation des infos :
+		div#chart_geo(style="width: 100%; height: 100%;")	
+	div.span6
+		div#chart_info(style="width: 500px; height: 300px;")	
+		div#chart_place(style="width: 500px; height: 300px;")
+		div#chart_user(style="width: 500px; height: 300px;")				
 	script
-		window.onload = function () {
-			
-			
-			
-		};
+		/*LINECHART*/
 		var last10Days = new Date() - 10*24*60*60*1000;
-			
 		google.load("visualization", "1", {packages:["corechart"]});
 		google.setOnLoadCallback(drawChart);
 		function drawChart() {
-			
-			
-			//console.log(data);	
-			$.get('/api/dashboard/stats/'+last10Days,function(data){
-				console.log(data.stats);
-				var data = google.visualization.arrayToDataTable(data.stats);
-				var data = google.visualization.arrayToDataTable([
-					['Year', 'Sales', 'Expenses'],
-					['2004',  1000,      400],
-					['2005',  1170,      460],
-					['2006',  660,       1120],
-					['2007',  1030,      540]
-					]);
+			var option = {};
+			var data = {};
+			var mapData = {};
+	
+			$.get('/api/dashboard/statsByDate/info/'+last10Days,function(rows){
+				
+				data['cols'] = [
+								{id: 'creationDate', label: 'Date', type: 'string'},
+								{id: 'infoTotal', label: 'Total Infos', type: 'number'},
+								{id: 'infoYassala', label: 'Yassalas', type: 'number'},
+								{id: 'infoTovalidate', label: 'To Validate', type: 'number'},
+							];
+				data['rows'] = rows;			
+				mapData = new google.visualization.DataTable(data)
+				options = {title: 'Infos',colors:['#3a87ad','#468847','#b94a48','#f89406'],areaOpacity:0.6};
+				var chartInfo = new google.visualization.AreaChart(document.getElementById('chart_info'));
+				chartInfo.draw(mapData, options);
+			});
+				
+			$.get('/api/dashboard/statsByDate/user/'+last10Days,function(rows){	
+				data = {};
+				mapData = {};
+				data['cols'] = [
+								{id: 'creationDate', label: 'Date', type: 'string'},
+								{id: 'userTotal', label: 'Total Users', type: 'number'},
+								{id: 'userTovalidate', label: 'To Validate', type: 'number'},
+							];
+				data['rows'] = rows;			
+				mapData = new google.visualization.DataTable(data)
+				options = {title: 'Users',colors:['#3a87ad','#468847','#b94a48','#f89406'],areaOpacity:0.8};
+				var chartUser = new google.visualization.AreaChart(document.getElementById('chart_user'));
+				chartUser.draw(mapData, options);
+			});
+			$.get('/api/dashboard/statsByDate/place/'+last10Days,function(rows){		
+				data = {};
+				mapData = {};
+				data['cols'] = [
+								{id: 'creationDate', label: 'Date', type: 'string'},
+								{id: 'placeTotal', label: 'Total Lieux', type: 'number'},
+								{id: 'placeTovalidate', label: 'To Validate', type: 'number'},
+							];
+				data['rows'] = rows;			
+				mapData = new google.visualization.DataTable(data)
+				options = {title: 'Lieux',colors:['#3a87ad','#468847','#b94a48','#f89406'],areaOpacity:0.4};
+				var chartPlace = new google.visualization.AreaChart(document.getElementById('chart_place'));
+				chartPlace.draw(mapData, options);
+			});
+		};
+
+		/*GEOCHART*/
+		google.load('visualization', '1', {'packages': ['geochart']});
+		google.setOnLoadCallback(drawMarkersMap);
+
+		function drawMarkersMap() {
+			var nowTs = parseInt(new Date().getTime());
+			$.get('/api/dashboard/statsByZone/'+nowTs,function(rows){
+				var mapData = {};
+				data = {};
+				data['cols'] = [
+								{id: 'Zone', label: 'Zone', type: 'string'},
+								{id: 'nbinfos', label: 'Infos: ', type: 'number'},
+							];
+
+				data['rows'] = rows;
+				mapData = new google.visualization.DataTable(data)
+				
 				var options = {
-					title: 'Company Performance',
-					hAxis: {title: 'Year',  titleTextStyle: {color: 'red'}, format:'MMM d, y'}
+				
+					region: 'FR',
+					displayMode: 'markers',
+					colorAxis: {colors: ['#3A87AD', '#b94a48']}
 				};
 
-				var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
-				chart.draw(data, options);
-			});
+				var chart = new google.visualization.GeoChart(document.getElementById('chart_geo'));
+				chart.draw(mapData, options);
+			});	
+		};
 
-			
-		}
 
 		

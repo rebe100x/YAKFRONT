@@ -114,7 +114,8 @@ app.get('/api/zones', back.zones);
 app.get('/api/users', back.users);
 app.get('/api/illicites', back.illicites);
 
-app.get('/api/dashboard/stats/:msts',back.requiresLogin, back.dashboard_stats);
+app.get('/api/dashboard/statsByZone/:msts',back.requiresLogin, back.dashboard_statsByZone);
+app.get('/api/dashboard/statsByDate/:type/:msts',back.requiresLogin, back.dashboard_statsByDate);
 
 
 app.get('/api/feed/:id',back.requiresLogin, back.findFeedById);
