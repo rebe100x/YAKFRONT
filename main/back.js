@@ -120,6 +120,7 @@ app.get('/api/dashboard/statsByDate/:type/:msts',back.requiresLogin, back.dashbo
 
 app.get('/api/feed/:id',back.requiresLogin, back.findFeedById);
 app.get('/api/feedExist/:name',back.requiresLogin, back.findFeedByName);
+app.get('/api/feedList',back.requiresLogin, back.findAllFeed);
 app.get('/api/cats/:id',back.requiresLogin, back.catsById);
 app.get('/api/cats',back.requiresLogin, api.cats);
 app.get('/api/tags',back.requiresLogin, api.tags);

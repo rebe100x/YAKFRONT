@@ -153,6 +153,25 @@ mixin feedForm()
 							input.lineToBeginGroup#lineToBegin(type="text",name="lineToBegin",placeholder="Ligne de début du parsing",value="0")	
 
 					.span6
+						label Fréquence du parsing : 
+						select#parsingFreq(name='parsingFreq')
+							option(value="30") toutes les 30min
+							option(value="60") toutes les 1h
+							option(value="120") toutes les 2h
+							option(value="180") toutes les 3h
+							option(value="240") toutes les 4h
+							option(value="360") toutes les 6h
+							option(value="600") toutes les 10h
+							option(value="1200") toutes les 12h
+							option(value="2400") tous les jours
+							option(value="4800") tous les 2 jours
+							option(value="7200") tous les 3 jours
+							option(value="1080") tous les 7 jours
+							option(value="2160") tous les 14 jours
+							option(value="43200") tous les mois
+							option(value="83400") tous les 2 mois
+							option(value="259200") tous les 6 mois
+							option(value="518400") tous les ans					
 						label &nbsp;
 						button.btn.btn-primary.btn-warning(type='button', name='parsing', id='parsing') Définir le parsing
 

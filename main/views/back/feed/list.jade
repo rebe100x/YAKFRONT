@@ -386,7 +386,8 @@ mixin list()
 					$('#defaultPlaceName').val(feed.defaultPlaceName);
 					
 
-					
+					$("#feedForm #parsingFreq").val(feed.parsingFreq);
+
 					$("#feedForm #feedType").val(feed.feedType);
 					switch(feed.feedType){
 						case 'CSV':

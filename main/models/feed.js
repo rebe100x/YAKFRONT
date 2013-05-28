@@ -16,6 +16,7 @@ var Feed = new Schema({
 	,fileSource	: [String] 
 	,rootElement	: String 
 	,lineToBegin	: Number
+	,parsingFreq	: Number
 	,parsingTemplate : {type:{
 		title : String,
 		content : String,
@@ -57,6 +58,10 @@ var Feed = new Schema({
 	,creationDate : {type: Date, required: true, default: Date.now}
 	,lastModifDate: {type: Date, required: true, default: Date.now}
 	,status : Number
+	,lastExecStatus : Number
+	,lastExecStatusLabel : String
+	,lastExecDate : Date
+	,lastExecErr : String
 	,daysBack : Number
 	,zone : Number
 },{ collection: 'feed' });
@@ -86,7 +91,6 @@ Feed.statics.formatLight2 = function (thefeed) {
 
 
 Feed.statics.format = function (thefeed) {
-	var formattedFeed = thefeed;
 
 	if(thefeed.thumb && typeof thefeed.thumb!= 'undefined'){
 		var thethumbbig = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/128_128/'+thefeed.thumb;
@@ -101,14 +105,19 @@ Feed.statics.format = function (thefeed) {
 	thefeed.thumbMedium = thethumbmedium;
 	thefeed.thumbSmall = thethumbsmall;
 
+	var now = new Date();
+	if(thefeed.lastExecStatus != 1 || now.getTime() > ( thefeed.lastExecDate.getTime() + (thefeed.parsingFreq * 60* 1000) ) ){
+		thefeed.lastExecStatusLabel = 'NOK';
+	}else{
+		thefeed.lastExecStatusLabel = 'OK';
+	}
 
+		
   return thefeed;
 }  
 
   
-Feed.statics.findAll = function (callback) {
-  return this.find({},{},{sort:{humanName:1}}, callback);
-}
+
 
 Feed.statics.searchOne = function (str,exact,callback) {
   if(!exact)
@@ -129,7 +138,7 @@ Feed.statics.findById = function (id, callback) {
 }
 
 Feed.statics.findAll = function (callback) {
-	return this.find({},[],{sort:{humanName:1}}, callback);
+	return this.find({},{},{sort:{humanName:1}}, callback);
 }
 
 

@@ -2,11 +2,35 @@ mixin list()
 	div.span6
 		legend Géolocalisation des infos :
 		div#chart_geo(style="width: 100%; height: 100%;")	
+		br
+		br
+		legend Etat des batchs :
+		table.table#batchList.table-hover
+
 	div.span6
-		div#chart_info(style="width: 500px; height: 300px;")	
-		div#chart_place(style="width: 500px; height: 300px;")
-		div#chart_user(style="width: 500px; height: 300px;")				
+		div#chart_info(style="width: 75%; height: 100%;")	
+		div#chart_place(style="width: 75%; height:100%;")
+		div#chart_user(style="width: 75%; height: 100%;")				
 	script
+
+		/*BATCH LIST*/
+		$.get('/api/feedList',function(data){
+			if(typeof data.feeds != 'undefined' && data.feeds.length > 0){	
+				var batchsInError = '';
+				data.feeds.forEach(function(item){
+					if(item.lastExecStatusLabel != 'OK'){
+						batchsInError += '<tr><td><i class="icon-exclamation-sign"></i>&nbsp;'+item.humanName+'</td><td>Last Execution : '+item.lastExecDate+'</td><td class="error">'+item.lastExecStatusLabel+'</td></tr>';
+					}
+				});
+				if(batchsInError.length == 0)
+					$("#batchList").append('<tr><td>Tous les batchs sont OK !</td></tr>');
+				else
+					$("#batchList").append(batchsInError);		
+			}
+			
+		});
+		
+
 		/*LINECHART*/
 		var last10Days = new Date() - 10*24*60*60*1000;
 		google.load("visualization", "1", {packages:["corechart"]});

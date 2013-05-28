@@ -271,6 +271,20 @@ exports.findFeedById = function (req, res) {
 	});
 };
 
+exports.findAllFeed = function (req, res) {
+	var Feed = db.model('Feed');
+   	Feed.findAll(function (err, feeds){
+   		var data = {};
+		var feedFormated = feeds.map(function(item){
+			return Feed.format(item);
+		});
+		res.json({
+			feeds: feedFormated
+		});
+	});
+
+};
+
 exports.gridFeeds = function (req, res) {
 	var Feed = db.model('Feed');
     
@@ -355,6 +369,8 @@ exports.feed = function(req, res){
 		feed.lineToBegin = parseInt(req.body.lineToBegin);
 	else
 		feed.lineToBegin = 1;
+
+	feed.parsingFreq = req.body.parsingFreq;
 
 	feed.parsingTemplate = {
 		title: req.body.infoTitle,
