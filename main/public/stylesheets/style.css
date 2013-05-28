@@ -170,7 +170,7 @@
 .mapHighlighterDetails{display:block;}
 ul#newsfeed{display:block;list-style-type:none;width:100%;margin:0px auto;padding:0px 0px;position:relative;opacity:1;z-index:2000;background:#FFFFFF;}
 ul#newsfeed li{width:100%;}
-ul#newsfeed li.highlighted .mapHighlighter{background-color:#F6F6F6; width: 99%; left: 0%; position: relative;}
+ul#newsfeed li.highlighted .mapHighlighter{background-color:#F6F6F6; width: 98%; left: 0%; position: relative;}
 
 ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: both; padding-left: 3px; padding-right: 3px; position: absolute; left: -119px; top: 5px}
 .infowindow .myitem {clear: both; position: relative; top: 12px; text-align: justify; padding-left: 7px; padding-right: 12px;}
@@ -420,7 +420,7 @@ width: 270px;
 
 /*Desktops and laptops*/
  @media only screen and ( min-width: 1024px ) {
-	#maplink { width: 51px; height: 51px; display: block; float: left; background-image: url('/images/yakwala_sprite.png'); background-position: 108px -126px; margin-top: 6px; margin-left: 6px; margin-bottom: 6px; cursor: pointer;}
+	#maplink { width: 51px; height: 51px; display: block; float: left; background-image: url('/images/yakwala_sprite.png'); background-position: 116px -126px; margin-top: 6px; margin-left: 6px; margin-bottom: 6px; cursor: pointer;}
 	#maplink:hover, #maplink.activated { background-position: 0px -126px;}
 
 	#feedlink { width: 51px; height: 51px; display: block; float: left; background-image: url('/images/yakwala_sprite.png'); background-position: 116px -62px; margin-top: 6px; margin-left: 6px; margin-bottom: 6px;}
