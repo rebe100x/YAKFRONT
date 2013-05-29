@@ -5,8 +5,14 @@ mixin list()
 		br
 		br
 		legend Etat des batchs :
-		table.table#batchList.table-hover
-
+		table.table.table-hover.table-condensed
+			thead
+				tr
+					th Nom
+					th Erreur
+					th Dernière execution
+					th status
+			tbody#batchList
 	div.span6
 		div#chart_info(style="width: 75%; height: 100%;")	
 		div#chart_place(style="width: 75%; height:100%;")
@@ -19,7 +25,20 @@ mixin list()
 				var batchsInError = '';
 				data.feeds.forEach(function(item){
 					if(item.lastExecStatusLabel != 'OK'){
-						batchsInError += '<tr><td><i class="icon-exclamation-sign"></i>&nbsp;'+item.humanName+'</td><td>Last Execution : '+item.lastExecDate+'</td><td class="error">'+item.lastExecStatusLabel+'</td></tr>';
+						var lastExecDate = '';
+						if(typeof item.lastExecDate != 'undefined' && item.lastExecDate )
+							lastExecDate = item.lastExecDate;
+						var lastExecErr = '';
+						if(typeof item.lastExecErr != 'undefined' && item.lastExecErr && item.lastExecErr != '' )
+							lastExecErr = item.lastExecErr;
+						var errClass = '';
+						if(item.lastExecStatusLabel == 'WARN')
+							errClass = 'warning';
+						if(item.lastExecStatusLabel == 'NOK')
+							errClass = 'error';
+						
+
+						batchsInError += '<tr class="'+errClass+'"><td><i class="icon-exclamation-sign"></i>&nbsp;'+item.humanName+'</td><td>'+lastExecErr+'</td><td>'+lastExecDate+'</td><td class="error">'+item.lastExecStatusLabel+'</td></tr>';
 					}
 				});
 				if(batchsInError.length == 0)
@@ -65,7 +84,7 @@ mixin list()
 							];
 				data['rows'] = rows;			
 				mapData = new google.visualization.DataTable(data)
-				options = {title: 'Users',colors:['#3a87ad','#468847','#b94a48','#f89406'],areaOpacity:0.8};
+				options = {title: 'Users',colors:['#3a87ad','#468847','#b94a48','#f89406'],areaOpacity:0.1,pointSize:5,lineWidth:3,};
 				var chartUser = new google.visualization.AreaChart(document.getElementById('chart_user'));
 				chartUser.draw(mapData, options);
 			});
@@ -79,7 +98,7 @@ mixin list()
 							];
 				data['rows'] = rows;			
 				mapData = new google.visualization.DataTable(data)
-				options = {title: 'Lieux',colors:['#3a87ad','#468847','#b94a48','#f89406'],areaOpacity:0.4};
+				options = {title: 'Lieux',colors:['#3a87ad','#468847','#b94a48','#f89406'],areaOpacity:0.1,pointSize:5,lineWidth:3};
 				var chartPlace = new google.visualization.AreaChart(document.getElementById('chart_place'));
 				chartPlace.draw(mapData, options);
 			});

@@ -60,7 +60,7 @@ var Feed = new Schema({
 	,status : Number
 	,lastExecStatus : Number
 	,lastExecStatusLabel : String
-	,lastExecDate : Date
+	,lastExecDate : {type: Date, required: true, default: Date.now}
 	,lastExecErr : String
 	,daysBack : Number
 	,zone : Number
@@ -108,6 +108,13 @@ Feed.statics.format = function (thefeed) {
 	var now = new Date();
 	if(thefeed.lastExecStatus != 1 || now.getTime() > ( thefeed.lastExecDate.getTime() + (thefeed.parsingFreq * 60* 1000) ) ){
 		thefeed.lastExecStatusLabel = 'NOK';
+		if(thefeed.lastExecStatus == 2)
+			thefeed.lastExecErr = 'Erreur de parsing';
+		else if(thefeed.lastExecStatus == 3)
+			thefeed.lastExecErr = 'Erreur de fetching';
+		else if(thefeed.lastExecStatus == 4){
+			thefeed.lastExecStatusLabel = 'WARN';
+		}
 	}else{
 		thefeed.lastExecStatusLabel = 'OK';
 	}
