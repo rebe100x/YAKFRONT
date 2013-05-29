@@ -12,6 +12,7 @@ mixin list()
 					th Erreur
 					th Dernière execution
 					th status
+					th Run
 			tbody#batchList
 	div.span6
 		div#chart_info(style="width: 75%; height: 100%;")	
@@ -38,7 +39,7 @@ mixin list()
 							errClass = 'error';
 						
 
-						batchsInError += '<tr class="'+errClass+'"><td><i class="icon-exclamation-sign"></i>&nbsp;'+item.humanName+'</td><td>'+lastExecErr+'</td><td>'+lastExecDate+'</td><td class="error">'+item.lastExecStatusLabel+'</td></tr>';
+						batchsInError += '<tr class="'+errClass+'"><td><i class="icon-exclamation-sign"></i>&nbsp;'+item.humanName+'</td><td>'+lastExecErr+'</td><td>'+lastExecDate+'</td><td class="error">'+item.lastExecStatusLabel+'</td><td><a href="'+conf.batchurl.replace('BACKEND','BATCH')+'parserPAPI.php?q='+item.name+'&forceUpdate=1" target=_blank"><i class="icon-play" title="Executer le batch"></i></a></td></tr>';
 					}
 				});
 				if(batchsInError.length == 0)
