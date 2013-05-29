@@ -419,6 +419,7 @@ exports.feed = function(req, res){
 		var cond = {_id:obj_id};
 	}else{
 		feed.creationDate = now;
+		feed.lastExecDate = now;
 		var cond = {name:"anameimpossibletochoose007"};
 	}
 		
@@ -484,15 +485,15 @@ exports.dashboard_statsByDate= function(req,res){
 exports.dashboard_statsByZone= function(req,res){
 	var Stat = db.model('Stat');
 	Stat.findToday(req.params.msts,function(err,stats){
-		var statsObj = stats;
-		if(!err){
+		if(!err && stats != null && typeof stats != 'undefined'){
 			var rows = {};			
 			var statFormated = stats.zone.map(function(item){
 				return Stat.formatByZone(item);
 			});
 			rows = statFormated;
 			res.json(rows);
-		}
+		}else
+			res.json({});
 			
 	});
 };

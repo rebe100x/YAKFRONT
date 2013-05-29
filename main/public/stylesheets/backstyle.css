@@ -24,6 +24,10 @@ input.error{background-color:#FF0000;}
 .fuelux .grid-pager input{line-height: 30px;margin-top: 0px;height: 30px;}
 
 table.table-nohover tbody tr td:hover,  table.table-nohover thead tr th:hover {background:#f89406;cursor:pointer;color:#FFF;} 
+
+table tr.warning{background-color: #FCF8E3;}
+table tr.error{background-color: #F2DEDE;}
+
 /*location chooser */
 #locationChooser{top:40%;}
 #locationChooser .modal-body {max-height: 420px;}
