@@ -940,8 +940,13 @@
 		}
 
 		function printMapItem(item,key,bounce){
+			
 			var latLng = new google.maps.LatLng(item.location['lat'],item.location['lng']);
-			var marker = new google.maps.Marker({position: latLng,icon:"/images/markers/new/type"+item.yakType+".png"});
+			if(item.yakType == "4")
+				var icon = new google.maps.MarkerImage("/images/yakwala_sprite.png", new google.maps.Size(40, 50), new google.maps.Point(0, 415));
+			else
+				var icon = new google.maps.MarkerImage("/images/yakwala_sprite.png", new google.maps.Size(40, 50), new google.maps.Point(28, 415));
+			var marker = new google.maps.Marker({position: latLng,icon:icon});
 			markers.push(marker);
 			marker.setMap(map);	
 			google.maps.event.addListener(marker, 'click', function() {
