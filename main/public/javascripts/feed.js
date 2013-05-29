@@ -307,7 +307,7 @@
 						};
 
 						if(!isUserBL && !isFeedBL && !isInfoBL)
-							ulCommented+="<li><a href='/news/feed?id="+val._id+"'>"+val.title+"</a><br /><span class='topCounts'>"+val.commentsCount+"commentaire(s)</span></li>";
+							ulCommented+="<li><a href='/news/feed?id="+val._id+"'>"+val.title+"</a><br /><i class='commentLogo'></i><span class='topCounts'>"+val.commentsCount+"</span></li>";
 				});
 				
 			}
@@ -342,7 +342,18 @@
 						};
 
 						if(!isUserBL && !isFeedBL && !isInfoBL)
-							ulHots+="<li><a href='/news/feed?id="+val._id+"'>"+val.title+"</a><br /><div class='topHeat'><div class='heatLevel' style='width: "+val.heat+"%'></div></div></li>";
+						{
+							//ulHots+="<li><a href='/news/feed?id="+val._id+"'>"+val.title+"</a><br /><div class='topHeat'><div class='heatLevel' style='width: "+val.heat+"%'></div></div></li>";
+							thedate = buildItemDate(val);
+							var thumbsource = "";
+							if(val.thumb != undefined && val.thumb != "")
+							{
+								thumbsource = "<img src='"+conf.fronturl+'/pictures/120_90/' + val.thumb +"' width='50' height='auto' />";
+							 }
+								
+							ulHots+="<li>"+thumbsource+"<a href='/news/feed?id="+val._id+"'>"+val.title+"</a><br />"+thedate+"</li>";
+						}
+							
 				});
 				
 			}

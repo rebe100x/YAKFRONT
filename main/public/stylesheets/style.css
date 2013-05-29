@@ -181,7 +181,8 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 .infowindow .myitem .buttons { z-index:  11;}
 .infowindow .myitem .yakLikes{font-size:12px;font-style:italic; position: relative; clear: both; width: auto; float: left; color: #000000; display: block; width: 100%; padding-bottom: 6px; border-bottom: 1px solid #d1d1d1;}
 .infowindow .myitem .yakComments{font-size:14px; position: relative; clear: both; width: auto; float: left; left: 0px; top: -28px; color: #D71920; cursor: pointer; width: 100%; border-bottom: 1px solid #d1d1d1}
-.infowindow .myitem .yakComments .commentLogo {width: 28px; height: 22px; float: left; margin-right: 6px; background: url('/images/yakwala_sprite.png') -126px -253px}
+.commentLogo {width: 28px; height: 22px; float: left; margin-right: 6px; background: url('/images/yakwala_sprite.png') -126px -253px}
+
 .infowindow .myitem .theContent { border-bottom: 1px solid #d1d1d1; padding-bottom: 6px;}
 .infowindow .myitem .commentBox .aComment { clear:  both; padding-bottom: 12px;}
 .infowindow .myitem .commentBox .timeago{ margin-left:5px;}
@@ -1068,14 +1069,15 @@ border-bottom: 1px solid #e5e5e5; width: 100%}
 #soundCloudResults ul li .yt_image img {  width: 100%; height: auto; position: relative;}
 
 
-.TheTops { list-style: disc;}
+.TheTops { list-style: none;}
 .TheTops li { padding-top: 20px;}
-.TheTops li a { color: #B71105; }
-.TheTops li .topCounts { color: #c5c5c5; font-size: 0.8em}
+.TheTops li a { color: #656565; font-size: 14px;}
+.TheTops li .topCounts { color: #e1252c; font-size: 12px;}
 .TheTops li .topHeat { width: 30%; background: white; height: 15px;}
 .TheTops li .topHeat .heatLevel { background: red; height: 15px;}
+.TheTops .timeago { color: #e1252c; font-size: 12px;}
 #topsContainer { background: #F6F6F6; margin-top: 30px;}
-#topsContainer .columnTitle { padding-left: 24px; padding-top: 20px; color: #5D5D5D; font-size: 1.2em}
+#topsContainer .columnTitle { padding-left: 24px; padding-top: 20px; color: #5D5D5D; font-size: 1.2em; border-top: 2px solid white; width: 94%;}
 
 h3 .posterInfo {width: 18px; height: 18px; background-image: url('/images/yakwala_sprite.png'); background-position: -136px 0px; display: block; float: left;margin-top: 4px; margin-right: 12px;}
 h3 .quelEndroit{width: 18px; height: 24px; background-image: url('/images/yakwala_sprite.png'); background-position: -121px -27px; display: block; float: left;margin-top: 4px; margin-right: 12px;}
