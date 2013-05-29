@@ -490,6 +490,7 @@ width: 270px;
    #newsfeedContent .mCSB_scrollTools { right: -3px}
    #locationChooser {top:40%;}
    #userChooser { top: 40%;}
+   .theContent iframe { height: 450px;}
  }
 
  /*large screens*/
@@ -546,7 +547,7 @@ width: 270px;
    #newsfeedContent .mCSB_scrollTools { right: -3px}
    #locationChooser {top:40%;}
    #userChooser { top: 40%;}
-
+   .theContent iframe { height: 450px;}
  }
 
  /*ipads portrail*/

@@ -163,7 +163,9 @@ mixin postForm()
 					}
 
 				$.cookie("yaktype", yakType,{ expires: 10000, path : '/' });
+
 				var content = $("#postForm #content").val() + $("#post_yakYoutube").html() + $("#post_yakSoundCloud").html() + $("#post_yakFlickr").html();
+				alert(content);
 				$("#postForm #content").val(content);
 				});
 			});
