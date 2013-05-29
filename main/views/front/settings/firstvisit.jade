@@ -223,8 +223,8 @@ block content
 				});
 
 				$("#username").blur(function(){
-					var currusername = $(this).val();
 
+					var currusername = $(this).val();
 					$.getJSON('/api/findbylogin/' + currusername,function(users) {
 
 						if(users.users.length != 0 && user.login != currusername)
