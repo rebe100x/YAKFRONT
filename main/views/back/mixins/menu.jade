@@ -49,9 +49,11 @@ mixin menu(active)
 								- if (active == 'feed')
 									li.active
 										a(href="feed/list") Flux
+											span1#feednumber
 								- else
 									li
 										a(href="feed/list") Flux
+											span1#feednumber
 								- if (active == 'zone')
 									li.active
 										a(href="zone/list") Zones
@@ -61,11 +63,11 @@ mixin menu(active)
 								- if (active == 'illicite')
 									li.active
 										a(href="/illicites/list") Illicites
-											span1#commentnumber
+											span1#illicitenumber
 								- else
 									li
 										a(href="/illicites/list") Illicites
-											span1#commentnumber
+											span1#illicitenumber
 								- if (active == 'yakcat')
 									li.active
 										a(href="/categories/list") Catégories
@@ -111,6 +113,10 @@ mixin menu(active)
 				$.getJSON('/api/validplaces', function(data) {
 					if (data.info != 0)
 						$('#placenumber').addClass('badge badge-important').html(data.info);
+				});
+				$.getJSON('/api/validillicites', function(data) {
+					if (data.info != 0)
+						$('#illicitenumber').addClass('badge badge-important').html(data.info);
 				});
 
 				if (!user.thumbsmall.match("no-user.png$"))

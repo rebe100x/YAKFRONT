@@ -81,6 +81,8 @@ exports.afeed = function (req, res) {
 };
 
 
+
+
 exports.geoalerts = function (req, res) {
 	var Info = db.model('Info');
 	var usersubs= res.locals.user.usersubs;

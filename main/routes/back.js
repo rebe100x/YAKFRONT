@@ -239,6 +239,14 @@ exports.countUnvalidatedCats = function (req, res) {
 	  });
 	});
 };
+exports.countUnvalidatedIllicites = function (req, res) {
+	var contenuIllicite = db.model('contenuIllicite');
+	contenuIllicite.countUnvalidated(function (err, docs){
+	  res.json({
+		info: docs
+	  });
+	});
+};
 
 
 /******* 

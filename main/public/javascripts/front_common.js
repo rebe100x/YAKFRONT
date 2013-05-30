@@ -1263,8 +1263,14 @@ function setSpamSystem(item){
 		item.html("<i class='signalerIcon'></i>Signaler cette info");
 
 		item.click(function(){
-			
-			$.post('/setSpams', {content_id : $(this).attr("rel"), content_type : 1, content: $(this).parent().parent().find(".yakTypeImage").html()+' '+$(this).parent().parent().find(".itemTitle").html()+'<br>'+$(this).parent().parent().find(".thumbImage").html()+'<br>'+$(this).parent().parent().find(".theContent").html()+'<br>'+$(this).parent().parent().find(".infodetail").html()+'<br>'+$(this).parent().parent().find(".tags").html()} , function(res){
+			var thetags = '';
+			if(typeof $(this).parent().parent().find(".tags").html() != 'undefined')
+				thetags = $(this).parent().parent().find(".tags").html();
+			var theimg = '';
+			if(typeof $(this).parent().parent().find(".thumbImage").html() != 'undefined')
+				theimg = $(this).parent().parent().find(".thumbImage").html().replace('512_0','120_90');
+			var thecontent = $(this).parent().parent().find(".yakTypeImage").html()+' '+$(this).parent().parent().find(".itemTitle").html()+'<br>'+theimg+'<br>'+$(this).parent().parent().find(".theContent").html()+'<br>'+$(this).parent().parent().find(".infodetail").html()+'<br>'+thetags;
+			$.post('/setSpams', {content_id : $(this).attr("rel"), content_type : 1, content: thecontent} , function(res){
 
 				
 						if (res != "0")
@@ -1282,12 +1288,9 @@ function setSpamSystem(item){
 	{
 		item.html("Vous avez déjà signalé cette info");
 	}
-
-
-
-	
-
 }
+
+
 function setLikeSystem(from)
 		{
 			$(".icon-thumbs-up").click(function(){
@@ -1499,16 +1502,15 @@ function checkByWidth()
 		}
 		
 
-		function gup( name )
-		{
-		name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
-		var regexS = "[\\?&]"+name+"=([^&#]*)";
-		var regex = new RegExp( regexS );
-		var results = regex.exec( window.location.href );
-		if( results == null )
-		return "";
-		else
-		return results[1];
+		function gup( name ){
+			name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+			var regexS = "[\\?&]"+name+"=([^&#]*)";
+			var regex = new RegExp( regexS );
+			var results = regex.exec( window.location.href );
+			if( results == null )
+			return "";
+			else
+			return results[1];
 		}
 
 		function isTouchDevice() {
@@ -1613,14 +1615,20 @@ function checkByWidth()
 			});
 			
 		}
-		function showUserProfile(el)
-		{
-			var userid = $(el).parent().find("input").val();
+
+		/*print user profile: 
+		if el is html => comes from a click, else it comes from the direct access news/feed/?idprofile=xxxx*/
+		function showUserProfile(el){
+			if(typeof $(el).html() == 'undefined')
+				var userid = el;
+			else	
+				var userid = $(el).parent().find("input").val();
 
 			emptyUserChooser();
 
 			$('#userChooser').modal('show');
-
+			$("#uc_illicite_user").html('Signaler cet utilisateur aux admins de Yakwala');
+				
 			$.getJSON('/api/usersearchbyid2/' + userid ,function(data) {
 
 				var theuser = data.user[0];
@@ -1654,6 +1662,26 @@ function checkByWidth()
 
 						});
 					});
+
+					$("#uc_illicite_user").unbind('click').click(function(){
+						
+						var isSpammed = false;
+						$.each(user.illicite, function(key, val){
+							if(theuser._id ==  val.content_id && val.content_type == 3)
+								isSpammed = true;
+						});	
+
+						if(!isSpammed){
+							$.post('/setSpams', {content_id : theuser._id, content_type : 3, content:  '<img src="'+theuser.thumb.replace('128_128','24_24')+'" />  '+theuser.name+' ( '+theuser.mail+' ) <br>'}, function(res){		
+								if (res != "0"){
+									$("#uc_illicite_user").html("Vous venez de signaler cet utilisateur aux admins Yakwala.");
+									user.illicite = user.illicite.concat(res)
+								}
+							});
+						}else{
+							$(this).html("Vous avez déjà signalé cet utilisateur");
+						}
+					});	
 
 					$("#uc_filter_user, #uc_profile_yaks_search").unbind('click').on('click',function(){
 						setSearchForUser('@'+theuser.humanName);
@@ -1830,9 +1858,11 @@ function checkByWidth()
 							}
 
 					});
-				})	
+				});	
 
-					
+				
+
+	
 				$("#uc_filter_user, #uc_profile_yaks_search").unbind('click').on('click',function(){
 					setSearchForUser('@'+theuser.humanName);
 					$('#userChooser').modal('hide');

@@ -183,7 +183,6 @@
 
 				if(!isUserBL && !isFeedBL && !isInfoBL)
 				{
-					console.log("here");
 					if(flagFilter!=1)
 						infoArray.push(val);						
 					printMapItem(val,key,0);
@@ -430,6 +429,7 @@
 			if(gup("id") != null && gup("id") != ""){
 				$.getJSON('/api/afeed', { id: gup("id") } ,function(data) {
 					infoArray.push(data.info[0]);
+					$('li.mapHighlighterDetails [infoid='+data.info[0]._id+']').hide();
 					printFeedItem(data.info[0],1,0);	
 					for(i=1; i<$(".mapHighlighterDetails[infoid=" + gup("id") +"]").length; i++)
 					{
@@ -446,6 +446,33 @@
 					}
 
 				});
+			}
+
+			if(gup("idcomment") != null && gup("idcomment") != ""){
+				$.getJSON('/api/afeedFromComment', { id: gup("idcomment") } ,function(data) {
+					
+					$('li.mapHighlighterDetails [infoid='+data.info._id+']').hide();
+					infoArray.push(data.info);
+					printFeedItem(data.info,1,0);	
+					for(i=1; i<$(".mapHighlighterDetails[infoid=" + gup("id") +"]").length; i++)
+					{
+						$(".mapHighlighterDetails[infoid=" + gup("id") +"]").eq(i).remove();
+					}
+					if(data.info.user != undefined){
+						var thumbsource = conf.fronturl+'/pictures/120_90/' + $(".mapHighlighterDetails[infoid=" + gup("id") +"]").eq(0).attr("src");
+						$(".mapHighlighterDetails[infoid=" + gup("id") +"]").eq(0).attr("src", thumbsource);
+
+					}else{
+						var thumbsource = $(".mapHighlighterDetails[infoid=" + gup("id") +"]").eq(0).find(".thumbImage img").attr("src");
+						$(".mapHighlighterDetails[infoid=" + gup("id") +"]").eq(0).find(".thumbImage img").attr("src", thumbsource);
+						
+					}
+
+				});
+			}
+
+			if(gup("idprofile") != null && gup("idprofile") != ""){
+				showUserProfile(gup("idprofile"));
 			}
 			//markerCluster.addMarkers(markers);
 			}
@@ -957,7 +984,6 @@ function getItemDetails(el){
 				dateLastCheck = new Date(user.alertsLastCheck);
 				alertsNumberUrl = '/api/geoalertsNumber/'+curPos.x+'/'+curPos.y+'/'+rangeFromZ()+'/'+'null'+'/'+dateFrom+'/'+dateLastCheck.getTime()+'/'+yakType.toString()+'/'+searchString;
 				$.getJSON(alertsNumberUrl,function(ajax) {
-					console.log(ajax);
 					if(ajax.data.info != '-1' && ajax.data.info != "0")
 						$("#alertsNumber").html(ajax.data.info);
 					else

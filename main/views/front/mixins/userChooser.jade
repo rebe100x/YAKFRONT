@@ -30,9 +30,11 @@ mixin userChooser
 						ul#customOptionsMenu.dropdown-menu.pull-right(style="position: relative; top: 0px;left: 0px;")
 							li
 								a#uc_blacklist_user
-									|Blacklister
+									|Blacklister cet utilisateur (vous ne verrez PLUS ses infos)
 								a#uc_filter_user
-									|Filtrer
+									|Filtrer cet utilisateur (vous ne verrez QUE ses infos)
+								a#uc_illicite_user
+									|Signaler cet utilisateur aux admins de Yakwala
 			
 			div.row-fluid 	
 				span10#uc_newsfeed
@@ -43,7 +45,6 @@ mixin userChooser
 
 	script
 		$(document).ready(function(){
-
 				$(".profileOptions").unbind("click").on('click',function(){
 									
 					if($("#customOptionsMenu").css("display") == "none")

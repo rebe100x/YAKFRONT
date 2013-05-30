@@ -209,6 +209,16 @@ exports.news_afeed = function(req, res){
 	}); 
 };
 
+exports.news_afeedFromComment = function (req, res) {
+	var Info = db.model('Info');
+	Info.findByCommentID(function (err, doc){
+		var Info = db.model('Info');
+		  res.json({
+			info: Info.format(doc)
+		  });
+	}, req.query["id"]); 
+};
+
 exports.loadingModal = function(req, res){
 		res.render('news/loadingModal');
 };
@@ -1429,41 +1439,24 @@ exports.setSpams = function(req, res){
 				trackUser(req.session.user, 14,  {infoId:req.body.content_id});
 				if(thealert != undefined && thealert != null ){
 					contenuIllicite.update({"_id":thealert._id},{$push:{user_id: req.session.user}, $inc:{count : 1}},{$set:{"last_date_mark":new Date()}}, function(err){
-						if (err) 
-						{
-							console.log(err);
-							res.send("0");
-						}
-						else
-						{
+						if(!err) 
 							res.send(aspamAlert);	
-						}
-							
+						else
+							res.send("0");	
 					});	
-
-					User.update({"_id":req.session.user}, {$push:{illicite:aspamAlert}}, function(err){
-
-					});
+					User.update({"_id":req.session.user}, {$push:{illicite:aspamAlert}}, function(err){});
 				}
-				else
-				{
+				else{
 					aspamAlert.save(function(err){
 						if(!err)
 							res.send(aspamAlert);
 						else
-						{
-							console.log(err);
-							res.send("0");
-						}
+							res.send("0");	
 					});
-					User.update({"_id":req.session.user}, {$push:{illicite:aspamAlert}}, function(err){
-
-					});
+					User.update({"_id":req.session.user}, {$push:{illicite:aspamAlert}}, function(err){});
 				}
-		
 			});
-		}
-		else{
+		}else{
 		req.session.message = "Erreur : vous devez être connecté pour signaler un contenu";
 		res.redirect('/user/login');
 	}

@@ -148,6 +148,7 @@ app.post('/api/delComment', routes.requiresLogin, api.delComment);
 app.get('/api/infos', api.infos);
 app.get('/api/feeds', api.feeds);
 app.get('/api/afeed', api.afeed);
+app.get('/api/afeedFromComment', routes.requiresLogin, routes.news_afeedFromComment);
 
 app.get('/api/geoinfos/:x1/:y1/:x2/:y2/:ago/:now/:type/:str', api.geoinfos);
 app.get('/api/geoinfos/:x1/:y1/:x2/:y2/:ago/:now/:type/:str/:limit', api.geoinfos);

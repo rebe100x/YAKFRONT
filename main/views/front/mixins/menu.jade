@@ -186,24 +186,7 @@ mixin menu(active)
 					$("#addLink").remove();
 				});
 
-		// this should be done in the erver side:
-		/*		
-		if(active != 'firstvisit')
-			script
-				$(document).ready(function(){
-					if(typeof(user) != 'undefined')
-						if(user.status == 4)
-							window.location = "/settings/firstvisit";
-				});
-		else
-			script
-				$(document).ready(function(){
-					if(typeof(user) != 'undefined')
-						if(user.status != 4)
-							window.location = "/news/map";
-				});
-		*/
-
+		
 		script
 			$(document).ready(function(){
 

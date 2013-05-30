@@ -370,7 +370,9 @@ var Point = new Schema({
 mongoose.model('Point', Point);
 
 
-
+/*
+#CONTENU ILLICTE
+*/
 
 var contenuIllicite = new Schema({
 	content_id : { type : Schema.ObjectId }
@@ -381,6 +383,10 @@ var contenuIllicite = new Schema({
 	,content : {type : String}
 	,status : { type : Number, default : 1}
 });
+
+contenuIllicite.statics.countUnvalidated = function (callback) {
+	return this.count( {'status': 1}, callback );
+}
 
 contenuIllicite.statics.findByUser = function (userid, infoid, callback) {
  	return this.findOne({'content_id': infoid,'user_id':userid}, callback);
@@ -676,7 +682,17 @@ Info.statics.findAllByID = function (callback, id) {
 		"_id":id
 	},	
 	callback);
+}
 
+Info.statics.findByCommentID = function (callback, id) {
+  var ObjectId = require('mongoose').Types.ObjectId; 
+  var theid = new ObjectId(id);
+  return this.findOne(
+  	{
+		commentsCount:{$gt:0}, 
+		'yakComments._id': theid
+	},	
+	callback);
 }
 
 Info.statics.findTopLiked = function(x1, y1, x2, limit, callback)

@@ -147,6 +147,7 @@ app.get('/api/user/:id', back.findUserById);
 app.get('/api/validusers', back.countUnvalidatedUsers);
 app.get('/api/validcats', back.countUnvalidatedCats);
 app.get('/api/validplaces', back.countUnvalidatedPlaces);
+app.get('/api/validillicites', back.countUnvalidatedIllicites);
 
 app.get('/api/places/validate/:ids', back.validatePlaces);
 app.get('/api/places/delete/:ids', back.deletePlaces);

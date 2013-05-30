@@ -1094,5 +1094,5 @@ h3 .ajouterMedia{width: 24px; height: 24px; background-image: url('/images/yakwa
 .mediaBoxContainer .btn {margin-top: 10px;}
 .timePng {width: 20px; height: 20px; background-image: url('/images/yakwala_sprite.png'); background-position: 0px -265px;}
 .filterPng {width: 20px; height: 20px; background-image: url('/images/yakwala_sprite.png'); background-position: -27px -265px;}
-.dotsPng {width: 66px; height: 20px; background-image: url('/images/yakwala_sprite.png'); background-position: -100px -353px; float: left;} 
+.dotsPng {width: 45px; height: 20px; background-image: url('/images/yakwala_sprite.png'); background-position: -130px -355px; float: left;position:relative;} 
 .posterInfoPng {float: right; position: relative; top: -29px;  left: 20px; width: 83px; height: 40px; background-image: url('/images/yakwala_sprite.png'); background-position: -187px -715px;}
