@@ -1127,12 +1127,12 @@ h3 .ajouterMedia{width: 24px; height: 24px; background-image: url('/images/yakwa
 .mediaBoxContainer .btn {margin-top: 10px;}
 .timePng {width: 20px; height: 20px; background-image: url('/images/yakwala_sprite.png'); background-position: 0px -265px;}
 .filterPng {width: 20px; height: 20px; background-image: url('/images/yakwala_sprite.png'); background-position: -27px -265px;}
-<<<<<<< HEAD
+
+/*
 .dotsPng {width: 45px; height: 20px; background-image: url('/images/yakwala_sprite.png'); background-position: -130px -355px; float: left;position:relative;} 
 .posterInfoPng {float: right; position: relative; top: -29px;  left: 20px; width: 83px; height: 40px; background-image: url('/images/yakwala_sprite.png'); background-position: -187px -715px;}
-=======
+*/
 .dotsPng {width: 66px; height: 20px; background-image: url('/images/yakwala_sprite.png'); background-position: -100px -353px; float: left;} 
 .posterInfoPng {float: right; position: relative; top: -29px;  left: 20px; width: 83px; height: 40px; background-image: url('/images/yakwala_sprite.png'); background-position: -187px -715px;}
 .delComment { float: right;position: absolute;top: 0px;right: 0px;background: url('/images/yakwala_sprite.png') -72px -659px;width: 13px;height: 13px;}
 .theContent .icon-remove { display: none;}
->>>>>>> 76df78b49a2d7f33771f03088878f0dc5554644b
