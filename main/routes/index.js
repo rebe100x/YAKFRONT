@@ -1421,6 +1421,7 @@ exports.setSpams = function(req, res){
 	aspamAlert.user_id = req.session.user;
 	aspamAlert.content_type = req.body.content_type;
 	aspamAlert.content = req.body.content;
+	aspamAlert.status = 1;
 
 	if(req.session.user){
 			contenuIllicite.findByUserInfoType(req.body.content_id, req.body.content_type, function (err, thealert){
@@ -1463,7 +1464,7 @@ exports.setSpams = function(req, res){
 			});
 		}
 		else{
-		req.session.message = "Erreur : vous devez être connecté pour sauver vos favoris";
+		req.session.message = "Erreur : vous devez être connecté pour signaler un contenu";
 		res.redirect('/user/login');
 	}
 	

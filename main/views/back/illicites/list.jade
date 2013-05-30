@@ -12,35 +12,8 @@ mixin list()
 							input#search.input-medium(type='text', placeholder='Recherche', data-provide="typeahead", autocomplete="off")
 							button.btn
 								i.icon-search
-						//		
-							a.showSearchPanel(href="/place/list/#") Filtrer les résultats
-								i.icon-chevron-right#iconSearchPanel
-					//
-						.datagrid-header-right
-							button.btn#btnAdd
-								i.icon-plus
-								span Ajouter
-				tr.headerControle.advancedSearch
-					td.searchPanel(colspan=6, style="display:none")
-						.yakCatFilter
-							input#yakCat.typeahead(type="text", data-provide="typeahead", autocomplete="off", placeholder="Filtrer par thème")
-							.pillbox#yakCatFilter(style="display:none")
-								ul
-						.userFilter
-							input#userFilter.typeahead(type="text", data-provide="typeahead", autocomplete="off", placeholder="Filtrer par utilisateur")
-							.pillbox#userFilter(style="display:none")
-								ul
 			tr.headerControle
 				td(colspan=6)
-					//
-						.btn-group.batchActions
-							button.btn.btn-small.validerPlaces(title="Valider les utilisateurs")
-								i.icon-ok-sign
-							button.btn.btn-small.disabled.enattentePlaces(title="Mettre les utilisateurs en attente")
-								i.icon-time
-							button.btn.btn-small.supprimerPlaces(title="Supprimer les utilisateurs")
-								i.icon-ban-circle
-					
 					select#filterType
 						option(value="0") Tous les types
 						option(value="1") Info
@@ -49,11 +22,11 @@ mixin list()
 					.dateSort.datagrid-header-right
 						.input-prepend
 							span.add-on Ordonner par
-							select#sortPlaces
-								option(value="last_date_mark")	Last date marked
+							select#sortSelectBtn
+								option(value="last_date_mark")	Dernier signalement
 								option(value="type") Type
 								option(value="content")	Contenu
-								option(value="count")	Count
+								option(value="count")	Nb de signalements
 		tfoot
 			tr
 				th
@@ -66,8 +39,8 @@ mixin list()
 								| de
 								span.grid-count
 							select.grid-pagesize
-								option 10
-								option 20
+								option 15
+								option 25
 								option 50
 								option 100
 							span Par Page
@@ -131,7 +104,7 @@ mixin list()
 				}
 
 				// Also sort by the selected date
-				sortPropertyArray.push( $('#sortPlaces :selected').val() );
+				sortPropertyArray.push( $('#sortSelectBtn :selected').val() );
 				// Always newest first
 				sortDirectionArray.push("desc");
 
@@ -182,34 +155,30 @@ mixin list()
 
 		$('#MyGrid').datagrid({
 			dataSource: new ApiDataSource({
-				columns: [{
-					property: 'checked',
-					label: '<input id="selectAllUsers" type="checkbox" />',
-					sortable: false
-				},
-				
+				columns: [
 				{
 					property: 'content',
-					label: 'Contenu',
+					label: 'La donnée',
 					sortable: true
 				},
 				{
 					property: 'content_type',
-					label: 'Type',
+					label: 'Type de donnée',
 					sortable: true
 				},
 				{
 					property: 'last_date_mark',
-					label: 'Last Date Marked',
+					label: 'Date de signalement',
 					sortable: true
 				},
 				{
 					property: 'count',
-					label: 'Count',
+					label: 'Nb de signalements',
 					sortable: true
 				},
 				{
 					property: 'delete',
+					label: 'Supprimer',
 					label: '<i class="icon-delete"></i>',
 					sortable: true
 				}
@@ -253,25 +222,16 @@ mixin list()
 				}
 				default :
 				{
-					return "";
+					return "Type inconnu";
 					break;
 				}
 			}
 		}
-		function formatOrigin(item) {
-			if (item.origin)
-				return item.origin
-			return "Origine inconnue";
-		}
+		
 
-		function makeUserThumb(item){
-			return '<img src="'+item.thumbsmall+'" class="userThumb" width="48" height="48" />'
-		}
+		
 
-		function makeNameTextBox(item){
-			return '<input onkeypress="setNewName(this, event)" type="text" class="user_name" rel="'+item._id+'" value="' + item.name + '"/>';
-		}
-
+		
 		function makeCheckBox(item) {
 			return '<input type="checkbox" class="selectYakUser" value="' + item._id + '"/>';
 		}
@@ -279,40 +239,26 @@ mixin list()
 		function makeDeleteOption(item){
 			var removeIcon = $("<i />");
 			removeIcon.attr("class", "icon-remove deleteAcomment");
+			removeIcon.attr("val_content_id", item.content_id);
+			removeIcon.attr("val_content_type", item.content_type);
+			removeIcon.attr("val_id", item._id);
 			removeIcon.css("cursor", "pointer");
+			removeIcon.attr("title", "Supprimer cette donnée");
 			removeIcon.attr("onclick", "deleteAnIllicite(this)");
-			var content = "";
-			content+="<input type='hidden' id='val_content_id' value='"+item.content_id+"' />";
-			content+="<input type='hidden' id='val_content_type' value='"+item.content_type+"' />";
-			content+="<input type='hidden' id='val_id' value='"+item._id+"' />";
-			return removeIcon[0].outerHTML + content;
+			return removeIcon[0].outerHTML;
 		}
 
 		function deleteAnIllicite(el)
 		{
-			var content_type = $(el).parent().find("#val_content_type").val();
-			var content_id = $(el).parent().find("#val_content_id").val();
-			var _id = $(el).parent().find("#val_id").val();
+			var content_type = $(el).attr("val_content_type");
+			var content_id = $(el).attr("val_content_id");
+			var _id = $(el).attr("val_id");
 			$.post("/deleteIllicite", {content_id: content_id, content_type: content_type, _id: _id}, function(data){
 				refreshDatagridAndMenu();
 			});
 		}
 
-		function setNewName(el, e)
-		{
-			if(e.keyCode == 13){
-				$(el).attr("disabled", "disabled");
-				$(el).after("<span class='updateStatus'>loading...</span>");
-				$.post("/user/setName", {name: $(el).val(), _id : $(el).attr("rel")}, function(data){
-					if(data.meta.code == "200")
-					{
-						$(el).removeAttr("disabled");
-						$(el).parent().find(".updateStatus").remove();
-					}
-				});
-			}
-			return false;
-		}
+		
 		function setNewStatus(el)
 		{
 			var _id = $(el).attr("rel");
@@ -327,41 +273,7 @@ mixin list()
 				});
 		}
 
-		function setNewType(el)
-		{
-			var _id = $(el).attr("rel");
-			$(el).after("<span class='updateStatus'>loading...</span>");
-			$(el).attr("disabled", "disabled");
-			$.post("/user/setType", {type: $(el).val(), _id : $(el).attr("rel")}, function(data){
-					if(data.meta.code == "200")
-					{
-						$(el).removeAttr("disabled");
-						$(el).parent().find(".updateStatus").remove();
-					}
-				});
-		}
-
-		function makeStatusDropDown(item){
-			var select = $("<div />");
-			select.attr("class", "selectStatus");
-			select.html('<select onchange="setNewStatus(this)" class="selectStatus" rel="'+item._id+'"><option value="2">En attente</option><option value="1">Validés</option><option value="3">Rejetés</option></select>');
-			select.find("option").each(function(){
-				if($(this).attr("value") == item.status)
-					$(this).attr("selected", "selected");
-			});
-			return select.html();
-		}
-
-		function makeTypeDropDown(item){
-			var select = $("<div />");
-			select.attr("class", "selectType");
-			select.html('<select onchange="setNewType(this)" class="selectType" rel="'+item._id+'"><option value="1">Normal</option><option value="2">Media</option><option value="3">Association</option><option value="4">Entreprise</option><option value="5">Institution</option><option value="10">Operator</option><option value="11">Super Admin</option></select>');
-			select.find("option").each(function(){
-				if($(this).attr("value") == item.type)
-					$(this).attr("selected", "selected");
-			});
-			return select.html();
-		}
+	
 
 		function fillContent(item) {
 			var res = "";
@@ -385,14 +297,15 @@ mixin list()
 				icon = 'icon-ok-sign';
 				title_icon = "Validée";
 			}
-			else if (item.status == 3) {
+			else if (item.status == 2) {
 				icon = 'icon-ban-circle';
 				title_icon = "Rejetée";
 			}
-			else if (item.status == 10) {
+			else if (item.status == 3) {
 				icon = 'icon-warning-sign';
 				title_icon = "Erreur de localisation";
 			}
+
 
 			if(item.title.length > 50) {
 				title_title = "title = '" + item.title + "'";
@@ -406,26 +319,6 @@ mixin list()
 			if (item.formatted_address)
 				res += "<div>" + item.formatted_address + "</div>";
 
-			if (item.yakCat) {
-				res += "<div>";
-				// AIE AIE NON !
-				/*for(i = 0; i<  item.yakCat.length;i++){
-					res += formatYakcat(item.yakName[i]);
-					res += ', ';
-				}*/
-				if(typeof item.yakCatName != 'undefined')
-					res += item.yakCatName.join(', ');
-
-				if (item.freeTag)
-					res += displayFreeTags(item.freeTag);
-
-				//res = res.slice(0,-2);
-				res += "</div>";
-			}
-			else if(item.freeTag) {
-				res += displayFreeTags(item.freeTag);
-				result = result.slice(0,-2);
-			}
 			res += '</small></a>';
 			return res;
 		}
@@ -530,7 +423,7 @@ mixin list()
 		});
 
 		// Refresh on sort selection
-		$('#sortPlaces').live('change', function() {
+		$('#sortSelectBtn').live('change', function() {
 			refreshDatagridAndMenu();
 		});
 		// Refresh on sort selection

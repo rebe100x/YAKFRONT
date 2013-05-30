@@ -379,6 +379,7 @@ var contenuIllicite = new Schema({
 	,content_type : { type : Number, default: 1 } // 1 info, 2 comments , 3 users
 	,count : { type : Number, default : 1}
 	,content : {type : String}
+	,status : { type : Number, default : 1}
 });
 
 contenuIllicite.statics.findByUser = function (userid, infoid, callback) {

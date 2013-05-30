@@ -1681,18 +1681,24 @@ exports.setComment = function(req, res){
 	
 };
 
-exports.del_comment = function (req, res) {
+exports.delComment = function (req, res) {
 	var Info = db.model('Info');
 	if(typeof(req.body.commentId) != 'undefined') {
 		var commentId = req.body.commentId;
 		var infoId = req.body.infoId;
-
-		Info.update({_id:mongoose.Types.ObjectId(infoId)},{$inc:{commentsCount : -1},$pull:{yakComments:{_id: mongoose.Types.ObjectId(commentId)}}}, function(err,docs){
-			if(!err)
-				res.json({meta:{code:200}});
-			else
-				res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+		// we can only delete our comments:
+		Info.find({_id:mongoose.Types.ObjectId(infoId),yakComments: {user_id : res.locals.user._id}},function(err,doc){
+			if(typeof doc != 'undefined' && doc != '' && doc != null){
+				Info.update({_id:mongoose.Types.ObjectId(infoId)},{$inc:{commentsCount : -1},$pull:{yakComments:{_id: mongoose.Types.ObjectId(commentId)}}}, function(err,docs){
+					if(!err)
+						res.json({meta:{code:200}});
+					else
+						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+				});	
+			}
+			
 		});
+		
 	}else{
 		res.json({meta:{code:404,error_type:'missing parameter',error_description:'Comment not set'}});
 	}		

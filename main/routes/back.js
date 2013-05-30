@@ -1026,20 +1026,16 @@ exports.deleteIllicite = function(req, res){
 	switch(content_type){
 		case "1": {
 			var Info = db.model("Info");
-			Info.find({_id:content_id}).remove(function(err){
-				if(!err)
-				{
+			Info.update({_id:content_id},{$set:{status:3}},function(err){
+				if(!err){
 					var Illicite = db.model("contenuIllicite");
-					Illicite.find({_id : _id}).remove(function(err){
+					Illicite.update({_id : _id},{$set:{status:2,dateProcessed:new Date()}},function(err){
 						if(!err)
 							res.json({meta:{code:200}});
 						else
 							res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});			
 					});
-					
-				}
-					
-				else
+				}else
 					res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 			});
 			break;
@@ -1047,35 +1043,29 @@ exports.deleteIllicite = function(req, res){
 		case "2": {
 			var Info = db.model("Info");
 			Info.update({_id:mongoose.Types.ObjectId(req.body.info_id)},{$inc:{commentsCount : -1},$pull:{yakComments:{_id: mongoose.Types.ObjectId(content_id)}}}, function(err,docs){
-				if(!err)
-				{
+				if(!err){
 					var Illicite = db.model("contenuIllicite");
-					Illicite.find({_id : _id}).remove(function(err){
+					Illicite.update({_id : _id},{$set:{status:2,dateProcessed:new Date()}},function(err){
 						if(!err)
 							res.json({meta:{code:200}});
 						else
 							res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});			
 					});
-					
-				}
-					
-				else
+				}else
 					res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 			});
 			break;
 		}
 		case "3": {
 			User.update({_id: content_id},{$set:{'status':3}}, function(err){
-				if(!err)
-				{
+				if(!err){
 					var Illicite = db.model("contenuIllicite");
-					Illicite.find({_id : _id}).remove(function(err){
+					Illicite.update({_id : _id},{$set:{status:2,dateProcessed:new Date()}},function(err){
 						if(!err)
 							res.json({meta:{code:200}});
 						else
 							res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});			
 					});
-					
 				}
 					
 				else

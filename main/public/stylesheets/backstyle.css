@@ -85,7 +85,7 @@ legend.mainlegend{color:#d51820;font-weight:bold;border-bottom:0px;}
 #MyGrid a.listIcon {padding: 5px;}
 #MyGrid .batchActions {padding-bottom: 11px; margin-right: 3px;}
 #MyGrid .batchActions > button {height: 30px;}
-#MyGrid tr.headerControle > td > select {width: 150px;}
+#MyGrid tr.headerControle > td > select {max-width: 2000px;}
 #MyGrid select#sortPlaces {width: 150px;}
 
 /* MAP
