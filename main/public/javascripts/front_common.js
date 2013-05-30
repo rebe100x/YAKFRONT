@@ -1145,7 +1145,7 @@ function changePlaceRange(id, lat, lng, pointname, range)
 
 function setCommentSpam(el)
 {
-	$.post('/setSpams', {content_id : $(el).attr("rel"), content_type : 2} , function(res){
+	$.post('/setSpams', {content_id : $(el).attr("rel"), content_type : 2,content : $(el).parent().prev().html()} , function(res){
 		if (res != "0")
 		{
 			el.remove();
@@ -1181,7 +1181,7 @@ function drawAComment(val,infoId, from)
 
 	if(!isSpammed)
 	{
-		iconSpam = "<i class='icon-warning-sign' rel='" + comment_id + "' onclick='setCommentSpam(this)'></i>";
+		iconSpam = "<i class='icon-warning-sign' title='Signaler ce commentaire' rel='" + comment_id + "' onclick='setCommentSpam(this)'></i>";
 	}
 	
 
@@ -1204,23 +1204,15 @@ function drawAComment(val,infoId, from)
 
 }
 
-function deleteComment(el)
-{
+function deleteComment(el) {
 	var commentId = $(el).attr("id");
 	var infoId = $(el).attr("infoid");
 	
-	$.post('/api/del_Comment', {commentId : commentId, infoId: infoId} , function(res){
-	//console.log(res);
+	$.post('/api/delComment', {commentId : commentId, infoId: infoId} , function(res){
 	if (res.meta.code == '200')
-	{
 		$(el).parent().remove();
-	}
-	else
-	{
-		alert("Erreur");
-	}
-
-});
+	
+	});
 }
 
 function setCommentText(len,item){
@@ -1258,10 +1250,6 @@ function setyakBlackListSystem(item)
 }
 
 function setSpamSystem(item){
-	
-	//var url = '/getSpams/' + item.attr("rel") + '/' + user._id;
-	
-	//console.log(url);
 	var isSpammed = false;
 
 	$.each(user.illicite, function(key, val){
@@ -1276,7 +1264,9 @@ function setSpamSystem(item){
 
 		item.click(function(){
 			
-				$.post('/setSpams', {content_id : $(this).attr("rel"), content_type : 1, content: $(this).parent().parent().find(".itemTitle").html()} , function(res){
+			$.post('/setSpams', {content_id : $(this).attr("rel"), content_type : 1, content: $(this).parent().parent().find(".yakTypeImage").html()+' '+$(this).parent().parent().find(".itemTitle").html()+'<br>'+$(this).parent().parent().find(".thumbImage").html()+'<br>'+$(this).parent().parent().find(".theContent").html()+'<br>'+$(this).parent().parent().find(".infodetail").html()+'<br>'+$(this).parent().parent().find(".tags").html()} , function(res){
+
+				
 						if (res != "0")
 						{
 							item.html("Vous avez déjà signalé cette info");
