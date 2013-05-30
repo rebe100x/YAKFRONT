@@ -5,40 +5,43 @@ mixin post_soundcloud
 			span#closeModal(type="button", data-dismiss="modal")
 			div.controls.clearBoth
 				span.mediaText.pull-left
+					span.rechercheSoundCloud
 					|Recherche SoundCloud
+					br
+					span.hint
+						|Chercher un audio sur SoundCloud et integrez-le dans votre Yassala
 				br
 				br
-			div.controls.clearBoth
-				input#soundcloundAudios(type="hidden")
-				input#inputSoundCloud
-				button#searchSoundCloud Rechercher
-				img#loadingSoundClound(src="/images/loader.gif", style="display: none")
-			br
+			div.mediaBoxContainer	
+				div.controls.clearBoth
+					input#soundcloundAudios(type="hidden")
+					input#inputSoundCloud.input
+					button#searchSoundCloud.btn Trouver
+					img#loadingSoundClound(src="/images/loader.gif", style="display: none")
+				br
 
-			div#soundCloudResults.controls.clearBoth
-			br
-			br
-			br
-			br
-			br
-			br
-			br
-			br
-			br
-			br
-			br
-			br
-	script(src="http://connect.soundcloud.com/sdk.js")
+				div#soundCloudResults.controls.clearBoth
+				br
+				br
+				br
+				br
+				br
+				br
+				br
+				br
+				br
+				br
+				br
+				br
+
+	
 	script
-		SC.initialize({
-			client_id: 'd34264e304490c3447dcc5275739c8da'
-		});
 		$(document).ready(function(){
 			$("#searchSoundCloud").click(function(){
 				$("#loadingSoundClound").show();
 				$("#soundCloudResults").html("");
 				var scUrl = '/tracks';
-				SC.get('/tracks', { q: $("#inputSoundCloud").val(), license: 'cc-by-sa', limit : 10 }, function(tracks) {
+				$.get('http://api.soundcloud.com/tracks?q='+$("#inputSoundCloud").val()+'&limit=10&client_id=d34264e304490c3447dcc5275739c8da&format=json', function(tracks) {
 					showMyAudios(tracks);
 					$("#loadingSoundClound").hide();
 				});
@@ -62,7 +65,8 @@ mixin post_soundcloud
 			html += '<li rel="'+sid+'">';
 			//html += '<span class="yt_image">' + "<img src='" + thumb +"' />" + '</span>';
 			html += '<span class="yt_title">' + title + '</span>';
-			html += '<iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F'+sid+'"></iframe>';
+			html += '<iframe width="90%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F'+sid+'"></iframe>';
+			html += '<span class="yt_add yakPosterLogo" rel="'+sid+'"></span>';
 			html += '</li>';
 
 			}
@@ -74,6 +78,8 @@ mixin post_soundcloud
 				var frame = '<div><iframe width="96%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F'+$(this).attr("rel")+'"></iframe><span style="cursor: pointer; position: relative; float: right" onclick="removeframe(this)">X</span><div>';
 				$("#post_yakSoundCloud").prepend(frame);
 				//$('#post_soundcloud').modal('hide');
+				$(this).unbind("click");
+				$(this).css("opacity", "0.4");
 			});
 		} 
 		

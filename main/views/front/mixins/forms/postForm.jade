@@ -8,20 +8,28 @@ mixin postForm()
 				input#longitude(type="hidden",name="longitude")
 				input#postFormRange(type="hidden",name="postFormRange")
 				input#username(type="hidden", name="username",value=locals.user.login)
-				legend Poster une info:
+				h3
+					span.posterInfo
+					| Poster une info:
+					span.posterInfoPng
 				div.control-group
 					div.controls
-						input.span12.hashtagMaker(type='text', name='title', id='title', placeholder='Titre: vous pouvez utiliser des hashtags dans votre texte ( #maisonavendre )', autocomplete='off')
-						textarea#content.span12.hashtagMaker(name='content', placeholder='Texte: vous pouvez utiliser des hashtags dans votre texte ( #maisonavendre )',rows='3')
+						input.span12.hashtagMaker(type='text', name='title', id='title', placeholder='Titre', autocomplete='off')
+						textarea#content.span12.hashtagMaker(name='content', placeholder='Texte',rows='3')
 				div.control-group
-					label(for='type') Quelle type de contenu voulez vous poster:
+					hr
+					h3.clearBoth
+						|Quelle type de contenu voulez vous poster:
 					div.controls#yakTypeController
 						label.radio.inline Une actualité
+							span.actuEvenIcon
 							input#option1(type="radio", name="yakType", value="1" , checked) 
 						- if(type != 2)
 							label.radio.inline Un Yassala
+								span.yassalaIcon
 								input#option4(type="radio", name="yakType", value="4")
 						label.radio.inline Un évènement
+							span.actuEvenIcon
 							input#option2(type="radio", name="yakType", value="2")
 						//label.radio.inline Infos&nbsp;pratiques
 						//	input#options3(type="radio", name="yakType", value="3")
@@ -31,26 +39,54 @@ mixin postForm()
 							input#eventDateFrom.span6(style="float:left;margin-right:5px;	", type="text",name="eventDateFrom", autocomplete="off", placeholder='Du...')
 							input#eventDateEnd.span6(type="text",name="eventDateEnd", autocomplete="off", placeholder='Au...')
 				div.control-group
-					label(for='category') Choisissez une ou plusieurs thèmes:
+					hr
+					h3.clearBoth
+						|Choisissez une ou plusieurs thèmes:
 					div.controls
 						input#yakcat.span12(type="text",data-provide="typeahead", name="category", autocomplete="off", placeholder='Rechercher...')
 					div.controls	
 						input#freetag.span12(type="text",data-provide="typeahead", name="freetag",placeholder='Ajouter des mots clés : maison à vendre', autocomplete='off')
-					div.controls
-						span#picturePreview
-						input.span6#picture(type="file",style="display:block",name="picture")
-				legend A quel endroit ?
+					//	
+						div.controls
+							span#picturePreview
+							input.span6#picture(type="file",style="display:block",name="picture")
+				hr
+				h3.clearBoth 
+					span.quelEndroit
+					|A quel endroit ?
 				div.control-group
 					label(for='Place') Clicker sur la carte ou bien entrer une adresse:<br /> 
 					div.controls
 						div.input-append
 							input#place(type="text",data-provide="typeahead", name="place", autocomplete="off", placeholder='Rechercher...') 
 							button.btn#btn-place-adder(type="button") Add
-							span.help-inline(style='font-size:0.95em;font-style:italic;margin-left:20px;') Ajoutez plusieurs adresses <br>et faites apparaître votre info <br>à plusieurs endroits !
+							//
+								span.help-inline(style='font-size:0.95em;font-style:italic;margin-left:20px;') Ajoutez plusieurs adresses <br>et faites apparaître votre info <br>à plusieurs endroits !
+				hr
+				div.control-group
+					h3 
+						span.ajouterMedia
+						|Ajouter un media
+					div.controls.myMedia
+						a(title="Poster une photo pour cet info sur yakwala", rel="post_picture")
+							span.yakPosterLogo
+						a(title="Rechercher dans Youtube et poster votre video", rel="post_youtube")
+							span.ytPosterLogo
+						a(title="Rechercher dans SoundCloud et poster votre audio", rel="post_soundcloud")
+							span.scPosterLogo
+						a(title="Rechercher dans flickr et poster votre image", rel="post_flicker")
+							span.flPosterLogo
+					br
+					div#post_yakpicture.controls.clearBoth(style="display: none")
+						span.mediaText.pull-left
+						span#picturePreview
+						input.span6#picture(type="file",style="display:block",name="picture")
+					div#post_yakYoutube.controls.clearBoth
+					div#post_yakSoundCloud.controls.clearBoth
+					div#post_yakFlickr.controls.clearBoth
 				br
-				button.btn.btn-large.btn-block.btn-inverse(style='width:100%',type='submit', name='submit', id='submit', value='Envoyer') POSTER
-				br
-				br
+				div(style="text-align: center; width: 100%")
+					button.yakbtn(type='submit', name='submit', id='submit', value='Envoyer') POSTER
 		- if(locals.user.type == 1)
 			form#postForm(action='/news', method='POST', enctype='multipart/form-data')
 				input#yakcatInput(type='hidden', name='yakcatInput', value='')
@@ -149,6 +185,8 @@ mixin postForm()
 					}
 
 					$.cookie("yaktype", yakType,{ expires: 10000, path : '/' });
+					var content = $("#postForm #content").val() + $("#post_yakYoutube").html() + $("#post_yakSoundCloud").html() + $("#post_yakFlickr").html();
+					$("#postForm #content").val(content);
 				});
 
 			});
