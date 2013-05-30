@@ -1190,14 +1190,14 @@ function drawAComment(val,infoId, from)
 			if(user._id	!= userid)
 				return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username prevent-default' onclick='setSearchFor(this)'>@" + username + "</a><span class='timeago'>" + date + "</span><div class='comment'>" + comment + "</div><div>" + iconSpam + "</div></div>";
 			else
-				return 	"<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username prevent-default' onclick='setSearchFor(this)'>@" + username + "</a><span class='timeago'>" + date + "</span><a class='delComment' onclick='deleteComment(this)' id='" + val._id +"' infoid='" + infoId + "'>X</a><div class='comment'>" + comment + "</div><div></div></div>";
+				return 	"<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username prevent-default' onclick='setSearchFor(this)'>@" + username + "</a><span class='timeago'>" + date + "</span><a class='delComment' onclick='deleteComment(this)' id='" + val._id +"' infoid='" + infoId + "'></a><div class='comment'>" + comment + "</div><div></div></div>";
 	}
 	else
 	{
 		if(user._id	!= userid)
 			return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username prevent-default' onclick='setSearchFor(this)'>@" + username + "</a><span class='timeago'>" + date + "</span><div class='comment'>" + comment + "</div><div>"+iconSpam+"</div></div>";	
 		else
-			return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username prevent-default' onclick='setSearchFor(this)'>@" + username + "</a><span class='timeago'>" + date + "</span><a class='delComment' onclick='deleteComment(this)' id='" + val._id +"' infoid='" + infoId + "'>X</a><div class='comment'>" + comment + "</div><div></div></div>";		
+			return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username prevent-default' onclick='setSearchFor(this)'>@" + username + "</a><span class='timeago'>" + date + "</span><a class='delComment' onclick='deleteComment(this)' id='" + val._id +"' infoid='" + infoId + "'></a><div class='comment'>" + comment + "</div><div></div></div>";		
 	}
 
 	
@@ -1269,7 +1269,7 @@ function setSpamSystem(item){
 				
 						if (res != "0")
 						{
-							item.html("Vous avez déjà signalé cette info");
+							item.html("<i class='signalerIcon'></i>Vous avez déjà signalé cette info");
 							item.alertid = res;
 							user.illicite = user.illicite.concat(res)
 						}
@@ -1280,7 +1280,7 @@ function setSpamSystem(item){
 	}
 	else
 	{
-		item.html("Vous avez déjà signalé cette info");
+		item.html("<i class='signalerIcon'></i>Vous avez déjà signalé cette info");
 	}
 
 

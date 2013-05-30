@@ -72,7 +72,7 @@ mixin post_youtube
 			$("#youtubeResults").html(html);
 
 			$("#youtubeResults ul li .yt_add").click(function(){
-				var frame = '<div><iframe  src="http://www.youtube.com/embed/'+$(this).attr("rel")+'" width="96%" frameborder="0" allowfullscreen></iframe><span style="cursor: pointer; position: relative; float: right" onclick="removeframe(this)">X</span><div>'
+				var frame = '<div><iframe  src="http://www.youtube.com/embed/'+$(this).attr("rel")+'" width="96%" frameborder="0" allowfullscreen></iframe><span style="cursor: pointer; position: absolute; float: right; right: 0px;" onclick="removeframe(this)"><i class="icon-remove"></i></span><div>'
 				$("#post_yakYoutube").prepend(frame);
 				//$('#post_youtube').modal('hide');
 			});

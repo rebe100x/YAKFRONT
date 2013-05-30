@@ -1340,7 +1340,7 @@
 		
 			});
 
-			var thumbsUp = "<span class='btn newYaklike'>Like</span>&nbsp;";
+			var thumbsUp = "<span class='btn newYaklike'><i></i>Like</span>&nbsp;";
 			var thumbsDown = "<i class='icon-thumbs-down'></i>";
 			if($.inArray(user._id, val.yaklikeUsersIds) > -1)
 			{
