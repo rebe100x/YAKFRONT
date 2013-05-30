@@ -10,7 +10,6 @@ mixin post_youtube
 					br
 					span.hint
 						|Chercher un video sur Youtube et integrez-la dans votre Yassala
-
 				br
 				br
 			div.mediaBoxContainer
@@ -75,6 +74,8 @@ mixin post_youtube
 				var frame = '<div><iframe  src="http://www.youtube.com/embed/'+$(this).attr("rel")+'" width="96%" frameborder="0" allowfullscreen></iframe><span style="cursor: pointer; position: absolute; float: right; right: 0px;" onclick="removeframe(this)"><i class="icon-remove"></i></span><div>'
 				$("#post_yakYoutube").prepend(frame);
 				//$('#post_youtube').modal('hide');
+				$(this).unbind("click");
+				$(this).css("opacity", "0.4");
 			});
 
 		} 

@@ -5,29 +5,34 @@ mixin post_flicker
 			span#closeModal(type="button", data-dismiss="modal")
 			div.controls.clearBoth
 				span.mediaText.pull-left
+					span.rechercheFlickr
 					|Recherche post_flicker
+					br
+					span.hint
+						|Chercher un photo sur Flickr et integrez-le dans votre Yassala
 				br
 				br
-			div.controls.clearBoth
-				input#flickerImages(type="hidden")
-				input#inputFlicker
-				button#searchFlicker Rechercher
-				img#loadingFlicker(src="/images/loader.gif", style="display: none")
-			br
+			div.mediaBoxContainer	
+				div.controls.clearBoth
+					input#flickerImages(type="hidden")
+					input#inputFlicker.input
+					button#searchFlicker.btn Trouver
+					img#loadingFlicker(src="/images/loader.gif", style="display: none")
+				br
 
-			div#FlickerResults.controls.clearBoth
-			br
-			br
-			br
-			br
-			br
-			br
-			br
-			br
-			br
-			br
-			br
-			br
+				div#FlickerResults.controls.clearBoth
+				br
+				br
+				br
+				br
+				br
+				br
+				br
+				br
+				br
+				br
+				br
+				br
 
 	script
 		$(document).ready(function(){
@@ -60,13 +65,14 @@ mixin post_flicker
 			
 			
 			var html = '<ul>';
-			for (var i = 0; i < 10; i++) {
+			for (var i = 0; i < 9; i++) {
 			var entry = feed[i];
 			var link = entry.link;
 			var title = entry.title;
 			var src = entry.media.m;
 			
-			html += '<li>';
+			html += '<li title="Integrez-le">';
+			html += '<span class="yt_add yakPosterLogo"></span>';
 			html += '<img src="'+src+'" width="100%" alt="'+title+'" style="cursor:pointer" title="'+title+'" />';
 			html += '</li>';
 
@@ -78,6 +84,8 @@ mixin post_flicker
 				var frame = '<div>' + $(this).html() + '<span style="cursor: pointer; position: relative; float: right" onclick="removeframe(this)">X</span></div>'
 				$("#post_yakFlickr").prepend(frame);
 				//$('#post_youtube').modal('hide');
+				$(this).unbind("click");
+				$(this).css("opacity", "0.4");
 			});
 		} 
 

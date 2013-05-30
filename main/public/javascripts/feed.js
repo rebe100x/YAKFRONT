@@ -270,7 +270,8 @@
 						};
 
 						if(!isUserBL && !isFeedBL && !isInfoBL)
-							ulLiked+="<li><a href='/news/feed?id="+val._id+"'>"+val.title+"</a><br /><span class='topCounts'>"+val.likes+"like(s)</span></li>";
+								if(val.likes != 0)
+									ulLiked+="<li><a href='/news/feed?id="+val._id+"'>"+val.title+"</a><br /><span class='topCounts'>"+val.likes+"like(s)</span></li>";
 				});
 				
 			}
@@ -307,7 +308,8 @@
 						};
 
 						if(!isUserBL && !isFeedBL && !isInfoBL)
-							ulCommented+="<li><a href='/news/feed?id="+val._id+"'>"+val.title+"</a><br /><i class='commentLogo'></i><span class='topCounts'>"+val.commentsCount+"</span></li>";
+							if(val.commentsCount != 0)
+								ulCommented+="<li><a href='/news/feed?id="+val._id+"'>"+val.title+"</a><br /><i class='commentLogo'></i><span class='topCounts'>"+val.commentsCount+"</span></li>";
 				});
 				
 			}

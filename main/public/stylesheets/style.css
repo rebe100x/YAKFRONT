@@ -211,7 +211,7 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 .infowindow .yakTypeImage { float: left; height:22px; z-index: 111; position: relative; top: 8px; padding: 0px 6px; }
 .infowindow .yakTypeImage img { float: left; width:15px;height:22px;}
 
-.infowindow .thumbImage { float: left;  margin: 0 3px 0 0; position: relative;}
+.infowindow .thumbImage { float: left;  margin: 0 3px 0 0; position: relative; clear: both;}
 .infowindow .thumbImage img { float: left; width: 120px; height: 90px;}
 .infowindow .thumbImage .mediumSizeThumb { width: 99%; height: auto;}
 
@@ -224,7 +224,8 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 
 .infowindow .infodetail{float:left;width:100%;font-style:italic;font-size:0.8em;line-height: 1.5em; clear: both; color: #c5c5c5; position: relative;left: 7px; padding-bottom: 3px}
 .infowindow .infodetail a{color:#0C0C0C;}
-.infowindow .icon-remove { float: right; clear: both;  position: relative; right: 7px;top:7px; z-index: 11111; background: url('/images/yakwala_sprite.png') -72px -659px;width: 13px;height: 13px;}
+.infowindow .icon-remove { float: right; clear: both;  position: relative; right: 7px;top:7px; z-index: 11111; }
+.icon-remove {background: url('/images/yakwala_sprite.png') -72px -659px;width: 13px;height: 13px; cursor: pointer;}
 
 
 
@@ -291,7 +292,7 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 #postForm span#picturePreview{float:left;margin:3px;}
 #postForm input#picture{float:left;}
 #postForm h3 { font-size: 18px; color: #7f7f7f; margin-top: 6px; margin-bottom: 6px; font-weight: normal;} 
-#postForm hr { border: 2px solid #e6e6e6; margin: 10px 0 0 0; padding: 0;}
+#postForm hr { border: 2px solid #e6e6e6; margin: 10px 0 0 0; padding: 0; clear: both;}
 #postForm .yakbtn { margin-bottom: 25px}
 #ui-datepicker-div{font-size:0.9em;}
 #newspostContent{display:none;position:relative;height:0px;width:100%;}
@@ -477,8 +478,8 @@ width: 270px;
    #closehideSearch { display: block;}
    #closeModal { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -70px -658px; position: relative; float: right; cursor: pointer;}
    span.closePlace { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -97px -658px; position: relative; float: right; cursor: pointer;}
-   span.redAdd { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -205px -658px; position: relative; float: left; cursor: pointer; top: 16px; margin-right: 10px}
-   span.redStars { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -176px -658px; position: relative; float: left; cursor: pointer; top: 0px; margin-right: 10px}
+   span.redAdd { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -213px -658px; position: relative; float: left; cursor: pointer; top: 16px; margin-right: 10px}
+   span.redStars { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -185px -658px; position: relative; float: left; cursor: pointer; top: 0px; margin-right: 10px}
    .searchYakwala #timeContainer { position: relative; margin-left: 12px; margin-top: 4px;}
    .searchYakwala #searchStr, .searchYakwala #searchPlaceStr { height: 26px;}
    #closehideSearch { display: none}
@@ -488,7 +489,7 @@ width: 270px;
    .searchYakwala #rangeSelectorTrigger, .searchYakwala #tagSelectorTrigger { margin-top: 10px;}
    #mymap { width: 68%;}
    #newsfeedContainer { width: 109%; right: 25px; top: 1px; }
-   #newsfeedContainer ul#newsfeed li.highlighted .mapHighlighter { width: 98%;}
+
    #newsfeedContent .mCSB_scrollTools { right: -3px}
    #locationChooser {top:40%;}
    #userChooser { top: 40%;}
@@ -542,8 +543,8 @@ width: 270px;
    #closehideSearch { display: none;}
    #closeModal { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -70px -658px; position: relative; float: right; cursor: pointer;}
    span.closePlace { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -97px -658px; position: relative; float: right; cursor: pointer;}
-   span.redAdd { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -205px -658px; position: relative; float: left; cursor: pointer; top: 16px; margin-right: 10px}
-   span.redStars { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -176px -658px; position: relative; float: left; cursor: pointer; top: 0px; margin-right: 10px}
+   span.redAdd { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -213px -658px; position: relative; float: left; cursor: pointer; top: 16px; margin-right: 10px}
+   span.redStars { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -185px -658px; position: relative; float: left; cursor: pointer; top: 0px; margin-right: 10px}
    .searchYakwala #timeContainer { position: relative; margin-left: 12px;}
    .searchYakwala #searchStr, .searchYakwala #searchPlaceStr { height: 26px;}
    #closehideSearch { display: none}
@@ -613,8 +614,8 @@ width: 270px;
    
    #closeModal { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -70px -658px; position: relative; float: right; cursor: pointer;}
    span.closePlace { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -97px -658px; position: relative; float: right; cursor: pointer;}
-   span.redAdd { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -205px -658px; position: relative; float: left; cursor: pointer; top: 16px; margin-right: 10px}
-   span.redStars { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -176px -658px; position: relative; float: left; cursor: pointer; top: 0px; margin-right: 10px}
+   span.redAdd { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -213px -658px; position: relative; float: left; cursor: pointer; top: 16px; margin-right: 10px}
+   span.redStars { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -185px -658px; position: relative; float: left; cursor: pointer; top: 0px; margin-right: 10px}
    .searchYakwala #timeContainer { position: relative; margin-left: 12px; margin-top: 10px;}
    .searchYakwala #searchStr, .searchYakwala #searchPlaceStr { height: 23px;}
    #mymap { width: 68%;}
@@ -683,8 +684,8 @@ width: 270px;
    
    #closeModal { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -70px -658px; position: relative; float: right; cursor: pointer;}
    span.closePlace { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -97px -658px; position: relative; float: right; cursor: pointer;}
-   span.redAdd { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -205px -658px; position: relative; float: left; cursor: pointer; top: 16px; margin-right: 10px}
-   span.redStars { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -176px -658px; position: relative; float: left; cursor: pointer; top: 0px; margin-right: 10px}
+   span.redAdd { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -213px -658px; position: relative; float: left; cursor: pointer; top: 16px; margin-right: 10px}
+   span.redStars { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -185px -658px; position: relative; float: left; cursor: pointer; top: 0px; margin-right: 10px}
    .searchYakwala #timeContainer { position: relative; margin-left: 12px; margin-top: 10px;}
    #locationChooser {top:40%;}
    #userChooser { top: 40%;}
@@ -746,8 +747,8 @@ width: 270px;
    
    #closeModal { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -70px -658px; position: relative; float: right; cursor: pointer;}
    span.closePlace { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -97px -658px; position: relative; float: right; cursor: pointer;}
-   span.redAdd { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -205px -658px; position: relative; float: left; cursor: pointer; top: 16px; margin-right: 10px}
-   span.redStars { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -176px -658px; position: relative; float: left; cursor: pointer; top: 0px; margin-right: 10px}
+   span.redAdd { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -213px -658px; position: relative; float: left; cursor: pointer; top: 16px; margin-right: 10px}
+   span.redStars { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -185px -658px; position: relative; float: left; cursor: pointer; top: 0px; margin-right: 10px}
    .searchYakwala #timeContainer { position: relative; margin-left: 12px; margin-top: 10px;}
    #locationChooser {top:40%;}
    #userChooser { top: 40%;}
@@ -807,8 +808,8 @@ width: 270px;
 
 	#closeModal { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -70px -658px; position: relative; float: right; cursor: pointer;}
 	span.closePlace { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -97px -658px; position: relative; float: right; cursor: pointer;}
-	span.redAdd { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -205px -658px; position: relative; float: left; cursor: pointer; top: 16px; margin-right: 10px}
-	span.redStars { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -176px -658px; position: relative; float: left; cursor: pointer; top: 0px; margin-right: 10px}
+	span.redAdd { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -213px -658px; position: relative; float: left; cursor: pointer; top: 16px; margin-right: 10px}
+	span.redStars { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -185px -658px; position: relative; float: left; cursor: pointer; top: 0px; margin-right: 10px}
 	.searchYakwala #timeContainer { position: relative; margin-left: 12px; margin-top: 10px;}
 	#locationChooser {top:7%;}
 	#userChooser {top:7%;}
@@ -864,8 +865,8 @@ width: 270px;
 
 	#closeModal { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -70px -658px; position: relative; float: right; cursor: pointer;}
 	span.closePlace { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -97px -658px; position: relative; float: right; cursor: pointer;}
-	span.redAdd { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -205px -658px; position: relative; float: left; cursor: pointer; top: 16px; margin-right: 10px}
-	span.redStars { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -176px -658px; position: relative; float: left; cursor: pointer; top: 0px; margin-right: 10px}
+	span.redAdd { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -213px -658px; position: relative; float: left; cursor: pointer; top: 16px; margin-right: 10px}
+	span.redStars { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -185px -658px; position: relative; float: left; cursor: pointer; top: 0px; margin-right: 10px}
 	.searchYakwala #timeContainer { position: relative; margin-left: 12px; margin-top: 10px;}
 	#locationChooser {top:7%;}
 	#userChooser {top:7%;}
@@ -1007,7 +1008,7 @@ border-bottom: 1px solid #e5e5e5; width: 100%}
 .myMedia a:hover { top: -2px;}
 
 #postForm button.btn.btn-large, input[type="submit"].btn.btn-large{background: #c20e16;color: #f9e7e8;}
-#postForm #yakTypeController label{margin-left:10%;}
+#postForm #yakTypeController label{margin-left:0%; display: block; width: 108px; float: left;}
 .clearBoth { clear: both;}
 
 .searchYakwala .customInput { margin-bottom: 6px}
@@ -1094,14 +1095,14 @@ border-bottom: 1px solid #e5e5e5; width: 100%}
 
 
 #soundCloudResults ul { list-style: none; padding: 0px; margin: 0px; }
-#soundCloudResults ul li {  cursor: pointer; float: left; clear: both; width: 100%;}
+#soundCloudResults ul li {  cursor: pointer; float: left; clear: both; width: 100%; margin-bottom: 20px;}
 #soundCloudResults ul li:hover { background: #cecece;}
 #soundCloudResults ul li span { float: left; position: relative;}
 
-#soundCloudResults ul li .yt_title {  font-weight: bold; width: 50%; float: left; position: relative; }
+#soundCloudResults ul li .yt_title {  font-weight: bold; width: 100%; float: left; position: relative; }
 #soundCloudResults ul li .yt_image {  font-weight: bold; width: 30%; float: left; position: relative;}
 #soundCloudResults ul li .yt_image img {  width: 100%; height: auto; position: relative;}
-
+#soundCloudResults ul li .yt_add { left: 0px; top: 55px; float: right;}
 
 .TheTops { list-style: none;}
 .TheTops li { padding-top: 20px;}
@@ -1121,6 +1122,8 @@ h3 .ajouterMedia{width: 24px; height: 24px; background-image: url('/images/yakwa
 .scPosterLogo {width: 32px; height: 32px; background-image: url('/images/yakwala_sprite.png'); background-position: -114px 152px; display: block; float: left;margin-top: 4px; margin-right: 6px;}
 .flPosterLogo {width: 32px; height: 32px; background-image: url('/images/yakwala_sprite.png'); background-position: -78px 152px; display: block; float: left;margin-top: 4px; margin-right: 6px;}
 .rechercheYoutube{width: 32px; height: 32px; background-image: url('/images/yakwala_sprite.png'); background-position: -7px 152px; display: block; float: left; margin-right: 12px;}
+.rechercheSoundCloud{width: 32px; height: 32px; background-image: url('/images/yakwala_sprite.png'); background-position: -114px 152px; display: block; float: left; margin-right: 12px;}
+.rechercheFlickr{width: 32px; height: 32px; background-image: url('/images/yakwala_sprite.png'); background-position: -78px 152px; display: block; float: left; margin-right: 12px;}
 .hint { font-size: 12px; color: #cecece;}
 .mediaBoxContainer { float: left; width: 100%; border: 1px solid #cecece;}
 .mediaBoxContainer .input {border: 1px solid #cecece;height: 25px;margin-left: 12px;margin-top: 12px;}
@@ -1131,3 +1134,12 @@ h3 .ajouterMedia{width: 24px; height: 24px; background-image: url('/images/yakwa
 .posterInfoPng {float: right; position: relative; top: -29px;  left: 20px; width: 83px; height: 40px; background-image: url('/images/yakwala_sprite.png'); background-position: -187px -715px;}
 .delComment { float: right;position: absolute;top: 0px;right: 0px;background: url('/images/yakwala_sprite.png') -72px -659px;width: 13px;height: 13px;}
 .theContent .icon-remove { display: none;}
+#topHots img { float: left; margin-right: 6px;}
+#topHots a { float: left;}
+#FlickerResults ul { list-style: none; margin: 0;}
+#FlickerResults ul li { width: 30%; height: 100px; overflow: hidden; margin: 1%; float: left;}
+#FlickerResults ul li .yt_add { display: block; z-index: 11111; position: relative; float: left;}
+#post_flicker .modal-body { min-height: auto;}
+#FlickerResults img { position:  relative;bottom: 33px;}
+.actuEvenIcon {width: 24px; height: 24px; background-image: url('/images/yakwala_sprite.png'); background-position: -131px -94px; float: right; position: relative; right: 8px;}
+.yassalaIcon {width: 24px; height: 24px; background-image: url('/images/yakwala_sprite.png'); background-position: -131px -218px; float: right; position: relative; right: 8px;}
