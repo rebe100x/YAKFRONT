@@ -1008,7 +1008,8 @@ border-bottom: 1px solid #e5e5e5; width: 100%}
 .myMedia a:hover { top: -2px;}
 
 #postForm button.btn.btn-large, input[type="submit"].btn.btn-large{background: #c20e16;color: #f9e7e8;}
-#postForm #yakTypeController label{margin-left:0%; display: block; width: 108px; float: left;}
+#postForm #yakTypeController label{margin-left:0%; display: block; width: 108px; float: left;white-space: nowrap;}
+#postForm #yakTypeController{height:25px;}
 .clearBoth { clear: both;}
 
 .searchYakwala .customInput { margin-bottom: 6px}
@@ -1148,3 +1149,4 @@ h3 .ajouterMedia{width: 24px; height: 24px; background-image: url('/images/yakwa
 #FlickerResults img { position:  relative;bottom: 33px;}
 .actuEvenIcon {width: 24px; height: 24px; background-image: url('/images/yakwala_sprite.png'); background-position: -131px -94px; float: right; position: relative; right: 8px;}
 .yassalaIcon {width: 24px; height: 24px; background-image: url('/images/yakwala_sprite.png'); background-position: -131px -218px; float: right; position: relative; right: 8px;}
+

@@ -1,4 +1,5 @@
 mixin postForm()
+	label.alert#err(type="text", id="err", name="err", style='display:none') Veuillez remplir les champs obligatoires.
 	- if(locals.user)
 		- if(locals.user.type > 1)
 			form#postForm(action='/news', method='POST', enctype='multipart/form-data')
@@ -177,7 +178,7 @@ mixin postForm()
 	- if(locals.user.type > 1)
 		script
 			$(document).ready(function() {
-				$('#postForm').submit(function() {
+				$('#postForm').unbind('submit').submit(function() {
 					var currType = $("input:radio[name='yakType']:checked").val();
 					
 					if ($.inArray(currType, yakType) == -1) {
@@ -187,6 +188,22 @@ mixin postForm()
 					$.cookie("yaktype", yakType,{ expires: 10000, path : '/' });
 					var content = $("#postForm #content").val() + $("#post_yakYoutube").html() + $("#post_yakSoundCloud").html() + $("#post_yakFlickr").html();
 					$("#postForm #content").val(content);
+
+					var err = false;
+					$('.alert-error').hide();
+					if($('#title').val() == ""){
+						$('#title').before('<div class="alert alert-error"><strong>Erreur: </strong> Indiquez un titre pour votre info !</div>').focus();
+						err = true;
+					}				
+					if($('#placeInput').val() == ""){
+						$('#place').before('<div class="alert alert-error"><strong>Erreur: </strong> Localisez votre info !</div>').focus();
+						err = true;
+					}
+					if (err){
+						$('#err').show();
+						return false;
+					}else
+						return true;
 				});
 
 			});
@@ -200,10 +217,26 @@ mixin postForm()
 						yakType[yakType.length] = currType;
 					}
 
-				$.cookie("yaktype", yakType,{ expires: 10000, path : '/' });
+					$.cookie("yaktype", yakType,{ expires: 10000, path : '/' });
 
-				var content = $("#postForm #content").val() + $("#post_yakYoutube").html() + $("#post_yakSoundCloud").html() + $("#post_yakFlickr").html();
-				$("#postForm #content").val(content);
+					var content = $("#postForm #content").val() + $("#post_yakYoutube").html() + $("#post_yakSoundCloud").html() + $("#post_yakFlickr").html();
+					$("#postForm #content").val(content);
+
+					var err = false;
+					$('.alert-error').hide();
+					if($('#title').val() == ""){
+						$('#title').before('<div class="alert alert-error"><strong>Erreur: </strong> Indiquez un titre pour votre info !</div>').focus();
+						err = true;
+					}				
+					if($('#placeInput').val() == ""){
+						$('#place').before('<div class="alert alert-error"><strong>Erreur: </strong> Localisez votre info !</div>').focus();
+						err = true;
+					}
+					if (err){
+						$('#err').show();
+						return false;
+					}else
+						return true;
 				});
 			});
 	

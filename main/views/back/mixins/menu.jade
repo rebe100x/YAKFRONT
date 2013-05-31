@@ -30,14 +30,6 @@ mixin menu(active)
 								- else
 									li
 										a(href="/") Dashboard
-								- if(active == 'place')
-									li.active
-										a(href="/place/list") Lieux
-											span1#placenumber
-								- else
-									li
-										a(href="/place/list") Lieux
-											span1#placenumber
 								- if (active == 'info')
 									li.active
 										a(href="") Infos
@@ -46,20 +38,6 @@ mixin menu(active)
 									li
 										a(href="") Infos
 											span1#infonumber
-								- if (active == 'feed')
-									li.active
-										a(href="feed/list") Flux
-											span1#feednumber
-								- else
-									li
-										a(href="feed/list") Flux
-											span1#feednumber
-								- if (active == 'zone')
-									li.active
-										a(href="zone/list") Zones
-								- else
-									li
-										a(href="zone/list") Zones							
 								- if (active == 'illicite')
 									li.active
 										a(href="/illicites/list") Illicites
@@ -68,14 +46,14 @@ mixin menu(active)
 									li
 										a(href="/illicites/list") Illicites
 											span1#illicitenumber
-								- if (active == 'yakcat')
+								- if(active == 'place')
 									li.active
-										a(href="/categories/list") Catégories
-											span1#catnumber
+										a(href="/place/list") Lieux
+											span1#placenumber
 								- else
 									li
-										a(href="/categories/list") Catégories
-											span1#catnumber
+										a(href="/place/list") Lieux
+											span1#placenumber
 								- if (active == 'user')
 									li.active
 										a(href="/user/list") Utilisateurs
@@ -84,6 +62,35 @@ mixin menu(active)
 									li
 										a(href="/user/list") Utilisateurs
 											span1#usernumber
+								- if (active == 'feed')
+									li.active
+										a(href="feed/list") Insertion de Données
+											span1#feednumber
+								- else
+									li
+										a(href="feed/list") Insertion de données
+											span1#feednumber
+								- if (active == 'zone')
+									li.active
+										a(href="zone/list") Zones
+								- else
+									li
+										a(href="zone/list") Zones
+								- if (active == 'yakne')
+									li.active
+										a(href="/yakne/list") Mots clés
+								- else
+									li
+										a(href="/yakne/list") Mots clés
+								- if (active == 'yakcat')
+									li.active
+										a(href="/categories/list") Catégories
+											span1#catnumber
+								- else
+									li
+										a(href="/categories/list") Catégories
+											span1#catnumber
+								
 		div#alertInfo.alert.alert-info
 			button.close(type="button",data-dismiss="alert") x
 			span.alertText								
