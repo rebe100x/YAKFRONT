@@ -135,7 +135,7 @@ User.statics.findGridUsers = function (pageIndex, pageSize, searchTerm, sortProp
 
 	return this.find(
 		conditions,
-		'thumb name type status creationDate',
+		'thumb thumbverysmall name login type status creationDate',
 		{
 			skip:
 			(pageIndex -1)*pageSize,
@@ -148,26 +148,31 @@ User.statics.findGridUsers = function (pageIndex, pageSize, searchTerm, sortProp
 }
 
 User.statics.format = function (theuser) {
+	console.log(theuser);
 	if(theuser.thumb && theuser.thumb!= 'no-user.png'){
 		var thethumb = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/128_128/'+theuser.thumb;
 		var thethumbsmall = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/48_48/'+theuser.thumb;
+		var thethumbverysmall = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/24_24/'+theuser.thumb;
 		//var thethumb = 	conf.fronturl+'/pictures/128_128/'+theuser.thumb;
 		//var thethumbsmall = 	conf.fronturl+'/pictures/48_48/'+theuser.thumb;
 	}
 	else{
 		var thethumb = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucketstatic+'/128_128/no-user.png';
 		var thethumbsmall = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucketstatic+'/48_48/no-user.png';
+		var thethumbverysmall = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucketstatic+'/24_24/no-user.png';
 	}
 		
 
 	var formattedUser = {
 		_id:theuser._id,
 		name:theuser.name,
+		login:theuser.login,
 		bio:theuser.bio,
 		thumb:thethumb,
+		creationDate:theuser.creationDate,
 		thumbsmall:thethumbsmall,
+		thumbverysmall:thethumbverysmall,
 		web:theuser.web,
-		login:theuser.login,
 		type:theuser.type,
 		mail:theuser.mail,
 		lastLoginDate:theuser.lastLoginDate,
@@ -213,28 +218,7 @@ User.statics.formatLight = function (theuser) {
   return formattedUser;
 }
 
-User.statics.formatLightBack = function (theuser) {
-	if(theuser.thumb && theuser.thumb!= 'no-user.png'){
-		var thethumb = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/128_128/'+theuser.thumb;
-		var thethumbsmall = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/24_24/'+theuser.thumb;
-	}else{
-		var thethumb = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucketstatic+'/128_128/no-user.png';
-		var thethumbsmall = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucketstatic+'/24_24/no-user.png';
-	}
 
-	var formattedUser = {
-		_id:theuser._id,
-		name:theuser.name,
-		login:theuser.login,
-		userdetails:theuser.name+'(@'+theuser.login+')',
-		thumb:thethumb,
-		thumbsmall:thethumbsmall,
-		creationDate: theuser.creationDate,
-		type: theuser.type,
-		status: theuser.status,
-	};
-  return formattedUser;
-}
 
 User.statics.formatLight2 = function (theuser) {
 	

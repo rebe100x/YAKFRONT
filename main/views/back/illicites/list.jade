@@ -326,7 +326,6 @@ mixin list()
 					var place = response.place;
 
 					var latlng = new google.maps.LatLng(place.location.lat, place.location.lng);
-					getformattedAddress(latlng);
 					placeMarker(latlng,markerLocation);
 					map.setCenter(markerLocation.getPosition());
 				}

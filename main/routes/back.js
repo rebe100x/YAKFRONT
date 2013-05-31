@@ -985,7 +985,7 @@ exports.gridUsers = function (req, res) {
 
 		var data = {};
 		var usersFormated = user.map(function(item){
-			return User.formatLightBack(item);
+			return User.format(item);
 		});
 
         data['user'] = usersFormated;
@@ -1016,6 +1016,16 @@ exports.user = function(req, res){
 			res.redirect('user/login?redir='+req.body.redir);
 		}
 	});
+};
+
+exports.findUserById = function (req, res) {
+    var User = db.model('User');
+    User.findById(req.params.id, function (err, docs){	
+      var userFormatted = User.format(docs);
+      res.json({
+        user: userFormatted
+      });
+    });
 };
 
 /*******

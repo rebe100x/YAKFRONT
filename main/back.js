@@ -128,6 +128,7 @@ app.get('/api/tags',back.requiresLogin, api.tags);
 app.get('/api/yakNE', api.yakNE);
 app.get('/api/places', back.places);
 
+
 app.get('/api/places/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status', back.gridPlaces);
 app.get('/api/places/:id', back.findPlaceById);
 
