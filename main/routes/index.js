@@ -52,6 +52,31 @@ exports.static_image = function(req,res){
 		res.json({error:'file does not exist'});
 }
 
+exports.requiresLogin = function(req,res,next){
+	
+	if(req.session.user){
+		var User = db.model('User');
+		User.findById(req.session.user,function (err, theuser){
+			if(theuser != undefined && theuser != null ){
+				res.locals.user = User.format(theuser);
+				//console.log(res.locals.user);
+				//console.log(theuser);
+				console.log('LOGGED IN');
+				next();
+			}else{
+				console.log('NOT LOGGED IN');
+				req.session.message = 'Please login to access this section:';
+				res.redirect('/user/login?redir='+req.url);
+			}
+		});
+	}else{
+		console.log('NOT LOGGED IN');
+		req.session.message = 'Please login to access this section:';
+		res.redirect('/user/login?redir='+req.url);
+	}	
+};
+
+
 
 exports.user_alertsLastCheck = function(req, res){
 	var User = db.model('User');
@@ -84,9 +109,7 @@ exports.set_user_alerts = function(req, res){
 				else
 					res.json("0");
 			});	
-	}	
-	
-	else
+	}else
 	{
 		User.update({_id: req.session.user},{$pull:{'usersubs':{_id:req.body.theuser._id}}}, function(err){
 			if(!err)
@@ -111,10 +134,7 @@ exports.set_user_alerts_feed = function(req, res){
 				else
 					res.json("0");
 			});	
-	}	
-	
-	
-	else
+	}else
 	{
 		User.update({_id: req.session.user},{$pull:{'feedsubs':{_id:req.body.theuser._id}}}, function(err){
 			if(!err)
@@ -128,29 +148,6 @@ exports.set_user_alerts_feed = function(req, res){
 }
 
 
-exports.requiresLogin = function(req,res,next){
-	
-	if(req.session.user){
-		var User = db.model('User');
-		User.findById(req.session.user,function (err, theuser){
-			if(theuser != undefined && theuser != null ){
-				res.locals.user = User.format(theuser);
-				//console.log(res.locals.user);
-				//console.log(theuser);
-				console.log('LOGGED IN');
-				next();
-			}else{
-				console.log('NOT LOGGED IN');
-				req.session.message = 'Please login to access this section:';
-				res.redirect('/user/login?redir='+req.url);
-			}
-		});
-	}else{
-		console.log('NOT LOGGED IN');
-		req.session.message = 'Please login to access this section:';
-		res.redirect('/user/login?redir='+req.url);
-	}	
-};
 
 
 
@@ -647,6 +644,9 @@ exports.session = function(req, res){
 
 			}else if(user.status == 2){
 				req.session.message = 'Compte non validé.';
+				res.redirect('user/login?redir='+req.body.redir);
+			}else if(user.status == 3){
+				req.session.message = 'Votre compte a été désactivé. Pour une réclamation, veuillez contacter nos administrateurs : admin@yakwala.fr';
 				res.redirect('user/login?redir='+req.body.redir);
 			}
 		}else{

@@ -1674,7 +1674,6 @@ function checkByWidth()
 							if(theuser._id ==  val.content_id && val.content_type == 3)
 								isSpammed = true;
 						});	
-
 						if(!isSpammed){
 							$.post('/setSpams', {content_id : theuser._id, content_type : 3, content:  '<img src="'+theuser.thumb.replace('128_128','24_24')+'" />  '+theuser.name+' ( '+theuser.mail+' ) <br>'}, function(res){		
 								if (res != "0"){
