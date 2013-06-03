@@ -1047,7 +1047,6 @@ exports.changeStatusIllicite = function(req, res){
 	switch(content_type){
 		case "1": {
 			var Info = db.model("Info");
-			console.log('status'+status);
 			if(status == 2){ // delete
 				var infoStatus = 3;
 				var illiciteStatus = 2;
@@ -1087,22 +1086,33 @@ exports.changeStatusIllicite = function(req, res){
 			break;
 		}
 		case "3": {
+			var User = db.model("User");
 			if(status == 2){ // delete
 				var userStatus = 3;
+				var infoStatus = 3;
 				var illiciteStatus = 2;
 			}
 			else{ // undelete
 				var userStatus = 1;
+				var infoStatus = 1;
 				var illiciteStatus = 1;
 			}	
 			User.update({_id: content_id},{$set:{'status':userStatus}}, function(err){
 				if(!err){
-					var Illicite = db.model("contenuIllicite");
-					Illicite.update({_id : _id},{$set:{status:illiciteStatus,dateProcessed:new Date()}},function(err){
-						if(!err)
-							res.json({meta:{code:200}});
-						else
-							res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});			
+					var Info = db.model("Info");
+					Info.update({user:mongoose.Types.ObjectId(content_id)},{$set:{status:infoStatus}}, function(err,docs){
+						if(!err){
+
+
+							var Illicite = db.model("contenuIllicite");
+							Illicite.update({_id : _id},{$set:{status:illiciteStatus,dateProcessed:new Date()}},function(err){
+								if(!err)
+									res.json({meta:{code:200}});
+								else
+									res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});			
+							});
+						}else
+							res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 					});
 				}else
 					res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});

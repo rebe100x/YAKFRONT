@@ -57,10 +57,8 @@ Zone.statics.findGridZones = function (pageIndex, pageSize, searchTerm, sortProp
 
 	conditions["_id"] = { $ne: currUser };
 
-	if (status == 2) {
-		conditions["status"] = { $in: [2,10] };
-	}
-	else if (status != 4) {
+console.log(status);
+	if (status >= 0) {
 		conditions["status"] = status;
 	}
 

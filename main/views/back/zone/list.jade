@@ -15,9 +15,10 @@ mixin list()
 			tr.headerControle
 				td(colspan=6)
 					select#filterStatus
+						option(value="-1", "selected"="selected") Toutes les zones
 						option(value="0") Désactivées
 						option(value="1") Actives
-						option(value="4", "selected"="selected") Toutes les zones
+						
 					
 		tfoot
 			tr
@@ -97,6 +98,7 @@ mixin list()
 				url += '/' + sortPropertyArray.join() + '/' + sortDirectionArray.join();
 
 				// Filter by status
+
 				var status = $('#filterStatus :selected').val();
 				url += '/' + status;
 
@@ -323,7 +325,12 @@ mixin list()
 		});
 
 
-		
+		// Refresh on sort selection
+		$('#filterStatus').live('change', function() {
+			refreshDatagridAndMenu();
+		});
+
+
 
 		function editZone(id,flagDuplicate){
 			event.preventDefault();
