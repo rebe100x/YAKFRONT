@@ -1245,7 +1245,7 @@
 		}
 		function createFeedPageItem(val)
 		{
-
+			var infofId = val._id;
 			var item = $("<div />");
 			item.attr("class", "myitem");
 
@@ -1283,7 +1283,7 @@
 				$(this).append('<img class="loadingMore" src="images/loader_big.gif">');
 				
 				$.each(val.yakComments, function(key, val){
-					divComment.append(drawAComment(val, currEleComment.attr("rel"), 'map'));
+					divComment.append(drawAComment(val, infofId, 'map'));
 				});
 				divComment.append('<textarea maxlength="250" rows="3" style="z-index: 1111111111111; display: block" class="yakTextarea" placeholder="Ajouter un commentaire..." onclick="return stopScroll()"></textarea>');
 

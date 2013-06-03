@@ -991,9 +991,10 @@ exports.gridUsers = function (req, res) {
         data['user'] = usersFormated;
 		data['pageIndex'] = req.params.pageIndex;
 		data['pageSize'] = req.params.pageSize;
-		data['count'] = user.length;
-		res.json(data);
- 		
+		User.countSearch(req.params.searchTerm, req.params.status, function (err, count){
+			data['count'] = count;
+			res.json(data);
+		});
 	});
 };
 
@@ -1036,18 +1037,29 @@ exports.illicites = function(req, res){
 	res.render('illicites/index');
 };
 
-exports.deleteIllicite = function(req, res){
+exports.changeStatusIllicite = function(req, res){
 	var content_type = req.body.content_type;
 	var content_id = req.body.content_id;
 	var _id = req.body._id;
+	var info_id = req.body.info_id;
+	var status = req.params.status; // 1 is delete, 2 is undelete
 
 	switch(content_type){
 		case "1": {
 			var Info = db.model("Info");
-			Info.update({_id:content_id},{$set:{status:3}},function(err){
+			
+			if(status == 1){ // delete
+				var infoStatus = 3;
+				var illiciteStatus = 2;
+			}
+			else{ // undelete
+				var infoStatus = 1;
+				var illiciteStatus = 1;
+			}	
+			Info.update({_id:content_id},{$set:{status:infoStatus}},function(err){
 				if(!err){
 					var Illicite = db.model("contenuIllicite");
-					Illicite.update({_id : _id},{$set:{status:2,dateProcessed:new Date()}},function(err){
+					Illicite.update({_id : _id},{$set:{status:illiciteStatus,dateProcessed:new Date()}},function(err){
 						if(!err)
 							res.json({meta:{code:200}});
 						else
@@ -1058,9 +1070,9 @@ exports.deleteIllicite = function(req, res){
 			});
 			break;
 		}
-		case "2": {
+		case "2": { // comments cannot be restablished
 			var Info = db.model("Info");
-			Info.update({_id:mongoose.Types.ObjectId(req.body.info_id)},{$inc:{commentsCount : -1},$pull:{yakComments:{_id: mongoose.Types.ObjectId(content_id)}}}, function(err,docs){
+			Info.update({_id:mongoose.Types.ObjectId(info_id)},{$inc:{commentsCount : -1},$pull:{yakComments:{_id: mongoose.Types.ObjectId(content_id)}}}, function(err,docs){
 				if(!err){
 					var Illicite = db.model("contenuIllicite");
 					Illicite.update({_id : _id},{$set:{status:2,dateProcessed:new Date()}},function(err){
@@ -1075,18 +1087,24 @@ exports.deleteIllicite = function(req, res){
 			break;
 		}
 		case "3": {
-			User.update({_id: content_id},{$set:{'status':3}}, function(err){
+			if(status == 1){ // delete
+				var userStatus = 3;
+				var illiciteStatus = 2;
+			}
+			else{ // undelete
+				var userStatus = 1;
+				var illiciteStatus = 1;
+			}	
+			User.update({_id: content_id},{$set:{'status':userStatus}}, function(err){
 				if(!err){
 					var Illicite = db.model("contenuIllicite");
-					Illicite.update({_id : _id},{$set:{status:2,dateProcessed:new Date()}},function(err){
+					Illicite.update({_id : _id},{$set:{status:illiciteStatus,dateProcessed:new Date()}},function(err){
 						if(!err)
 							res.json({meta:{code:200}});
 						else
 							res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});			
 					});
-				}
-					
-				else
+				}else
 					res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 			});
 			break;
@@ -1112,16 +1130,15 @@ exports.gridIllicites = function (req, res) {
     }
 
 	contenuIllicite.findGridIllicites(req.params.pageIndex,req.params.pageSize,
-		req.params.searchTerm,sortProperties,sortDirections, req.params.type, function (err, illicites){
-
-		var data = {};
-		
-        data['illicites'] = illicites;
-		data['pageIndex'] = req.params.pageIndex;
-		data['pageSize'] = req.params.pageSize;
-		data['count'] = illicites.length;
-		res.json(data);
- 		
+		req.params.searchTerm,sortProperties,sortDirections, req.params.type, req.params.status, function (err, illicites){
+			var data = {};
+			data['illicites'] = illicites;
+			data['pageIndex'] = req.params.pageIndex;
+			data['pageSize'] = req.params.pageSize;
+			contenuIllicite.countSearch(req.params.searchTerm, req.params.type, req.params.status, function (err, count){
+				data['count'] = count;
+				res.json(data);
+			});		
 	});
 };
 

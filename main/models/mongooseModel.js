@@ -32,7 +32,7 @@ var UserLight = new Schema({
 });
 mongoose.model('UserLight', UserLight);
 /******************************USERS*/
-
+//#USER
 var User = new Schema({
 	name	: { type: String, index: true}
 	, bio	: { type: String}
@@ -123,12 +123,8 @@ User.statics.findGridUsers = function (pageIndex, pageSize, searchTerm, sortProp
 
 	conditions["_id"] = { $ne: currUser };
 
-	if (status == 2) {
-		conditions["status"] = { $in: [2,10] };
-	}
-	else if (status != 4) {
+	if(status >=0)
 		conditions["status"] = status;
-	}
 
 	if(type != 0)
 		conditions["type"] = type;
@@ -147,8 +143,20 @@ User.statics.findGridUsers = function (pageIndex, pageSize, searchTerm, sortProp
 		callback);
 }
 
+User.statics.countSearch = function (searchTerm, status, callback) {
+	var search = new RegExp(searchTerm, 'i');
+
+	var conditions = {
+		"name" : search
+	};
+
+	if(status >=0)
+		conditions["status"] = status;
+	
+	return this.count(conditions, callback)-1;
+}
+
 User.statics.format = function (theuser) {
-	console.log(theuser);
 	if(theuser.thumb && theuser.thumb!= 'no-user.png'){
 		var thethumb = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/128_128/'+theuser.thumb;
 		var thethumbsmall = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/48_48/'+theuser.thumb;
@@ -340,6 +348,8 @@ User.statics.findByNameorLogin = function(string,callback){
 
 
 
+
+
 var auth = require('../mylib/basicAuth');
 User.plugin(auth);
 
@@ -361,6 +371,7 @@ mongoose.model('Point', Point);
 var contenuIllicite = new Schema({
 	content_id : { type : Schema.ObjectId }
 	,user_id : { type : [Schema.ObjectId] }
+	,info_id : { type : Schema.ObjectId }
 	,last_date_mark : {type: Date, default: Date.now }
 	,content_type : { type : Number, default: 1 } // 1 info, 2 comments , 3 users
 	,count : { type : Number, default : 1}
@@ -384,7 +395,7 @@ contenuIllicite.statics.findByUserInfoType = function (content_id, content_type,
  	return this.findOne({'content_id': content_id, 'content_type' : content_type}, callback);
 }
 
-contenuIllicite.statics.findGridIllicites = function (pageIndex, pageSize, searchTerm, sortProperties, sortDirections, type, callback) {
+contenuIllicite.statics.findGridIllicites = function (pageIndex, pageSize, searchTerm, sortProperties, sortDirections, type, status, callback) {
 
 	var conditions = {
 		"content" : new RegExp(searchTerm, 'i')
@@ -398,13 +409,8 @@ contenuIllicite.statics.findGridIllicites = function (pageIndex, pageSize, searc
 			desc = -1;
 		sortBy[sortProperties[index]] = desc;
 	}
-
-	/*if (status == 2) {
-		conditions["status"] = { $in: [2,10] };
-	}
-	else if (status != 4) {
-		conditions["status"] = status;
-	}*/
+	
+	conditions["status"] = status;
 
 	if(type != 0)
 		conditions["content_type"] = type;
@@ -423,6 +429,20 @@ contenuIllicite.statics.findGridIllicites = function (pageIndex, pageSize, searc
 		callback);
 }
 
+contenuIllicite.statics.countSearch = function (searchTerm, type, status, callback) {
+	var search = new RegExp(searchTerm, 'i');
+
+	var conditions = {
+		"content" : search
+	};
+
+	if(type > 0)
+		conditions["content_type"] = type;		
+
+	conditions["status"] = status;
+	
+	return this.count(conditions, callback)-1;
+}
 
 mongoose.model('contenuIllicite', contenuIllicite);
 
@@ -1176,6 +1196,7 @@ Yakcat.statics.findGridYakcats = function (pageIndex, pageSize, searchTerm, sort
 }
 
 mongoose.model('Yakcat', Yakcat);
+
 
 
 /******************************YAKTAG*/

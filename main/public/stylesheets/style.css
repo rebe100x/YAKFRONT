@@ -483,7 +483,7 @@ width: 270px;
    .searchYakwala #timeContainer { position: relative; margin-left: 12px; margin-top: 4px;}
    .searchYakwala #searchStr, .searchYakwala #searchPlaceStr { height: 26px;}
    #closehideSearch { display: none}
-   #blackBox { background-color: #3c3c3c; color: white; font-weight: bold; padding: 3px 15px; position: relative; top: 50px; }
+   #blackBox { background-color: #3c3c3c; color: white; font-weight: bold; padding: 3px 15px; position: relative; top: 48px; }
 
    #dayPrinter .blackArrow { position: relative; top: -9px; left: 50%; float: left;}
    .searchYakwala #rangeSelectorTrigger, .searchYakwala #tagSelectorTrigger { margin-top: 10px;}

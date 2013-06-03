@@ -24,8 +24,9 @@ mixin feedForm()
 			div.control-group#titleGroup
 				div.controls
 					div.row-fluid
-						.span6
-							label Nom*:
+						.span6 
+							label Nom*: 
+								i.icon-question-sign#titleHelp
 							input(type='text', name='humanName', id='humanName', placeholder='Le nom du flux')
 						.span6
 							label Imagette:
@@ -286,7 +287,11 @@ mixin feedForm()
 			div.modal-footer
 				button.btn.btn-primary.btn-warning(type="button", data-dismiss="modal", aria-hidden="true") OK
 
-			
+			div.popover.fade.right.in(style="top: 12.5px; left: 242px; display: block;")
+				div.arrow
+				h3.popover-title A Title
+				div.popover-content
+					And here's some amazing content. It's very engaging. right?
 
 	
 	script
@@ -302,6 +307,8 @@ mixin feedForm()
 		
 		$(document).ready(function() {
 
+		
+			$('#titleHelp').popover({animation:true,title:'Le nom du flux',content:"C'est son nom",html:true});
 			
 			listenerHandle = google.maps.event.addListener(map, 'click', function(event) {
 				placeMarker(event.latLng,markerLocation);

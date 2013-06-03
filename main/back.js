@@ -93,7 +93,7 @@ app.get('/illicites/list',back.requiresLogin, back.illicites);
 app.get('/categories/list',back.requiresLogin, back.categories);
 
 
-app.post('/deleteIllicite', back.requiresLogin, back.deleteIllicite);
+app.post('/changeStatusIllicite', back.requiresLogin, back.changeStatusIllicite);
 app.post('/feed', back.requiresLogin, back.feed);
 app.post('/place', back.requiresLogin, back.place);
 app.post('/user', back.requiresLogin, back.user);
@@ -134,7 +134,7 @@ app.get('/api/places/:id', back.findPlaceById);
 
 app.get('/api/zones/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status', back.gridZones);
 app.get('/api/users/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status/:type', back.gridUsers);
-app.get('/api/illicites/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:type', back.gridIllicites);
+app.get('/api/illicites/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:type/:status', back.gridIllicites);
 
 app.get('/api/yakcats/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status', back.gridYakcats);
 

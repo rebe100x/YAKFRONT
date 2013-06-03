@@ -182,7 +182,7 @@ Place.statics.countSearch = function (searchTerm, status, yakcats, users, callba
 	if (0 < users.length)
 		conditions["user"] = { $in: users };
 
-	return this.count(conditions, callback);
+	return this.count(conditions, callback)-1;
 }
 
 Place.statics.validatePlaces = function (ids, callback) {

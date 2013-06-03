@@ -1145,7 +1145,13 @@ function changePlaceRange(id, lat, lng, pointname, range)
 
 function setCommentSpam(el)
 {
-	$.post('/setSpams', {content_id : $(el).attr("rel"), content_type : 2,content : $(el).parent().prev().html()} , function(res){
+	var infoid = $(el).parent().parent().find('.comment').attr('idinfo');	
+	console.log(infoid);
+	var content = '<img src="'+$(el).parent().parent().find('.userthumb').attr('src').replace('128_128','24_24')+'"/>&nbsp;'+$(el).parent().parent().find('.comment').html()
+					+'<br><b>Posté par </b><a target="_blank" href="'+conf.fronturl+'/news/feed/?idprofile='+$(el).parent().parent().find('.comment').attr('idposter')+'">'+$(el).parent().parent().find('.username').html()+'</a>'
+					+'<br><b>Signalé par </b><a target="_blank" href="'+conf.fronturl+'/news/feed/?idprofile='+user._id+'">@'+user.login+'</a>'
+					+'&nbsp;'+$(el).parent().parent().find('.timeago').html();
+	$.post('/setSpams', {content_id : $(el).attr("rel"), content_type : 2,content : content , info_id: infoid} , function(res){
 		if (res != "0")
 		{
 			el.remove();
@@ -1163,8 +1169,8 @@ function drawAComment(val,infoId, from)
 	//var comment =  wordFilter(val.comment.toString()).linkify();
 	var comment =  checkandremoveTags(wordFilter(val.comment.toString()));
 	var thumb	 = val.userthumb;
-	if(typeof(infoId) === 'undefined')
-		infoId = val.infoid;
+	
+
 	date = "";
 	if (typeof(val.date) != 'undefined' ) {
 		var date	 = $.timeago(val.date);
@@ -1181,23 +1187,23 @@ function drawAComment(val,infoId, from)
 
 	if(!isSpammed)
 	{
-		iconSpam = "<i class='icon-warning-sign' title='Signaler ce commentaire' rel='" + comment_id + "' onclick='setCommentSpam(this)'></i>";
+		iconSpam = "<i class='icon-warning-sign' title='Signaler ce commentaire aux admins Yakwala' rel='" + comment_id + "' onclick='setCommentSpam(this)'></i>";
 	}
 	
 
 
 	if (typeof(from) === 'undefined' ) {
 			if(user._id	!= userid)
-				return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username prevent-default' onclick='setSearchFor(this)'>@" + username + "</a><span class='timeago'>" + date + "</span><div class='comment'>" + comment + "</div><div>" + iconSpam + "</div></div>";
+				return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username prevent-default' onclick='setSearchFor(this)'>@" + username + "</a><span class='timeago'>" + date + "</span><div class='comment' idposter='"+userid+"' idinfo='"+infoId+"'>" + comment + "</div><div>" + iconSpam + "</div></div>";
 			else
-				return 	"<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username prevent-default' onclick='setSearchFor(this)'>@" + username + "</a><span class='timeago'>" + date + "</span><a class='delComment' onclick='deleteComment(this)' id='" + val._id +"' infoid='" + infoId + "'></a><div class='comment'>" + comment + "</div><div></div></div>";
+				return 	"<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username prevent-default' onclick='setSearchFor(this)'>@" + username + "</a><span class='timeago'>" + date + "</span><a class='delComment' onclick='deleteComment(this)' id='" + val._id +"' infoid='" + infoId + "'></a><div class='comment' idposter='"+userid+"' idinfo='"+infoId+"'>" + comment + "</div><div></div></div>";
 	}
 	else
 	{
 		if(user._id	!= userid)
-			return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username prevent-default' onclick='setSearchFor(this)'>@" + username + "</a><span class='timeago'>" + date + "</span><div class='comment'>" + comment + "</div><div>"+iconSpam+"</div></div>";	
+			return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username prevent-default' onclick='setSearchFor(this)'>@" + username + "</a><span class='timeago'>" + date + "</span><div class='comment' idposter='"+userid+"' idinfo='"+infoId+"'>" + comment + "</div><div>"+iconSpam+"</div></div>";	
 		else
-			return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username prevent-default' onclick='setSearchFor(this)'>@" + username + "</a><span class='timeago'>" + date + "</span><a class='delComment' onclick='deleteComment(this)' id='" + val._id +"' infoid='" + infoId + "'></a><div class='comment'>" + comment + "</div><div></div></div>";		
+			return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username prevent-default' onclick='setSearchFor(this)'>@" + username + "</a><span class='timeago'>" + date + "</span><a class='delComment' onclick='deleteComment(this)' id='" + val._id +"' infoid='" + infoId + "'></a><div class='comment' idposter='"+userid+"' idinfo='"+infoId+"'>" + comment + "</div><div></div></div>";		
 	}
 
 	
@@ -1271,8 +1277,6 @@ function setSpamSystem(item){
 				theimg = $(this).parent().parent().find(".thumbImage").html().replace('512_0','120_90');
 			var thecontent = $(this).parent().parent().find(".yakTypeImage").html()+' '+$(this).parent().parent().find(".itemTitle").html()+'<br>'+theimg+'<br>'+$(this).parent().parent().find(".theContent").html()+'<br>'+$(this).parent().parent().find(".infodetail").html()+'<br>'+thetags;
 			$.post('/setSpams', {content_id : $(this).attr("rel"), content_type : 1, content: thecontent} , function(res){
-
-				
 						if (res != "0")
 						{
 							item.html("<i class='signalerIcon'></i>Vous avez déjà signalé cette info");

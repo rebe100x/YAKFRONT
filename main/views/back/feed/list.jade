@@ -101,9 +101,10 @@ mixin list()
 				// sort by name by default
 				if(sortPropertyArray.length == 0)
 					sortPropertyArray.push( "humanName");
-				// Always newest first
-				sortDirectionArray.push("asc");
-
+				if(sortDirectionArray.length == 0)
+					sortDirectionArray.push("asc");
+				
+					
 				// Would be easier if we could pass dictionaries, needs testing
 				url += '/' + sortPropertyArray.join() + '/' + sortDirectionArray.join();
 
@@ -207,12 +208,12 @@ mixin list()
 		
 
 		$('#filterStatus').live('change', function() {
-			var currentSelection = $('#filterStatus :selected').val();
+			//var currentSelection = $('#filterStatus :selected').val();
 			refreshDatagrid();
 		});
 
 		$('#filterType').live('change', function() {
-			var currentSelection = $('#filterType :selected').val();
+			//var currentSelection = $('#filterType :selected').val();
 			refreshDatagrid();
 		});
 

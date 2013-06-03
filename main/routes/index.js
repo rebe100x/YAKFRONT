@@ -1432,6 +1432,8 @@ exports.setSpams = function(req, res){
 	aspamAlert.content_type = req.body.content_type;
 	aspamAlert.content = req.body.content;
 	aspamAlert.status = 1;
+	if(typeof req.body.info_id != 'undefined' && req.body.info_id != '')
+		aspamAlert.info_id = req.body.info_id;
 
 	if(req.session.user){
 			contenuIllicite.findByUserInfoType(req.body.content_id, req.body.content_type, function (err, thealert){
