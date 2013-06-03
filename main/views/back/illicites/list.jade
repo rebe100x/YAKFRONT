@@ -273,31 +273,36 @@ mixin list()
 					removeIcon.attr("title", "Supprimer cette donnée");
 				removeIcon.attr("onclick", "changeStatusIllicite(this,2)");
 			}else{
-				removeIcon.attr("class", "icon-remove deleteAcomment");
-				removeIcon.attr("val_content_id", item.content_id);
-				removeIcon.attr("val_content_type", item.content_type);
-				removeIcon.attr("val_id", item._id);
-				removeIcon.css("cursor", "pointer");
-				removeIcon.attr("title", "Rétablir cette donnée");
-				removeIcon.attr("onclick", "changeStatusIllicite(this,1)");
+				if(item.content_type == 2){
+					removeIcon.attr("class", "icon-minus-sign");
+					removeIcon.attr("title", "Un commentaire ne peut être rétabli !");
+				}else{
+					removeIcon.attr("class", "icon-ok deleteAcomment");
+					removeIcon.attr("val_content_id", item.content_id);
+					removeIcon.attr("val_content_type", item.content_type);
+					removeIcon.attr("val_id", item._id);
+					removeIcon.css("cursor", "pointer");
+					removeIcon.attr("title", "Rétablir cette donnée");
+					removeIcon.attr("onclick", "changeStatusIllicite(this,1)");
+				}
+
+				
 			}
 			return removeIcon[0].outerHTML;
 		}
 
 		function changeStatusIllicite(el,status)
 		{
+			
 			var content_type = $(el).attr("val_content_type");
 			var content_id = $(el).attr("val_content_id");
 			var _id = $(el).attr("val_id");	
 			// for comments push the infoID
-			if(content_type == 2){
+			if(content_type == 2)
 				var info_id = $(el).attr("val_infoid");
-				console.log('elo'+info_id);	
-			}
 			else
 				var info_id = '';
 
-			console.log(info_id);
 			$.post("/changeStatusIllicite/", {content_id: content_id, content_type: content_type, _id: _id,info_id:info_id,status:status}, function(data){
 				$(el).parent().parent().hide();
 			});

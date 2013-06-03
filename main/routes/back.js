@@ -1042,13 +1042,13 @@ exports.changeStatusIllicite = function(req, res){
 	var content_id = req.body.content_id;
 	var _id = req.body._id;
 	var info_id = req.body.info_id;
-	var status = req.params.status; // 1 is delete, 2 is undelete
+	var status = req.body.status; // 1 is undelete, 2 is delete
 
 	switch(content_type){
 		case "1": {
 			var Info = db.model("Info");
-			
-			if(status == 1){ // delete
+			console.log('status'+status);
+			if(status == 2){ // delete
 				var infoStatus = 3;
 				var illiciteStatus = 2;
 			}
@@ -1087,7 +1087,7 @@ exports.changeStatusIllicite = function(req, res){
 			break;
 		}
 		case "3": {
-			if(status == 1){ // delete
+			if(status == 2){ // delete
 				var userStatus = 3;
 				var illiciteStatus = 2;
 			}
