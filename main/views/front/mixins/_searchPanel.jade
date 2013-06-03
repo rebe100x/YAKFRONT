@@ -108,7 +108,7 @@ mixin searchPanel()
 										if(query.indexOf('@') == 0)
 										{
 											ajax = JSON.parse(JSON.stringify(ajax).replace(/name/g, "title"));
-											console.log(ajax);
+											//console.log(ajax);
 											$("#SearchWhat").val(query.substring(1, query.length));
 											typeahead.process(ajax.users);
 											$("#SearchWhat").val(query);

@@ -6,6 +6,7 @@ html
 		base(href='/')
 		title Yakwala - #{JSON.parse(conf).env} - #{JSON.parse(mainConf).version}
 		meta(name="viewport", content="width=device-width, initial-scale=1.0") 
+		script(src='/javascripts/lib/css3-mediaqueries.js')
 		link(rel="shortcut icon",href="/images/yakfav.png", type="image/x-icon")
 		- if(JSON.parse(conf).env == 'DEV')
 			link(rel='stylesheet', href='/javascripts/lib/bootstrap/css/bootstrap.css')
@@ -33,6 +34,7 @@ html
 			script(src="/javascripts/lib/jquery/js/jquery.md5.min.js")
 			script(src='/javascripts/common.js?v='+JSON.parse(mainConf).version)
 			script(src='/javascripts/front_common.js?v='+JSON.parse(mainConf).version)
+
 
 		- else
 			script(src='https://maps.googleapis.com/maps/api/js?v=3.9&sensor=false&libraries=drawing&key='+JSON.parse(conf).gmapKey)		
