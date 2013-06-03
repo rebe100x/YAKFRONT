@@ -1630,6 +1630,9 @@ function checkByWidth()
 
 			emptyUserChooser();
 
+			//console.log(userid);
+
+
 			$('#userChooser').modal('show');
 			$("#uc_illicite_user").html('Signaler cet utilisateur aux admins de Yakwala');
 				
@@ -1652,7 +1655,30 @@ function checkByWidth()
 				}
 
 
+
+
 				if(userid != user._id){
+
+					if($.inArray(userid,user.usersubs) && user.usersubs.length > 0)
+					{
+
+						addAlert = 0;
+						var currHtml  = "<img src='images/uc_minus.png' />Supprimer de mes alertes";
+						$("#userChooser #uc_profile_yaks_alerts.mybtn").html(currHtml);		
+						$("#userChooser #uc_profile_yaks_alerts.mybtn").unbind('click').click(function(){
+							bindClickAlertUser(theuser._id, theuser.name, theuser.login, theuser.thumb);
+						});
+					}
+						
+					else
+					{
+						addAlert = 1;
+						var currHtml = "<img src='images/uc_plus.png' />Ajouter a mes alertes";
+						$("#userChooser #uc_profile_yaks_alerts.mybtn").html(currHtml);		
+						$("#userChooser #uc_profile_yaks_alerts.mybtn").unbind('click').click(function(){
+							bindClickAlertUser(theuser._id, theuser.name, theuser.login, theuser.thumb);
+						});
+					}
 
 					$("#uc_blacklist_user").unbind('click').click(function(){
 						$.post('/api/user/blacklist', {id : theuser._id, type : 'user', login: theuser.login} , function(res){
@@ -1926,7 +1952,7 @@ function checkByWidth()
 						$("#userChooser #uc_profile_yaks_posts").html("Cette Semaine<br /><b>" + data.count + "<b>");		
 				});
 
-			
+				
 				//console.log(userid);
 				if($.inArray(userid,user.feedsubs) && user.feedsubs.length > 0)
 				{
