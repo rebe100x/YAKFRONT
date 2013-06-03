@@ -1651,7 +1651,9 @@ function checkByWidth()
 					return;
 				}
 
+
 				if(userid != user._id){
+
 					$("#uc_blacklist_user").unbind('click').click(function(){
 						$.post('/api/user/blacklist', {id : theuser._id, type : 'user', login: theuser.login} , function(res){
 								if (res != "0")
@@ -1720,6 +1722,20 @@ function checkByWidth()
 					$('#userChooser').modal('hide');
 
 				});
+
+				var alreadySpammed = false;
+				for (var i = user.illicite.length - 1; i >= 0; i--) {
+					if(user.illicite[i].content_type == 3)
+						if(user.illicite[i].content_id == theuser._id)
+							alreadySpammed = true;
+
+
+					if(alreadySpammed)
+					{
+						$("#uc_illicite_user").unbind('click');
+						$("#uc_illicite_user").html("Vous avez déjà signalé cet utilisateur");
+					}
+				}
 					
 				} else {
 
@@ -1914,6 +1930,7 @@ function checkByWidth()
 				//console.log(userid);
 				if($.inArray(userid,user.feedsubs) && user.feedsubs.length > 0)
 				{
+
 					addAlert = 0;
 					var currHtml  = "<img src='images/uc_minus.png' />Supprimer de mes alertes";
 					$("#userChooser #uc_profile_yaks_alerts.mybtn").html(currHtml);		
