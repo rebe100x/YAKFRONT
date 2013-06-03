@@ -215,7 +215,7 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 .infowindow .thumbImage img { float: left; width: 120px; height: 90px;}
 .infowindow .thumbImage .mediumSizeThumb { width: 99%; height: auto;}
 
-.infowindow .itemTitle { font-size: 1.3em; font-weight: bold; color: #5D5D5D; left: 0px;margin-left:20px; padding-right: 25px; position: relative; text-align: justify;line-height:1.3em; margin-top: 8px; padding-left: 10px;}
+.infowindow .itemTitle { font-size: 1.3em; font-weight: bold; color: #5D5D5D; left: 0px;margin-left:20px; padding-right: 25px; position: relative; text-align: justify;line-height:1.3em; margin-top: 8px; padding-left: 10px; width: 85%;}
 
 .infowindow .postedBy { position: relative; left: 7px; padding-right: 12px; font-size: 0.91em;color:#c5c5c5;line-height:2em; padding-left: 0px; clear: both;}
 
@@ -224,7 +224,7 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 
 .infowindow .infodetail{float:left;width:100%;font-style:italic;font-size:0.8em;line-height: 1.5em; clear: both; color: #c5c5c5; position: relative;left: 7px; padding-bottom: 3px}
 .infowindow .infodetail a{color:#0C0C0C;}
-.infowindow .icon-remove { float: right; clear: both;  position: relative; right: 7px;top:7px; z-index: 11111; }
+.infowindow .icon-remove { float: right; clear: both;  position: absolute; right: 12px;top:12px; z-index: 11111; }
 .icon-remove {background: url('/images/yakwala_sprite.png') -72px -659px;width: 13px;height: 13px; cursor: pointer;}
 
 
@@ -1174,6 +1174,8 @@ h3 .ajouterMedia{width: 24px; height: 24px; background-image: url('/images/yakwa
 .mediaBoxContainer { float: left; width: 100%; border: 1px solid #cecece;}
 .mediaBoxContainer .input {border: 1px solid #cecece;height: 25px;margin-left: 12px;margin-top: 12px;}
 .mediaBoxContainer .btn {margin-top: 10px;}
+.mediaBoxContainer .aTab { font-size: 12px; color: #c0c0c0; margin-left: 15px; position: relative; top: 5px; cursor: pointer;}
+.mediaBoxContainer .aTab.active { color: black; font-weight: bold;}
 .timePng {width: 20px; height: 20px; background-image: url('/images/yakwala_sprite.png'); background-position: 0px -265px;}
 .filterPng {width: 20px; height: 20px; background-image: url('/images/yakwala_sprite.png'); background-position: -27px -265px;}
 

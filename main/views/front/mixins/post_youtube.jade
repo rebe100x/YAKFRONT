@@ -14,6 +14,10 @@ mixin post_youtube
 				br
 			div.mediaBoxContainer
 				div.controls.clearBoth
+					div
+						span#atabRechecher.aTab.active Recherche
+						span#atabVideo.aTab Mes videos
+						span#atabFavoris.aTab Favoris
 					input#youtubeVideos(type="hidden")
 					input#inputYoutube.input
 					button#searchYoutube.btn Trouver
@@ -36,6 +40,45 @@ mixin post_youtube
 
 	script
 		$(document).ready(function(){
+			$(".mediaBoxContainer .aTab").click(function(){
+				$(".mediaBoxContainer .aTab.active").removeClass("active");
+				$(this).addClass("active");
+			});
+
+			$("#atabVideo").click(function(){
+				$("#loadingYoutube").show();
+				$("#youtubeResults").html("");
+				var youtubeUrl = 'http://gdata.youtube.com/feeds/api/users/danysrour/uploads?&orderby=viewCount&time=all_time&max-results=10&alt=json&fields=entry/id,entry/media:group/media:thumbnail,entry/title';
+				$.get(youtubeUrl, function(data){
+					showMyVideos(data);
+					$("#loadingYoutube").hide();
+				})
+			});
+
+
+			$("#atabFavoris").click(function(){
+				$("#loadingYoutube").show();
+				$("#youtubeResults").html("");
+				var youtubeUrl = 'http://gdata.youtube.com/feeds/api/users/danysrour/favorites?&orderby=viewCount&time=all_time&max-results=10&alt=json&fields=entry/id,entry/media:group/media:thumbnail,entry/title';
+				$.get(youtubeUrl, function(data){
+					showMyVideos(data);
+					$("#loadingYoutube").hide();
+				})
+			});
+
+			$("#atabRechecher").click(function(){
+				$("#loadingYoutube").hide();
+				$("#youtubeResults").html("");
+				$("#inputYoutube").focus();
+			});
+
+			$("#inputYoutube").focus(function(){
+				$("#loadingYoutube").hide();
+				$("#youtubeResults").html("");
+				$(".mediaBoxContainer .aTab.active").removeClass("active");
+				$("#atabRechecher").addClass("active");
+			});
+
 			$("#searchYoutube").click(function(){
 				$("#loadingYoutube").show();
 				$("#youtubeResults").html("");
