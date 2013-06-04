@@ -1324,6 +1324,7 @@
 						newComment.comment = comment;
 						newComment.userthumb = user.thumb;
 						newComment.date = new Date();
+						newComment.status = 1;
 
 						$.post('/api/setComment', {infoId : currEleComment.attr("rel"), username: user.login, userthumb: user.thumb, comment: comment.substring(0, 249)} , function(res){
 							if (res.meta.code == '200')
@@ -1332,7 +1333,8 @@
 								newComment._id = res.meta.cid;
 								theArea.val("");
 								theArea.removeAttr("disabled");
-								theArea.after(drawAComment(newComment));
+
+								theArea.after(drawAComment(newComment, infofId, 'map'));
 							}
 
 						});

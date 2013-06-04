@@ -132,7 +132,7 @@
 					{
 						//getItemDetails(this);
 					}*/
-					unhighlightInfo($(this),highlightInfo);	
+					//unhighlightInfo($(this),highlightInfo);	
 				}
 				
 			});
