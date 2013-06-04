@@ -186,7 +186,7 @@ mixin postForm()
 					}
 
 					$.cookie("yaktype", yakType,{ expires: 10000, path : '/' });
-					var content = $("#postForm #content").val() + $("#post_yakYoutube").html() + $("#post_yakSoundCloud").html() + $("#post_yakFlickr").html();
+					var content = $("#postForm #content").val() + $("#youtubeContent").html() + $("#post_yakSoundCloud").html() + $("#post_yakFlickr").html();
 					$("#postForm #content").val(content);
 
 					var err = false;
@@ -219,7 +219,9 @@ mixin postForm()
 
 					$.cookie("yaktype", yakType,{ expires: 10000, path : '/' });
 
-					var content = $("#postForm #content").val() + $("#post_yakYoutube").html() + $("#post_yakSoundCloud").html() + $("#post_yakFlickr").html();
+					//var content = $("#postForm #content").val() + $("#post_yakYoutube").html() + $("#post_yakSoundCloud").html() + $("#post_yakFlickr").html();
+					var content = $("#postForm #content").val() + $("#youtubeContent").html() + $("#post_yakSoundCloud").html() + $("#post_yakFlickr").html();
+					
 					$("#postForm #content").val(content);
 
 					var err = false;

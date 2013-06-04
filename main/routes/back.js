@@ -419,10 +419,6 @@ exports.feed = function(req, res){
 		
 	
 	
-
-	console.log(feed);
-	
-
 	if(typeof obj_id != 'undefined' && obj_id != ''){
 		var cond = {_id:obj_id};
 	}else{
@@ -504,6 +500,20 @@ exports.dashboard_statsByZone= function(req,res){
 			res.json({});
 			
 	});
+};
+
+
+/*******
+#INFOS
+********/
+exports.findInfoById = function (req, res) {
+    var Info = db.model('Info');
+    Info.findById(req.params.id, function (err, docs){	
+      var infoFormatted = Info.format(docs);
+      res.json({
+        info: infoFormatted
+      });
+    });
 };
 
 /*******
@@ -1037,6 +1047,10 @@ exports.illicites = function(req, res){
 	res.render('illicites/index');
 };
 
+/* Change illicite status and content status as well :
+if it is a news : disable the news
+if it is a comment : disable the comment
+if it is a user : disable user, disable his news, disable his comments*/
 exports.changeStatusIllicite = function(req, res){
 	var content_type = req.body.content_type;
 	var content_id = req.body.content_id;
@@ -1044,9 +1058,27 @@ exports.changeStatusIllicite = function(req, res){
 	var info_id = req.body.info_id;
 	var status = req.body.status; // 1 is undelete, 2 is delete
 
+	var User = db.model("User");
+	var Info = db.model("Info");
+	var Illicite = db.model("contenuIllicite");
+
+	if(status == 2){ // delete
+		var userStatus = 3;
+		var infoStatus = 3;
+		var illiciteStatus = 2;
+		var commentStatus = 2;
+		var commentInc = -1;
+	}
+	else{ // undelete
+		var userStatus = 1;
+		var infoStatus = 1;
+		var illiciteStatus = 1;
+		var commentStatus = 1;
+		var commentInc = 1;
+	}
+
 	switch(content_type){
-		case "1": {
-			var Info = db.model("Info");
+		case "1":
 			if(status == 2){ // delete
 				var infoStatus = 3;
 				var illiciteStatus = 2;
@@ -1057,7 +1089,6 @@ exports.changeStatusIllicite = function(req, res){
 			}	
 			Info.update({_id:content_id},{$set:{status:infoStatus}},function(err){
 				if(!err){
-					var Illicite = db.model("contenuIllicite");
 					Illicite.update({_id : _id},{$set:{status:illiciteStatus,dateProcessed:new Date()}},function(err){
 						if(!err)
 							res.json({meta:{code:200}});
@@ -1067,44 +1098,45 @@ exports.changeStatusIllicite = function(req, res){
 				}else
 					res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 			});
-			break;
-		}
-		case "2": { // comments cannot be restablished
-			var Info = db.model("Info");
-			Info.update({_id:mongoose.Types.ObjectId(info_id)},{$inc:{commentsCount : -1},$pull:{yakComments:{_id: mongoose.Types.ObjectId(content_id)}}}, function(err,docs){
+		break;
+		
+		case "2":  // comments 
+			Info.update({_id:mongoose.Types.ObjectId(info_id)},{$inc:{commentsCount : commentInc}}, function(err,docs){
 				if(!err){
-					var Illicite = db.model("contenuIllicite");
-					Illicite.update({_id : _id},{$set:{status:2,dateProcessed:new Date()}},function(err){
-						if(!err)
-							res.json({meta:{code:200}});
-						else
-							res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});			
+					Info.findOne({_id:mongoose.Types.ObjectId(info_id)},function(err,theinfo){
+						if(!err){
+							var comments = [];
+							theinfo.yakComments.forEach(function(item){
+								if(item._id == content_id){
+									item.status = commentStatus;
+								}
+								comments.push(item);	
+							});
+							Info.update({_id:mongoose.Types.ObjectId(info_id)},{$set:{yakComments : comments}}, function(err,docs){
+								if(!err){
+									Illicite.update({_id : _id},{$set:{status:illiciteStatus,dateProcessed:new Date()}},function(err){
+										if(!err)
+											res.json({meta:{code:200}});
+										else
+											res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});			
+									});
+								}else
+									res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});			
+							});
+						}else
+							res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});										
 					});
 				}else
 					res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 			});
-			break;
-		}
-		case "3": {
-			var User = db.model("User");
-			if(status == 2){ // delete
-				var userStatus = 3;
-				var infoStatus = 3;
-				var illiciteStatus = 2;
-			}
-			else{ // undelete
-				var userStatus = 1;
-				var infoStatus = 1;
-				var illiciteStatus = 1;
-			}	
+		break;
+		
+		case "3":  // user => disable user, his news and his comments
 			User.update({_id: content_id},{$set:{'status':userStatus}}, function(err){
 				if(!err){
 					var Info = db.model("Info");
 					Info.update({user:mongoose.Types.ObjectId(content_id)},{$set:{status:infoStatus}}, function(err,docs){
 						if(!err){
-
-
-							var Illicite = db.model("contenuIllicite");
 							Illicite.update({_id : _id},{$set:{status:illiciteStatus,dateProcessed:new Date()}},function(err){
 								if(!err)
 									res.json({meta:{code:200}});
@@ -1118,7 +1150,7 @@ exports.changeStatusIllicite = function(req, res){
 					res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 			});
 			break;
-		}
+		
 		default:{
 			res.send("none");
 			break;

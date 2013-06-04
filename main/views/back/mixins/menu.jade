@@ -85,11 +85,9 @@ mixin menu(active)
 								- if (active == 'yakcat')
 									li.active
 										a(href="/categories/list") Catégories
-											span1#catnumber
 								- else
 									li
 										a(href="/categories/list") Catégories
-											span1#catnumber
 								
 		div#alertInfo.alert.alert-info
 			button.close(type="button",data-dismiss="alert") x
@@ -110,11 +108,6 @@ mixin menu(active)
 				$.getJSON('/api/validusers', function(data) {
 					if (data.info != 0)
 						$('#usernumber').addClass('badge badge-important').html(data.info);
-				});
-
-				$.getJSON('/api/validcats', function(data) {
-					if (data.info != 0)
-						$('#catnumber').addClass('badge badge-important').html(data.info);
 				});
 
 				$.getJSON('/api/validplaces', function(data) {

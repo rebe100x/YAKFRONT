@@ -273,27 +273,22 @@ mixin list()
 					removeIcon.attr("title", "Supprimer cette donnée");
 				removeIcon.attr("onclick", "changeStatusIllicite(this,2)");
 			}else{
-				if(item.content_type == 2){
-					removeIcon.attr("class", "icon-minus-sign");
-					removeIcon.attr("title", "Un commentaire ne peut être rétabli !");
-				}else{
-					removeIcon.attr("class", "icon-ok deleteAcomment");
-					removeIcon.attr("val_content_id", item.content_id);
-					removeIcon.attr("val_content_type", item.content_type);
-					removeIcon.attr("val_id", item._id);
-					removeIcon.css("cursor", "pointer");
-					removeIcon.attr("title", "Rétablir cette donnée");
-					removeIcon.attr("onclick", "changeStatusIllicite(this,1)");
-				}
-
+				removeIcon.attr("class", "icon-ok deleteAcomment");
+				removeIcon.attr("val_content_id", item.content_id);
+				removeIcon.attr("val_content_type", item.content_type);
+				removeIcon.attr("val_id", item._id);
+				removeIcon.css("cursor", "pointer");
+				if(typeof item.info_id != 'undefined' && item.info_id != '')
+					removeIcon.attr("val_infoid", item.info_id);
+				removeIcon.attr("title", "Rétablir cette donnée");
+				removeIcon.attr("onclick", "changeStatusIllicite(this,1)");
 				
 			}
 			return removeIcon[0].outerHTML;
 		}
 
-		function changeStatusIllicite(el,status)
-		{
-			
+		/*Change illicite status and content status : */
+		function changeStatusIllicite(el,status){
 			var content_type = $(el).attr("val_content_type");
 			var content_id = $(el).attr("val_content_id");
 			var _id = $(el).attr("val_id");	
@@ -334,7 +329,10 @@ mixin list()
 			res += '<div class="liens">';
 			res += '<a href=\''+ linkToFront+ '\' target="_blank" title="Lien vers le front"><i class="icon-share-alt "></i></a>';
 
-			res += '<a class="centerMap" id="' + item.content_id + '" href="/#">';
+			if(item.content_type == 'Commentaire')
+				res += '<a class="centerMap" type="'+item.content_type+'" id="' + item.content_id + '" idinfo="' + item.info_id + '" href="/#">';	
+			else
+				res += '<a class="centerMap" type="'+item.content_type+'" id="' + item.content_id + '" href="/#">';
 			res += '<i class = "icon-map-marker" title="Localiser"></i>';
 			res += '</a>';
 
@@ -351,23 +349,38 @@ mixin list()
 
 		}
 
-		$('a.centerMap').live('click', function() {
-			var url = '/api/places/'+this.id;
-
-			// We search for the place in mongo and we fill the form with the place's values
-			$.ajax({
-				url: url,
-				type: 'GET',
-				async: false,
-				success: function (response)
-				{
-					var place = response.place;
-
-					var latlng = new google.maps.LatLng(place.location.lat, place.location.lng);
+		$('a.centerMap').unbind('click').live('click', function() {
+			if($(this).attr('type') == 'Info'){
+					var url = '/api/info/'+this.id;
+				$.get(url,function (response){
+					var info = response.info;
+					var latlng = new google.maps.LatLng(info.location.lat, info.location.lng);
 					placeMarker(latlng,markerLocation);
 					map.setCenter(markerLocation.getPosition());
-				}
-			});
+				});
+				return false;
+			}else if($(this).attr('type') == 'Commentaire'){
+				var url = '/api/info/'+$(this).attr('idinfo');
+				$.get(url,function (response){
+					var info = response.info;
+					var latlng = new google.maps.LatLng(info.location.lat, info.location.lng);
+					placeMarker(latlng,markerLocation);
+					map.setCenter(markerLocation.getPosition());
+				});
+				return false;
+			}else if($(this).attr('type') == 'Utilisateur'){
+				var url = '/api/user/'+this.id;
+				$.get(url,function (response){
+					var user = response.user;
+					var latlng = new google.maps.LatLng(user.location.lat, user.location.lng);
+					placeMarker(latlng,markerLocation);
+					map.setCenter(markerLocation.getPosition());
+				});
+				return false;
+			}else
+				return false;
+			
+
 		});
 
 		

@@ -144,6 +144,7 @@ app.get('/api/feeds/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:sta
 app.get('/api/usersearch/:string', back.usersearch);
 app.get('/api/findCatById', back.findCatById);
 app.get('/api/user/:id', back.findUserById);
+app.get('/api/info/:id', back.findInfoById);
 
 app.get('/api/validusers', back.countUnvalidatedUsers);
 app.get('/api/validcats', back.countUnvalidatedCats);

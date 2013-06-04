@@ -1266,7 +1266,7 @@
 			var yakComments = $("<span />");
 			yakComments.attr("class", "yakComments");
 			yakComments.attr("rel", val._id);
-			setCommentText(val.yakComments.length,yakComments);
+			setCommentText(val.yakComments,yakComments);
 			
 			
 

@@ -25,17 +25,16 @@ mixin userChooser
 						b#subscribers_number
 							|0
 					span.span3#uc_profile_yaks_options
-						a.profileOptions.dropdown-toggle(data-toggle="dropdown", alt="Options", title="Option", style="position: relative; top: 3px; left: 30px; cursor: pointer")
-							span.dotsPng
-						ul#customOptionsMenu.dropdown-menu.pull-right(style="position: relative; top: 0px;left: 0px;")
-							li
-								a#uc_blacklist_user
-									|Blacklister cet utilisateur (vous ne verrez PLUS ses infos)
-								a#uc_filter_user
-									|Filtrer cet utilisateur (vous ne verrez QUE ses infos)
-								a#uc_illicite_user
-									|Signaler cet utilisateur aux admins de Yakwala
-			
+						a.profileOptions.dropdown-toggle(data-toggle="dropdown", alt="Options", title="Options")
+							i.dotsPng
+				ul#customOptionsMenu.dropdown-menu.pull-right(style="position: relative; top: -20px;left: 0px;")
+					li
+						a#uc_blacklist_user
+							|Blacklister cet utilisateur (vous ne verrez PLUS ses infos)
+						a#uc_filter_user
+							|Filtrer cet utilisateur (vous ne verrez QUE ses infos)
+						a#uc_illicite_user
+							|Signaler cet utilisateur aux admins de Yakwala			
 			div.row-fluid 	
 				span10#uc_newsfeed
 			div.row-fluid 	

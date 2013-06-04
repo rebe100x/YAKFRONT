@@ -247,7 +247,7 @@
 		var ulLiked = "<ul class='TheTops'>";
 		$.getJSON(apiUrlLiked,function(ajax) {	
 			if(typeof(ajax.data) == 'undefined' || ajax.data.length == 0){
-				ulLiked+="<li>Pad d'info</li>";
+				ulLiked+="<li>Pas d'info ici !</li>";
 			}else{
 				$.each(ajax.data, function(key,val) {
 					var isUserBL = false;
@@ -285,7 +285,7 @@
 		var ulCommented = "<ul class='TheTops'>";
 		$.getJSON(apiUrlCommented,function(ajax) {	
 			if(typeof(ajax.data) == 'undefined' || ajax.data.length == 0){
-				ulCommented+="<li>Pad d'info</li>";
+				ulCommented+="<li>Pas d'info ici !</li>";
 			}else{
 				$.each(ajax.data, function(key,val) {
 					var isUserBL = false;
@@ -321,7 +321,7 @@
 		var ulHots = "<ul class='TheTops'>";
 		$.getJSON(apiUrlHots,function(ajax) {	
 			if(typeof(ajax.data) == 'undefined' || ajax.data.length == 0){
-				ulHots+="<li>Pad d'info</li>";
+				ulHots+="<li>Pas d'info ici !</li>";
 			}else{
 				$.each(ajax.data, function(key,val) {
 						var isUserBL = false;
@@ -810,7 +810,7 @@ function getItemDetails(el){
 			var yakComments = $("<span />");
 			yakComments.attr("class", "yakComments");
 			yakComments.attr("rel", val._id);
-			setCommentText(val.yakComments.length,yakComments);
+			setCommentText(val.yakComments,yakComments);
 			
 
 			yakComments.unbind("click").on('click',function(){

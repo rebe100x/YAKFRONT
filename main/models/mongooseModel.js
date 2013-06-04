@@ -604,7 +604,7 @@ Info.statics.findByTitle = function (title, callback) {
   return this.find({ title: title }, callback);
 }
 
-Info.statics.findByID = function (id, callback) {
+Info.statics.findById = function (id, callback) {
   return this.findOne({ _id: id }, callback);
 }
 
@@ -1271,6 +1271,7 @@ var Comment = new Schema({
 	,	userthumb : {type: String}
 	,	comment : {type: String}
 	, 	date : {type: Date}
+	, 	status : {type: Number,default:1}
 },{ collection: 'comment' });
 mongoose.model('Comment', Comment);
 

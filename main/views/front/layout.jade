@@ -6,6 +6,8 @@ html
 		base(href='/')
 		title Yakwala - #{JSON.parse(conf).env} - #{JSON.parse(mainConf).version}
 		meta(name="viewport", content="width=device-width, initial-scale=1.0") 
+		meta(name="description", content="Yakwala, l'info locale")
+		meta(name="author", content="Yakwala")
 		script(src='/javascripts/lib/css3-mediaqueries.js')
 		link(rel="shortcut icon",href="/images/yakfav.png", type="image/x-icon")
 		- if(JSON.parse(conf).env == 'DEV')

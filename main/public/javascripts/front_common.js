@@ -1242,6 +1242,8 @@ function setCommentSpam(el)
 
 function drawAComment(val,infoId, from)
 {
+	if(val.status != 1 )
+		return true;
 	
 	var username = val.username;
 	var userid = val.userid;
@@ -1300,7 +1302,12 @@ function deleteComment(el) {
 	});
 }
 
-function setCommentText(len,item){
+function setCommentText(comments,item){
+	var len = 0;
+	comments.forEach(function(com){
+		if(com.status == 1)
+			len++;
+	});
 	if( len== 0)
 		item.html("<i class='commentLogo'></i>Poster un commentaire");
 	else if(len == 1)
@@ -1823,28 +1830,28 @@ function checkByWidth()
 					});
 
 					$("#uc_filter_user, #uc_profile_yaks_search").unbind('click').on('click',function(){
-					setSearchForUser('@'+userName);
-					$('#userChooser').modal('hide');
+						setSearchForUser('@'+userName);
+						$('#userChooser').modal('hide');
+					});
 
-				});
-
-				var alreadySpammed = false;
-				for (var i = user.illicite.length - 1; i >= 0; i--) {
-					if(user.illicite[i].content_type == 3)
-						if(user.illicite[i].content_id == theuser._id)
-							alreadySpammed = true;
+					var alreadySpammed = false;
+					for (var i = user.illicite.length - 1; i >= 0; i--) {
+						if(user.illicite[i].content_type == 3)
+							if(user.illicite[i].content_id == theuser._id)
+								alreadySpammed = true;
 
 
-					if(alreadySpammed)
-					{
-						$("#uc_illicite_user").unbind('click');
-						$("#uc_illicite_user").html("Vous avez déjà signalé cet utilisateur");
+						if(alreadySpammed)
+						{
+							$("#uc_illicite_user").unbind('click');
+							$("#uc_illicite_user").html("Vous avez déjà signalé cet utilisateur");
+						}
 					}
-				}
 					
 				} else {
 
-					$("#uc_blacklist_user, #uc_filter_user, #uc_profile_yaks_search").unbind('click').hide();
+					$("#uc_blacklist_user, #uc_filter_user, #uc_profile_yaks_search, #uc_illicite_user").unbind('click').hide();
+					$("#uc_profile_yaks_options").html("Pas d'options dispo");
 					$("#userChooser #uc_profile_yaks_alerts.mybtn").hide();		
 				}
 
