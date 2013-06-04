@@ -266,7 +266,7 @@ User.statics.FormatProfile = function (theuser) {
 }
 
 User.statics.countUnvalidated = function (callback) {
-	return this.count( {'status': { $in: [2, 10]}}, callback );
+	return this.count( {'status': 2}, callback );
 }
 
 User.statics.findByLogin = function (login,callback) {
@@ -380,7 +380,8 @@ var contenuIllicite = new Schema({
 });
 
 contenuIllicite.statics.countUnvalidated = function (callback) {
-	return this.count( {'status': 1}, callback );
+	var last10Days = new Date() - 10*24*60*60*1000;	
+	return this.count( {'status': 1,'last_date_mark':{$gte:last10Days} }, callback );
 }
 
 contenuIllicite.statics.findByUser = function (userid, infoid, callback) {
@@ -395,7 +396,7 @@ contenuIllicite.statics.findByUserInfoType = function (content_id, content_type,
  	return this.findOne({'content_id': content_id, 'content_type' : content_type}, callback);
 }
 
-contenuIllicite.statics.findGridIllicites = function (pageIndex, pageSize, searchTerm, sortProperties, sortDirections, type, status, callback) {
+contenuIllicite.statics.findGridIllicites = function (pageIndex, pageSize, searchTerm, sortProperties, sortDirections, type, status, limit, callback) {
 
 	var conditions = {
 		"content" : new RegExp(searchTerm, 'i')
@@ -415,6 +416,11 @@ contenuIllicite.statics.findGridIllicites = function (pageIndex, pageSize, searc
 	if(type != 0)
 		conditions["content_type"] = type;
 
+	if(limit){
+		var last10Days = new Date() - 10*24*60*60*1000;	
+		conditions["last_date_mark"] = {$gte: last10Days};	
+	}
+
 	return this.find(
 		conditions,
 		'',
@@ -429,7 +435,7 @@ contenuIllicite.statics.findGridIllicites = function (pageIndex, pageSize, searc
 		callback);
 }
 
-contenuIllicite.statics.countSearch = function (searchTerm, type, status, callback) {
+contenuIllicite.statics.countSearch = function (searchTerm, type, status, limit, callback) {
 	var search = new RegExp(searchTerm, 'i');
 
 	var conditions = {
@@ -441,6 +447,11 @@ contenuIllicite.statics.countSearch = function (searchTerm, type, status, callba
 
 	conditions["status"] = status;
 	
+	if(limit){
+		var last10Days = new Date() - 10*24*60*60*1000;	
+		conditions["last_date_mark"] = {$gte: last10Days};	
+	}
+
 	return this.count(conditions, callback)-1;
 }
 
@@ -1130,7 +1141,7 @@ var Yakcat = new Schema({
 }, { collection: 'yakcat' });
 
 Yakcat.statics.countUnvalidated = function (callback) {
-	return this.count( {'status': { $in: [2, 10]}}, callback );
+	return this.count( {'status': 2}, callback );
 }
 
 Yakcat.statics.findAll = function (callback) {
