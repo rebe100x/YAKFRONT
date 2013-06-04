@@ -753,7 +753,10 @@ function getItemDetails(el){
 				$("#newsfeed li").removeClass('highlighted');
 				currentItem.parent().addClass('highlighted');
 				//$('#newsfeedContent').mCustomScrollbar("update");
-				$('#newsfeedContent').mCustomScrollbar("scrollTo",".mapHighlighter[infoId=\""+currentItem.parent().attr("infoid")+"\"]");
+				//$('#newsfeedContent').mCustomScrollbar("scrollTo",".mapHighlighter[infoId=\""+currentItem.parent().attr("infoid")+"\"]");
+				 $('html, body').animate({
+         			scrollTop: $(".mapHighlighter[infoId=\""+currentItem.parent().attr("infoid")+"\"]").offset().top
+     			 }, 1000);
 
 				var trackParams ={"infoId":infoid,"page": "map"};
 				$.getJSON(conf.trackurl+'/track/user/'+user._id+'/'+'6'+'/'+encodeURIComponent(JSON.stringify(trackParams)));  
