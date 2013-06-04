@@ -349,16 +349,37 @@ function setLocalnessSliderTextMinified(x, elid){
 		case 11:
 			sliderText = "Local";
 		break;
+		case 60:
+			sliderText = "Local";
+			break;
+		case 70:
+			sliderText = "Local";
+			break;
 		case 12:
 			sliderText = "Très Local";
 		break;	
+		case 80:
+			sliderText = "Très Local";
+		break;	
+		case 90:
+			sliderText = "Très Local";
+		break;	
 		case 13:
+			sliderText = "Super Local";
+		break;	
+		case 100:
+			sliderText = "Super Local";
+		break;	
+		case 110:
 			sliderText = "Super Local";
 		break;	
 		case 14:
 			sliderText = "Super Local";
 		break;
 		case 15:
+			sliderText = "Hyper local";
+			break;
+		case 120:
 			sliderText = "Hyper local";
 			break;
 		case 16:
@@ -369,6 +390,7 @@ function setLocalnessSliderTextMinified(x, elid){
 		break;			
 	}
 	if (typeof(elid) === 'undefined') {
+
 		$("#localnessPrinter").html(sliderText);
 	}
 	else

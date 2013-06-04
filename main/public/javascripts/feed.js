@@ -19,7 +19,7 @@
 	$(document).ready(function() {
 		/*control opener*/
 		
-
+	setLocalnessSliderTextMinified(curPos.z);
 
 	$('#searchBtn').unbind("click").on('click',function(){
 				
@@ -866,6 +866,7 @@ function getItemDetails(el){
 						newComment.comment = comment;
 						newComment.userthumb = user.thumb;
 						newComment.date = new Date();
+						newComment.status = 1;	
 
 						$.post('/api/setComment', {infoId : currEleComment.attr("rel"), username: user.login, userthumb: user.thumb, comment: comment.substring(0, 249)} , function(res){
 							if (res.meta.code == '200')
@@ -874,7 +875,7 @@ function getItemDetails(el){
 								newComment._id = res.meta.cid;
 								theArea.val("");
 								theArea.removeAttr("disabled");
-								theArea.before(drawAComment(newComment));
+								theArea.after(drawAComment(newComment, infofId, 'feed'));
 							}
 
 						});
@@ -885,7 +886,7 @@ function getItemDetails(el){
 		
 			});
 
-			var thumbsUp = "<i class='icon-thumbs-up'></i>&nbsp;";
+			var thumbsUp = "<span class='btn newYaklike'><i></i>Like</span>&nbsp;";
 			var thumbsDown = "<i class='icon-thumbs-down'></i>";
 			if($.inArray(user._id, val.yaklikeUsersIds) > -1)
 			{
