@@ -175,11 +175,12 @@ ul#newsfeed li.highlighted .mapHighlighter{background-color:#F6F6F6; width: 100%
 ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: both; padding-left: 3px; padding-right: 3px; position: absolute; left: -119px; top: 5px}
 .infowindow .myitem {clear: both; position: relative; top: 12px; text-align: justify; padding-left: 7px; padding-right: 12px;}
 .infowindow .myitem .shareMe { width: auto; float: right; clear: both; top: -17px; position: relative; right: 85px;}
-.infowindow .myitem .ftgIcon { height: 21px; position: absolute; top: 7px; float: left; clear: both; background: url('/images/yakwala_sprite.png') -349px -759px; left: -83px; width: 177px; display: block; z-index: 11111}
+.infowindow .myitem .ftgIcon { height: 21px; position: absolute; top: 2px; float: left; clear: both; background: url('/images/yakwala_sprite.png') -349px -759px; left: -83px; width: 177px; display: block; z-index: 11111}
 .infowindow .myitem .btn.newYaklike { width: 54px; height: 15px; font-size: 12px; font-weight: bold; text-indent: 8px; padding-top: 4px;}
 .infowindow .myitem .btn.newYaklike i {background: url('/images/yakwala_sprite.png') -306px -292px; width: 20px; height: 23px; position: relative; top: -4px; float: left;}
 .infowindow .myitem .yakLikes {top: -33px; position: relative; float: left; clear: both; }
-.infowindow .myitem .buttons { z-index:  11;}
+.infowindow .myitem .buttons { z-index:  11111111; position: absolute; top: 30px; left: -79px; background: white; border: 1px solid #cecece; width: 168px; margin-top: -28px;}
+.infowindow .myitem .shareMe .box { display: none;}
 .infowindow .myitem .yakLikes{font-size:12px;font-style:italic; position: relative; clear: both; width: auto; float: left; color: #000000; display: block; width: 100%; padding-bottom: 6px; border-bottom: 1px solid #d1d1d1;}
 .infowindow .myitem .yakComments{font-size:14px; position: relative; clear: both; width: auto; float: left; left: 0px; top: -28px; color: #D71920; cursor: pointer; width: 100%; border-bottom: 1px solid #d1d1d1}
 .commentLogo {width: 28px; height: 22px; float: left; margin-right: 6px; background: url('/images/yakwala_sprite.png') -126px -253px}

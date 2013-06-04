@@ -1126,7 +1126,7 @@ function setShare(el){
 	},
 	render: function(api, options){
 		$(api.element).find('.box').livequery(function(){
-    		$(api.element).prepend("<img src='images/ftg.png' class='ftgIcon' class='icon-share' /> ");
+    		$(api.element).prepend('<div class="ftgIcon"></div>');
     		$(api.element).find('.buttons').css("display", "block");
     		$(this).trigger('mouseover'); // or similar
 		});
@@ -1383,7 +1383,7 @@ function setSpamSystem(item){
 
 function setLikeSystem(from)
 		{
-			$(".icon-thumbs-up").click(function(){
+			$(".newYaklike").click(function(){
 
 				var currEl = $(this);
 				var thumbs = $(this).parent().find(".theUps");
@@ -1394,7 +1394,7 @@ function setLikeSystem(from)
 					{
 						thumbs.html(currentLikes + 1);
 						//currEl.parent().find("i").eq(0).before("déjà aimé");
-						currEl.parent().find("i").remove();
+						currEl.parent().find(".newYaklike").remove();
 
 						var trackParams = {"params": [
 											{"infoId":infoid},
