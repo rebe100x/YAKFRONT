@@ -1188,7 +1188,7 @@ h3 .ajouterMedia{width: 24px; height: 24px; background-image: url('/images/yakwa
 .dotsPng {width: 60px; height: 15px; background-image: url('/images/yakwala_sprite.png'); background-position: -112px -360px; float: left;margin-left:15px;margin-top:7px;} 
 .dotsPng:hover {background-position: -112px -375px;} 
 .posterInfoPng {float: right; position: relative; top: -29px;  left: 20px; width: 83px; height: 40px; background-image: url('/images/yakwala_sprite.png'); background-position: -187px -715px;}
-.delComment { float: right;position: absolute;top: 72px;right: 0px;background: url('/images/yakwala_sprite.png') -72px -659px;width: 13px;height: 13px;}
+.delComment { float: right;position: relative;top: -28px;right: 0px;background: url('/images/yakwala_sprite.png') -72px -659px;width: 13px;height: 13px;}
 .theContent .icon-remove { display: none;}
 #topHots img { float: left; margin-right: 6px;}
 #topHots a { float: left;}
