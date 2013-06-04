@@ -1,8 +1,7 @@
 mixin list()
-	style
-		.fuelux select { width: auto; max-width: 120px;} 
-		.fuelux .datagrid tfoot .datagrid-footer-right .grid-pager .combobox { width: auto;}
-		
+	div.error#errContainer(style='display:none;')
+		button.close(type="button", data-dismiss="alert") &times;
+		span.alert#err(type="text", id="err", name="err")
 	table#MyGrid.table.table-bordered.datagrid
 		thead
 			tr.headerControle
@@ -18,7 +17,7 @@ mixin list()
 						option(value="2") En attente de validation
 						option(value="1") Validés
 						option(value="3") Blacklistés
-						option(value="4") DOit remplir la page de première visite
+						option(value="4") Doit remplir la page de première visite
 						option(value="-1", "selected"="selected") Tous les utilisateurs
 					select#filterType
 						option(value="0") Tous les types
@@ -248,13 +247,17 @@ mixin list()
 			var res = "";
 			var title_title = "";
 			linkToFront = conf.fronturl+'/news/feed/?idprofile='+item._id;
+			
 			res += '<div class="liens">';
-			res += '<a href=\''+ linkToFront + '\' target="_blank" title="Lien vers le profil"><i class="icon-share-alt "></i></a>';
-
-			res += '<a class="centerMap" id="' + item._id + '" href="/#">';
-			res += '<i class = "icon-map-marker" title="Localiser"></i>';
-			res += '</a>';
-
+			if (item.status == 1 || item.status == 3) {
+				res += '<a href=\''+ linkToFront + '\' target="_blank" title="Lien vers le profil"><i class="icon-share-alt "></i></a>';
+				res += '<a class="centerMap" id="' + item._id + '" href="/#"><i class = "icon-map-marker" title="Localiser"></i></a>';
+				
+			}
+			if (item.status == 2){
+				res += '<a class="reminder"  id="' + item._id + '" href="/#" title="Renvoyer un mail de validation"><i class="icon-retweet"></i></a>';
+				
+			}
 			res += "</div>";
 
 			res += '<span>';
@@ -308,6 +311,26 @@ mixin list()
 			});
 			return false;
 			
+		});
+
+		$('a.reminder').live('click', function() {
+			var url = '/api/sendUserReminder/'+this.id;
+			$(this).html('<img src="/images/loader.gif" />');
+			$.get(url,function (response){
+				if(response.meta.code == '200'){
+					console.log('elo');
+					$('#err').html('Un email a été envoyé !');
+					$('#errContainer').show();
+					
+				}else{
+					$('#err').show().html("Erreur pendant l'envoi du mail!");
+					$('#errContainer').show();
+				}
+			});
+			$(this).html('<i class="icon-ok"></i>').css('cursor','default').attr('title','Un email a été envoyé');
+			$(this).unbind('click').live('click', function() {return false;});
+
+			return false;
 		});
 
 		// Refresh on sort selection

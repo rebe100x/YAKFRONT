@@ -899,6 +899,42 @@ exports.gridPlaces = function (req, res) {
 #USER 
 ******/
 
+exports.user_reminder = function(req, res){
+
+	var crypto = require('crypto')
+	var userid = req.params.id;
+	var User = db.model('User');
+	var Point = db.model('Point');
+	var user = new User();
+	
+	/*check if user exists*/
+	User.findOne({_id: userid},{_ids:1,status:1,mail:1}, function(err,theuser){
+		if(theuser){
+			//console.log(theuser);
+				var salt = Math.round(new Date().valueOf() * Math.random());
+				var token = crypto.createHash('sha1').update("yakwala@secure"+salt).digest("hex");
+				var password = user.generatePassword(5);
+				var link = conf.resetpassUrl+token+"/"+password;
+				var hash = crypto.createHash('sha1').update(password+"yakwala@secure"+salt).digest("hex");
+				var logo = conf.fronturl+"/static/images/yakwala-logo_petit.png";
+				var templateMail = "link";
+				var themail = theuser.mail;
+				console.log(theuser);
+				User.update({_id: theuser._id}, {hash : hash,token:token,salt:salt,password:password}, {upsert: false}, function(err){
+					User.sendValidationMail(link,themail,templateMail,logo,function(err){
+						if(!err)
+							console.log(err);				
+					});
+				});
+				res.json({meta:{code:200}});
+			}else{
+				res.json({meta:{code:404,error_type:'operation failed',error_description:'No user'}});
+			}
+	});
+	
+	
+};
+
 exports.user_list = function(req, res){
 	delete req.session.message;
 	res.render('user/index');
@@ -1172,12 +1208,12 @@ exports.gridIllicites = function (req, res) {
     }
 
 	contenuIllicite.findGridIllicites(req.params.pageIndex,req.params.pageSize,
-		req.params.searchTerm,sortProperties,sortDirections, req.params.type, req.params.status, function (err, illicites){
+		req.params.searchTerm,sortProperties,sortDirections, req.params.type, req.params.status, req.params.limit, function (err, illicites){
 			var data = {};
 			data['illicites'] = illicites;
 			data['pageIndex'] = req.params.pageIndex;
 			data['pageSize'] = req.params.pageSize;
-			contenuIllicite.countSearch(req.params.searchTerm, req.params.type, req.params.status, function (err, count){
+			contenuIllicite.countSearch(req.params.searchTerm, req.params.type, req.params.status, req.params.limit, function (err, count){
 				data['count'] = count;
 				res.json(data);
 			});		

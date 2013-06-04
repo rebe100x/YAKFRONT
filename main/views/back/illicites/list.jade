@@ -12,6 +12,12 @@ mixin list()
 							input#search.input-medium(type='text', placeholder='Recherche', data-provide="typeahead", autocomplete="off")
 							button.btn
 								i.icon-search
+					.datagrid-header-right
+						label 
+							input#limit10days(type="checkbox",style="margin-top:-1px;",checked="checked") 
+							span &nbsp;Limiter aux 10 derniers jours
+						
+						
 			tr.headerControle
 				td(colspan=6)
 					select#filterType
@@ -133,6 +139,7 @@ mixin list()
 				if(sortDirectionArray.length == 0)
 					sortDirectionArray.push("desc");
 
+				
 				//sortPropertyArray.push( $('#sortSelectBtn :selected').val() );
 				//sortDirectionArray.push("desc");
 					
@@ -151,7 +158,10 @@ mixin list()
 				var queryChar = '?';
 
 				
-				
+				var limit10days = ($("#limit10days").is(":checked"));
+				url += '/' + limit10days;
+
+
 
 				$.ajax(url, {
 					type: 'GET'
@@ -392,15 +402,10 @@ mixin list()
 		});
 
 		// Datagrid checkbox
-		$('#filterStatus').live('change', function() {
-			refreshDatagridAndMenu();
-		});
-
-		$('#filterType').live('change', function() {
+		$('#filterStatus , #filterType , #limit10days').unbind('click').live('change', function() {
 			refreshDatagridAndMenu();
 		});
 		
-
 		function refreshDatagridAndMenu () {
 			// Temporary refresh method for datagrid
 			var $gridsearch = jQuery('#MyGrid').find('.search');
