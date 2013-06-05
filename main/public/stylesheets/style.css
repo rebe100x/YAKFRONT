@@ -690,7 +690,7 @@ width: 270px;
    .searchYakwala #btnMesalertes:hover, .searchYakwala #btnMesalertes.active { background-position: 106px -521px;}
   .searchYakwala #btnDiscussion { width: 97px; height: 49px;  border-left: 1px solid #e1e1e1; border-right: 1px solid #e1e1e1; margin-top: 0px; margin-right: 11px; float: left;opacity:0.5;cursor:pointer;}
    .searchYakwala #btnDiscussion .theicon { background-image: url('/images/yakwala_sprite_medium.png'); background-position: -131px -186px; float: left; height: 24px; left: 6px; position: relative; top: 14px; width: 24px;}
-   .searchYakwala #btnDiscussion.active .theicon { background-position: -131px -218px; display: none;}
+   .searchYakwala #btnDiscussion.active .theicon { background-position: -131px -218px;}
    .searchYakwala #btnDiscussion .thetext { color: #000000;float: right;font-size: 12px; position: relative;right: 13px; top: 14px}
    .searchYakwala #btnDiscussion.active .thetext { color: #F5881F}
 
@@ -765,7 +765,7 @@ width: 270px;
    .searchYakwala #btnMesalertes:hover, .searchYakwala #btnMesalertes.active { background-position: 106px -521px;}
   .searchYakwala #btnDiscussion { width: 97px; height: 49px;  border-left: 1px solid #e1e1e1; border-right: 1px solid #e1e1e1; margin-top: 0px; margin-right: 11px; float: left;opacity:0.5;cursor:pointer;}
    .searchYakwala #btnDiscussion .theicon { background-image: url('/images/yakwala_sprite.png'); background-position: -131px -186px; float: left; height: 24px; left: 6px; position: relative; top: 14px; width: 24px;}
-   .searchYakwala #btnDiscussion.active .theicon { background-position: -131px -218px; display: none;}
+   .searchYakwala #btnDiscussion.active .theicon { background-position: -131px -218px;}
    .searchYakwala #btnDiscussion .thetext { color: #000000;float: right;font-size: 12px; position: relative;right: 13px; top: 14px}
    .searchYakwala #btnDiscussion.active .thetext { color: #F5881F}
 
@@ -837,7 +837,7 @@ width: 270px;
 	.searchYakwala #btnMesalertes:hover, .searchYakwala #btnMesalertes.active { background-position: 106px -521px;}
 	.searchYakwala #btnDiscussion { width: 97px; height: 49px;  border-left: 1px solid #e1e1e1; border-right: 1px solid #e1e1e1; margin-top: 0px; margin-right: 11px; float: left;opacity:0.5;cursor:pointer;}
    .searchYakwala #btnDiscussion .theicon { background-image: url('/images/yakwala_sprite.png'); background-position: -131px -186px; float: left; height: 24px; left: 6px; position: relative; top: 14px; width: 24px;}
-   .searchYakwala #btnDiscussion.active .theicon { background-position: -131px -218px; display: none;}
+   .searchYakwala #btnDiscussion.active .theicon { background-position: -131px -218px;}
    .searchYakwala #btnDiscussion .thetext { color: #000000;float: right;font-size: 12px; position: relative;right: 13px; top: 14px}
    .searchYakwala #btnDiscussion.active .thetext { color: #F5881F}
 
