@@ -998,8 +998,8 @@
 			
 			}
 			var yakTypeImage = $("<div />");
-			yakTypeImage.attr("class", "yakTypeImage");
-			yakTypeImage.html("<img src='/images/markers/new/type" + item.yakType + ".png' />");
+			yakTypeImage.attr("class", "yakTypeImage yakTypeImage" + item.yakType);
+			//yakTypeImage.html("<img src='/images/markers/new/type" + item.yakType + ".png' />");
 			infoContent.append(yakTypeImage);
 			
 
