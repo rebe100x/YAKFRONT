@@ -448,7 +448,7 @@ width: 270px;
 
 	#ZoneMesalertes.active, #ZoneMesalertes:hover { background-position: -115px -510px;}
 
-	#alertsModeText { color: #9e9e9e; display: block; font-size: 12px; font-weight: bold;   position: absolute;   right: 178px;   text-align: right;   top: 14px;}
+	#alertsModeText { color: #9e9e9e; display: block; font-size: 10px; font-weight: bold;   position: absolute;   right: 178px;   text-align: right;   top: 14px;}
 	#alertsModeText.active {color: #f5881f; }
 	#alertsModeText.empty { color: #C2160D;}
 
@@ -561,7 +561,7 @@ width: 270px;
    #locationChooser {top:40%;}
    #userChooser { top: 40%;}
    .theContent iframe { height: 450px;}
-   #alertsModeText { color: #9e9e9e; display: block; font-size: 12px; font-weight: bold;   position: absolute;   right: 178px;   text-align: right;   top: 14px;}
+   #alertsModeText { color: #9e9e9e; display: block; font-size: 10px; font-weight: bold;   position: absolute;   right: 178px;   text-align: right;   top: 14px;}
 	#alertsModeText.active {color: #f5881f; }
 	#alertsModeText.empty { color: #C2160D;}
 	#ZoneMesalertes { width: 51px; height: 51px; display: block; background-image: url('/images/yakwala_sprite.png'); background-position: -115px -458px; position: absolute; top: 6px; right: 118px; cursor: pointer;}
@@ -631,7 +631,7 @@ width: 270px;
    #newsfeedContent .mCSB_scrollTools { right: -3px}
    #locationChooser {top:40%;}
    #userChooser { top: 40%;}
-   #alertsModeText { color: #9e9e9e; display: block; font-size: 12px; font-weight: bold;   position: absolute;   right: 178px;   text-align: right;   top: 14px;}
+   #alertsModeText { color: #9e9e9e; display: block; font-size: 10px; font-weight: bold;   position: absolute;   right: 178px;   text-align: right;   top: 14px;}
 	#alertsModeText.active {color: #f5881f; }
 	#alertsModeText.empty { color: #C2160D;}
 	#ZoneMesalertes { width: 51px; height: 51px; display: block; background-image: url('/images/yakwala_sprite.png'); background-position: -115px -458px; position: absolute; top: 6px; right: 118px; cursor: pointer;}
@@ -705,7 +705,7 @@ width: 270px;
    .searchYakwala #timeContainer { position: relative; margin-left: 12px; margin-top: 10px;}
    #locationChooser {top:40%;}
    #userChooser { top: 40%;}
-   #alertsModeText { color: #9e9e9e; display: block; font-size: 12px; font-weight: bold;   position: absolute;   right: 95px;   text-align: right;   top: 6px;}
+   #alertsModeText { color: #9e9e9e; display: block; font-size: 10px; font-weight: bold;   position: absolute;   right: 95px;   text-align: right;   top: 6px;}
 	
 	#ZoneMesalertes { width: 26px; height: 26px; display: block; background-image: url('/images/yakwala_sprite_medium.png'); background-position: -54px -219px; position: absolute; top: 6px; right: 65px; cursor: pointer;}
 
@@ -783,7 +783,7 @@ width: 270px;
 	#ZoneMesalertes { width: 26px; height: 26px; display: block; background-image: url('/images/yakwala_sprite_medium.png'); background-position: -54px -219px; position: absolute; top: 6px; right: 65px; cursor: pointer;}
 
 	#ZoneMesalertes.active, #ZoneMesalertes:hover { background-position: -54px -244px;}
-	#alertsModeText { color: #9e9e9e; display: block; font-size: 12px; font-weight: bold;   position: absolute;   right: 95px;   text-align: right;   top: 6px;}
+	#alertsModeText { color: #9e9e9e; display: block; font-size: 10px; font-weight: bold;   position: absolute;   right: 95px;   text-align: right;   top: 6px;}
 	#alertsModeText.active {color: #f5881f; }
 	#alertsModeText.empty { color: #C2160D;}
 	.infowindow .yakTypeImage1 {  background-image: url('/images/yakwala_sprite.png'); background-position: -133px 739px; width: 15px;}
@@ -855,7 +855,7 @@ width: 270px;
 	#ZoneMesalertes { width: 26px; height: 26px; display: block; background-image: url('/images/yakwala_sprite_medium.png'); background-position: -54px -219px; position: absolute; top: 6px; right: 65px; cursor: pointer;}
 
 	#ZoneMesalertes.active, #ZoneMesalertes:hover { background-position: -54px -244px;}
-	#alertsModeText { color: #9e9e9e; display: block; font-size: 12px; font-weight: bold;   position: absolute;   right: 95px;   text-align: right;   top: 6px; display: none;}
+	#alertsModeText { color: #9e9e9e; display: block; font-size: 10px; font-weight: bold;   position: absolute;   right: 95px;   text-align: right;   top: 6px; display: none;}
 	#alertsModeText.active {color: #f5881f; }
 	#alertsModeText.empty { color: #C2160D;}
 	.infowindow .yakTypeImage1 {  background-image: url('/images/yakwala_sprite.png'); background-position: -133px 739px; width: 15px;}
@@ -926,7 +926,7 @@ width: 270px;
 	#ZoneMesalertes { width: 26px; height: 26px; display: block; background-image: url('/images/yakwala_sprite_medium.png'); background-position: -54px -219px; position: absolute; top: 6px; right: 65px; cursor: pointer;}
 
 	#ZoneMesalertes.active, #ZoneMesalertes:hover { background-position: -54px -244px;}
-	#alertsModeText { color: #9e9e9e; display: block; font-size: 12px; font-weight: bold;   position: absolute;   right: 95px;   text-align: right;   top: 6px; display: none;}
+	#alertsModeText { color: #9e9e9e; display: block; font-size: 10px; font-weight: bold;   position: absolute;   right: 95px;   text-align: right;   top: 6px; display: none;}
 	#alertsModeText.active {color: #f5881f; }
 	#alertsModeText.empty { color: #C2160D;}
 	.infowindow .yakTypeImage1 {  background-image: url('/images/yakwala_sprite.png'); background-position: -133px 739px; width: 15px;}

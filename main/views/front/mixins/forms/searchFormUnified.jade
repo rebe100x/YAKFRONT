@@ -90,13 +90,16 @@ mixin searchFormUnified(page)
 			
 
 			if(yakType.inArray("5")){
-				$("#btnMesalertes").addClass('active').attr('title','Passer en mode normal');
+				$("#ZoneMesalertes").addClass('active').attr('title','Passer en mode normal');
+				$("#alertsModeText").html("Vous etes en <br /> mode alerte").addClass("active");
 				//console.log('active ALerte');
 				$("#alertsNumber").html("");
 				$("#alertsNumber").hide();
 			}
 			else
 			{
+				$("#ZoneMesalertes").removeClass('active').attr('title','Passer en mode normale');
+				$("#alertsModeText").html("Passer en <br /> mode normale").removeClass("active");
 				$("#alertsNumber").show();
 			}
 				
