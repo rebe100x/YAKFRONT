@@ -1414,7 +1414,10 @@ function setLikeSystem(from)
 				$.post('/setLikes', {infoId : infoid, islike: 'like'} , function(res){
 					if (res == 'updated')
 					{
-						thumbs.html(currentLikes + 1);
+						if(currentLikes + 1 == 1)
+							thumbs.html(currentLikes + 1 + "like");
+						else
+							thumbs.html(currentLikes + 1 + "likes");
 						//currEl.parent().find("i").eq(0).before("déjà aimé");
 						currEl.parent().find(".newYaklike").remove();
 
