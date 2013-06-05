@@ -741,7 +741,7 @@ mixin list()
 		{
 
 			var user = !{JSON.stringify(user)};
-			console.log(user);
+			//console.log(user);
 			event.preventDefault();
 			listenerHandle = google.maps.event.addListener(map, 'click', function(event) {
 				getformattedAddress(event.latLng);

@@ -101,7 +101,7 @@ exports.getFileSample = function(req,res){
 				itemVal = S(text).stripTags().s;
 				},
 				onattribute: function(attr,val){
-				console.log(oldItemKey+' '+itemKey+' '+attr+' '+val);
+				//console.log(oldItemKey+' '+itemKey+' '+attr+' '+val);
 					if(val != ''){
 						attribute.push({attr:attr,val:val});
 					}
@@ -332,7 +332,7 @@ exports.feed = function(req, res){
 	var Feed = db.model('Feed');
 	var Yakcat = db.model('Yakcat');
 	var obj_id = req.body.objid;
-	console.log(req.body);
+	//console.log(req.body);
 	var feed = new Object();
 	var now = new Date();
 	feed.XLconnector = 'parser';
@@ -372,7 +372,7 @@ exports.feed = function(req, res){
 	feed.lastModifDate = now;
 
 	feed.rootElement = req.body.rootElement;
-	console.log(req.body.lineToBegin);
+	//console.log(req.body.lineToBegin);
 	if(req.body.lineToBegin != '' && typeof req.body.lineToBegin != 'undefined' )
 		feed.lineToBegin = parseInt(req.body.lineToBegin);
 	else
@@ -919,7 +919,7 @@ exports.user_reminder = function(req, res){
 				var logo = conf.fronturl+"/static/images/yakwala-logo_petit.png";
 				var templateMail = "link";
 				var themail = theuser.mail;
-				console.log(theuser);
+				//console.log(theuser);
 				User.update({_id: theuser._id}, {hash : hash,token:token,salt:salt,password:password}, {upsert: false}, function(err){
 					User.sendValidationMail(link,themail,templateMail,logo,function(err){
 						if(!err)

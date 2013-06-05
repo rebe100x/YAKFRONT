@@ -342,8 +342,7 @@ mixin loginForm()
 			$("#usergoogleinfo").html(googleinfo);
 
 			resp.friendsList = googlelist;
-			console.log(resp);
-
+			
 			$("#authenticategoogle").click(function(){
 				handleGoogleClick($(this), resp, gapi.auth.getToken());
 			});		

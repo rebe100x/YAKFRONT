@@ -1247,7 +1247,7 @@ function changePlaceRange(id, lat, lng, pointname, range)
 function setCommentSpam(el)
 {
 	var infoid = $(el).parent().parent().find('.comment').attr('idinfo');	
-	console.log(infoid);
+	//console.log(infoid);
 	var content = '<img src="'+$(el).parent().parent().find('.userthumb').attr('src').replace('128_128','24_24')+'"/>&nbsp;'+$(el).parent().parent().find('.comment').html()
 					+'<br><b>Posté par </b><a target="_blank" href="'+conf.fronturl+'/news/feed/?idprofile='+$(el).parent().parent().find('.comment').attr('idposter')+'">'+$(el).parent().parent().find('.username').html()+'</a>'
 					+'<br><b>Signalé par </b><a target="_blank" href="'+conf.fronturl+'/news/feed/?idprofile='+user._id+'">@'+user.login+'</a>'
@@ -1653,8 +1653,9 @@ function checkByWidth()
 			$("#userChooser #subscribers_number").html("0");
 			$("#userChooser #subscribed_number").html("0");
 			$("#userChooser #thealerts").html("");
-
-
+			$("#uc_profile_yaks_options").show();
+			$("#userChooser #uc_profile_yaks_alerts.mybtn").show();		
+			$("#uc_blacklist_user, #uc_filter_user, #uc_profile_yaks_search, #uc_illicite_user").show();
 		}
 
 		function bindClickAlertFeed(id, humanName, name)
@@ -1872,8 +1873,8 @@ function checkByWidth()
 					
 				} else {
 
-					$("#uc_blacklist_user, #uc_filter_user, #uc_profile_yaks_search, #uc_illicite_user").unbind('click').hide();
-					$("#uc_profile_yaks_options").html("Pas d'options dispo");
+					$("#uc_blacklist_user, #uc_filter_user, #uc_profile_yaks_search, #uc_illicite_user").hide();
+					$("#uc_profile_yaks_options").hide();
 					$("#userChooser #uc_profile_yaks_alerts.mybtn").hide();		
 				}
 

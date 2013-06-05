@@ -23,14 +23,14 @@ mixin postForm()
 						|Quelle type de contenu voulez vous poster:
 					div.controls#yakTypeController
 						label.radio.inline Une actualité
-							span.actuEvenIcon
+							//span.actuEvenIcon
 							input#option1(type="radio", name="yakType", value="1" , checked) 
 						- if(type != 2)
 							label.radio.inline Un Yassala
-								span.yassalaIcon
+								//span.yassalaIcon
 								input#option4(type="radio", name="yakType", value="4")
 						label.radio.inline Un évènement
-							span.actuEvenIcon
+							//span.actuEvenIcon
 							input#option2(type="radio", name="yakType", value="2")
 						//label.radio.inline Infos&nbsp;pratiques
 						//	input#options3(type="radio", name="yakType", value="3")
@@ -69,11 +69,11 @@ mixin postForm()
 						span.ajouterMedia
 						|Ajouter un media
 					div.controls.myMedia
-						a(title="Poster une photo pour cet info sur yakwala", rel="post_picture")
+						a(title="Poster une photo pour cette info sur yakwala", rel="post_picture")
 							span.yakPosterLogo
-						a(title="Rechercher dans Youtube et poster votre video", rel="post_youtube")
+						a(title="Rechercher dans Youtube et poster votre vidéo", rel="post_youtube")
 							span.ytPosterLogo
-						a(title="Rechercher dans SoundCloud et poster votre audio", rel="post_soundcloud")
+						a(title="Rechercher dans SoundCloud et poster votre son", rel="post_soundcloud")
 							span.scPosterLogo
 						a(title="Rechercher dans flickr et poster votre image", rel="post_flicker")
 							span.flPosterLogo
@@ -144,11 +144,11 @@ mixin postForm()
 						span.ajouterMedia
 						|Ajouter un media
 					div.controls.myMedia
-						a(title="Poster une photo pour cet info sur yakwala", rel="post_picture")
+						a(title="Poster une photo pour cette info sur yakwala", rel="post_picture")
 							span.yakPosterLogo
-						a(title="Rechercher dans Youtube et poster votre video", rel="post_youtube")
+						a(title="Rechercher dans Youtube et poster votre vidéo", rel="post_youtube")
 							span.ytPosterLogo
-						a(title="Rechercher dans SoundCloud et poster votre audio", rel="post_soundcloud")
+						a(title="Rechercher dans SoundCloud et poster votre son", rel="post_soundcloud")
 							span.scPosterLogo
 						a(title="Rechercher dans flickr et poster votre image", rel="post_flicker")
 							span.flPosterLogo
@@ -220,7 +220,25 @@ mixin postForm()
 					$.cookie("yaktype", yakType,{ expires: 10000, path : '/' });
 
 					//var content = $("#postForm #content").val() + $("#post_yakYoutube").html() + $("#post_yakSoundCloud").html() + $("#post_yakFlickr").html();
-					var content = $("#postForm #content").val() + $("#youtubeContent").html() + $("#post_yakSoundCloud").html() + $("#post_yakFlickr").html();
+					var contentInit =$("#postForm #content").val();
+					if(contentInit)== 'undefined')
+						contentInit = '';
+					else
+						contentInit = contentInit.replace(/\n/g, '<br />');
+
+					var contentYT = $("#youtubeContent").html();
+					if(contentYT == 'undefined')
+						contentYT  = '';
+
+					var contentSC = $("#post_yakSoundCloud").html();
+					if(contentSC == 'undefined')
+						contentSC  = '';
+
+					var contentFK = $("#post_yakFlickr").html();
+					if(contentFK == 'undefined')
+						contentFK  = '';
+
+					var content = contentInit + contentYT + contentSC + contentFK;
 					
 					$("#postForm #content").val(content);
 

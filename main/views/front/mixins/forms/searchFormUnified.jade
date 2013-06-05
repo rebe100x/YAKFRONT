@@ -91,7 +91,7 @@ mixin searchFormUnified(page)
 
 			if(yakType.inArray("5")){
 				$("#btnMesalertes").addClass('active').attr('title','Passer en mode normal');
-				console.log('active ALerte');
+				//console.log('active ALerte');
 				$("#alertsNumber").html("");
 				$("#alertsNumber").hide();
 			}
@@ -148,66 +148,6 @@ mixin searchFormUnified(page)
 				$(this).select();
 			});
 			
-			/*
-			$('#searchPlaceStr').keyup(function(event){
-				var query = $("#searchPlaceStr").val();
-				if(query.length < 3)
-				{
-					$("#searchPlaceStr").removeClass('searching');
-				}
-				psClick = 0;
-				if (event.which == 13) {
-					
-					if(query==''){
-						curPos.name = user.formatted_address;
-						curPos.x = user.location.lat;
-						curPos.y = user.location.lng;
-						//curPos.z = mainConf.rangeDefault;
-						$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
-						$('#searchPlaceStr').val(curPos.name);	
-
-					}
-					else
-					{
-						
-						if(query.length >= 3){
-							encodeURIComponent(query);
-							$("#searchPlaceStr").addClass('searching');
-							var addressQuery = {"address": query ,"region":"fr","language":"fr"};
-							console.log(addressQuery);
-							var geocoder = new google.maps.Geocoder();
-							geocoder.geocode( addressQuery, function(results, status) {						
-							if (status == google.maps.GeocoderStatus.OK) {
-								if(results.length > 0)
-								{
-									console.log(results[0].toString());
-									$("#searchPlaceStr").removeClass('searching');
-									curPos.x = results[0].geometry.location.Ya;
-									curPos.y = results[0].geometry.location.Za;
-									curPos.name = results[0].formatted_address;
-									$("#searchPlaceStr").val(curPos.name);
-									$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
-									$("#searchBtn").trigger('click');
-								}
-								else
-								{
-									//$("#searchPlaceStr").removeClass('searching');
-									//alert("No Places Found...");
-								}
-							} 
-							else
-							{
-								//$("#searchPlaceStr").removeClass('searching');
-								//alert("No Places Found...");
-							}
-							});
-						}
-					}
-					$('#searchBtn').trigger('click');
-				}
-			});*/
-
-				
 				
 			/*slider time selector*/
 			$( "#heatSelector" ).slider({
@@ -392,7 +332,7 @@ mixin searchFormUnified(page)
 				});
 				$.cookie("yaktype", yakType.join(','),{ expires: 10000, path : '/' });	
 			}
-			console.log('PRINT');
+			//console.log('PRINT');
 			getAndPrintInfo();
 		}
 

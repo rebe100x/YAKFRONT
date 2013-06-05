@@ -318,7 +318,6 @@ mixin list()
 			$(this).html('<img src="/images/loader.gif" />');
 			$.get(url,function (response){
 				if(response.meta.code == '200'){
-					console.log('elo');
 					$('#err').html('Un email a été envoyé !');
 					$('#errContainer').show();
 					

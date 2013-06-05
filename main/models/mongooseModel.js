@@ -725,6 +725,8 @@ Info.statics.findTopLiked = function(x1, y1, x2, limit, callback)
 		cond["location"] = {$near:[parseFloat(x1),parseFloat(y1)],$maxDistance:parseFloat(x2)};
 	}	
 
+	cond['likes'] = {$gt:0};
+
 	return this.find(cond).sort({likes: -1}).limit(limit).exec(callback);
 }
 
@@ -742,6 +744,8 @@ Info.statics.findTopCommented = function(x1, y1, x2, limit, callback)
 	if (!isNaN(x1)) {
 		cond["location"] = {$near:[parseFloat(x1),parseFloat(y1)],$maxDistance:parseFloat(x2)};
 	}	
+
+	cond['commentsCount'] = {$gt:0};
 
 	return this.find(cond).sort({commentsCount: -1}).limit(limit).exec(callback);
 }
@@ -761,7 +765,7 @@ Info.statics.findTopHots = function(x1, y1, x2, limit, callback)
 		cond["location"] = {$near:[parseFloat(x1),parseFloat(y1)],$maxDistance:parseFloat(x2)};
 	}	
 
-	return this.find(cond).sort({heat: -1}).limit(limit).exec(callback);
+	return this.find(cond).sort({pubDate: -1}).limit(limit).exec(callback);
 }
 
 Info.statics.findByUser = function (userid, count, from, callback) {

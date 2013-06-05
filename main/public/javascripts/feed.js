@@ -269,8 +269,15 @@
 						};
 
 						if(!isUserBL && !isFeedBL && !isInfoBL)
-								if(val.likes != 0)
-									ulLiked+="<li><a href='/news/feed?id="+val._id+"'>"+val.title+"</a><br /><span class='topCounts'>"+val.likes+"like(s)</span></li>";
+								if(val.likes != 0){
+									var thumbsource = "";
+									if(val.thumb != undefined && val.thumb != "")
+										thumbsource = "<img src='"+val.thumb +"' width='50' height='auto' />";
+
+									ulLiked+="<li>"+thumbsource+"<a href='/news/feed?id="+val._id+"'>"+val.title+"</a><br /><span class='topCounts'>"+val.likes+"like(s)</span></li>";
+							
+								}
+							
 				});
 				
 			}
@@ -307,8 +314,14 @@
 						};
 
 						if(!isUserBL && !isFeedBL && !isInfoBL)
-							if(val.commentsCount != 0)
-								ulCommented+="<li><a href='/news/feed?id="+val._id+"'>"+val.title+"</a><br /><i class='commentLogo'></i><span class='topCounts'>"+val.commentsCount+"</span></li>";
+							if(val.commentsCount > 0){
+								var thumbsource = "";
+								if(val.thumb != undefined && val.thumb != "")
+									thumbsource = "<img src='"+val.thumb +"' width='50' height='auto' />";
+								
+								ulCommented+="<li>"+thumbsource+"<a href='/news/feed?id="+val._id+"'>"+val.title+"</a><br /><i class='commentLogo'></i><span class='topCounts'>"+val.commentsCount+"</span></li>";
+							}
+								
 				});
 				
 			}
@@ -348,10 +361,8 @@
 							thedate = buildItemDate(val);
 							var thumbsource = "";
 							if(val.thumb != undefined && val.thumb != "")
-							{
-								thumbsource = "<img src='"+conf.fronturl+'/pictures/120_90/' + val.thumb +"' width='50' height='auto' />";
-							 }
-								
+								thumbsource = "<img src='"+val.thumb +"' width='50' height='auto' />";
+
 							ulHots+="<li>"+thumbsource+"<a href='/news/feed?id="+val._id+"'>"+val.title+"</a><br />"+thedate+"</li>";
 						}
 							

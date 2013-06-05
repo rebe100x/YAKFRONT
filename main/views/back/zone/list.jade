@@ -354,8 +354,6 @@ mixin list()
 				success: function (response)
 				{
 					var zone = response.zone;
-					console.log(zone);
-					
 					var latlng = new google.maps.LatLng(zone.location.lat, zone.location.lng);
 					map.setCenter(latlng);
 					$("#zoneForm #name").val(zone.name);

@@ -59,15 +59,12 @@ exports.StoreImg = function(file,destName,size,conf){
 	var fs = require('fs');	
 	//var crypto = require('crypto');
 	
+
 	if(file.size){
 		
 		var srcPathTmp = file.path;
-		srcPath = srcPathTmp.replace('.gif', '.jpeg');
-		srcPath = srcPathTmp.replace('.png', '.jpeg');
-		srcPath = srcPathTmp.replace('.jpg', '.jpeg');
-		srcPath = srcPathTmp.replace('.jpeg', '-new.jpeg');
-		// convert to jpeg
-		console.log(srcPathTmp+','+srcPath);
+		var srcPath = srcPathTmp.replace(/^(.*\.)[a-zA-Z](3,4)$/,'$1')+"jpeg";
+		//console.log(srcPathTmp+','+srcPath);
 		im.convert([srcPathTmp,srcPath],function(err,stdout){
 			// if convertion ok, we begin to build the small images
 			if(!err){
@@ -93,6 +90,7 @@ exports.StoreImg = function(file,destName,size,conf){
 						if (err) {
 							//console.log('error creating thumbnail');
 							flagError = 1;
+							console.log("resize FAILED!");
 							message.push("L'image n'est pas reconnue, essayer avec une autre image !");
 						}else{
 							//console.log(size.w+" "+size.h);
@@ -209,12 +207,12 @@ function StoreImgOnS3(imgPath,conf){
 	  var data2send = {Bucket: conf.bucket, Key: imgPath, Body: data, ACL:'public-read',ContentType:'image/jpeg'};
 	  s3.client.putObject(data2send, function() {
 	    console.log("Successfully uploaded data to "+conf.bucket+"/"+imgPath);
-	    fs.unlink(conf.uploadsDir+'pictures/'+imgPath,function(err){
+	    /*fs.unlink(conf.uploadsDir+'pictures/'+imgPath,function(err){
 	    	if(err)
 	    		console.log(err);
 	    	else
 	    		console.log('file deleted localy');
-	    });
+	    });*/
 	  });
 	});
 }

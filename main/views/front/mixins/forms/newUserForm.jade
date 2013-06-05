@@ -77,7 +77,6 @@ mixin newUserForm()
 			FB.api('/me', function(response) {
 				if(!response.error)
 				{
-					console.log(response);
 					$("#loginFB").remove();
 					var fbinfo = "<img class='pull-left' src='https:/graph.facebook.com/"+response.id+"/picture/' /><span class='pull-left'><a style='cursor: pointer' id='authenticatefb'> Bienvenu  " + response.name + "<br />" + " Login with facebook</a></span><span class='clearBoth'></span>";
 					$("#userinfo").html(fbinfo);
@@ -162,7 +161,6 @@ mixin newUserForm()
 		})();
 
 		function signinCallback(authResult) {
-			console.log(authResult);
 			if (authResult['access_token']) {
 			// Successfully authorized
 			// Hide the sign-in button now that the user is authorized, for example:
@@ -187,7 +185,6 @@ mixin newUserForm()
 		}
 
 		function createProfileResponse(resp) {
-			console.log(resp);
 			var googleinfo = "<img class='pull-left' src='"+resp.image.url+"' /><span class='pull-left'><a style='cursor: pointer' id='authenticategoogle'> Bienvenu  " + resp.displayName + "<br />" + " Login with google</a></span><span class='clearBoth'></span>";
 			$("#usergoogleinfo").html(googleinfo);
 			$("#authenticategoogle").click(function(){
@@ -201,7 +198,7 @@ mixin newUserForm()
 						
 					else if(data.response == "1")
 					{
-						console.log("map");	
+						//console.log("map");	
 						window.location = conf.fronturl + "/news/map";
 					}
 						

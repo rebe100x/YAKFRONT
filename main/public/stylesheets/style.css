@@ -653,8 +653,8 @@ width: 270px;
 
 	#logoLink { width: 60px; height: 29px; display: block; float: none; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 0px -90px; margin: 0 auto;}
 
-	#profileMenu { width: 26px; height: 26px; display: block; float: left; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 0px -527px;}
-	#profileMenu:hover { background-position: -30px -527px;}
+	#profileMenu { width: 26px; height: 26px; display: block; float: left; background-image: url('/images/yakwala_sprite_medium.png'); background-position:0px -572px;}
+	#profileMenu:hover { background-position: 56px -572px}
 	#profileMenu img { width: 26px26px; height: 26px; }	
 	#zoneLocButton { width: 26px; height: 26px; display: block; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 84px -543px; position: absolute; top: 6px; right: 35px; cursor: pointer;}
 	#zoneLocButton:hover { background-position: 56px -543px;}
@@ -1132,13 +1132,13 @@ border-bottom: 1px solid #e5e5e5; width: 100%}
 #alertsNumber {  background: none repeat scroll 0 0 #C61810; border-radius: 8px 8px 8px 8px; color: white;  float: right; font-size: 11px; font-weight: bold; position: relative; top: 8px;}
 
 #youtubeResults ul { list-style: none; padding: 0px; margin: 0px; }
-#youtubeResults ul li {  cursor: pointer; float: left; clear: both; width: 100%;}
-#youtubeResults ul li:hover { background: #cecece;}
+#youtubeResults ul li {   float: left; clear: both; width: 100%;}
+#youtubeResults ul li:hover { background: #cfffff;}
 #youtubeResults ul li .yt_title {  font-weight: bold; width: 60%; float: left; color: black}
 
 #youtubeResults ul li .yt_image {  font-weight: bold; width: 30%; float: left; position: relative;}
 #youtubeResults ul li .yt_image img {  width: 100%; height: auto; position: relative;}
-#youtubeResults ul li .yt_add {  width: 6%;float: left;position: relative;left: 5px;top: 31px;}
+#youtubeResults ul li .yt_add {  cursor: pointer;width: 6%;float: left;position: relative;left: 5px;top: 31px;}
 
 
 #soundCloudResults ul { list-style: none; padding: 0px; margin: 0px; }
@@ -1190,8 +1190,8 @@ h3 .ajouterMedia{width: 24px; height: 24px; background-image: url('/images/yakwa
 .posterInfoPng {float: right; position: relative; top: -29px;  left: 20px; width: 83px; height: 40px; background-image: url('/images/yakwala_sprite.png'); background-position: -187px -715px;}
 .delComment { float: right;position: relative;top: -28px;right: 0px;background: url('/images/yakwala_sprite.png') -72px -659px;width: 13px;height: 13px;}
 .theContent .icon-remove { display: none;}
-#topHots img { float: left; margin-right: 6px;}
-#topHots a { float: left;}
+#topHots img,#topLiked img, #topCommented img{ float: left; margin-right: 6px;}
+#topHots a, #topLiked a, #topCommented a { float: left;}
 #FlickerResults ul { list-style: none; margin: 0;}
 #FlickerResults ul li { width: 30%; height: 100px; overflow: hidden; margin: 1%; float: left;}
 #FlickerResults ul li .yt_add { display: block; z-index: 11111; position: relative; float: left;}
