@@ -284,7 +284,7 @@ new compressor.minify({
 	, __dirname+'/public/javascripts/lib/bootstrap/js/bootstrap-typeahead.js'
 	, __dirname+'/public/javascripts/lib/plugin/jquery.cookie.js'
 	, __dirname+'/public/javascripts/lib/plugin/jquery.mousewheel.min.js'
-	//, __dirname+'/public/javascripts/lib/plugin/happy.js'
+	, __dirname+'/public/javascripts/lib/plugin/happy.js'
 	, __dirname+'/public/javascripts/lib/plugin/jquery.scrollTo-min.js'
 	, __dirname+'/public/javascripts/lib/jquery/js/timeago.js'
 	, __dirname+'/public/javascripts/customSB.js'

@@ -170,13 +170,13 @@ app.get('*', back.index);
 
 
 // Start server
-app.listen(conf.backport,conf.backdns, function(){
+app.listen(conf.backport, function(){
  console.log("Express server %s listening on port %d in %s mode", conf.backdns, conf.backport, app.settings.env);
 });
 
 
 // Uglify with node-minify : https://github.com/srod/node-minify
-/*
+
 new compressor.minify({
   type: 'yui-js',
   fileIn: [
@@ -233,5 +233,5 @@ new compressor.minify({
     else
       console.log('YUI CSS BACK compressor ok');
   } 
-}); */
+}); 
 

@@ -6,7 +6,7 @@
 var express = require('express'),
   routes = require('./routes'),
   api = require('./routes/api'),
-  users = require('./routes/users'),
+  //users = require('./routes/users'),
   auth = require('./mylib/basicAuth'),
   db = require('./models/mongooseModel'),
   config = require('./confs.js'),
