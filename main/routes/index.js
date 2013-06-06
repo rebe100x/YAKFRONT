@@ -1343,7 +1343,7 @@ exports.delfavplace = function (req, res) {
 	
 	if(req.session.user){
 			var pointId = req.body.pointId;
-			User.update({_id:req.session.user},{$pull:{favplace:{_id:pointId}}}, function(err){
+			User.update({_id:req.session.user},{$pull:{'favplace':{_id:mongoose.Types.ObjectId(pointId)}}}, function(err){
 				console.log(err);
 				res.json('del');
 				
