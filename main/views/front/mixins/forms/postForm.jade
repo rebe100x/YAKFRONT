@@ -186,15 +186,20 @@ mixin postForm()
 					}
 
 					$.cookie("yaktype", yakType,{ expires: 10000, path : '/' });
-					var content = $("#postForm #content").val() + $("#youtubeContent").html() + $("#post_yakSoundCloud").html() + $("#post_yakFlickr").html();
-					$("#postForm #content").val(content);
+
+					var content = $("#postForm #content").val() + $("#post_yakYoutube").html() + $("#post_yakSoundCloud").html() + $("#post_yakFlickr").html();
+					
 
 					var err = false;
 					$('.alert-error').hide();
 					if($('#title').val() == ""){
 						$('#title').before('<div class="alert alert-error"><strong>Erreur: </strong> Indiquez un titre pour votre info !</div>').focus();
 						err = true;
-					}				
+					}			
+					if($('#content').val() == "undefined" || $.trim($('#content').val()) == ""){
+						$('#content').before('<div class="alert alert-error"><strong>Erreur: </strong> Indiquez un contenu pour votre info !</div>').focus();
+						err = true;
+					}			
 					if($('#placeInput').val() == ""){
 						$('#place').before('<div class="alert alert-error"><strong>Erreur: </strong> Localisez votre info !</div>').focus();
 						err = true;
@@ -203,7 +208,11 @@ mixin postForm()
 						$('#err').show();
 						return false;
 					}else
+					{
+						$("#postForm #content").val(content);
 						return true;
+					}
+						
 				});
 
 			});
@@ -212,6 +221,7 @@ mixin postForm()
 		script
 			$(document).ready(function() {
 				$('#postForm').submit(function() {
+
 					var currType = 4;
 					if ($.inArray(currType, yakType) == -1) {
 						yakType[yakType.length] = currType;
@@ -221,12 +231,12 @@ mixin postForm()
 
 					//var content = $("#postForm #content").val() + $("#post_yakYoutube").html() + $("#post_yakSoundCloud").html() + $("#post_yakFlickr").html();
 					var contentInit =$("#postForm #content").val();
-					if(contentInit)== 'undefined')
+					if(contentInit == 'undefined')
 						contentInit = '';
 					else
 						contentInit = contentInit.replace(/\n/g, '<br />');
 
-					var contentYT = $("#youtubeContent").html();
+					var contentYT = $("#post_yakYoutube").html();
 					if(contentYT == 'undefined')
 						contentYT  = '';
 
@@ -240,14 +250,19 @@ mixin postForm()
 
 					var content = contentInit + contentYT + contentSC + contentFK;
 					
-					$("#postForm #content").val(content);
+					
 
 					var err = false;
-					$('.alert-error').hide();
+					$('.alert-error').remove();
 					if($('#title').val() == ""){
 						$('#title').before('<div class="alert alert-error"><strong>Erreur: </strong> Indiquez un titre pour votre info !</div>').focus();
 						err = true;
-					}				
+					}		
+					if($('#content').val() == "undefined" || $.trim($('#content').val()) == ""){
+						$('#content').before('<div class="alert alert-error"><strong>Erreur: </strong> Indiquez un contenu pour votre info !</div>').focus();
+						err = true;
+					}		
+
 					if($('#placeInput').val() == ""){
 						$('#place').before('<div class="alert alert-error"><strong>Erreur: </strong> Localisez votre info !</div>').focus();
 						err = true;
@@ -256,7 +271,11 @@ mixin postForm()
 						$('#err').show();
 						return false;
 					}else
+					{
+						$("#postForm #content").val(content);
 						return true;
+					}
+						
 				});
 			});
 	

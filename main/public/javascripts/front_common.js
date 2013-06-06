@@ -1417,7 +1417,10 @@ function setLikeSystem(from)
 				$.post('/setLikes', {infoId : infoid, islike: 'like'} , function(res){
 					if (res == 'updated')
 					{
-						thumbs.html(currentLikes + 1);
+						if(currentLikes + 1 == 1)
+							thumbs.html(currentLikes + 1 + "like");
+						else
+							thumbs.html(currentLikes + 1 + "likes");
 						//currEl.parent().find("i").eq(0).before("déjà aimé");
 						currEl.parent().find(".newYaklike").remove();
 
@@ -2151,8 +2154,8 @@ function checkByWidth()
 			
 			}
 			var yakTypeImage = $("<div />");
-			yakTypeImage.attr("class", "yakTypeImage");
-			yakTypeImage.html("<img src='/images/markers/new/type" + item.yakType + ".png' />");
+			yakTypeImage.attr("class", "yakTypeImage yakTypeImage" + item.yakType);
+			//yakTypeImage.html("<img src='/images/markers/new/type" + item.yakType + ".png' />");
 			infoContent.append(yakTypeImage);
 			
 

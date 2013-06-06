@@ -54,13 +54,14 @@ mixin profileForm(type)
 					div.controls
 						div.input-append 
 							label.control-label(for="tag") 
-								|Quelques mots clés pour définir vos centres d'intérêt:
+								|Quelques mots clés pour définir vos centres d intérêt:
 								br
 								|(ex: sport,musique) :
+							br
 							- each tag in tags
 								p
 									div
-										i.icon-remove.icon-pointer(onclick="tagArray.cleanArrayByName(\""+tag+"\");$(\"#tagInput\").val(JSON.stringify(tagArray));$(this).parent().remove(); clickSubmit(this);") 
+										i.icon-remove.icon-pointer(onclick="tagArray.cleanArrayByName(\""+tag+"\");$(\"#tagInput\").val(JSON.stringify(tagArray));$(this).parent().remove();;") 
 										= tag 
 							input#tag(type='text', name='tag')
 							button.btn#btn-tag-adder(type="button") Ajouter
@@ -103,15 +104,16 @@ mixin profileForm(type)
 				div.control-group
 					div.controls
 						div.input-append 
-							label.control-label(for="tag") 
-								|Quelques mots clés pour définir vos centres d'intérêt:
+							label.control-label(for="tag", style='width: auto') 
+								|Quelques mots clés pour définir vos centres d intérêt:
 								br
 								|(ex: sport,musique) :
 							- each tag in tags
 								p
-									div
-										i.icon-remove.icon-pointer(onclick="tagArray.cleanArrayByName(\""+tag+"\");$(\"#tagInput\").val(JSON.stringify(tagArray));$(this).parent().remove(); clickSubmit(this);") 
+									div.clearBoth
+										i.icon-remove.icon-pointer(onclick="tagArray.cleanArrayByName(\""+tag+"\");$(\"#tagInput\").val(JSON.stringify(tagArray));$(this).parent().remove();") 
 										= tag 
+							br.clearBoth
 							input#tag(type='text', name='tag')
 							button.btn#btn-tag-adder(type="button") Ajouter
 
