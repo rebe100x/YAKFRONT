@@ -186,9 +186,9 @@ mixin postForm()
 					}
 
 					$.cookie("yaktype", yakType,{ expires: 10000, path : '/' });
-					
+
 					var content = $("#postForm #content").val() + $("#post_yakYoutube").html() + $("#post_yakSoundCloud").html() + $("#post_yakFlickr").html();
-					$("#postForm #content").val(content);
+					
 
 					var err = false;
 					$('.alert-error').hide();
@@ -208,7 +208,11 @@ mixin postForm()
 						$('#err').show();
 						return false;
 					}else
+					{
+						$("#postForm #content").val(content);
 						return true;
+					}
+						
 				});
 
 			});
@@ -246,7 +250,7 @@ mixin postForm()
 
 					var content = contentInit + contentYT + contentSC + contentFK;
 					
-					$("#postForm #content").val(content);
+					
 
 					var err = false;
 					$('.alert-error').remove();
@@ -267,7 +271,11 @@ mixin postForm()
 						$('#err').show();
 						return false;
 					}else
+					{
+						$("#postForm #content").val(content);
 						return true;
+					}
+						
 				});
 			});
 	
