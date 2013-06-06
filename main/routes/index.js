@@ -722,7 +722,17 @@ exports.user = function(req, res){
 				user.salt="1";
 				user.type=1;
 				//user.favplace = [{'name':'Nice, France','location':{'lat':43.681343,'lng':7.232094},'range':100},{'name':'Marseille, France','location':{'lat':43.298198,'lng':5.370255},'range':100},{'name':'Paris, France','location':{'lat':48.851875,'lng':2.356374},'range':100}];
-				user.favplace = mainConf.favPlaces;
+				var defaultFavPlaces = [];
+				var Point = db.model('Point');
+				for (var i = 0; i < mainConf.favPlaces.length; i++) {
+					var point = new Point();
+					var location = '{"lng":' + mainConf.favPlaces[i].location.lng + ',"lat":' + mainConf.favPlaces[i].location.lat +'}'
+					point.name = mainConf.favPlaces[i].name;
+					point.location = JSON.parse(location);
+					point.range = mainConf.favPlaces[i].range;
+					defaultFavPlaces[i] = point;
+				};
+				user.favplace = defaultFavPlaces;
 				var link = conf.validationUrl+token+"/"+password;
 				
 				user.name=login;
@@ -1878,8 +1888,18 @@ exports.auth_twitter_callback_create = function(req, res){
 				if(!(typeof data.url  === 'undefined') && data.url  != null && data.url  != '')
 					user.web = data.url;
 				//user.favplace = [{'name':'Nice, France','location':{'lat':43.681343,'lng':7.232094},'range':100},{'name':'Marseille, France','location':{'lat':43.298198,'lng':5.370255},'range':100},{'name':'Paris, France','location':{'lat':48.851875,'lng':2.356374},'range':100}];
-				user.favplace = mainConf.favPlaces;
-			
+				//user.favplace = mainConf.favPlaces;
+				var defaultFavPlaces = [];
+				var Point = db.model('Point');
+				for (var i = 0; i < mainConf.favPlaces.length; i++) {
+					var point = new Point();
+					var location = '{"lng":' + mainConf.favPlaces[i].location.lng + ',"lat":' + mainConf.favPlaces[i].location.lat +'}'
+					point.name = mainConf.favPlaces[i].name;
+					point.location = JSON.parse(location);
+					point.range = mainConf.favPlaces[i].range;
+					defaultFavPlaces[i] = point;
+				};
+				user.favplace = defaultFavPlaces;
 
 				
 
@@ -2107,7 +2127,19 @@ exports.auth_facebook = function(req, res){
 	user.bio = data.bio;
 	user.web = data.link;
 	//user.favplace = [{'name':'Nice, France','location':{'lat':43.681343,'lng':7.232094},'range':100},{'name':'Marseille, France','location':{'lat':43.298198,'lng':5.370255},'range':100},{'name':'Paris, France','location':{'lat':48.851875,'lng':2.356374},'range':100}];
-	user.favplace = mainConf.favPlaces;
+	//user.favplace = mainConf.favPlaces;
+	var defaultFavPlaces = [];
+	var Point = db.model('Point');
+	for (var i = 0; i < mainConf.favPlaces.length; i++) {
+		var point = new Point();
+		var location = '{"lng":' + mainConf.favPlaces[i].location.lng + ',"lat":' + mainConf.favPlaces[i].location.lat +'}'
+		point.name = mainConf.favPlaces[i].name;
+		point.location = JSON.parse(location);
+		point.range = mainConf.favPlaces[i].range;
+		defaultFavPlaces[i] = point;
+	};
+	user.favplace = defaultFavPlaces;
+
 	User.findByFacebookId(facebook_id,function (err, theuser){
 		if(theuser != undefined && theuser != null ){
 			console.log('LOGGED IN');
@@ -2341,7 +2373,18 @@ exports.auth_google = function(req, res){
 	user.bio = data.bio;
 	user.web = data.link;
 	//user.favplace = [{'name':'Paris, France','location':{'lat':48.851875,'lng':2.356374}},{'name':'Eghézée, Belgique','location':{'lat':50.583346,'lng':4.900031}},{'name':'Montpellier, France','location':{'lat':43.610787,'lng':3.876715}}];
-	user.favplace = mainConf.favPlaces;
+	//user.favplace = mainConf.favPlaces;
+	var defaultFavPlaces = [];
+	var Point = db.model('Point');
+	for (var i = 0; i < mainConf.favPlaces.length; i++) {
+		var point = new Point();
+		var location = '{"lng":' + mainConf.favPlaces[i].location.lng + ',"lat":' + mainConf.favPlaces[i].location.lat +'}'
+		point.name = mainConf.favPlaces[i].name;
+		point.location = JSON.parse(location);
+		point.range = mainConf.favPlaces[i].range;
+		defaultFavPlaces[i] = point;
+	};
+	user.favplace = defaultFavPlaces;
 	
 	User.findByGoogleId(google_id,function (err, theuser){
 		if(theuser != undefined && theuser != null ){
