@@ -10,11 +10,13 @@
 .icon-pointer{cursor:pointer;margin:2px;}
 .icon-pointer:hover{opacity:0.7;}
 
-.searching{background-image:url('images/loader.gif');padding-left:20px;}
+.searching{background-image:url('/images/loader.gif');padding-left:20px;background-repeat:no-repeat;background-position: 0px 5px;}
 .searchInput{background-repeat:no-repeat;background-position: 0px 5px;padding-left:0px;background-image: none;}
 
 input.error{background-color:#FF0000;}
 
+/*jquery fix*/
+.ui-widget-content a{color:#000000;}
 /*bootsrap fixes*/
 @media (max-width: 979px) {
   .navbar-fixed-top {margin-bottom: 0px;}
@@ -46,6 +48,8 @@ table tr.error{background-color: #F2DEDE;}
 .colTableParsingOn{background-color:#f89406;color:#FFF;}
 #parsingEditor{font-size:10px;}
 
+/*ZONE FORM*/
+#boxArea{padding-left:20px;}
 /*FORMS*/
 legend.mainlegend{color:#d51820;font-weight:bold;border-bottom:0px;}
 .fuelux .btn .caret {margin-top: 8px;margin-left: 8px;}
@@ -67,12 +71,13 @@ legend.mainlegend{color:#d51820;font-weight:bold;border-bottom:0px;}
 .fuelux .yakForm .input-append{width:90%;}
 .fuelux .yakForm input[type=text] { width: 90%;}
 .fuelux .yakForm input[type=text].big { width: 85%; }
+.fuelux .yakForm input[type=text].medium { width:50%; }
 .fuelux .yakForm input[type=text].small { width: 25%; }
 .fuelux .yakForm label.radio.inline { margin-right: 10px; }
 .fuelux .yakForm textarea {width: 85%;}
 .fuelux .yakForm legend { padding-left: 15px; margin-top: 0px; padding-bottom: 0px;}
 .fuelux .yakForm .btn.btn-large {margin-top: 20px;}
-#MyGrid thead tr.headerControle {background: url(../images/texture.png) repeat; border: none;}
+#MyGrid thead tr.headerControle {background: url(/images/texture.png) repeat; border: none;}
 #MyGrid thead td {border-top: none;}
 #MyGrid thead a {font-size: smaller;}
 #MyGrid thead .searchPanel {background-color: rgba(255,255,255,0.6);}
@@ -244,7 +249,7 @@ width: 270px;
 }
 .yak-sidenav .active .icon-chevron-right,
 .yak-sidenav .active a:hover .icon-chevron-right {
-  background-image: url(../images/glyphicons-halflings-white.png);
+  background-image: url(/images/glyphicons-halflings-white.png);
   opacity: 1;
 }
 .yak-sidenav.affix {

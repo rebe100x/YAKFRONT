@@ -38,14 +38,14 @@ block content
 				var geocoder = new google.maps.Geocoder();
 				geocoder.geocode( geoQuery, function(results, status) {
 					if (status == google.maps.GeocoderStatus.OK) {
-						//$('#place').val(results[0].formatted_address).select();
-						var placeGmap = getPlaceFromGmapResult(results[0]);
+						var result = fixGmapResult(results[0]);
+						var placeGmap = getPlaceFromGmapResult(result);
 						//console.log(results);
 						placeArray = placeGmap;
 						$("#placeForm #placeInput").val(JSON.stringify(placeArray));
 						$('#placeSearch').val(placeGmap.address.state+', '+placeGmap.address.area);
 						$('#placeLabel').first().remove();
-						$('#btn-place-adder').parent().before("<div id='placeLabel'><i class='icon-remove' onclick='placeArray=null;$(\"#placeInput\").val(JSON.stringify(placeArray));$(this).parent().remove();'></i> "+results[0].formatted_address+"</div>");
+						$('#btn-place-adder').parent().before("<div id='placeLabel'><i class='icon-remove' onclick='placeArray=null;$(\"#placeInput\").val(JSON.stringify(placeArray));$(this).parent().remove();'></i> "+result.formatted_address+"</div>");
 					} else {
 						var salt = new Date().getTime();
 						$('#btn-place-adder').parent().before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide ("+status+")</div>");

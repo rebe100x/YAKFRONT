@@ -34,7 +34,8 @@
 			var geocoder = new google.maps.Geocoder();
 			geocoder.geocode( addressQuery, function(results, status) {						
 			if (status == google.maps.GeocoderStatus.OK) {
-				var placeGmap = getPlaceFromGmapResult((results[0]));
+				var result = fixGmapResult(results[0]);
+				var placeGmap = getPlaceFromGmapResult(result);
 				var location = JSON.stringify({lat:curPos.x,lng:curPos.y});				
 				changeLocation(location);
 		

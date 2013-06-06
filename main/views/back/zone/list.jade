@@ -384,6 +384,9 @@ mixin list()
 					rect.setVisible(true);
 					drawRect();
 
+					var CTlatLng = new google.maps.LatLng(zone.location.lat,zone.location.lng);
+					placeMarker(CTlatLng,markerLocation);
+
 
 				}
 			});

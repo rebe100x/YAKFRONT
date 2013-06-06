@@ -76,8 +76,8 @@ block content
 				var center = drawRect();
 				$("#zoneForm #latTR").val(markerLocationTR.getPosition().lat());
 				$("#zoneForm #lngTR").val(markerLocationTR.getPosition().lng());
-				$("#zoneForm #latCT").val(center.lat());
-				$("#zoneForm #lngCT").val(center.lng());
+				//$("#zoneForm #latCT").val(center.lat());
+				//$("#zoneForm #lngCT").val(center.lng());
 				
 			});
 
@@ -85,11 +85,20 @@ block content
 				var center = drawRect();
 				$("#zoneForm #latBL").val(markerLocationBL.getPosition().lat());
 				$("#zoneForm #lngBL").val(markerLocationBL.getPosition().lng());
-				$("#zoneForm #latCT").val(center.lat());
-				$("#zoneForm #lngCT").val(center.lng());
+				//$("#zoneForm #latCT").val(center.lat());
+				//$("#zoneForm #lngCT").val(center.lng());
 			});
 
+			google.maps.event.addListener(map, 'click', function(event) {
+				var position = event.latLng;
+				placeMarker(event.latLng,markerLocation);
+			});
 			
+			google.maps.event.addListener(markerLocation, 'dragend', function() {
+				var position = markerLocation.getPosition();
+				placeMarker(position,markerLocation);
+			});
+
 		});
 		
 		function drawRect(){
@@ -113,7 +122,8 @@ block content
 				var geocoder = new google.maps.Geocoder();
 				geocoder.geocode( geoQuery, function(results, status) {
 					if (status == google.maps.GeocoderStatus.OK) {
-						var placeGmap = getPlaceFromGmapResult(results[0]);
+						var result = fixGmapResult(results[0]);
+						var placeGmap = getPlaceFromGmapResult(result);
 						return placeGmap;
 					} else {
 						var salt = new Date().getTime();
@@ -125,4 +135,11 @@ block content
 					}
 				});
 
-		}					
+		}		
+
+		function placeMarker(location,mk) {
+			$('#zoneForm #latCT').val(location.lat());	
+			$('#zoneForm #lngCT').val(location.lng());	
+			mk.setVisible(true);
+			mk.setPosition(location);
+		}			

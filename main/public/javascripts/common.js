@@ -91,11 +91,7 @@ var setdelay = (function(){
 
 
 function getPlaceFromGmapResult(result){	
-	var loctmp = result.geometry.location.toString();
-	var latlng = loctmp.replace('(','').replace(')','').split(',');
-	var thelat = latlng[0];
-	var thelng = latlng[1];
-
+	
 
 	var addressGmap = {
 		"street_number":""
@@ -126,7 +122,8 @@ function getPlaceFromGmapResult(result){
 		if(item.types.inArray('postal_code'))
 			addressGmap.zip = item.long_name;
 	});
-	//console.log((result.geometry.location));
+	
+	var bounds = result['geometry']['bounds'];
 	var placeGmap = {
 		"title":result.formatted_address
 		,"content":""
@@ -138,13 +135,29 @@ function getPlaceFromGmapResult(result){
 		,"yakCat":["504d89f4fa9a958808000001"]
 		,"creationDate":new Date()
 		,"lastModifDate":new Date()
-		,"location":{"lng":parseFloat(result.geometry.location.ib),"lat":parseFloat(result.geometry.location.hb)}
+		,"location":{"lng":parseFloat(result.geometry.location.lng),"lat":parseFloat(result.geometry.location.lat)}
+		//,"location":{"lng":parseFloat(result.geometry.location.ib),"lat":parseFloat(result.geometry.location.hb)}
 		,"status":2 // need validation
 		,"address": addressGmap
 		,"formatted_address":result.formatted_address
-		,"bounds":result['geometry']['bounds']
+		//,"bounds":{tr:{lat:bounds.Z.d,lng:bounds.fa.d},bl:{lat:bounds.Z.b,lng:bounds.fa.b}}
+		,"bounds":{tr:{lat:bounds.tr.lat,lng:bounds.tr.lng},bl:{lat:bounds.bl.lat,lng:bounds.bl.lng}}
 	};
-	//results[0]['geometry']['location'].lat()
 	return placeGmap;
 }	
 
+function fixGmapResult(item){
+	item.geometry.location.lat = item.geometry.location.lat();
+	item.geometry.location.lng = item.geometry.location.lng();
+	if(typeof item.geometry.bounds != 'undefined'){
+		var latLngTR = item.geometry.bounds.getNorthEast();
+		var latLngBL = item.geometry.bounds.getSouthWest();
+		item.geometry.bounds = {tr:{lat:latLngTR.lat(),lng:latLngTR.lng()},bl:{lat:latLngBL.lat(),lng:latLngBL.lng()}};
+	}else{
+		var latLngTR = item.geometry.viewport.getNorthEast();
+		var latLngBL = item.geometry.viewport.getSouthWest();
+		item.geometry.bounds = {tr:{lat:latLngTR.lat(),lng:latLngTR.lng()},bl:{lat:latLngBL.lat(),lng:latLngBL.lng()}};
+	}
+		
+	return item
+}

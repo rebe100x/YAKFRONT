@@ -378,6 +378,7 @@ mixin list()
 						var geocoder = new google.maps.Geocoder();
 						geocoder.geocode( addressQuery, function(results, status) {						
 						if (status == google.maps.GeocoderStatus.OK) {
+							$.map( results, function( item ) {fixGmapResult(item);});
 							typeahead.process(results);
 							$("#searchPlaceStr").removeClass('searching');
 						} 
@@ -903,15 +904,16 @@ mixin list()
 				var geocoder = new google.maps.Geocoder();
 				geocoder.geocode(addressQuery, function(results, status) {
 					if (status == google.maps.GeocoderStatus.OK) {
-						map.setCenter(results[0].geometry.location);
+						var result = fixGmapResult(results[0]);
+						map.setCenter(result.geometry.location);
 						markerLocation.setVisible(true);
-						markerLocation.setPosition(results[0].geometry.location);
-						placeMarker(results[0].geometry.location,markerLocation);
-						var placeGmap = getPlaceFromGmapResult(results[0]);
+						markerLocation.setPosition(result.geometry.location);
+						placeMarker(result.geometry.location,markerLocation);
+						var placeGmap = getPlaceFromGmapResult(result);
 						placeArray = placeGmap;
 						$("#placeForm #placeInput").val(JSON.stringify(placeArray));
 						$('#placeLabel').first().remove();
-						$('#placeForm #btn-place-adder').parent().before("<div id='placeLabel'><i class='icon-remove icon-pointer' onclick='placeArray=null;$(\"#placeForm #placeInput\").val(JSON.stringify(placeArray));$(this).parent().remove();'></i> "+results[0].formatted_address+"</div>");
+						$('#placeForm #btn-place-adder').parent().before("<div id='placeLabel'><i class='icon-remove icon-pointer' onclick='placeArray=null;$(\"#placeForm #placeInput\").val(JSON.stringify(placeArray));$(this).parent().remove();'></i> "+result.formatted_address+"</div>");
 						$("#placeForm #place").val("");
 					} else {
 						var salt = new Date().getTime();

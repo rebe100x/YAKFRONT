@@ -312,7 +312,7 @@ new compressor.minify({
 	, __dirname+'/public/javascripts/lib/bootstrap/css/bootstrap-responsive.css'
 	, __dirname+'/public/javascripts/lib/jquery/css/custom-theme/jquery-ui-1.8.24.custom.css'
 	, __dirname+'/public/stylesheets/common.css'
-	, __dirname+'/public/stylesheets/customSB.css'
+	, __dirname+'/public/javascripts/lib/jquery/css/customSB.css'
 	, __dirname+'/public/javascripts/lib/jquery/css/share.css'
 	, __dirname+'/public/stylesheets/style.css'
 	],

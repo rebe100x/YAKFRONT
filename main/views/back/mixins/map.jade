@@ -62,6 +62,7 @@ mixin map()
 						var geocoder = new google.maps.Geocoder();
 						geocoder.geocode( addressQuery, function(results, status) {						
 						if (status == google.maps.GeocoderStatus.OK) {
+							$.map( results, function( item ) {fixGmapResult(item);});
 							typeahead.process(results);
 							$("#searchPlaceStr").removeClass('searching');
 						} 
@@ -184,7 +185,8 @@ mixin map()
 				var curLatLng = new google.maps.LatLng(curPos.x, curPos.y);
 				geocoder.geocode( {'latLng': curLatLng}, function(results, status) {						
 					if (status == google.maps.GeocoderStatus.OK) {
-						var placeGmap = getPlaceFromGmapResult((results[0]));
+						var result = fixGmapResult(results[0]);
+						var placeGmap = getPlaceFromGmapResult(result);
 						$("#searchPlaceStr").val(placeGmap.address.city + ", " + placeGmap.address.country);
 						curPos.name = placeGmap.address.city + ", " + placeGmap.address.country;
 						$.cookie("geoloc", JSON.stringify(curPos));

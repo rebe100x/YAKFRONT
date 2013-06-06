@@ -218,6 +218,7 @@ mixin searchFormUnified(page)
 						var geocoder = new google.maps.Geocoder();
 						geocoder.geocode( addressQuery, function(results, status) {						
 						if (status == google.maps.GeocoderStatus.OK) {
+							$.map( results, function( item ) {fixGmapResult(item);});
 							typeahead.process(results);
 							$("#searchPlaceStr").removeClass('searching');
 						} 

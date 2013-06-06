@@ -144,18 +144,8 @@ mixin searchForm(page)
 							var geocoder = new google.maps.Geocoder();
 							geocoder.geocode( addressQuery, function(results, status) {						
 							if (status == google.maps.GeocoderStatus.OK) {
-								/*var latLng = new google.maps.LatLng(results[0].geometry.location.Ya,results[0].geometry.location.Za);
-								markerHL.setPosition(latLng);
-								markerHL.setVisible(true);
-								markerHL.setMap(map);
-								markerHL.setOptions({icon:"/images/markers/target3.png"});
-								
-								setTimeout(function() {
-									markerHL.setMap(null);
-								}, 3000);
-								map.panTo(latLng);*/
-								//console.log(results);
-								var placeGmap = getPlaceFromGmapResult((results[0]));
+								var result = fixGmapResult(results[0]);
+								var placeGmap = getPlaceFromGmapResult(result);
 								//changeLocation(JSON.stringify(placeGmap));
 
 							}else{
@@ -261,6 +251,7 @@ mixin searchForm(page)
 						var geocoder = new google.maps.Geocoder();
 						geocoder.geocode( addressQuery, function(results, status) {						
 						if (status == google.maps.GeocoderStatus.OK) {
+							$.map( results, function( item ) {fixGmapResult(item);});
 							typeahead.process(results);
 							$("#searchPlaceStr").removeClass('searching');
 						} 

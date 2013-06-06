@@ -134,26 +134,27 @@ block content
 						var geocoder = new google.maps.Geocoder();
 						geocoder.geocode( geoQuery, function(results, status) {
 							if (status == google.maps.GeocoderStatus.OK) {
-								//console.log(results[0]);
+								var result = fixGmapResult(results[0]);
+								
 								var currlocation = "<h2>Adresse actuelle</h2>";
 								currlocation += "<br />";
-								currlocation += results[0].formatted_address;
+								currlocation += result.formatted_address;
 								currlocation += "<br /><br />";
-								currlocation += "Lattitude: " + results[0].geometry.location.Ya;
+								currlocation += "Lattitude: " + result.geometry.location.lat;
 								currlocation += "<br /><br />";
-								currlocation += "Longitude: " + results[0].geometry.location.Za;
+								currlocation += "Longitude: " + result.geometry.location.lng;
 								currlocation += "<br /><br />";
-								currlocation += "<a class='btn' onclick='setasdefaultLocation(this)' lat='"+results[0].geometry.location.Ya+"' lng='"+results[0].geometry.location.Za+"' address='"+results[0].formatted_address+"'>+ Votre géolocalisation</a><br /><br /> <a class='btn' onclick='setasdefaultLocation(this)' lat='"+results[0].geometry.location.Ya+"' lng='"+results[0].geometry.location.Za+"' address='"+results[0].formatted_address+"'>+ Endroits favoris</a>";
+								currlocation += "<a class='btn' onclick='setasdefaultLocation(this)' lat='"+result.geometry.location.lat+"' lng='"+result.geometry.location.lng+"' address='"+result.formatted_address+"'>+ Votre géolocalisation</a><br /><br /> <a class='btn' onclick='setasdefaultLocation(this)' lat='"+result.geometry.location.lat+"' lng='"+result.geometry.location.lng+"' address='"+result.formatted_address+"'>+ Endroits favoris</a>";
 								//$("#Locationtip").html(currlocation);
 								if(typeof(user.location) === 'undefined')
 									{
 
-										var placeGmap = getPlaceFromGmapResult(results[0]);	
+										var placeGmap = getPlaceFromGmapResult(result);	
 
 										$("#cityTarget").before("<br />");
-										$("#cityTarget").html(results[0].formatted_address);
+										$("#cityTarget").html(result.formatted_address);
 
-										$('#formatted_address').val(JSON.stringify(results[0].formatted_address));
+										$('#formatted_address').val(JSON.stringify(result.formatted_address));
 										$('#location').val(JSON.stringify(placeGmap.location));
 										var curPos = {x:placeGmap.location.lat,y:placeGmap.location.lng,z:mainConf.rangeDefault};
 										$.cookie("geoloc", JSON.stringify(curPos),{ expires: 10000, path : '/' });
@@ -331,7 +332,7 @@ block content
 							var geocoder = new google.maps.Geocoder();
 							geocoder.geocode( addressQuery, function(results, status) {
 								if (status == google.maps.GeocoderStatus.OK) {
-									//results[0].geometry.location
+									$.map( results, function( item ) {fixGmapResult(item);});
 									typeahead.process(results);
 								} 
 								

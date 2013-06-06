@@ -216,14 +216,15 @@ block content
 						var geocoder = new google.maps.Geocoder();
 						geocoder.geocode( addressQuery, function(results, status) {
 							if (status == google.maps.GeocoderStatus.OK) {
-								map.setCenter(results[0].geometry.location);
+								var result = fixGmapResult(results[0]);
+								map.setCenter(result.geometry.location);
 								markerLocation.setVisible(true);
 								markerLocation.setPosition(results[0].geometry.location);
-								placeMarker(results[0].geometry.location,markerLocation);
-								var placeGmap = getPlaceFromGmapResult(results[0]);
+								placeMarker(result.geometry.location,markerLocation);
+								var placeGmap = getPlaceFromGmapResult(result);
 								placeArray.push(placeGmap);
 								$("#placeInput").val(JSON.stringify(placeArray));
-								$('#btn-place-adder').parent().before("<div><i class='icon-remove icon-pointer' onclick='placeArray.cleanArrayByLocation("+results[0].geometry.location.Ya+","+results[0].geometry.location.Xa+");$(\"#placeInput\").val(JSON.stringify(placeArray));$(this).parent().remove();'></i> "+results[0].formatted_address+"</div>");
+								$('#btn-place-adder').parent().before("<div><i class='icon-remove icon-pointer' onclick='placeArray.cleanArrayByLocation("+result.geometry.location.Ya+","+result.geometry.location.Xa+");$(\"#placeInput\").val(JSON.stringify(placeArray));$(this).parent().remove();'></i> "+results.formatted_address+"</div>");
 								
 							} else {
 								var salt = new Date().getTime();

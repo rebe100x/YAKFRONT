@@ -56,7 +56,8 @@ block content
 				var geocoder = new google.maps.Geocoder();
 				geocoder.geocode( geoQuery, function(results, status) {
 					if (status == google.maps.GeocoderStatus.OK) {
-						var placeGmap = getPlaceFromGmapResult(results[0]);
+						var result = fixGmapResult(results[0]);
+						var placeGmap = getPlaceFromGmapResult(result);
 						//placeArray = placeGmap;
 						$('#defaultPlaceName').val(placeGmap.title);
 						$('#defaultPlaceSearchName').val(placeGmap.address.state+', '+placeGmap.address.area);

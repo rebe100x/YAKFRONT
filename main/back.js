@@ -176,7 +176,6 @@ app.listen(conf.backport, function(){
 
 
 // Uglify with node-minify : https://github.com/srod/node-minify
-
 new compressor.minify({
   type: 'yui-js',
   fileIn: [

@@ -21,6 +21,13 @@ mixin zoneForm()
 						label Nom
 						input.big(type='text', name='name', id='name', placeholder='Nom')
 						span#numero
+					.span6
+						label Aide à la localisation:
+						div.input-append.searchInput
+							input.medium(type='text', name='boxArea', id='boxArea', placeholder='Entrer une zone géographique',autocomplete="off")
+							button.btn#btn-zone-searcher(type="button") Appliquer cette zone sur la carte
+							
+
 		
 		div.row-fluid				
 			div.control-group#statusGroup
@@ -39,7 +46,51 @@ mixin zoneForm()
 	script
 	
 		$(document).ready(function() {
+				
+			$('#boxArea').typeahead({
+				minLength : 3,							
+				source: function (typeahead, query) {
+					if(query.length >= 3){
+						encodeURIComponent(query);
+						$("#boxArea").addClass('searching');
+						var addressQuery = {"address": query ,"region":"fr","language":"fr"};
+						var geocoder = new google.maps.Geocoder();
+						geocoder.geocode( addressQuery, function(results, status) {						
+							if (status == google.maps.GeocoderStatus.OK) {
 
+								$.map( results, function( item ) {fixGmapResult(item);});
+
+								typeahead.process(results);
+								//console.log(results);
+								$("#boxArea").removeClass('searching');
+							} 
+						});
+					}
+				},
+				property: "formatted_address",
+				onselect: function(obj) { 
+					$("#boxArea").removeClass('searching');
+					
+					var placeGmap = getPlaceFromGmapResult(obj);
+
+					$('#boxArea').val(placeGmap.title);
+					$("#zoneForm #latBL").val(placeGmap.bounds.bl.lat);
+					$("#zoneForm #lngBL").val(placeGmap.bounds.bl.lng);
+					$("#zoneForm #latCT").val(placeGmap.location.lat);
+					$("#zoneForm #lngCT").val(placeGmap.location.lng);
+					$("#zoneForm #latTR").val(placeGmap.bounds.tr.lat);
+					$("#zoneForm #lngTR").val(placeGmap.bounds.tr.lng);
+				
+					var latLng = new google.maps.LatLng(placeGmap.location.lat,placeGmap.location.lng);
+					map.panTo(latLng);
+					placeMarker(latLng,markerLocation);
+					var latLngBL = new google.maps.LatLng(placeGmap.bounds.bl.lat,placeGmap.bounds.bl.lng);
+					var latLngTR = new google.maps.LatLng(placeGmap.bounds.tr.lat,placeGmap.bounds.tr.lng);
+					markerLocationBL.setPosition(latLngBL);
+					markerLocationTR.setPosition(latLngTR);
+					drawRect();
+				}
+			});
 				
 		});
 		

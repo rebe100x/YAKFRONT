@@ -1149,7 +1149,7 @@ Yakcat.statics.countUnvalidated = function (callback) {
 }
 
 Yakcat.statics.findAll = function (callback) {
-  return this.find({},{},{sort:{title:1}}, callback);
+  return this.find({status:1},{},{sort:{title:1}}, callback);
 }
 Yakcat.statics.searchOne = function (str,callback) {
 	searchStr = new RegExp(str,'i');

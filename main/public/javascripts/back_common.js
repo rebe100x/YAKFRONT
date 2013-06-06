@@ -62,6 +62,7 @@ $('#favplace,#favplace2').typeahead({
 				geocoder.geocode( addressQuery, function(results, status) {
 				
 					if (status == google.maps.GeocoderStatus.OK) {
+						$.map( results, function( item ) {fixGmapResult(item);});
 						typeahead.process(results);
 					} 
 					

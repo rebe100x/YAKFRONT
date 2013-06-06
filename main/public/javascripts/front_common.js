@@ -303,6 +303,7 @@ function setshortUrl()
 		}
 		if ($(this).find(".buttons").length == 0) {
 			var more = $(this);
+			
 			$.getJSON("https://api-ssl.bitly.com/v3/shorten?", 
 	        { 
 	            "format": "json",
@@ -310,7 +311,7 @@ function setshortUrl()
 	            "login": "o_5ko6l8pajb",
 	            "longUrl": conf.fronturl + "/news/feed/?id=" + more.parent().parent().parent().find(".more").attr("rel")
 	        }, function(data){
-	        	
+	        	console.log(data);
 	        	more.parent().parent().parent().find(".more").attr("title", data.data.url);
 	        	setShare(more);
 	        }
@@ -648,32 +649,33 @@ $(document).ready(function() {
     '/images/yakwala_sprite-medium.png'
 	]);*/
 	
-	if(user.gravatarStatus == 1)
-	{
-		setGravatar();
-	}
-	if(typeof(user.social) != 'undefined')
-	{
-		if(typeof(user.social.twitter[0]) != 'undefined')
+	if(typeof user != 'undefined'){
+		if(user.gravatarStatus == 1)
+			setGravatar();
+		if(typeof(user.social) != 'undefined')
 		{
-			if(typeof(user.social.twitter[0].friendsList) == 'undefined')
+			if(typeof(user.social.twitter[0]) != 'undefined')
 			{
-				(function($) {
-					var url = 'https://api.twitter.com/1/following/ids.json?cursor=-1&screen_name='+user.social.twitter[0].screen_name;
-					$.ajax({
-					type: 'GET',
-					url: url,
-					async: false,
-					contentType: "application/json",
-					dataType: 'jsonp',
-					success: function(data){ 
-						$.post('/user/settwitterFriend', { friendList : data.ids });
-					}
-					});
-				})(jQuery);	
+				if(typeof(user.social.twitter[0].friendsList) == 'undefined')
+				{
+					(function($) {
+						var url = 'https://api.twitter.com/1/following/ids.json?cursor=-1&screen_name='+user.social.twitter[0].screen_name;
+						$.ajax({
+						type: 'GET',
+						url: url,
+						async: false,
+						contentType: "application/json",
+						dataType: 'jsonp',
+						success: function(data){ 
+							$.post('/user/settwitterFriend', { friendList : data.ids });
+						}
+						});
+					})(jQuery);	
+				}
 			}
-		}
+		}	
 	}
+	
 	
 	$(".myMedia a").click(function(){
 		var popup = $(this).attr("rel");
@@ -816,6 +818,7 @@ $(document).ready(function() {
 				geocoder.geocode( addressQuery, function(results, status) {
 				
 					if (status == google.maps.GeocoderStatus.OK) {
+						$.map( results, function( item ) {fixGmapResult(item);});
 						typeahead.process(results);
 					} 
 					
@@ -1086,14 +1089,14 @@ function getformattedAddress(position){
 	var geocoder = new google.maps.Geocoder();
 	geocoder.geocode( geoQuery, function(results, status) {
 		if (status == google.maps.GeocoderStatus.OK) {
-			$('#place').val(results[0].formatted_address).select();
-			var placeGmap = getPlaceFromGmapResult(results[0]);
-			//console.log(results);
+			var result = fixGmapResult(results[0]);
+			$('#place').val(result.formatted_address).select();
+			var placeGmap = getPlaceFromGmapResult(result);			
 			placeArray.push(placeGmap);
 
 			$("#placeInput").val(JSON.stringify(placeArray));
 			
-			$('#btn-place-adder').parent().before("<div class='pillItem'><i class='icon-remove' onclick='placeArray.cleanArrayByLocation("+results[0].geometry.location.Ya+","+results[0].geometry.location.Za+");$(\"#placeInput\").val(JSON.stringify(placeArray));$(this).parent().remove();'></i> "+results[0].formatted_address+"</div>");
+			$('#btn-place-adder').parent().before("<div class='pillItem'><i class='icon-remove' onclick='placeArray.cleanArrayByLocation("+result.geometry.location.lat+","+result.geometry.location.lat+");$(\"#placeInput\").val(JSON.stringify(placeArray));$(this).parent().remove();'></i> "+result.formatted_address+"</div>");
 		} else {
 			var salt = new Date().getTime();
 			$('#btn-place-adder').parent().before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide ("+status+")</div>");

@@ -66,27 +66,6 @@
 			//console.log('SEARCH CLICK='+str);
 			var placeName = $('#searchPlaceStr').val();
 			
-			// if(placeName.length >= 2 ){
-			// 	console.log('ONSEARCH');
-			
-			// 	var addressQuery = {"address": placeName ,"region":"fr","language":"fr"};
-			// 	var geocoder = new google.maps.Geocoder();
-			// 	geocoder.geocode( addressQuery, function(results, status) {						
-			// 	if (status == google.maps.GeocoderStatus.OK) {
-			// 		var placeGmap = getPlaceFromGmapResult((results[0]));
-			// 		var location = JSON.stringify({lat:curPos.x,lng:curPos.y});				
-			// 		changeLocation(location);
-			
-			// 	}else{
-			// 		/*var salt = new Date().getTime();
-			// 		$('#searchStr').before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide</div>");
-			// 		setTimeout(function() {
-			// 			$("#alert"+salt).fadeOut();
-			// 		}, 3000);
-			// 		*/
-			// 	} 
-			// 	});
-			// }
 			
 			var localSearchString = decodeURIComponent(str);
 			if(str != 'Quoi ?' && str != ''){
@@ -376,6 +355,7 @@
 						var geocoder = new google.maps.Geocoder();
 						geocoder.geocode( addressQuery, function(results, status) {						
 						if (status == google.maps.GeocoderStatus.OK) {
+							$.map( results, function( item ) {fixGmapResult(item);});
 							typeahead.process(results);
 							$("#place").removeClass('searching');
 						} 
@@ -400,15 +380,15 @@
 					var geocoder = new google.maps.Geocoder();
 					geocoder.geocode( addressQuery, function(results, status) {
 						if (status == google.maps.GeocoderStatus.OK) {
-							//map.setCenter(results[0].geometry.location);
-							map.panTo(results[0].geometry.location);
+							var result = fixGmapResult(results[0]);
+							map.panTo(result.geometry.location);
 							markerLocation.setVisible(true);
-							markerLocation.setPosition(results[0].geometry.location);
-							placeMarker(results[0].geometry.location,markerLocation);
-							var placeGmap = getPlaceFromGmapResult(results[0]);
+							markerLocation.setPosition(result.geometry.location);
+							placeMarker(result.geometry.location,markerLocation);
+							var placeGmap = getPlaceFromGmapResult(result);
 							placeArray.push(placeGmap);
 							$("#placeInput").val(JSON.stringify(placeArray));
-							$('#btn-place-adder').parent().before("<div class='pillItem'><i class='icon-remove icon-pointer' onclick='placeArray.cleanArrayByLocation("+results[0].geometry.location.Ya+","+results[0].geometry.location.Za+");$(\"#placeInput\").val(JSON.stringify(placeArray));$(this).parent().remove();'></i> "+results[0].formatted_address+"</div>");
+							$('#btn-place-adder').parent().before("<div class='pillItem'><i class='icon-remove icon-pointer' onclick='placeArray.cleanArrayByLocation("+result.geometry.location.lat+","+result.geometry.location.lng+");$(\"#placeInput\").val(JSON.stringify(placeArray));$(this).parent().remove();'></i> "+result.formatted_address+"</div>");
 							
 						} else {
 							var salt = new Date().getTime();
@@ -868,7 +848,8 @@
 			var curLatLng = new google.maps.LatLng(curPos.x, curPos.y);
 			geocoder.geocode( {'latLng': curLatLng}, function(results, status) {						
 				if (status == google.maps.GeocoderStatus.OK) {
-					var placeGmap = getPlaceFromGmapResult((results[0]));
+					var result = fixGmapResult(results[0]);
+					var placeGmap = getPlaceFromGmapResult(result);
 					$("#searchPlaceStr").val(placeGmap.address.city + ", " + placeGmap.address.country);
 				}
 			});	
