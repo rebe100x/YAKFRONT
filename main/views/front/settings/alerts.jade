@@ -99,10 +99,11 @@ block content
 				if(event.which == 13 && $.trim($("#alert").val()) != "")
 				{
 					var tag = $('#alert').val();
-					$("label[for='alert']").after("<div><i class='icon-remove icon-pointer'  onclick='tagsubsArray.cleanArrayByName(\""+tag+"\");$(\"#tagsubsInput\").val(JSON.stringify(tagsubsArray));$(this).parent().remove();'></i> "+tag+"</div>");
+					$("label[for='alert']").after("<div><i class='icon-remove icon-pointer'  onclick='tagsubsArray.cleanArrayByName(\""+tag+"\");$(\"#tagsubsInput\").val(JSON.stringify(tagsubsArray));$(this).parent().remove(); clickSubmit(this);'></i> "+tag+"</div>");
 					$('#alert').val('').focus();
 					tagsubsArray.push(tag);
 					$("#tagsubsInput").val(JSON.stringify(tagsubsArray));
+					clickSubmit(this);
 					var trackParams = {"params": [
 										{"type": "tag"},
 									]
@@ -112,7 +113,7 @@ block content
 						type: "get",
 						dataType: "json"
 					});
-					//clickSubmit(this);
+					
 				}
 			});
 			//console.log(usersubsArray);
@@ -162,7 +163,7 @@ block content
 					onselect: function(obj) {
 						usertoSearch = obj.humanName;
 						if(!feedsubsArray.inArrayId(obj._id)){
-							$("label[for='userfeeds']").after("<div><i class='icon-remove icon-pointer'  onclick='feedsubsArray.cleanArray(\""+obj._id+"\");$(\"#feedsubsInput\").val(JSON.stringify(feedsubsArray));$(this).parent().remove(); clickSubmit(this);'></i> "+obj.humanName+"</div>");
+							$("label[for='userfeeds']").after("<div><i class='icon-remove icon-pointer'  onclick='feedsubsArray.cleanArray(\""+obj._id+"\");$(\"#feedsubsInput\").val(JSON.stringify(feedsubsArray));$(this).parent().remove(); clickSubmit(this); clickSubmit(this);'></i> "+obj.humanName+"</div>");
 							$('#userfeeds').val('').focus();
 							feedsubsArray.push(obj);
 							$("#feedsubsInput").val(JSON.stringify(feedsubsArray));
