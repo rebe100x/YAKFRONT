@@ -83,6 +83,7 @@ mixin post_flicker
 			$("#FlickerResults").html(html);
 
 			$("#FlickerResults ul li").click(function(){
+				$(this).find(".yakPosterLogo").hide();
 				var frame = '<div>' + $(this).html() + '<span style="cursor: pointer; position: relative; float: right" onclick="removeframe(this)">X</span></div>'
 				$("#post_yakFlickr").prepend(frame);
 				//$('#post_youtube').modal('hide');
