@@ -17,12 +17,15 @@ input.error{background-color:#FF0000;}
 
 /*jquery fix*/
 .ui-widget-content a{color:#000000;}
+
 /*bootsrap fixes*/
 @media (max-width: 979px) {
   .navbar-fixed-top {margin-bottom: 0px;}
 }
 .row-fluid [class*="span"] {min-height: 1px;}
+.popover-title{margin-top:2px;color:#000000;}
 .fuelux .datagrid thead .datagrid-header-left .search{margin-left: 0px;}
+/*fuelux fixes*/
 .fuelux .grid-pager input{line-height: 30px;margin-top: 0px;height: 30px;}
 
 table.table-nohover tbody tr td:hover,  table.table-nohover thead tr th:hover {background:#f89406;cursor:pointer;color:#FFF;} 

@@ -30,19 +30,23 @@ mixin feedForm()
 							input(type='text', name='humanName', id='humanName', placeholder='Le nom du flux')
 						.span6
 							label Imagette:
+								i.icon-question-sign#imagetteHelp
 							span#picturePreview
 								img.img-rounded(style='width:100px;display:none;')
 							input.span6#picture(type="file",style="display:block",name="picture")
 					div.row-fluid
 						.span6
 							label Licence*:
+								i.icon-question-sign#licenceHelp
 							input(type='text', name='licence', id='licence', placeholder='Licence')
 						.span6
 							label Lien externe:
+								i.icon-question-sign#linkHelp
 							input(type='text', name='link', id='link', placeholder='Lien vers la source de la donnée')
 					div.row-fluid
 						.span6
 							label Combien de jours l info restera sur le front ?*
+								i.icon-question-sign#persistDaysHelp
 							div.input-append.dropdown.combobox#persistDays
 								input(type='text', placeholder="Jours de persistence", name="persistDays", id="persistDaysValue")
 								button.btn(data-toggle="dropdown", tabindex="-1")
@@ -64,12 +68,14 @@ mixin feedForm()
 										a(href="") 365
 						.span6
 							label Description:
+								i.icon-question-sign#descriptionHelp
 							textarea#description.span12(name='description', placeholder='Description',rows='3')
 		div.row-fluid
 			legend Metadata:		
 			div.control-group#yakType.row-fluid
 				.span12
 					label Type info:
+						i.icon-question-sign#yakTypeHelp
 					label.radio.inline Actu
 						input(type="radio", name="yakType", value="1")
 					label.radio.inline Agenda
@@ -81,11 +87,13 @@ mixin feedForm()
 				div.controls.row-fluid
 					.span6
 						label(for='category') Catégories
+							i.icon-question-sign#yakcatHelp
 						input#yakcat(type="text", data-provide="typeahead", name="yakcat", autocomplete="off", placeholder='Chercher une catégorie...')
 						.pillbox#pillYakcat(style="display:none")
 							ul
 					.span6
 						label Tags
+							i.icon-question-sign#freetagHelp
 						.input-append
 							input#freetag(type="text", data-provide="typeahead", name="freetag", autocomplete="off", placeholder='Entrer un tag...')
 							button.btn#btn-freetag-adder(type="button") Ajouter	
@@ -97,9 +105,11 @@ mixin feedForm()
 				div.controls.row-fluid	
 					.span6
 						label(for='defaultPlaceName') Localisation du flux:
+							i.icon-question-sign#defaultPlaceNameHelp
 						input(type="text",data-provide="typeahead", id="defaultPlaceName", name="defaultPlaceName", autocomplete="off", placeholder="Chercher...")
 					.span6
 						label Si l'info n'est pas géolocalisée...	
+							i.icon-question-sign#defaultPrintFlagHelp
 						select.big#defaultPrintFlag(name='defaultPrintFlag')
 							option(value="0") ... ne pas afficher sur la carte mais afficher sur le fil info
 							option(value="1") ... afficher sur la carte + fil info
@@ -108,10 +118,12 @@ mixin feedForm()
 				div.controls.row-fluid	
 					.span6
 						label(for='defaultPlaceSearchName') Texte de recherche sur Google Map:
+							i.icon-question-sign#defaultPlaceSearchNameHelp
 						input(type="text", id="defaultPlaceSearchName", name="defaultPlaceSearchName", autocomplete="off", placeholder="Texte de recherche sur google map.")
 				div.controls.row-fluid	
 					.span6
 						label(for='zone') Zone:
+							i.icon-question-sign#zoneHelp
 						select.big#zone(name='zone')
 
 		div.row-fluid
@@ -120,6 +132,7 @@ mixin feedForm()
 				div.controls.row-fluid		
 					.span6			
 						label Uploader un fichier : 
+							i.icon-question-sign#fileuploadHelp
 						input(type="file", id="fileupload", name="files[]", data-url="http://localhost:"+JSON.parse(conf).fileport, multiple)
 						div#progress
 							div.bar.alert.alert-success(style="width: 0%;")
@@ -128,6 +141,7 @@ mixin feedForm()
 							ul
 					.span6
 						label Source(s) web
+							i.icon-question-sign#sourceHelp
 						.input-append	
 							input.big(type='text', name='source', id='source', placeholder='http://...')
 							button.btn#btn-source-adder(type="button") Ajouter
@@ -139,6 +153,7 @@ mixin feedForm()
 				div.controls.row-fluid
 					.span6
 						label Type de flux : 
+							i.icon-question-sign#feedTypeHelp
 						select#feedType(name='feedType')
 							option(value="XML") XML
 							option(value="CSV") CSV
@@ -149,12 +164,15 @@ mixin feedForm()
 							span.alertText
 						div#parsingParam
 							label.rootElementGroup Root Element:
+								i.icon-question-sign#rootElementHelp
 							input.rootElementGroup#rootElement(type="text",name="rootElement",placeholder="Root du fichier",,value='/rss/channel/item')	
 							label.lineToBeginGroup Commencer à la ligne numéro:
+								i.icon-question-sign#lineToBeginHelp
 							input.lineToBeginGroup#lineToBegin(type="text",name="lineToBegin",placeholder="Ligne de début du parsing",value="0")	
 
 					.span6
-						label Fréquence du parsing : 
+						label Fréquence du parsing :
+							i.icon-question-sign#parsingFreqHelp
 						select#parsingFreq(name='parsingFreq')
 							option(value="30") toutes les 30min
 							option(value="60") toutes les 1h
@@ -287,12 +305,6 @@ mixin feedForm()
 			div.modal-footer
 				button.btn.btn-primary.btn-warning(type="button", data-dismiss="modal", aria-hidden="true") OK
 
-			div.popover.fade.right.in(style="top: 12.5px; left: 242px; display: block;")
-				div.arrow
-				h3.popover-title A Title
-				div.popover-content
-					And here's some amazing content. It's very engaging. right?
-
 	
 	script
 
@@ -307,9 +319,29 @@ mixin feedForm()
 		
 		$(document).ready(function() {
 
-		
-			$('#titleHelp').popover({animation:true,title:'Le nom du flux',content:"C'est son nom",html:true});
-			
+			$('#titleHelp').popover({animation:true,title:'Le nom du flux',content:"<p>Le nom du flux apparait sur le front comme le nom d'un utilisateur.</p><br /><p><img width='100%' src='/images/back/help/cap1.jpg' /></p>",html:true});
+			//$('#titleHelp').tooltip({title:"<label>Le titre du flux</label><p>Le nom du flux apparait sur le front comme le nom d'un utilisateur.</p><p><img src='/images/back/help/cap1.jpg' /></p>",html:true})
+			$('#imagetteHelp').tooltip({title:'<label>Le titre du flux</label><div>Nommez votre flux de façon pertinente!</div>',html:true})
+			/*
+			lineToBeginHelp
+			rootElementHelp
+			feedTypeHelp
+			sourceHelp
+			fileuploadHelp
+			zoneHelp
+			defaultPlaceSearchNameHelp
+			defaultPrintFlagHelp
+			defaultPlaceNameHelp
+			freetagHelp
+			yakcatHelp
+			yakTypeHelp
+			descriptionHelp
+			persistDaysHelp
+			linkHelp
+			licenceHelp
+			imagetteHelp*/
+
+
 			listenerHandle = google.maps.event.addListener(map, 'click', function(event) {
 				placeMarker(event.latLng,markerLocation);
 				getformattedAddress(event.latLng);
