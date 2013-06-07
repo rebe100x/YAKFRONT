@@ -1,8 +1,7 @@
 mixin list()
-	style
-		.fuelux select { width: auto; max-width: 120px;} 
-		.fuelux .datagrid tfoot .datagrid-footer-right .grid-pager .combobox { width: auto;}
-		
+	div.error#errContainer(style='display:none;')
+		button.close(type="button", data-dismiss="alert") &times;
+		span.alert#err(type="text", id="err", name="err")
 	table#MyGrid.table.table-bordered.datagrid
 		thead
 			tr.headerControle
@@ -229,6 +228,7 @@ mixin list()
 						item.last_date_mark = formatDate(item.last_date_mark);
 						item.content_type = makeContentType(item.content_type);
 						item.content = fillContent(item);
+						item.count = item.count + ' fois';
 					});
 				}
 			})
@@ -267,25 +267,23 @@ mixin list()
 		}
 
 		function makeDeleteOption(item){
-			console.log(item);
 			var removeIcon = $("<i />");
 			if(item.status == 1){
 				removeIcon.attr("class", "icon-remove deleteAcomment");
 				removeIcon.attr("val_content_id", item.content_id);
+				removeIcon.attr("val_poster_id", item.poster_id);
 				removeIcon.attr("val_content_type", item.content_type);
 				removeIcon.attr("val_id", item._id);
 				if(typeof item.info_id != 'undefined' && item.info_id != '')
 					removeIcon.attr("val_infoid", item.info_id);
 				removeIcon.css("cursor", "pointer");
-				if(item.content_type == 2)
-					removeIcon.attr("title", "Attention une fois supprimés, les commentaires ne peuvent être rétablis!");
-				else
-					removeIcon.attr("title", "Supprimer cette donnée");
+				removeIcon.attr("title", "Supprimer cette donnée");
 				removeIcon.attr("onclick", "changeStatusIllicite(this,2)");
 			}else{
 				removeIcon.attr("class", "icon-ok deleteAcomment");
 				removeIcon.attr("val_content_id", item.content_id);
 				removeIcon.attr("val_content_type", item.content_type);
+				removeIcon.attr("val_poster_id", item.poster_id);
 				removeIcon.attr("val_id", item._id);
 				removeIcon.css("cursor", "pointer");
 				if(typeof item.info_id != 'undefined' && item.info_id != '')
@@ -301,31 +299,30 @@ mixin list()
 		function changeStatusIllicite(el,status){
 			var content_type = $(el).attr("val_content_type");
 			var content_id = $(el).attr("val_content_id");
+			var poster_id = $(el).attr("val_poster_id");
 			var _id = $(el).attr("val_id");	
 			// for comments push the infoID
 			if(content_type == 2)
 				var info_id = $(el).attr("val_infoid");
 			else
 				var info_id = '';
-
-			$.post("/changeStatusIllicite/", {content_id: content_id, content_type: content_type, _id: _id,info_id:info_id,status:status}, function(data){
-				$(el).parent().parent().hide();
+			var oldClass = $(el).attr('class');
+			$(el).attr('class','searching');
+			$.post("/changeStatusIllicite/", {content_id : content_id , content_type : content_type, _id : _id , info_id : info_id , poster_id : poster_id , status:status}, function(data){
+				console.log(data);
+				if(data.meta.code == 200){
+					$(el).parent().parent().hide();
+					if(data.meta.mail == 1)
+						$('#err').html('Un email a été envoyé !');
+					else
+						$('#err').html('Ok');
+					$('#errContainer').show();	
+					$(el).attr('class',oldClass);
+				}
+				
 			});
 		}
 
-		
-		function setNewStatus(el){
-			var _id = $(el).attr("rel");
-			$(el).after("<span class='updateStatus'>loading...</span>");
-			$(el).attr("disabled", "disabled");
-			$.post("/user/setStatus", {status: $(el).val(), _id : $(el).attr("rel")}, function(data){
-					if(data.meta.code == "200")
-					{
-						$(el).removeAttr("disabled");
-						$(el).parent().find(".updateStatus").remove();
-					}
-				});
-		}
 
 		function fillContent(item) {
 			var res = "";

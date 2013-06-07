@@ -1255,9 +1255,8 @@ function setCommentSpam(el)
 					+'<br><b>Posté par </b><a target="_blank" href="'+conf.fronturl+'/news/feed/?idprofile='+$(el).parent().parent().find('.comment').attr('idposter')+'">'+$(el).parent().parent().find('.username').html()+'</a>'
 					+'<br><b>Signalé par </b><a target="_blank" href="'+conf.fronturl+'/news/feed/?idprofile='+user._id+'">@'+user.login+'</a>'
 					+'&nbsp;'+$(el).parent().parent().find('.timeago').html();
-	$.post('/setSpams', {content_id : $(el).attr("rel"), content_type : 2,content : content , info_id: infoid} , function(res){
-		if (res != "0")
-		{
+	$.post('/setSpams', {content_id : $(el).attr("rel"), content_type : 2,content : content , info_id: infoid, poster_id : $(el).parent().parent().find('.comment').attr('idposter')} , function(res){
+		if (res != "0"){
 			el.remove();
 			user.illicite = user.illicite.concat(res)
 		}
@@ -1366,7 +1365,7 @@ function setyakBlackListSystem(item)
 	});
 }
 
-function setSpamSystem(item){
+function setSpamSystem(item,theinfo){
 	var isSpammed = false;
 
 	$.each(user.illicite, function(key, val){
@@ -1387,16 +1386,13 @@ function setSpamSystem(item){
 			if(typeof $(this).parent().parent().find(".thumbImage").html() != 'undefined')
 				theimg = $(this).parent().parent().find(".thumbImage").html().replace('512_0','120_90');
 			var thecontent = $(this).parent().parent().find(".yakTypeImage").html()+' '+$(this).parent().parent().find(".itemTitle").html()+'<br>'+theimg+'<br>'+$(this).parent().parent().find(".theContent").html()+'<br>'+$(this).parent().parent().find(".infodetail").html()+'<br>'+thetags;
-			$.post('/setSpams', {content_id : $(this).attr("rel"), content_type : 1, content: thecontent} , function(res){
-						if (res != "0")
-						{
-							item.html("<i class='signalerIcon'></i>Vous avez déjà signalé cette info");
-							item.alertid = res;
-							user.illicite = user.illicite.concat(res)
-						}
-
-				});
-
+			$.post('/setSpams', {content_id : $(this).attr("rel"), content_type : 1, content: thecontent, poster_id:theinfo.user} , function(res){
+				if (res != "0"){
+					item.html("<i class='signalerIcon'></i>Vous avez déjà signalé cette info");
+					item.alertid = res;
+					user.illicite = user.illicite.concat(res)
+				}
+			});
 		});
 	}
 	else

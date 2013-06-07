@@ -228,7 +228,52 @@ function auth (schema, options) {
 	})
 	
 
+// Send an email with the validation link or the validation code
+  schema.static('sendIlliciteMail', function ( mail, content, cb) {
 
+    var nodemailer = require("nodemailer");
+    var fs = require('fs');
+    var error = '';
+    var messageSubject = '';
+    var headerContent = ''
+    var mailTemplate = __dirname+'/../views/mails/contenuIllicite.html';
+    messageSubject = "Modération d'un de vos contenu"; 
+    headerContent = "Un de vos contenu a été désactivé";
+    var logo = conf.fronturl+"/static/images/yakwala-logo_petit.png";
+
+    fs.readFile(mailTemplate, 'utf8', function(err, data) {
+      data = data.replace("*|MC:SUBJECT|*","Votre inscription");
+      data = data.replace("*|MC:HEADERIMG|*",logo);
+      data = data.replace("*|MC:ILLICITECONTENT|*",content);
+      data = data.replace("*|CURRENT_YEAR|*",new Date().getFullYear());
+      var config_secret = require('../confs_secret.js');
+      var secretConf = config_secret.confs_secret;
+      var smtpTransport = nodemailer.createTransport("SES", {
+        AWSAccessKeyID: secretConf.S3.accessKeyId,
+        AWSSecretKey: secretConf.S3.secretAccessKey,
+      });
+
+      var mailOptions = {
+        from: "Labs Yakwala <labs.yakwala@gmail.com>", // sender address
+        to: mail, // list of receivers
+        subject: messageSubject, // Subject line
+        text: "Bonjour, \r\n Un de vos contenu a été modéré : " + content, // plaintext bod
+        html: data
+      } 
+
+      smtpTransport.sendMail(mailOptions, function(error, response){
+        if(error)
+          console.log(error);
+        else
+          console.log(response);
+        smtpTransport.close(); // shut down the connection pool, no more messages
+        console.log('---return');
+        cb(error);
+      });
+    });
+
+    
+  })
 
   // Send an email with the validation link or the validation code
   schema.static('sendValidationMail', function ( link, mail, template, logo, next) {

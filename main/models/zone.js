@@ -41,7 +41,7 @@ Zone.statics.findAll = function (callback) {
   return this.find({}, callback);
 }
 
-Zone.statics.findGridZones = function (pageIndex, pageSize, searchTerm, sortProperties, sortDirections, status, currUser, callback) {
+Zone.statics.findGridZones = function (pageIndex, pageSize, searchTerm, sortProperties, sortDirections, status, callback) {
 	var conditions = {
 		"name" : new RegExp(searchTerm, 'i')
 	};
@@ -55,7 +55,6 @@ Zone.statics.findGridZones = function (pageIndex, pageSize, searchTerm, sortProp
 		sortBy[sortProperties[index]] = desc;
 	}
 
-	conditions["_id"] = { $ne: currUser };
 
 	if (status >= 0) {
 		conditions["status"] = status;
@@ -72,5 +71,20 @@ Zone.statics.findGridZones = function (pageIndex, pageSize, searchTerm, sortProp
 		},
 		callback);
 }
+
+Zone.statics.countSearch = function (searchTerm, status, callback) {
+	var search = new RegExp(searchTerm, 'i');
+
+	var conditions = {
+		"name" : search
+	};
+
+	if(status >= 0)
+		conditions["status"] = status;
+		
+	return this.count(conditions, callback)-1;
+}
+
+
 mongoose.model('Zone', Zone);
 

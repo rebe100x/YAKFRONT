@@ -372,6 +372,7 @@ var contenuIllicite = new Schema({
 	content_id : { type : Schema.ObjectId }
 	,user_id : { type : [Schema.ObjectId] }
 	,info_id : { type : Schema.ObjectId }
+	,poster_id : { type : Schema.ObjectId }
 	,last_date_mark : {type: Date, default: Date.now }
 	,content_type : { type : Number, default: 1 } // 1 info, 2 comments , 3 users
 	,count : { type : Number, default : 1}
@@ -1130,7 +1131,7 @@ mongoose.model('Info', Info);
 
 
 
-/******************************YAKCAT*/
+//#YAKCAT
 var Yakcat = new Schema({
     title     : { type: String, index:true, required: true}
   , path       : { type:String }
@@ -1210,6 +1211,19 @@ Yakcat.statics.findGridYakcats = function (pageIndex, pageSize, searchTerm, sort
 		callback);
 }
 
+Yakcat.statics.countSearch = function (searchTerm, status, callback) {
+	var search = new RegExp(searchTerm, 'i');
+
+	var conditions = {
+		"title" : search
+	};
+
+	if(status >= 0)
+		conditions["status"] = status;
+	
+	
+	return this.count(conditions, callback)-1;
+}
 mongoose.model('Yakcat', Yakcat);
 
 

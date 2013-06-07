@@ -1397,7 +1397,7 @@
 			var yakSpam = $("<span />");
 			yakSpam.attr("class", "yakSpam");
 			yakSpam.attr("rel", val._id);
-			setSpamSystem(yakSpam);
+			setSpamSystem(yakSpam,val);
 			item.append(yakSpam);
 			}
 

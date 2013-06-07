@@ -1437,14 +1437,24 @@ exports.setSpams = function(req, res){
 	var User = db.model('User');
 
 	var aspamAlert = new contenuIllicite();
-	aspamAlert.content_id = req.body.content_id;
-	aspamAlert.user_id = req.session.user;
+	aspamAlert.content_id = mongoose.Types.ObjectId(req.body.content_id);
+	aspamAlert.user_id = mongoose.Types.ObjectId(req.session.user);
 	aspamAlert.content_type = req.body.content_type;
 	aspamAlert.content = req.body.content;
 	aspamAlert.status = 1;
-	if(typeof req.body.info_id != 'undefined' && req.body.info_id != '')
-		aspamAlert.info_id = req.body.info_id;
+	
+	// for users
+	if(req.body.content_type == 3)
+		aspamAlert.poster_id = mongoose.Types.ObjectId(req.body.content_id);
+	else{
+		aspamAlert.poster_id = mongoose.Types.ObjectId(req.body.poster_id);
+	}
+		
+	// for comments
+	if(req.body.content_type == 2)
+		aspamAlert.info_id = mongoose.Types.ObjectId(req.body.info_id);
 
+console.log(aspamAlert);
 	if(req.session.user){
 			contenuIllicite.findByUserInfoType(req.body.content_id, req.body.content_type, function (err, thealert){
 				//log
