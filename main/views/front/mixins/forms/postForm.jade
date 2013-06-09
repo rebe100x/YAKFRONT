@@ -196,10 +196,7 @@ mixin postForm()
 						$('#title').before('<div class="alert alert-error"><strong>Erreur: </strong> Indiquez un titre pour votre info !</div>').focus();
 						err = true;
 					}			
-					if($('#content').val() == "undefined" || $.trim($('#content').val()) == ""){
-						$('#content').before('<div class="alert alert-error"><strong>Erreur: </strong> Indiquez un contenu pour votre info !</div>').focus();
-						err = true;
-					}			
+							
 					if($('#placeInput').val() == ""){
 						$('#place').before('<div class="alert alert-error"><strong>Erreur: </strong> Localisez votre info !</div>').focus();
 						err = true;
@@ -258,11 +255,7 @@ mixin postForm()
 						$('#title').before('<div class="alert alert-error"><strong>Erreur: </strong> Indiquez un titre pour votre info !</div>').focus();
 						err = true;
 					}		
-					if($('#content').val() == "undefined" || $.trim($('#content').val()) == ""){
-						$('#content').before('<div class="alert alert-error"><strong>Erreur: </strong> Indiquez un contenu pour votre info !</div>').focus();
-						err = true;
-					}		
-
+				
 					if($('#placeInput').val() == ""){
 						$('#place').before('<div class="alert alert-error"><strong>Erreur: </strong> Localisez votre info !</div>').focus();
 						err = true;

@@ -949,7 +949,7 @@ function getItemDetails(el){
 			more.html(" plus de détails...");
 			
 			
-			content.append("<div class='shareMe' userid='"+user._id+"'><i style='background: none' class='icon-share' title=''><div class='ftgIcon'></div></i></div>");
+			content.append("<div class='shareMe' userid='"+user._id+"'><i style='background: none' rel='"+val._id+"'' class='icon-share' title=''><div class='ftgIcon'></div></i></div>");
 			
 			if(typeof(val.outGoingLink) != 'undefined')
 				content.find(".theContent").append(more);
