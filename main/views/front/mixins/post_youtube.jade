@@ -42,6 +42,7 @@ mixin post_youtube
 
 	script
 		$(document).ready(function(){
+
 			$(".mediaBoxContainer .aTab").click(function(){
 				$(".mediaBoxContainer .aTab.active").removeClass("active");
 				$(this).addClass("active");
@@ -121,6 +122,8 @@ mixin post_youtube
 				//$('#post_youtube').modal('hide');
 				$(this).unbind("click");
 				$(this).css("opacity", "0.4");
+				if($("#socialThumbs").val() == "")
+					$("#socialThumbs").val('http://img.youtube.com/vi/'+$(this).attr("rel")+'/1.jpg');
 			});
 
 		} 

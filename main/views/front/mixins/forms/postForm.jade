@@ -8,6 +8,7 @@ mixin postForm()
 				input#latitude(type="hidden",name="latitude")
 				input#longitude(type="hidden",name="longitude")
 				input#postFormRange(type="hidden",name="postFormRange")
+				input#socialThumbs(type="hidden", name="socialThumbs")
 				input#username(type="hidden", name="username",value=locals.user.login)
 				h3
 					span.posterInfo
@@ -95,6 +96,7 @@ mixin postForm()
 				input#latitude(type="hidden",data-provide="typeahead", name="latitude")
 				input#longitude(type="hidden",data-provide="typeahead", name="longitude")
 				input#postFormRange(type="hidden",name="postFormRange")
+				input#socialThumbs(type="hidden", name="socialThumbs")
 				input#username(type="hidden", name="username",value=locals.user.login)
 				h3
 					span.posterInfo

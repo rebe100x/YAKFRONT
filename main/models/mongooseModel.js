@@ -553,6 +553,7 @@ var Info = new Schema({
   , yaklikeUsersIds : {type: [String]}
   , yakunlikeUsersIds : {type: [String]}
   , yakComments : {type : [Schema.Types.Comment]}
+  , socialThumbs : { type : [String]}
 }, { collection: 'info' });
 
 //Info.index({location : '2d',pubDate:-1,yakType:1,print:1,status:1});
@@ -603,7 +604,8 @@ Info.statics.format = function (theinfo) {
 		outGoingLink:theinfo.outGoingLink,
 		user: theinfo.user,
 		feed: theinfo.feed,
-		heat: theinfo.heat
+		heat: theinfo.heat,
+		socialThumbs : theinfo.socialThumbs
 	};
   return formattedInfo;
 }

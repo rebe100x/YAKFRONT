@@ -978,6 +978,17 @@
 				infoContent.append(thumbImageCode);
 			
 			}
+			else
+			{
+				if(!(typeof item.socialThumbs === 'undefined'))
+					if(item.socialThumbs.length > 0)
+					{
+						var thumbImageCode = $("<div />");
+						thumbImageCode.attr("class", "thumbImage");
+						thumbImageCode.append("<img src=\'"+item.socialThumbs[0]+"\' />");
+						infoContent.append(thumbImageCode);
+					}
+			}
 			var yakTypeImage = $("<div />");
 			yakTypeImage.attr("class", "yakTypeImage yakTypeImage" + item.yakType);
 			//yakTypeImage.html("<img src='/images/markers/new/type" + item.yakType + ".png' />");

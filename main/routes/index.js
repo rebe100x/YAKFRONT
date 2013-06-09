@@ -392,7 +392,7 @@ exports.news = function(req, res){
 					//console.log(req.session.user);
 					info.user = mongoose.Types.ObjectId(req.session.user);
 					info.origin = "@"+req.body.username;
-					
+					info.socialThumbs = req.body.socialThumbs;
 					info.save(function (err) {
 						if (!err) 
 							{
