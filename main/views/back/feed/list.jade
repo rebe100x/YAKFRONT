@@ -354,7 +354,7 @@ mixin list()
 					$("#feedForm #licence").val(feed.licence);
 					$("#feedForm #link").val(feed.link);
 					$('#feedForm #persistDaysValue').val(feed.persistDays);
-					$("#feedForm #description").text(feed.description);
+					$("#feedForm #description").val(feed.description);
 					if(feed.yakCatId.length > 0)
 						feed.yakCatId.forEach(function(cat){
 							$.get('/api/cats/'+cat,function(data){

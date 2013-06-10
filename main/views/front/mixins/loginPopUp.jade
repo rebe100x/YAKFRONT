@@ -4,9 +4,9 @@ mixin loginPopUp
 	div.modal.hide.fade#loginPopUp
 		div.modal-header
 			span#closeModal(type="button", data-dismiss="modal")
-			h4 Entrer le login et mot de passe du compte à associer ou creer un nouveau
+			h4 Entrer le login et mot de passe du compte Yakwala à associer ou bien créer un nouveau compte:
 		div.modal-body	
-			div(style="text-align: center")
+			div(style="text-align: center;")
 				form(action='/session2', method='POST')
 					div.span7
 						div.control-group
@@ -25,6 +25,6 @@ mixin loginPopUp
 						div.control-group.clearBoth
 							div.controls
 								button#social_create.yakbtnLogin(title="Vous ne possédez pas de compte Yakwala ? Créer le à partir de votre compte social, vous gagnerez du temps !", style="margin-top: 85px; position: relative; top: 5px;", type="button")
-									|Créer	
+									|Créer
 				div.clearBoth
 		div.modal-footer

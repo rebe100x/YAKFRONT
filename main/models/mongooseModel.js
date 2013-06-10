@@ -526,7 +526,7 @@ var Info = new Schema({
   , thumbFlag :{type:Number,default:0}		
   , origin	: {type: String}	
   , access	: {type: Number}
-  , licence	: {type: String}		
+  , licence	: {type: String, default : "Licence Ouverte"}		
   , outGoingLink       : { type: String }  
   , heat	: {type: Number}		
   , print	: {type: Number}		

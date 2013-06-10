@@ -49,7 +49,8 @@ mixin profileForm(type)
 							br
 							|de votre activité :  
 						textarea(name='bio', id='bio',rows='10')
-			
+						span#charNum 120
+						span &nbsp;caratères max
 				div.control-group
 					div.controls
 						div.input-append 
@@ -101,6 +102,8 @@ mixin profileForm(type)
 					div.controls
 						label.control-label(for="bio") Votre biographie :  
 						textarea(name='bio', id='bio',rows='10')
+						span#charNum 120
+						span &nbsp;caratères max
 				div.control-group
 					div.controls
 						div.input-append 

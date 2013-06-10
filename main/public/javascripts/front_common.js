@@ -2033,8 +2033,8 @@ function checkByWidth()
 				if(typeof theuser.thumb != 'undefined')
 					userThumb = theuser.thumbBig;
 
-				if(typeof theuser.bio != 'undefined')
-					userBio = theuser.bio;
+				if(typeof theuser.description != 'undefined')
+					userBio = theuser.description;
 
 				if(typeof theuser.humanName != 'undefined')
 					userName = theuser.humanName;

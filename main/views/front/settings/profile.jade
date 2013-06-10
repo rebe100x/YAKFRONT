@@ -113,7 +113,16 @@ block content
 			$(document).ready(function() {
 
 			
-				
+				$('#bio').on('keyup',function(){
+					var len = $(this).val().length;
+					if (len > 120) {
+						$(this).val($(this).val().substring(0, 120));
+						$('#charNum').css('color','red');
+					} else {
+						$('#charNum').html(120 - len);
+						$('#charNum').css('color','black');
+					}
+				});
 				$('#tagInput').val(JSON.stringify(tagArray));
 			
 

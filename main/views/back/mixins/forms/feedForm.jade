@@ -70,6 +70,8 @@ mixin feedForm()
 							label Description:
 								i.icon-question-sign#descriptionHelp
 							textarea#description.span12(name='description', placeholder='Description',rows='3')
+							span#charNum 120
+							span &nbsp;caratères max
 		div.row-fluid
 			legend Metadata:		
 			div.control-group#yakType.row-fluid
@@ -80,8 +82,6 @@ mixin feedForm()
 						input(type="radio", name="yakType", value="1")
 					label.radio.inline Agenda
 						input(type="radio", name="yakType", value="2")
-					label.radio.inline Info pratiques
-						input(type="radio", name="yakType", value="3")
 				
 			div.control-group
 				div.controls.row-fluid
@@ -117,7 +117,7 @@ mixin feedForm()
 							option(value="2") ... ne pas faire de géoloc et la placer au point par défaut
 				div.controls.row-fluid	
 					.span6
-						label(for='defaultPlaceSearchName') Texte de recherche sur Google Map:
+						label(for='defaultPlaceSearchName') Texte complémentaire pour la recherche de lieu:
 							i.icon-question-sign#defaultPlaceSearchNameHelp
 						input(type="text", id="defaultPlaceSearchName", name="defaultPlaceSearchName", autocomplete="off", placeholder="Texte de recherche sur google map.")
 				div.controls.row-fluid	
@@ -163,9 +163,9 @@ mixin feedForm()
 							button.close(type="button", data-dismiss="alert") x
 							span.alertText
 						div#parsingParam
-							label.rootElementGroup Root Element:
+							label.rootElementGroup Element racine:
 								i.icon-question-sign#rootElementHelp
-							input.rootElementGroup#rootElement(type="text",name="rootElement",placeholder="Root du fichier",,value='/rss/channel/item')	
+							input.rootElementGroup#rootElement(type="text",name="rootElement",placeholder="element racine",value='/rss/channel/item')	
 							label.lineToBeginGroup Commencer à la ligne numéro:
 								i.icon-question-sign#lineToBeginHelp
 							input.lineToBeginGroup#lineToBegin(type="text",name="lineToBegin",placeholder="Ligne de début du parsing",value="0")	
@@ -319,27 +319,36 @@ mixin feedForm()
 		
 		$(document).ready(function() {
 
-			$('#titleHelp').popover({animation:true,title:'Le nom du flux',content:"<p>Le nom du flux apparait sur le front comme le nom d'un utilisateur.</p><br /><p><img width='100%' src='/images/back/help/cap1.jpg' /></p>",html:true});
-			$('#imagetteHelp').popover({animation:true,title:'Imagette',content:"<p>Cette image apparaîtra sur le profil du flux. Pour l'instant elle doit être carrée. </p><br /><p><img width='100%' src='/images/back/help/cap1.jpg' /></p>",html:true});
-			/*
-			lineToBeginHelp
-			rootElementHelp
-			feedTypeHelp
-			sourceHelp
-			fileuploadHelp
-			zoneHelp
-			defaultPlaceSearchNameHelp
-			defaultPrintFlagHelp
-			defaultPlaceNameHelp
-			freetagHelp
-			yakcatHelp
-			yakTypeHelp
-			descriptionHelp
-			persistDaysHelp
-			linkHelp
-			licenceHelp
-			imagetteHelp*/
+			$('#description').on('keyup',function(){
+				var len = $(this).val().length;
+				if (len > 120) {
+					$(this).val($(this).val().substring(0, 120));
+					$('#charNum').css('color','red');
+				} else {
+					$('#charNum').html(120 - len);
+					$('#charNum').css('color','black');
+				}
+			});
 
+			$('#titleHelp').popover({animation:true,title:'Le nom du flux',content:"<p>Le nom du flux apparait sur le front comme le nom d'un utilisateur.</p><br /><p><img width='100%' src='/images/back/help/cap1.jpg' /></p>",html:true});
+			$('#imagetteHelp').popover({animation:true,title:'Imagette',content:"<p>Cette image apparaîtra sur le profil du flux. Pour l'instant elle doit être carrée. </p><br /><p><img width='100%' src='/images/back/help/cap2.jpg' /></p>",html:true});
+			$('#licenceHelp').popover({animation:true,title:'Licence',content:"<p>Le type de licence, par défaut : Licence Ouverte</p>",html:true});
+			$('#linkHelp').popover({animation:true,title:'Line externe',content:"<p>Entrer le lien général vers le site ( ex : pour la version paris intra-muros du parsien : http://www.leparisien.fr/accueil/paris-75.php ) </p>",html:true});
+			$('#persistDaysHelp').popover({animation:true,title:"Temps de persistance de l'info sur le front.",content:"<p>Le nombre de jours que l'info restera sur le front.</p>",html:true});
+			$('#descriptionHelp').popover({animation:true,title:'description',content:"<p>La description apparait dans le profil du flux : <br><img width='100%' src='/images/back/help/cap2.jpg' /></p>",html:true});
+			$('#yakTypeHelp').popover({animation:true,title:"Le type d'info",content:"<p>Les Actus ont une date de publication.<br> Les évènements ont une date de début et de fin, et servent à annoncer des évènements.</p>",html:true});
+			$('#yakcatHelp').popover({animation:true,title:'Catégorie',content:"<p>Vous pouvez associer ce flux à une catégorie Yakwala, ainsi toutes les informations issues de ce flux seront tagguées avec cette catégorie.<br>NB: un dédoublement est automatiquement fait avec les tags et il n'y aura pas de redondance.<br><br> Par ex : le parsien.fr doit être associé avec la catégorie <b>Actualités</b></p>",html:true});
+			$('#freetagHelp').popover({animation:true,title:'Tags',content:"<p>Vous pouvez associer ce flux à un mot clé. Ainsi toutes les infos issues de ce flux seront taggués avec ce mot.<br><br> La liste de restaurant du guide Michelin doit être tagguée avec le mot clé <b>Restaurant</b></p>",html:true});
+			$('#defaultPlaceNameHelp').popover({animation:true,title:'Localisation du flux',content:"<p>Le flux doit être localisé afin de permettre un meilleur filtrage des infos.<br> Selon l'option choisie dans la case suivante ( Si l'info n'est pas géolocalisée... ) L'info sera par défaut placée à ce point.<br><br>Pour le parisien 75, nous plaçons ce point à la mairie de Paris.</p>",html:true});
+			$('#defaultPrintFlagHelp').popover({animation:true,title:'Flag',content:"<p>Ce flag est très important, il permet de régler le comportement du système si l'info n'est pas géolocalisée.<br> En effet, parfois l'info n'est pas géolocalisable ( car elle ne contient pas d'info de lieux ou que l'algo plante ). Dans ce cas, on peut placer l'info soit au point défini juste avant( la localisation du flux ), soit ne pas l'afficher. Dans le cas où on l'affiche, on peut également choisir de ne l'afficher que sur le fil info et pas sur la carte. <br><br> Par exemple le parisen 75 est localisé à la mairie de paris, mais nous ne voulons pas que des infos apparaissent en masse sur la carte à ce point, par contre on veut les voir dans le fil info quand on est pas loin de Paris. Nous avons donc choisi <b>... ne pas afficher sur la carte mais afficher sur le fil info</b><br><br>Pour un flux relatif à un lieu, par exemple le flux du stade vélodrome à Marseille, nous ne faisons pas de géoloc et nous choisissons la <b>ne pas faire de géoloc et place l'info au point par défaut.</b> </p>",html:true});
+			$('#defaultPlaceSearchNameHelp').popover({animation:true,title:'Indice pour la recherche de lieu',content:"<p>Entrer ici un texte qui complète l'information de géolocalisation et donne une précision à l'algo de recherche de lieu afin de distinguer des lieux différents mais ayant le même nom.<br><br>Par exemple un lieu reconnu comme le Musée des Civilisations pourrait être à Marseille ou à Paris. Si votre flux est un flux local à Marseille, il vous faut entrer <b>Marseille, France</b>, ou <b>Bouches-du-Rhône, France</b>. La requète de géoloc sera alors bien plus précise et évitera les doublons avec d'autre lieux du même nom en France.<br><br> Si vous entrez une liste des musées de France, il vous suffit d'entrer <b>France</b>.<br><br> SI vous être trop précis vous perdrez des infos qui aurraient pu être géolocalisées, si vous êtes trop imprécis vous risquez les doublons.</p>",html:true});
+			$('#zoneHelp').popover({animation:true,title:'La zone',content:"<p>Les zones sont définies dans l'onglet Zones.<br> Elles permettent un filtrage des données : toute donnée géolocalisée en dehors de la zone définie est mise en erreur.<br> Cela permet de filtrer les infos nationales ou internationales présentent parfois dans les medias locaux.</p>",html:true});
+			$('#fileuploadHelp').popover({animation:true,title:'Source = Fichier',content:"<p>Vous pouvez uploader vos données sous forme de fichiers. <br> Vous pouvez ajouter autant de fichiers que vous voulez du moment qu'ils suivent le même schéma de parsing.</p>",html:true});
+			$('#sourceHelp').popover({animation:true,title:'Source = Url',content:"<p>Vous pouvez définit une url à parser. <br> Vous pouvez ajouter autant d'url que vous voulez du moment qu'elles suivent le même schéma de parsing.</p>",html:true});
+			$('#feedTypeHelp').popover({animation:true,title:'Type de flux',content:"<p>Regarder l'extension du fichier ou du flux pour définir un des 3 types.</p>",html:true});
+			$('#rootElementHelp').popover({animation:true,title:'Element racine',content:"<p>Dans le cas d'un type XML ou JSON, défnir ici l'élément racine surlequel l'algo doit boucler.<br><br>Par exemple, un flux RSS a la plus part du temps un élément racine /rss/channel/item </p><br><br>Pour un type JSON, indiquer le nom de l'élément surlequel boucler ( souvent item )",html:true});
+			$('#lineToBeginHelp').popover({animation:true,title:'Ligne de commencement',content:"<p>Pour un type CSV, vous pouvez indiquer la ligne de départ afin de ne pas prendre en compte le header oudes lignes vides.</p>",html:true});
+			$('#parsingFreq').popover({animation:true,title:'Fréquence de parsing',content:"<p>Vous aligner ici sur la fréquence de mise à jour de votre flux ou de votre fichier.</p>",html:true});
 
 			listenerHandle = google.maps.event.addListener(map, 'click', function(event) {
 				placeMarker(event.latLng,markerLocation);
