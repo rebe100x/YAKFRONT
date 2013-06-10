@@ -494,7 +494,7 @@ width: 270px;
    #newsfeedContent .mCSB_scrollTools { right: -3px}
    #locationChooser {top:40%;}
    #userChooser { top: 40%;}
-   .theContent iframe { height: 450px; width: 100%;}
+   .theContent iframe.youtubeFrame { height: 450px; width: 100%;}
    .infowindow .yakTypeImage1 {  background-image: url('/images/yakwala_sprite.png'); background-position: -133px 739px; width: 15px;}
    .infowindow .yakTypeImage4 {  background-image: url('/images/yakwala_sprite.png'); background-position: -133px 673px; width: 15px;}
  }
@@ -560,7 +560,7 @@ width: 270px;
    #newsfeedContent .mCSB_scrollTools { right: -3px}
    #locationChooser {top:40%;}
    #userChooser { top: 40%;}
-   .theContent iframe { height: 450px;}
+   .theContent iframe.youtubeFrame { height: 450px;}
    #alertsModeText { color: #9e9e9e; display: block; font-size: 10px; font-weight: bold;   position: absolute;   right: 178px;   text-align: right;   top: 14px;}
 	#alertsModeText.active {color: #f5881f; }
 	#alertsModeText.empty { color: #C2160D;}
