@@ -311,8 +311,7 @@ function setshortUrl()
 	            "login": "o_5ko6l8pajb",
 	            "longUrl": conf.fronturl + "/news/feed/?id=" + more.parent().parent().parent().find(".more").attr("rel")
 	        }, function(data){
-	        	console.log(data);
-	        	more.parent().parent().parent().find(".more").attr("title", data.data.url);
+	        	$(".infowindow[infoid='"+more.attr("rel")+"']").find(".more").attr("title", data.data.url);
 	        	setShare(more);
 	        }
 	        
@@ -1118,6 +1117,7 @@ function getformattedAddress(position){
 
 function setShare(el){
 	//el.prepend('<span>&nbsp;&nbsp;&nbsp;&nbsp;Loading</span>');
+	var infoid = el.attr("rel");
 	el.sharrre({
 	share: {
 	googlePlus: true,
@@ -1128,18 +1128,19 @@ function setShare(el){
 	yakwalaTrackingUrl : conf.trackurl,
 	buttons: {
 		googlePlus: {
-			url: el.parent().parent().find(".title").find(".more").attr("href"),
+			url: $(".infowindow[infoid='"+infoid+"']").find(".more").attr("href"),
 			size: 'medium'
 		},
 
 	facebook: {
-		url:  el.parent().parent().find(".title").find(".more").attr("href"),
+		url:  $(".infowindow[infoid='"+infoid+"']").find(".more").attr("href"),
 		layout: 'button_count'
 	},
 
 	twitter: {
-		text: "J'ai vu ça dans #Yakwala " + el.parent().parent().parent().find(".more").attr("title") + " " + el.parent().parent().parent().parent().find(".tags").text(),
-		count: 'horizontal'
+		text: "J'ai vu ça dans #Yakwala " + $(".infowindow[infoid='"+infoid+"']").find(".more").attr("title") + " " + el.parent().parent().parent().parent().find(".tags").text(),
+		count: 'horizontal',
+		url: ' '
 	}					
 	},
 	hover: function(api, options){
