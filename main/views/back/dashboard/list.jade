@@ -1,7 +1,7 @@
 mixin list()
 	div.span6
-		legend Géolocalisation des infos :
-		div#chart_geo(style="width: 100%; height: 100%;")	
+		legend Géolocalisation des infos des 10 derniers jours: 
+		div.dashboardBigChart#chart_geo	
 		br
 		br
 		legend Etat des batchs :
@@ -15,9 +15,9 @@ mixin list()
 					th Run
 			tbody#batchList
 	div.span6
-		div#chart_info(style="width: 75%; height: 100%;")	
-		div#chart_place(style="width: 75%; height:100%;")
-		div#chart_user(style="width: 75%; height: 100%;")				
+		div.dashboardSmallChart#chart_info	
+		div.dashboardSmallChart#chart_place
+		div.dashboardSmallChart#chart_user
 	script
 
 		/*BATCH LIST*/

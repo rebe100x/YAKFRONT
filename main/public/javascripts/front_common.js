@@ -2031,7 +2031,7 @@ function checkByWidth()
 				$("#userChooser p.alertText").html("");
 
 				if(typeof theuser.thumb != 'undefined')
-					userThumb = theuser.thumb;
+					userThumb = theuser.thumbBig;
 
 				if(typeof theuser.bio != 'undefined')
 					userBio = theuser.bio;
@@ -2054,7 +2054,7 @@ function checkByWidth()
 					thetags = '<b>Tags :</b>'+thetags;
 
 
-				$("#userChooser #uc_profile_brief").html("<span class='theimage'><img src='" + userThumb +"' /></span><span class='theinfo'><div class='thename' id='uc_username'>" + userName + "</div>" + "<div class='thelogin'>@"+ userLogin+ "</div><div class='thebio'>" + userBio + "</div><div class='thelink'><a href='" + userWeb +"' target='_blank'>" + userWeb + "</a></div><div id='thealerts'>"+thetags+"</div></span>");
+				$("#userChooser #uc_profile_brief").html("<span class='theimage span5'><img src='" + userThumb +"' /></span><span class='theinfo span7'><div class='thename' id='uc_username'>" + userName + "</div>" + "<div class='thelogin'>@"+ userLogin+ "</div><div class='thebio'>" + userBio + "</div><div class='thelink'><a href='" + userWeb +"' target='_blank'>" + userWeb + "</a></div><div id='thealerts'>"+thetags+"</div></span>");
 				
 				$.getJSON('/api/countUserInfo/' + userid ,function(data) {
 					if(typeof data.count != 'undefined')

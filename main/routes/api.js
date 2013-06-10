@@ -303,7 +303,7 @@ exports.findFeedById2 = function (req, res) {
 	var Feed = db.model('Feed');
 	Feed.findOne( {'_id' : req.params.id}, function(err,docs){
 		 res.json({
-  			user: docs
+  			user: Feed.format(docs)
 	  	});
 	});
 	

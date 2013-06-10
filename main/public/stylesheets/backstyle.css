@@ -33,6 +33,9 @@ table.table-nohover tbody tr td:hover,  table.table-nohover thead tr th:hover {b
 table tr.warning{background-color: #FCF8E3;}
 table tr.error{background-color: #F2DEDE;}
 
+/*dashboard*/
+.dashboardSmallChart{width: 75%; height: 100%;}
+.dashboardBigChart{width: 100%; height: 100%;}
 /*location chooser */
 #locationChooser{top:40%;}
 #locationChooser .modal-body {max-height: 420px;}

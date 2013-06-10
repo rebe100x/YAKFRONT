@@ -1090,7 +1090,7 @@ border-bottom: 1px solid #e5e5e5; width: 100%}
 #uc_Name { color: #d51820; font-size: 18px; font-weight: bold; float: left;}
 #userChooser #uc_profile_brief { background: white; line-height: 25px; color: black; font-size: 14px; clear: both; float: left;}
 #userChooser .modal-body {max-height: 450px;}
-#userChooser #uc_profile_brief .theimage { background-color: #c2160d; text-align: center;}
+#userChooser #uc_profile_brief .theimage { background-color: #c2160d; text-align: center;height:138px;padding-top:5px;}
 #userChooser #uc_profile_brief .theinfo .thename { font-size: 24px; font-weight: bold;}
 #userChooser #uc_profile_brief .theinfo .thelogin { font-size: 18px; color: #aeaeae;}
 #userChooser #uc_profile_brief .theinfo .thebio { font-size: 12px; line-height: 20px; display: block; margin-top: 12px;}

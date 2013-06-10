@@ -320,8 +320,7 @@ mixin feedForm()
 		$(document).ready(function() {
 
 			$('#titleHelp').popover({animation:true,title:'Le nom du flux',content:"<p>Le nom du flux apparait sur le front comme le nom d'un utilisateur.</p><br /><p><img width='100%' src='/images/back/help/cap1.jpg' /></p>",html:true});
-			//$('#titleHelp').tooltip({title:"<label>Le titre du flux</label><p>Le nom du flux apparait sur le front comme le nom d'un utilisateur.</p><p><img src='/images/back/help/cap1.jpg' /></p>",html:true})
-			$('#imagetteHelp').tooltip({title:'<label>Le titre du flux</label><div>Nommez votre flux de façon pertinente!</div>',html:true})
+			$('#imagetteHelp').popover({animation:true,title:'Imagette',content:"<p>Cette image apparaîtra sur le profil du flux. Pour l'instant elle doit être carrée. </p><br /><p><img width='100%' src='/images/back/help/cap1.jpg' /></p>",html:true});
 			/*
 			lineToBeginHelp
 			rootElementHelp
