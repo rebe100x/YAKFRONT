@@ -1138,7 +1138,7 @@ function setShare(el){
 	},
 
 	twitter: {
-		text: "J'ai vu ça dans #Yakwala " + $(".infowindow[infoid='"+infoid+"']").find(".more").attr("title") + " " + el.parent().parent().parent().parent().find(".tags").text(),
+		text: "J'ai vu ça dans #Yakwala " + $(".infowindow[infoid='"+infoid+"']").find(".more").attr("title") + " " + $(".infowindow[infoid='"+infoid+"']").find(".tags").text(),
 		count: 'horizontal',
 		url: ' '
 	}					
