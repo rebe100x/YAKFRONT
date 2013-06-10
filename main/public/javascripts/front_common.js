@@ -293,7 +293,7 @@ function setshortUrl()
 {
 
 	$(".icon-share").mouseenter(function(){
-		var iconShare = $(this);
+
 		if($(this).find(".box").length > 0)
 		{
 			return;
@@ -311,6 +311,8 @@ function setshortUrl()
 	            "login": "o_5ko6l8pajb",
 	            "longUrl": conf.fronturl + "/news/feed/?id=" + more.parent().parent().parent().find(".more").attr("rel")
 	        }, function(data){
+	        	console.log(data);
+	        	more.parent().parent().parent().find(".more").attr("title", data.data.url);
 	        	setShare(more);
 	        }
 	        
