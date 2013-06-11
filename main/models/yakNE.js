@@ -45,4 +45,51 @@ YakNE.statics.findById = function (id, callback) {
 }
 
 
+YakNE.statics.findGridYakNE = function (pageIndex, pageSize, searchTerm, sortProperties, sortDirections, status, callback) {
+
+	var conditions = {
+		$or:[ {'title': new RegExp(searchTerm, 'i')}]	
+	};
+
+	var sortBy = {};
+
+	for (index in sortProperties) {
+		var desc = 1;
+		if (sortDirections[index] == "desc")
+			desc = -1;
+		sortBy[sortProperties[index]] = desc;
+	}
+
+	if (status != 'all') {
+			conditions["status"] = status;
+	}
+
+	return this.find(
+		conditions,
+		{},
+		{
+			skip:
+			(pageIndex -1)*pageSize,
+			limit:
+			pageSize,
+			sort:
+			sortBy
+		},
+		callback);
+}
+
+YakNE.statics.countSearch = function (searchTerm, status, callback) {
+	var search = new RegExp(searchTerm, 'i');
+
+	var conditions = {
+		$or:[ {'title': search}]	
+	};
+
+	if (status != 'all') {
+			conditions["status"] = status;
+	}
+	
+	return this.count(conditions, callback);
+}
+
 mongoose.model('YakNE', YakNE);

@@ -74,6 +74,7 @@ var db = routes.db(conf);
 
 app.get('/', back.requiresLogin, back.back_default);
 
+// USER
 app.get('/user/login', back.user_login);
 app.get('/user/logout', back.user_logout);
 app.post('/session',back.session);
@@ -81,87 +82,107 @@ app.post('/user/setName', back.requiresLogin, back.user_setname);
 app.post('/user/setStatus', back.requiresLogin, back.user_setstatus);
 app.post('/user/setType', back.requiresLogin, back.user_settype);
 
+app.get('/api/validusers', back.requiresLogin, back.countUnvalidatedUsers);
+app.get('/api/user/:id', back.requiresLogin, back.findUserById);
+app.get('/api/usersearch/:string',back.requiresLogin, back.usersearch);
+app.get('/api/users/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status/:type',back.requiresLogin, back.gridUsers);
+
+
 app.get('/api/sendUserReminder/:id', back.requiresLogin, back.user_reminder);
-app.post('/yakcat/setStatus', back.requiresLogin, back.yakcat_setstatus);
-app.post('/zone/setStatus', back.requiresLogin, back.zone_setstatus);
 
-app.get('/place/list', back.requiresLogin, back.place_list);
-app.get('/feed/list', back.requiresLogin, back.feed_list);
 app.get('/user/list',back.requiresLogin, back.user_list);
-app.get('/zone/list',back.requiresLogin, back.zone_list);
-app.get('/dashboard/list',back.requiresLogin, back.dashboard_list);
-app.get('/illicites/list',back.requiresLogin, back.illicites);
-app.get('/categories/list',back.requiresLogin, back.categories);
-
-
-app.post('/changeStatusIllicite', back.requiresLogin, back.changeStatusIllicite);
-app.post('/feed', back.requiresLogin, back.feed);
-app.post('/place', back.requiresLogin, back.place);
 app.post('/user', back.requiresLogin, back.user);
-app.post('/news', back.requiresLogin, back.news);
-app.post('/alerts', back.requiresLogin, back.alerts);
-app.post('/profile', back.requiresLogin, back.profile);
+app.get('/api/users/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status/:type',back.requiresLogin, back.gridUsers);
+
+
+// YAKCAT
+app.post('/yakcat/setStatus', back.requiresLogin, back.yakcat_setstatus);
+app.get('/categories/list',back.requiresLogin, back.categories);
+app.get('/api/cats/:id',back.requiresLogin, back.catsById);
+app.get('/api/cats',back.requiresLogin, api.cats);
+app.get('/api/yakcats/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status', back.requiresLogin, back.gridYakcats);
+app.get('/api/findCatById', back.requiresLogin, back.findCatById);
+app.get('/api/validcats', back.requiresLogin, back.countUnvalidatedCats);
+
+
+// ZONE
+app.post('/zone/setStatus', back.requiresLogin, back.zone_setstatus);
+app.get('/zone/list',back.requiresLogin, back.zone_list);
 app.post('/zone', back.requiresLogin, back.zone);
+app.get('/api/zones/:x/:y', back.requiresLogin, back.findAllZoneNear);
+app.get('/api/zone/:id', back.requiresLogin, back.findZoneById);
+app.get('/api/zoneMaxnum', back.requiresLogin, back.findZoneMaxnum);
+app.get('/api/zones', back.requiresLogin, back.zones);
+app.get('/api/zones/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status', back.requiresLogin, back.gridZones);
 
-// ajax
-app.get('/api/infos', back.infos);
-app.get('/api/validinfos', back.countUnvalidatedInfos);
-app.get('/api/geoinfos/:x1/:y1/:x2/:y2/:heat/:type', back.geoinfos);
-app.get('/api/zones/:x/:y', back.findAllZoneNear);
-app.get('/api/zone/:id', back.findZoneById);
-app.get('/api/zoneMaxnum', back.findZoneMaxnum);
-app.get('/api/zones', back.zones);
-//app.post('/api/users', back.users);
-app.get('/api/users', back.users);
-app.get('/api/illicites', back.illicites);
 
+// PLACE
+app.get('/place/list', back.requiresLogin, back.place_list);
+app.post('/place', back.requiresLogin, back.place);
+app.get('/api/places', back.requiresLogin, back.places);
+app.get('/api/places/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status', back.requiresLogin, back.gridPlaces);
+app.get('/api/places/:id', back.requiresLogin, back.findPlaceById);
+app.get('/api/places/validate/:ids', back.requiresLogin, back.validatePlaces);
+app.get('/api/places/delete/:ids', back.requiresLogin, back.deletePlaces);
+app.get('/api/places/wait/:ids', back.requiresLogin, back.waitPlaces);
+app.get('/api/validplaces', back.requiresLogin, back.countUnvalidatedPlaces);
+app.get('/api/places/validate/:ids', back.requiresLogin, back.validatePlaces);
+
+
+//FEED
+app.get('/feed/list', back.requiresLogin, back.feed_list);
+app.get('/api/feedList',back.requiresLogin, back.findAllFeed);
+app.post('/feed', back.requiresLogin, back.feed);
+app.get('/api/feed/:id',back.requiresLogin, back.findFeedById);
+app.get('/api/feedExist/:name',back.requiresLogin, back.findFeedByName);
+app.post('/api/getFileSample', back.requiresLogin, back.getFileSample);
+app.get('/api/feeds/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status/:type',back.requiresLogin, back.gridFeeds);
+
+
+//DASHBOARD
+app.get('/dashboard/list',back.requiresLogin, back.dashboard_list);
 app.get('/api/dashboard/statsByZone/:msts',back.requiresLogin, back.dashboard_statsByZone);
 app.get('/api/dashboard/statsByDate/:type/:msts',back.requiresLogin, back.dashboard_statsByDate);
 
-
-app.get('/api/feed/:id',back.requiresLogin, back.findFeedById);
-app.get('/api/feedExist/:name',back.requiresLogin, back.findFeedByName);
-app.get('/api/feedList',back.requiresLogin, back.findAllFeed);
-app.get('/api/cats/:id',back.requiresLogin, back.catsById);
-app.get('/api/cats',back.requiresLogin, api.cats);
-app.get('/api/tags',back.requiresLogin, api.tags);
-
-app.get('/api/yakNE', api.yakNE);
-app.get('/api/places', back.places);
+//ILLICITE
+app.get('/illicites/list',back.requiresLogin, back.illicites);
+app.post('/changeStatusIllicite', back.requiresLogin, back.changeStatusIllicite);
+app.get('/api/illicites',back.requiresLogin, back.illicites);
+app.get('/api/illicites/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:type/:status/:limit',back.requiresLogin, back.gridIllicites);
+app.get('/api/validillicites', back.requiresLogin, back.countUnvalidatedIllicites);
 
 
-app.get('/api/places/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status', back.gridPlaces);
-app.get('/api/places/:id', back.findPlaceById);
+//INFO
+app.post('/news', back.requiresLogin, back.news);
+app.get('/api/infos', back.requiresLogin, back.infos);
+app.get('/api/validinfos', back.requiresLogin, back.countUnvalidatedInfos);
+app.get('/api/geoinfos/:x1/:y1/:x2/:y2/:heat/:type', back.requiresLogin, back.geoinfos);
+app.get('/api/info/:id', back.requiresLogin, back.findInfoById);
 
-app.get('/api/zones/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status', back.gridZones);
-app.get('/api/users/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status/:type', back.gridUsers);
-app.get('/api/illicites/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:type/:status/:limit', back.gridIllicites);
 
-app.get('/api/yakcats/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status', back.gridYakcats);
+// YAKNE
+app.get('/yakNE/list', back.requiresLogin, back.yakNE_list);
+app.get('/api/yakNE', back.requiresLogin, api.yakNE);
+app.post('/yakNE', back.requiresLogin, back.yakNE);
+app.get('/api/yakNE/:id',back.requiresLogin, back.findyakNEById);
+app.get('/api/yakNEExist/:title',back.requiresLogin, back.findYakNEByTitle);
+app.get('/api/yakNE/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status',back.requiresLogin, back.gridYakNE);
 
-app.get('/api/users/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status/:type',back.requiresLogin, back.gridUsers);
-app.get('/api/feeds/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status/:type',back.requiresLogin, back.gridFeeds);
 
-app.get('/api/usersearch/:string', back.usersearch);
-app.get('/api/findCatById', back.findCatById);
-app.get('/api/user/:id', back.findUserById);
-app.get('/api/info/:id', back.findInfoById);
 
-app.get('/api/validusers', back.countUnvalidatedUsers);
-app.get('/api/validcats', back.countUnvalidatedCats);
-app.get('/api/validplaces', back.countUnvalidatedPlaces);
-app.get('/api/validillicites', back.countUnvalidatedIllicites);
+// FAV PLACE
+app.post('/api/favplace', back.requiresLogin, back.addfavplace);
+app.post('/api/delfavplace', back.requiresLogin, back.delfavplace);
 
-app.get('/api/places/validate/:ids', back.validatePlaces);
-app.get('/api/places/delete/:ids', back.deletePlaces);
-app.get('/api/places/wait/:ids', back.waitPlaces);
 
-app.post('/api/favplace', back.addfavplace);
-app.post('/api/delfavplace', back.delfavplace);
+//UNUSED
+//app.post('/alerts', back.requiresLogin, back.alerts);
+//app.post('/profile', back.requiresLogin, back.profile);
+//app.post('/api/users', back.users);
+//app.get('/api/users', back.users);
+//app.get('/api/tags',back.requiresLogin, api.tags);
 
-app.get('/api/places/validate/:ids', back.validatePlaces);
 
-app.post('/api/getFileSample', back.getFileSample);
 
 // redirect all others to the index (HTML5 history)
 app.get('*', back.index);

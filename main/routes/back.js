@@ -268,9 +268,7 @@ exports.feed_list = function(req, res){
 	res.render('feed/index');
 };
 
-exports.feed_add = function(req, res){
-	res.render('feed/add');
-};
+
 
 exports.findFeedByName = function (req, res) {
 	var Feed = db.model('Feed');
@@ -457,6 +455,178 @@ exports.feed = function(req, res){
 	
 };
 
+
+/********
+#YAKNE
+********/
+exports.yakNE_list = function(req, res){
+	delete req.session.message;
+	res.render('yakNE/index');
+};
+
+exports.findFeedByName = function (req, res) {
+	var Feed = db.model('Feed');
+   	Feed.findByName(req.params.name, function (err, thefeed){
+   		res.json({
+			feed: thefeed
+		});
+	});
+};
+
+exports.findYakNEById = function (req, res) {
+	var Feed = db.model('Feed');
+   	Feed.findById(req.params.id, function (err, thefeed){
+		res.json({
+			feed: Feed.format(thefeed)
+		});
+	});
+};
+
+
+exports.gridYakNE = function (req, res) {
+	var YakNE = db.model('YakNE');
+    
+    var sortProperties = [];
+    if (req.params.sortBy) {
+        sortProperties = req.params.sortBy.split(',');
+    }
+
+    var sortDirections = [];
+    if (req.params.sortDirection) {
+        sortDirections = req.params.sortDirection.split(',');
+    }
+
+   
+
+	YakNE.findGridYakNE(req.params.pageIndex,req.params.pageSize,
+		req.params.searchTerm,sortProperties,sortDirections,
+        req.params.status, function (err, yakNEs){
+
+			var data = {};
+			data['yakNE'] = yakNEs;
+			data['pageIndex'] = req.params.pageIndex;
+			data['pageSize'] = req.params.pageSize;
+			YakNE.countSearch(req.params.searchTerm, req.params.status, function (err, count){
+				data['count'] = count;
+				res.json(data);
+			});	
+		});
+	};
+
+exports.yakNE = function(req, res){
+
+	var formMessage = new Array();
+	delete req.session.message;
+	var Feed = db.model('Feed');
+	var Yakcat = db.model('Yakcat');
+	var obj_id = req.body.objid;
+	//console.log(req.body);
+	var feed = new Object();
+	var now = new Date();
+	feed.XLconnector = 'parser';
+
+	feed.humanName = req.body.humanName;
+	var strLib = require("string");
+	feed.name = strLib(feed.humanName).slugify().s;
+	if(req.body.linkSource == '' && req.body.source != '')
+		feed.linkSource = req.body.source;
+	else if(req.body.linkSource != '')
+		feed.linkSource = req.body.linkSource;
+	
+	feed.yakCatId = req.body.yakCatIdsHidden.split(',');
+	feed.yakCatName = req.body.yakCatNamesHidden.split(',');
+	if(req.body.tagsHidden == '' && req.body.freetag != '')
+		feed.tag = req.body.freetag.split(',');
+	else if(req.body.tagsHidden != '')		
+		feed.tag = req.body.tagsHidden.split(',');
+	else
+		feed.tag = [];
+
+	feed.defaultPlaceLocation = {lng:parseFloat(req.body.longitude),lat : parseFloat(req.body.latitude)};
+	feed.defaultPlaceName = req.body.defaultPlaceName;
+	feed.defaultPlaceSearchName = req.body.defaultPlaceSearchName;
+	feed.defaultPrintFlag = req.body.defaultPrintFlag;
+	feed.link = req.body.link;
+	feed.licence = req.body.licence;
+	feed.yakType = req.body.yakType;
+
+	feed.feedType = req.body.feedType;
+	feed.fileSource = req.body.fileSource.split(',');
+	feed.linkSource = req.body.linkSource.split(',');
+	feed.persistDays = req.body.persistDays;
+	feed.description = req.body.description;
+	feed.zone = req.body.zone;
+	feed.status = parseInt(req.body.status);
+	feed.lastModifDate = now;
+
+	feed.rootElement = req.body.rootElement;
+	//console.log(req.body.lineToBegin);
+	if(req.body.lineToBegin != '' && typeof req.body.lineToBegin != 'undefined' )
+		feed.lineToBegin = parseInt(req.body.lineToBegin);
+	else
+		feed.lineToBegin = 1;
+
+	feed.parsingFreq = req.body.parsingFreq;
+
+	feed.parsingTemplate = {
+		title: req.body.infoTitle,
+		content: req.body.infoContent,
+		address: req.body.infoAddress,
+		geolocation: req.body.infoGeolocation,
+		latitude: req.body.infoLatitude,
+		longitude: req.body.infoLongitude,
+		outGoingLink: req.body.infoLink,
+		thumb: req.body.infoThumb,
+		yakCats: req.body.infoCat,
+		freeTag: req.body.infoTag,
+		place: req.body.infoPlace,
+		eventDate: req.body.infoEventDate,
+		pubDate: req.body.infoPubDate,
+		telephone: req.body.infoTel,
+		transportation: req.body.infoTransportation,
+		opening: req.body.infoOpening,
+		web: req.body.infoWeb,
+		mail: req.body.infoMail
+	};
+
+	var feedThumb = new Object();
+	if(req.files.picture.size && req.files.picture.size > 0 && req.files.picture.size < 1048576*5){
+		var drawTool = require('../mylib/drawlib.js');
+		var size = mainConf.imgSizeAvatar;
+		var crypto = require('crypto');
+		var destFile = crypto.createHash('md5').update(req.files.picture.name).digest("hex")+'.jpeg';
+				
+		for(i=0;i<size.length;i++){
+			feedThumb = drawTool.StoreImg(req.files.picture,destFile,{w:size[i].width,h:size[i].height},conf);
+		}
+		feed.thumb = feedThumb.name;
+	}
+	else{
+		feedThumb.err = 0;
+	}
+		
+	
+	
+	if(typeof obj_id != 'undefined' && obj_id != ''){
+		var cond = {_id:obj_id};
+	}else{
+		feed.creationDate = now;
+		feed.lastExecDate = now;
+		var cond = {name:"anameimpossibletochoose007"};
+	}
+		
+
+	Feed.update(cond,feed,{upsert:true},function (err){
+		if (!err)
+			formMessage.push("Flux sauvegardé.");
+		else{
+			formMessage.push("Erreur pendant la sauvegarde du flux !");
+			console.log(err);
+		}
+		req.session.message = formMessage;
+		res.redirect('feed/list')
+	});	
+};
 
 /*******
 #DASHBOARD
