@@ -1,7 +1,7 @@
 #################
 ## Eclipse
 #################
-
+/public/stylesheets/minify/
 *.pydevproject
 .project
 .metadata
