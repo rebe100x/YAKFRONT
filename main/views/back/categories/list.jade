@@ -155,7 +155,6 @@ mixin list()
 		$('#MyGrid').datagrid({
 			dataSource: new ApiDataSource({
 				columns: [
-				
 				{
 					property: 'title',
 					label: 'Nom',
@@ -175,8 +174,9 @@ mixin list()
 				formatter: function (items) {
 					$.each(items, function (index, item) {
 						item.creationDate = formatDate(item.creationDate);
-						item.status = makeStatus(item.status, item._id);
 						item.title = fillContent(item);
+						item.status = makeStatus(item.status, item._id);
+						
 					});
 				}
 			})
@@ -184,8 +184,7 @@ mixin list()
 
 
 	
-		function makeStatus(status, _id)
-		{
+		function makeStatus(status, _id){
 			switch(status)
 			{
 				case 1 : 
@@ -213,16 +212,22 @@ mixin list()
 		}
 		
 
-		function setNewStatus(el)
-		{
+		function setNewStatus(el){
 			var _id = $(el).attr("rel");
-			$(el).after("<span class='updateStatus'>loading...</span>");
-			$(el).attr("disabled", "disabled");
-			$.post("/yakcat/setStatus", {status: $(el).val(), _id : $(el).attr("rel")}, function(data){
-					if(data.meta.code == "200")
-					{
-						$(el).removeAttr("disabled");
-						$(el).parent().find(".updateStatus").remove();
+			$.post("/yakcat/setStatus", {status: $(el).val(), _id : _id}, function(data){
+					if(data.meta.code == "200"){
+						var icon = "icon-wrench";
+						var title_icon = "System";
+						if($(el).val() == 0){
+								icon = 'icon-ban-circle';
+								title_icon = "Inactive";
+						}
+						if($(el).val() == 1){
+								icon = 'icon-ok-sign';
+								title_icon = "Active";
+						}
+
+						$("#icon_"+_id).attr('class',icon).attr('title',title_icon);
 					}
 				});
 		}
@@ -232,29 +237,19 @@ mixin list()
 		
 		function fillContent(item) {
 			var res = "";
-			var icon = "icon-time";
-			var title_icon = "En attente";
-			
-			
+			var icon = "icon-wrench";
+			var title_icon = "System";
 			res += '<span>';
-
 			if (item.status == 1) {
 				icon = 'icon-ok-sign';
 				title_icon = "Active";
 
 			}
-			else if (item.status == 2) {
+			else if (item.status == 0) {
 				icon = 'icon-ban-circle';
-				title_icon = "Incative";
+				title_icon = "Inactive";
 			}
-			else if (item.status == 3) {
-				icon = 'icon-wrench';
-				title_icon = "Système";
-			}
-			
-
-			res += '<span class="text-info"><i class="' + icon + ' status" title="' + title_icon + '" ></i>' + item.title + '</span>';
-
+			res += '<span class="text-info"><i id="icon_'+item._id+'" class="' + icon + ' status" title="' + title_icon + '" ></i>' + item.title + '</span>';
 			res += '<small>&nbsp;(&nbsp;#'+item._id+'</small> )</span>';
 			return res;
 		}

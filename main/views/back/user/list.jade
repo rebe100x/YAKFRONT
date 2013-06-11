@@ -196,13 +196,25 @@ mixin list()
 		function setNewStatus(el)
 		{
 			var _id = $(el).attr("rel");
-			$(el).after("<span class='updateStatus'>loading...</span>");
-			$(el).attr("disabled", "disabled");
 			$.post("/user/setStatus", {status: $(el).val(), _id : $(el).attr("rel")}, function(data){
 					if(data.meta.code == "200")
 					{
-						$(el).removeAttr("disabled");
-						$(el).parent().find(".updateStatus").remove();
+						icon = 'icon-ok-sign';
+						title_icon = "validé";
+						if($(el).val() == 2){
+								icon = 'icon-ban-circle';
+								title_icon = "Inactive";
+						}else if($(el).val() == 1){
+								icon = 'icon-ok-sign';
+								title_icon = "Active";
+						}else if (item.status == 3) {
+								icon = 'icon-ban-circle';
+								title_icon = "Blacklisté";
+						}else if (item.status == 4) {
+								icon = 'icon-warning-sign';
+								title_icon = "Doit remplir le formulaire de première visite";
+							}
+						$("#icon_"+_id).attr('class',icon).attr('title',title_icon);
 					}
 				});
 		}
@@ -254,7 +266,7 @@ mixin list()
 				res += '<a class="centerMap" id="' + item._id + '" href="/#"><i class = "icon-map-marker" title="Localiser"></i></a>';
 				
 			}
-			if (item.status == 2){
+			if (item.status == 2 || item.status == 4){
 				res += '<a class="reminder"  id="' + item._id + '" href="/#" title="Renvoyer un mail de validation"><i class="icon-retweet"></i></a>';
 				
 			}
@@ -271,7 +283,7 @@ mixin list()
 				title_icon = "Waiting for validation";
 			}
 			else if (item.status == 3) {
-				icon = 'icon-warning-sign';
+				icon = 'icon-ban-circle';
 				title_icon = "Blacklisté";
 			}else if (item.status == 4) {
 				icon = 'icon-warning-sign';
@@ -284,7 +296,7 @@ mixin list()
 				item.name = item.name.slice(0, 50) + "...";
 			}
 
-			res += '<div class="text-info" '+ title_title + '><i class="' + icon + ' status" title="' + title_icon + '" ></i> <img src="'+item.thumbverysmall+'" />&nbsp;' + item.name +' ( ' + item.login +' ) '+ '</div>';
+			res += '<div class="text-info" '+ title_title + '><i id="icon_'+item._id+'"  class="' + icon + ' status" title="' + title_icon + '" ></i> <img src="'+item.thumbverysmall+'" />&nbsp;' + item.name +' ( ' + item.login +' ) '+ '</div>';
 
 			res += "<small>";
 
