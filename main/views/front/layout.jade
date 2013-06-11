@@ -45,6 +45,11 @@ html
 
 		
 		script(src='/javascripts/lib/respond.js')
+		//if lt IE 9
+			style
+				#newsfeedContainer { height: 530px}
+				#newsfeedContent { height: 510px;}
+				#newsfeed { height: 510px;}
 		block head
 	body	
 		block content

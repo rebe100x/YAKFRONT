@@ -947,12 +947,14 @@ function getItemDetails(el){
 			more.attr("rel", val._id);
 			more.attr("data-toggle", "data-toggle");
 			more.html(" plus de détails...");
-			
+			more.hide();			
 			
 			content.append("<div class='shareMe' userid='"+user._id+"'><i style='background: none' rel='"+val._id+"'' class='icon-share' title=''><div class='ftgIcon'></div></i></div>");
 			
+			content.find(".theContent").append(more);
 			if(typeof(val.outGoingLink) != 'undefined')
-				content.find(".theContent").append(more);
+				more.show();
+
 			item.append(content);
 			item.append(yakLikes);
 			item.append(yakComments);
