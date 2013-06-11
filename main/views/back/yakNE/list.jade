@@ -1,0 +1,333 @@
+mixin list()
+	table#MyGrid.table.table-bordered.datagrid
+		thead
+			tr.headerControle
+				th
+					.datagrid-header-left
+						.input-append.search
+							input#search.input-medium(type='text', placeholder='Recherche', data-provide="typeahead", autocomplete="off")
+							button.btn
+								i.icon-search
+					.datagrid-header-right
+						button.btn#btnAdd
+							i.icon-plus
+							span Ajouter
+			tr.headerControle
+				td(colspan=5)
+					select#filterStatus
+						option(value="1") Actifs
+						option(value="0") Inactifs
+
+		tfoot
+			tr
+				th
+					.datagrid-footer-left(style='display: none;')
+						.grid-controls
+							span
+								span.grid-start
+								| -
+								span.grid-end
+								| de
+								span.grid-count
+							select.grid-pagesize
+								option 10
+								option 20
+								option 50
+								option 100
+							span Par Page
+					.datagrid-footer-right(style='display: none;')
+						.grid-pager
+							button.btn.grid-prevpage
+								i.icon-chevron-left
+							span Page
+							.input-append.dropdown.combobox.dropup
+								input.span1(type='text')
+								button.btn(data-toggle='dropdown')
+									i.caret
+								ul.dropdown-menu
+							span
+								| de
+								span.grid-pages
+							button.btn.grid-nextpage
+								i.icon-chevron-right
+
+
+	script
+	
+		var firstLoad = true;
+
+		var ApiDataSource = function (options) {
+			this._formatter = options.formatter;
+			this._columns = options.columns;
+		};
+
+		ApiDataSource.prototype = {
+			columns: function () {
+				return this._columns;
+			},
+			data: function (options, callback) {
+
+				var url = '/api/yakNE';
+				var self = this;
+
+				if (!options.search) {
+					options.search = "^";
+				}
+
+				url += '/' + (options.pageIndex + 1);
+				url += '/' + options.pageSize;
+				url += '/' + options.search;
+
+				var sortPropertyArray = [];
+				var sortDirectionArray = [];
+
+				// Add currently selected datagrid column to sort properties
+				if (options.sortProperty) {
+					sortPropertyArray.push(options.sortProperty);
+					sortDirectionArray.push(options.sortDirection);
+				}
+
+				// sort by name by default
+				if(sortPropertyArray.length == 0)
+					sortPropertyArray.push( "title");
+				if(sortDirectionArray.length == 0)
+					sortDirectionArray.push("asc");
+				
+					
+				// Would be easier if we could pass dictionaries, needs testing
+				url += '/' + sortPropertyArray.join() + '/' + sortDirectionArray.join();
+
+				// Filter by status
+				var status = $('#filterStatus :selected').val();
+				url += '/' + status;
+				
+				$.ajax(url, {
+					type: 'GET'
+				}).done(function (response) {
+
+					if (firstLoad) {
+						$("#search").focus();
+						$('th[data-property="name"]').addClass('sorted');
+						$('th[data-property="name"]').append('<i class="icon-chevron-down"></i>');
+						firstLoad = false;
+					}
+					// Prepare data to return to Datagrid
+					var data = response.yakNE;
+					var count = response.count;
+					var startIndex = (response.pageIndex - 1) * response.pageSize;
+					var endIndex = parseInt(startIndex) + parseInt(response.pageSize);
+					var end = (endIndex > count) ? count : endIndex;
+					var page = parseInt(response.pageIndex);
+					var pages = Math.ceil(response.count / response.pageSize);
+					var start = startIndex + 1;
+
+					if (self._formatter) self._formatter(data);
+
+					callback({ data: data, start: start, end: end, count: count, pages: pages, page: page });
+
+				});
+			}
+		};
+
+		$('#MyGrid').datagrid({
+			dataSource: new ApiDataSource({
+				columns: [
+				{
+					property: 'title',
+					label: 'Mot clé',
+					sortable: true
+				},
+				{
+					property: 'creationDate',
+					label: 'Création',
+					sortable: true
+				}],
+				formatter: function (items) {
+					$.each(items, function (index, item) {
+						item.title = fillContent(item);
+						item.creationDate = formatDate(item.creationDate);
+					});
+				}
+			})
+		});
+
+		/*bind form edition on the loaded datagrid event to avoid double loading*/
+		$('#MyGrid').unbind('loaded').on('loaded',function(){
+				// Edit YAKNE function
+			$("#MyGrid .editYakNE").on('click', function(event){
+				event.preventDefault();
+				event.stopPropagation();
+				editYakNE(this.id,0);
+				
+			});
+
+			
+			$("#MyGrid a.duplicateItem").on('click', function(event){
+				event.preventDefault();
+				event.stopPropagation();
+				editYakNE(this.id,1);
+			});
+		});
+		
+
+		$('#filterStatus').live('change', function() {
+			//var currentSelection = $('#filterStatus :selected').val();
+			refreshDatagrid();
+		});
+
+		
+		function fillContent(item) {
+			var res = "";
+			var icon = "icon-time";
+			var title_icon = "En attente";
+			var title_title = "";
+			
+			res += '<div class="liens">';
+			res += '<a href="#" id="'+item._id+'" class="duplicateItem listIcon" title="Dupliquer"><i class="icon-random"></i></a>';
+			res += "</div>";
+
+			res += '<a class="editYakNE" id="' + item._id + '" href="#">';
+
+			if (item.status == 1) {
+				icon = 'icon-ok-sign';
+				title_icon = "Actif";
+			}
+			else {
+				icon = 'icon-ban-circle';
+				title_icon = "Inactif";
+			}
+
+	
+			res += 	'<div class="text-info"><i class="' + icon + ' status" title="' + title_icon + '" ></i>' + item.title + '</div>';
+			res += '<small> ( ';
+			if(item.match.length > 0){
+				var i = 0;
+				item.match.forEach(function(val){
+					if(i<5)
+						res += val.title+', ';
+				});
+			}
+			res += '... ) </small>';
+			res += '</a>';
+
+			return res;
+		}
+
+		function formatDate(creationDate) {
+			var dateTmp = new Date(creationDate);
+			return dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
+
+		}
+
+
+		
+
+		function refreshDatagrid () {
+			// Temporary refresh method for datagrid
+			var $gridsearch = jQuery('#MyGrid').find('.search');
+			var search = $gridsearch.find('input').val();
+			$gridsearch.trigger('searched', search);
+		}
+
+		
+		$("#btnBack").unbind('click').on('click',function(){
+			$("#yakNEForm").hide();
+			$("#MyGrid").show();
+			$("#yakNEForm input[type=hidden]").val('');
+			$('#yakNEForm').clearForm();
+			$('#err').hide();
+			$("#btnBack").hide();
+		});
+
+		
+		
+
+		/* get data and edit yakNE in the form
+			flagDuplicate = 1 for duplicating the yakNE
+		*/
+		function edityakNE(id,flagDuplicate){
+			$("#btnBack").show();
+			$("#MyGrid").hide();
+			
+			// We remove the error class when we open a form for editing a place
+			$('#yakNEForm').removeClass("error");
+
+			/*INIT FORM FOR EDITION*/
+			$("#yakNEForm").show();
+			
+			$("#pillMatch ul").html('');
+			$("#pillYakcat ul").html('');
+			$("#yakNEForm input[type=hidden]").val('');
+			$('#yakNEForm').clearForm();	
+			$('#err').hide();
+			yakCatIds = new Array();
+			yakCatNames = new Array();
+			match = new Array();
+			
+			
+			var url = '/api/yakNE/'+id;
+			
+			// We search for the yakNE in mongo and we fill the form with the yakNE's values
+			$.ajax({
+				url: url,
+				type: 'GET',
+				async: false,
+				success: function (response)
+				{
+					/*FORM INITIALISATION*/
+					var yakNE = response.yakNE;
+
+					
+
+					if(flagDuplicate == 1){
+						$("#yakNEForm legend.mainlegend").html("Dupliquer un mot clé");
+						$("#yakNEForm #title").val(yakNE.title+'_copy').focus();
+						$("#yakNEForm #objid").val('');
+					}	
+					else{	
+						$("#yakNEForm legend.mainlegend").html("Modifier un mot clé");
+						$("#yakNEForm #objid").val(yakNE._id);
+						$("#yakNEForm #title").val(yakNE.title).focus();
+					}							
+
+					var tmpArr = new Array();
+					tmpArr = yakNE.match;
+					tmpArr.forEach(function(m){
+						if(m.length>0){	
+							$("#pillMatch").show();
+							$("#pillMatch ul").append("<li class='source-val status-success' data-value='"+m+"'>"+m+"</li>");
+							match.push(m);
+						}
+					});
+
+					
+					$('#yakNEForm input:radio[name=status][value='+yakNE.status+']').click();
+					
+
+					$("#yakNEForm #title").focus();
+					
+					
+				}
+			});
+		}
+		
+
+		// Add New YakNE
+		$("#btnAdd").click(function(){
+			$("#MyGrid").hide();
+			$("#yakNEForm")[0].reset();
+			// We remove the error class when we open a form for creating a new yakNE
+			$('#yakNEForm #titleGroup').removeClass("error");
+			$("#btnBack").fadeIn();
+			$("#yakNEForm").fadeIn();
+			$("#yakNEForm #objid").val("");
+			$("#pillMatch ul").empty();
+			$('#err').hide();
+			$("#yakNEForm #title").focus();
+
+		});
+			
+		$('#yakNEForm input:radio[name=status][value=1]').click();
+
+
+		

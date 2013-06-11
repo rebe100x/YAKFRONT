@@ -171,16 +171,21 @@ mixin list()
 
 		
 		
-		function setNewStatus(el)
-		{
+		function setNewStatus(el){
 			var _id = $(el).attr("rel");
-			$(el).after("<span class='updateStatus'>loading...</span>");
-			$(el).attr("disabled", "disabled");
-			$.post("/zone/setStatus", {status: $(el).val(), _id : $(el).attr("rel")}, function(data){
-					if(data.meta.code == "200")
-					{
-						$(el).removeAttr("disabled");
-						$(el).parent().find(".updateStatus").remove();
+			$.post("/zone/setStatus", {status: $(el).val(), _id : _id}, function(data){
+					if(data.meta.code == "200"){
+						var icon = "icon-time";
+						var title_icon = "En attente";
+						if($(el).val() == 0){
+								icon = 'icon-ban-circle';
+								title_icon = "Inactive";
+						}
+						if($(el).val() == 1){
+								icon = 'icon-ok-sign';
+								title_icon = "Active";
+						}
+						$("#icon_"+_id).attr('class',icon).attr('title',title_icon);
 					}
 				});
 		}
@@ -232,7 +237,7 @@ mixin list()
 				item.name = item.name.slice(0, 50) + "...";
 			}
 
-			res += '<div class="text-info" ><i class="' + icon + ' status" title="' + title_icon + '" ></i>' + item.name +'</div>';
+			res += '<div class="text-info" ><i  id="icon_'+item._id+'"  class="' + icon + ' status" title="' + title_icon + '" ></i>' + item.name +'</div>';
 
 			
 			res += '</a>';
