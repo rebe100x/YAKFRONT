@@ -1689,7 +1689,7 @@ exports.delComment = function (req, res) {
 		var commentId = req.body.commentId;
 		var infoId = req.body.infoId;
 		// we can only delete our comments:
-		Info.find({_id:mongoose.Types.ObjectId(infoId),yakComments: {user_id : res.locals.user._id}},function(err,doc){
+		Info.find({_id:mongoose.Types.ObjectId(infoId),yakComments: {userid : res.locals.user._id}},function(err,doc){
 			if(typeof doc != 'undefined' && doc != '' && doc != null){
 				Info.update({_id:mongoose.Types.ObjectId(infoId)},{$inc:{commentsCount : -1},$pull:{yakComments:{_id: mongoose.Types.ObjectId(commentId)}}}, function(err,docs){
 					if(!err)
@@ -1697,6 +1697,10 @@ exports.delComment = function (req, res) {
 					else
 						res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 				});	
+			}
+			else
+			{
+				res.json({meta:{code:404,error_type:'error deleting comment',error_description:'error deleting comment'}});
 			}
 			
 		});
