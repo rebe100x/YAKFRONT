@@ -60,7 +60,10 @@ exports.getFileSample = function(req,res){
 			if(req.body.isLink == 1 ){
 				var request = require('request');
 				var thepath = req.body.file;
-				var data = request(thepath).pipe(csvStream);
+				var data = request(thepath,function(err){
+					if(err)
+						res.json({code:400,error:'Erreur '+err});
+				}).pipe(csvStream);
 			}else{
 				var thepath = conf.uploadsDir+'files/'+req.body.file;
 				var data = fs.createReadStream(thepath).pipe(csvStream);
@@ -131,10 +134,14 @@ exports.getFileSample = function(req,res){
 			if(req.body.isLink == 1 ){
 				var request = require('request');
 				var thepath = req.body.file;
-				var data = request(thepath,function(error, response, data){
-					parser.write(data.toString('utf8'));
-					parser.end();
-					res.json({code:200,fileSample:JSON.stringify(output.slice(0,4))});
+				var data = request(thepath,function(err, response, data){
+					if(err)
+						res.json({code:400,error:'Erreur '+err});
+					else{
+						parser.write(data.toString('utf8'));
+						parser.end();
+						res.json({code:200,fileSample:JSON.stringify(output.slice(0,4))});	
+					}
 				});
 			}else{
 				var thepath = conf.uploadsDir+'files/'+req.body.file;
@@ -154,12 +161,16 @@ exports.getFileSample = function(req,res){
 			if(req.body.isLink == 1 ){
 				var request = require('request');
 				var thepath = req.body.file;
-				var data = request(thepath,function(error, response, data){
-					var dataObj = JSON.parse(data.toString('utf8'));
-					dataObj[req.body.param].forEach(function(item){
-						output.push(item);
-					});
-					res.json({code:200,fileSample:JSON.stringify(output.slice(0,4))});
+				var data = request(thepath,function(err, response, data){
+					if(err)
+						res.json({code:400,error:'Erreur '+err});
+					else{
+						var dataObj = JSON.parse(data.toString('utf8'));
+						dataObj[req.body.param].forEach(function(item){
+							output.push(item);
+						});
+						res.json({code:200,fileSample:JSON.stringify(output.slice(0,4))});
+					}
 				});
 			}else{
 				var thepath = conf.uploadsDir+'files/'+req.body.file;
@@ -362,7 +373,7 @@ exports.feed = function(req, res){
 	feed.link = req.body.link;
 	feed.licence = req.body.licence;
 	feed.yakType = req.body.yakType;
-	
+
 	feed.feedType = req.body.feedType;
 	feed.fileSource = req.body.fileSource.split(',');
 	feed.linkSource = req.body.linkSource.split(',');

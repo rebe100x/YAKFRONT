@@ -6,6 +6,7 @@
 
 /* GENERAL
 -------------------------------------------------- */
+i {margin : 0 3px;}
 #alertInfo{display:none;position:relative;z-index:20000000;}
 .icon-pointer{cursor:pointer;margin:2px;}
 .icon-pointer:hover{opacity:0.7;}
