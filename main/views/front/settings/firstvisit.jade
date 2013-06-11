@@ -50,7 +50,7 @@ block content
 							ul.favplacelist.unstyled
 								-if(locals.user.favplace)
 									- each favplace in locals.user.favplace
-										li(pointid=favplace._id,lat=favplace.location.lat, lng=favplace.location.lng)
+										li(pointid=favplace._id,lat=favplace.location.lat, lng=favplace.location.lng , pointname=favplace.name)
 											span.redStars
 											span= favplace.name
 											span.closePlace(onclick='removefavPlace($(this));')
@@ -177,6 +177,14 @@ block content
 			
 
 			$(document).ready(function() {
+
+				$(".dropdownRangeSelector").change(function(){
+					var favPlaceId = changePlaceRange($(this).attr("alt"), $(this).parent().attr("lat"), $(this).parent().attr("lng"), $(this).parent().attr("pointname"), $(this).val());
+
+					$(this).attr("alt", favPlaceId);
+				});
+
+				
 				checkGravatar();
 				getLocation();
 				

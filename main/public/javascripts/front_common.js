@@ -855,7 +855,7 @@ $(document).ready(function() {
 			point.name = placeGmap.title;
 			point.location = placeGmap.location;
 			$.post('/favplace', {'place':point},function(id) {
-				var mydropdown = '<select onchange="changemyrange()" alt="' + id + '" range="80" class="dropdownRangeSelector"><option value="70" rangetext="Local">Local</option><option value="80" rangetext="Très Local" selected="selected">Très Local</option><option value="100" rangetext="Super Local">Super Local</option><option value="120" rangetext="Hyper Local">Hyper Local</option></select>';
+				var mydropdown = '<select onchange="changemyrange(this)" alt="' + id + '" range="80" class="dropdownRangeSelector"><option value="70" rangetext="Local">Local</option><option value="80" rangetext="Très Local" selected="selected">Très Local</option><option value="100" rangetext="Super Local">Super Local</option><option value="120" rangetext="Hyper Local">Hyper Local</option></select>';
 				$('.favplacelist').append("<li id='newLI' pointname='" + placeGmap.title + "' location='" + JSON.stringify(placeGmap.location) +"' pointId='"+id+"' lat='"+placeGmap.location.lat+"' lng='"+placeGmap.location.lng+"' class='zoneLoc'><span class='redStars'></span><span> "+obj.formatted_address+"</span><span class='closePlace'  onclick='removefavPlace($(this));'></span><span style='display: none' class='mylocalnessPrinter'></span>" + mydropdown +"</li>");
 
 				$('#favplace,#favplace2').val('').focus();
@@ -1415,9 +1415,9 @@ function setLikeSystem(from)
 					if (res == 'updated')
 					{
 						if(currentLikes + 1 == 1)
-							thumbs.html(currentLikes + 1 + "like");
+							thumbs.html(currentLikes + 1 + " like");
 						else
-							thumbs.html(currentLikes + 1 + "likes");
+							thumbs.html(currentLikes + 1 + " likes");
 						//currEl.parent().find("i").eq(0).before("déjà aimé");
 						currEl.parent().find(".newYaklike").remove();
 

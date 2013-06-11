@@ -983,10 +983,13 @@
 				if(!(typeof item.socialThumbs === 'undefined'))
 					if(item.socialThumbs.length > 0)
 					{
-						var thumbImageCode = $("<div />");
-						thumbImageCode.attr("class", "thumbImage");
-						thumbImageCode.append("<img src=\'"+item.socialThumbs[0]+"\' />");
-						infoContent.append(thumbImageCode);
+						if(item.socialThumbs[0] != "")
+						{
+							var thumbImageCode = $("<div />");
+							thumbImageCode.attr("class", "thumbImage");
+							thumbImageCode.append("<img src=\'"+item.socialThumbs[0]+"\' />");
+							infoContent.append(thumbImageCode);
+						}
 					}
 			}
 			var yakTypeImage = $("<div />");

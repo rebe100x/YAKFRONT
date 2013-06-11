@@ -85,7 +85,7 @@ mixin post_youtube
 			$("#searchYoutube").click(function(){
 				$("#loadingYoutube").show();
 				$("#youtubeResults").html("");
-				var youtubeUrl = 'http://gdata.youtube.com/feeds/api/videos?q=' + $("#inputYoutube").val() + '&orderby=viewCount&time=all_time&max-results=10&alt=json&fields=entry/id,entry/media:group/media:thumbnail,entry/title';
+				var youtubeUrl = 'http://gdata.youtube.com/feeds/api/videos?q=' + $("#inputYoutube").val() + '&orderby=viewCount&time=all_time&max-results=10&alt=json&fields=entry/id,entry/media:group/media:thumbnail,entry/title,entry/content';
 				$.get(youtubeUrl, function(data){
 					showMyVideos(data);
 					$("#loadingYoutube").hide();
@@ -104,9 +104,11 @@ mixin post_youtube
 			var entry = entries[i];
 			var vid = entry.id.$t.replace("http://gdata.youtube.com/feeds/api/videos/", '');
 			var title = entry.title.$t;
+			var content = entry.content.$t;
+			console.log(content);
 			var thumb = entry.media$group.media$thumbnail[0].url;
 			html += '<li rel="' + vid + '">';
-			html += '<a target="_blank" href="http://www.youtube.com/watch?v='+vid+'" class="yt_title" rel="'+vid+'">' + title + '</a>';
+			html += '<a target="_blank" href="http://www.youtube.com/watch?v='+vid+'" class="yt_title" rel="'+vid+'">' + title + '<br /><span class="yt_content">'+content+'</span></a>';
 			html += '<a target="_blank" href="http://www.youtube.com/watch?v='+vid+'" class="yt_image" rel="'+vid+'">' + "<img src='" + thumb +"' />" + '</a>';
 			html += '<span class="yt_add yakPosterLogo" rel="'+vid+'"></span>';
 			//html += '<iframe  src="http://www.youtube.com/embed/'+vid+'" width="100%" frameborder="0" allowfullscreen></iframe>';

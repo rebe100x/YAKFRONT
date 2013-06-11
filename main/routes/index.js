@@ -1033,11 +1033,13 @@ exports.resetpassword = function(req,res){
 	if(req.session.user){	
 		User.findById(req.session.user,function (err, docs){
 			var crypto = require('crypto');
+			var salt = Math.round(new Date().valueOf() * Math.random());
+			var token = crypto.createHash('sha1').update("yakwala@secure"+salt).digest("hex");
 			var newcryptedPass = crypto.createHash('sha1').update(req.body.password+"yakwala@secure"+docs.salt).digest("hex");	
 			var login = docs.login;
 			if(req.body.password.length >= 8){
 				
-				User.update({_id: req.session.user}, {hash : newcryptedPass}, {upsert: false}, function(err){
+				User.update({_id: req.session.user}, {hash : newcryptedPass, token:token,salt:salt, password:req.body.password}, {upsert: false}, function(err){
 				
 					if (err) console.log(err);
 					else{
@@ -1061,7 +1063,11 @@ exports.resetpassword = function(req,res){
 				});
 			}
 			else
+			{
 				formMessage = "Votre mot de passe doit au moins 8 caractères";
+				req.send(formMessage);
+			}
+				
 				
 			
 		});

@@ -369,13 +369,13 @@ mixin searchFormUnified(page)
 				{
 					$('#newsfeed').html("<li class='mapHighlighterDetails'><div class='infowindow emptyfeeditem'>Il n'y pas d'info à afficher car vous n'avez pas défini vos <a href='/settings/alerts'>alertes</a> !</div></li>");
 					$("#alertsModeText").addClass("empty");
-					$("#alertsModeText").html("Personnalisez<br />vos alertes");
+					$("#alertsModeText").html("<a href='/settings/alerts'>Personnalisez<br />vos alertes</a>");
 					return;
 				}
 				else
 				{
 					$("#alertsModeText").addClass("active");
-					$("#alertsModeText").html("Vous etes en <br />mode alerte");
+					$("#alertsModeText").html("Vous êtes en <br />mode alerte");
 				}
 				
 			}
