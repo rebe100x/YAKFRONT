@@ -1169,14 +1169,15 @@ border-bottom: 1px solid #e5e5e5; width: 100%}
 #soundCloudResults ul li .yt_add { left: 0px; top: 55px; float: right;}
 
 .TheTops { list-style: none;}
-.TheTops li { padding-top: 20px;}
-.TheTops li a { color: #656565; font-size: 14px;}
+.TheTops li { padding-top: 20px; clear: both;}
+.TheTops li a { color: #656565; font-size: 14px; float: left; width: 60%}
+.TheTops img { width: 30%; height: auto; float: left;}
 .TheTops li .topCounts { color: #e1252c; font-size: 12px;}
 .TheTops li .topHeat { width: 30%; background: white; height: 15px;}
 .TheTops li .topHeat .heatLevel { background: red; height: 15px;}
-.TheTops .timeago { color: #e1252c; font-size: 12px;}
+.TheTops .timeago { color: #e1252c; font-size: 12px; clear: both; display: block;}
 #topsContainer { background: #F6F6F6; margin-top: -1px; position: relative; right: -16px;}
-#topsContainer .columnTitle { padding-left: 24px; padding-top: 20px; color: #5D5D5D; font-size: 1.2em; border-top: 2px solid white; width: 94%;}
+#topsContainer .columnTitle { padding-left: 24px; padding-top: 20px; color: #5D5D5D; font-size: 1.2em; border-top: 2px solid white; width: 94%; float: left;}
 
 h3 .posterInfo {width: 18px; height: 18px; background-image: url('/images/yakwala_sprite.png'); background-position: -136px 0px; display: block; float: left;margin-top: 4px; margin-right: 12px;}
 h3 .quelEndroit{width: 18px; height: 24px; background-image: url('/images/yakwala_sprite.png'); background-position: -121px -27px; display: block; float: left;margin-top: 4px; margin-right: 12px;}

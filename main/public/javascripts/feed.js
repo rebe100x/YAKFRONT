@@ -185,8 +185,7 @@
 				if(!isUserBL && !isFeedBL && !isInfoBL)
 				{
 					if(flagFilter!=1)
-						infoArray.push(val);						
-					printMapItem(val,key,0);
+						infoArray.push(val);
 					if(key<10)
 						printFeedItem(val,0,0);	
 				}
@@ -273,7 +272,18 @@
 								if(val.likes != 0){
 									var thumbsource = "";
 									if(val.thumb != undefined && val.thumb != "")
-										thumbsource = "<img src='"+val.thumb +"' width='50' height='auto' />";
+										thumbsource = "<img src='"+val.thumb +"' />";
+									else
+									{
+										if(!(typeof val.socialThumbs === 'undefined'))
+											if(val.socialThumbs.length > 0)
+											{
+												if(val.socialThumbs[0] != "")
+												{
+													thumbsource = "<img src='"+val.socialThumbs[0] +"' />";
+												}
+											}
+									}
 
 									ulLiked+="<li>"+thumbsource+"<a href='/news/feed?id="+val._id+"'>"+val.title+"</a><br /><span class='topCounts'>"+val.likes+"like(s)</span></li>";
 							
@@ -318,8 +328,18 @@
 							if(val.commentsCount > 0){
 								var thumbsource = "";
 								if(val.thumb != undefined && val.thumb != "")
-									thumbsource = "<img src='"+val.thumb +"' width='50' height='auto' />";
-								
+									thumbsource = "<img src='"+val.thumb +"'  />";
+								else
+									{
+										if(!(typeof val.socialThumbs === 'undefined'))
+											if(val.socialThumbs.length > 0)
+											{
+												if(val.socialThumbs[0] != "")
+												{
+													thumbsource = "<img src='"+val.socialThumbs[0] +"' />";
+												}
+											}
+									}
 								ulCommented+="<li>"+thumbsource+"<a href='/news/feed?id="+val._id+"'>"+val.title+"</a><br /><i class='commentLogo'></i><span class='topCounts'>"+val.commentsCount+"</span></li>";
 							}
 								
@@ -362,9 +382,19 @@
 							thedate = buildItemDate(val);
 							var thumbsource = "";
 							if(val.thumb != undefined && val.thumb != "")
-								thumbsource = "<img src='"+val.thumb +"' width='50' height='auto' />";
-
-							ulHots+="<li>"+thumbsource+"<a href='/news/feed?id="+val._id+"'>"+val.title+"</a><br />"+thedate+"</li>";
+								thumbsource = "<img src='"+val.thumb +"' />";
+							else
+									{
+										if(!(typeof val.socialThumbs === 'undefined'))
+											if(val.socialThumbs.length > 0)
+											{
+												if(val.socialThumbs[0] != "")
+												{
+													thumbsource = "<img src='"+val.socialThumbs[0] +"' />";
+												}
+											}
+									}
+							ulHots+="<li>"+thumbsource+"<a href='/news/feed?id="+val._id+"'>"+val.title + " " + thedate+"</a></li>";
 						}
 							
 				});
