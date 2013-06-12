@@ -373,11 +373,11 @@ var contenuIllicite = new Schema({
 	,user_id : { type : [Schema.ObjectId] }
 	,info_id : { type : Schema.ObjectId }
 	,poster_id : { type : Schema.ObjectId }
-	,last_date_mark : {type: Date, default: Date.now }
-	,content_type : { type : Number, default: 1 } // 1 info, 2 comments , 3 users
-	,count : { type : Number, default : 1}
+	,last_date_mark : {type: Date, default: Date.now , index : true}
+	,content_type : { type : Number, default: 1 , index : true} // 1 info, 2 comments , 3 users
+	,count : { type : Number, default : 1 , index : true}
 	,content : {type : String}
-	,status : { type : Number, default : 1}
+	,status : { type : Number, default : 1 , index : true}
 });
 
 contenuIllicite.statics.countUnvalidated = function (callback) {
@@ -1137,13 +1137,13 @@ mongoose.model('Info', Info);
 var Yakcat = new Schema({
     title     : { type: String, index:true, required: true}
   , path       : { type:String }
-  , pathN       : { type:String, uppercase: true, index:true }
+  , pathN       : { type:String, uppercase: true}
   , tag       : { type:[String] }
   , level       : { type:Number }
   , thumb       : { type:String }
   , creationDate       : { type:Date }
   , lastModifDate       : { type:Date }
-  , status       : { type:Number }
+  , status       : { type : Number , index : true }
   
 }, { collection: 'yakcat' });
 
@@ -1232,10 +1232,10 @@ mongoose.model('Yakcat', Yakcat);
 
 /******************************YAKTAG*/
 var Tag = new Schema({
-    title     : { type: String, required: true, index:true}
-  , usageDate       : { type:Date , default: Date.now, index:true}
-  , creationDate       : { type:Date , index:true}
-  , numUsed :{type:Number}
+    title     : { type: String, required: true, index : true}
+  , usageDate       : { type: Date , default: Date.now , index : true}
+  , creationDate       : { type: Date , index : true}
+  , numUsed : { type : Number , index : true}
   , location	: { type : { lat: Number, lng: Number }, index : '2d'}
   , print :{type:Number,require: true, index: true, default: 0}	
   
@@ -1301,8 +1301,8 @@ var Comment = new Schema({
 	,	username : {type: String}
 	,	userthumb : {type: String}
 	,	comment : {type: String}
-	, 	date : {type: Date}
-	, 	status : {type: Number,default:1}
+	, 	date : {type: Date,index:true}
+	, 	status : {type: Number,default:1,index:true}
 },{ collection: 'comment' });
 mongoose.model('Comment', Comment);
 

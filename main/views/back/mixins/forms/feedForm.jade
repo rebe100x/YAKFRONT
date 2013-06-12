@@ -143,7 +143,7 @@ mixin feedForm()
 						label Source(s) web
 							i.icon-question-sign#sourceHelp
 						.input-append	
-							input.big(type='text', name='source', id='source', placeholder='http://...')
+							input.big(type='text', name='source', id='source', placeholder='http://...',autocomplete='off')
 							button.btn#btn-source-adder(type="button") Ajouter
 						.pillbox#pillSourceLink(style="display:none")
 							ul	
@@ -401,7 +401,6 @@ mixin feedForm()
 
 			/*THUMB*/
 			$('#picture').live('change', function () {
-
 				if ( window.FileReader ) {
 					var fileList = this.files;
 					var file = fileList[0];
@@ -410,10 +409,10 @@ mixin feedForm()
 						var binimage = r.result;
 						binimage1 = binimage.replace('data:'+file.type+';base64,', '');
 						var src = "data:"+file.type+";base64," + binimage1;
+						$("#picturePreview").show();
 						$("#picturePreview img").attr('src',src).show();
 					};
 					r.readAsDataURL(file);
-				
 				}
 			});
 				
@@ -514,7 +513,8 @@ mixin feedForm()
 									function(){$('.col_'+$(this).attr('key')).removeClass('colTableParsingOn');
 								});
 								$('.tableParsing').contextmenu({
-									target:'#context-menu', 
+									target:'#context-menu',
+									placement:'bottom', 
 									before: function(e,element) {
 										if($('#feedType').val() == 'CSV'){
 											var target = element.attr('num');

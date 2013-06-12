@@ -1,15 +1,13 @@
 mixin yakNEForm()
 	button.btn#btnBack(style='display:none')
 		i.icon-chevron-left
-	form#feedForm.yakForm(action='/feed', method='POST', enctype='multipart/form-data', style='display:none')
+	form#yakNEForm.yakForm(action='/yakNE', method='POST', enctype='multipart/form-data', style='display:none')
+		input#titleNormalizedHidden(type='hidden', name='titleNormalizedHidden', value='')
 		input#yakCatIdsHidden(type='hidden', name='yakCatIdsHidden', value='')
 		input#yakCatNamesHidden(type='hidden', name='yakCatNamesHidden', value='')
-		input#tagsHidden(type='hidden', name='tagsHidden', value='')
-		input#linkSource(type='hidden', name='linkSource', value='')
-		input#fileSource(type='hidden', name='fileSource', value='')		
-		input#latitude(type="hidden", name="latitude")
-		input#longitude(type="hidden", name="longitude")
-		input#update(type="hidden", name="update", value='0')
+		input#normalizedTagsHidden(type='hidden', name='normalizedTagsHidden', value='')
+		input#exactTagsHidden(type='hidden', name='exactTagsHidden', value='')
+		
 		input#objid(type="hidden", name="objid", value='0')
 		
 
@@ -17,183 +15,59 @@ mixin yakNEForm()
 				div.controls
 					label.alert#err(type="text", id="err", name="err", style='display:none') Les champs en rouge sont obligatoires.
 		
-		legend.mainlegend Ajouter un flux
+		legend.mainlegend Ajouter un mot clé :
 		
 		div.row-fluid
-			legend Infos générales:
 			div.control-group#titleGroup
+				legend La tête du mot clé
 				div.controls
-					div.row-fluid
-						.span6 
-							label Nom*: 
-								i.icon-question-sign#titleHelp
-							input(type='text', name='humanName', id='humanName', placeholder='Le nom du flux')
-						.span6
-							label Imagette:
-								i.icon-question-sign#imagetteHelp
-							span#picturePreview
-								img.img-rounded(style='width:100px;display:none;')
-							input.span6#picture(type="file",style="display:block",name="picture")
-					div.row-fluid
-						.span6
-							label Licence*:
-								i.icon-question-sign#licenceHelp
-							input(type='text', name='licence', id='licence', placeholder='Licence')
-						.span6
-							label Lien externe:
-								i.icon-question-sign#linkHelp
-							input(type='text', name='link', id='link', placeholder='Lien vers la source de la donnée')
-					div.row-fluid
-						.span6
-							label Combien de jours l info restera sur le front ?*
-								i.icon-question-sign#persistDaysHelp
-							div.input-append.dropdown.combobox#persistDays
-								input(type='text', placeholder="Jours de persistence", name="persistDays", id="persistDaysValue")
-								button.btn(data-toggle="dropdown", tabindex="-1")
-									i.caret
-								ul.dropdown-menu
-									li(data-value="1")
-										a(href="") 1
-									li(data-value="2")
-										a(href="") 2
-									li(data-value="3")
-										a(href="") 3
-									li(data-value="7")
-										a(href="") 7
-									li(data-value="30")
-										a(href="") 30
-									li(data-value="90")
-										a(href="") 90
-									li(data-value="365")
-										a(href="") 365
-						.span6
-							label Description:
-								i.icon-question-sign#descriptionHelp
-							textarea#description.span12(name='description', placeholder='Description',rows='3')
-							span#charNum 120
-							span &nbsp;caratères max
-		div.row-fluid
-			legend Metadata:		
-			div.control-group#yakType.row-fluid
-				.span12
-					label Type info:
-						i.icon-question-sign#yakTypeHelp
-					label.radio.inline Actu
-						input(type="radio", name="yakType", value="1")
-					label.radio.inline Agenda
-						input(type="radio", name="yakType", value="2")
-				
-			div.control-group
-				div.controls.row-fluid
+					.span6 
+						label Tête du mot clé*: 
+							i.icon-question-sign#titleHelp
+						input(type='text', name='title', id='title', placeholder='La tête du mot clé',autocomplete="off")
+					.span6 
+						label Mot clé tel qu il apparaitra sur le front:
+							i.icon-question-sign#titleNormalizedHelp
+						span#titleNormalized	
+		div.row-fluid						
+			div.control-group#tailGroup
+				legend Les queues du mot clé
+				div.controls
+					.span6
+						label Queue normalisée
+							i.icon-question-sign#normalizedTagHelp
+						.input-append
+							input#normalizedTag(type="text", data-provide="typeahead", name="normalizedTag", autocomplete="off", placeholder='Entrer une expression...')
+							button.btn#btn-normalizedTag-adder(type="button") Ajouter	
+						.pillbox#pillNormalizedTag(style="display:none")
+							ul
+					.span6
+						label Queue exacte
+							i.icon-question-sign#exactTagHelp
+						.input-append
+							input#exactTag(type="text", data-provide="typeahead", name="exactTag", autocomplete="off", placeholder='Entrer une expression...')
+							button.btn#btn-exactTag-adder(type="button") Ajouter	
+						.pillbox#pillExactTag(style="display:none")
+							ul		
+		div.row-fluid	
+			div.control-group#otherGroup
+				legend Catégories associées
+				div.controls				
 					.span6
 						label(for='category') Catégories
 							i.icon-question-sign#yakcatHelp
 						input#yakcat(type="text", data-provide="typeahead", name="yakcat", autocomplete="off", placeholder='Chercher une catégorie...')
 						.pillbox#pillYakcat(style="display:none")
 							ul
-					.span6
-						label Tags
-							i.icon-question-sign#freetagHelp
-						.input-append
-							input#freetag(type="text", data-provide="typeahead", name="freetag", autocomplete="off", placeholder='Entrer un tag...')
-							button.btn#btn-freetag-adder(type="button") Ajouter	
-						.pillbox#pillFreetag(style="display:none")
-							ul						
-		div.row-fluid
-			legend Localisation:						
-			div.control-group#locationGroup.clearBoth
-				div.controls.row-fluid	
-					.span6
-						label(for='defaultPlaceName') Localisation du flux:
-							i.icon-question-sign#defaultPlaceNameHelp
-						input(type="text",data-provide="typeahead", id="defaultPlaceName", name="defaultPlaceName", autocomplete="off", placeholder="Chercher...")
-					.span6
-						label Si l'info n'est pas géolocalisée...	
-							i.icon-question-sign#defaultPrintFlagHelp
-						select.big#defaultPrintFlag(name='defaultPrintFlag')
-							option(value="0") ... ne pas afficher sur la carte mais afficher sur le fil info
-							option(value="1") ... afficher sur la carte + fil info
-							option(value="3") ... ne pas afficher l info du tout
-							option(value="2") ... ne pas faire de géoloc et la placer au point par défaut
-				div.controls.row-fluid	
-					.span6
-						label(for='defaultPlaceSearchName') Texte complémentaire pour la recherche de lieu:
-							i.icon-question-sign#defaultPlaceSearchNameHelp
-						input(type="text", id="defaultPlaceSearchName", name="defaultPlaceSearchName", autocomplete="off", placeholder="Texte de recherche sur google map.")
-				div.controls.row-fluid	
-					.span6
-						label(for='zone') Zone:
-							i.icon-question-sign#zoneHelp
-						select.big#zone(name='zone')
-
-		div.row-fluid
-			legend Sources des données:
-			div.control-group.clearBoth#dataSource
-				div.controls.row-fluid		
-					.span6			
-						label Uploader un fichier : 
-							i.icon-question-sign#fileuploadHelp
-						input(type="file", id="fileupload", name="files[]", data-url="http://localhost:"+JSON.parse(conf).fileport, multiple)
-						div#progress
-							div.bar.alert.alert-success(style="width: 0%;")
-								span.alertText 0%
-						.pillbox#pillSourceFile(style="display:none")
-							ul
-					.span6
-						label Source(s) web
-							i.icon-question-sign#sourceHelp
-						.input-append	
-							input.big(type='text', name='source', id='source', placeholder='http://...')
-							button.btn#btn-source-adder(type="button") Ajouter
-						.pillbox#pillSourceLink(style="display:none")
-							ul	
-		div.row-fluid
-			legend Parsing:
-			div.control-group#parsingGroup.clearBoth
-				div.controls.row-fluid
-					.span6
-						label Type de flux : 
-							i.icon-question-sign#feedTypeHelp
-						select#feedType(name='feedType')
-							option(value="XML") XML
-							option(value="CSV") CSV
-							option(value="JSON") JSON
-							option(value="YAKMADE") YAKMADE
-						div#alertFeedType.alert.alert-info
-							button.close(type="button", data-dismiss="alert") x
-							span.alertText
-						div#parsingParam
-							label.rootElementGroup Element racine:
-								i.icon-question-sign#rootElementHelp
-							input.rootElementGroup#rootElement(type="text",name="rootElement",placeholder="element racine",value='/rss/channel/item')	
-							label.lineToBeginGroup Commencer à la ligne numéro:
-								i.icon-question-sign#lineToBeginHelp
-							input.lineToBeginGroup#lineToBegin(type="text",name="lineToBegin",placeholder="Ligne de début du parsing",value="0")	
-
-					.span6
-						label Fréquence du parsing : 
-							i.icon-question-sign#parsingFreqHelp
-						select#parsingFreq(name='parsingFreq')
-							option(value="30") toutes les 30min
-							option(value="60") toutes les 1h
-							option(value="120") toutes les 2h
-							option(value="180") toutes les 3h
-							option(value="240") toutes les 4h
-							option(value="360") toutes les 6h
-							option(value="600") toutes les 10h
-							option(value="1200") toutes les 12h
-							option(value="2400") tous les jours
-							option(value="4800") tous les 2 jours
-							option(value="7200") tous les 3 jours
-							option(value="1080") tous les 7 jours
-							option(value="2160") tous les 14 jours
-							option(value="43200") tous les mois
-							option(value="83400") tous les 2 mois
-							option(value="259200") tous les 6 mois
-							option(value="518400") tous les ans					
-						label &nbsp;
-						button.btn.btn-primary.btn-warning(type='button', name='parsing', id='parsing') Définir le parsing
-
+		div.row-fluid	
+			div.control-group#otherGroup
+				legend Description
+				div.controls
+					.span12									
+						label Description:
+							i.icon-question-sign#descriptionHelp
+						textarea#description.span12(name='description', placeholder='Description',rows='3')
+					
 		div.row-fluid
 			div.control-group#parsingGroup.clearBoth
 			legend Désactiver
@@ -208,355 +82,36 @@ mixin yakNEForm()
 		div.control-group
 			div.controls
 				button.btn.btn-large.btn-inverse(type='submit', name='submit', id='submit', value='Enregistrer') Enregistrer
-			br
-			br
-			br		
-		div#parsingModal.modal.hide.fade.big
-			div.modal-header
-				button.big(type="button", class="close", data-dismiss="modal", aria-hidden="true") X
-				h3(id="myModalLabel") Définir le modèle de parsing:
-			div.modal-body
-				div#alertInfo.alert.alert-info
-					button.close(type="button", data-dismiss="alert") x
-					span.alertText
-				div.control-group#titleGroup
-					div.controls.row-fluid	
-						.span6#infoParsingForm
-							label Titre de l&rsquo;info:*
-							input(type='text', name='infoTitle', id='infoTitle', placeholder="Titre")
-							label Corps de l&rsquo; info:
-							input(type='text', name='infoContent', id='infoContent', placeholder="Corps")
-							label Lien web vers l&rsquo;info:*
-							input(type='text', name='infoLink', id='infoLink', placeholder="Lien web vers l'info")
-							legend Paramètres optionels:
-							label Imagette:
-							input(type='text', name='infoThumb', id='infoThumb', placeholder="Imagette")
-							label Date de publication:
-							input(type='text', name='infoPubDate', id='infoPubDate', placeholder="Date de publication")
-							label Tags:
-							input(type='text', name='infoTag', id='infoTag', placeholder="Tags")
-							label Date de l&rsquo;évènement:
-							input(type='text', name='infoEventDate', id='infoEventDate', placeholder="Date de l'évènement")
-							label Lieu ( pour recherche sémantique de géoloc ):
-							input(type='text', name='infoPlace', id='infoPlace', placeholder="Le lieu")
-							label Adresse:
-							input(type='text', name='infoAddress', id='infoAddress', placeholder="Adresse")
-							label Géolocation ( latitude#longitude ou latitude longitude ):
-							input(type='text', name='infoGeolocation', id='infoGeolocation', placeholder="Géolocation")
-							label Latitude:
-							input(type='text', name='infoLatitude', id='infoLatitude', placeholder="Latitude")
-							label Longitude:
-							input(type='text', name='infoLongitude', id='infoLongitude', placeholder="Longitude")
-							label Catégories Yakwala (format: id#id#id):
-							input(type='text', name='infoCat', id='infoCat', placeholder="Catégories Yakwala")
-							label Téléphone:
-							input(type='text', name='infoTel', id='infoTel', placeholder="Téléphone")
-							label Moyen de transports:
-							input(type='text', name='infoTransportation', id='infoTransportation', placeholder="Moyens de transports")
-							label Heures d ouverture:
-							input(type='text', name='infoOpening', id='infoOpening', placeholder="Heures d'ouverture")
-							label Site web:
-							input(type='text', name='infoWeb', id='infoWeb', placeholder="Site web")
-							label Mail:
-							input(type='text', name='infoMail', id='infoMail', placeholder="Mail")
-						.span6
-							div#context-menu
-								ul.dropdown-menu(role="menu")
-									li
-										a(tabindex="-1", href="#", key='infoTitle') Titre de l&rsquo;info
-									li
-										a(tabindex="-1", href="#", key='infoContent') Corps de l&rsquo; info
-									li
-										a(tabindex="-1", href="#", key='infoLink') Lien web vers l&rsquo;info
-									li.divider
-									li
-										a(tabindex="-1", href="#", key='infoThumb') Imagette
-									li
-										a(tabindex="-1", href="#", key='infoPubDate') Date de publication	
-									li
-										a(tabindex="-1", href="#", key='infoTag') Tags
-									li
-										a(tabindex="-1", href="#", key='infoEventDate') Date de l&rsquo;évènement
-									li
-										a(tabindex="-1", href="#", key='infoPlace') Lieu ( pour recherche sémantique de géoloc )
-									li
-										a(tabindex="-1", href="#", key='infoAddress') Adresse
-									li
-										a(tabindex="-1", href="#", key='infoGeolocation') Géolocation
-									li
-										a(tabindex="-1", href="#", key='infoLatitude') Latitude
-									li
-										a(tabindex="-1", href="#", key='infoLongitude') Longitude
-									li
-										a(tabindex="-1", href="#", key='infoCat') Catégories Yakwala (format: id#id#id):
-									li
-										a(tabindex="-1", href="#", key='infoTel') Téléphone
-									li
-										a(tabindex="-1", href="#", key='infoTransportation') Moyen de transports
-									li
-										a(tabindex="-1", href="#", key='infoOpening') Horaires d&rsquo;ouverture
-									li
-										a(tabindex="-1", href="#", key='infoWeb') Site web
-									li
-										a(tabindex="-1", href="#", key='infoMail') Mail
-									
-
-							div#parsingEditor
-			div.modal-footer
-				button.btn.btn-primary.btn-warning(type="button", data-dismiss="modal", aria-hidden="true") OK
-
+			
 	
 	script
 
 		var yakCatIds = new Array();
 		var yakCatNames = new Array();
-		var freeTags = new Array();
-		var linkSource = new Array();
-		var fileSource = new Array();
-		var rule = new RegExp('#([^\\s]*)','g');
-		var rule2 = new RegExp('[#]','g');
-
+		var exactTags = new Array();
+		var normalizedTags = new Array();
+		
 		
 		$(document).ready(function() {
 
-			$('#description').on('keyup',function(){
-				var len = $(this).val().length;
-				if (len > 120) {
-					$(this).val($(this).val().substring(0, 120));
-					$('#charNum').css('color','red');
-				} else {
-					$('#charNum').html(120 - len);
-					$('#charNum').css('color','black');
-				}
-			});
-
-			$('#titleHelp').popover({animation:true,title:'Le nom du flux',content:"<p>Le nom du flux apparait sur le front comme le nom d'un utilisateur.</p><br /><p><img width='100%' src='/images/back/help/cap1.jpg' /></p>",html:true});
-			$('#imagetteHelp').popover({animation:true,title:'Imagette',content:"<p>Cette image apparaîtra sur le profil du flux. Pour l'instant elle doit être carrée. </p><br /><p><img width='100%' src='/images/back/help/cap2.jpg' /></p>",html:true});
-			$('#licenceHelp').popover({animation:true,title:'Licence',content:"<p>Le type de licence, par défaut : Licence Ouverte</p>",html:true});
-			$('#linkHelp').popover({animation:true,title:'Line externe',content:"<p>Entrer le lien général vers le site ( ex : pour la version paris intra-muros du parsien : http://www.leparisien.fr/accueil/paris-75.php ) </p>",html:true});
-			$('#persistDaysHelp').popover({animation:true,title:"Temps de persistance de l'info sur le front.",content:"<p>Le nombre de jours que l'info restera sur le front.</p>",html:true});
-			$('#descriptionHelp').popover({animation:true,title:'description',content:"<p>La description apparait dans le profil du flux : <br><img width='100%' src='/images/back/help/cap2.jpg' /></p>",html:true});
-			$('#yakTypeHelp').popover({animation:true,title:"Le type d'info",content:"<p>Les Actus ont une date de publication.<br> Les évènements ont une date de début et de fin, et servent à annoncer des évènements.</p>",html:true});
-			$('#yakcatHelp').popover({animation:true,title:'Catégorie',content:"<p>Vous pouvez associer ce flux à une catégorie Yakwala, ainsi toutes les informations issues de ce flux seront tagguées avec cette catégorie.<br>NB: un dédoublement est automatiquement fait avec les tags et il n'y aura pas de redondance.<br><br> Par ex : le parsien.fr doit être associé avec la catégorie <b>Actualités</b></p>",html:true});
-			$('#freetagHelp').popover({animation:true,title:'Tags',content:"<p>Vous pouvez associer ce flux à un mot clé. Ainsi toutes les infos issues de ce flux seront taggués avec ce mot.<br><br> La liste de restaurant du guide Michelin doit être tagguée avec le mot clé <b>Restaurant</b></p>",html:true});
-			$('#defaultPlaceNameHelp').popover({animation:true,title:'Localisation du flux',content:"<p>Le flux doit être localisé afin de permettre un meilleur filtrage des infos.<br> Selon l'option choisie dans la case suivante ( Si l'info n'est pas géolocalisée... ) L'info sera par défaut placée à ce point.<br><br>Pour le parisien 75, nous plaçons ce point à la mairie de Paris.</p>",html:true});
-			$('#defaultPrintFlagHelp').popover({placement:'left',animation:true,title:'Flag',content:"<p>Ce flag est très important, il permet de régler le comportement du système si l'info n'est pas géolocalisée.<br> En effet, parfois l'info n'est pas géolocalisable ( car elle ne contient pas d'info de lieux ou que l'algo plante ). Dans ce cas, on peut placer l'info soit au point défini juste avant( la localisation du flux ), soit ne pas l'afficher. Dans le cas où on l'affiche, on peut également choisir de ne l'afficher que sur le fil info et pas sur la carte. <br><br> Par exemple le parisen 75 est localisé à la mairie de paris, mais nous ne voulons pas que des infos apparaissent en masse sur la carte à ce point, par contre on veut les voir dans le fil info quand on est pas loin de Paris. Nous avons donc choisi <b>... ne pas afficher sur la carte mais afficher sur le fil info</b><br><br>Pour un flux relatif à un lieu, par exemple le flux du stade vélodrome à Marseille, nous ne faisons pas de géoloc et nous choisissons la <b>ne pas faire de géoloc et place l'info au point par défaut.</b> </p>",html:true});
-			$('#defaultPlaceSearchNameHelp').popover({animation:true,title:'Indice pour la recherche de lieu',content:"<p>Entrer ici un texte qui complète l'information de géolocalisation et donne une précision à l'algo de recherche de lieu afin de distinguer des lieux différents mais ayant le même nom.<br><br>Par exemple un lieu reconnu comme le Musée des Civilisations pourrait être à Marseille ou à Paris. Si votre flux est un flux local à Marseille, il vous faut entrer <b>Marseille, France</b>, ou <b>Bouches-du-Rhône, France</b>. La requète de géoloc sera alors bien plus précise et évitera les doublons avec d'autre lieux du même nom en France.<br><br> Si vous entrez une liste des musées de France, il vous suffit d'entrer <b>France</b>.<br><br> SI vous être trop précis vous perdrez des infos qui aurraient pu être géolocalisées, si vous êtes trop imprécis vous risquez les doublons.</p>",html:true});
-			$('#zoneHelp').popover({animation:true,title:'La zone',content:"<p>Les zones sont définies dans l'onglet Zones.<br> Elles permettent un filtrage des données : toute donnée géolocalisée en dehors de la zone définie est mise en erreur.<br> Cela permet de filtrer les infos nationales ou internationales présentent parfois dans les medias locaux.</p>",html:true});
-			$('#fileuploadHelp').popover({animation:true,title:'Source = Fichier',content:"<p>Vous pouvez uploader vos données sous forme de fichiers. <br> Vous pouvez ajouter autant de fichiers que vous voulez du moment qu'ils suivent le même schéma de parsing.</p>",html:true});
-			$('#sourceHelp').popover({animation:true,title:'Source = Url',content:"<p>Vous pouvez définit une url à parser. <br> Vous pouvez ajouter autant d'url que vous voulez du moment qu'elles suivent le même schéma de parsing.</p>",html:true});
-			$('#feedTypeHelp').popover({animation:true,title:'Type de flux',content:"<p>Regarder l'extension du fichier ou du flux pour définir un des 3 types.</p>",html:true});
-			$('#rootElementHelp').popover({animation:true,title:'Element racine',content:"<p>Dans le cas d'un type XML ou JSON, défnir ici l'élément racine surlequel l'algo doit boucler.<br><br>Par exemple, un flux RSS a la plus part du temps un élément racine <b>/rss/channel/item</b> </p><br><br>Pour un type JSON, indiquer le nom de l'élément surlequel boucler ( souvent <b>item</b> )",html:true});
-			$('#lineToBeginHelp').popover({animation:true,title:'Ligne de commencement',content:"<p>Pour un type CSV, vous pouvez indiquer la ligne de départ afin de ne pas prendre en compte le header oudes lignes vides.</p>",html:true});
-			$('#parsingFreqHelp').popover({placement:'left',animation:true,title:'Fréquence de parsing',content:"<p>Vous devez ici vous aligner sur la fréquence de mise à jour de votre flux ou de votre fichier.</p>",html:true});
-
-			listenerHandle = google.maps.event.addListener(map, 'click', function(event) {
-				placeMarker(event.latLng,markerLocation);
-				getformattedAddress(event.latLng);
-			});
-
-			listenerHandleDrag = google.maps.event.addListener(markerLocation, 'dragend', function() {
-				var position = markerLocation.getPosition();
-				getformattedAddress(position);
-
-			});
-
-			$('#alertFeedType').hide();
-
-			/*Set zone select button*/
-			$.get('api/zones',function(data){
-				$.each(data.zone, function (key,val) {
-					$('#zone').append('<option value ="'+val.num+'">'+val.name+'</option>');
-				});	
-			});
-			
-
-			/*feedtype : CSV , XML , JSON, YAKMADE*/
-			$('#feedType').on('change',function(){
-				switch($(this).val()){
-					case 'CSV':
-							$('.lineToBeginGroup').show();
-							$('.rootElementGroup').hide();
-							$('#alertFeedType').show().children('span.alertText').html('Le fichier doit être sauvé en UTF8, séparation point virgule et textes délimités par des guillemets doubles. ');
-						break;
-						case 'XML':
-							$('.lineToBeginGroup').hide();
-							$('.rootElementGroup').show();
-							$('#alertFeedType').hide();
-						break;
-						case 'JSON':
-							$('.lineToBeginGroup').hide();
-							$('.rootElementGroup').show();
-							$('#alertFeedType').hide();
-						break;
-						case 'YAKMADE':
-							$('.lineToBeginGroup').hide();
-							$('.rootElementGroup').hide();
-							$('#alertFeedType').hide();
-						break;
-				}
-					
-			});
-
-
-			/*THUMB*/
-			$('#picture').live('change', function () {
-
-				if ( window.FileReader ) {
-					var fileList = this.files;
-					var file = fileList[0];
-					var r = new FileReader();
-					r.onload = function () {
-						var binimage = r.result;
-						binimage1 = binimage.replace('data:'+file.type+';base64,', '');
-						var src = "data:"+file.type+";base64," + binimage1;
-						$("#picturePreview img").attr('src',src).show();
-					};
-					r.readAsDataURL(file);
-				
-				}
-			});
-				
-			/*SOURCE FILE : DATA FILE UPLOAD*/
-			$('#fileupload').fileupload({
-				dataType: 'json',
-				done: function (e, data) {
-					$.each(data.result.files, function (index, file) {		
-						if(typeof file.error != 'undefined' && file.error != '' ){
-							$('#progress .bar span.alertText').html(file.error);
-							return;
-						}else{
-							$("#pillSourceFile").show();
-							$("#pillSourceFile ul").append("<li class='source-val status-success' data-value='"+file.name+"'>"+file.name+"</li>");
-							fileSource.push(file.name);
-							$("#fileSource").val(fileSource.join(','));
-							/*
-							if(file.name.split('.').pop().toLowerCase() == 'csv'){
-								$('#feedType').val('CSV');
-							}*/
-							/*empty the link source*/
-							linkSource = [];
-							$("#linkSource").val('');
-							$("#pillSourceLink ul").html('');
-						}
-					});
-				},
-				progressall: function (e, data) {
-					var progress = parseInt(data.loaded / data.total * 100, 10);
-					$('#progress .bar').css('width',(progress-20) + '%');
-					$('#progress .bar span.alertText').html(progress+'%');
-				}
-			});
-
-			$('#fileupload').click(function(){
-				$('#progress .bar').css('width','0%');
-				$('#progress .bar span.alertText').html('0%');
-	
-			});
-			
-			/*SOURCE LINK*/
-			$('#btn-source-adder').unbind('click').on('click',function(){
-				$("#pillSourceLink").show();
-				if($('#source').val().length > 40)
-					var linkText = $('#source').val().substring(0,40)+'...';
-				else
-					var linkText = $('#source').val();
-				$("#pillSourceLink ul").append("<li class='source-val status-warning' data-value='"+$('#source').val()+"'>"+linkText+"</li>");
-				$('#pillSourceLink').val('').focus();
-				linkSource.push($('#source').val());
-				$("#linkSource").val(linkSource.join(','));
-				/*empty the sourcefile*/
-				fileSource = [];
-				$("#fileSource").val('');
-				$("#pillSourceFile ul").html('');							
-			});
-
-			$("#pillSourceLink ul").unbind('click').on('click','li',function(){
-				linkSource.cleanArrayByName($(this).attr('data-value'));
-				$('#linkSource').val(linkSource.join(','));
-			});
-
-
-			$("#pillSourceFile ul").unbind('click').on('click','li',function(){
-				fileSource.cleanArrayByName($(this).attr('data-value'));
-				$('#fileSource').val(fileSource.join(','));
-			});
-
-
-			$('#parsing').unbind('click').click(function(){
-				$('#parsingModal .modal-body span.alertText').html('');
-				$('#parsingModal').modal('show');
-				var thesource = '';
-				
-					if( !( ($('#feedType').val() == 'CSV' && $('#lineToBegin').val() == '' )  ||  ( ($('#feedType').val() == 'XML' || $('#feedType').val() == 'JSON') && $('#rootElement').val() == '' ) ) ){
-					if(typeof fileSource[0] != 'undefined' || typeof linkSource[0] != 'undefined'){
-						if(typeof fileSource[0] != 'undefined'){
-							thesource = fileSource[0];
-							isLink = 0;
-						}
-							
-						if(typeof linkSource[0] != 'undefined'){
-							thesource = linkSource[0];	
-							isLink = 1;
-						}
-						$('#parsingEditor').html('<span class="alert alert-info"><img src ="images/loader_big.gif" /> Chargement du fichier <i>'+thesource+'</i></span>');	
-						if($('#feedType').val() == 'CSV')
-							var param = $('#lineToBegin').val();
-						if($('#feedType').val() == 'XML' || $('#feedType').val() == 'JSON')
-							var param = $('#rootElement').val();
-						$.post('/api/getFileSample', {file:thesource,type:$('#feedType').val(),isLink:isLink,param:param}, function(data){
-							if(typeof data != 'undefined' && data.code == '200'){
-								var sample = JSON.parse(data.fileSample);
-								var tableParsing = createTableParsing(sample,$('#feedType').val());
-								$('#parsingEditor').html(tableParsing);	
-								$('.tableParsing').unbind('hover').hover(
-									function(){$('.col_'+$(this).attr('key')).addClass('colTableParsingOn');},
-									function(){$('.col_'+$(this).attr('key')).removeClass('colTableParsingOn');
-								});
-								$('.tableParsing').contextmenu({
-									target:'#context-menu', 
-									before: function(e,element) {
-										if($('#feedType').val() == 'CSV'){
-											var target = element.attr('num');
-										}else{
-											var target = element.attr('key');
-										}
-										$('#context-menu ul li a').attr('target',target);
-										$(this).attr('target',element.attr('key'));
-										return true;	
-									},
-									onItem: function(e, element) {
-										event.preventDefault();
-										
-										if( $('#'+element.attr('key')).val() != '')
-											$('#'+element.attr('key')).val( $('#'+element.attr('key')).val() +' #YKL'+element.attr('target'));
-										else
-											$('#'+element.attr('key')).val('#YKL'+element.attr('target'));	
-										var checkedIcon = '<i title="mapped" class="icon-check"></i>';
-										if($('#feedType').val() == 'CSV')
-											$('#parsingEditor table thead tr th[num='+element.attr('target')+']').append(checkedIcon);
-										else
-											$('#parsingEditor table thead tr th[key='+element.attr('target')+']').append(checkedIcon);
-										return false;
-									}
-								})
-							}else
-								$('#parsingEditor').html('<span class="alert alert-error">Erreur : '+data.error+'</span>');	
-
-						});
-					}else{
-						$('#parsingEditor').html('<span class="alert alert-error">Veuillez définir une source ( Fichier ou Lien )</span>');	
+			$('#title').on('keyup',function(){
+				var titleNormalized = normalizeTag($(this).val()).slice(1,$(this).val().length+1);
+				$('#titleNormalized').html(titleNormalized);				
+				$("#yakNEForm #titleNormalizedHidden").val(titleNormalized);
+				$.get('/api/yakNEExist/'+titleNormalized,function(data){
+					if(data.yakNE.length > 0 ){
+						$('#titleNormalized').html('<span class="alert">Ce mot clé existe déjà ! </span>'+ titleNormalized);
 					}
-				}else{
-					if($('#feedType').val() == 'CSV')
-						$('#parsingEditor').html('<span class="alert alert-error">Veuillez définir une linge de début.</span>');		
-					if($('#feedType').val() == 'XML' || $('#feedType').val() == 'JSON')
-						$('#parsingEditor').html('<span class="alert alert-error">Veuillez définir un élément racine.</span>');		
-				}	
-					
+				});
 			});
 
-
+			$('#titleHelp').popover({placement:'bottom',animation:true,title:'La tête du mot clé',content:"<p>C'est le tag qui apparaitra dans la news précédé d'un <b>#</b>.<br>Il est automatiquement converti en CamelCase que vous pouvez visualiser dans le champs juste à droite.<br>Tous les mots vérifiant une des queues du mot clé seront regroupés sous la tête du mot clé.<br> Par ex: en créant un mot clé de tête <b>MariagePourTous</b> et en mettant dans la queue : <b>mariage gay</b> et <b>mariage homosexuel</b> vous tagguerez toutes les infos portant sur ce sujet sous un seul mot clé ( la tête du mot clé) </p><p><b>NB : </b><u>La tête du mot clé n'est pas détectée dans l'analyse sémantique.</u><br> Il faut donc parfois ajouter le mot clé de tête dans la queue, mais pas toujours .. à vous d'y réfléchir. </p>",html:true});
+			$('#titleNormalizedHelp').popover({placement:'bottom',animation:true,title:'La tête du mot clé normalisée',content:"<p>Les tags sont automatiquement transformés en HashTag du type <i>CamelCase</i></p>",html:true});
+			$('#descriptionHelp').popover({animation:true,title:'Description',content:"<p>La description n'apparait qu'ici et est juste pour vous aider à comprendre un mot clé.<br> Remplissez là soigneusement si vous voulez que les autres opérateurs comprenne votre travail.</p>",html:true});
+			$('#yakcatHelp').popover({animation:true,title:'Catégorie',content:"<p>Vous pouvez associer des catégories à ce mot clé. Lorsqu'un élément de queue est détecté dans un texte, on attribura automatiquement cette catégorie à la news.</p>",html:true});
+			$('#normalizedTagHelp').popover({animation:true,title:'Queue normalisée',content:"<p>Les tags de la queue normalisée font l'objet d'une détection <b>non sensible à la casse</b> et </b>non sensible la ponctuation</b>.<br> Vous pouvez donc mettre ici les expressions plus souples qui peuvent changer de forme ( majuscule de début de phrase, ponctuation acollé... ) </p>",html:true});
+			$('#exactTagHelp').popover({animation:true,title:'Queue exact',content:"<p>Les tags de la queue exacte font l'objet d'une détection <b>sensible à la casse</b> et <b>sensible la ponctuation</b>.<br> Vous pouvez donc mettre ici les expressions rigoureusement cherchées. Par exemple: les expressions qui peuvent porter à confusion : <b>Croix-Rouge</b>  ou encore les sigles : <b>CARE</b> (pour l'ONG).</p>",html:true});	
+			
 
 			$('#yakcat').typeahead({
 				minLength : 3,
@@ -570,7 +125,7 @@ mixin yakNEForm()
 						})},
 				property: "title",
 				onselect: function(obj) { 
-					$("#pillYakcat ul").append("<li class='yakcat-val status-important' data-id='"+obj._id+"' data-title='"+obj.title+"' >"+obj.title+"</li>");
+					$("#pillYakcat ul").append("<li class='yakcat-val status-success' data-id='"+obj._id+"' data-title='"+obj.title+"' >"+obj.title+"</li>");
 					$('#yakcat').val('').focus();
 					yakCatIds.push(obj._id);
 					yakCatNames.push(obj.title);
@@ -587,198 +142,77 @@ mixin yakNEForm()
 			});
 			
 			
-			$('#btn-freetag-adder').unbind('click').on('click',function(event){
+			$('#btn-normalizedTag-adder').unbind('click').on('click',function(event){
 				event.preventDefault();
-				if($('#freetag').val() != ''){
-					var tags = $('#freetag').val().split(',');
+				if($('#normalizedTag').val() != ''){
+					var tags = $('#normalizedTag').val().split(',');
 					for(i = 0; i< tags.length;i++){
-						$("#pillFreetag ul").append("<li class='freetag-val' data-value='"+tags[i].trim()+"'>"+tags[i].trim()+"</li>");
-						freeTags.push(tags[i].trim());
+						$("#pillNormalizedTag ul").append("<li class='source-val status-warning' data-value='"+tags[i]+"'>"+tags[i]+"</li>");
+						normalizedTags.push(tags[i]);
 					}
-					$('#tagsHidden').val(freeTags.join(','));
-					$('#freetag').val('').focus();
+					$('#normalizedTagsHidden').val(normalizedTags.join(','));
+					$('#normalizedTag').val('').focus();
 				}
 				return false;
 			});	
 
-			$('#freetag').typeahead({
-				minLength : 3,
-				source: function (typeahead, query) {
-					$.ajax({
-							dataType: "json",
-							url: "/api/yakNE",				
-							success: function( ajax ) {
-								typeahead.process(ajax.data.yakne);
-							}
-						})},
-				property: "title",
-				onselect: function(obj) { 
-					$("#pillFreetag ul").append("<li class='freetag-val status-info' data-value='"+obj.title+"'>"+obj.title+"</li>");
-					$('#freetag').val('').focus();
-					freeTags.push(obj.title);
-					$('#tagsHidden').val(freeTags.join(','));
-				}
-			});
-
-			$("#pillFreetag ul").unbind('click').on('click','li',function(){
-				freeTags.cleanArrayByName($(this).attr('data-value'));
-				$('#tagsHidden').val(freeTags.join(','));
+			$("#pillNormalizedTag ul").unbind('click').on('click','li',function(){
+				normalizedTags.cleanArrayByName($(this).attr('data-value'));
+				$('#normalizedTagsHidden').val(normalizedTags.join(','));
 			});
 
 
-			
-			
-
-			/*CLEAN LOCATION*/
-			$('#defaultPlaceName').unbind('blur').on('blur',function(){
-				if($(this).val() == ''){
-					$("#feedForm #longitude").val('');
-					$("#feedForm #latitude").val('');
-					markerLocation.setVisible(false);
-				}
-
-			});
-			
-			/*
-			//Place autocomplete
-			var input = document.getElementById('defaultPlaceName');
-			var autocomplete = new google.maps.places.Autocomplete(input);
-			autocomplete.bindTo('bounds', map);
-			google.maps.event.addListener(autocomplete, 'place_changed', function() {
-				var place = autocomplete.getPlace();				
-				if (!place.geometry) {
-					return;
-				}
-				
-				var formattedPlace = getPlaceFromGmapResult(place);
-				$('#defaultPlaceSearchName').val(formattedPlace.address.state+', '+formattedPlace.address.area);				
-				map.setCenter(place.geometry.location);
-				$("#feedForm #longitude").val(place.geometry.location.Za);
-				$("#feedForm #latitude").val(place.geometry.location.Ya);
-
-				markerLocation.setPosition(place.geometry.location);
-				markerLocation.setVisible(true);
-			});
-			*/
-			$('#defaultPlaceName').typeahead({
-				minLength : 3,							
-				source: function (typeahead, query) {
-					if(query.length >= 3){
-						encodeURIComponent(query);
-						$("#defaultPlaceName").addClass('searching');
-						var addressQuery = {"address": query ,"region":"fr","language":"fr"};
-						var geocoder = new google.maps.Geocoder();
-						geocoder.geocode( addressQuery, function(results, status) {						
-						if (status == google.maps.GeocoderStatus.OK) {
-							$.map( results, function( item ) {fixGmapResult(item);});
-							typeahead.process(results);
-							$("#defaultPlaceName").removeClass('searching');
-						} 
-						});
+			$('#btn-exactTag-adder').unbind('click').on('click',function(event){
+				event.preventDefault();
+				if($('#exactTag').val() != ''){
+					var tags = $('#exactTag').val().split(',');
+					for(i = 0; i< tags.length;i++){
+						$("#pillExactTag ul").append("<li class='source-val status-important' data-value='"+tags[i]+"'>"+tags[i]+"</li>");
+						exactTags.push(tags[i]);
 					}
-				},
-				property: "formatted_address",
-				onselect: function(obj) { 
-					$("#defaultPlaceName").removeClass('searching');
-					var placeGmap = getPlaceFromGmapResult(obj);
-					$('#defaultPlaceName').val(placeGmap.title);
-					$('#defaultPlaceSearchName').val(placeGmap.address.state+', '+placeGmap.address.area);
-					$("#feedForm #longitude").val(placeGmap.location.lng);
-					$("#feedForm #latitude").val(placeGmap.location.lat);
-					var latLng = new google.maps.LatLng(placeGmap.location.lat,placeGmap.location.lng);
-					map.panTo(latLng);
-					placeMarker(latLng,markerLocation);
-					reduceZoneOptions(latLng.lat(),latLng.lng(),null);
+					$('#exactTagsHidden').val(exactTags.join(','));
+					$('#exactTag').val('').focus();
 				}
-			});
-
-			/*EXTERNAL SOURCE LINK COMPLETION*/
-			$('#link').on('blur',function(){
-				if($(this).val() != '' && $(this).val().slice(0,7) != "http://")
-					$(this).val('http://'+$(this).val());
+				return false;
 			});	
-				
 
+			$("#pillExactTag ul").unbind('click').on('click','li',function(){
+				exactTags.cleanArrayByName($(this).attr('data-value'));
+				$('#exactTagsHidden').val(exactTags.join(','));
+			});
+			
 				
 		});
 		
 		
 		
 		/*Form custom validation*/
-		$('#feedForm').unbind('submit').on('submit',function(){
+		$('#yakNEForm').unbind('submit').on('submit',function(){
 			var err = false;
 
 			$('.alert-error').hide();
-			if($('#humanName').val() == ""){
-				setError('#humanName','Entrer un nom pour ce flux');
+			var title = $('#title').val();
+			if(title == ""){
+				setError('#title','Entrer une tête pour ce mot clé');
 				err = true;
 			}else{
-				var feedName = S($('#humanName').val()).slugify();
-				if($('#objid').val() == ''){
-					$.get('/api/feedExist/'+feedName,function(data){
-						if(data.feed){
-							setError('#humanName','Ce flux existe déjà: '+data.feed.humanName+' / '+data.feed.name+'.xml');
-							err=true;
-						}else
-							$('#humanName').append(' File : '+feedName+'.xml');
-					});
-				}
-				
+				var titleNormalized = normalizeTag(title);
+				$.get('/api/yakNEExist/'+titleNormalized,function(data){
+					if(data.yakNE){
+						setError('#title','Ce mot clé existe déjà !'+ titleNormalized);
+						err=true;
+					}else
+						$('#title').append('Mot clé : '+titleNormalized);
+				});
 			}
 
 			
-			if($('#link').val() != "" && !$('#link').val().isUrl()){
-				setError('#link','Entrer une url valide');
-				err = true;
-			}				
-			
-			if($('#licence').val() == ""){
-				setError('#licence','Entrer un nom de licence');
-				err = true;
-			}
-			if($('#persistDays input').val() == "" || !$('#persistDays input').val().isInt()){
-				setError('#persistDays','Entrer un chiffre');
-				err = true;
-			}
-			if(typeof $('input:radio[name=yakType]:checked').val() == "undefined" ){
-				setError('#yakType','Choisir un type info');
-				err = true;
-			}
-			if($('#defaultPlaceName').val() == ""){
-				setError('#defaultPlaceName','Définir une géoloc par défaut');
-				err = true;
-			}
-			if($('#defaultPlaceSearchName').val() == ""){
-				setError('#defaultPlaceSearchName','Définir un texte de recherche par défaut');
-				err = true;
-			}
-			if($('#linkSource').val() == "" && $('#fileSource').val() == "" ){
-				setError('#dataSource','Définir soit un fichier source, soit une url source');
-				err = true;
-			}
-			if($('#infoTitle').val() == ""){
-				setError('#infoTitle','Définir le champ contenant le titre de la news.');
-				setError('#parsing','Définir le champ contenant le titre de la news.');
-				err = true;
-			}
-			if($('#rootElement').val() == "" && $('#feedType').val() == 'XML'){
-				setError('#rootElement','Pour un flux XML, définir un élément racine');
-				err = true;
-			}	
-			if($('#lineToBegin').val() == "" && $('#feedType').val() == 'CSV'){
-				setError('#lineToBegin','Pour un flux CSV, indiquez la première ligne à prendre en compte.');
+			if($('#normalizedTagsHidden').val() == "" && $('#exactTagsHidden').val() == "" ){
+				setError('#tailGroup','Définir soit un une queue exacte, soit une queue normalisée');
 				err = true;
 			}
 			
-			if(!$('#parsingFreq').val()){
-				setError('#parsingFreq','Indiquez la fréquence de mise à jour du flux.');
-				err = true;
-			}
 
-			if(!$('#feedType').val()){
-				setError('#feedType','Indiquez le type de flux.');
-				err = true;
-			}
 
 			if (err){
 				$('#err').show();
@@ -789,13 +223,4 @@ mixin yakNEForm()
 		
 		
 
-		function reduceZoneOptions(lat,lng,zone){
-			$.get('api/zones/'+lat+'/'+lng,function(data){
-				$('#zone').html('');	
-				$.each(data.zones, function (key,val) {
-					$('#zone').append('<option value ="'+val.num+'">'+val.name+'</option>');
-				});
-				if(typeof zone)
-					$("#feedForm #zone").val(zone);
-			});
-		}
+	

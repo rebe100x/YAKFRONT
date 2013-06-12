@@ -270,6 +270,13 @@ mixin list()
 			$('#zoneForm').clearForm();
 			$('#err').hide();
 			$("#btnBack").hide();
+			$('#zoneForm #nameGroup').removeClass("error");
+			$('#zoneForm #addressGroup').removeClass("error");
+			$('#zoneForm #TRGroup').removeClass("error");
+			$('#zoneForm #BLGroup').removeClass("error");
+			markerLocationBL.setVisible(false);
+			markerLocationTR.setVisible(false);
+			rect.setVisible(false);
 		});
 
 
@@ -323,10 +330,28 @@ mixin list()
 			$("#zoneForm #objid").val("");
 			$('#err').hide();
 			$("#zoneForm #name").focus();
+			
+			var mapCenter = map.getCenter();
+			$("#zoneForm #latCT").val(mapCenter.lat());
+			$("#zoneForm #lngCT").val(mapCenter.lng());
+			$("#zoneForm #latTR").val(mapCenter.lat()+0.01);
+			$("#zoneForm #lngTR").val(mapCenter.lng()+0.01);
+			$("#zoneForm #latBL").val(mapCenter.lat()-0.01);
+			$("#zoneForm #lngBL").val(mapCenter.lng()-0.01);
+			
+			var BLlatLng = new google.maps.LatLng(mapCenter.lat()-0.01,mapCenter.lng()-0.01);
+			markerLocationBL.setPosition(BLlatLng);
 			markerLocationBL.setVisible(true);
+
+			var TRlatLng = new google.maps.LatLng(mapCenter.lat()+0.01,mapCenter.lng()+0.01);
+			markerLocationTR.setPosition(TRlatLng);
 			markerLocationTR.setVisible(true);
+			
 			rect.setVisible(true);
 			drawRect();
+
+			var CTlatLng = new google.maps.LatLng(mapCenter.lat(),mapCenter.lng());
+			placeMarker(CTlatLng,markerLocation);
 		});
 
 

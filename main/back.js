@@ -162,7 +162,7 @@ app.get('/api/info/:id', back.requiresLogin, back.findInfoById);
 
 // YAKNE
 app.get('/yakNE/list', back.requiresLogin, back.yakNE_list);
-app.get('/api/yakNE', back.requiresLogin, api.yakNE);
+app.get('/api/yakNE/:id', back.requiresLogin, api.yakNE);
 app.post('/yakNE', back.requiresLogin, back.yakNE);
 app.get('/api/yakNE/:id',back.requiresLogin, back.findyakNEById);
 app.get('/api/yakNEExist/:title',back.requiresLogin, back.findYakNEByTitle);

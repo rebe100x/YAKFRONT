@@ -366,9 +366,9 @@ exports.tags = function (req, res) {
 
 exports.yakNE = function (req, res) {
 	var YakNE = db.model('YakNE');
-	YakNE.find(function (err, docs){
+	YakNE.findById(req.params.id,function (err, docs){
 	  if(!err)
-	  	res.json({meta:{code:200},data:{yakne:docs}});
+	  	res.json({meta:{code:200},data:{yakNE:docs}});
 	  else
 	  	res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 	});

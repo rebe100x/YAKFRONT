@@ -3,7 +3,7 @@ var mongoose = require('mongoose')
 , Schema = mongoose.Schema;
 
 var Stat = new Schema({
-	creationDate	: {type: Date, required: true, default: Date.now}	
+	creationDate	: {type: Date, required: true, default: Date.now, index:true}	
 	, info : {type:  Schema.Types.Mixed}				
 	, user : {type:  Schema.Types.Mixed}
 	, place : {type:  Schema.Types.Mixed}

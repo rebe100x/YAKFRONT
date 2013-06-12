@@ -7,15 +7,17 @@ var mongoose = require('mongoose')
 
 
 var YakNE = new Schema({
-	title	: String
+	title	: {type :String, index: true}
 	,match	: { type : [{ title: String, level: String }] }
+	,description : {type: String}
 	,yakCatName : [String]
 	,yakCatId : [String]
 	,creationDate : {type: Date, required: true, default: Date.now}
 	,lastModifDate: {type: Date, required: true, default: Date.now}
-	,status : Number
+	,status : {type :Number, index: true}
 },{ collection: 'yakNE' });
 
+YakNE.index({"match.title":1});
 
 YakNE.statics.findByTitle = function (str,callback) {
   searchStr = new RegExp(str,'i');

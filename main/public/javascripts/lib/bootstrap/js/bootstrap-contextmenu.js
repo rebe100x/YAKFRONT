@@ -10,6 +10,7 @@
  * Modified by rebe100x 17/5/2013 : 
  * - add left click reacts as right click
  * - unbind events
+ * - fix top position
  *
  * Twitter Bootstrap (http://twitter.github.com/bootstrap).
  */
@@ -134,9 +135,11 @@
 				, Y, X;
 
 			if (mouseY + menuHeight > boundsY) {
-				Y = {"top": mouseY - menuHeight};
+				//Y = {"top": mouseY - menuHeight};
+				Y = 10;
 			} else {
-				Y = {"top": mouseY};
+				//Y = {"top": mouseY};
+				Y = 10;
 			}
 
 			if ((mouseX + menuWidth > boundsX) && ((mouseX - menuWidth) > 0)) {

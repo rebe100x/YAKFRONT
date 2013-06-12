@@ -12,7 +12,7 @@ mixin menu(active)
 
 						div.btn-group.pull-right
 							a.customprofile(href="/user/logout",title=locals.user.login)
-								img.avatar(id="profileMenu", src=locals.user.thumbsmall, alt=locals.user.name, title=locals.user.name)
+								img.avatar(id="profileMenu", src=locals.user.thumbsmall, alt=locals.user.name, title="Logout from "+locals.user.name)
 						- if (active != 'dashboard' && active != 'login')
 							div.btn-group.pull-right
 								&nbsp;&nbsp;&nbsp;

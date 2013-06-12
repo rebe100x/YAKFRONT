@@ -4,9 +4,9 @@ var mongoose = require('mongoose')
 
 var Zone = new Schema({
     name     : { type: String, required : true, index : true, unique:true}
-  , location       : { lat: {type: Number},lng:{type:Number} }
+  , location	: { type : { lat: Number, lng: Number }, index : '2d'}	
   , num : {type : Number,unique:true}
-  , status : {type : Number}
+  , status : {type : Number, index:1}
   , address		: { type : { 
 								arr: String,
 								city: String,

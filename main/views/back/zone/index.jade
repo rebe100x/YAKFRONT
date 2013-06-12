@@ -30,10 +30,10 @@ block content
 		var markerLocationBL = null;
 		var rect = new google.maps.Rectangle({
 			visible:false,
-			strokeColor: '##B94A48',
+			strokeColor: '#f8872c',
 			strokeOpacity: 0.8,
 			strokeWeight: 1,
-			fillColor: '##B94A48',
+			fillColor: '#B94A48',
 			fillOpacity: 0.35,
 			draggable:false,
 		});
@@ -49,7 +49,7 @@ block content
 				raiseOnDrag:false,
 				crossOnDrag:false,
 				flat:true,
-				icon:{url:'/images/back/bl.png',anchor:new google.maps.Point(5,37)}
+				icon:{url:'/images/back/bl.png',anchor:new google.maps.Point(4,37)}
 			});
 
 			markerLocationTR = new google.maps.Marker({
@@ -59,7 +59,7 @@ block content
 				raiseOnDrag:false,
 				crossOnDrag:false,
 				flat:true,
-				icon:{url:'/images/back/tr.png',anchor:new google.maps.Point(26,5)}
+				icon:{url:'/images/back/tr.png',anchor:new google.maps.Point(26,4)}
 			});
 			
 			var mapCenter = map.getCenter();

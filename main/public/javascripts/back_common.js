@@ -270,6 +270,16 @@ function deletePlaceHTML(placeArray,results,self){
 	
 }
 
+function normalizeTag(str) {
 
+    var tmp =  str.replace(/(?:^|\s)\w/g, function(match) {
+        return match.toUpperCase();
+    }).replace(/(\s|,)/g,'').trim();
+
+   	if(tmp.length > 0)
+    	return "#"+tmp;
+    else
+    	return '';
+}
 
 

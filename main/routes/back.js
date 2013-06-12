@@ -458,26 +458,26 @@ exports.feed = function(req, res){
 
 /********
 #YAKNE
-********/
+*******	*/
 exports.yakNE_list = function(req, res){
 	delete req.session.message;
 	res.render('yakNE/index');
 };
 
-exports.findFeedByName = function (req, res) {
-	var Feed = db.model('Feed');
-   	Feed.findByName(req.params.name, function (err, thefeed){
+exports.findYakNEByTitle = function (req, res) {
+	var YakNE = db.model('YakNE');
+   	YakNE.findByTitle(req.params.title, function (err, theYakNE){
    		res.json({
-			feed: thefeed
+			yakNE: theYakNE
 		});
 	});
 };
 
 exports.findYakNEById = function (req, res) {
-	var Feed = db.model('Feed');
-   	Feed.findById(req.params.id, function (err, thefeed){
+	var YakNE = db.model('YakNE');
+   	YakNE.findById(req.params.id, function (err, theYakNE){
 		res.json({
-			feed: Feed.format(thefeed)
+			yakNE: theYakNE
 		});
 	});
 };
@@ -517,114 +517,57 @@ exports.yakNE = function(req, res){
 
 	var formMessage = new Array();
 	delete req.session.message;
-	var Feed = db.model('Feed');
+	var YakNE = db.model('YakNE');
 	var Yakcat = db.model('Yakcat');
 	var obj_id = req.body.objid;
 	//console.log(req.body);
-	var feed = new Object();
+	var yakNE = new Object();
 	var now = new Date();
-	feed.XLconnector = 'parser';
+	var match = new Array();
 
-	feed.humanName = req.body.humanName;
-	var strLib = require("string");
-	feed.name = strLib(feed.humanName).slugify().s;
-	if(req.body.linkSource == '' && req.body.source != '')
-		feed.linkSource = req.body.source;
-	else if(req.body.linkSource != '')
-		feed.linkSource = req.body.linkSource;
-	
-	feed.yakCatId = req.body.yakCatIdsHidden.split(',');
-	feed.yakCatName = req.body.yakCatNamesHidden.split(',');
-	if(req.body.tagsHidden == '' && req.body.freetag != '')
-		feed.tag = req.body.freetag.split(',');
-	else if(req.body.tagsHidden != '')		
-		feed.tag = req.body.tagsHidden.split(',');
+	var TNH = req.body.titleNormalizedHidden;
+	if(TNH.indexOf('"')==0)
+		yakNE.title = TNH.slice(1,TNH.length);
 	else
-		feed.tag = [];
-
-	feed.defaultPlaceLocation = {lng:parseFloat(req.body.longitude),lat : parseFloat(req.body.latitude)};
-	feed.defaultPlaceName = req.body.defaultPlaceName;
-	feed.defaultPlaceSearchName = req.body.defaultPlaceSearchName;
-	feed.defaultPrintFlag = req.body.defaultPrintFlag;
-	feed.link = req.body.link;
-	feed.licence = req.body.licence;
-	feed.yakType = req.body.yakType;
-
-	feed.feedType = req.body.feedType;
-	feed.fileSource = req.body.fileSource.split(',');
-	feed.linkSource = req.body.linkSource.split(',');
-	feed.persistDays = req.body.persistDays;
-	feed.description = req.body.description;
-	feed.zone = req.body.zone;
-	feed.status = parseInt(req.body.status);
-	feed.lastModifDate = now;
-
-	feed.rootElement = req.body.rootElement;
-	//console.log(req.body.lineToBegin);
-	if(req.body.lineToBegin != '' && typeof req.body.lineToBegin != 'undefined' )
-		feed.lineToBegin = parseInt(req.body.lineToBegin);
-	else
-		feed.lineToBegin = 1;
-
-	feed.parsingFreq = req.body.parsingFreq;
-
-	feed.parsingTemplate = {
-		title: req.body.infoTitle,
-		content: req.body.infoContent,
-		address: req.body.infoAddress,
-		geolocation: req.body.infoGeolocation,
-		latitude: req.body.infoLatitude,
-		longitude: req.body.infoLongitude,
-		outGoingLink: req.body.infoLink,
-		thumb: req.body.infoThumb,
-		yakCats: req.body.infoCat,
-		freeTag: req.body.infoTag,
-		place: req.body.infoPlace,
-		eventDate: req.body.infoEventDate,
-		pubDate: req.body.infoPubDate,
-		telephone: req.body.infoTel,
-		transportation: req.body.infoTransportation,
-		opening: req.body.infoOpening,
-		web: req.body.infoWeb,
-		mail: req.body.infoMail
-	};
-
-	var feedThumb = new Object();
-	if(req.files.picture.size && req.files.picture.size > 0 && req.files.picture.size < 1048576*5){
-		var drawTool = require('../mylib/drawlib.js');
-		var size = mainConf.imgSizeAvatar;
-		var crypto = require('crypto');
-		var destFile = crypto.createHash('md5').update(req.files.picture.name).digest("hex")+'.jpeg';
-				
-		for(i=0;i<size.length;i++){
-			feedThumb = drawTool.StoreImg(req.files.picture,destFile,{w:size[i].width,h:size[i].height},conf);
-		}
-		feed.thumb = feedThumb.name;
+		yakNE.title = TNH;
+	yakNE.yakCatId = req.body.yakCatIdsHidden.split(',');
+	yakNE.yakCatName = req.body.yakCatNamesHidden.split(',');
+	if(req.body.normalizedTagsHidden != ''){
+		req.body.normalizedTagsHidden.split(',').forEach(function(item){
+			match.push({title:item,level:'normalized'});
+		});
 	}
-	else{
-		feedThumb.err = 0;
-	}
-		
-	
+
+	if(req.body.exactTagsHidden != ''){
+		req.body.exactTagsHidden.split(',').forEach(function(item){
+			match.push({title:item,level:'exact'});
+		});
+	}	
+
+	yakNE.match = match;
+	yakNE.description = req.body.description;
+	yakNE.status = parseInt(req.body.status);
+	yakNE.lastModifDate = now;
 	
 	if(typeof obj_id != 'undefined' && obj_id != ''){
 		var cond = {_id:obj_id};
 	}else{
-		feed.creationDate = now;
-		feed.lastExecDate = now;
-		var cond = {name:"anameimpossibletochoose007"};
+		yakNE.creationDate = now;
+		yakNE.lastModif = now;
+		var cond = {title:"anameimpossibletochoose007"};
 	}
 		
-
-	Feed.update(cond,feed,{upsert:true},function (err){
+	console.log(req.body);
+	console.log(yakNE);
+	YakNE.update(cond,yakNE,{upsert:true},function (err){
 		if (!err)
-			formMessage.push("Flux sauvegardé.");
+			formMessage.push("Mot clé sauvegardé.");
 		else{
-			formMessage.push("Erreur pendant la sauvegarde du flux !");
-			console.log(err);
+			formMessage.push("Erreur pendant la sauvegarde du mot clé !"+err);
+			//console.log(err);
 		}
 		req.session.message = formMessage;
-		res.redirect('feed/list')
+		res.redirect('yakNE/list')
 	});	
 };
 
