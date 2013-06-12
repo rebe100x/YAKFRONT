@@ -1316,7 +1316,8 @@
 						newComment.infoid = currEleComment.attr("rel");
 						newComment.username = user.login;
 						newComment.userid = user._id;
-						newComment.comment = comment;
+						newComment.comment = checkandremoveTags(comment);
+						alert(checkandremoveTags(comment));
 						newComment.userthumb = user.thumb;
 						newComment.date = new Date();
 						newComment.status = 1;

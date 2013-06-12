@@ -872,7 +872,7 @@ function getItemDetails(el){
 			setCommentText(val.yakComments,yakComments);
 			
 
-			yakComments.unbind("click").on('click',function(){
+yakComments.unbind("click").on('click',function(){
 				if ($(this).parent().find(".commentBox").length > 0)
 				{
 					return;
@@ -880,13 +880,17 @@ function getItemDetails(el){
 					
 				var currEleComment = $(this);
 				var divComment = $("<div />");
+
 				divComment.attr("class", "commentBox");
 				$(this).append('<img class="loadingMore" src="images/loader_big.gif">');
 				
-				$.each(val.yakComments, function(key, val){
-					divComment.append(drawAComment(val, infofId, 'map'));
-				});
-				divComment.append('<textarea maxlength="250" rows="3" style="z-index: 1111111111111; display: block" class="yakTextarea" placeholder="Ajouter un commentaire..." onclick="return stopScroll()"></textarea>');
+				divComment.append('<div><textarea maxlength="250" rows="3" style="z-index: 1111111111111; display: block" class="yakTextarea" placeholder="Ajouter un commentaire..." onclick="return stopScroll()"></textarea></div>');
+
+				for (var i = val.yakComments.length - 1; i >= 0; i--) {
+					divComment.append(drawAComment(val.yakComments[i], infofId, 'map'));
+				};
+				
+				
 
 				divComment.find("textarea").mouseenter(function(){
 
@@ -919,10 +923,10 @@ function getItemDetails(el){
 						newComment.infoid = currEleComment.attr("rel");
 						newComment.username = user.login;
 						newComment.userid = user._id;
-						newComment.comment = comment;
+						newComment.comment = checkandremoveTags(comment);
 						newComment.userthumb = user.thumb;
 						newComment.date = new Date();
-						newComment.status = 1;	
+						newComment.status = 1;
 
 						$.post('/api/setComment', {infoId : currEleComment.attr("rel"), username: user.login, userthumb: user.thumb, comment: comment.substring(0, 249)} , function(res){
 							if (res.meta.code == '200')
@@ -931,7 +935,8 @@ function getItemDetails(el){
 								newComment._id = res.meta.cid;
 								theArea.val("");
 								theArea.removeAttr("disabled");
-								theArea.after(drawAComment(newComment, infofId, 'feed'));
+
+								theArea.after(drawAComment(newComment, infofId, 'map'));
 							}
 
 						});

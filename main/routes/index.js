@@ -1719,7 +1719,7 @@ exports.auth_twitter_callback = function(req, res){
 				req.session.oauth.access_token = oauth_access_token;
 				req.session.oauth.access_token_secret = oauth_access_token_secret;
 				//console.log(results, req.session.oauth);
-				oa.get("https://api.twitter.com/1/account/verify_credentials.json", req.session.oauth.access_token, req.session.oauth.access_token_secret, function (error, data, response) {
+				oa.get("https://api.twitter.com/1.1/account/verify_credentials.json", req.session.oauth.access_token, req.session.oauth.access_token_secret, function (error, data, response) {
 		        if (error) {
 		          console.log(error);
 		          res.send("Error getting twitter screen name : " + error, 500);
@@ -1794,7 +1794,7 @@ exports.auth_twitter_callback_create = function(req, res){
 					req.session.oauth.access_token = oauth_access_token;
 					req.session.oauth.access_token_secret = oauth_access_token_secret;
 					//console.log(results, req.session.oauth);
-					oa.get("https://api.twitter.com/1/account/verify_credentials.json", req.session.oauth.access_token, req.session.oauth.access_token_secret, function (error, data, response) {
+					oa.get("https://api.twitter.com/1.1/account/verify_credentials.json", req.session.oauth.access_token, req.session.oauth.access_token_secret, function (error, data, response) {
 			        if (error) {
 			          console.log(error);
 			          res.send("Error getting twitter screen name : " + error, 500);
@@ -1981,7 +1981,7 @@ exports.auth_twitter_callback2 = function(req, res){
 				req.session.oauth.access_token = oauth_access_token;
 				req.session.oauth.access_token_secret = oauth_access_token_secret;
 				//console.log(results, req.session.oauth);
-				oa.get("https://api.twitter.com/1/account/verify_credentials.json", req.session.oauth.access_token, req.session.oauth.access_token_secret, function (error, data, response) {
+				oa.get("https://api.twitter.com/1.1/account/verify_credentials.json", req.session.oauth.access_token, req.session.oauth.access_token_secret, function (error, data, response) {
 		        if (error) {
 		          console.log(error);
 		          res.send("Error getting twitter screen name : " + error, 500);
@@ -2000,7 +2000,15 @@ exports.auth_twitter_callback2 = function(req, res){
 				var Twitter = db.model('Twitter');
 				var aTwitter = new Twitter();	
 
-				aTwitter.twitter_id = twitter_id;
+				oa.get("https://api.twitter.com/1.1/followers/list.json?cursor=-1&screen_name=sitestreams&skip_status=true&include_user_entities=false", req.session.oauth.access_token, req.session.oauth.access_token_secret, function (error, data2, response) {
+					 if (error) {
+			          console.log(error);
+			          req.session.message = "Error Associating Twitter";
+			          res.redirect('/user/login');
+			         
+			        } else {
+			    		aTwitter.friendsList = JSON.parse(data2);    	
+			    		aTwitter.twitter_id = twitter_id;
 
 				if(typeof(data.name) != 'undefined')
 					aTwitter.name = data.name;
@@ -2059,7 +2067,9 @@ exports.auth_twitter_callback2 = function(req, res){
 				res.cookie('loginFrom', '1', { expires: new Date(Date.now() + 90000000000) , httpOnly: false, path: '/'});
 				var trackParams = {"loginFrom": 1};
 				trackUser(req.session.user, 3,  trackParams);
-				res.redirect('news/map');
+				res.redirect('news/map/?associate=tw');
+			    	}
+			    });
 		        }  
 		      });
 
