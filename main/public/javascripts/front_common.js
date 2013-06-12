@@ -1302,14 +1302,14 @@ function drawAComment(val,infoId, from)
 			if(user._id	!= userid)
 				return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username prevent-default' onclick='setSearchFor(this)'>@" + username + "</a><span class='timeago'>" + date + "</span><div class='comment' idposter='"+userid+"' idinfo='"+infoId+"'>" + comment + "</div><div>" + iconSpam + "</div></div>";
 			else
-				return 	"<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username prevent-default' onclick='setSearchFor(this)'>@" + username + "</a><span class='timeago'>" + date + "</span><a class='delComment' onclick='deleteComment(this)' id='" + val._id +"' infoid='" + infoId + "'></a><div class='comment' idposter='"+userid+"' idinfo='"+infoId+"'>" + comment + "</div><div></div></div>";
+				return 	"<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username prevent-default' onclick='setSearchFor(this)'>@" + username + "</a><span class='timeago'>" + date + "</span><a class='delComment' title='Supprimer ce commentaire' onclick='deleteComment(this)' id='" + val._id +"' infoid='" + infoId + "'></a><div class='comment' idposter='"+userid+"' idinfo='"+infoId+"'>" + comment + "</div><div></div></div>";
 	}
 	else
 	{
 		if(user._id	!= userid)
 			return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username prevent-default' onclick='setSearchFor(this)'>@" + username + "</a><span class='timeago'>" + date + "</span><div class='comment' idposter='"+userid+"' idinfo='"+infoId+"'>" + comment + "</div><div>"+iconSpam+"</div></div>";	
 		else
-			return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username prevent-default' onclick='setSearchFor(this)'>@" + username + "</a><span class='timeago'>" + date + "</span><a class='delComment' onclick='deleteComment(this)' id='" + val._id +"' infoid='" + infoId + "'></a><div class='comment' idposter='"+userid+"' idinfo='"+infoId+"'>" + comment + "</div><div></div></div>";		
+			return "<div class='aComment'><img class='userthumb' src='" + thumb + "' /><a class='username prevent-default' onclick='setSearchFor(this)'>@" + username + "</a><span class='timeago'>" + date + "</span><a class='delComment' title='Supprimer ce commentaire' onclick='deleteComment(this)' id='" + val._id +"' infoid='" + infoId + "'></a><div class='comment' idposter='"+userid+"' idinfo='"+infoId+"'>" + comment + "</div><div></div></div>";		
 	}
 
 	
@@ -1575,7 +1575,11 @@ function checkByWidth()
 
 		function checkandremoveTags(str)
 		{
-			return str.replace(/<script.*?>.*?<\/script>/gi, '');
+			str = str.replace(/<script.*?>.*?<\/script>/gi, '');
+			str = str.replace(/<script.*?>.*?/gi, '');
+			str = str.replace(/.*?<\/script>/gi, '');
+			str = str.replace(/script/gi, '');
+			return str
 		}
 		function checkifSafeVideo(str)
 		{
