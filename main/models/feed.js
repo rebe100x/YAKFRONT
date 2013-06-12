@@ -57,9 +57,9 @@ var Feed = new Schema({
 	,defaultPrintFlag : Number
 	,creationDate : {type: Date, required: true, default: Date.now}
 	,lastModifDate: {type: Date, required: true, default: Date.now}
-	,status : Number
-	,lastExecStatus : Number
-	,lastExecStatusLabel : String
+	,status : {type : Number, default : 1 }
+	,lastExecStatus : {type : Number, default : 1}
+	,lastExecStatusLabel : {type : String, default : 'OK'}
 	,lastExecDate : {type: Date, required: true, default: Date.now}
 	,lastExecErr : String
 	,daysBack : Number
