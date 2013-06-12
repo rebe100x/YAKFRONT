@@ -1208,16 +1208,16 @@ function findUrls( text )
 			{
 				$scrollingDiv.removeAttr("style")
 			}*/
-
-			if (isScrolledIntoView($(".next"))) {
-				if ($(".next").css("display") != "none")
-					$(".next").trigger('click');
+			if (isScrolledIntoView($(".loadingfeeditem"))) {
+				if ($(".loadingfeeditem").css("display") != "none")
+					$(".loadingfeeditem").trigger('click');
 			};
 		});
 }
 
 function isScrolledIntoView(elem)
 {
+	printLoadingFeedItem();
     var docViewTop = $(window).scrollTop();
     var docViewBottom = docViewTop + $(window).height();
 

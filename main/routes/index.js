@@ -1037,6 +1037,7 @@ exports.resetpassword = function(req,res){
 			var token = crypto.createHash('sha1').update("yakwala@secure"+salt).digest("hex");
 			var newcryptedPass = crypto.createHash('sha1').update(req.body.password+"yakwala@secure"+docs.salt).digest("hex");	
 			var login = docs.login;
+			//console.log(req.session.user);
 			if(req.body.password.length >= 8){
 				
 				User.update({_id: req.session.user}, {hash : newcryptedPass, token:token,salt:salt, password:req.body.password}, {upsert: false}, function(err){
@@ -1044,20 +1045,32 @@ exports.resetpassword = function(req,res){
 					if (err) console.log(err);
 					else{
 						formMessage = "Votre nouveau mot de passe est enregistré";
+						console.log(req.body.password);
 						//delete req.session.user;
 						User.authenticate(login,req.body.password, "", function(err, user) {
-							if(!(typeof(user) == 'undefined' || user === null || user === '') && user.status == 1){
+							if (err) 
+								{
+									console.log(err);	
+									req.session.message = 'Server Error';
+									res.redirect('user/login?redir='+req.body.redir);
+								}
+							else
+							{
+								if(!(typeof(user) == 'undefined' || user === null || user === '') && user.status == 1){
 									req.session.user = user._id;
 									res.locals.user = user;
 									req.session.message = formMessage;
 									res.redirect('news/map');
-								}else{
-									if(user.status == 2)
+								}else if(!(typeof(user) == 'undefined' || user === null || user === '') && user.status == 2){
 										req.session.message = 'Compte non validé.';
-									else
-										req.session.message = 'Identifiants incorrects.';
+										res.redirect('user/login?redir='+req.body.redir);
+								}
+								else
+								{
+									req.session.message = 'Identifiants incorrects.';
 									res.redirect('user/login?redir='+req.body.redir);
 								}
+							}
 						});
 					}
 				});

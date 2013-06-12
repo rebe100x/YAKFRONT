@@ -581,8 +581,7 @@ function printFeedItem(item,top,scrollTo){
 					}
 			}
 			var yakTypeImage = $("<div />");
-			yakTypeImage.attr("class", "yakTypeImage");
-			yakTypeImage.html("<img src='/images/markers/new/type" + item.yakType + ".png' />");
+			yakTypeImage.attr("class", "yakTypeImage yakTypeImage" + item.yakType);
 			infoContent.append(yakTypeImage);
 			
 
@@ -694,7 +693,6 @@ function printFeedItem(item,top,scrollTo){
 	
 
 	function printLoadingFeedItem(){
-
 		$('.loadingfeeditem').hide();
 		if(skip < infoArray.length - 10){
 			infoContent = "<div class=\'infowindow loadingfeeditem\'></div>";					
