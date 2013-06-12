@@ -721,7 +721,7 @@ function printFeedItem(item,top,scrollTo){
 			printFeedItem(val,0,0);
 		});
 		printLoadingFeedItem();
-		$('#newsfeedContent').mCustomScrollbar("update");
+		//$('#newsfeedContent').mCustomScrollbar("update");
 	}
 
 	function closeAllItems()
@@ -1061,9 +1061,9 @@ yakComments.unbind("click").on('click',function(){
 		}
 
 		$(window).scroll(function(){			
-			if (isScrolledIntoView($(".loadingfeeditem"))) {
-				printArrayFeedItem();
-			};
+			 if($(window).scrollTop() + $(window).height() == $(document).height()) {
+    		   printArrayFeedItem();
+   			}
 		});
 
 	function getHotTags(curPos,dateFrom){
