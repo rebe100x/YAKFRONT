@@ -1019,6 +1019,8 @@ Info.statics.findAllGeoAlertNumber = function (x1,y1,x2,y2,from,lastcheck,type,s
 	var DPUB = new Date();
 	var DEND = new Date();
 	var DLC = new Date();
+	var Yakcat = db.model('Yakcat');
+	var User = db.model('User');
 
 	var offset = 1000;
 	DPUB.setTime(DPUB.getTime()+from*1000-offset);
