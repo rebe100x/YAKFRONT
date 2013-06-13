@@ -1811,7 +1811,9 @@ exports.user_blacklist_remove = function(req, res){
 
 exports.getTopLiked = function(req, res){
 	var Info = db.model('Info');
-	Info.findTopLiked(req.params.x1,req.params.y1,req.params.x2,req.params.limit, function(err, docs){
+	var type = [];
+	type = req.params.type.split(',');
+	Info.findTopLiked(req.params.x1,req.params.y1,req.params.x2,req.params.ago,type,req.params.limit, function(err, docs){
 		if(!err){
 			var infosFormated = docs.map(function(item){
 				var Info = db.model('Info');
@@ -1826,7 +1828,9 @@ exports.getTopLiked = function(req, res){
 
 exports.getTopCommented = function(req, res){
 	var Info = db.model('Info');
-	Info.findTopCommented(req.params.x1,req.params.y1,req.params.x2,req.params.limit, function(err, docs){
+	var type = [];
+	type = req.params.type.split(',');
+	Info.findTopCommented(req.params.x1,req.params.y1,req.params.x2,req.params.ago,type,req.params.limit, function(err, docs){
 		if(!err){
 			var infosFormated = docs.map(function(item){
 				var Info = db.model('Info');
@@ -1841,7 +1845,9 @@ exports.getTopCommented = function(req, res){
 
 exports.getTopHots = function(req, res){
 	var Info = db.model('Info');
-	Info.findTopHots(req.params.x1,req.params.y1,req.params.x2,req.params.limit, function(err, docs){
+	var type = [];
+	type = req.params.type.split(',');
+	Info.findTopHots(req.params.x1,req.params.y1,req.params.x2,req.params.ago,type,req.params.limit, function(err, docs){
 		if(!err){
 			var infosFormated = docs.map(function(item){
 				var Info = db.model('Info');

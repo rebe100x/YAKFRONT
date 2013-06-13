@@ -183,9 +183,9 @@ app.get('/api/feedsearch/:string', api.feed_search);
 //app.get('/api/getUsers', api.getUsers);
 app.get('/api/getContentTitles', api.getContentTitles);
 app.get('/api/getHotTags/:x1/:y1/:x2/:y2/:d/:limit', api.getHotTags);
-app.get('/api/getTopLiked/:x1/:y1/:x2/:limit', api.getTopLiked);
-app.get('/api/getTopCommented/:x1/:y1/:x2/:limit', api.getTopCommented);
-app.get('/api/getTopHots/:x1/:y1/:x2/:limit', api.getTopHots);
+app.get('/api/getTopLiked/:x1/:y1/:x2/:ago/:type/:limit', api.getTopLiked);
+app.get('/api/getTopCommented/:x1/:y1/:x2/:ago/:type/:limit', api.getTopCommented);
+app.get('/api/getTopHots/:x1/:y1/:x2/:ago/:type/:limit', api.getTopHots);
 
 // DOCS
 app.get('/docs/api', routes.docs_api);

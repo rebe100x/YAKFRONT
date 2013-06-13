@@ -243,7 +243,7 @@
 	{
 		//top liked
 		$("#topLiked").html("");
-		var apiUrlLiked = '/api/getTopLiked/'+curPos.x+'/'+curPos.y+'/'+rangeFromZ()+'/4';	
+		var apiUrlLiked = '/api/getTopLiked/'+curPos.x+'/'+curPos.y+'/'+rangeFromZ()+'/'+dateFrom+'/'+yakType.toString()+'/4';	
 		var ulLiked = "<ul class='TheTops'>";
 		$.getJSON(apiUrlLiked,function(ajax) {	
 			if(typeof(ajax.data) == 'undefined' || ajax.data.length == 0){
@@ -285,7 +285,7 @@
 											}
 									}
 
-									ulLiked+="<li>"+thumbsource+"<a href='/news/feed?id="+val._id+"'>"+val.title+"</a><br /><span class='topCounts'>"+val.likes+"like(s)</span></li>";
+									ulLiked+="<li>"+thumbsource+"<a href='/news/feed?id="+val._id+"'>"+val.title+"</a><span class='topCounts'>"+val.likes+"like(s)</span></li>";
 							
 								}
 							
@@ -299,7 +299,7 @@
 
 		//top commented
 		$("#topCommented").html("");
-		var apiUrlCommented = '/api/getTopCommented/'+curPos.x+'/'+curPos.y+'/'+rangeFromZ()+'/4';	
+		var apiUrlCommented = '/api/getTopCommented/'+curPos.x+'/'+curPos.y+'/'+rangeFromZ()+'/'+dateFrom+'/'+yakType.toString()+'/4';	
 		var ulCommented = "<ul class='TheTops'>";
 		$.getJSON(apiUrlCommented,function(ajax) {	
 			if(typeof(ajax.data) == 'undefined' || ajax.data.length == 0){
@@ -340,7 +340,7 @@
 												}
 											}
 									}
-								ulCommented+="<li>"+thumbsource+"<a href='/news/feed?id="+val._id+"'>"+val.title+"</a><br /><i class='commentLogo'></i><span class='topCounts'>"+val.commentsCount+"</span></li>";
+								ulCommented+="<li>"+thumbsource+"<a href='/news/feed?id="+val._id+"'>"+val.title+"</a><br /><span class='topCountContainer'><span class='topCounts'>"+val.commentsCount+"</span><i class='commentLogo'></i></span></li>";
 							}
 								
 				});
@@ -351,7 +351,7 @@
 		});
 
 		$("#topHots").html("");
-		var apiUrlHots = '/api/getTopHots/'+curPos.x+'/'+curPos.y+'/'+rangeFromZ()+'/4';	
+		var apiUrlHots = '/api/getTopHots/'+curPos.x+'/'+curPos.y+'/'+rangeFromZ()+'/'+dateFrom+'/'+yakType.toString()+'/4';
 		var ulHots = "<ul class='TheTops'>";
 		$.getJSON(apiUrlHots,function(ajax) {	
 			if(typeof(ajax.data) == 'undefined' || ajax.data.length == 0){

@@ -183,7 +183,7 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 .infowindow .myitem .shareMe .box { display: none;}
 .infowindow .myitem .yakLikes{font-size:12px;font-style:italic; position: relative; clear: both; width: auto; float: left; color: #000000; display: block; width: 100%; padding-bottom: 6px; border-bottom: 1px solid #d1d1d1;}
 .infowindow .myitem .yakComments{font-size:14px; position: relative; clear: both; width: auto; float: left; left: 0px; top: -28px; color: #D71920; cursor: pointer; width: 100%; border-bottom: 1px solid #d1d1d1}
-.commentLogo {width: 28px; height: 22px; float: left; margin-right: 6px; background: url('/images/yakwala_sprite.png') -126px -253px}
+.commentLogo {width: 28px; height: 22px; float: left; margin-right: 6px; background: url('/images/yakwala_sprite.png') -126px -253px;float:left;}
 
 .infowindow .myitem .theContent { border-bottom: 1px solid #d1d1d1; padding-bottom: 6px;}
 .infowindow .myitem .commentBox .aComment { clear:  both; padding-bottom: 12px;}
@@ -1167,7 +1167,8 @@ border-bottom: 1px solid #e5e5e5; width: 100%}
 .TheTops li { padding-top: 20px; clear: both;}
 .TheTops li a { color: #656565; font-size: 14px; float: left; width: 60%}
 .TheTops img { width: 30%; height: auto; float: left;}
-.TheTops li .topCounts { color: #e1252c; font-size: 12px;}
+.TheTops li .topCounts { color: #e1252c; font-size: 14px;float:left;}
+.TheTops li .topCountContainer{white-space: nowrap;float:left;}
 .TheTops li .topHeat { width: 30%; background: white; height: 15px;}
 .TheTops li .topHeat .heatLevel { background: red; height: 15px;}
 .TheTops .timeago { color: #e1252c; font-size: 12px; clear: both; display: block;}

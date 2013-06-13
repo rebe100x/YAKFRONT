@@ -713,15 +713,20 @@ Info.statics.findByCommentID = function (callback, id) {
 	callback);
 }
 
-Info.statics.findTopLiked = function(x1, y1, x2, limit, callback)
-{
+Info.statics.findTopLiked = function(x1, y1, x2, from, type, limit, callback){
+	//if(from > 0)
+	//	from = 0;
 	var DPUB = new Date();
 	var DEND = new Date();
+	var offset = 1000;
+	DPUB.setTime(DPUB.getTime()+from*24*60*60*1000-offset);
+	DEND.setTime(DEND.getTime()+from*24*60*60*1000);
 
 	var cond = {
 				"status":1,
 				"pubDate":{$lte:DPUB},
-				"dateEndPrint":{$gte:DEND}
+				"dateEndPrint":{$gte:DEND},
+				"yakType" : {$in:type}
 			};
 
 	if (!isNaN(x1)) {
@@ -733,15 +738,20 @@ Info.statics.findTopLiked = function(x1, y1, x2, limit, callback)
 	return this.find(cond).sort({likes: -1}).limit(limit).exec(callback);
 }
 
-Info.statics.findTopCommented = function(x1, y1, x2, limit, callback)
-{
+Info.statics.findTopCommented = function(x1, y1, x2, from, type, limit, callback){
+	//if(from > 0)
+	//	from = 0;
 	var DPUB = new Date();
 	var DEND = new Date();
+	var offset = 1000;
+	DPUB.setTime(DPUB.getTime()+from*24*60*60*1000-offset);
+	DEND.setTime(DEND.getTime()+from*24*60*60*1000);
 
 	var cond = {
 				"status":1,
 				"pubDate":{$lte:DPUB},
-				"dateEndPrint":{$gte:DEND}
+				"dateEndPrint":{$gte:DEND},
+				"yakType" : {$in:type}
 			};
 
 	if (!isNaN(x1)) {
@@ -753,15 +763,20 @@ Info.statics.findTopCommented = function(x1, y1, x2, limit, callback)
 	return this.find(cond).sort({commentsCount: -1}).limit(limit).exec(callback);
 }
 
-Info.statics.findTopHots = function(x1, y1, x2, limit, callback)
-{
+Info.statics.findTopHots = function(x1, y1, x2, from, type, limit, callback){
+	//if(from > 0)
+	//	from = 0;
 	var DPUB = new Date();
 	var DEND = new Date();
+	var offset = 1000;
+	DPUB.setTime(DPUB.getTime()+from*24*60*60*1000-offset);
+	DEND.setTime(DEND.getTime()+from*24*60*60*1000);
 
 	var cond = {
 				"status":1,
 				"pubDate":{$lte:DPUB},
-				"dateEndPrint":{$gte:DEND}
+				"dateEndPrint":{$gte:DEND},
+				"yakType" : {$in:type}
 			};
 
 	if (!isNaN(x1)) {
