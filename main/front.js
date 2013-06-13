@@ -79,7 +79,7 @@ app.get('/user/logout', routes.user_logout);
 app.get('/user/new', routes.user_new);
 app.get('/user/forgotpassword', routes.user_forgotpassword);
 app.get('/user/validate/:token/:password', routes.user_validate);
-app.get('/user/resetpassword/:token/:password', routes.user_resetpassword);
+app.get('/user/resetpassword/:token/:hash', routes.user_resetpassword);
 app.get('/pictures/:size/:picture', routes.picture);
 app.get('/static/images/:name', routes.static_image);
 

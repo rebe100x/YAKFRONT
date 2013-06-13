@@ -1,20 +1,13 @@
 extends ../layout
 block content
 
-	include ../mixins/menu.jade
 	include ../mixins/forms/loginForm.jade
 	include ../mixins/loginPopUp.jade
-	
-	mixin menu('login')
+	include ../mixins/menuUnlogged.jade
 
-	div.navbar.navbar-fixed-top#loginPageNavBar
-		div.container-fluid
-			div.row-fluid
-				div.span3
-				div.span6
-					a(href="/news/map")
-						img(src="/images/new/logo.png")
-				div.span3
+
+	mixin menuUnlogged()
+	
 	
 		
 	div.container-fluid#loginPageContent

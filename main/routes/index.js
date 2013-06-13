@@ -458,18 +458,22 @@ exports.user_validate = function(req, res){
 };
 
 exports.user_resetpassword = function(req, res){
+	delete req.session.message;
 	var User = db.model('User');	
 	
-	User.authenticateByToken(req.params.token,req.params.password, function(err, model) {
-	if(!(typeof(model) == 'undefined' || model === null || model === '')){
-			req.session.user = model._id;
-			res.render('settings/resetpassword',{user:model});
-		}else{
-			req.session.message = "Votre clé d'activation est incorrecte.";
-			res.redirect('/user/forgotpassword');
-		}
+	User.findOne({token:req.params.token,hash:req.params.hash}, function(err, theuser) {
+		console.log(theuser);
+		if(!(typeof(theuser) == 'undefined' || theuser === null || theuser === '')){
+				req.session.user = theuser._id;
+				res.render('settings/resetpassword',{user:theuser});
+			}else{
+				req.session.message = "Votre clé d'activation est incorrecte.";
+				res.redirect('/user/forgotpassword');
+			}
 	
 	});
+
+	
 	
 };
 
@@ -781,34 +785,51 @@ exports.forgotpassword = function(req, res){
 	
 	
 	/*check if user exists*/
-	User.findOne({'mail': themail},{_ids:1,status:1,mail:1}, function(err,theuser){
+	User.findOne({'mail': themail},{_ids:1,status:1,mail:1,token:1,hash:1}, function(err,theuser){
 		if(theuser){
-			//console.log(theuser);
-				var salt = Math.round(new Date().valueOf() * Math.random());
-				var token = crypto.createHash('sha1').update("yakwala@secure"+salt).digest("hex");
-				var password = user.generatePassword(5);
-				var link = conf.resetpassUrl+token+"/"+password;
-				var hash = crypto.createHash('sha1').update(password+"yakwala@secure"+salt).digest("hex");
-				var logo = conf.fronturl+"/static/images/yakwala-logo_petit.png";
-				var templateMail = "forgetpass";
-				User.update({_id: theuser._id}, {hash : hash,token:token,salt:salt,password:password}, {upsert: false}, function(err){
-					
+			/*
+			var salt = Math.round(new Date().valueOf() * Math.random());
+			var token = crypto.createHash('sha1').update("yakwala@secure"+salt).digest("hex");
+			var password = user.generatePassword(5);
+			var link = conf.resetpassUrl+token+"/"+password;
+			var hash = crypto.createHash('sha1').update(password+"yakwala@secure"+salt).digest("hex");
+			var logo = conf.fronturl+"/static/images/yakwala-logo_petit.png";
+			var templateMail = "forgetpass";
+			User.update({_id: theuser._id}, {hash : hash,token:token,salt:salt,password:password}, {upsert: false}, function(err){
 				
-					User.sendValidationMail(link,themail,templateMail,logo,function(err){
-						if(!err)
-							console.log(err);				
-					});
-				
-					
+			
+				User.sendValidationMail(link,themail,templateMail,logo,function(err){
+					if(!err)
+						console.log(err);				
 				});
-				req.session.message = "Un nouveau mail a été renvoyé avec une nouvelle clé d'activation. Veuillez vérifier qu'il n'est pas dans les spams.";
-				res.redirect('user/forgotpassword');
-			}else{
-				req.session.message = "Ce mail ne correspond à aucun compte Yakwala !";
-				res.redirect('user/forgotpassword');
-			}
+			
+				
+			});
+			req.session.message = "Un mail a été renvoyé avec une nouvelle clé d'activation. Veuillez vérifier qu'il n'est pas dans les spams.";
+			res.redirect('user/forgotpassword');
+		}else{
+			req.session.message = "Ce mail ne correspond à aucun compte Yakwala !";
+			res.redirect('user/forgotpassword');
+		}*/
+
+		// "hash": "ddf2e13253ce344e238541670b8f3d56790a0ee6",
+		// "salt": "a797ba46baff5c836de7909dabf63a8f15fe1ca1",
+		// "token": "7ca291c7fd911706d0883c37e12e1df439ecfd03",
+
+			var link = conf.resetpassUrl+theuser.token+"/"+theuser.hash;
+			var logo = conf.fronturl+"/static/images/yakwala-logo_petit.png";
+			var templateMail = "forgetpass";
+			User.sendValidationMail(link,themail,templateMail,logo,function(err){
+				if(!err)
+					console.log(err);				
+			});
+			req.session.message = "Vous allez recevoir un mail contenant une nouvelle clé d'activation. (Veuillez vérifier qu'il n'est pas dans les spams!)";
+			res.redirect('user/forgotpassword');
+		}else{
+			req.session.message = "Ce mail ne correspond à aucun compte Yakwala !";
+			res.redirect('user/forgotpassword');
+		}
 	});
-	
 	
 };
 
@@ -821,7 +842,7 @@ exports.user_new = function(req, res){
 
 exports.user_forgotpassword = function(req, res){
 	delete req.session.message;
-	res.render('user/forgotpassword',{email:req.query.email});
+	res.render('user/forgotpassword');
 	
 };
 
@@ -1035,19 +1056,18 @@ exports.resetpassword = function(req,res){
 			var crypto = require('crypto');
 			var salt = Math.round(new Date().valueOf() * Math.random());
 			var token = crypto.createHash('sha1').update("yakwala@secure"+salt).digest("hex");
-			var newcryptedPass = crypto.createHash('sha1').update(req.body.password+"yakwala@secure"+docs.salt).digest("hex");	
+			var newcryptedPass = crypto.createHash('sha1').update(req.body.password+"yakwala@secure"+salt).digest("hex");	
 			var login = docs.login;
 			//console.log(req.session.user);
 			if(req.body.password.length >= 8){
 				
-				User.update({_id: req.session.user}, {hash : newcryptedPass, token:token,salt:salt, password:req.body.password}, {upsert: false}, function(err){
+				User.update({_id: req.session.user}, {hash : newcryptedPass, token:token , salt:salt}, {upsert: false}, function(err){
 				
 					if (err) console.log(err);
 					else{
 						formMessage = "Votre nouveau mot de passe est enregistré";
-						console.log(req.body.password);
 						//delete req.session.user;
-						User.authenticate(login,req.body.password, "", function(err, user) {
+						User.authenticate(login,req.body.password, token, function(err, user) {
 							if (err) 
 								{
 									console.log(err);	
@@ -1075,9 +1095,8 @@ exports.resetpassword = function(req,res){
 					}
 				});
 			}
-			else
-			{
-				formMessage = "Votre mot de passe doit au moins 8 caractères";
+			else{
+				formMessage = "Votre mot de passe doit faire au moins 8 caractères";
 				req.send(formMessage);
 			}
 				
