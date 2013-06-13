@@ -175,7 +175,12 @@ block content
 			}
 
 			
+			function changemyrange (el)
+			{
+				var favPlaceId = changePlaceRange($(el).attr("alt"), $(el).parent().attr("lat"), $(el).parent().attr("lng"), $(el).parent().attr("pointname"), $(el).val());
 
+				$(el).attr("alt", favPlaceId);
+			}
 			$(document).ready(function() {
 
 				$(".dropdownRangeSelector").change(function(){
