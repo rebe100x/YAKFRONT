@@ -1689,7 +1689,6 @@ exports.delComment = function (req, res) {
 		var commentId = req.body.commentId;
 		var infoId = req.body.infoId;
 		// we can only delete our comments:
-		console.log(res.locals.user._id);
 		Info.find({_id:mongoose.Types.ObjectId(infoId),'yakComments.userid': mongoose.Types.ObjectId(res.locals.user._id.toString())},function(err,doc){
 			if(typeof doc != 'undefined' && doc != '' && doc != null){
 				Info.update({_id:mongoose.Types.ObjectId(infoId)},{$inc:{commentsCount : -1},$pull:{yakComments:{_id: mongoose.Types.ObjectId(commentId)}}}, function(err,docs){

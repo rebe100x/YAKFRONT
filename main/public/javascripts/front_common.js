@@ -529,7 +529,7 @@ function  showPostForm()
 				getformattedAddress(event.latLng);
 				placeMarker(event.latLng,markerLocation);
 				google.maps.event.addListener(markerLocation, 'dragend', function() {
-					cleanMarkers();
+					//cleanMarkers();
 					var position = markerLocation.getPosition();
 					$('#latitude').val(position.lat());	
 					$('#longitude').val(position.lng());	
@@ -565,7 +565,7 @@ function  hidePostForm()
 				getformattedAddress(event.latLng);
 				placeMarker(event.latLng,markerLocation);
 				google.maps.event.addListener(markerLocation, 'dragend', function() {
-					cleanMarkers();
+					//cleanMarkers();
 					var position = markerLocation.getPosition();
 					$('#latitude').val(position.lat());	
 					$('#longitude').val(position.lng());	
@@ -1095,7 +1095,7 @@ function getformattedAddress(position){
 
 			$("#placeInput").val(JSON.stringify(placeArray));
 			
-			$('#btn-place-adder').parent().before("<div class='pillItem'><i class='icon-remove' onclick='placeArray.cleanArrayByLocation("+result.geometry.location.lat+","+result.geometry.location.lat+");$(\"#placeInput\").val(JSON.stringify(placeArray));$(this).parent().remove();'></i> "+result.formatted_address+"</div>");
+			$('#btn-place-adder').parent().before("<div class='pillItem'><i class='icon-remove' onclick='placeArray.cleanArrayByLocation("+result.geometry.location.lat+","+result.geometry.location.lng+");$(\"#placeInput\").val(JSON.stringify(placeArray));$(this).parent().remove();'></i> "+result.formatted_address+"</div>");
 		} else {
 			var salt = new Date().getTime();
 			$('#btn-place-adder').parent().before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide ("+status+")</div>");

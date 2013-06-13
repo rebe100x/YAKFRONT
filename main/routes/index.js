@@ -486,6 +486,7 @@ exports.user_logout = function(req, res){
 };
 
 
+/**/
 exports.session2 = function(req, res)
 {
 	var User = db.model('User');
@@ -501,108 +502,106 @@ exports.session2 = function(req, res)
 
 			if(req.body.fromSocial == "3")
 			{
-			var data = JSON.parse(req.body.social);
-			var login = data.name.givenName + "." + data.name.familyName;
-			var Google = db.model('Google');
+				var data = JSON.parse(req.body.social);
+				var login = data.name.givenName + "." + data.name.familyName;
+				var Google = db.model('Google');
 
-			var aGoogle = new Google();	
+				var aGoogle = new Google();	
 
-			if(typeof(data.id) != 'undefined')
-				aGoogle.google_id = data.id;
+				if(typeof(data.id) != 'undefined')
+					aGoogle.google_id = data.id;
 
-			if(typeof(data.name) != 'undefined')
-				aGoogle.screen_name = login;
+				if(typeof(data.name) != 'undefined')
+					aGoogle.screen_name = login;
 
-			if(typeof(data.name) != 'undefined')
-				aGoogle.name = data.name.givenName + "." + data.name.familyName;
+				if(typeof(data.name) != 'undefined')
+					aGoogle.name = data.name.givenName + "." + data.name.familyName;
 
-			if(typeof(data.image) != 'undefined'){
-				var drawTool = require('../mylib/drawlib.js');
-				var ts = new Date().getTime();
-				var crypto = require('crypto');
-				data.image.url = data.image.url.replace('?sz=50','?sz=300');
-				user.thumb = crypto.createHash('md5').update(ts.toString()).digest("hex")+'.jpeg';
-				drawTool.GetImg(data.image.url,user.thumb,conf,mainConf);
-				aGoogle.profile_image_url = data.image.url;
-			}else
-				user.thumb = "no-user.png";
-			
+				var userThumb = 'no-user.png';
+				if(typeof(data.image) != 'undefined'){ 
+					var drawTool = require('../mylib/drawlib.js');
+					var ts = new Date().getTime();
+					var crypto = require('crypto');
+					data.image.url = data.image.url.replace('?sz=50','?sz=300');
+					userThumb = crypto.createHash('md5').update(ts.toString()).digest("hex")+'.jpeg';
+					drawTool.GetImg(data.image.url,userThumb,conf,mainConf);
+					aGoogle.profile_image_url = data.image.url;
+				}
+				
 
-			if(typeof(data.url) != 'undefined')
-				aGoogle.url = data.url;
+				if(typeof(data.url) != 'undefined')
+					aGoogle.url = data.url;
 
-			if(typeof(data.aboutMe) != 'undefined')
-				aGoogle.description = data.aboutMe;
+				if(typeof(data.aboutMe) != 'undefined')
+					aGoogle.description = data.aboutMe;
 
-			if(typeof(data.ageRange) != 'undefined')
-				aGoogle.ageRange = data.ageRange;	
+				if(typeof(data.ageRange) != 'undefined')
+					aGoogle.ageRange = data.ageRange;	
 
-			if(typeof(data.gender) != 'undefined')
-				aGoogle.gender = data.gender;		
+				if(typeof(data.gender) != 'undefined')
+					aGoogle.gender = data.gender;		
 
-			if(typeof(data.language) != 'undefined')
-				aGoogle.language = data.language;			
+				if(typeof(data.language) != 'undefined')
+					aGoogle.language = data.language;			
 
-			if(typeof(data.friendsList) != 'undefined')
-				aGoogle.friendsList = data.friendsList;			
+				if(typeof(data.friendsList) != 'undefined')
+					aGoogle.friendsList = data.friendsList;			
 
-			user.social.google = aGoogle;
-			req.session.user = user._id;
-			User.update({"_id":user._id},{$set:{"lastLoginDate":new Date()}, $set:{"social.google":aGoogle}}, function(err){if (err) console.log(err);});
-			res.cookie('loginFrom', '3', { expires: new Date(Date.now() + 90000000000) , httpOnly: false, path: '/'});
-			res.redirect(req.body.redir || '/news/map');
+				user.social.google = aGoogle;
+				req.session.user = user._id;
+				User.update({"_id":user._id},{$set:{"lastLoginDate":new Date()}, $set:{"social.google":aGoogle},$set:{"thumb":userThumb}}, function(err){if (err) console.log(err);});
+				res.cookie('loginFrom', '3', { expires: new Date(Date.now() + 90000000000) , httpOnly: false, path: '/'});
+				res.redirect(req.body.redir || '/news/map');
 
-			//track user
-			var trackParams = {"loginFrom": 0};
-			trackUser(user._id, 3, trackParams);
+				//track user
+				var trackParams = {"loginFrom": 0};
+				trackUser(user._id, 3, trackParams);
 			}
 
 			if(req.body.fromSocial == "2")
 			{
-			var data = JSON.parse(req.body.social);
-			var Facebook = db.model('Facebook');
-			var aFacebook = new Facebook();	
+				var data = JSON.parse(req.body.social);
+				var Facebook = db.model('Facebook');
+				var aFacebook = new Facebook();	
 
-			if(typeof(data.id) != 'undefined')
-				aFacebook.facebook_id = data.id;
+				if(typeof(data.id) != 'undefined')
+					aFacebook.facebook_id = data.id;
 
-			if(typeof(data.username) != 'undefined')
-				aFacebook.screen_name = data.username;
+				if(typeof(data.username) != 'undefined')
+					aFacebook.screen_name = data.username;
 
-			if(typeof(data.name) != 'undefined')
-				aFacebook.name = data.name;
+				if(typeof(data.name) != 'undefined')
+					aFacebook.name = data.name;
 
-			if(typeof(data.id) != 'undefined')
-				aFacebook.profile_image_url = 'https:/graph.facebook.com/'+data.id+'/picture/?type=large';
+				if(typeof(data.id) != 'undefined')
+					aFacebook.profile_image_url = 'https:/graph.facebook.com/'+data.id+'/picture/?type=large';
 
-			
-			if(typeof(aFacebook.profile_image_url) != 'undefined'){					
-				var drawTool = require('../mylib/drawlib.js');
-				var profileImg;
-				var ts = new Date().getTime();
-				var crypto = require('crypto');				
-				user.thumb = crypto.createHash('md5').update(ts.toString()).digest("hex")+'.jpeg';
-				drawTool.GetImg(aFacebook.profile_image_url,user.thumb,conf,mainConf);	
-			}else
-				user.thumb = "no-user.png";
+				var userThumb = 'no-user.png';
+				if(typeof(aFacebook.profile_image_url) != 'undefined'){ 
+					var drawTool = require('../mylib/drawlib.js');
+					var profileImg;
+					var ts = new Date().getTime();
+					var crypto = require('crypto');				
+					userThumb = crypto.createHash('md5').update(ts.toString()).digest("hex")+'.jpeg';
+					drawTool.GetImg(aFacebook.profile_image_url,userThumb,conf,mainConf);	
+				}
+				if(typeof(data.link) != 'undefined')
+					aFacebook.url = data.link;
 
-			if(typeof(data.link) != 'undefined')
-				aFacebook.url = data.link;
+				if(typeof(data.bio) != 'undefined')
+					aFacebook.description = data.bio;
 
-			if(typeof(data.bio) != 'undefined')
-				aFacebook.description = data.bio;
+				if(typeof(data.friendsList) != 'undefined')
+					aFacebook.friendsList = data.friendsList;
 
-			if(typeof(data.friendsList) != 'undefined')
-				aFacebook.friendsList = data.friendsList;
+				req.session.user = user._id;
+				User.update({"_id":user._id},{$set:{"lastLoginDate":new Date()}, $set:{"social.facebook":aFacebook},$set:{"thumb":userThumb}}, function(err){if (err) console.log(err);});
+				res.cookie('loginFrom', '2', { expires: new Date(Date.now() + 90000000000) , httpOnly: false, path: '/'});
+				res.redirect(req.body.redir || '/news/map');
 
-			req.session.user = user._id;
-			User.update({"_id":user._id},{$set:{"lastLoginDate":new Date()}, $set:{"social.facebook":aFacebook}}, function(err){if (err) console.log(err);});
-			res.cookie('loginFrom', '2', { expires: new Date(Date.now() + 90000000000) , httpOnly: false, path: '/'});
-			res.redirect(req.body.redir || '/news/map');
-
-			//track user
-			var trackParams = {"loginFrom": 0};
-			trackUser(user._id, 3, trackParams);
+				//track user
+				var trackParams = {"loginFrom": 0};
+				trackUser(user._id, 3, trackParams);
 			}
 
 			
@@ -1492,7 +1491,6 @@ exports.setSpams = function(req, res){
 	if(req.body.content_type == 2)
 		aspamAlert.info_id = mongoose.Types.ObjectId(req.body.info_id);
 
-console.log(aspamAlert);
 	if(req.session.user){
 			contenuIllicite.findByUserInfoType(req.body.content_id, req.body.content_type, function (err, thealert){
 				//log
@@ -1646,7 +1644,7 @@ exports.auth_twitter_check = function(req, res){
 				res.send("0");
 			}
 			else {
-				console.log(results.screen_name)
+				//console.log(results.screen_name)
 				 req.session.oauth.verifier = req.query.oauth_verifier;
     			var oauth = req.session.oauth;
 				oa.getOAuthAccessToken(oauth.token,oauth.token_secret,oauth.verifier, 
@@ -1832,7 +1830,7 @@ exports.auth_twitter_callback_create = function(req, res){
 			          res.send("Error getting twitter screen name : " + error, 500);
 			        } else {
 			        	data = JSON.parse(data);
-				console.log(data);
+				//console.log(data);
 		        var crypto = require('crypto')
 		        var User = db.model('User');
 			    var user = new User();
@@ -2044,21 +2042,19 @@ exports.auth_twitter_callback2 = function(req, res){
 
 				if(typeof(data.name) != 'undefined')
 					aTwitter.name = data.name;
-
-				console.log('data TW 2');
-				console.log(data);
-				if(typeof(data.profile_image_url) != 'undefined'){					
+				
+				var userThumb = 'no-user.png';
+				if(typeof(data.profile_image_url) != 'undefined'){	 
 					var drawTool = require('../mylib/drawlib.js');
 					var profileImg;
 					// this line is only for Twitter to get a better image
 					data.profile_image_url = data.profile_image_url.replace('normal','bigger');
-					var ts = new Date().getTime();
 					var crypto = require('crypto');				
-					user.thumb = crypto.createHash('md5').update(ts.toString()).digest("hex")+'.jpeg';
-					drawTool.GetImg(data.profile_image_url,user.thumb,conf,mainConf);
-					aTwitter.profile_image_url = data.profile_image_url;	
-				}else
-					user.thumb = "no-user.png";
+					var ts = new Date().getTime();
+					userThumb= crypto.createHash('md5').update(ts.toString()).digest("hex")+'.jpeg';
+					drawTool.GetImg(data.profile_image_url,userThumb,conf,mainConf);
+					aTwitter.profile_image_url = data.profile_image_url;		
+				}
 
 					
 
@@ -2095,7 +2091,7 @@ exports.auth_twitter_callback2 = function(req, res){
 				if(typeof(data.created_at) != 'undefined')
 					aTwitter.created_at = data.created_at;
 
-				User.update({"_id":req.session.user},{$set:{"lastLoginDate":new Date()}, $set:{"social.twitter":aTwitter}}, function(err){if (err) console.log(err);});
+				User.update({"_id":req.session.user},{$set:{"lastLoginDate":new Date()}, $set:{"social.twitter":aTwitter},$set:{"thumb":userThumb}}, function(err){if (err) console.log(err);});
 				res.cookie('loginFrom', '1', { expires: new Date(Date.now() + 90000000000) , httpOnly: false, path: '/'});
 				var trackParams = {"loginFrom": 1};
 				trackUser(req.session.user, 3,  trackParams);
@@ -2393,7 +2389,7 @@ exports.auth_google = function(req, res){
 		aGoogle.name = data.name.givenName + "." + data.name.familyName;
 
 	console.log('data GOOGLE 2');
-	console.log(data);
+	//console.log(data);
 			
 	if(typeof(data.image) != 'undefined'){
 		var drawTool = require('../mylib/drawlib.js');

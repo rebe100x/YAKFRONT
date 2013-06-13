@@ -960,7 +960,10 @@ yakComments.unbind("click").on('click',function(){
 			if($.inArray(user._id, val.yaklikeUsersIds) > -1 && $.inArray(user._id, val.yakunlikeUsersIds) == -1)
 			{
 				//yakLikes.append("<span class='theUps'>" + val.likes + "</span> likes- " + "" + "<span class='theDowns'>" + val.unlikes +"</span> dislikes");			
-				yakLikes.append("<span class='theUps'>" + val.likes + "</span> likes");			
+				if(val.likes == 1)
+					yakLikes.append("<span class='theUps'>" + val.likes + "</span> like");			
+				else
+					yakLikes.append("<span class='theUps'>" + val.likes + "</span> likes");			
 				yakLikes.unbind("click").on('click',function(){
 					$('.alreadyVoted').hide();	
 					$(this).append("<span class='alreadyVoted'> Vous avez déjà donnée votre avis !</span>");
@@ -982,7 +985,10 @@ yakComments.unbind("click").on('click',function(){
 			{
 
 			//yakLikes.append(thumbsUp + "<span class='theUps'>" + val.likes + "</span> likes- " + thumbsDown + "<span class='theDowns'>" + val.unlikes +"</span> dislikes");			
-			yakLikes.append(thumbsUp + "<span class='theUps'>" + val.likes + "</span> likes ");			
+			if(val.likes == 1)
+				yakLikes.append(thumbsUp + "<span class='theUps'>" + val.likes + " like</span>");				
+			else
+				yakLikes.append(thumbsUp + "<span class='theUps'>" + val.likes + " likes</span>");				
 
 			}
 

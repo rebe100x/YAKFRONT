@@ -448,7 +448,7 @@ width: 270px;
 
 	#ZoneMesalertes.active, #ZoneMesalertes:hover { background-position: -115px -510px;}
 	#ZoneMesalertes.notempty { background-position: -179px -781px}
-	#alertsModeText { color: #9e9e9e; display: block; font-size: 11px; font-weight: bold;   position: absolute;   right: 178px;   text-align: right;   top: 14px;}
+	#alertsModeText { color: #9e9e9e; display: block; font-size: 14px; font-weight: bold;   position: absolute;   right: 178px;   text-align: right;   top: 14px;}
 	#alertsModeText.active {color: #f5881f; }
 	#alertsModeText.empty a{ color: #C2160D;}
 
@@ -1028,6 +1028,7 @@ width: 270px;
 .searchYakwala .mytime {padding-top: 6px; background: url('../images/time.png') no-repeat; background-position: -1px 9px; }
 .searchYakwala .myfilter {padding-left: 8px; background: url('../images/filter.png') no-repeat; background-position: -1px 9px }
 .searchYakwala #dropdownRangeSelector { left: auto;}
+#rangeSelectorTrigger{padding: 9px 5px 11px;}
 /* FOOTER
 ----------------------------------------------------*/
 #footer { background-color: #ffffff; height: 20px; font-size: 12px; padding-top: 2px;}
@@ -1190,7 +1191,7 @@ h3 .ajouterMedia{width: 24px; height: 24px; background-image: url('/images/yakwa
 .mediaBoxContainer .aTab { font-size: 12px; color: #c0c0c0; margin-left: 15px; position: relative; top: 5px; cursor: pointer;}
 .mediaBoxContainer .aTab.active { color: black; font-weight: bold;}
 .timePng {width: 20px; height: 20px; background-image: url('/images/yakwala_sprite.png'); background-position: 0px -265px;}
-.filterPng {width: 20px; height: 20px; background-image: url('/images/yakwala_sprite.png'); background-position: -27px -265px;}
+.filterPng {width: 20px; height: 20px; background-image: url('/images/yakwala_sprite.png'); background-position: -27px -265px;left:4px;}
 
 /*
 .dotsPng {width: 45px; height: 20px; background-image: url('/images/yakwala_sprite.png'); background-position: -130px -355px; float: left;position:relative;} 

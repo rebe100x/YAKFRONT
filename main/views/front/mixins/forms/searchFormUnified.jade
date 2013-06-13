@@ -108,8 +108,8 @@ mixin searchFormUnified(page)
 			}
 			else
 			{
-				$("#ZoneMesalertes").removeClass('active').removeClass('notempty').attr('title','Passer en mode alertes');
-				$("#alertsModeText").html("Passer en <br /> mode alertes").removeClass("active");
+				$("#ZoneMesalertes").removeClass('active').removeClass('notempty').attr('title','Passer en mode alerte');
+				$("#alertsModeText").html("Passer en <br /> mode alerte").removeClass("active");
 				$("#alertsNumber").show();
 			}
 				
@@ -353,13 +353,13 @@ mixin searchFormUnified(page)
 		function setAlert(el){
 			if($(el).hasClass('active')){
 
-				$(el).removeClass('active').attr('title','Passer en mode Alertes');
+				$(el).removeClass('active').attr('title','Passer en mode alerte');
 				yakType.cleanArrayByName("5");
 				$.cookie("yaktype", yakType.join(','),{ expires: 10000, path : '/' });
 				$("#alertsNumber").show();
 				$("#alertsModeText").removeClass("active").removeClass("empty");
 				$("#alertsModeText").html("Passez en <br />mode alerte");
-				$("#ZoneMesalertes").removeClass('active').removeClass('notempty').attr('title','Passer en mode alertes');
+				$("#ZoneMesalertes").removeClass('active').removeClass('notempty').attr('title','Passer en mode alerte');
 			}else{
 				
 				$("#alertsNumber").hide();

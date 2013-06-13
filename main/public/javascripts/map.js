@@ -200,7 +200,8 @@
 				}
 			});
 
-			/*news nav*/
+
+			
 			$('#newsNav li').unbind("click").on('click',function(event){
 				event.preventDefault();
 				
@@ -211,21 +212,20 @@
 					
 					$('.tabContent').hide();
 					$('#'+contentToLoad).fadeIn();	
-					
+					alert(contentToLoad);
 					if(contentToLoad == "newspostContent"){
 						// INIT MARKERLOCATION
-						
+						alert("fsdfsfsd");
 						listenerHandle = google.maps.event.addListener(map, 'click', function(event) {
 							getformattedAddress(event.latLng);
 							placeMarker(event.latLng,markerLocation);
 							google.maps.event.addListener(markerLocation, 'dragend', function() {
-								cleanMarkers();
+								//cleanMarkers();
 								var position = markerLocation.getPosition();
 								$('#latitude').val(position.lat());	
 								$('#longitude').val(position.lng());	
 								
 								getformattedAddress(position);
-								
 							});		
 						});
 					}
@@ -663,6 +663,7 @@
 			//getAndPrintInfo();
 			
 			google.maps.event.addListenerOnce(map, 'idle', function() {
+
 				cleanMarkers();
 				bounds = getMyBounds();
 				center = this.getCenter();
@@ -796,7 +797,7 @@
 			});
 		}
 		
-		function getAndPrintInfo(){
+		function getAndPrintInfo(){			
 			getHotTags(curPos,dateFrom);
 			numAlertsSearch();
 		
@@ -875,6 +876,7 @@
 
 		function printMapAndFeed(data,flagFilter){
 			cleanFeed();
+
 			cleanMarkers();
 
 
@@ -1316,7 +1318,6 @@
 						newComment.username = user.login;
 						newComment.userid = user._id;
 						newComment.comment = checkandremoveTags(comment);
-						alert(checkandremoveTags(comment));
 						newComment.userthumb = user.thumb;
 						newComment.date = new Date();
 						newComment.status = 1;
