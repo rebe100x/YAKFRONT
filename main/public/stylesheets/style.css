@@ -528,7 +528,7 @@ width: 270px;
    #dayPrinter { width: 260px; color: black; font-size: 13px; }
    .headerYakwala .navbar .nav > li > a { line-height: 12px; color: black; text-shadow: 0 0 0 rgba(0, 0, 0, 0.25); font-size: 14px }
    .searchYakwala .customInput{ width: 260px; margin-top: 6px; float: left; margin-left: 6px; height: 26px; border: 1px solid #dddddd}
-   .rightPull { position: fixed; right: 0px}
+   .rightPull { position: absolute; right: 0px}
    .timeIcon { position: relative; top: -14px; }
    .filterIcon { position: relative; top: 15px}
    #heatSelector { position:  relative; left: 23px; bottom: 6px; margin-right: 45px;}
@@ -602,7 +602,7 @@ width: 270px;
    #dayPrinter { width: 200px; color: black; font-size: 12px; }
    .headerYakwala .navbar .nav > li > a { line-height: 12px; color: black; text-shadow: 0 0 0 rgba(0, 0, 0, 0.25); font-size: 12px}
    .searchYakwala .customInput{ width: 115px; margin-top: 6px; float: left; margin-left: 6px; border: 1px solid #dddddd; height: 20px}
-    .rightPull { position: fixed; right: 0px}
+    .rightPull { position: absolute; right: 0px}
    .timeIcon { position: relative; top: -14px; }
    .filterIcon { position: relative; top: 15px}
    #heatSelector { position:  relative; left: 23px; bottom: 6px; margin-right: 45px;}
