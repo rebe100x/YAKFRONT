@@ -70,7 +70,7 @@ mixin list()
 							];
 				data['rows'] = rows;			
 				mapData = new google.visualization.DataTable(data)
-				options = {title: 'Infos',colors:['#3a87ad','#468847','#b94a48','#f89406'],areaOpacity:0.6};
+				options = {title: 'Infos créées par jour:',colors:['#3a87ad','#468847','#b94a48','#f89406'],areaOpacity:0.6};
 				var chartInfo = new google.visualization.AreaChart(document.getElementById('chart_info'));
 				chartInfo.draw(mapData, options);
 			});
@@ -85,7 +85,7 @@ mixin list()
 							];
 				data['rows'] = rows;			
 				mapData = new google.visualization.DataTable(data)
-				options = {title: 'Users',colors:['#3a87ad','#468847','#b94a48','#f89406'],areaOpacity:0.1,pointSize:5,lineWidth:3,};
+				options = {title: 'Utilisateurs créés par jour:',colors:['#3a87ad','#468847','#b94a48','#f89406'],areaOpacity:0.1,pointSize:5,lineWidth:3,};
 				var chartUser = new google.visualization.AreaChart(document.getElementById('chart_user'));
 				chartUser.draw(mapData, options);
 			});
@@ -99,7 +99,7 @@ mixin list()
 							];
 				data['rows'] = rows;			
 				mapData = new google.visualization.DataTable(data)
-				options = {title: 'Lieux',colors:['#3a87ad','#468847','#b94a48','#f89406'],areaOpacity:0.1,pointSize:5,lineWidth:3};
+				options = {title: 'Lieux créés par jour:',colors:['#3a87ad','#468847','#b94a48','#f89406'],areaOpacity:0.1,pointSize:5,lineWidth:3};
 				var chartPlace = new google.visualization.AreaChart(document.getElementById('chart_place'));
 				chartPlace.draw(mapData, options);
 			});

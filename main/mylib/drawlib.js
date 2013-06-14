@@ -66,15 +66,18 @@ exports.StoreImg = function(file,destName,size,conf){
 		var srcPath = srcPathTmp.replace(/^(.*\.)[a-zA-Z](3,4)$/,'$1')+"jpeg";
 		//console.log(srcPathTmp+','+srcPath);
 		im.convert([srcPathTmp,srcPath],function(err,stdout){
+			console.log('CONVERT');
 			// if convertion ok, we begin to build the small images
 			if(!err){
-				
+				console.log('CONVERT OK');
 				//var w = size.w;
 				//var h = size.h;
-				//console.log( size.w+' x '+ size.h);
+				console.log( size.w+' x '+ size.h);
 				
 				if(size.w > 0 && size.h > 0){
+
 					//console.log("1="+conf.uploadsDir+'pictures/'+ size.w+'_'+ size.h+'/'+destName);
+					console.log('RESIZE');
 					im.resize({
 						srcPath: srcPath,
 						dstPath: conf.uploadsDir+'pictures/'+size.w+'_'+size.h+'/'+destName,

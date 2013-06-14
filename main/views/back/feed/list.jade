@@ -224,7 +224,7 @@ mixin list()
 			var title_title = "";
 			
 			res += '<div class="liens">';
-			res += '<a href="'+conf.batchurl.replace('BACKEND','BATCH')+'parser.php?q='+item.name+'" target="_blank" class="testItem listIcon" title="Tester"><i class="icon-play"></i></a>';
+			res += '<a href="'+conf.batchurl.replace('BACKEND','BATCH')+'parserPAPI.php?q='+item.name+'&forceUpdate=1" target="_blank" class="testItem listIcon" title="Tester"><i class="icon-play"></i></a>';
 			res += '<a href="#" id="'+item._id+'" class="duplicateItem listIcon" title="Dupliquer"><i class="icon-random"></i></a>';
 
 			if (item.link)
@@ -393,7 +393,7 @@ mixin list()
 						map.setCenter(markerLocation.getPosition());
 						$("#feedForm #longitude").val(feed.defaultPlaceLocation.lng);
 						$("#feedForm #latitude").val(feed.defaultPlaceLocation.lat);
-						reduceZoneOptions(feed.defaultPlaceLocation.lat,feed.defaultPlaceLocation.lng,feed.zone);
+						reduceZoneOptions(null,null,feed.zone);
 						
 					}
 

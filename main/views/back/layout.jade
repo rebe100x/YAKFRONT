@@ -46,7 +46,8 @@ html
 			script(src='/javascripts/common.js?v='+JSON.parse(mainConf).versionback)
 			script(src='/javascripts/back_common.js?v='+JSON.parse(mainConf).versionback))
 		- else
-			script(src='https://maps.googleapis.com/maps/api/js?v=3.9&sensor=false&libraries=drawing&key='+JSON.parse(conf).gmapKey)		
+			script(src='https://maps.googleapis.com/maps/api/js?v=3.9&sensor=false&libraries=drawing&key='+JSON.parse(conf).gmapKey)
+			script(src='https://www.google.com/jsapi')		
 			script(src='/javascripts/minify/back-min-'+JSON.parse(mainConf).versionback+'.js')
 
 		

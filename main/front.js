@@ -292,6 +292,7 @@ new compressor.minify({
 	, __dirname+'/public/javascripts/lib/jquery/js/jquery.livequery.js'
 	, __dirname+'/public/javascripts/json2.js'
 	, __dirname+'/public/javascripts/lib/jquery/js/jquery.md5.min.js'
+	, __dirname+'/public/javascripts/lib/respond.js'
 	, __dirname+'/public/javascripts/common.js'
 	, __dirname+'/public/javascripts/front_common.js'
 	],

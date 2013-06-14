@@ -82,6 +82,8 @@ mixin feedForm()
 						input(type="radio", name="yakType", value="1")
 					label.radio.inline Agenda
 						input(type="radio", name="yakType", value="2")
+					label.radio.inline Infos Pratiques
+						input(type="radio", name="yakType", value="3")
 				
 			div.control-group
 				div.controls.row-fluid
@@ -688,7 +690,7 @@ mixin feedForm()
 					var latLng = new google.maps.LatLng(placeGmap.location.lat,placeGmap.location.lng);
 					map.panTo(latLng);
 					placeMarker(latLng,markerLocation);
-					reduceZoneOptions(latLng.lat(),latLng.lng(),null);
+					//reduceZoneOptions(latLng.lat(),latLng.lng(),null);
 				}
 			});
 
@@ -780,6 +782,11 @@ mixin feedForm()
 				err = true;
 			}
 
+			if(!$('#zone').val()){
+				setError('#zone','Indiquez une zone.');
+				err = true;
+			}
+
 			if (err){
 				$('#err').show();
 				return false;
@@ -790,12 +797,15 @@ mixin feedForm()
 		
 
 		function reduceZoneOptions(lat,lng,zone){
-			$.get('api/zones/'+lat+'/'+lng,function(data){
-				$('#zone').html('');	
-				$.each(data.zones, function (key,val) {
-					$('#zone').append('<option value ="'+val.num+'">'+val.name+'</option>');
-				});
-				if(typeof zone)
-					$("#feedForm #zone").val(zone);
-			});
+			if(lat && lng){
+				$.get('api/zones/'+lat+'/'+lng,function(data){
+					$('#zone').html('');	
+					$.each(data.zones, function (key,val) {
+						$('#zone').append('<option value ="'+val.num+'">'+val.name+'</option>');
+					});
+				});	
+			}
+			
+			if(typeof zone)
+				$("#feedForm #zone").val(zone);
 		}
