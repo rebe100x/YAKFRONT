@@ -700,9 +700,9 @@ width: 270px;
     
    
    #closeModal { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite_medium.png'); background-position: -70px -658px; position: relative; float: right; cursor: pointer;}
-   span.closePlace { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite_medium.png'); background-position: -97px -658px; position: relative; float: right; cursor: pointer;}
-   span.redAdd { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite_medium.png'); background-position: -213px -658px; position: relative; float: left; cursor: pointer; top: 16px; margin-right: 10px}
-   span.redStars { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite_medium.png'); background-position: -185px -658px; position: relative; float: left; cursor: pointer; top: 0px; margin-right: 10px}
+   span.closePlace { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -97px -658px; position: relative; float: right; cursor: pointer;}
+   span.redAdd { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -213px -658px; position: relative; float: left; cursor: pointer; top: 16px; margin-right: 10px}
+   span.redStars { width: 17px; height: 17px; background-image: url('/images/yakwala_sprite.png'); background-position: -185px -658px; position: relative; float: left; cursor: pointer; top: 0px; margin-right: 10px}
    .searchYakwala #timeContainer { position: relative; margin-left: 12px; margin-top: 10px;}
    #locationChooser {top:40%;}
    #userChooser { top: 40%;}
@@ -737,7 +737,7 @@ width: 270px;
 
 	#logoLink { width: 60px; height: 29px; display: block; float: none; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 0px -90px; margin: 0 auto;}
 
-	#profileMenu { width: 26px; height: 26px; display: block; float: left; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 0px -527px;}
+	#profileMenu { width: 26px; height: 26px; display: block; float: left; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 0 -572px;}
 	#profileMenu:hover { background-position: -30px -527px;}
 	#profileMenu img { width: 26px26px; height: 26px; }	
 	#zoneLocButton { width: 26px; height: 26px; display: block; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 84px -543px; position: absolute; top: 6px; right: 35px; cursor: pointer;}
@@ -809,7 +809,7 @@ width: 270px;
 
 	#logoLink { width: 60px; height: 29px; display: block; float: none; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 0px -90px; margin: 0 auto;}
 
-	#profileMenu { width: 26px; height: 26px; display: block; float: left; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 0px -527px;}
+	#profileMenu { width: 26px; height: 26px; display: block; float: left; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 0 -572px;}
 	#profileMenu:hover { background-position: -30px -527px;}
 	#profileMenu img { width: 26px26px; height: 26px; }	
 	#zoneLocButton { width: 26px; height: 26px; display: block; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 84px -543px; position: absolute; top: 6px; right: 35px; cursor: pointer;}
@@ -880,7 +880,7 @@ width: 270px;
 
 	#logoLink { width: 60px; height: 29px; display: block; float: none; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 0px -90px; margin: 0 auto;}
 
-	#profileMenu { width: 26px; height: 26px; display: block; float: left; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 0px -527px;}
+	#profileMenu { width: 26px; height: 26px; display: block; float: left; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 0 -527px;}
 	#profileMenu:hover { background-position: -30px -527px;}
 	#profileMenu img { width: 26px26px; height: 26px; }	
 	#zoneLocButton { width: 26px; height: 26px; display: block; background-image: url('/images/yakwala_sprite_medium.png'); background-position: 84px -543px; position: absolute; top: 6px; right: 35px; cursor: pointer;}
