@@ -103,9 +103,12 @@ User.index({"social.facebook.facebook_id":1});
 User.index({"social.google.google_id":1});
 
 User.statics.countUserSubscribers = function (usersubs, callback) {
-  return this.find({ usersubs: { $in : usersubs } },{},{sort:{pudDate:-1}}).count().exec(callback);
+  return this.find({ 'usersubs._id':usersubs},{}).count().exec(callback);
 }
 
+User.statics.countFeedSubscribers = function (feedsubs, callback) {
+	return this.find({ 'feedsubs._id':feedsubs},{}).count().exec(callback);
+}
 User.statics.findGridUsers = function (pageIndex, pageSize, searchTerm, sortProperties, sortDirections, status, type, currUser, callback) {
 
 	var conditions = {
@@ -545,7 +548,7 @@ var Info = new Schema({
   , user	: {type: Schema.ObjectId}	
   , feed :	{type: Schema.ObjectId}	
   , userName	: {type: String}		
-  , zone	: {type: Schema.ObjectId}
+  , zone	: Number
   ,	placeId	: {type: Schema.ObjectId} 
   , likes	: {type: Number, default: 0,index:1}
   , unlikes	: {type: Number, default: 0,index:1}
@@ -799,7 +802,13 @@ Info.statics.findByFeed = function (feedid, count, from, callback) {
 }
 
 Info.statics.countUserInfo = function (userid, callback) {
-  return this.find({ user: userid,status :1 },{},{sort:{pudDate:-1}}).count().exec(callback);
+	var last7Days = new Date() - 7*24*60*60*1000;	
+  return this.find({ user: mongoose.Types.ObjectId(userid),status :1, pubDate:{$gte:last7Days}},{}).count().exec(callback);
+}
+
+Info.statics.countFeedInfo = function (feedid, callback) {
+	var last7Days = new Date() - 7*24*60*60*1000;
+  return this.find({ feed: mongoose.Types.ObjectId(feedid),status :1, pubDate:{$gte:last7Days} },{}).count().exec(callback);
 }
 
 Info.statics.findByUserIds = function (useridArray, count, from, callback) {

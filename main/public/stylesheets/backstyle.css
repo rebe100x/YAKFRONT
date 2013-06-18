@@ -33,6 +33,7 @@ table.table-nohover tbody tr td:hover,  table.table-nohover thead tr th:hover {b
 
 table tr.warning{background-color: #FCF8E3;}
 table tr.error{background-color: #F2DEDE;}
+table tr.success{background-color: #DFF0D8;}
 
 /*dashboard*/
 .dashboardSmallChart{width: 75%; height: 100%;}

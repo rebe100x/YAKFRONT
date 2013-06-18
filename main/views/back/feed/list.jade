@@ -343,15 +343,16 @@ mixin list()
 					var feed = response.feed;
 
 					
-
 					if(flagDuplicate == 1){
 						$("#feedForm legend.mainlegend").html("Dupliquer un flux");
 						$("#feedForm #humanName").val(feed.humanName+'_copy').focus();
 						$("#feedForm #objid").val('');
+						$("#feedForm #placeid").val('');
 					}	
 					else{	
 						$("#feedForm legend.mainlegend").html("Modifier un flux");
 						$("#feedForm #objid").val(feed._id);
+						$("#feedForm #placeid").val(feed.defaultPlaceId);
 						$("#feedForm #humanName").val(feed.humanName).focus();
 					}	
 						
@@ -501,6 +502,7 @@ mixin list()
 			$("#feedForm").fadeIn();
 			$("#feedForm legendmainlegend").html("Ajouter un lieu");
 			$("#feedForm #objid").val("");
+			$("#feedForm #placeid").val("");
 			$("#pillYakcat ul").empty();
 			$('#err').hide();
 			$("#feedForm #title").focus();

@@ -63,7 +63,8 @@ block content
 						$('#defaultPlaceSearchName').val(placeGmap.address.state+', '+placeGmap.address.area);
 						$("#feedForm #longitude").val(placeGmap.location.lng);
 						$("#feedForm #latitude").val(placeGmap.location.lat);
-
+						$("#feedForm #address").val(JSON.stringify(placeGmap.address));
+						$("#feedForm #formatted_address").val(placeGmap.formatted_address);
 					} else {
 						var salt = new Date().getTime();
 						$('#defaultPlaceName').parent().before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide ("+status+")</div>");

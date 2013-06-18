@@ -45,7 +45,7 @@ var Place = new Schema({
 			}
 ,	status	: {type: Number}	
 ,	user	: {type: Schema.ObjectId}		
-,	zone	: {type: Schema.ObjectId}
+,	zone	: Number
 },{ collection: 'place' });
 
 

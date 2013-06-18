@@ -171,6 +171,8 @@ app.get('/api/countUserInfo/:id', api.countUserInfo);
 app.get('/api/countUserSubscribers/:id', api.countUserSubscribers);
 app.get('/api/user/feed/:userid', api.get_user_feed);
 app.get('/api/feed/feed/:feedid', api.get_feed_feed);
+app.get('/api/countFeedInfo/:id', api.countFeedInfo);
+app.get('/api/countFeedSubscribers/:id', api.countFeedSubscribers);
 
 app.post('/api/user/blacklist', routes.requiresLogin, api.user_blacklist);
 app.post('/api/user/blacklist/remove', routes.requiresLogin, api.user_blacklist_remove);

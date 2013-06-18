@@ -106,12 +106,13 @@ Feed.statics.format = function (thefeed) {
 	thefeed.thumbSmall = thethumbsmall;
 
 	var now = new Date();
+//	console.log(now.getTime() +'>'+ thefeed.lastExecDate.getTime() + ' + ' + thefeed.parsingFreq * 60* 1000 );
 	if(thefeed.lastExecStatus != 1 || now.getTime() > ( thefeed.lastExecDate.getTime() + (thefeed.parsingFreq * 60* 1000) ) ){
 		thefeed.lastExecStatusLabel = 'NOK';
 		if(thefeed.lastExecStatus == 2)
-			thefeed.lastExecErr = 'Erreur de parsing';
+			thefeed.lastExecErr = 'Parsing...';
 		else if(thefeed.lastExecStatus == 3)
-			thefeed.lastExecErr = 'Erreur de fetching';
+			thefeed.lastExecErr = 'Fetching...';
 		else if(thefeed.lastExecStatus == 4){
 			thefeed.lastExecStatusLabel = 'WARN';
 		}

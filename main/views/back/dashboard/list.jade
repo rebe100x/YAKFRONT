@@ -25,7 +25,7 @@ mixin list()
 			if(typeof data.feeds != 'undefined' && data.feeds.length > 0){	
 				var batchsInError = '';
 				data.feeds.forEach(function(item){
-					if(item.lastExecStatusLabel != 'OK'){
+					if(item.lastExecStatusLabel != 'OK' && item.status == 1){
 						var lastExecDate = '';
 						if(typeof item.lastExecDate != 'undefined' && item.lastExecDate )
 							lastExecDate = item.lastExecDate;

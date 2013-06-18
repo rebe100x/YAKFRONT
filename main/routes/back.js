@@ -340,8 +340,10 @@ exports.feed = function(req, res){
 	var formMessage = new Array();
 	delete req.session.message;
 	var Feed = db.model('Feed');
+	var Place = db.model('Place');
 	var Yakcat = db.model('Yakcat');
 	var obj_id = req.body.objid;
+	var place_id = req.body.placeid;
 	//console.log(req.body);
 	var feed = new Object();
 	var now = new Date();
@@ -368,9 +370,12 @@ exports.feed = function(req, res){
 	feed.defaultPlaceName = req.body.defaultPlaceName;
 	feed.defaultPlaceSearchName = req.body.defaultPlaceSearchName;
 	feed.defaultPrintFlag = req.body.defaultPrintFlag;
+
+
 	feed.link = req.body.link;
 	feed.licence = req.body.licence;
 	feed.yakType = req.body.yakType;
+
 
 	feed.feedType = req.body.feedType;
 	feed.fileSource = req.body.fileSource.split(',');
@@ -423,6 +428,7 @@ exports.feed = function(req, res){
 		}
 		feed.thumb = feedThumb.name;
 	}
+
 	else{
 		feedThumb.err = 0;
 	}
@@ -438,16 +444,77 @@ exports.feed = function(req, res){
 	}
 		
 
-	Feed.update(cond,feed,{upsert:true},function (err){
-		if (!err)
-			formMessage.push("Flux sauvegardé.");
-		else{
-			formMessage.push("Erreur pendant la sauvegarde du flux !");
-			console.log(err);
-		}
-		req.session.message = formMessage;
-		res.redirect('feed/list')
-	});
+		// if placeid is set
+		console.log(req.body);
+	if(typeof place_id != 'undefined' && place_id != ''){
+		feed.defaultPlaceId = place_id;
+		Feed.update(cond,feed,{upsert:true},function (err){
+			if (!err)
+				formMessage.push("Flux sauvegardé.");
+			else{
+				formMessage.push("Erreur pendant la sauvegarde du flux !");
+				console.log(err);
+			}
+			req.session.message = formMessage;
+			res.redirect('feed/list')
+		});
+	}else{ // if no place id we match against db
+		Place.findOne({title:feed.defaultPlaceName},function(err,theplace){
+			if(err)
+				throw err;
+			else{	
+				if(theplace){
+					feed.defaultPlaceId = theplace._id;
+					Feed.update(cond,feed,{upsert:true},function (err){
+						if (!err)
+							formMessage.push("Flux sauvegardé.");
+						else{
+							formMessage.push("Erreur pendant la sauvegarde du flux !");
+							console.log(err);
+						}
+						req.session.message = formMessage;
+						res.redirect('feed/list')
+					});
+				}else{ // if nothing in db we create it 
+					var place = new Place();
+					place.title = feed.defaultPlaceName;
+					place.origin = "Yakwala";
+					place.access = 1;
+					place.licence = "Yakwala";
+					place.location = feed.defaultPlaceLocation;
+					place.status = 1;
+					place.user = req.session.user;
+					place.zone = parseInt(feed.zone);
+					place.creationDate = new Date();
+					place.lastModifDate = new Date();
+					place.formatted_address = req.body.formatted_address;
+					place.address = JSON.parse(req.body.address);
+					place.yakCat = [mongoose.Types.ObjectId("504d89f4fa9a958808000001"),mongoose.Types.ObjectId("51c00669fa9a95b40b000036")];
+					place.yakCatName = ["Géolocalisation","Feed"];
+					place.save(function(err){console.log(err);});
+					feed.defaultPlaceId = place._id;
+					
+					Feed.update(cond,feed,{upsert:true},function (err){
+						if (!err)
+							formMessage.push("Flux sauvegardé.");
+						else{
+							formMessage.push("Erreur pendant la sauvegarde du flux !");
+							console.log(err);
+						}
+						req.session.message = formMessage;
+						res.redirect('feed/list')
+					});
+				}
+			}
+			
+
+		});
+
+ 
+
+	}
+
+	
 
 	
 
@@ -557,8 +624,6 @@ exports.yakNE = function(req, res){
 		var cond = {title:"anameimpossibletochoose007"};
 	}
 		
-	console.log(req.body);
-	console.log(yakNE);
 	YakNE.update(cond,yakNE,{upsert:true},function (err){
 		if (!err)
 			formMessage.push("Mot clé sauvegardé.");

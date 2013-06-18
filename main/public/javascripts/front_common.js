@@ -2054,16 +2054,18 @@ function checkByWidth()
 
 				var thetags = "";
 
-				for(i=0; i<theuser.yakCatNameArray.length; i++){
-					thetags += "<a onclick='setSearchForTag(this)'>#" + theuser.yakCatNameArray[i] + "</a> ";
-				}	
+				if(typeof theuser.yakCatNameArray != 'undefined'){
+					for(i=0; i<theuser.yakCatNameArray.length; i++){
+						thetags += "<a onclick='setSearchForTag(this)'>#" + theuser.yakCatNameArray[i] + "</a> ";
+					}	
+				}
 				if(thetags != '')
 					thetags = '<b>Tags :</b>'+thetags;
 
 
 				$("#userChooser #uc_profile_brief").html("<span class='theimage span5'><img src='" + userThumb +"' /></span><span class='theinfo span7'><div class='thename' id='uc_username'>" + userName + "</div>" + "<div class='thelogin'>@"+ userLogin+ "</div><div class='thebio'>" + userBio + "</div><div class='thelink'><a href='" + userWeb +"' target='_blank'>" + userWeb + "</a></div><div id='thealerts'>"+thetags+"</div></span>");
 				
-				$.getJSON('/api/countUserInfo/' + userid ,function(data) {
+				$.getJSON('/api/countFeedInfo/' + userid ,function(data) {
 					if(typeof data.count != 'undefined')
 						$("#userChooser #uc_profile_yaks_posts").html("Cette Semaine<br /><b>" + data.count + "<b>");		
 				});
@@ -2103,7 +2105,7 @@ function checkByWidth()
 
 				$("#userChooser #subscribed_number").html(subscribed_number);
 
-				$.getJSON('/api/countUserSubscribers/' + userid ,function(data) {
+				$.getJSON('/api/countFeedSubscribers/' + userid ,function(data) {
 					if(typeof data != 'undefined')
 						$("#userChooser #subscribers_number").html(data.count);		
 				});

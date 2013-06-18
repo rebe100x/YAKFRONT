@@ -274,6 +274,14 @@ exports.countUserInfo = function (req, res) {
 	});
 };
 
+exports.countFeedInfo = function (req, res) {
+	var Info = db.model('Info');
+	Info.countFeedInfo(req.params.id, function (err, docs){
+  	  res.json({
+  		count: docs
+	  });
+	});
+};
 
 exports.countUserSubscribers = function (req, res) {
 	var User = db.model('User');
@@ -284,6 +292,14 @@ exports.countUserSubscribers = function (req, res) {
 	});
 };
 
+exports.countFeedSubscribers = function (req, res) {
+	var User = db.model('User');
+	User.countFeedSubscribers(req.params.id, function (err, docs){
+  	  res.json({
+  		count: docs
+	  });
+	});
+};
 
 
 exports.findUserById2 = function (req, res) {

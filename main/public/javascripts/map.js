@@ -1040,25 +1040,30 @@
 			var thetags = "<div class=\'tags\'>";					
 
 			
-			if(item.yakCatName.length > 0)
-			{
-				for (var i = 0; i < item.yakCatName.length; i++) {
-					thetags += '<a class="tagHashLink prevent-default" onclick="setSearchFor(this)">#' + item.yakCatName[i] +'</a> ';	
+			
+			if (typeof(item.yakCatName) != 'undefined') {
+				if(item.yakCatName.length > 0){
+					for (var i = 0; i < item.yakCatName.length; i++) {
+						thetags += '<a class="tagHashLink prevent-default" onclick="setSearchFor(this)">#' + item.yakCatName[i] +'</a> ';	
+					}
 				}
-			}
-
+			}	
 			
 
 			if (typeof(item.freeTag) != 'undefined') {
-					
-					for (var i = 0; i < item.freeTag.length; i++) {
+				var maxTag = 5;
+				if(item.freeTag.length < maxTag)
+					maxTag = item.freeTag.length;
+				
+					for (var i = 0; i < maxTag; i++) {
 						if(item.freeTag[i] != ""){
 							thetags += '<a class="tagHashLink prevent-default" onclick="setSearchFor(this)">#' + item.freeTag[i] +'</a> ';	
-							if( i < item.freeTag.length -1)
+							if( i < maxTag -1)
 								thetags += ', ';
 						}
 					}
 			}
+
 			thetags += "</div>";
 
 			
