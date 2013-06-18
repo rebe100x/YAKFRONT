@@ -551,13 +551,19 @@ var Info = new Schema({
   , zone	: Number
   ,	placeId	: {type: Schema.ObjectId} 
   , likes	: {type: Number, default: 0,index:1}
-  , unlikes	: {type: Number, default: 0,index:1}
+  , unlikes	: {type: Number, default: 0}
   , commentsCount	: {type: Number, default: 0,index:1}
   , yaklikeUsersIds : {type: [String]}
   , yakunlikeUsersIds : {type: [String]}
   , yakComments : {type : [Schema.Types.Comment]}
   , socialThumbs : { type : [String]}
 }, { collection: 'info' });
+
+Info.index({location : '2d',pubDate:-1,creationDate:-1,dateEndPrint:-1,yakType:1,print:1,status:1});
+Info.index({location : '2d',pubDate:-1,dateEndPrint:-1,yakType:1,print:1,status:1});
+Info.index({location : '2d',pubDate:-1,creationDate:-1,dateEndPrint:-1,yakType:1,print:1,status:1,title:1,content:1,freeTag:1,});
+Info.index({location : '2d',pubDate:-1,dateEndPrint:-1,yakType:1,print:1,status:1,origin:1,user:1,freeTag:1,});
+
 
 //Info.index({location : '2d',pubDate:-1,yakType:1,print:1,status:1});
 //Info.index({location : '2d'});
