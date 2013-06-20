@@ -111,6 +111,7 @@ app.get('/zone/list',back.requiresLogin, back.zone_list);
 app.post('/zone', back.requiresLogin, back.zone);
 app.get('/api/zones/:x/:y', back.requiresLogin, back.findAllZoneNear);
 app.get('/api/zone/:id', back.requiresLogin, back.findZoneById);
+app.get('/api/zoneByNum/:num', back.requiresLogin, back.findZoneByNum);
 app.get('/api/zoneMaxnum', back.requiresLogin, back.findZoneMaxnum);
 app.get('/api/zones', back.requiresLogin, back.zones);
 app.get('/api/zones/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status', back.requiresLogin, back.gridZones);

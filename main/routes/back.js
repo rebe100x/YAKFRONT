@@ -383,6 +383,7 @@ exports.feed = function(req, res){
 	feed.persistDays = req.body.persistDays;
 	feed.description = req.body.description;
 	feed.zone = req.body.zone;
+	feed.zoneName = req.body.zoneName;
 	feed.status = parseInt(req.body.status);
 	feed.lastModifDate = now;
 
@@ -722,10 +723,10 @@ exports.zone = function(req, res){
 	zone.name = req.body.name;
 	Zone.findOne({},{},{sort:{num:-1}},function (err, docs){
  		
- 		zone.location = {lng:parseFloat(req.body.lngCT),lat : parseFloat(req.body.latCT)};
+ 		zone.location = {lat : parseFloat(req.body.latCT),lng:parseFloat(req.body.lngCT)};
 		var box = new Object();
-		box.tr = {lng:parseFloat(req.body.lngTR),lat : parseFloat(req.body.latTR)};
-		box.bl = {lng:parseFloat(req.body.lngBL),lat : parseFloat(req.body.latBL)};
+		box.tr = {lat : parseFloat(req.body.latTR),lng:parseFloat(req.body.lngTR)};
+		box.bl = {lat : parseFloat(req.body.latBL),lng:parseFloat(req.body.lngBL)};
 
 		zone.box = box;
 		zone.status = parseInt(req.body.status);
@@ -764,7 +765,16 @@ exports.findZoneMaxnum = function(req, res){
 
 exports.findZoneById = function (req, res) {
     var Zone = db.model('Zone');
-    Zone.findById(req.params.id, function (err, docs){
+    Zone.findOne({_id:req.params.id}, function (err, docs){
+      res.json({
+        zone: docs
+      });
+    });
+};
+
+exports.findZoneByNum = function (req, res) {
+    var Zone = db.model('Zone');
+    Zone.findOne({num:req.params.num}, function (err, docs){
       res.json({
         zone: docs
       });
@@ -1185,12 +1195,42 @@ exports.user_setname = function (req, res){
 
 exports.user_setstatus = function (req, res){
 	var User = db.model('User');
-	User.update({"_id":req.body._id},{$set:{"status":req.body.status}}, function(err){
-		if(!err)
-			res.json({meta:{code:200}});
-		else
-			res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+
+	var status = req.body.status;
+	var infostatus = 1;
+	if(status != 1){ // if we disactivate the user
+		infoStatus = 3;
+	}else{
+		infoStatus = 1;
+	}
+
+	User.update({_id: mongoose.Types.ObjectId(req.body._id)},{$set:{'status':status}}, function(err){
+		if(!err){
+			var Info = db.model("Info");
+			Info.update({user:mongoose.Types.ObjectId(req.body._id)},{$set:{status:infoStatus}}, function(err,docs){
+				if(!err){
+					// send email
+					if(status != 1){
+						User.findOne({_id:req.body._id},function(err,theuser){
+							if(theuser != null && typeof theuser != 'undefined' && typeof theuser.mail != 'undefined'){
+								User.sendBlacklistedMail(theuser.mail,function(err){
+									if(err)
+										console.log(err);
+									else
+										res.json({meta:{code:200,mail:1}});				
+								});
+							}
+						});
+					}
+				}else
+					res.json({meta:{code:404,mail:0,error_type:'operation failed',error_description:err.toString()}});
+			});
+		}else
+			res.json({meta:{code:404,mail:0,error_type:'operation failed',error_description:err.toString()}});
 	});
+
+			
+
 }
 
 exports.user_settype = function (req, res){

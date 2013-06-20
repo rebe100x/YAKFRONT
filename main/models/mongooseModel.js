@@ -571,52 +571,50 @@ Info.index({location : '2d',pubDate:-1,dateEndPrint:-1,yakType:1,print:1,status:
 
 
 Info.statics.format = function (theinfo) {
-	if(theinfo.thumb != undefined && theinfo.thumb != '')
-		var thethumb = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/120_90/'+theinfo.thumb;
-		/*
-		if(theinfo.user != undefined)
-			var thethumb = 	conf.fronturl+'/pictures/120_90/'+theinfo.thumb;
+	if(typeof theinfo != 'undefined' && theinfo != null){
+		if(theinfo.thumb != undefined && theinfo.thumb != '')
+			var thethumb = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/120_90/'+theinfo.thumb;
 		else
-			var thethumb = 	conf.batchurl+theinfo.thumb;
-		*/
-	else
-		var thethumb = 	'';
+			var thethumb = 	'';
 
 
-	var formattedInfo = {
-		_id:theinfo._id,
-		title:theinfo.title,
-		content:theinfo.content,
-		thumb:thethumb,
-		thumbFlag: theinfo.thumbFlag,
-		yakType:theinfo.yakType,
-		print:theinfo.print,
-		dateEndPrint:theinfo.dateEndPrint,
-		address:theinfo.address,
-		location:theinfo.location,
-		lastModifDate:theinfo.lastModifDate,
-		creationDate:theinfo.creationDate,
-		eventDate:theinfo.eventDate,
-		pubDate:theinfo.pubDate,
-		freeTag:theinfo.freeTag,
-		yakTag:theinfo.yakTag,
-		yakCatName:theinfo.yakCatName,
-		yakCat:theinfo.yakCat,
-		placeId:theinfo.placeId,
-		origin:theinfo.origin,
-		likes:theinfo.likes,
-		commentsCount:theinfo.commentsCount,
-		unlikes:theinfo.unlikes,
-		yaklikeUsersIds:theinfo.yaklikeUsersIds,
-		yakunlikeUsersIds:theinfo.yakunlikeUsersIds,
-		yakComments:theinfo.yakComments,
-		outGoingLink:theinfo.outGoingLink,
-		user: theinfo.user,
-		feed: theinfo.feed,
-		heat: theinfo.heat,
-		socialThumbs : theinfo.socialThumbs
-	};
-  return formattedInfo;
+		var formattedInfo = {
+			_id:theinfo._id,
+			title:theinfo.title,
+			content:theinfo.content,
+			thumb:thethumb,
+			thumbFlag: theinfo.thumbFlag,
+			yakType:theinfo.yakType,
+			print:theinfo.print,
+			dateEndPrint:theinfo.dateEndPrint,
+			address:theinfo.address,
+			location:theinfo.location,
+			lastModifDate:theinfo.lastModifDate,
+			creationDate:theinfo.creationDate,
+			eventDate:theinfo.eventDate,
+			pubDate:theinfo.pubDate,
+			freeTag:theinfo.freeTag,
+			yakTag:theinfo.yakTag,
+			yakCatName:theinfo.yakCatName,
+			yakCat:theinfo.yakCat,
+			placeId:theinfo.placeId,
+			origin:theinfo.origin,
+			likes:theinfo.likes,
+			commentsCount:theinfo.commentsCount,
+			unlikes:theinfo.unlikes,
+			yaklikeUsersIds:theinfo.yaklikeUsersIds,
+			yakunlikeUsersIds:theinfo.yakunlikeUsersIds,
+			yakComments:theinfo.yakComments,
+			outGoingLink:theinfo.outGoingLink,
+			user: theinfo.user,
+			feed: theinfo.feed,
+			heat: theinfo.heat,
+			socialThumbs : theinfo.socialThumbs
+		};
+	  return formattedInfo;
+	}else
+		return {};
+	
 }
 
 Info.statics.countUnvalidated = function (callback) {

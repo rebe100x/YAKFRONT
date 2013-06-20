@@ -14,11 +14,11 @@ mixin list()
 			tr.headerControle
 				td(colspan=6)
 					select#filterStatus
+						option(value="-1", "selected"="selected") Tous les utilisateurs
 						option(value="2") En attente de validation
 						option(value="1") Validés
 						option(value="3") Blacklistés
 						option(value="4") Doit remplir la page de première visite
-						option(value="-1", "selected"="selected") Tous les utilisateurs
 					select#filterType
 						option(value="0") Tous les types
 						option(value="1") Normal
@@ -173,7 +173,7 @@ mixin list()
 				},
 				{
 					property: 'status',
-					label: 'Statut',
+					label: "Statut <i class='icon-question-sign' id='statusHelp'></i>",
 					sortable: true
 				},
 				{
@@ -197,8 +197,13 @@ mixin list()
 		{
 			var _id = $(el).attr("rel");
 			$.post("/user/setStatus", {status: $(el).val(), _id : $(el).attr("rel")}, function(data){
-					if(data.meta.code == "200")
-					{
+					if(data.meta.code == "200"){
+						console.log(data);
+						if(data.meta.mail == 1){
+							$('#err').html('Un email a été envoyé !');
+							$('#errContainer').show();
+						}
+							
 						icon = 'icon-ok-sign';
 						title_icon = "validé";
 						if($(el).val() == 2){
@@ -236,7 +241,7 @@ mixin list()
 		function makeStatusDropDown(item){
 			var select = $("<div />");
 			select.attr("class", "selectStatus");
-			select.html('<select onchange="setNewStatus(this)" class="selectStatus" rel="'+item._id+'"><option value="2">En attente</option><option value="1">Validé</option><option value="3">Blacklisté</option></select>');
+			select.html('<select onchange="setNewStatus(this)" class="selectStatus" rel="'+item._id+'"><option value="2">En attente</option><option value="1">Validé</option><option value="3">Blacklisté</option><option value="4">Doit remplir la page de première visite</option></select>');
 			select.find("option").each(function(){
 				if($(this).attr("value") == item.status)
 					$(this).attr("selected", "selected");
@@ -370,5 +375,6 @@ mixin list()
 		}
 
 
-
-		
+		$(document).ready(function() {
+			$('#statusHelp').popover({animation:true,title:"Vous pouvez ici blacklister un utilisateur ou bien le débloquer en validant sont compte.",content:"<p><b>NB:</b>Si vous blacklistez un utilisateur, son compte sera immédiatement bloqué et les contenus postés via ce compte seront désactivés.<br> Un email lui sera envoyé pour le prévenir que son compte a été bloqué.<br><br> Cette opération de blacklistage est réversible, il suffit de remettre le statut à <i>Validé</i> et le compte est à nouveau opérationnel. Ses yassalas ré-apparaissent également.</p>",html:true});
+		});

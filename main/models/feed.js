@@ -64,6 +64,7 @@ var Feed = new Schema({
 	,lastExecErr : String
 	,daysBack : Number
 	,zone : Number
+	,zoneName : String
 },{ collection: 'feed' });
 
 
@@ -92,6 +93,7 @@ Feed.statics.formatLight2 = function (thefeed) {
 
 Feed.statics.format = function (thefeed) {
 
+	// THUMB
 	if(thefeed.thumb && typeof thefeed.thumb!= 'undefined'){
 		var thethumbbig = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/128_128/'+thefeed.thumb;
 		var thethumbmedium = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/48_48/'+thefeed.thumb;
@@ -105,21 +107,42 @@ Feed.statics.format = function (thefeed) {
 	thefeed.thumbMedium = thethumbmedium;
 	thefeed.thumbSmall = thethumbsmall;
 
+	// PARSING STATUS
 	var now = new Date();
-//	console.log(now.getTime() +'>'+ thefeed.lastExecDate.getTime() + ' + ' + thefeed.parsingFreq * 60* 1000 );
-	if(thefeed.lastExecStatus != 1 || now.getTime() > ( thefeed.lastExecDate.getTime() + (thefeed.parsingFreq * 60* 1000) ) ){
-		thefeed.lastExecStatusLabel = 'NOK';
-		if(thefeed.lastExecStatus == 2)
-			thefeed.lastExecErr = 'Parsing...';
-		else if(thefeed.lastExecStatus == 3)
-			thefeed.lastExecErr = 'Fetching...';
-		else if(thefeed.lastExecStatus == 4){
-			thefeed.lastExecStatusLabel = 'WARN';
+	//	console.log(now.getTime() +'>'+ thefeed.lastExecDate.getTime() + ' + ' + thefeed.parsingFreq * 60* 1000 );
+	thefeed.lastExecStatusLabel = 'OK';
+
+	if(thefeed.parsingFreq > 0){
+
+				var offset = 1*60*1000; // after one hour, we set the alert
+
+
+		if(thefeed.lastExecStatus == 1){ // batch is ok
+			if( now.getTime() < ( thefeed.lastExecDate.getTime() + (thefeed.parsingFreq * 60* 1000) ) ){
+				thefeed.lastExecStatusLabel = 'OK';
+				thefeed.lastExecErr = 'Success';
+			}else if( now.getTime() > ( thefeed.lastExecDate.getTime() + (thefeed.parsingFreq * 60* 1000) ) && now.getTime() < ( thefeed.lastExecDate.getTime() + (thefeed.parsingFreq * 60* 1000) + offset )){
+				thefeed.lastExecStatusLabel = 'WARNING';
+				thefeed.lastExecErr = 'Should run very soon...';
+			}else if(now.getTime() > ( thefeed.lastExecDate.getTime() + (thefeed.parsingFreq * 60* 1000) + offset )){
+				thefeed.lastExecStatusLabel = 'NOK';
+				thefeed.lastExecErr = 'Did not run !';
+			}
+		}else{ // batch status not ok
+			if( now.getTime() > ( thefeed.lastExecDate.getTime() + (thefeed.parsingFreq * 60* 1000) ) && now.getTime() < ( thefeed.lastExecDate.getTime() + (thefeed.parsingFreq * 60* 1000) + offset ) ){
+				thefeed.lastExecStatusLabel = 'PROCESSING';
+				thefeed.lastExecErr = "Running...";
+			}else if(now.getTime() > ( thefeed.lastExecDate.getTime() + (thefeed.parsingFreq * 60* 1000) + offset )){
+				thefeed.lastExecStatusLabel = 'NOK';
+				thefeed.lastExecErr = 'Last Execution failed !';
+			}
 		}
+
 	}else{
 		thefeed.lastExecStatusLabel = 'OK';
+		thefeed.lastExecErr = 'Run it manually !';
 	}
-
+	
 		
   return thefeed;
 }  

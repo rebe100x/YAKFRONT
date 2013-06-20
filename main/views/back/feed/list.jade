@@ -161,7 +161,7 @@ mixin list()
 					sortable: true
 				},
 				{
-					property: 'defaultPlaceSearchName',
+					property: 'zoneName',
 					label: 'Zone',
 					sortable: true
 				},
@@ -174,7 +174,7 @@ mixin list()
 					$.each(items, function (index, item) {
 						item.name = fillContent(item);
 						item.creationDate = formatDate(item.creationDate);
-						
+						item.zoneName = getZone(item);
 					});
 				}
 			})
@@ -216,6 +216,13 @@ mixin list()
 			//var currentSelection = $('#filterType :selected').val();
 			refreshDatagrid();
 		});
+
+		function getZone(item){
+			if(typeof item.zoneName == "undefined" || item.zoneName == '' ||  item.zoneName == null){
+				return item.defaultPlaceName;
+			}else
+				return  item.zoneName;
+		}
 
 		function fillContent(item) {
 			var res = "";
@@ -394,9 +401,14 @@ mixin list()
 						map.setCenter(markerLocation.getPosition());
 						$("#feedForm #longitude").val(feed.defaultPlaceLocation.lng);
 						$("#feedForm #latitude").val(feed.defaultPlaceLocation.lat);
-						reduceZoneOptions(null,null,feed.zone);
-						
 					}
+
+					if(typeof feed.zone)
+						$("#feedForm #zone").val(feed.zone);
+						
+					if(typeof feed.zoneName)
+						$("#feedForm #zoneName").val(feed.zoneName);
+
 
 					$('#defaultPlaceSearchName').val(feed.defaultPlaceSearchName);
 					$('#defaultPlaceName').val(feed.defaultPlaceName);
@@ -506,6 +518,11 @@ mixin list()
 			$("#pillYakcat ul").empty();
 			$('#err').hide();
 			$("#feedForm #title").focus();
+
+			$('.lineToBeginGroup').hide();
+			$('.rootElementGroup').show();
+			$("#feedForm #feedType").val("").change();
+			
 
 		});
 			

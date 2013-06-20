@@ -14,6 +14,8 @@ mixin feedForm()
 		input#placeid(type="hidden", name="placeid", value='0')
 		input#address(type="hidden", name="address", value='0')
 		input#formatted_address(type="hidden", name="formatted_address", value='0')
+		input#zoneName(type="hidden", name="zoneName", value='')
+
 
 		div.control-group.error
 				div.controls
@@ -84,8 +86,6 @@ mixin feedForm()
 						input(type="radio", name="yakType", value="1")
 					label.radio.inline Agenda
 						input(type="radio", name="yakType", value="2")
-					label.radio.inline Infos Pratiques
-						input(type="radio", name="yakType", value="3")
 				
 			div.control-group
 				div.controls.row-fluid
@@ -137,7 +137,7 @@ mixin feedForm()
 					.span6			
 						label Uploader un fichier : 
 							i.icon-question-sign#fileuploadHelp
-						input(type="file", id="fileupload", name="files[]", data-url="http://localhost:"+JSON.parse(conf).fileport, multiple)
+						input(type="file", id="fileupload", name="files[]", data-url=JSON.parse(conf).fronturl+":"+JSON.parse(conf).fileport, multiple)
 						div#progress
 							div.bar.alert.alert-success(style="width: 0%;")
 								span.alertText 0%
@@ -159,17 +159,32 @@ mixin feedForm()
 						label Type de flux : 
 							i.icon-question-sign#feedTypeHelp
 						select#feedType(name='feedType')
+							option(value="") Choisir un type de fichier
 							option(value="XML") XML
 							option(value="CSV") CSV
 							option(value="JSON") JSON
-							option(value="YAKMADE") YAKMADE
+							//option(value="YAKMADE") YAKMADE
 						div#alertFeedType.alert.alert-info
 							button.close(type="button", data-dismiss="alert") x
 							span.alertText
 						div#parsingParam
 							label.rootElementGroup Element racine:
 								i.icon-question-sign#rootElementHelp
-							input.rootElementGroup#rootElement(type="text",name="rootElement",placeholder="element racine",value='/rss/channel/item')	
+							//input.rootElementGroup#rootElement(type="text",name="rootElement",placeholder="element racine",value='/rss/channel/item')
+
+							div.input-append.dropdown.combobox.rootElementGroup
+								input(type='text', placeholder="Element Racine", name="rootElement", id="rootElement")
+								button.btn(data-toggle="dropdown", tabindex="-1")
+									i.caret
+								ul.dropdown-menu
+									li(data-value="/rss/channel/item")
+										a(href="") /rss/channel/item
+									li(data-value="items")
+										a(href="") items
+									li(data-value="list")
+										a(href="") list
+
+
 							label.lineToBeginGroup Commencer à la ligne numéro:
 								i.icon-question-sign#lineToBeginHelp
 							input.lineToBeginGroup#lineToBegin(type="text",name="lineToBegin",placeholder="Ligne de début du parsing",value="0")	
@@ -231,7 +246,7 @@ mixin feedForm()
 							input(type='text', name='infoTitle', id='infoTitle', placeholder="Titre")
 							label Corps de l&rsquo; info:
 							input(type='text', name='infoContent', id='infoContent', placeholder="Corps")
-							label Lien web vers l&rsquo;info:*
+							label Lien web vers l&rsquo;info, ou identifiant unique:*
 							input(type='text', name='infoLink', id='infoLink', placeholder="Lien web vers l'info")
 							legend Paramètres optionels:
 							label Imagette:
@@ -347,7 +362,7 @@ mixin feedForm()
 			$('#defaultPlaceNameHelp').popover({animation:true,title:'Localisation du flux',content:"<p>Le flux doit être localisé afin de permettre un meilleur filtrage des infos.<br> Selon l'option choisie dans la case suivante ( Si l'info n'est pas géolocalisée... ) L'info sera par défaut placée à ce point.<br><br>Pour le parisien 75, nous plaçons ce point à la mairie de Paris.</p>",html:true});
 			$('#defaultPrintFlagHelp').popover({placement:'left',animation:true,title:'Flag',content:"<p>Ce flag est très important, il permet de régler le comportement du système si l'info n'est pas géolocalisée.<br> En effet, parfois l'info n'est pas géolocalisable ( car elle ne contient pas d'info de lieux ou que l'algo plante ). Dans ce cas, on peut placer l'info soit au point défini juste avant( la localisation du flux ), soit ne pas l'afficher. Dans le cas où on l'affiche, on peut également choisir de ne l'afficher que sur le fil info et pas sur la carte. <br><br> Par exemple le parisen 75 est localisé à la mairie de paris, mais nous ne voulons pas que des infos apparaissent en masse sur la carte à ce point, par contre on veut les voir dans le fil info quand on est pas loin de Paris. Nous avons donc choisi <b>... ne pas afficher sur la carte mais afficher sur le fil info</b><br><br>Pour un flux relatif à un lieu, par exemple le flux du stade vélodrome à Marseille, nous ne faisons pas de géoloc et nous choisissons la <b>ne pas faire de géoloc et place l'info au point par défaut.</b> </p>",html:true});
 			$('#defaultPlaceSearchNameHelp').popover({animation:true,title:'Indice pour la recherche de lieu',content:"<p>Entrer ici un texte qui complète l'information de géolocalisation et donne une précision à l'algo de recherche de lieu afin de distinguer des lieux différents mais ayant le même nom.<br><br>Par exemple un lieu reconnu comme le Musée des Civilisations pourrait être à Marseille ou à Paris. Si votre flux est un flux local à Marseille, il vous faut entrer <b>Marseille, France</b>, ou <b>Bouches-du-Rhône, France</b>. La requète de géoloc sera alors bien plus précise et évitera les doublons avec d'autre lieux du même nom en France.<br><br> Si vous entrez une liste des musées de France, il vous suffit d'entrer <b>France</b>.<br><br> SI vous être trop précis vous perdrez des infos qui aurraient pu être géolocalisées, si vous êtes trop imprécis vous risquez les doublons.</p>",html:true});
-			$('#zoneHelp').popover({animation:true,title:'La zone',content:"<p>Les zones sont définies dans l'onglet Zones.<br> Elles permettent un filtrage des données : toute donnée géolocalisée en dehors de la zone définie est mise en erreur.<br> Cela permet de filtrer les infos nationales ou internationales présentent parfois dans les medias locaux.</p>",html:true});
+			$('#zoneHelp').popover({animation:true,title:'La zone',content:"<p>Les zones sont définies dans l'onglet Zones.<br> Elles permettent un filtrage des données : toute donnée géolocalisée en dehors de la zone définie est mise en erreur.<br> Cela permet de filtrer les infos nationales ou internationales présentes parfois dans les medias locaux.</p>",html:true});
 			$('#fileuploadHelp').popover({animation:true,title:'Source = Fichier',content:"<p>Vous pouvez uploader vos données sous forme de fichiers. <br> Vous pouvez ajouter autant de fichiers que vous voulez du moment qu'ils suivent le même schéma de parsing.</p>",html:true});
 			$('#sourceHelp').popover({animation:true,title:'Source = Url',content:"<p>Vous pouvez définit une url à parser. <br> Vous pouvez ajouter autant d'url que vous voulez du moment qu'elles suivent le même schéma de parsing.</p>",html:true});
 			$('#feedTypeHelp').popover({animation:true,title:'Type de flux',content:"<p>Regarder l'extension du fichier ou du flux pour définir un des 3 types.</p>",html:true});
@@ -371,34 +386,47 @@ mixin feedForm()
 			/*Set zone select button*/
 			$.get('api/zones',function(data){
 				$.each(data.zone, function (key,val) {
-					$('#zone').append('<option value ="'+val.num+'">'+val.name+'</option>');
+					$('#zone').append("<option value ='"+val.num+"'>"+val.name+"</option>");
 				});	
 			});
 			
+			$('#zone').change(function(){
+				$('#zoneName').val($("#zone option:selected").html());
+			});
 
 			/*feedtype : CSV , XML , JSON, YAKMADE*/
 			$('#feedType').on('change',function(){
 				switch($(this).val()){
+					case '':
+						$('.lineToBeginGroup').hide();
+						$('.rootElementGroup').hide();
+						$('#alertFeedType').hide();
+						$('#rootElement').val('');
+						
+					break;
 					case 'CSV':
-							$('.lineToBeginGroup').show();
-							$('.rootElementGroup').hide();
-							$('#alertFeedType').show().children('span.alertText').html('Le fichier doit être sauvé en UTF8, séparation point virgule et textes délimités par des guillemets doubles. ');
-						break;
-						case 'XML':
-							$('.lineToBeginGroup').hide();
-							$('.rootElementGroup').show();
-							$('#alertFeedType').hide();
-						break;
-						case 'JSON':
-							$('.lineToBeginGroup').hide();
-							$('.rootElementGroup').show();
-							$('#alertFeedType').hide();
-						break;
-						case 'YAKMADE':
-							$('.lineToBeginGroup').hide();
-							$('.rootElementGroup').hide();
-							$('#alertFeedType').hide();
-						break;
+						$('.lineToBeginGroup').show();
+						$('.rootElementGroup').hide();
+						$('#alertFeedType').show().children('span.alertText').html('Le fichier doit être sauvé en UTF8, séparation point virgule et textes délimités par des guillemets doubles. ');
+						$('#rootElement').val('');
+					break;
+					case 'XML':
+						$('.lineToBeginGroup').hide();
+						$('.rootElementGroup').show();
+						$('#alertFeedType').hide();
+						$('#rootElement').val('/rss/channle/item');
+					break;
+					case 'JSON':
+						$('.lineToBeginGroup').hide();
+						$('.rootElementGroup').show();
+						$('#alertFeedType').hide();
+						$('#rootElement').val('items');
+					break;
+					case 'YAKMADE':
+						$('.lineToBeginGroup').hide();
+						$('.rootElementGroup').hide();
+						$('#alertFeedType').hide();
+					break;
 				}
 					
 			});
@@ -695,7 +723,7 @@ mixin feedForm()
 					var latLng = new google.maps.LatLng(placeGmap.location.lat,placeGmap.location.lng);
 					map.panTo(latLng);
 					placeMarker(latLng,markerLocation);
-					//reduceZoneOptions(latLng.lat(),latLng.lng(),null);
+					reduceZoneOptions(latLng.lat(),latLng.lng());
 				}
 			});
 
@@ -801,7 +829,7 @@ mixin feedForm()
 		
 		
 
-		function reduceZoneOptions(lat,lng,zone){
+		function reduceZoneOptions(lat,lng){
 			if(lat && lng){
 				$.get('api/zones/'+lat+'/'+lng,function(data){
 					$('#zone').html('');	
@@ -810,7 +838,4 @@ mixin feedForm()
 					});
 				});	
 			}
-			
-			if(typeof zone)
-				$("#feedForm #zone").val(zone);
 		}

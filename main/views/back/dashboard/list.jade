@@ -9,7 +9,7 @@ mixin list()
 			thead
 				tr
 					th Nom
-					th Erreur
+					th Message
 					th Dernière execution
 					th status
 					th Run
@@ -25,21 +25,40 @@ mixin list()
 			if(typeof data.feeds != 'undefined' && data.feeds.length > 0){	
 				var batchsInError = '';
 				data.feeds.forEach(function(item){
-					if(item.lastExecStatusLabel != 'OK' && item.status == 1){
+					//if(item.lastExecStatusLabel != 'OK' && item.status == 1 ){
+					if(item.status == 1 ){
 						var lastExecDate = '';
+						var errClass = '';
+						var iconClass = '';
+						var lastExecErr = '';
+						
 						if(typeof item.lastExecDate != 'undefined' && item.lastExecDate )
 							lastExecDate = item.lastExecDate;
-						var lastExecErr = '';
+
 						if(typeof item.lastExecErr != 'undefined' && item.lastExecErr && item.lastExecErr != '' )
 							lastExecErr = item.lastExecErr;
-						var errClass = '';
-						if(item.lastExecStatusLabel == 'WARN')
-							errClass = 'warning';
-						if(item.lastExecStatusLabel == 'NOK')
-							errClass = 'error';
 						
+						if(item.lastExecStatusLabel == 'WARN'){
+							errClass = 'warning';
+							iconClass = 'icon-warning-sign';
+						}
 
-						batchsInError += '<tr class="'+errClass+'"><td><i class="icon-exclamation-sign"></i>&nbsp;'+item.humanName+'</td><td>'+lastExecErr+'</td><td>'+lastExecDate+'</td><td class="error">'+item.lastExecStatusLabel+'</td><td><a href="'+conf.batchurl.replace('BACKEND','BATCH')+'parserPAPI.php?q='+item.name+'&forceUpdate=1" target=_blank"><i class="icon-play" title="Executer le batch"></i></a></td></tr>';
+						if(item.lastExecStatusLabel == 'PROCESSING'){
+							errClass = 'warning';
+							iconClass = 'icon-refresh';
+						}
+
+						if(item.lastExecStatusLabel == 'NOK'){
+							errClass = 'error';
+							iconClass = 'icon-exclamation-sign';
+						}
+
+						if(item.lastExecStatusLabel == 'OK'){
+							errClass = 'success';
+							iconClass = 'icon-ok';
+						}
+
+						batchsInError += '<tr class="'+errClass+'"><td><i class="'+iconClass+'"></i>&nbsp;'+item.humanName+'</td><td>'+lastExecErr+'</td><td>'+lastExecDate+'</td><td class="error">'+item.lastExecStatusLabel+'</td><td><a href="'+conf.batchurl.replace('BACKEND','BATCH')+'parserPAPI.php?q='+item.name+'&forceUpdate=1" target=_blank"><i class="icon-play" title="Executer le batch"></i></a></td></tr>';
 					}
 				});
 				if(batchsInError.length == 0)

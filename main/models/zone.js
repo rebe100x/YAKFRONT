@@ -5,7 +5,7 @@ var mongoose = require('mongoose')
 var Zone = new Schema({
     name     : { type: String, required : true, index : true, unique:true}
   , location	: { type : { lat: Number, lng: Number }, index : '2d'}	
-  , num : {type : Number,unique:true}
+  , num : {type : Number,unique:true,index:true}
   , status : {type : Number, index:1}
   , address		: { type : { 
 								arr: String,
