@@ -170,20 +170,14 @@ mixin feedForm()
 						div#parsingParam
 							label.rootElementGroup Element racine:
 								i.icon-question-sign#rootElementHelp
-							//input.rootElementGroup#rootElement(type="text",name="rootElement",placeholder="element racine",value='/rss/channel/item')
+								span#searchRootElement
+									i.icon-search 
+									span#searchRootElementIcon Cliquer ici pour avoir une suggestion
+									span#searchRootElementResult
+							input.rootElementGroup#rootElement(type="text",name="rootElement",placeholder="element racine",value='/rss/channel/item')
 
-							div.input-append.dropdown.combobox.rootElementGroup
-								input(type='text', placeholder="Element Racine", name="rootElement", id="rootElement")
-								button.btn(data-toggle="dropdown", tabindex="-1")
-									i.caret
-								ul.dropdown-menu
-									li(data-value="/rss/channel/item")
-										a(href="") /rss/channel/item
-									li(data-value="items")
-										a(href="") items
-									li(data-value="list")
-										a(href="") list
 
+							
 
 							label.lineToBeginGroup Commencer à la ligne numéro:
 								i.icon-question-sign#lineToBeginHelp
@@ -215,7 +209,7 @@ mixin feedForm()
 						button.btn.btn-primary.btn-warning(type='button', name='parsing', id='parsing') Définir le parsing
 
 		div.row-fluid
-			div.control-group#parsingGroup.clearBoth
+			div.control-group#statusGroup.clearBoth
 			legend Désactiver
 			div.control-group
 				div.controls
@@ -366,7 +360,7 @@ mixin feedForm()
 			$('#fileuploadHelp').popover({animation:true,title:'Source = Fichier',content:"<p>Vous pouvez uploader vos données sous forme de fichiers. <br> Vous pouvez ajouter autant de fichiers que vous voulez du moment qu'ils suivent le même schéma de parsing.</p>",html:true});
 			$('#sourceHelp').popover({animation:true,title:'Source = Url',content:"<p>Vous pouvez définit une url à parser. <br> Vous pouvez ajouter autant d'url que vous voulez du moment qu'elles suivent le même schéma de parsing.</p>",html:true});
 			$('#feedTypeHelp').popover({animation:true,title:'Type de flux',content:"<p>Regarder l'extension du fichier ou du flux pour définir un des 3 types.</p>",html:true});
-			$('#rootElementHelp').popover({animation:true,title:'Element racine',content:"<p>Dans le cas d'un type XML ou JSON, défnir ici l'élément racine surlequel l'algo doit boucler.<br><br>Par exemple, un flux RSS a la plus part du temps un élément racine <b>/rss/channel/item</b> </p><br><br>Pour un type JSON, indiquer le nom de l'élément surlequel boucler ( souvent <b>item</b> )",html:true});
+			$('#rootElementHelp').popover({animation:true,title:'Element racine',content:"<p>Ce champ n'est nécessaire que pour un type <b>XML</b> ou <b>JSON</b>.<br><br>Définir ici l'élément racine surlequel l'algo doit boucler.<br><br><b>Pour pré-remplir ce champ cliquer sur l'icône <i class='icon-search'></i></b> ( attention , c'est expérimental, il est préférable de vérifier manuellement.<br><br>Par exemple, un flux RSS a la plus part du temps un élément racine <b>/rss/channel/item</b> </p><br><br>Pour un type JSON, indiquer le nom de l'élément surlequel boucler ( souvent <b>item</b> )<br><br>",html:true});
 			$('#lineToBeginHelp').popover({animation:true,title:'Ligne de commencement',content:"<p>Pour un type CSV, vous pouvez indiquer la ligne de départ afin de ne pas prendre en compte le header oudes lignes vides.</p>",html:true});
 			$('#parsingFreqHelp').popover({placement:'left',animation:true,title:'Fréquence de parsing',content:"<p>Vous devez ici vous aligner sur la fréquence de mise à jour de votre flux ou de votre fichier.</p>",html:true});
 
@@ -414,13 +408,11 @@ mixin feedForm()
 						$('.lineToBeginGroup').hide();
 						$('.rootElementGroup').show();
 						$('#alertFeedType').hide();
-						$('#rootElement').val('/rss/channle/item');
 					break;
 					case 'JSON':
 						$('.lineToBeginGroup').hide();
 						$('.rootElementGroup').show();
 						$('#alertFeedType').hide();
-						$('#rootElement').val('items');
 					break;
 					case 'YAKMADE':
 						$('.lineToBeginGroup').hide();
@@ -514,6 +506,33 @@ mixin feedForm()
 				$('#fileSource').val(fileSource.join(','));
 			});
 
+			$('#searchRootElementIcon').unbind('click').on('click',function(){
+				$('#searchRootElementIcon').html('<img src ="images/loader_big.gif" />');
+				if(typeof fileSource[0] != 'undefined' || typeof linkSource[0] != 'undefined'){
+					if(typeof fileSource[0] != 'undefined'){
+						thesource = fileSource[0];
+						isLink = 0;
+					}
+						
+					if(typeof linkSource[0] != 'undefined'){
+						thesource = linkSource[0];	
+						isLink = 1;
+					}
+				}
+
+				if($('#feedType').val() == 'CSV')
+					var param = $('#lineToBegin').val();
+				if($('#feedType').val() == 'XML' || $('#feedType').val() == 'JSON')
+					var param = $('#rootElement').val();
+
+				$.post('/api/getFileSample', {file:thesource,type:$('#feedType').val(),isLink:isLink,param:param}, function(data){
+					if(typeof data != 'undefined'){
+						$('#searchRootElementIcon').html('Cliquer ici pour avoir une suggestion');
+						$('#searchRootElementResult').html('<br>Suggestion : <code onclick="$(\'#rootElement\').val(\''+data.rootElement.replace(/\\/g, '&#92;')+'\');" >'+data.rootElement+'</code>');
+					}
+				});
+
+			})
 
 			$('#parsing').unbind('click').click(function(){
 				$('#parsingModal .modal-body span.alertText').html('');

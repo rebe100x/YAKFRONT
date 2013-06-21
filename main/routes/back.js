@@ -51,6 +51,9 @@ exports.static_image = function(req,res){
 exports.getFileSample = function(req,res){
 	var output = new Array();
 	var fs = require('fs');
+	var tagArray = new Array();
+	var error = '';		
+	var rootElement = '';
 	switch(req.body.type){
 		case 'CSV':
 			var csv = require('csv-stream');
@@ -92,6 +95,11 @@ exports.getFileSample = function(req,res){
 			var htmlparser = require("htmlparser2");
 			var parser = new htmlparser.Parser({
 				onopentag: function(name, attribs){
+					if(tagArray[name])
+						tagArray[name] = tagArray[name] +1;
+					else
+						tagArray[name] = 1;
+
 					if(name === "item")
 						item = new Object();
 					else{
@@ -128,19 +136,74 @@ exports.getFileSample = function(req,res){
 						}
 							
 					}
+				},
+				onend: function(){
+					// Try to detect root element : the first tag that belongs to the most used tag group
+					var mostUsed = 0;
+					var mostUsedIndex = -1;
+					var tagGroup = new Array();
+					var values = Object.keys( tagArray ).map(function ( key ) { return tagArray[key]; });
+					var keys = Object.keys( tagArray );
+					for(var i=0;i<values.length;i++) {
+						if(values[i] > 3){ // arbitrary 3 : we need a very recurrent tag
+							if(tagGroup[values[i]]) 
+								tagGroup[values[i]] = tagGroup[values[i]] +1;
+							else
+								tagGroup[values[i]] = 1;
+						}
+					}
+					var valuesGroup = Object.keys( tagGroup ).map(function ( key ) { return tagGroup[key]; });
+					for(var i=0;i<tagGroup.length;i++) {
+						if(tagGroup[i] > mostUsed){
+							mostUsed = tagGroup[i];
+							mostUsedIndex = i;
+						}
+					}
+					
+
+					rootElement = '/';
+					var flagDescending =0;
+					for(var i=0;i<keys.length;i++) {
+						if(values[i]  > 1)
+							flagDescending = 1;
+
+						if(values[i] == 1 && flagDescending == 0)
+							rootElement += keys[i]+'/';
+						
+						if(values[i]  == mostUsedIndex){
+							rootElement += keys[i];
+							break;
+						}
+					}
+
+					
+					if(output.length == 0){
+						error = 'No data from this feed, please try this rootElement: <code>'+rootElement+'</code>';
+					}
+						
+						
+					
 				}
 			});
+
+			
 
 			if(req.body.isLink == 1 ){
 				var request = require('request');
 				var thepath = req.body.file;
 				var data = request(thepath,function(err, response, data){
 					if(err)
-						res.json({code:400,error:'Erreur '+err});
+						res.json({code:400,rootElement:'check feed url', error:'Erreur '+err});
 					else{
 						parser.write(data.toString('utf8'));
 						parser.end();
-						res.json({code:200,fileSample:JSON.stringify(output.slice(0,4))});	
+						if(error == ''){
+							res.json({code:200, rootElement:rootElement, fileSample:JSON.stringify(output.slice(0,4))});			
+						}else{
+							res.json({code:400,rootElement:rootElement, error:error});
+						}
+					
+						
 					}
 				});
 			}else{
@@ -150,11 +213,13 @@ exports.getFileSample = function(req,res){
 				data.on('data',function(data){
 					parser.write(data.toString('utf8'));
 					parser.end();
-					res.json({code:200,fileSample:JSON.stringify(output.slice(0,4))});
+					if(error == ''){
+						res.json({code:200, rootElement:rootElement, fileSample:JSON.stringify(output.slice(0,4))});			
+					}else{
+						res.json({code:400,rootElement:rootElement, error:error});
+					}
 				});	
 			}
-
-	
 			
 		break;
 		case 'JSON':
@@ -163,13 +228,22 @@ exports.getFileSample = function(req,res){
 				var thepath = req.body.file;
 				var data = request(thepath,function(err, response, data){
 					if(err)
-						res.json({code:400,error:'Erreur '+err});
+						res.json({code:400,rootElement:'Check feed url', error:'Erreur '+err});
 					else{
 						var dataObj = JSON.parse(data.toString('utf8'));
+						
+						// try to detect the loop element
+						var values = Object.keys( dataObj ).map(function ( key ) { return dataObj[key]; });
+						var keys = Object.keys( dataObj );
+						var level = 0;
+						for(var i=0;i<keys.length;i++) {
+							if(values[i].length > 5) // searching for a big array
+								rootElement = keys[i];
+						}
 						dataObj[req.body.param].forEach(function(item){
 							output.push(item);
 						});
-						res.json({code:200,fileSample:JSON.stringify(output.slice(0,4))});
+						res.json({code:200, rootElement:rootElement, fileSample:JSON.stringify(output.slice(0,4))});
 					}
 				});
 			}else{
@@ -181,7 +255,7 @@ exports.getFileSample = function(req,res){
 					dataObj[req.body.param].forEach(function(item){
 						output.push(item);
 					});
-					res.json({code:200,fileSample:JSON.stringify(output.slice(0,4))});
+					res.json({code:200, rootElement:rootElement, fileSample:JSON.stringify(output.slice(0,4))});
 				});	
 			}
 
@@ -446,7 +520,7 @@ exports.feed = function(req, res){
 		
 
 		// if placeid is set
-		console.log(req.body);
+		//console.log(req.body);
 	if(typeof place_id != 'undefined' && place_id != ''){
 		feed.defaultPlaceId = place_id;
 		Feed.update(cond,feed,{upsert:true},function (err){

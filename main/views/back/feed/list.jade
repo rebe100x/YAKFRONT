@@ -377,7 +377,6 @@ mixin list()
 						feed.yakCatId.forEach(function(cat){
 							if(cat != ""){
 								$.get('/api/cats/'+cat,function(data){
-									console.log(data.cats);
 									$("#pillYakcat ul").append("<li class='yakcat-val status-important' data-id='"+data.cats._id+"'>"+data.cats.title+"</li>");
 									yakCatIds.push(data.cats._id);
 									yakCatNames.push(data.cats.title);	
@@ -472,6 +471,7 @@ mixin list()
 					
 					$("#feedForm #rootElement").val(feed.rootElement);
 					$("#feedForm #lineToBegin").val(feed.lineToBegin);
+					$('#searchRootElementResult').html('');
 					
 					if (feed.parsingTemplate)
 					{
@@ -521,6 +521,7 @@ mixin list()
 
 			$('.lineToBeginGroup').hide();
 			$('.rootElementGroup').show();
+			$('#searchRootElementResult').html('');
 			$("#feedForm #feedType").val("").change();
 			
 
