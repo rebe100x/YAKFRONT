@@ -201,8 +201,9 @@ function buildItemDate(item){
 
 			var DaysDiff = Math.floor((dateTmpEnd.getTime() - dateTmpFrom.getTime())/(1000*60*60*24));
 			var HoursDiff = Math.floor(dateTmpEnd.getHours() - dateTmpFrom.getHours());
-			if(DaysDiff == 0){
-				if(HoursDiff == 0)
+			var minDiff = Math.floor(dateTmpEnd.getMinutes() - dateTmpFrom.getMinutes());
+			if(DaysDiff == 0 ){
+				if(HoursDiff == 0 && minDiff < 10)
 					thedate = 'Le '+dateTmpFrom.getDate()+' '+months[dateTmpFrom.getMonth()];
 				else
 					thedate = 'Le '+dateTmpFrom.getDate()+' '+months[dateTmpFrom.getMonth()]+' à '+(dateTmpFrom.getHours())+':'+m;
