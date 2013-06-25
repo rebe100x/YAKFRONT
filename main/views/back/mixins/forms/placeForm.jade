@@ -2,8 +2,9 @@ mixin placeForm()
 	button.btn#btnBack(style='display:none')
 		i.icon-chevron-left
 	form.yakForm#placeForm(action='/place', method='POST', enctype='multipart/form-data', style='display:none')
-		input#yakcatInput(type='hidden', name='yakcatInput', value='')
-		input#yakcatNames(type='hidden', name='yakcatNames', value='')
+		input#yakCatIdsHidden(type='hidden', name='yakCatIdsHidden', value='')
+		input#yakCatNamesHidden(type='hidden', name='yakCatNamesHidden', value='')
+		input#tagsHidden(type='hidden', name='tagsHidden', value='')
 		input#placeInput(type='hidden', name='placeInput', value='')
 		input#latitude(type="hidden",data-provide="typeahead", name="latitude")
 		input#longitude(type="hidden",data-provide="typeahead", name="longitude")
@@ -17,8 +18,8 @@ mixin placeForm()
 					label.alert#err(type="text", id="err", name="err", style='display:none') Les champs en rouge sont obligatoires.
 		div.control-group#titleGroup
 			div.controls
-				label Titre
-				input.big.hashtagMaker(type='text', name='title', id='title', placeholder='Opéra Bastille, Restaurant du Coin #BonneBouffe2012')
+				label Nom
+				input.big.hashtagMaker(type='text', name='title', id='title', placeholder='Nom du lieu')
 		div.control-group#contentGroup
 			div.controls
 				label Description
@@ -30,10 +31,10 @@ mixin placeForm()
 					input(type='text', name='licence', id='licence', placeholder='Ex: Open Source', autocomplete="off")
 				.col
 					label Origine
-					input(type='text', name='origine', id='origine', placeholder='Yakwala', autocomplete="on")
+					input(type='text', name='origine', id='origine', placeholder='Yakwala', autocomplete="off")
 				.col
 					label Outgoing Link
-					input(type='text', name='outgoinglink', id='outgoinglink', placeholder='outgoinglink')
+					input(type='text', name='outgoinglink', id='outgoinglink', placeholder='outgoinglink', , autocomplete="off")
 		div.control-group#adresseGroup.clearBoth
 			div.controls
 				label(for='Place') Adresse
@@ -49,7 +50,11 @@ mixin placeForm()
 						ul
 				.col
 					label Free Tags
-					input#freetag(type="text", data-provide="typeahead", name="freetag",placeholder='Free tags séparés par des virgules')
+					.input-append
+						input#freetag(type="text", data-provide="typeahead", name="freetag", autocomplete="off", placeholder='Entrer un tag...')
+						button.btn#btn-freetag-adder(type="button") Ajouter	
+					.pillbox#pillFreetag(style="display:none")
+						ul
 		div.control-group.clearBoth
 			div.controls
 				label Contact
@@ -72,8 +77,9 @@ mixin placeForm()
 					input#transportation(type="text", data-provide="typeahead", name="transportation", placeholder='Comment y arriver? (ex: métro ligne 2 station Jaurès)')
 
 				label(for='picture').clearBoth Photo
-				input#picture(type="file", name="picture")
 				span#picturePreview
+					img.img-rounded(style='width:100px;display:none;')
+				input.span6#picture(type="file",style="display:block",name="picture")
 			div.control-group
 				div.controls
 					label Status
@@ -93,6 +99,11 @@ mixin placeForm()
 
 script
 
+	var yakCatIds = new Array();
+	var yakCatNames = new Array();
+	var freeTags = new Array();
+	
+
 	$(document).ready(function() {
 		// bind 'myForm' and provide a simple callback function
 		$('#placeForm').ajaxForm(function() {
@@ -103,4 +114,93 @@ script
 			markerLocation.setVisible(false);
 			refreshDatagridAndMenu();
 		});
+
+
+		$('#yakcat').typeahead({
+			minLength : 3,
+			source: function (typeahead, query) {
+				$.ajax({
+						dataType: "json",
+						url: "/api/cats",				
+						success: function( ajax ) {
+							typeahead.process(ajax.data.cats);
+						}
+					})},
+			property: "title",
+			onselect: function(obj) { 
+				$("#pillYakcat ul").append("<li class='yakcat-val status-important' data-id='"+obj._id+"' data-title='"+obj.title+"' >"+obj.title+"</li>");
+				$('#yakcat').val('').focus();
+				yakCatIds.push(obj._id);
+				yakCatNames.push(obj.title);
+				$('#yakCatIdsHidden').val(yakCatIds.join(','));
+				$('#yakCatNamesHidden').val(yakCatNames.join(','));
+			}
+		});
+
+		/*THUMB*/
+		$('#picture').live('change', function () {
+			if ( window.FileReader ) {
+				var fileList = this.files;
+				var file = fileList[0];
+				var r = new FileReader();
+				r.onload = function () {
+					var binimage = r.result;
+					binimage1 = binimage.replace('data:'+file.type+';base64,', '');
+					var src = "data:"+file.type+";base64," + binimage1;
+					$("#picturePreview").show();
+					$("#picturePreview img").attr('src',src).show();
+				};
+				r.readAsDataURL(file);
+			}
+		});
+
+		$("#pillYakcat ul").unbind('click').on('click','li',function(){
+			yakCatIds.cleanArrayByName($(this).attr('data-id'));
+			yakCatNames.cleanArrayByName($(this).attr('data-title'));
+			$('#yakCatIdsHidden').val(yakCatIds.join(','));
+			$('#yakCatNamesHidden').val(yakCatNames.join(','));
+		});
+		
+		
+		$('#btn-freetag-adder').unbind('click').on('click',function(event){
+			event.preventDefault();
+			if($('#freetag').val() != ''){
+				var tags = $('#freetag').val().split(',');
+				for(i = 0; i< tags.length;i++){
+					$("#pillFreetag ul").append("<li class='freetag-val' data-value='"+tags[i].trim()+"'>"+tags[i].trim()+"</li>");
+					freeTags.push(tags[i].trim());
+				}
+				$('#tagsHidden').val(freeTags.join(','));
+				$('#freetag').val('').focus();
+			}
+			return false;
+		});	
+
+		$('#freetag').typeahead({
+			minLength : 3,
+			source: function (typeahead, query) {
+				if(query.length>1){
+					$.ajax({
+							dataType: "json",
+							url: "/api/yakNEExist/"+query,				
+							success: function( ajax ) {
+								typeahead.process(ajax.yakNE);
+							}
+						})
+				}
+			},
+			property: "title",
+			onselect: function(obj) { 
+				$("#pillFreetag ul").append("<li class='freetag-val status-info' data-value='"+obj.title+"'>"+obj.title+"</li>");
+				$('#freetag').val('').focus();
+				freeTags.push(obj.title);
+				$('#tagsHidden').val(freeTags.join(','));
+			}
+		});
+
+		$("#pillFreetag ul").unbind('click').on('click','li',function(){
+			freeTags.cleanArrayByName($(this).attr('data-value'));
+			$('#tagsHidden').val(freeTags.join(','));
+		});
+
 	});

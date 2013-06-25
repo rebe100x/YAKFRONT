@@ -30,15 +30,25 @@ mixin menu(active)
 								- else
 									li
 										a(href="/") Dashboard
-								//			
-									- if (active == 'info')
-										li.active
-											a(href="") Infos
-												span1#infonumber
-									- else
-										li
-											a(href="") Infos
-												span1#infonumber
+										
+								- if (active == 'info')
+									li.active
+										a(href="") Infos
+											span1#infonumber
+								- else
+									li
+										a(href="") Infos
+											span1#infonumber
+								
+								- if(active == 'place')
+									li.active
+										a(href="/place/list") Lieux
+											span1#placenumber
+								- else
+									li
+										a(href="/place/list") Lieux
+											span1#placenumber
+
 								- if (active == 'illicite')
 									li.active
 										a(href="/illicites/list") Modération
@@ -47,15 +57,7 @@ mixin menu(active)
 									li
 										a(href="/illicites/list") Modération
 											span1#illicitenumber
-								//
-									- if(active == 'place')
-										li.active
-											a(href="/place/list") Lieux
-												span1#placenumber
-									- else
-										li
-											a(href="/place/list") Lieux
-												span1#placenumber
+								
 								- if (active == 'user')
 									li.active
 										a(href="/user/list") Utilisateurs

@@ -258,4 +258,6 @@ Feed.statics.findByNameNear = function (title,location,maxd,callback) {
   return this.findOne({'name': title,'location' : {  "$near" : location, $maxDistance : maxd }}, callback);
 }
 
+
+
 mongoose.model('Feed', Feed);

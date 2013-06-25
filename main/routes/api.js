@@ -227,6 +227,16 @@ exports.cats = function (req, res) {
 	});
 };
 
+exports.allCats = function (req, res) {
+	var Yakcat = db.model('Yakcat');
+	Yakcat.find({},{},{sort:{title:1}},function (err, docs){
+	  if(!err)
+	  	res.json({meta:{code:200},data:{cats:docs}});
+	  else
+	  	res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+	});
+};
+
 exports.findCatById = function (req, res) {
 	var Yakcat = db.model('Yakcat');
    	Yakcat.findById(req.params.id, function (err, docs){

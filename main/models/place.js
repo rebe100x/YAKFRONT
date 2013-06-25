@@ -45,6 +45,7 @@ var Place = new Schema({
 			}
 ,	status	: {type: Number}	
 ,	user	: {type: Schema.ObjectId}		
+,	feed	: {type: Schema.ObjectId}
 ,	zone	: Number
 ,	zoneName	: String
 },{ collection: 'place' });
@@ -169,14 +170,8 @@ Place.statics.countSearch = function (searchTerm, status, yakcats, users, callba
 		"title" : search
 	};
 
-	if (status == 2) {
-		conditions["status"] = { $in: [2,10] };
-	}
-	else if (status != 4) {
-		conditions["status"] = status;
-	}
-
-
+	conditions["status"] = {$in:status};
+	
 	if (0 < yakcats.length)
 		conditions["yakCat"] = { $all: yakcats };
 
@@ -227,7 +222,7 @@ Place.statics.waitPlaces = function (ids, callback) {
 	this.update(conditions, update, options, callback);
 }
 
-Place.statics.findGridPlaces = function (pageIndex, pageSize, searchTerm, sortProperties, sortDirections, status, yakcats, users, callback) {
+Place.statics.findGridPlaces = function (pageIndex, pageSize, searchTerm, sortProperties, sortDirections, status, yakcats, users, feeds, callback) {
 
 	var conditions = {
 		"title" : new RegExp(searchTerm, 'i')
@@ -242,22 +237,20 @@ Place.statics.findGridPlaces = function (pageIndex, pageSize, searchTerm, sortPr
 		sortBy[sortProperties[index]] = desc;
 	}
 
-	if (status == 2) {
-		conditions["status"] = { $in: [2,10] };
-	}
-	else if (status != 4) {
-		conditions["status"] = status;
-	}
-
+	conditions["status"] = {$in:status};
+	
 	if (users.length > 0)
 		conditions["user"] = { $in: users };
+
+	if (feeds.length > 0)
+		conditions["feed"] = { $in: feeds };
 
 	if (yakcats.length > 0)
 		conditions["yakCat"] = { $all: yakcats };
 
 	return this.find(
 		conditions,
-		'title content outGoingLink origin status formatted_address yakCat freeTag creationDate',
+		{},
 		{
 			skip:
 			(pageIndex -1)*pageSize,
@@ -270,7 +263,7 @@ Place.statics.findGridPlaces = function (pageIndex, pageSize, searchTerm, sortPr
 }
 
 Place.statics.countUnvalidated = function (callback) {
-	return this.count( {status: { $in: [2, 10]}}, callback );
+	return this.count( {status: { $in: [2,10,11,12,13]}}, callback );
 }
 
 Place.statics.findByTitle = function (title, callback) {
@@ -282,6 +275,9 @@ Place.statics.findByIds = function (ids,callback) {
 }
 Place.statics.findByName = function (title,callback) {
   return this.findOne({'title': title}, callback);
+}
+Place.statics.searchByTitleAndStatus = function (str,status,callback) {
+  return this.find({'title': new RegExp(str, 'i'),'status':{$in:status}}, callback);
 }
 Place.statics.findByNameNear = function (title,location,maxd,callback) {
   return this.findOne({'title': title,'location' : {  "$near" : location, $maxDistance : maxd }}, callback);

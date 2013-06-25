@@ -351,6 +351,11 @@ User.statics.findByNameorLogin = function(string,callback){
 
 
 
+User.statics.searchByNameorLogin = function(str,callback){
+	return this.find( {  $or : [{'name': new RegExp(str, 'i')},{'login': new RegExp(str, 'i')}]  ,'status':1}, callback);
+}
+
+
 
 
 var auth = require('../mylib/basicAuth');
@@ -1184,6 +1189,7 @@ Yakcat.statics.countUnvalidated = function (callback) {
 Yakcat.statics.findAll = function (callback) {
   return this.find({status:1},{},{sort:{title:1}}, callback);
 }
+
 Yakcat.statics.searchOne = function (str,callback) {
 	searchStr = new RegExp(str,'i');
 	return this.find({'title': {$regex:searchStr}},{},{limit:1}, callback);

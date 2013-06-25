@@ -656,13 +656,16 @@ mixin feedForm()
 			$('#freetag').typeahead({
 				minLength : 3,
 				source: function (typeahead, query) {
-					$.ajax({
-							dataType: "json",
-							url: "/api/yakNE",				
-							success: function( ajax ) {
-								typeahead.process(ajax.data.yakne);
-							}
-						})},
+					if(query.length>1){
+						$.ajax({
+								dataType: "json",
+								url: "/api/yakNEExist/"+query,				
+								success: function( ajax ) {
+									typeahead.process(ajax.yakNE);
+								}
+							})
+					}
+				},
 				property: "title",
 				onselect: function(obj) { 
 					$("#pillFreetag ul").append("<li class='freetag-val status-info' data-value='"+obj.title+"'>"+obj.title+"</li>");

@@ -84,7 +84,7 @@ app.post('/user/setType', back.requiresLogin, back.user_settype);
 
 app.get('/api/validusers', back.requiresLogin, back.countUnvalidatedUsers);
 app.get('/api/user/:id', back.requiresLogin, back.findUserById);
-app.get('/api/usersearch/:string',back.requiresLogin, back.usersearch);
+app.get('/api/usersearch/:string',back.requiresLogin, back.userSearchByNameorLogin);
 app.get('/api/users/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status/:type',back.requiresLogin, back.gridUsers);
 
 
@@ -100,6 +100,7 @@ app.post('/yakcat/setStatus', back.requiresLogin, back.yakcat_setstatus);
 app.get('/categories/list',back.requiresLogin, back.categories);
 app.get('/api/cats/:id',back.requiresLogin, back.catsById);
 app.get('/api/cats',back.requiresLogin, api.cats);
+app.get('/api/allCats',back.requiresLogin, api.allCats);
 app.get('/api/yakcats/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status', back.requiresLogin, back.gridYakcats);
 app.get('/api/findCatById', back.requiresLogin, back.findCatById);
 app.get('/api/validcats', back.requiresLogin, back.countUnvalidatedCats);
@@ -120,14 +121,13 @@ app.get('/api/zones/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:sta
 // PLACE
 app.get('/place/list', back.requiresLogin, back.place_list);
 app.post('/place', back.requiresLogin, back.place);
-app.get('/api/places', back.requiresLogin, back.places);
+app.get('/api/places/search/:str/:status', back.requiresLogin, back.searchByTitleAndStatus);
 app.get('/api/places/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status', back.requiresLogin, back.gridPlaces);
 app.get('/api/places/:id', back.requiresLogin, back.findPlaceById);
 app.get('/api/places/validate/:ids', back.requiresLogin, back.validatePlaces);
 app.get('/api/places/delete/:ids', back.requiresLogin, back.deletePlaces);
 app.get('/api/places/wait/:ids', back.requiresLogin, back.waitPlaces);
 app.get('/api/validplaces', back.requiresLogin, back.countUnvalidatedPlaces);
-app.get('/api/places/validate/:ids', back.requiresLogin, back.validatePlaces);
 
 
 //FEED
@@ -168,7 +168,6 @@ app.post('/yakNE', back.requiresLogin, back.yakNE);
 app.get('/api/yakNE/:id',back.requiresLogin, back.findyakNEById);
 app.get('/api/yakNEExist/:title',back.requiresLogin, back.findYakNEByTitle);
 app.get('/api/yakNE/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status',back.requiresLogin, back.gridYakNE);
-
 
 
 // FAV PLACE

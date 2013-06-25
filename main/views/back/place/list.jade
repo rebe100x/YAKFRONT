@@ -8,7 +8,7 @@ mixin list()
 							input#search.input-medium(type='text', placeholder='Recherche', data-provide="typeahead", autocomplete="off")
 							button.btn
 								i.icon-search
-						a.showSearchPanel(href="/place/list/#") Filtrer les résultats
+						a.showSearchPanel(href="#") &nbsp;Recherche avancée
 							i.icon-chevron-right#iconSearchPanel
 					.datagrid-header-right
 						button.btn#btnAdd
@@ -24,6 +24,10 @@ mixin list()
 							input#userFilter.typeahead(type="text", data-provide="typeahead", autocomplete="off", placeholder="Filtrer par utilisateur")
 							.pillbox#userFilter(style="display:none")
 								ul
+						.feedFilter
+							input#feedFilter.typeahead(type="text", data-provide="typeahead", autocomplete="off", placeholder="Filtrer par flux")
+							.pillbox#feedFilter(style="display:none")
+								ul
 			tr.headerControle
 				td(colspan=5)
 					.btn-group.batchActions
@@ -31,13 +35,13 @@ mixin list()
 							i.icon-ok-sign
 						button.btn.btn-small.disabled.enattentePlaces(title="Mettre les lieux en attente")
 							i.icon-time
-						button.btn.btn-small.supprimerPlaces(title="Supprimer les lieux")
+						button.btn.btn-small.supprimerPlaces(title="Rejeter les lieux")
 							i.icon-ban-circle
 					select#filterStatus
-						option(value="2") En attente
+						option(value="2,10,11,12,13") En attente
 						option(value="1") Validés
 						option(value="3") Rejetés
-						option(value="4") Tous les lieux
+						option(value="1,2,3,4,10,11,12,13,14") Tous les lieux
 					.dateSort.datagrid-header-right
 						.input-prepend
 							span.add-on Ordonner par
@@ -87,6 +91,11 @@ mixin list()
 		var hashtag = [];
 		var hashtagTmp = [];
 		var firstLoad = true;
+
+
+		$("#pillYakcat").show();
+		$("#pillFreetag").show();
+		
 
 		var ApiDataSource = function (options) {
 			this._formatter = options.formatter;
@@ -161,6 +170,20 @@ mixin list()
 
 					url += queryChar + "users=" + userArray.join();
 				}
+
+
+				// Filter by feeds
+				var feedPillboxItems = $(".pillbox#feedFilter").pillbox("items");
+				if (feedPillboxItems.length) {
+					var feedArray = [];
+
+					$(feedPillboxItems).each(function() {
+						feedArray.push(this.value);
+					});
+
+					url += queryChar + "feeds=" + feedArray.join();
+				}
+
 
 				$.ajax(url, {
 					type: 'GET'
@@ -244,10 +267,19 @@ mixin list()
 			if (item.outGoingLink)
 				res += '<a href=\''+ item.outGoingLink + '\' target="_blank" title="Lien externe"><i class="icon-share-alt "></i></a>';
 
-			res += '<a class="centerMap" id="' + item._id + '" href="/place/list/#">';
-			res += '<i class = "icon-map-marker" title="Localiser"></i>';
-			res += '</a>';
+			if(typeof item.location != 'undefined' && item.location.lat > 0 && item.location.lng > 0){
+				res += '<a class="centerMap" id="' + item._id + '" lat="'+item.location.lat+'" lng="'+item.location.lng+'" href="#">';
+				res += '<i class = "icon-map-marker" title="Localiser"></i>';
+				res += '</a>';
+			}
 
+			if(typeof item.debugCallGmap != 'undefined'){
+				res += '<a class="debugGmap" id="' + item._id + '" target="_blank" href="'+item.debugCallGmap+'">';
+				res += '<i class = "icon-check" title="Gmap Query Debug"></i>';
+				res += '</a>';				
+			}
+			
+			
 			res += "</div>";
 
 			res += '<a class="editPlace" id="' + item._id + '" href="#">';
@@ -333,28 +365,18 @@ mixin list()
 
 		}
 
-		$('a.centerMap').live('click', function() {
-			var url = '/api/places/'+this.id;
-
-			// We search for the place in mongo and we fill the form with the place's values
-			$.ajax({
-				url: url,
-				type: 'GET',
-				async: false,
-				success: function (response)
-				{
-					var place = response.place;
-
-					var latlng = new google.maps.LatLng(place.location.lat, place.location.lng);
-					getformattedAddress(latlng);
-					placeMarker(latlng,markerLocation);
-					map.setCenter(markerLocation.getPosition());
-				}
-			});
+		$('#MyGrid a.centerMap').live('click', function() {
+			event.preventDefault();
+			event.stopPropagation();
+			var latlng = new google.maps.LatLng($(this).attr('lat'), $(this).attr('lng'));
+			getformattedAddress(latlng);
+			placeMarker(latlng,markerLocation);
+			map.panTo(markerLocation.getPosition());
+			
 		});
 
 		// Toggle searchPanel
-		$('a.showSearchPanel').live('click', function() {
+		$('a.showSearchPanel').unbind('click').on('click', function() {
 			$("#iconSearchPanel").toggleClass("icon-chevron-down");
 			$("td.searchPanel").toggle("fast");
 			return false;
@@ -420,9 +442,10 @@ mixin list()
 		$('input#yakCat').typeahead({
 			source: function (typeahead, query) {
 				$.ajax({
-					url: "/api/cats",
+					url: "/api/allCats",
 					success: function(data) {
-						typeahead.process(data.cats);
+						console.log(data);
+						typeahead.process(data.data.cats);
 					}
 				})
 			},
@@ -436,25 +459,48 @@ mixin list()
 			}
 		});
 
-		// Searchpanel yakcat input
+		// Searchpanel user input
 		$('input#userFilter').typeahead({
 			source: function (typeahead, query) {
-				$.ajax({
-					url: "/api/users",
-					success: function(data) {
-						typeahead.process(data.users);
-					}
-				})
+					if (query.length > 1) {
+						$.ajax({
+						url: "/api/usersearch/"+query,
+						success: function(data) {
+							typeahead.process(data.users);
+						}
+					})
+				}
 			},
 			property: "name",
 			onselect: function(obj) {
 				$(".pillbox#userFilter").show();
 				$(".pillbox#userFilter ul").append("<li class='user-value' data-value="+obj._id+">"+obj.name+"</li>");
-
 				$('input#userFilter').val('').focus();
 				refreshDatagridAndMenu();
 			}
 		});
+
+		// Searchpanel feed input
+		$('input#feedFilter').typeahead({
+			source: function (typeahead, query) {
+					if (query.length > 1) {
+						$.ajax({
+						url: "/api/feedList/",
+						success: function(data) {
+							typeahead.process(data.feeds);
+						}
+					})
+				}
+			},
+			property: "name",
+			onselect: function(obj) {
+				$(".pillbox#feedFilter").show();
+				$(".pillbox#feedFilter ul").append("<li class='user-value' data-value="+obj._id+">"+obj.name+"</li>");
+				$('input#feedFilter').val('').focus();
+				refreshDatagridAndMenu();
+			}
+		});
+
 
 		// Refresh on sort selection
 		$('#sortPlaces').live('change', function() {
@@ -490,9 +536,10 @@ mixin list()
 		//Autocomplete on title (search input)
 		$('input#search').typeahead({
 			source: function (typeahead, query) {
+				var status = $('#filterStatus :selected').val();
 				if (query.length > 1) {
 					$.ajax({
-						url: "/api/places",
+						url: "/api/places/search/"+query+'/'+status,
 						success: function(data) {
 							typeahead.process(data.places);
 						}
@@ -548,7 +595,7 @@ mixin list()
 			return vals;
 		});
 
-		$(".supprimerPlaces").live('click', function() {
+		$(".supprimerPlaces").unbind('click').on('click', function() {
 			if ($(".supprimerPlaces").hasClass("disabled")) return;
 			var vals = [];
 			var i = 0;
@@ -566,10 +613,10 @@ mixin list()
 			var url = '/api/places/delete/'+vals.toString();
 
 			$.get(url, function(data) {
-				if (data.result == -1)
-					alert('Erreur lors de la suppression');
+				if (data.result == -1 || typeof data.result == 'undefined')
+					toastr.error('Erreur de blacklistage');
 				else {
-					toastr.info('Suppression de ' + data.result + ' lieu(x)');
+					toastr.info('Blacklistage de ' + data.result + ' lieu(x)');
 					refreshDatagridAndMenu();
 				}
 			});
@@ -771,7 +818,8 @@ mixin list()
 			$("#placeForm legend").html("Ajouter un lieu");
 			$("#placeForm #objid").val("");
 			$(".catLabel").remove();
-			$("#pillYakcat ul").empty();
+			$("#pillYakcat ul").html('');
+			$("#pillFreetag ul").html('');
 			$('#err').hide();
 			$("#placeForm #title").focus();
 			$("#placeForm #hiddenOrigin").val(user.login);
@@ -783,12 +831,24 @@ mixin list()
 
 
 		// Function to go back from adding/editing form to the grid
-		$("#btnBack").click(function() {
+		$("#btnBack").unbind('click').on('click',function() {
 			$("#MyGrid").fadeIn();
 			$("#placeForm").hide();
 			$("#btnBack").hide();
 			google.maps.event.removeListener(listenerHandle);
 			markerLocation.setVisible(false);
+
+
+			$("#pillYakcat ul").html('');
+			$("#pillFreetag ul").html('');
+			$("#placeForm input[type=hidden]").val('');
+			$('#placeForm').clearForm();
+			$('#err').hide();
+			$("#btnBack").hide();
+			yakCatIds = new Array();
+			yakCatNames = new Array();
+			freeTags = new Array();
+
 		});
 
 		// We validate the form before submitting it

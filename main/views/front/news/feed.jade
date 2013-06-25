@@ -8,13 +8,11 @@ block content
 	mixin locationChooser('feed')
 	mixin userChooser
 
-	style
-		#newsfeedContainer ul#newsfeed li.highlighted .mapHighlighter { width: 98%;}
 	div.container-fluid
 		div.row-fluid
 			div.span8
-				div#newsfeedContainer(style="overflow: hidden")
-					span#newsfeedContent.tabContent			
+				div#newsfeedContainer.feedPage
+					span#newsfeedContent.tabContent.feedPage		
 						ul#newsfeed
 			div.span4
 				div#topsContainer
@@ -28,8 +26,7 @@ block content
 					div.columnTitle Les plus appréciées
 					div#topLiked
 		div.row-fluid.clearBoth		
-	style
-		#newsfeedContent{position:relative;display:block;overflow:auto;height:auto;z-index:2000; overflow-x: hidden;}				
+		
 	
 	script
 		var conf = !{conf};

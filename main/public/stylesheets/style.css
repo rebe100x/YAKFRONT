@@ -1,4 +1,5 @@
 
+
 /* THE FEED PAGE
 ---------------------------------------------------*/
 #mainFeedWrapper {border: 0px solid #292929; background: #E8E8E8; font-family: helvetica,arial,sans-serif;}
@@ -91,8 +92,9 @@
 .localnessPrinter {position: relative; top: -13px; left: 209px;}
 .alreadyVoted { color: green;}
 
-
-
+#newsfeedContainer.feedPage ul#newsfeed li.highlighted .mapHighlighter { width: 98%;}
+#newsfeedContent.feedPage{position:relative;display:block;overflow:auto;height:auto; overflow-x: hidden;}				
+#newsfeedContainer.feedPage{overflow: hidden}
 
 
 
@@ -164,11 +166,11 @@
 .mCSB_scrollTools .mCSB_buttonDown {background-position: -80px -20px;}
 .mCSB_container {margin-right: 5px;}
 		/*NEWS FEED*/
-#newsfeedContent{position:relative;display:block;overflow:auto;height:0px;z-index:2000; overflow-x: hidden; top: 4px; right: 4px;}
+#newsfeedContent{position:relative;display:block;overflow:auto;height:0px;z-index:0; overflow-x: hidden; top: 4px; right: 4px;}
 .mapHighlighter{cursor:pointer;-webkit-border-radius: 2px;border-radius: 2px;}
 .mapHighlighter:hover{background-color:#F6F6F6;}
 .mapHighlighterDetails{display:block;}
-ul#newsfeed{display:block;list-style-type:none;width:100%;margin:0px auto;padding:0px 0px;position:relative;opacity:1;z-index:2000;background:#FFFFFF;}
+ul#newsfeed{display:block;list-style-type:none;width:100%;margin:0px auto;padding:0px 0px;position:relative;opacity:1;z-index:0;background:#FFFFFF;}
 ul#newsfeed li{width:100%;}
 ul#newsfeed li.highlighted .mapHighlighter{background-color:#F6F6F6; width: 100%; left: 0%; position: relative; top: -6px;}
 
@@ -228,7 +230,7 @@ ul#newsfeed li .loadingMore { height: 20px; float: right; width: auto; clear: bo
 .infowindow .icon-remove { float: right; clear: both;  position: absolute; right: 12px;top:12px; z-index: 11111; }
 .icon-remove {background: url('/images/yakwala_sprite.png') -72px -659px;width: 13px;height: 13px; cursor: pointer;}
 
-
+#newsNav{display: none;}	
 
 
 /*currentDetails*/

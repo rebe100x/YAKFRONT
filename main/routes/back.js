@@ -615,6 +615,8 @@ exports.findYakNEByTitle = function (req, res) {
 	});
 };
 
+
+
 exports.findYakNEById = function (req, res) {
 	var YakNE = db.model('YakNE');
    	YakNE.findById(req.params.id, function (err, theYakNE){
@@ -1109,7 +1111,7 @@ exports.deletePlaces = function (req, res) {
 	var Place = db.model('Place');
 	var ids = [];
 	ids = req.params.ids.split(',');
-
+	console.log(ids);
 	Place.deletePlaces(ids, function (err, numAffected){
   	  res.json({
   		result: numAffected
@@ -1143,6 +1145,11 @@ exports.gridPlaces = function (req, res) {
         users = req.query.users.split(',');
     }
 
+    var feeds = [];
+    if (req.query.feeds) {
+        feeds = req.query.feeds.split(',');
+    }
+
     var sortProperties = [];
     if (req.params.sortBy) {
         sortProperties = req.params.sortBy.split(',');
@@ -1153,9 +1160,12 @@ exports.gridPlaces = function (req, res) {
         sortDirections = req.params.sortDirection.split(',');
     }
 
+    var status = [];
+	status = req.params.status.split(',');
+
 	Place.findGridPlaces(req.params.pageIndex,req.params.pageSize,
 		req.params.searchTerm,sortProperties,sortDirections,
-        req.params.status, yakcats, users, function (err, place){
+        status, yakcats, users, feeds, function (err, place){
 
 		var data = {};
 
@@ -1163,10 +1173,23 @@ exports.gridPlaces = function (req, res) {
 		data['pageIndex'] = req.params.pageIndex;
 		data['pageSize'] = req.params.pageSize;
 
-		Place.countSearch(req.params.searchTerm, req.params.status, yakcats, users, function (err, count){
+		Place.countSearch(req.params.searchTerm, status, yakcats, users, function (err, count){
 			data['count'] = count;
 			res.json(data);
 		});
+	});
+};
+
+
+exports.searchByTitleAndStatus = function (req, res) {
+	var Place = db.model('Place');
+	var status = [];
+	status = req.params.status.split(',');
+
+	Place.searchByTitleAndStatus(req.params.str,status, function (err, places){
+  	  res.json({
+  		places: places
+	  });
 	});
 };
 
@@ -1352,7 +1375,14 @@ exports.gridUsers = function (req, res) {
 
 
 
-
+exports.userSearchByNameorLogin = function (req, res) {
+	var User = db.model('User');
+	User.searchByNameorLogin(req.params.str,function (err, users){
+  	  res.json({
+  		users: users
+	  });
+	});
+};
 
 
 exports.user = function(req, res){
