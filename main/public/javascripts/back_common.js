@@ -1,8 +1,12 @@
-		
+	
+setInterval("$('.alert-error').fadeOut('slow');", 5000);
+
 /*READY FUNCTIONS*/	
 $(document).ready(function() {
 
-	
+
+
+
 	/* Detect browser */
 	var isChrome = window.chrome;
 	if(!isChrome) {

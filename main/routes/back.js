@@ -880,6 +880,13 @@ exports.findAllZoneNear = function (req, res) {
 	}); 
 };
 
+exports.findAllZoneContaining = function (req, res) {
+	var Zone = db.model('Zone');
+	Zone.findAllContaining(req.params.x,req.params.y,function (err, docs){
+		res.json({zones:docs});
+	}); 
+};
+
 exports.gridZones = function (req, res) {
     var Zone = db.model('Zone');
 
@@ -943,138 +950,113 @@ exports.place = function(req, res){
 	var Yakcat = db.model('Yakcat');
 	//mongoose.set('debug', true);
 	var obj_id = req.body.objid;
-	var edit = false;
 	
+	var place = new Object();
+	var now = new Date();
 	// we need a title, a location and a user
-	if(req.body.placeInput && req.body.title && req.session.user)
-	{
-		Place.findById(obj_id, function (err, place)
-		{
-			if (err || place == null)
-			{
-				console.log("Place not found by id: creating a new place");
-				edit = false;
-				place = new Place();
+	if(req.body.placeInput && req.body.title && req.session.user){
+		var placeThumb = new Object();
+		if(req.files.picture.size && req.files.picture.size > 0 && req.files.picture.size < 1048576*5){
+			var drawTool = require('../mylib/drawlib.js');
+			var size = mainConf.imgSizePlace;
+			var crypto = require('crypto');
+			var destFile = crypto.createHash('md5').update(req.files.picture.name).digest("hex")+'.jpeg';
+					
+			for(i=0;i<size.length;i++){
+				placeThumb = drawTool.StoreImg(req.files.picture,destFile,{w:size[i].width,h:size[i].height},conf);
 			}
-			else
-			{
-				console.log("Place found by id: updating");
-				edit = true;
+			place.thumb = placeThumb.name;
+		}
+
+		else{
+			placeThumb.err = 0;
+		}
+			
+		place.yakCat = [];
+		if(req.body.yakCatIdsHidden)
+			place.yakCat = req.body.yakCatIdsHidden.split(',');
+		place.yakCatName = [];
+		if(req.body.yakCatNamesHidden)
+			place.yakCatName = req.body.yakCatNamesHidden.split(',');
+		place.freeTag = [];
+		if(req.body.tagsHidden == '' && req.body.freetag != '')
+			place.freeTag = req.body.freetag.split(',');
+		else if(req.body.tagsHidden != '')		
+			place.freeTag = req.body.tagsHidden.split(',');
+		else
+			place.freeTag = [];	
+
+		
+		if(req.body.yakCatVille == "yakCatVille"){
+			place.yakCat.push("507e5a9a1d22b30c44000068");
+			place.yakCatName.push("Ville");	
+		}
+
+		if(req.body.yakCatYakdico == "yakCatYakdico"){
+			place.yakCat.push("5056b7aafa9a95180b000000");
+			place.yakCatName.push("Yakdico");
+		}	
+	
+		
+
+		place.title = req.body.title;
+		place.content = req.body.content;
+
+		// NOTE : in the query below, order is important : in DB we have lat, lng but need to insert in reverse order : lng,lat  (=> bug mongoose ???)
+		
+		var placeInput = JSON.parse(req.body.placeInput);
+		place.formatted_address = placeInput.title;
+		var location = placeInput.location;
+		place.location = {lng:parseFloat(location.lng),lat:parseFloat(location.lat)};
+
+		place.address = placeInput.address;
+		place.origin = req.body.hiddenOrigin;
+		place.outGoingLink = req.body.outgoinglink;
+
+		place.status = req.body.status;
+
+		place.access = 1;
+		place.licence = req.body.licence;
+		
+
+		var contact = {
+				'tel' : req.body.tel,
+				'mobile' : req.body.mobile,
+				'mail' : req.body.mail,
+				'transportation' : req.body.transportation,
+				'web' : req.body.web,
+				'opening' : req.body.opening,
+				'closing' : req.body.closing,
+				'special_opening' : req.body.special
+			};
+
+		place.contact = contact;
+
+		place.zone = req.body.zone;
+		place.zoneName = req.body.zoneName;
+	
+		if(typeof obj_id != 'undefined' && obj_id != ''){
+			var cond = {_id:obj_id};
+		}else{
+			place.creationDate = now;
+			place.lastExecDate = now;
+			var cond = {title:"anameimpossibletochoose007"};
+		}
+
+
+		Place.update(cond,place,{upsert:true},function (err){
+			if (!err)
+				formMessage.push("Lieu sauvegardé.");
+			else{
+				formMessage.push("Erreur pendant la sauvegarde du lieu !");
+				console.log(err);
 			}
-
-			var placeThumb = new Object();
-			if (req.files.picture) {
-				if(req.files.picture.size && req.files.picture.size > 0 && req.files.picture.size < 1048576*5)
-				{
-					var drawTool = require('../mylib/drawlib.js');
-					var size = [{"width":120,"height":90},{"width":512,"height":0}];
-					placeThumb = drawTool.StoreImg(req.files.picture,size,conf);
-					place.thumb = placeThumb.name;
-				}
-			}
-			else
-				placeThumb.err = 0;
-
-
-			if(placeThumb.err == 0)
-			{
-				if(req.body.yakcatInput.length > 0)
-				{
-					var yak = eval('('+req.body.yakcatInput+')');
-					var yakN = eval('('+req.body.yakcatNames+')');
-					place.yakCat = yak;
-					place.yakcatName = yakN;
-				}
-				place.title = req.body.title;
-				place.content = req.body.content;
-
-				// NOTE : in the query below, order is important : in DB we have lat, lng but need to insert in reverse order : lng,lat  (=> bug mongoose ???)
-				place.formatted_address = JSON.parse(req.body.placeInput).title;
-				place.location = {lng:parseFloat(req.body.longitude),lat:parseFloat(req.body.latitude)};
-
-				if (!edit)
-					place.creationDate = new Date();
-				place.lastModifDate = new Date();
-				place.origin = req.body.hiddenOrigin;
-				place.outGoingLink = req.body.outgoinglink;
-
-				place.status = req.body.status;
-
-				place.access = 1;
-				place.licence = req.body.licence;
-				place.freeTag = req.body.freetag.split(',');
-
-				var contact = {
-						'tel' : req.body.tel,
-						'mobile' : req.body.mobile,
-						'mail' : req.body.mail,
-						'transportation' : req.body.transportation,
-						'web' : req.body.web,
-						'opening' : req.body.opening,
-						'closing' : req.body.closing,
-						'special_opening' : req.body.special
-					};
-
-				place.contact = contact;
-
-				Zone.findNear(place.location.lat, place.location.lng, function(err, zone)
-				{
-					if (!err)
-					{
-						//place.zone = zone[0]._id;
-						place.zone = zone[0].num;
-						// security against unidentified users
-						if(req.session.user)
-						{
-							if (!edit)
-								place.user = req.session.user._id;
-							place.save(function (err)
-							{
-								if (!err)
-								{
-									if (place.status == 1)
-										formMessage.push("Le lieu a été validé.");
-									else if (place.status == 3)
-										formMessage.push("Le lieu a été rejeté.");
-									else
-									{
-										if (edit)
-											formMessage.push("Le lieu a été modifié et est en attente de validation.");
-										else
-											formMessage.push("Le lieu a été ajouté et est en attente de validation.");
-									}
-									console.log('Success!');
-								}
-								else
-								{
-									formMessage.push("Une erreur est survenue lors de l'ajout du lieu (Doublon...etc).");
-									console.log(err);
-								}
-								req.session.message = formMessage;
-
-
-								res.redirect('place/list');
-
-							});
-						}
-					}
-					else
-					{
-						console.log(err);
-					}
-				});
-			}
-			else
-			{
-				formMessage.push("Erreur dans l'image uploadée: Le lieu n'est pas sauvegardé.");
-				console.log("Erreur dans l'image uploadée: Le lieu n'est pas sauvegardé.");
-				req.session.message = formMessage;
-				res.redirect('place/list');
-			}
+			req.session.message = formMessage;
+			res.redirect('place/list')
 		});
-	}
-	else
-	{
+	
+	
+	}else{
 		if(!req.session.user)
 			formMessage.push("Veuillez vous identifier pour ajouter un lieu");
 		if(!req.body.title)
@@ -1088,9 +1070,9 @@ exports.place = function(req, res){
 
 exports.findPlaceById = function (req, res) {
 	var Place = db.model('Place');
-   	Place.findById(req.params.id, function (err, docs){
+   	Place.findById(req.params.id, function (err, doc){
   	  res.json({
-  		place: docs
+  		place: Place.format(doc)
 	  });
 	});
 };
@@ -1168,8 +1150,11 @@ exports.gridPlaces = function (req, res) {
         status, yakcats, users, feeds, function (err, place){
 
 		var data = {};
+		var placeFormated = place.map(function(item){
+			return Place.format(item);
+		});
 
-        data['place'] = place;
+        data['place'] = placeFormated;
 		data['pageIndex'] = req.params.pageIndex;
 		data['pageSize'] = req.params.pageSize;
 

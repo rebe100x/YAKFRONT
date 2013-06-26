@@ -70,6 +70,9 @@ mixin list()
 		$("#pillFreetag").show();
 		$("#pillSourceLink").show();
 
+
+		/****************************************************************** LIST GRID ***************************************************************************/
+
 		ApiDataSource.prototype = {
 
 			columns: function () {
@@ -206,17 +209,6 @@ mixin list()
 			});
 		});
 		
-
-		$('#filterStatus').live('change', function() {
-			//var currentSelection = $('#filterStatus :selected').val();
-			refreshDatagrid();
-		});
-
-		$('#filterType').live('change', function() {
-			//var currentSelection = $('#filterType :selected').val();
-			refreshDatagrid();
-		});
-
 		function getZone(item){
 			if(typeof item.zoneName == "undefined" || item.zoneName == '' ||  item.zoneName == null){
 				return item.defaultPlaceName;
@@ -273,9 +265,6 @@ mixin list()
 
 		}
 
-
-		
-
 		function refreshDatagrid () {
 			// Temporary refresh method for datagrid
 			var $gridsearch = jQuery('#MyGrid').find('.search');
@@ -283,29 +272,25 @@ mixin list()
 			$gridsearch.trigger('searched', search);
 		}
 
+
+		/****************************************************************** TOP SEARCH PANEL ***************************************************************************/
+
 		
-		$("#btnBack").unbind('click').on('click',function(){
-			$("#feedForm").hide();
-			$("#MyGrid").show();
-			$("#pillSourceLink ul").html('');
-			$("#pillYakcat ul").html('');
-			$("#pillFreetag ul").html('');
-			$("#pillSourceFile ul").html('');
-			google.maps.event.removeListener(listenerHandle);
-			markerLocation.setVisible(false);					
-			$("#feedForm input[type=hidden]").val('');
-			$('#feedForm').clearForm();
-			$('#err').hide();
-			$("#btnBack").hide();
-			$("#picturePreview").hide();
-			$("#picturePreview img").attr('src','').hide();
-			yakCatIds = new Array();
-			yakCatNames = new Array();
-			freeTags = new Array();
-			linkSource = new Array();
-			fileSource = new Array();
-			
+
+		$('#filterStatus').live('change', function() {
+			//var currentSelection = $('#filterStatus :selected').val();
+			refreshDatagrid();
 		});
+
+		$('#filterType').live('change', function() {
+			//var currentSelection = $('#filterType :selected').val();
+			refreshDatagrid();
+		});
+
+		
+		/****************************************************************** ADD / EDIT / DUPLICATE A PLACE ***************************************************************************/
+
+		
 
 		
 		
@@ -499,10 +484,59 @@ mixin list()
 		}
 		
 
+
+		$("#btnBack").unbind('click').on('click',function(){
+			$("#feedForm").hide();
+			$("#MyGrid").show();
+			$("#btnBack").hide();
+
+			$("#pillSourceLink ul").html('');
+			$("#pillYakcat ul").html('');
+			$("#pillFreetag ul").html('');
+			$("#pillSourceFile ul").html('');
+
+			google.maps.event.removeListener(listenerHandle);
+			markerLocation.setVisible(false);
+
+			$("#feedForm input[type=hidden]").val('');
+			$('#feedForm').clearForm();
+			$('#err').hide();
+			
+			$("#feedForm #objid").val("");
+			$("#feedForm #placeid").val("");
+			
+
+			$("#picturePreview").hide();
+			$("#picturePreview img").attr('src','').hide();
+
+			yakCatIds = new Array();
+			yakCatNames = new Array();
+			freeTags = new Array();
+			linkSource = new Array();
+			fileSource = new Array();
+			
+		});
+
+
 		// Add New Feed
 		$("#btnAdd").click(function(){
 			$("#MyGrid").hide();
 			$("#feedForm")[0].reset();
+			$("#feedForm").fadeIn();
+			$("#btnBack").fadeIn();
+
+			$("#pillSourceLink ul").html('');
+			$("#pillYakcat ul").html('');
+			$("#pillFreetag ul").html('');
+			$("#pillSourceFile ul").html('');
+			
+			$("#feedForm input[type=hidden]").val('');
+			$('#feedForm').clearForm();
+			$('#err').hide();
+			
+			$("#feedForm #objid").val("");
+			$("#feedForm #placeid").val("");
+			
 			// We remove the error class when we open a form for creating a new feed
 			$('#feedForm #titleGroup').removeClass("error");
 			$('#feedForm #contentGroup').removeClass("error");
@@ -510,13 +544,9 @@ mixin list()
 			$('#feedForm #origineGroup').removeClass("error");
 			$('#feedForm #adresseGroup').removeClass("error");
 			$('#feedForm #content').val("");
-			$("#btnBack").fadeIn();
-			$("#feedForm").fadeIn();
+			
+			
 			$("#feedForm legendmainlegend").html("Ajouter un lieu");
-			$("#feedForm #objid").val("");
-			$("#feedForm #placeid").val("");
-			$("#pillYakcat ul").empty();
-			$('#err').hide();
 			$("#feedForm #title").focus();
 
 			$('.lineToBeginGroup').hide();
@@ -524,6 +554,15 @@ mixin list()
 			$('#searchRootElementResult').html('');
 			$("#feedForm #feedType").val("").change();
 			
+			$("#picturePreview").hide();
+			$("#picturePreview img").attr('src','').hide();
+			
+			
+			yakCatIds = new Array();
+			yakCatNames = new Array();
+			freeTags = new Array();
+			linkSource = new Array();
+			fileSource = new Array();
 
 		});
 			

@@ -83,7 +83,7 @@ legend.mainlegend{color:#d51820;font-weight:bold;border-bottom:0px;}
 .fuelux .yakForm input[type=text].small { width: 25%; }
 .fuelux .yakForm label.radio.inline { margin-right: 10px; }
 .fuelux .yakForm textarea {width: 85%;}
-.fuelux .yakForm legend { padding-left: 15px; margin-top: 0px; padding-bottom: 0px;}
+.fuelux .yakForm legend { padding-left: 15px; margin-top: 25px; padding-bottom: 0px;margin-bottom:0px;}
 .fuelux .yakForm .btn.btn-large {margin-top: 20px;}
 #MyGrid thead tr.headerControle {background: url(/images/texture.png) repeat; border: none;}
 #MyGrid thead td {border-top: none;}

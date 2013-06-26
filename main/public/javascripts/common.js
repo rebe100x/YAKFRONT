@@ -1,7 +1,8 @@
 Array.prototype.cleanArrayByName=function(str){
-	for(i=0;i<this.length;i++)
+	for(i=0;i<this.length;i++){		
 		if(str==this[i]) 
 			this.splice(i, 1);
+	}
 }
 Array.prototype.cleanArray=function(id){
 	for(i=0;i<this.length;i++){

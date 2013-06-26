@@ -108,8 +108,8 @@ mixin list()
 				// Also sort by the selected date
 				
 				if (sortPropertyArray.length == 0) {
-					sortPropertyArray.push('name');
-					sortDirectionArray.push("-1");
+					sortPropertyArray.push('creationDate');
+					sortDirectionArray.push("1");
 				}
 				// Would be easier if we could pass dictionaries, needs testing
 				url += '/' + sortPropertyArray.join() + '/' + sortDirectionArray.join();

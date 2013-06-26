@@ -111,6 +111,8 @@ app.post('/zone/setStatus', back.requiresLogin, back.zone_setstatus);
 app.get('/zone/list',back.requiresLogin, back.zone_list);
 app.post('/zone', back.requiresLogin, back.zone);
 app.get('/api/zones/:x/:y', back.requiresLogin, back.findAllZoneNear);
+app.get('/api/zonesContaining/:x/:y', back.requiresLogin, back.findAllZoneContaining);
+
 app.get('/api/zone/:id', back.requiresLogin, back.findZoneById);
 app.get('/api/zoneByNum/:num', back.requiresLogin, back.findZoneByNum);
 app.get('/api/zoneMaxnum', back.requiresLogin, back.findZoneMaxnum);

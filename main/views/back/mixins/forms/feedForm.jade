@@ -367,11 +367,13 @@ mixin feedForm()
 			listenerHandle = google.maps.event.addListener(map, 'click', function(event) {
 				placeMarker(event.latLng,markerLocation);
 				getformattedAddress(event.latLng);
+				reduceZoneOptions(event.latLng.lat(),event.latLng.lng());
 			});
 
 			listenerHandleDrag = google.maps.event.addListener(markerLocation, 'dragend', function() {
 				var position = markerLocation.getPosition();
 				getformattedAddress(position);
+				reduceZoneOptions(position.lat(),position.lng());
 
 			});
 
@@ -379,6 +381,7 @@ mixin feedForm()
 
 			/*Set zone select button*/
 			$.get('api/zones',function(data){
+				$('#zone').append("<option value =''>Choisir une zone</option>");	
 				$.each(data.zone, function (key,val) {
 					$('#zone').append("<option value ='"+val.num+"'>"+val.name+"</option>");
 				});	
@@ -609,7 +612,7 @@ mixin feedForm()
 			});
 
 
-
+			// YAKCATS
 			$('#yakcat').typeahead({
 				minLength : 3,
 				source: function (typeahead, query) {
@@ -639,6 +642,7 @@ mixin feedForm()
 			});
 			
 			
+			// FREE TAGS
 			$('#btn-freetag-adder').unbind('click').on('click',function(event){
 				event.preventDefault();
 				if($('#freetag').val() != ''){
@@ -694,27 +698,7 @@ mixin feedForm()
 
 			});
 			
-			/*
-			//Place autocomplete
-			var input = document.getElementById('defaultPlaceName');
-			var autocomplete = new google.maps.places.Autocomplete(input);
-			autocomplete.bindTo('bounds', map);
-			google.maps.event.addListener(autocomplete, 'place_changed', function() {
-				var place = autocomplete.getPlace();				
-				if (!place.geometry) {
-					return;
-				}
-				
-				var formattedPlace = getPlaceFromGmapResult(place);
-				$('#defaultPlaceSearchName').val(formattedPlace.address.state+', '+formattedPlace.address.area);				
-				map.setCenter(place.geometry.location);
-				$("#feedForm #longitude").val(place.geometry.location.Za);
-				$("#feedForm #latitude").val(place.geometry.location.Ya);
-
-				markerLocation.setPosition(place.geometry.location);
-				markerLocation.setVisible(true);
-			});
-			*/
+			
 			$('#defaultPlaceName').typeahead({
 				minLength : 3,							
 				source: function (typeahead, query) {
@@ -853,8 +837,9 @@ mixin feedForm()
 
 		function reduceZoneOptions(lat,lng){
 			if(lat && lng){
-				$.get('api/zones/'+lat+'/'+lng,function(data){
+				$.get('api/zonesContaining/'+lat+'/'+lng,function(data){
 					$('#zone').html('');	
+					$('#zone').append("<option value =''>Choisir une zone</option>");	
 					$.each(data.zones, function (key,val) {
 						$('#zone').append('<option value ="'+val.num+'">'+val.name+'</option>');
 					});

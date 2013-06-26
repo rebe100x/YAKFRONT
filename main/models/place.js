@@ -60,19 +60,37 @@ Place.statics.format = function (theplace) {
 	else
 		var thethumb = 	'';
 
+	if(theplace.thumb && theplace.thumb!= 'no-user.png'){
+		var thethumb = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/120_90/'+theplace.thumb;
+		var thethumbmedium = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/256_0/'+theplace.thumb;
+		var thethumbbig = 	"https://s3-eu-west-1.amazonaws.com/"+conf.bucket+'/512_0/'+theplace.thumb;
+	}else{
+		var thethumb = 	'';
+		var thethumbmedium = '';
+		var thethumbbig = '';
+	}
+
 	var formattedPlace = {
 		_id:theplace._id,
 		title: theplace.title,
 		content: theplace.content, 
-		thumb: theplace.thumb,
+		thumb: thethumb,
+		thumbmedium: thethumbmedium,
+		thumbbig: thethumbbig,
 		outGoingLink: theplace.outGoingLink,
 		yakCat: theplace.yakCat,
+		freeTag: theplace.freeTag,
 		creationDate: theplace.creationDate,
 		lastModifDate: theplace.lastModifDate,
 		location: theplace.location,
+		origin : theplace.origin,
+		licence : theplace.licence,
+		zoneName : theplace.zoneName,
+		zone : theplace.zone,
 		address: theplace.address,
 		contact: theplace.contact,
-		formatted_address: theplace.formatted_address 
+		formatted_address: theplace.formatted_address ,
+		status:theplace.status,
 	};
   return formattedPlace;
 }  

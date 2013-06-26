@@ -37,6 +37,17 @@ Zone.statics.findAllNear = function (x,y,callback) {
 	return this.find({"location" : {  "$near" : [parseFloat(x),parseFloat(y)], $maxDistance : z }},{},{sort:{name:1}},callback );
 }
 
+Zone.statics.findAllContaining = function (x,y,callback) {
+	var center = [parseFloat(x), parseFloat(y)];
+	return this.find({
+						"box.tr.lat" : {  "$gte" : parseFloat(x)},
+						"box.tr.lng" : {  "$gte" : parseFloat(y)},
+						"box.bl.lat" : {  "$lte" : parseFloat(x)},
+						"box.bl.lng" : {  "$lte" : parseFloat(y)}
+					},{},{sort:{name:1}},callback );
+}
+
+
 Zone.statics.findAll = function (callback) {
   return this.find({}, callback);
 }
