@@ -313,7 +313,7 @@ exports.news = function(req, res){
 
 				
 				if(item._id == "" || typeof item._id === "undefined"){
-					item.status=2;
+					item.status=1;
 					place = new Place(item);
 					place.heat = 80;
 					place.user = mongoose.Types.ObjectId(req.session.user);

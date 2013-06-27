@@ -11,9 +11,12 @@ mixin list()
 						a.showSearchPanel(href="#") &nbsp;Recherche avancée
 							i.icon-chevron-right#iconSearchPanel
 					.datagrid-header-right
-						button.btn#btnAdd
-							i.icon-plus
-							span Ajouter
+						label
+							input#limit10days(type="checkbox",style="margin-top:-1px;",checked="checked") 
+							span &nbsp;Limiter aux 10 derniers jours&nbsp;&nbsp;&nbsp;
+							button.btn#btnAdd
+								i.icon-plus
+								span Ajouter
 				tr.headerControle.advancedSearch
 					td.searchPanel(colspan=5, style="display:none")
 						.yakCatFilter
@@ -38,10 +41,11 @@ mixin list()
 						button.btn.btn-small.supprimerPlaces(title="Rejeter les lieux")
 							i.icon-ban-circle
 					select#filterStatus
+						option(value="1,2,3,4,10,11,12,13,14") Tous les lieux
 						option(value="2,10,11,12,13") En attente
 						option(value="1") Validés
 						option(value="3") Rejetés
-						option(value="1,2,3,4,10,11,12,13,14") Tous les lieux
+						
 					.dateSort.datagrid-header-right
 						.input-prepend
 							span.add-on Ordonner par
@@ -185,6 +189,8 @@ mixin list()
 					url += queryChar + "feeds=" + feedArray.join();
 				}
 
+				var limit10days = ($("#limit10days").is(":checked"));
+				url += '/' + limit10days;
 
 				$.ajax(url, {
 					type: 'GET'
@@ -381,6 +387,12 @@ mixin list()
 				if (data.info != 0)
 					$('#placenumber').addClass('badge badge-important').html(data.info);
 			});
+			$.getJSON('/api/validinfos', function(data) {
+				$('#infonumber').removeClass('badge badge-important');
+				if (data.info != 0)
+					$('#infonumber').addClass('badge badge-important').html(data.info);
+			});
+			
 		}
 
 
@@ -683,6 +695,10 @@ mixin list()
 			refreshDatagridAndMenu();
 		});
 
+		// Datagrid checkbox
+		$('#filterStatus , #filterType , #limit10days').unbind('click').live('change', function() {
+			refreshDatagridAndMenu();
+		});
 
 
 		/****************************************************************** ADD / EDIT / DUPLICATE A PLACE ***************************************************************************/
@@ -782,7 +798,7 @@ mixin list()
 
 						
 
-						if(place.yakCat.length > 0){
+						if(typeof place.yakCat != 'undefined' &&  place.yakCat.length > 0){
 							place.yakCat.forEach(function(cat){
 								if(cat != ""){
 									$.get('/api/cats/'+cat,function(data){

@@ -334,7 +334,8 @@ exports.countUnvalidatedIllicites = function (req, res) {
 };
 
 
-/******* 
+
+/******************************************************************************************************************************************************************
 #FEED
 *******/
 exports.feed_list = function(req, res){
@@ -598,7 +599,272 @@ exports.feed = function(req, res){
 };
 
 
-/********
+
+/****************************************************************************************************************************************************************** 
+#INFO
+*******/
+exports.info_list = function(req, res){
+	delete req.session.message;
+	res.render('info/index');
+};
+
+
+
+exports.findInfoByName = function (req, res) {
+	var Info = db.model('Info');
+   	Info.findByName(req.params.name, function (err, theinfo){
+   		res.json({
+			info: theinfo
+		});
+	});
+};
+
+exports.findInfoById = function (req, res) {
+	var Info = db.model('Info');
+   	Info.findById(req.params.id, function (err, theinfo){
+		res.json({
+			info: Info.format(theinfo)
+		});
+	});
+};
+
+
+exports.findAllInfo = function (req, res) {
+	var Info = db.model('Info');
+   	Info.findAll(function (err, infos){
+   		var data = {};
+		var infoFormated = infos.map(function(item){
+			return Info.format(item);
+		});
+		res.json({
+			infos: infoFormated
+		});
+	});
+
+};
+
+exports.gridInfos = function (req, res) {
+	var Info = db.model('Info');
+    
+    var sortProperties = [];
+    if (req.params.sortBy) {
+        sortProperties = req.params.sortBy.split(',');
+    }
+
+    var sortDirections = [];
+    if (req.params.sortDirection) {
+        sortDirections = req.params.sortDirection.split(',');
+    }
+
+   
+
+	Info.findGridInfos(req.params.pageIndex,req.params.pageSize,
+		req.params.searchTerm,sortProperties,sortDirections,
+        req.params.status,req.params.type, req.params.limit,  function (err, info){
+
+			var data = {};
+			var infoFormated = info.map(function(item){
+				return Info.format(item);
+			});
+			data['info'] = infoFormated;
+			data['pageIndex'] = req.params.pageIndex;
+			data['pageSize'] = req.params.pageSize;
+			Info.countSearch(req.params.searchTerm, req.params.status, req.params.type, req.params.limit, function (err, count){
+				data['count'] = count;
+				res.json(data);
+			});	
+		});
+	};
+
+exports.info = function(req, res){
+
+	var formMessage = new Array();
+	delete req.session.message;
+	var Info = db.model('Info');
+	var Place = db.model('Place');
+	var Yakcat = db.model('Yakcat');
+	var obj_id = req.body.objid;
+	var place_id = req.body.placeid;
+	//console.log(req.body);
+	var info = new Object();
+	var now = new Date();
+	info.XLconnector = 'parser';
+
+	info.humanName = req.body.humanName;
+	var strLib = require("string");
+	info.name = strLib(info.humanName).slugify().s;
+	if(req.body.linkSource == '' && req.body.source != '')
+		info.linkSource = req.body.source;
+	else if(req.body.linkSource != '')
+		info.linkSource = req.body.linkSource;
+	
+	info.yakCatId = req.body.yakCatIdsHidden.split(',');
+	info.yakCatName = req.body.yakCatNamesHidden.split(',');
+	if(req.body.tagsHidden == '' && req.body.freetag != '')
+		info.tag = req.body.freetag.split(',');
+	else if(req.body.tagsHidden != '')		
+		info.tag = req.body.tagsHidden.split(',');
+	else
+		info.tag = [];
+
+	info.defaultPlaceLocation = {lng:parseFloat(req.body.longitude),lat : parseFloat(req.body.latitude)};
+	info.defaultPlaceName = req.body.defaultPlaceName;
+	info.defaultPlaceSearchName = req.body.defaultPlaceSearchName;
+	info.defaultPrintFlag = req.body.defaultPrintFlag;
+
+
+	info.link = req.body.link;
+	info.licence = req.body.licence;
+	info.yakType = req.body.yakType;
+
+
+	info.infoType = req.body.infoType;
+	info.fileSource = req.body.fileSource.split(',');
+	info.linkSource = req.body.linkSource.split(',');
+	info.persistDays = req.body.persistDays;
+	info.description = req.body.description;
+	info.zone = req.body.zone;
+	info.zoneName = req.body.zoneName;
+	info.status = parseInt(req.body.status);
+	info.lastModifDate = now;
+
+	info.rootElement = req.body.rootElement;
+	//console.log(req.body.lineToBegin);
+	if(req.body.lineToBegin != '' && typeof req.body.lineToBegin != 'undefined' )
+		info.lineToBegin = parseInt(req.body.lineToBegin);
+	else
+		info.lineToBegin = 1;
+
+	info.parsingFreq = req.body.parsingFreq;
+
+	info.parsingTemplate = {
+		title: req.body.infoTitle,
+		content: req.body.infoContent,
+		address: req.body.infoAddress,
+		geolocation: req.body.infoGeolocation,
+		latitude: req.body.infoLatitude,
+		longitude: req.body.infoLongitude,
+		outGoingLink: req.body.infoLink,
+		thumb: req.body.infoThumb,
+		yakCats: req.body.infoCat,
+		freeTag: req.body.infoTag,
+		place: req.body.infoPlace,
+		eventDate: req.body.infoEventDate,
+		pubDate: req.body.infoPubDate,
+		telephone: req.body.infoTel,
+		transportation: req.body.infoTransportation,
+		opening: req.body.infoOpening,
+		web: req.body.infoWeb,
+		mail: req.body.infoMail
+	};
+
+	var infoThumb = new Object();
+	if(req.files.picture.size && req.files.picture.size > 0 && req.files.picture.size < 1048576*5){
+		var drawTool = require('../mylib/drawlib.js');
+		var size = mainConf.imgSizeAvatar;
+		var crypto = require('crypto');
+		var destFile = crypto.createHash('md5').update(req.files.picture.name).digest("hex")+'.jpeg';
+				
+		for(i=0;i<size.length;i++){
+			infoThumb = drawTool.StoreImg(req.files.picture,destFile,{w:size[i].width,h:size[i].height},conf);
+		}
+		info.thumb = infoThumb.name;
+	}
+
+	else{
+		infoThumb.err = 0;
+	}
+		
+	
+	
+	if(typeof obj_id != 'undefined' && obj_id != ''){
+		var cond = {_id:obj_id};
+	}else{
+		info.creationDate = now;
+		info.lastExecDate = now;
+		var cond = {name:"anameimpossibletochoose007"};
+	}
+		
+
+		// if placeid is set
+		//console.log(req.body);
+	if(typeof place_id != 'undefined' && place_id != ''){
+		info.defaultPlaceId = place_id;
+		Info.update(cond,info,{upsert:true},function (err){
+			if (!err)
+				formMessage.push("Flux sauvegardé.");
+			else{
+				formMessage.push("Erreur pendant la sauvegarde du flux !");
+				console.log(err);
+			}
+			req.session.message = formMessage;
+			res.redirect('info/list')
+		});
+	}else{ // if no place id we match against db
+		Place.findOne({title:info.defaultPlaceName},function(err,theplace){
+			if(err)
+				throw err;
+			else{	
+				if(theplace){
+					info.defaultPlaceId = theplace._id;
+					Info.update(cond,info,{upsert:true},function (err){
+						if (!err)
+							formMessage.push("Flux sauvegardé.");
+						else{
+							formMessage.push("Erreur pendant la sauvegarde du flux !");
+							console.log(err);
+						}
+						req.session.message = formMessage;
+						res.redirect('info/list')
+					});
+				}else{ // if nothing in db we create it 
+					var place = new Place();
+					place.title = info.defaultPlaceName;
+					place.origin = "Yakwala";
+					place.access = 1;
+					place.licence = "Yakwala";
+					place.location = info.defaultPlaceLocation;
+					place.status = 1;
+					place.user = req.session.user;
+					place.zone = parseInt(info.zone);
+					place.creationDate = new Date();
+					place.lastModifDate = new Date();
+					place.formatted_address = req.body.formatted_address;
+					place.address = JSON.parse(req.body.address);
+					place.yakCat = [mongoose.Types.ObjectId("504d89f4fa9a958808000001"),mongoose.Types.ObjectId("51c00669fa9a95b40b000036")];
+					place.yakCatName = ["Géolocalisation","Info"];
+					place.save(function(err){console.log(err);});
+					info.defaultPlaceId = place._id;
+					
+					Info.update(cond,info,{upsert:true},function (err){
+						if (!err)
+							formMessage.push("Flux sauvegardé.");
+						else{
+							formMessage.push("Erreur pendant la sauvegarde du flux !");
+							console.log(err);
+						}
+						req.session.message = formMessage;
+						res.redirect('info/list')
+					});
+				}
+			}
+			
+
+		});
+
+ 
+
+	}
+
+	
+
+	
+
+	
+	
+};
+
+/******************************************************************************************************************************************************************
 #YAKNE
 *******	*/
 exports.yakNE_list = function(req, res){
@@ -713,7 +979,7 @@ exports.yakNE = function(req, res){
 	});	
 };
 
-/*******
+/******************************************************************************************************************************************************************
 #DASHBOARD
 ********/
 
@@ -770,20 +1036,9 @@ exports.dashboard_statsByZone= function(req,res){
 };
 
 
-/*******
-#INFOS
-********/
-exports.findInfoById = function (req, res) {
-    var Info = db.model('Info');
-    Info.findById(req.params.id, function (err, docs){	
-      var infoFormatted = Info.format(docs);
-      res.json({
-        info: infoFormatted
-      });
-    });
-};
 
-/*******
+
+/******************************************************************************************************************************************************************
 #ZONE
 ********/
 
@@ -929,7 +1184,7 @@ exports.zone_setstatus = function (req, res){
 
 
 
-/******* 
+/******************************************************************************************************************************************************************
 #PLACE 
 *******/
 exports.place_add = function(req, res){
@@ -1145,9 +1400,10 @@ exports.gridPlaces = function (req, res) {
     var status = [];
 	status = req.params.status.split(',');
 
+
 	Place.findGridPlaces(req.params.pageIndex,req.params.pageSize,
 		req.params.searchTerm,sortProperties,sortDirections,
-        status, yakcats, users, feeds, function (err, place){
+        status, yakcats, users, feeds, req.params.limit, function (err, place){
 
 		var data = {};
 		var placeFormated = place.map(function(item){
@@ -1158,7 +1414,7 @@ exports.gridPlaces = function (req, res) {
 		data['pageIndex'] = req.params.pageIndex;
 		data['pageSize'] = req.params.pageSize;
 
-		Place.countSearch(req.params.searchTerm, status, yakcats, users, function (err, count){
+		Place.countSearch(req.params.searchTerm, status, yakcats, users, feeds, req.params.limit, function (err, count){
 			data['count'] = count;
 			res.json(data);
 		});
@@ -1179,7 +1435,7 @@ exports.searchByTitleAndStatus = function (req, res) {
 };
 
 
-/******* 
+/******************************************************************************************************************************************************************
 #USER 
 ******/
 
@@ -1396,7 +1652,7 @@ exports.findUserById = function (req, res) {
     });
 };
 
-/*******
+/******************************************************************************************************************************************************************
 # ILLICITE
 ********/
 exports.illicites = function(req, res){
@@ -1594,7 +1850,7 @@ exports.gridIllicites = function (req, res) {
 };
 
 
-/******* 
+/******************************************************************************************************************************************************************
 #YAKCAT 
 ******/
 

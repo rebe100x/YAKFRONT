@@ -1,0 +1,549 @@
+mixin list()
+	table#MyGrid.table.table-bordered.datagrid
+		thead
+			tr.headerControle
+				th
+					.datagrid-header-left
+						.input-append.search
+							input#search.input-medium(type='text', placeholder='Recherche', data-provide="typeahead", autocomplete="off")
+							button.btn
+								i.icon-search
+					.datagrid-header-right
+						label
+							input#limit10days(type="checkbox",style="margin-top:-1px;",checked="checked") 
+							span &nbsp;Limiter aux 10 derniers jours
+			tr.headerControle
+				td(colspan=5)
+					select#filterStatus
+						option(value="all") Tous les statuts
+						option(value="1") Validé
+						option(value="3") Blacklisté
+						option(value="alert") Toutes les alertes
+						option(value="2")  - Alerte: En attente de validation
+						option(value="10") - Alerte: Gmap a échoué
+						option(value="11") - Alerte: Le lieu matché est blacklisté
+						option(value="12") - Alerte: La localisation est en dehors de la zone
+						option(value="13") - Alerte: La géoloc a échoué
+					select#filterType
+						option(value="all") Tous les types
+						option(value="1") Actu
+						option(value="2") Agenda
+						//option(value="3") Info pratique
+						option(value="4") Yassala
+					
+		tfoot
+			tr
+				th
+					.datagrid-footer-left(style='display: none;')
+						.grid-controls
+							span
+								span.grid-start
+								| -
+								span.grid-end
+								| de
+								span.grid-count
+							select.grid-pagesize
+								option 10
+								option 20
+								option 50
+								option 100
+							span Par Page
+					.datagrid-footer-right(style='display: none;')
+						.grid-pager
+							button.btn.grid-prevpage
+								i.icon-chevron-left
+							span Page
+							.input-append.dropdown.combobox.dropup
+								input.span1(type='text')
+								button.btn(data-toggle='dropdown')
+									i.caret
+								ul.dropdown-menu
+							span
+								| de
+								span.grid-pages
+							button.btn.grid-nextpage
+								i.icon-chevron-right
+
+
+	script
+		
+		
+		var ApiDataSource = function (options) {
+			this._formatter = options.formatter;
+			this._columns = options.columns;
+		};
+
+		$("#pillYakcat").show();
+		$("#pillFreetag").show();
+		$("#pillSourceLink").show();
+
+
+		/****************************************************************** LIST GRID ***************************************************************************/
+
+		ApiDataSource.prototype = {
+
+			columns: function () {
+				return this._columns;
+			},
+
+			data: function (options, callback) {
+
+				var url = '/api/infos';
+				var self = this;
+
+				if (!options.search) {
+					options.search = "^";
+				}
+
+				url += '/' + (options.pageIndex + 1);
+				url += '/' + options.pageSize;
+				url += '/' + options.search;
+
+				var sortPropertyArray = [];
+				var sortDirectionArray = [];
+
+				// Add currently selected datagrid column to sort properties
+				if (options.sortProperty) {
+					sortPropertyArray.push(options.sortProperty);
+					sortDirectionArray.push(options.sortDirection);
+				}
+
+				// sort by name by default
+				if(sortPropertyArray.length == 0)
+					sortPropertyArray.push( "creationDate");
+				if(sortDirectionArray.length == 0)
+					sortDirectionArray.push("desc");
+				
+					
+				// Would be easier if we could pass dictionaries, needs testing
+				url += '/' + sortPropertyArray.join() + '/' + sortDirectionArray.join();
+
+				// Filter by status
+				var status = $('#filterStatus :selected').val();
+				url += '/' + status;
+
+				// Filter by type
+				var type = $('#filterType :selected').val();
+				url += '/' + type;
+
+				
+				var limit10days = ($("#limit10days").is(":checked"));
+				url += '/' + limit10days;
+				
+				$.ajax(url, {
+					type: 'GET'
+				}).done(function (response) {
+
+					
+					// Prepare data to return to Datagrid
+					var data = response.info;
+					var count = response.count;
+					var startIndex = (response.pageIndex - 1) * response.pageSize;
+					var endIndex = parseInt(startIndex) + parseInt(response.pageSize);
+					var end = (endIndex > count) ? count : endIndex;
+					var page = parseInt(response.pageIndex);
+					var pages = Math.ceil(response.count / response.pageSize);
+					var start = startIndex + 1;
+
+					if (self._formatter) self._formatter(data);
+
+					callback({ data: data, start: start, end: end, count: count, pages: pages, page: page });
+
+				});
+			}
+		};
+
+		$('#MyGrid').datagrid({
+			dataSource: new ApiDataSource({
+				columns: [
+				{
+					property: 'title',
+					label: "Info",
+					sortable: true
+				},
+				{
+					property: 'origin',
+					label: 'Origine',
+					sortable: true
+				},
+				{
+					property: 'creationDate',
+					label: 'Création',
+					sortable: true
+				}],
+				formatter: function (items) {
+					$.each(items, function (index, item) {
+						item.title = fillContent(item);
+						item.creationDate = formatDate(item.creationDate);
+						item.zoneName = getZone(item);
+					});
+				}
+			})
+		});
+
+		/*bind form edition on the loaded datagrid event to avoid double loading*/
+		$('#MyGrid').unbind('loaded').on('loaded',function(){
+				// Edit Info function
+			$("#MyGrid .editInfo").on('click', function(event){
+				event.preventDefault();
+				event.stopPropagation();
+				editInfo(this.id,0);
+				
+			});
+
+			$("#MyGrid a.centerMap").on('click', function(event){
+				event.preventDefault();
+				event.stopPropagation();
+				var latlng = new google.maps.LatLng($(this).attr('lat'), $(this).attr('lng'));
+				getformattedAddress(latlng);
+				placeMarker(latlng,markerLocation);
+				map.panTo(markerLocation.getPosition());
+			});	
+			
+			$("#MyGrid a.duplicateItem").on('click', function(event){
+				event.preventDefault();
+				event.stopPropagation();
+				editInfo(this.id,1);
+			});
+		});
+		
+		function getYakType(item){
+			switch(item.yakType){
+				case 1:
+					return "<img width='15' title='Actu' src = '/images/back/type1.png' />";
+				break;
+				case 2:
+					return "<img width='15'title='Agenda' src = '/images/back/type2.png' />";
+				break;
+				case 3:
+					return "<img width='15' title='Info Pratique' src = '/images/back/type3.png' />";
+				break;
+				case 4:
+					return "<img width='15' title='Yassala' src = '/images/back/type4.png' />";
+				break;
+			}
+				
+
+		}
+
+		function getZone(item){
+			if(typeof item.zoneName == "undefined" || item.zoneName == '' ||  item.zoneName == null){
+				if(typeof item.zone == "undefined" || item.zone == '' ||  item.zone == null)
+					return 'undefined';
+				else
+					$.get('/api/zoneByNum/'+item.zone,function(data){
+						if(data)
+							return data.name;
+						else
+							return 'undefined';
+					});
+			}else
+				return  item.zoneName;
+		}
+
+		function fillContent(item) {
+			var res = "";
+			var icon = "icon-time";
+			var title_icon = "En attente";
+			var title_title = "";
+			
+			res += '<div class="liens">';
+			res += '<a href="#" id="'+item._id+'" class="duplicateItem listIcon" title="Dupliquer"><i class="icon-random"></i></a>';
+
+			if (item.link)
+				res += '<a href=\''+ item.outGoingLink + '\' target="_blank" class="listIcon" title="Lien externe"><i class="icon-share-alt "></i></a>';	
+
+			if (typeof item.location != 'undefined'
+				&& typeof item.location.lat != 'undefined'
+				&& typeof item.location.lng != 'undefined' ){
+				res += '<a class="centerMap listIcon" id="' + item._id + '" lat="' + item.location.lat + '" lng="' + item.location.lng + '"   href="#">';
+			res += '<i class = "icon-map-marker" title="Localiser"></i>';
+			res += '</a>';
+			}	
+			
+			res += "</div>";
+
+			res += '<a class="editInfo" id="' + item._id + '" href="#">';
+
+			if (item.status == 1) {
+				icon = 'icon-ok-sign';
+				title_icon = "Validée";
+			}
+			else {
+				icon = 'icon-ban-circle';
+				title_icon = "Rejetée";
+			}
+
+			var img = '';
+			if(typeof item.thumb != 'undefined' && item.thumb != '' && item.thumb != 'no-user.png')
+				img = '<img src=\''+ item.thumb + '\' width="50" /> ';	
+			
+			
+			var desc = '';
+			if(typeof item.content != 'undefined' && item.content != '')
+				desc = "<br><small>"+item.content.substr(0,200)+"...</small>";
+
+
+			res += 	'<div class="text-info"><i class="' + icon + ' status" title="' + title_icon + '" ></i>'+ img +'&nbsp;'+getYakType(item)+'&nbsp;'+item.title + desc +'</div>';
+
+
+
+			res += '</a>';
+
+			return res;
+		}
+
+		function formatDate(creationDate) {
+			var dateTmp = new Date(creationDate);
+			return dateTmp.getDate()+'/'+(dateTmp.getMonth()+1)+'/'+dateTmp.getFullYear();
+
+		}
+
+		
+
+		function refreshDatagrid () {
+			// Temporary refresh method for datagrid
+			var $gridsearch = jQuery('#MyGrid').find('.search');
+			var search = $gridsearch.find('input').val();
+			$gridsearch.trigger('searched', search);
+			$.getJSON('/api/validplaces', function(data) {
+				$('#placenumber').removeClass('badge badge-important');
+				if (data.info != 0)
+					$('#placenumber').addClass('badge badge-important').html(data.info);
+			});
+			$.getJSON('/api/validinfos', function(data) {
+				$('#infonumber').removeClass('badge badge-important');
+				if (data.info != 0)
+					$('#infonumber').addClass('badge badge-important').html(data.info);
+			});
+			
+		}
+
+		/****************************************************************** TOP SEARCH PANEL ***************************************************************************/
+
+		
+
+		$('#filterStatus').live('change', function() {
+			//var currentSelection = $('#filterStatus :selected').val();
+			refreshDatagrid();
+		});
+
+		$('#filterType').live('change', function() {
+			//var currentSelection = $('#filterType :selected').val();
+			refreshDatagrid();
+		});
+
+		// Datagrid checkbox
+		$('#filterStatus , #filterType , #limit10days').unbind('click').live('change', function() {
+			refreshDatagrid();
+		});
+		
+		
+
+		/****************************************************************** ADD / EDIT / DUPLICATE A PLACE ***************************************************************************/
+
+		
+
+		
+		
+
+		/* get data and edit info in the form
+			flagDuplicate = 1 for duplicating the info
+		*/
+		function editInfo(id,flagDuplicate){
+			$("#btnBack").show();
+			$("#MyGrid").hide();
+			
+			// We remove the error class when we open a form for editing a place
+			$('#infoForm').removeClass("error");
+
+			/*INIT FORM FOR EDITION*/
+			$("#infoForm").show();
+			
+			$("#pillYakcat ul").html('');
+			$("#pillFreetag ul").html('');
+			$("#infoForm input[type=hidden]").val('');
+			$('#infoForm').clearForm();	
+			$('#err').hide();
+			yakCatIds = new Array();
+			yakCatNames = new Array();
+			freeTags = new Array();
+			
+			var url = '/api/info/'+id;
+			
+			// We search for the info in mongo and we fill the form with the info's values
+			$.ajax({
+				url: url,
+				type: 'GET',
+				async: false,
+				success: function (response)
+				{
+					/*FORM INITIALISATION*/
+					var info = response.info;
+
+					
+					if(flagDuplicate == 1){
+						$("#infoForm legend.mainlegend").html("Dupliquer une info");
+						$("#infoForm #title").val(info.title+'_copy').focus();
+						$("#infoForm #objid").val('');
+						$("#infoForm #placeid").val('');
+					}	
+					else{	
+						$("#infoForm legend.mainlegend").html("Modifier une info");
+						$("#infoForm #objid").val(info._id);
+						$("#infoForm #placeid").val(info.placeId);
+						$("#infoForm #title").val(info.title).focus();
+					}	
+						
+					$("#infoForm #content").val(info.content);
+				
+
+					var spinner = $( "#spinnerLikes" ).spinner('value', info.likes);
+					
+					var latlng = new google.maps.LatLng(info.location.lat, info.location.lng);
+					getformattedAddress(latlng);
+					placeMarker(latlng,markerLocation);
+					map.setCenter(markerLocation.getPosition());
+
+
+					if(info.thumb != '' && typeof info.thumb != 'undefined'){
+						$("#picturePreview").show();
+						$("#picturePreview img").attr('src',info.thumb).show();
+					}
+					$("#infoForm #licence").val(info.licence);
+					$("#infoForm #outGoingLink").val(info.outGoingLink);
+					$('#infoForm #persistDaysValue').val(info.persistDays);
+					$("#infoForm #description").val(info.description);
+					if(typeof info.yakCat != 'undefined' && info.yakCat.length > 0){
+						info.yakCat.forEach(function(cat){
+							if(cat != ""){
+								$.get('/api/cats/'+cat,function(data){
+									$("#pillYakcat ul").append("<li class='yakcat-val status-important' data-id='"+data.cats._id+"'>"+data.cats.title+"</li>");
+									yakCatIds.push(data.cats._id);
+									yakCatNames.push(data.cats.title);	
+									$("#yakCatIdsHidden").val(yakCatIds.join(','));
+								});
+							}
+						});	
+					}
+					if(typeof info.freeTag != 'undefined' && info.freeTag.length > 0){
+						info.freeTag.forEach(function(tag){
+							if(tag.length > 0){
+								$("#pillFreetag ul").append("<li class='freetag-val status-info' data-value='"+tag+"'>"+tag+"</li>");
+								freeTags.push(tag);
+							}
+						});
+						$("#infoForm #tagsHidden").val(freeTags.join(','));	
+					}
+					
+					
+					if(typeof info.location != 'undefined'){
+						var latlng = new google.maps.LatLng(info.location.lat, info.location.lng);
+						placeMarker(latlng,markerLocation);
+						map.setCenter(markerLocation.getPosition());
+					}
+
+					if(typeof info.zone)
+						$("#infoForm #zone").val(info.zone);
+						
+					if(typeof info.zoneName)
+						$("#infoForm #zoneName").val(info.zoneName);
+
+					$('#infoForm input:radio[name=yakType][value='+info.yakType+']').attr("checked", true);	
+					if(info.yakType==2)
+						$('#eventDateController').fadeIn();
+					else
+						$('#eventDateController').hide();
+					
+					$('#infoForm input:radio[name=status][value='+info.status+']').click();
+				}
+			});
+		}
+		
+
+
+		$("#btnBack").unbind('click').on('click',function(){
+			$("#infoForm").hide();
+			$("#MyGrid").show();
+			$("#btnBack").hide();
+
+			$("#pillSourceLink ul").html('');
+			$("#pillYakcat ul").html('');
+			$("#pillFreetag ul").html('');
+			$("#pillSourceFile ul").html('');
+
+			google.maps.event.removeListener(listenerHandle);
+			markerLocation.setVisible(false);
+
+			$("#infoForm input[type=hidden]").val('');
+			$('#infoForm').clearForm();
+			$('#err').hide();
+			
+			$("#infoForm #objid").val("");
+			$("#infoForm #placeid").val("");
+			
+
+			$("#picturePreview").hide();
+			$("#picturePreview img").attr('src','').hide();
+
+			yakCatIds = new Array();
+			yakCatNames = new Array();
+			freeTags = new Array();
+			linkSource = new Array();
+			fileSource = new Array();
+			
+		});
+
+
+		// Add New Info
+		$("#btnAdd").click(function(){
+			$("#MyGrid").hide();
+			$("#infoForm")[0].reset();
+			$("#infoForm").fadeIn();
+			$("#btnBack").fadeIn();
+
+			$("#pillSourceLink ul").html('');
+			$("#pillYakcat ul").html('');
+			$("#pillFreetag ul").html('');
+			$("#pillSourceFile ul").html('');
+			
+			$("#infoForm input[type=hidden]").val('');
+			$('#infoForm').clearForm();
+			$('#err').hide();
+			
+			$("#infoForm #objid").val("");
+			$("#infoForm #placeid").val("");
+			
+			// We remove the error class when we open a form for creating a new info
+			$('#infoForm #titleGroup').removeClass("error");
+			$('#infoForm #contentGroup').removeClass("error");
+			$('#infoForm #licenceGroup').removeClass("error");
+			$('#infoForm #origineGroup').removeClass("error");
+			$('#infoForm #adresseGroup').removeClass("error");
+			$('#infoForm #content').val("");
+			
+			
+			$("#infoForm legendmainlegend").html("Ajouter un lieu");
+			$("#infoForm #title").focus();
+
+			$('.lineToBeginGroup').hide();
+			$('.rootElementGroup').show();
+			$('#searchRootElementResult').html('');
+			$("#infoForm #infoType").val("").change();
+			
+			$("#picturePreview").hide();
+			$("#picturePreview img").attr('src','').hide();
+			
+			
+			yakCatIds = new Array();
+			yakCatNames = new Array();
+			freeTags = new Array();
+			linkSource = new Array();
+			fileSource = new Array();
+
+		});
+			
+		$('#infoForm input:radio[name=status][value=1]').click();
+
+
+		

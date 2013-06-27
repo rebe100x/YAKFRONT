@@ -124,7 +124,7 @@ app.get('/api/zones/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:sta
 app.get('/place/list', back.requiresLogin, back.place_list);
 app.post('/place', back.requiresLogin, back.place);
 app.get('/api/places/search/:str/:status', back.requiresLogin, back.searchByTitleAndStatus);
-app.get('/api/places/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status', back.requiresLogin, back.gridPlaces);
+app.get('/api/places/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status/:limit', back.requiresLogin, back.gridPlaces);
 app.get('/api/places/:id', back.requiresLogin, back.findPlaceById);
 app.get('/api/places/validate/:ids', back.requiresLogin, back.validatePlaces);
 app.get('/api/places/delete/:ids', back.requiresLogin, back.deletePlaces);
@@ -156,11 +156,12 @@ app.get('/api/validillicites', back.requiresLogin, back.countUnvalidatedIllicite
 
 
 //INFO
-app.post('/news', back.requiresLogin, back.news);
-app.get('/api/infos', back.requiresLogin, back.infos);
+app.post('/info', back.requiresLogin, back.info);
 app.get('/api/validinfos', back.requiresLogin, back.countUnvalidatedInfos);
 app.get('/api/geoinfos/:x1/:y1/:x2/:y2/:heat/:type', back.requiresLogin, back.geoinfos);
 app.get('/api/info/:id', back.requiresLogin, back.findInfoById);
+app.get('/info/list', back.requiresLogin, back.info_list);
+app.get('/api/infos/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status/:type/:limit',back.requiresLogin, back.gridInfos);
 
 
 // YAKNE

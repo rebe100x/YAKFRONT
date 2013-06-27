@@ -1,0 +1,74 @@
+extends ../layout
+block content
+	include ../mixins/menu.jade
+	include ../mixins/map.jade
+	include list.jade
+	include ../mixins/forms/infoForm.jade
+
+	mixin menu('info')
+	mixin locationChooser()
+
+	div.container-fluid
+		div.row-fluid
+			div.span4
+				mixin map()
+			div.span8
+				div.fuelux
+					- if (message)
+						each msg in message
+							div.alert.fade.in#alert
+								button.close(type="button",data-dismiss="alert") x
+								strong= msg
+
+					div#newsfeedContainer
+						mixin list()
+						mixin infoForm()
+	script
+		
+		$(document).ready(function() {
+			google.maps.event.addListener(map, 'click', function(event) {
+				var position = event.latLng;
+				getformattedAddress(event.latLng);
+				placeMarker(event.latLng,markerLocation);
+			});
+			
+			google.maps.event.addListener(markerLocation, 'dragend', function() {
+				var position = markerLocation.getPosition();
+				getformattedAddress(position);
+				placeMarker(position,markerLocation);
+			});
+
+			
+		});
+		
+
+		function placeMarker(location,mk) {
+				$('#latitude').val(location.lat());	
+				$('#longitude').val(location.lng());	
+				mk.setVisible(true);
+				mk.setPosition(location);
+			}
+			
+
+
+		function getformattedAddress(position){
+			var geoQuery = {"location": position};
+				var geocoder = new google.maps.Geocoder();
+				geocoder.geocode( geoQuery, function(results, status) {
+					if (status == google.maps.GeocoderStatus.OK) {
+						var result = fixGmapResult(results[0]);
+						var placeGmap = getPlaceFromGmapResult(result);
+						placeArray = placeGmap;
+						$("#infoForm #placeInput").val(JSON.stringify(placeArray));
+						$('#infoForm #placePreview ').html("<div id='placeLabel'><i class='icon-remove' onclick='placeArray=null;$(\"#placeInput\").val(JSON.stringify(placeArray));$(this).parent().remove();'></i> "+result.formatted_address+"</div>");
+					} else {
+						var salt = new Date().getTime();
+						$('#defaultPlaceName').parent().before("<div id='alert"+salt+"' class='control-label'><i class='icon-exclamation-sign'> </i>Adresse invalide ("+status+")</div>");
+						setTimeout(function() {
+							$("#alert"+salt).fadeOut();
+						}, 1000);
+						$('#defaultPlaceName').select();
+					}
+				});
+
+		}						

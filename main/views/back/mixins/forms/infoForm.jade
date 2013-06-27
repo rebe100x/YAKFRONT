@@ -1,0 +1,465 @@
+mixin infoForm()
+	button.btn#btnBack(style='display:none')
+		i.icon-chevron-left
+	form#infoForm.yakForm(action='/info', method='POST', enctype='multipart/form-data', style='display:none')
+		input#yakCatIdsHidden(type='hidden', name='yakCatIdsHidden', value='')
+		input#yakCatNamesHidden(type='hidden', name='yakCatNamesHidden', value='')
+		input#tagsHidden(type='hidden', name='tagsHidden', value='')
+		input#placeInput(type='hidden', name='placeInput', value='')
+		input#objid(type="hidden", name="objid", value='0')
+		input#placeid(type="hidden", name="placeid", value='0')
+		input#hiddenOrigin(type="hidden",data-provide="typeahead", name="hiddenOrigin", value='0')
+		input#zoneName(type="hidden", name="zoneName", value='')
+
+
+		div.control-group.error
+				div.controls
+					label.alert#err(type="text", id="err", name="err", style='display:none') Les champs en rouge sont obligatoires.
+		
+		legend.mainlegend Ajouter une info
+		
+		div.row-fluid
+			legend Infos générales:
+			div.control-group#titleGroup
+				div.controls
+					div.row-fluid
+						.span6 
+							label Titre*: 
+								i.icon-question-sign#titleHelp
+							input(type='text', name='title', id='title', placeholder="Le titre de l'info")
+						.span6
+							label Imagette:
+								i.icon-question-sign#imagetteHelp
+							span#picturePreview
+								img.img-rounded(style='width:100px;display:none;')
+							input.span6#picture(type="file",style="display:block",name="picture")
+					div.row-fluid
+						.span12
+							label Text:
+								i.icon-question-sign#contentHelp
+							textarea#content.span12(name='content', placeholder='Contenu',rows='5')
+					div.row-fluid
+						.span6
+							label Licence*:
+								i.icon-question-sign#licenceHelp
+							input(type='text', name='licence', id='licence', placeholder='Licence')
+						.span6
+							label Lien externe*:
+								i.icon-question-sign#linkHelp
+							input(type='text', name='outGoingLink', id='outGoingLink', placeholder='Lien vers la news')
+					
+		div.row-fluid
+			legend Metadata:		
+			div.control-group#yakType.row-fluid
+				.span6
+					label Type info:
+						i.icon-question-sign#yakTypeHelp
+					label.radio.inline Actu
+						input(type="radio", name="yakType", value="1")
+					label.radio.inline Agenda
+						input(type="radio", name="yakType", value="2")
+				.span6
+					div.control-group#eventDateController
+						label(for='eventDate') Date de l événement :
+							div.controls
+								input#eventDateFrom.span6(style="float:left;margin-right:5px;	", type="text",name="eventDateFrom", autocomplete="off", placeholder='Du...')
+								input#eventDateEnd.span6(type="text",name="eventDateEnd", autocomplete="off", placeholder='Au...')
+			div.control-group
+				div.controls.row-fluid
+					.span6
+						label(for='category') Catégories
+							i.icon-question-sign#yakcatHelp
+						input#yakcat(type="text", data-provide="typeahead", name="yakcat", autocomplete="off", placeholder='Chercher une catégorie...')
+						.pillbox#pillYakcat(style="display:none")
+							ul
+					.span6
+						label Tags
+							i.icon-question-sign#freetagHelp
+						.input-append
+							input#freetag(type="text", data-provide="typeahead", name="freetag", autocomplete="off", placeholder='Entrer un tag...')
+							button.btn#btn-freetag-adder(type="button") Ajouter	
+						.pillbox#pillFreetag(style="display:none")
+							ul						
+		div.row-fluid
+			legend Localisation:						
+			div.control-group#locationGroup.clearBoth
+				div.controls.row-fluid	
+					.span6
+						label(for='location') Localisation:
+							i.icon-question-sign#locationHelp
+						div#placePreview
+						input(type="text",data-provide="typeahead", id="location", name="location", autocomplete="off", placeholder="Chercher...")
+					.span6
+						label(for='zone') Zone:
+							i.icon-question-sign#zoneHelp
+						select.big#zone(name='zone')
+
+		div.row-fluid
+			div.control-group#likesGroup.clearBoth
+			legend Likes
+				div.controls.row-fluid	
+					.span12
+						div#spinnerLikes.spinner
+							input.small.spinner-input(type="text")
+							div.spinner-buttons.btn-group.btn-group-vertical
+								button.btn.spinner-up(type='button')
+									i.icon-chevron-up
+								button.btn.spinner-down(type='button')
+									i.icon-chevron-down
+		div.row-fluid
+			div.control-group#statusGroup.clearBoth
+			legend Désactiver
+			div.control-group
+				div.controls
+					label.radio Validé
+						input(type="radio", name="status", value="1", checked)
+					label.radio  Blacklisté
+						input(type="radio", name="status", value="3")
+					label.radio.inline Alerte : En attente de validation
+						input(type="radio", name="status", value="2")	
+					label.radio Alerte: Gmap a échoué
+						input(type="radio", name="status", value="10")
+					label.radio Alerte : Le lieu matché est blacklisté
+						input(type="radio", name="status", value="11")
+					label.radio Alerte : La localisation est en dehors de la zone
+						input(type="radio", name="status", value="12")
+					label.radio Alerte : La géoloc, a échoué
+						input(type="radio", name="status", value="13")
+							
+		br				
+		div.control-group
+			div.controls
+				button.btn.btn-large.btn-inverse(type='submit', name='submit', id='submit', value='Enregistrer') Enregistrer
+	
+	script
+
+		var yakCatIds = new Array();
+		var yakCatNames = new Array();
+		var freeTags = new Array();
+		var placeArray = new Array();
+		
+		
+		
+		$(document).ready(function() {
+
+			var spinner = $( "#spinnerLikes" ).spinner();
+
+			
+			$('#titleHelp').popover({animation:true,title:'Le nom du flux',content:"<p>Le nom du flux apparait sur le front comme le nom d'un utilisateur.</p><br /><p><img width='100%' src='/images/back/help/cap1.jpg' /></p>",html:true});
+			$('#imagetteHelp').popover({animation:true,title:'Imagette',content:"<p>Cette image apparaîtra sur le profil du flux. Pour l'instant elle doit être carrée. </p><br /><p><img width='100%' src='/images/back/help/cap2.jpg' /></p>",html:true});
+			$('#licenceHelp').popover({animation:true,title:'Licence',content:"<p>Le type de licence, par défaut : Licence Ouverte</p>",html:true});
+			$('#linkHelp').popover({animation:true,title:'Line externe',content:"<p>Entrer le lien général vers le site ( ex : pour la version paris intra-muros du parsien : http://www.leparisien.fr/accueil/paris-75.php ) </p>",html:true});
+			$('#persistDaysHelp').popover({animation:true,title:"Temps de persistance de l'info sur le front.",content:"<p>Le nombre de jours que l'info restera sur le front.<br> S'il s'agit d'un évènement, c'est le nombre de jours que l'info restera sur le front après la date de fin de l'évènement.</p>",html:true});
+			$('#descriptionHelp').popover({animation:true,title:'description',content:"<p>La description apparait dans le profil du flux : <br><img width='100%' src='/images/back/help/cap2.jpg' /></p>",html:true});
+			$('#yakTypeHelp').popover({animation:true,title:"Le type d'info",content:"<p>Les Actus ont une date de publication.<br> Les évènements ont une date de début et de fin, et servent à annoncer des évènements.</p>",html:true});
+			$('#yakcatHelp').popover({animation:true,title:'Catégorie',content:"<p>Vous pouvez associer ce flux à une catégorie Yakwala, ainsi toutes les informations issues de ce flux seront tagguées avec cette catégorie.<br>NB: un dédoublement est automatiquement fait avec les tags et il n'y aura pas de redondance.<br><br> Par ex : le parsien.fr doit être associé avec la catégorie <b>Actualités</b></p>",html:true});
+			$('#freetagHelp').popover({animation:true,title:'Tags',content:"<p>Vous pouvez associer ce flux à un mot clé. Ainsi toutes les infos issues de ce flux seront taggués avec ce mot.<br><br> La liste de restaurant du guide Michelin doit être tagguée avec le mot clé <b>Restaurant</b></p>",html:true});
+			$('#locationHelp').popover({animation:true,title:'Localisation du flux',content:"<p>Le flux doit être localisé afin de permettre un meilleur filtrage des infos.<br> Selon l'option choisie dans la case suivante ( Si l'info n'est pas géolocalisée... ) L'info sera par défaut placée à ce point.<br><br>Pour le parisien 75, nous plaçons ce point à la mairie de Paris.</p>",html:true});
+			$('#defaultPrintFlagHelp').popover({placement:'left',animation:true,title:'Flag',content:"<p>Ce flag est très important, il permet de régler le comportement du système si l'info n'est pas géolocalisée.<br> En effet, parfois l'info n'est pas géolocalisable ( car elle ne contient pas d'info de lieux ou que l'algo plante ). Dans ce cas, on peut placer l'info soit au point défini juste avant( la localisation du flux ), soit ne pas l'afficher. Dans le cas où on l'affiche, on peut également choisir de ne l'afficher que sur le fil info et pas sur la carte. <br><br> Par exemple le parisen 75 est localisé à la mairie de paris, mais nous ne voulons pas que des infos apparaissent en masse sur la carte à ce point, par contre on veut les voir dans le fil info quand on est pas loin de Paris. Nous avons donc choisi <b>... ne pas afficher sur la carte mais afficher sur le fil info</b><br><br>Pour un flux relatif à un lieu, par exemple le flux du stade vélodrome à Marseille, nous ne faisons pas de géoloc et nous choisissons la <b>ne pas faire de géoloc et place l'info au point par défaut.</b> </p>",html:true});
+			$('#defaultPlaceSearchNameHelp').popover({animation:true,title:'Indice pour la recherche de lieu',content:"<p>Entrer ici un texte qui complète l'information de géolocalisation et donne une précision à l'algo de recherche de lieu afin de distinguer des lieux différents mais ayant le même nom.<br><br>Par exemple un lieu reconnu comme le Musée des Civilisations pourrait être à Marseille ou à Paris. Si votre flux est un flux local à Marseille, il vous faut entrer <b>Marseille, France</b>, ou <b>Bouches-du-Rhône, France</b>. La requète de géoloc sera alors bien plus précise et évitera les doublons avec d'autre lieux du même nom en France.<br><br> Si vous entrez une liste des musées de France, il vous suffit d'entrer <b>France</b>.<br><br> SI vous être trop précis vous perdrez des infos qui aurraient pu être géolocalisées, si vous êtes trop imprécis vous risquez les doublons.</p>",html:true});
+			$('#zoneHelp').popover({animation:true,title:'La zone',content:"<p>Les zones sont définies dans l'onglet Zones.<br> Elles permettent un filtrage des données : toute donnée géolocalisée en dehors de la zone définie est mise en erreur.<br> Cela permet de filtrer les infos nationales ou internationales présentes parfois dans les medias locaux.</p>",html:true});
+			$('#fileuploadHelp').popover({animation:true,title:'Source = Fichier',content:"<p>Vous pouvez uploader vos données sous forme de fichiers. <br> Vous pouvez ajouter autant de fichiers que vous voulez du moment qu'ils suivent le même schéma de parsing.</p>",html:true});
+			$('#sourceHelp').popover({animation:true,title:'Source = Url',content:"<p>Vous pouvez définit une url à parser. <br> Vous pouvez ajouter autant d'url que vous voulez du moment qu'elles suivent le même schéma de parsing.</p>",html:true});
+			$('#infoTypeHelp').popover({animation:true,title:'Type de flux',content:"<p>Regarder l'extension du fichier ou du flux pour définir un des 3 types.</p>",html:true});
+			$('#rootElementHelp').popover({animation:true,title:'Element racine',content:"<p>Ce champ n'est nécessaire que pour un type <b>XML</b> ou <b>JSON</b>.<br><br>Définir ici l'élément racine surlequel l'algo doit boucler.<br><br><b>Pour pré-remplir ce champ cliquer sur l'icône <i class='icon-search'></i></b> ( attention , c'est expérimental, il est préférable de vérifier manuellement.<br><br>Par exemple, un flux RSS a la plus part du temps un élément racine <b>/rss/channel/item</b> </p><br><br>Pour un type JSON, indiquer le nom de l'élément surlequel boucler ( souvent <b>item</b> )<br><br>",html:true});
+			$('#lineToBeginHelp').popover({animation:true,title:'Ligne de commencement',content:"<p>Pour un type CSV, vous pouvez indiquer la ligne de départ afin de ne pas prendre en compte le header oudes lignes vides.</p>",html:true});
+			$('#parsingFreqHelp').popover({placement:'left',animation:true,title:'Fréquence de parsing',content:"<p>Vous devez ici vous aligner sur la fréquence de mise à jour de votre flux ou de votre fichier.</p>",html:true});
+
+			/*
+			listenerHandle = google.maps.event.addListener(map, 'click', function(event) {
+				placeMarker(event.latLng,markerLocation);
+				getformattedAddress(event.latLng);
+				reduceZoneOptions(event.latLng.lat(),event.latLng.lng());
+			});
+
+			listenerHandleDrag = google.maps.event.addListener(markerLocation, 'dragend', function() {
+				var position = markerLocation.getPosition();
+				getformattedAddress(position);
+				reduceZoneOptions(position.lat(),position.lng());
+
+			});*/
+
+			$('#alertInfoType').hide();
+
+			// ZONE
+			$.get('api/zones',function(data){
+				$('#zone').append("<option value =''>Choisir une zone</option>");	
+				$.each(data.zone, function (key,val) {
+					$('#zone').append("<option value ='"+val.num+"'>"+val.name+"</option>");
+				});	
+			});
+			
+			$('#zone').change(function(){
+				$('#zoneName').val($("#zone option:selected").html());
+			});
+
+			/* EVENTDATE */
+			$('#yakType').unbind('change').change(function() { 
+				if($("input[name='yakType']:checked").val()==2)
+					$('#eventDateController').fadeIn();
+				else
+					$('#eventDateController').hide();
+			});
+			
+			/*$( "#eventDateFrom" ).datetimepicker({
+				timeFormat: 'HH:mm',
+				stepHour: 1,
+				stepMinute: 10,
+			});
+			$( "#eventDateEnd" ).datetimepicker({
+				timeFormat: 'HH:mm',
+				stepHour: 1,
+				stepMinute: 10,
+			});*/
+
+			/*THUMB*/
+			$('#picture').live('change', function () {
+				if ( window.FileReader ) {
+					var fileList = this.files;
+					var file = fileList[0];
+					var r = new FileReader();
+					r.onload = function () {
+						var binimage = r.result;
+						binimage1 = binimage.replace('data:'+file.type+';base64,', '');
+						var src = "data:"+file.type+";base64," + binimage1;
+						$("#picturePreview").show();
+						$("#picturePreview img").attr('src',src).show();
+					};
+					r.readAsDataURL(file);
+				}
+			});
+				
+			
+
+			// YAKCATS
+			$('#yakcat').typeahead({
+				minLength : 3,
+				source: function (typeahead, query) {
+					$.ajax({
+							dataType: "json",
+							url: "/api/cats",				
+							success: function( ajax ) {
+								typeahead.process(ajax.data.cats);
+							}
+						})},
+				property: "title",
+				onselect: function(obj) { 
+					$("#pillYakcat ul").append("<li class='yakcat-val status-important' data-id='"+obj._id+"' data-title='"+obj.title+"' >"+obj.title+"</li>");
+					$('#yakcat').val('').focus();
+					yakCatIds.push(obj._id);
+					yakCatNames.push(obj.title);
+					$('#yakCatIdsHidden').val(yakCatIds.join(','));
+					$('#yakCatNamesHidden').val(yakCatNames.join(','));
+				}
+			});
+
+			$("#pillYakcat ul").unbind('click').on('click','li',function(){
+				yakCatIds.cleanArrayByName($(this).attr('data-id'));
+				yakCatNames.cleanArrayByName($(this).attr('data-title'));
+				$('#yakCatIdsHidden').val(yakCatIds.join(','));
+				$('#yakCatNamesHidden').val(yakCatNames.join(','));
+			});
+			
+			
+			// FREE TAGS
+			$('#btn-freetag-adder').unbind('click').on('click',function(event){
+				event.preventDefault();
+				if($('#freetag').val() != ''){
+					var tags = $('#freetag').val().split(',');
+					for(i = 0; i< tags.length;i++){
+						$("#pillFreetag ul").append("<li class='freetag-val' data-value='"+tags[i].trim()+"'>"+tags[i].trim()+"</li>");
+						freeTags.push(tags[i].trim());
+					}
+					$('#tagsHidden').val(freeTags.join(','));
+					$('#freetag').val('').focus();
+				}
+				return false;
+			});	
+
+			$('#freetag').typeahead({
+				minLength : 3,
+				source: function (typeahead, query) {
+					if(query.length>1){
+						$.ajax({
+								dataType: "json",
+								url: "/api/yakNEExist/"+query,				
+								success: function( ajax ) {
+									typeahead.process(ajax.yakNE);
+								}
+							})
+					}
+				},
+				property: "title",
+				onselect: function(obj) { 
+					$("#pillFreetag ul").append("<li class='freetag-val status-info' data-value='"+obj.title+"'>"+obj.title+"</li>");
+					$('#freetag').val('').focus();
+					freeTags.push(obj.title);
+					$('#tagsHidden').val(freeTags.join(','));
+				}
+			});
+
+			$("#pillFreetag ul").unbind('click').on('click','li',function(){
+				freeTags.cleanArrayByName($(this).attr('data-value'));
+				$('#tagsHidden').val(freeTags.join(','));
+			});
+
+
+			
+			
+
+			/*CLEAN LOCATION*/
+			$('#location').unbind('blur').on('blur',function(){
+				if($(this).val() == ''){
+					markerLocation.setVisible(false);
+				}
+
+			});
+			
+			
+			$('#location').typeahead({
+				minLength : 3,							
+				source: function (typeahead, query) {
+					if(query.length >= 3){
+						encodeURIComponent(query);
+						$("#location").addClass('searching');
+						var addressQuery = {"address": query ,"region":"fr","language":"fr"};
+						var geocoder = new google.maps.Geocoder();
+						geocoder.geocode( addressQuery, function(results, status) {						
+						if (status == google.maps.GeocoderStatus.OK) {
+							$.map( results, function( item ) {fixGmapResult(item);});
+							typeahead.process(results);
+							$("#location").removeClass('searching');
+						} 
+						});
+					}
+				},
+				property: "formatted_address",
+				onselect: function(obj) { 
+					$("#location").removeClass('searching');
+					var placeGmap = getPlaceFromGmapResult(obj);
+					$('#location').val(placeGmap.title);
+					placeArray = placeGmap;
+					$("#infoForm #placeInput").val(JSON.stringify(placeArray));
+					$('#infoLabel').first().remove();
+					$('#infoForm #placePreview').html("<div id='placeLabel'><i class='icon-remove icon-pointer' onclick='placeArray=null;$(\"#placeForm #placeInput\").val(JSON.stringify(placeArray));$(this).parent().remove();'></i> "+placeGmap.formatted_address+"</div>");
+					$("#infoForm #location").val("");
+					var latLng = new google.maps.LatLng(placeGmap.location.lat,placeGmap.location.lng);
+					map.panTo(latLng);
+					placeMarker(latLng,markerLocation);
+					reduceZoneOptions(placeGmap.location.lat,placeGmap.location.lng);
+				}
+			});
+
+			/*EXTERNAL SOURCE LINK COMPLETION*/
+			$('#link').on('blur',function(){
+				if($(this).val() != '' && $(this).val().slice(0,7) != "http://")
+					$(this).val('http://'+$(this).val());
+			});	
+				
+
+				
+		});
+		
+		
+		
+		/*Form custom validation*/
+		$('#infoForm').unbind('submit').on('submit',function(){
+			var err = false;
+
+			$('.alert-error').hide();
+			if($('#humanName').val() == ""){
+				setError('#humanName','Entrer un nom pour ce flux');
+				err = true;
+			}else{
+				var infoName = S($('#humanName').val()).slugify();
+				if($('#objid').val() == ''){
+					$.get('/api/infoExist/'+infoName,function(data){
+						if(data.info){
+							setError('#humanName','Ce flux existe déjà: '+data.info.humanName+' / '+data.info.name+'.xml');
+							err=true;
+						}else
+							$('#humanName').append(' File : '+infoName+'.xml');
+					});
+				}
+				
+			}
+
+			
+			if($('#link').val() != "" && !$('#link').val().isUrl()){
+				setError('#link','Entrer une url valide');
+				err = true;
+			}				
+			
+			if($('#licence').val() == ""){
+				setError('#licence','Entrer un nom de licence');
+				err = true;
+			}
+			if($('#persistDays input').val() == "" || !$('#persistDays input').val().isInt()){
+				setError('#persistDays','Entrer un chiffre');
+				err = true;
+			}
+			if(typeof $('input:radio[name=yakType]:checked').val() == "undefined" ){
+				setError('#yakType','Choisir un type info');
+				err = true;
+			}
+			if($('#location').val() == ""){
+				setError('#location','Définir une géoloc par défaut');
+				err = true;
+			}
+			if($('#defaultPlaceSearchName').val() == ""){
+				setError('#defaultPlaceSearchName','Définir un texte de recherche par défaut');
+				err = true;
+			}
+			if($('#linkSource').val() == "" && $('#fileSource').val() == "" ){
+				setError('#dataSource','Définir soit un fichier source, soit une url source');
+				err = true;
+			}
+			if($('#infoTitle').val() == ""){
+				setError('#infoTitle','Définir le champ contenant le titre de la news.');
+				setError('#parsing','Définir le champ contenant le titre de la news.');
+				err = true;
+			}
+			if($('#rootElement').val() == "" && $('#infoType').val() == 'XML'){
+				setError('#rootElement','Pour un flux XML, définir un élément racine');
+				err = true;
+			}	
+			if($('#lineToBegin').val() == "" && $('#infoType').val() == 'CSV'){
+				setError('#lineToBegin','Pour un flux CSV, indiquez la première ligne à prendre en compte.');
+				err = true;
+			}
+			
+			if(!$('#parsingFreq').val()){
+				setError('#parsingFreq','Indiquez la fréquence de mise à jour du flux.');
+				err = true;
+			}
+
+			if(!$('#infoType').val()){
+				setError('#infoType','Indiquez le type de flux.');
+				err = true;
+			}
+
+			if(!$('#zone').val()){
+				setError('#zone','Indiquez une zone.');
+				err = true;
+			}
+
+			if (err){
+				$('#err').show();
+				return false;
+			}else
+				return true;
+		});	
+		
+		
+
+		function reduceZoneOptions(lat,lng){
+			if(lat && lng){
+				$.get('api/zonesContaining/'+lat+'/'+lng,function(data){
+					$('#zone').html('');	
+					$('#zone').append("<option value =''>Choisir une zone</option>");	
+					$.each(data.zones, function (key,val) {
+						$('#zone').append('<option value ="'+val.num+'">'+val.name+'</option>');
+					});
+				});	
+			}
+		}

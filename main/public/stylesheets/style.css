@@ -498,7 +498,7 @@ width: 270px;
    #userChooser { top: 40%;}
    .theContent iframe.youtubeFrame { height: 450px; width: 100%;}
    .infowindow .yakTypeImage1 {  background-image: url('/images/yakwala_sprite.png'); background-position: -133px 739px; width: 15px;}
-   .infowindow .yakTypeImage4 {  background-image: url('/images/yakwala_sprite.png'); background-position: -133px 673px; width: 15px;}
+   .infowindow .yakTypeImage4 {  background-image: url('/images/yakwala_sprite.png'); background-position: -133px 613px; width: 15px;}
  }
 
  /*large screens*/
@@ -571,7 +571,7 @@ width: 270px;
 	#ZoneMesalertes.active, #ZoneMesalertes:hover { background-position: -115px -510px;}
 	#ZoneMesalertes.notempty { background-position: -179px -781px}
 	.infowindow .yakTypeImage1 {  background-image: url('/images/yakwala_sprite.png'); background-position: -133px 739px; width: 15px;}
-   .infowindow .yakTypeImage4 {  background-image: url('/images/yakwala_sprite.png'); background-position: -133px 673px; width: 15px;}
+   .infowindow .yakTypeImage4 {  background-image: url('/images/yakwala_sprite.png'); background-position: -133px 613px; width: 15px;}
  }
 
  /*ipads portrail*/
@@ -641,7 +641,7 @@ width: 270px;
 
 	#ZoneMesalertes.active, #ZoneMesalertes:hover { background-position: -115px -510px;}
 	.infowindow .yakTypeImage1 {  background-image: url('/images/yakwala_sprite.png'); background-position: -133px 739px; width: 15px;}
-   .infowindow .yakTypeImage4 {  background-image: url('/images/yakwala_sprite.png'); background-position: -133px 673px; width: 15px;}
+   .infowindow .yakTypeImage4 {  background-image: url('/images/yakwala_sprite.png'); background-position: -133px 613px; width: 15px;}
 }
 
   /*ipads portrail*/
@@ -717,9 +717,8 @@ width: 270px;
 	#alertsModeText.active {color: #f5881f; }
 	#alertsModeText.empty a { color: #C2160D;}
 	.infowindow .yakTypeImage1 {  background-image: url('/images/yakwala_sprite.png'); background-position: -133px 739px; width: 15px;}
-   .infowindow .yakTypeImage4 {  background-image: url('/images/yakwala_sprite.png'); background-position: -133px 673px; width: 15px;}
-   .infowindow .yakTypeImage1 {  background-image: url('/images/yakwala_sprite.png'); background-position: -133px 739px; width: 15px;}
-   .infowindow .yakTypeImage4 {  background-image: url('/images/yakwala_sprite.png'); background-position: -133px 673px; width: 15px;}
+	.infowindow .yakTypeImage4 {  background-image: url('/images/yakwala_sprite.png'); background-position: -133px 613px; width: 15px;}
+
  }
 
  /*ipads portrail*/
@@ -790,7 +789,7 @@ width: 270px;
 	#alertsModeText.active {color: #f5881f; }
 	#alertsModeText.empty a{ color: #C2160D;}
 	.infowindow .yakTypeImage1 {  background-image: url('/images/yakwala_sprite.png'); background-position: -133px 739px; width: 15px;}
-   .infowindow .yakTypeImage4 {  background-image: url('/images/yakwala_sprite.png'); background-position: -133px 673px; width: 15px;}
+   .infowindow .yakTypeImage4 {  background-image: url('/images/yakwala_sprite.png'); background-position: -133px 613px; width: 15px;}
  }
 
 
@@ -862,7 +861,7 @@ width: 270px;
 	#alertsModeText.active {color: #f5881f; }
 	#alertsModeText.empty a{ color: #C2160D;}
 	.infowindow .yakTypeImage1 {  background-image: url('/images/yakwala_sprite.png'); background-position: -133px 739px; width: 15px;}
-   .infowindow .yakTypeImage4 {  background-image: url('/images/yakwala_sprite.png'); background-position: -133px 673px; width: 15px;}
+   .infowindow .yakTypeImage4 {  background-image: url('/images/yakwala_sprite.png'); background-position: -133px 613px; width: 15px;}
 }
 
 /* Smartphones (portrait) ----------- */
@@ -933,7 +932,7 @@ width: 270px;
 	#alertsModeText.active {color: #f5881f; }
 	#alertsModeText.empty a{ color: #C2160D;}
 	.infowindow .yakTypeImage1 {  background-image: url('/images/yakwala_sprite.png'); background-position: -133px 739px; width: 15px;}
-   .infowindow .yakTypeImage4 {  background-image: url('/images/yakwala_sprite.png'); background-position: -133px 673px; width: 15px;}
+   .infowindow .yakTypeImage4 {  background-image: url('/images/yakwala_sprite.png'); background-position: -133px 613px; width: 15px;}
 }
 
 

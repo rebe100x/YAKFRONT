@@ -425,7 +425,7 @@ contenuIllicite.statics.findGridIllicites = function (pageIndex, pageSize, searc
 	if(type != 0)
 		conditions["content_type"] = type;
 
-	if(limit){
+	if(limit == 'true'){
 		var last10Days = new Date() - 10*24*60*60*1000;	
 		conditions["last_date_mark"] = {$gte: last10Days};	
 	}
@@ -456,7 +456,7 @@ contenuIllicite.statics.countSearch = function (searchTerm, type, status, limit,
 
 	conditions["status"] = status;
 	
-	if(limit){
+	if(limit == 'true'){
 		var last10Days = new Date() - 10*24*60*60*1000;	
 		conditions["last_date_mark"] = {$gte: last10Days};	
 	}
@@ -554,6 +554,7 @@ var Info = new Schema({
   , feed :	{type: Schema.ObjectId}	
   , userName	: {type: String}		
   , zone	: Number
+  , zoneName	: String
   ,	placeId	: {type: Schema.ObjectId} 
   , likes	: {type: Number, default: 0,index:1}
   , unlikes	: {type: Number, default: 0}
@@ -604,6 +605,7 @@ Info.statics.format = function (theinfo) {
 			yakCat:theinfo.yakCat,
 			placeId:theinfo.placeId,
 			origin:theinfo.origin,
+			licence:theinfo.licence,
 			likes:theinfo.likes,
 			commentsCount:theinfo.commentsCount,
 			unlikes:theinfo.unlikes,
@@ -613,6 +615,7 @@ Info.statics.format = function (theinfo) {
 			outGoingLink:theinfo.outGoingLink,
 			user: theinfo.user,
 			feed: theinfo.feed,
+			status: theinfo.status,
 			heat: theinfo.heat,
 			socialThumbs : theinfo.socialThumbs
 		};
@@ -623,7 +626,8 @@ Info.statics.format = function (theinfo) {
 }
 
 Info.statics.countUnvalidated = function (callback) {
-	return this.count( {'status': { $in: [2, 10]}}, callback );
+	var last10Days = new Date() - 10*24*60*60*1000;	
+	return this.count( {'status': { $in: [2, 10]},creationDate : {$gte:last10Days}}, callback );
 }
 
 Info.statics.findByTitle = function (title, callback) {
@@ -1150,7 +1154,70 @@ Info.statics.findAllGeoAlertNumber = function (x1,y1,x2,y2,from,lastcheck,type,s
 }
 
 
+Info.statics.findGridInfos = function (pageIndex, pageSize, searchTerm, sortProperties, sortDirections, status, type, limit, callback) {
 
+	var conditions = {'title': new RegExp(searchTerm, 'i')};
+
+	var sortBy = {};
+
+	for (index in sortProperties) {
+		var desc = 1;
+		if (sortDirections[index] == "desc")
+			desc = -1;
+		sortBy[sortProperties[index]] = desc;
+	}
+
+	if (status != 'all') {
+		if (status == 'alert') 
+			conditions["status"] = {$in:[2,10,11,12,13]};
+		else
+			conditions["status"] = status;
+	}
+
+	
+
+	if (type != 'all') {
+			conditions["yakType"] = type;
+	}
+
+	if(limit == 'true'){
+		var last10Days = new Date() - 10*24*60*60*1000;	
+		conditions["creationDate"] = {$gte: last10Days};	
+	}
+
+	return this.find(
+		conditions,
+		{},
+		{
+			skip:(pageIndex -1)*pageSize,
+			limit:pageSize,
+			sort:sortBy
+		},
+		callback);
+}
+
+Info.statics.countSearch = function (searchTerm, status, type, limit, callback) {
+
+	var conditions = {'title': new RegExp(searchTerm, 'i')};
+
+	if (status != 'all') {
+		if (status == 'alert') 
+			conditions["status"] = {$in:[2,10,11,12,13]};
+		else
+			conditions["status"] = status;
+	}
+
+	if (type != 'all') {
+			conditions["yakType"] = type;
+	}
+	
+	if(limit == 'true'){
+		var last10Days = new Date() - 10*24*60*60*1000;	
+		conditions["creationDate"] = {$gte: last10Days};	
+	}
+
+	return this.count(conditions, callback);
+}
 
 mongoose.model('Info', Info);
 
@@ -1183,7 +1250,7 @@ var Yakcat = new Schema({
 }, { collection: 'yakcat' });
 
 Yakcat.statics.countUnvalidated = function (callback) {
-	return this.count( {'status': 2}, callback );
+	return this.count( {'status': {$in:[2,10,11,12,13]}}, callback );
 }
 
 Yakcat.statics.findAll = function (callback) {
@@ -1239,12 +1306,9 @@ Yakcat.statics.findGridYakcats = function (pageIndex, pageSize, searchTerm, sort
 		conditions,
 		'',
 		{
-			skip:
-			(pageIndex -1)*pageSize,
-			limit:
-			pageSize,
-			sort:
-			sortBy
+			skip:(pageIndex -1)*pageSize,
+			limit:pageSize,
+			sort:sortBy
 		},
 		callback);
 }

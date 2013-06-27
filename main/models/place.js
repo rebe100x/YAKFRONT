@@ -181,7 +181,7 @@ Place.statics.search = function(string,count,from,sensitive,lat,lng,maxd,callbac
 	},callback);
 }
 
-Place.statics.countSearch = function (searchTerm, status, yakcats, users, callback) {
+Place.statics.countSearch = function (searchTerm, status, yakcats, users, feeds, limit,  callback) {
 	var search = new RegExp(searchTerm, 'i');
 
 	var conditions = {
@@ -195,6 +195,14 @@ Place.statics.countSearch = function (searchTerm, status, yakcats, users, callba
 
 	if (0 < users.length)
 		conditions["user"] = { $in: users };
+
+	if (0 < feeds.length)
+		conditions["feed"] = { $in: feeds };
+
+	if(limit == 'true'){
+		var last10Days = new Date() - 10*24*60*60*1000;	
+		conditions["creationDate"] = {$gte: last10Days};	
+	}
 
 	return this.count(conditions, callback)-1;
 }
@@ -240,7 +248,7 @@ Place.statics.waitPlaces = function (ids, callback) {
 	this.update(conditions, update, options, callback);
 }
 
-Place.statics.findGridPlaces = function (pageIndex, pageSize, searchTerm, sortProperties, sortDirections, status, yakcats, users, feeds, callback) {
+Place.statics.findGridPlaces = function (pageIndex, pageSize, searchTerm, sortProperties, sortDirections, status, yakcats, users, feeds, limit, callback) {
 
 	var conditions = {
 		"title" : new RegExp(searchTerm, 'i')
@@ -266,22 +274,25 @@ Place.statics.findGridPlaces = function (pageIndex, pageSize, searchTerm, sortPr
 	if (yakcats.length > 0)
 		conditions["yakCat"] = { $all: yakcats };
 
+	if(limit == 'true'){
+		var last10Days = new Date() - 10*24*60*60*1000;	
+		conditions["creationDate"] = {$gte: last10Days};	
+	}
+
 	return this.find(
 		conditions,
 		{},
 		{
-			skip:
-			(pageIndex -1)*pageSize,
-			limit:
-			pageSize,
-			sort:
-			sortBy
+			skip:(pageIndex -1)*pageSize,
+			limit:pageSize,
+			sort:sortBy,
 		},
 		callback);
 }
 
 Place.statics.countUnvalidated = function (callback) {
-	return this.count( {status: { $in: [2,10,11,12,13]}}, callback );
+	var last10Days = new Date() - 10*24*60*60*1000;	
+	return this.count( {status: { $in: [2,10,11,12,13]},creationDate:{$gte:last10Days}}, callback );
 }
 
 Place.statics.findByTitle = function (title, callback) {
