@@ -30,12 +30,14 @@ block content
 				var position = event.latLng;
 				getformattedAddress(event.latLng);
 				placeMarker(event.latLng,markerLocation);
+				reduceZoneOptions(event.latLng.lat(),event.latLng.lng(),0);
 			});
 			
 			google.maps.event.addListener(markerLocation, 'dragend', function() {
 				var position = markerLocation.getPosition();
 				getformattedAddress(position);
 				placeMarker(position,markerLocation);
+				reduceZoneOptions(position.lat(),position.lng()),0;
 			});
 
 			
@@ -43,8 +45,6 @@ block content
 		
 
 		function placeMarker(location,mk) {
-				$('#latitude').val(location.lat());	
-				$('#longitude').val(location.lng());	
 				mk.setVisible(true);
 				mk.setPosition(location);
 			}
@@ -60,6 +60,7 @@ block content
 						var placeGmap = getPlaceFromGmapResult(result);
 						placeArray = placeGmap;
 						$("#infoForm #placeInput").val(JSON.stringify(placeArray));
+						$('#placeid').val(''); // clean the edit mode
 						$('#infoForm #placePreview ').html("<div id='placeLabel'><i class='icon-remove' onclick='placeArray=null;$(\"#placeInput\").val(JSON.stringify(placeArray));$(this).parent().remove();'></i> "+result.formatted_address+"</div>");
 					} else {
 						var salt = new Date().getTime();

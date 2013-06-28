@@ -390,7 +390,7 @@ mixin list()
 					}	
 					else{	
 						$("#infoForm legend.mainlegend").html("Modifier une info");
-						$("#infoForm #objid").val(info._id);
+						$("#infoForm #objid").val(id);
 						$("#infoForm #placeid").val(info.placeId);
 						$("#infoForm #title").val(info.title).focus();
 					}	
@@ -400,10 +400,7 @@ mixin list()
 
 					var spinner = $( "#spinnerLikes" ).spinner('value', info.likes);
 					
-					var latlng = new google.maps.LatLng(info.location.lat, info.location.lng);
-					getformattedAddress(latlng);
-					placeMarker(latlng,markerLocation);
-					map.setCenter(markerLocation.getPosition());
+					
 
 
 					if(info.thumb != '' && typeof info.thumb != 'undefined'){
@@ -412,20 +409,42 @@ mixin list()
 					}
 					$("#infoForm #licence").val(info.licence);
 					$("#infoForm #outGoingLink").val(info.outGoingLink);
+					$("#infoForm #origin").val(info.origin);
 					$('#infoForm #persistDaysValue').val(info.persistDays);
 					$("#infoForm #description").val(info.description);
 					if(typeof info.yakCat != 'undefined' && info.yakCat.length > 0){
 						info.yakCat.forEach(function(cat){
 							if(cat != ""){
 								$.get('/api/cats/'+cat,function(data){
-									$("#pillYakcat ul").append("<li class='yakcat-val status-important' data-id='"+data.cats._id+"'>"+data.cats.title+"</li>");
+									$("#pillYakcat ul").append("<li class='yakcat-val status-important' data-id='"+data.cats._id+"' data-title='"+data.cats.title+"'>"+data.cats.title+"</li>");
 									yakCatIds.push(data.cats._id);
 									yakCatNames.push(data.cats.title);	
 									$("#yakCatIdsHidden").val(yakCatIds.join(','));
+									$("#yakCatNamesHidden").val(yakCatNames.join(','));
 								});
 							}
 						});	
 					}
+
+
+
+
+
+
+
+					if(typeof info.placeId != 'undefined' && info.placeId != ''){ // eidt mode
+						$.get('/api/places/'+info.placeId,function(data){
+							placeArray = data.place;
+							$("#infoForm #placeInput").val(JSON.stringify(placeArray));
+							$('#placeid').val(info.placeId);
+							$('#infoForm #placePreview ').html("<div id='placeLabel'><i class='icon-remove' onclick='placeArray=null;$(\"#placeInput\").val(JSON.stringify(placeArray));$(this).parent().remove();'></i> "+placeArray.formatted_address+"</div>");
+							var latlng = new google.maps.LatLng(placeArray.location.lat,placeArray.location.lng);
+							placeMarker(latlng,markerLocation);
+							map.setCenter(markerLocation.getPosition());
+							reduceZoneOptions(latlng.lat(),latlng.lng(),info.zone);
+						});
+					}
+
 					if(typeof info.freeTag != 'undefined' && info.freeTag.length > 0){
 						info.freeTag.forEach(function(tag){
 							if(tag.length > 0){
@@ -437,18 +456,14 @@ mixin list()
 					}
 					
 					
-					if(typeof info.location != 'undefined'){
-						var latlng = new google.maps.LatLng(info.location.lat, info.location.lng);
-						placeMarker(latlng,markerLocation);
-						map.setCenter(markerLocation.getPosition());
-					}
-
-					if(typeof info.zone)
+					if(typeof info.zone != 'undefined'){
 						$("#infoForm #zone").val(info.zone);
-						
-					if(typeof info.zoneName)
+						console.log($("#infoForm #zone").val());
+					}	
+					if(typeof info.zoneName != 'undefined')
 						$("#infoForm #zoneName").val(info.zoneName);
 
+					console.log(info);
 					$('#infoForm input:radio[name=yakType][value='+info.yakType+']').attr("checked", true);	
 					if(info.yakType==2)
 						$('#eventDateController').fadeIn();

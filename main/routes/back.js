@@ -1,5 +1,5 @@
-/*
- * GET home page.
+/******************************************************************************************************************************************************************
+ * UTILITIES
  */
 
 exports.db = function(conf){
@@ -432,8 +432,13 @@ exports.feed = function(req, res){
 	else if(req.body.linkSource != '')
 		feed.linkSource = req.body.linkSource;
 	
-	feed.yakCatId = req.body.yakCatIdsHidden.split(',');
-	feed.yakCatName = req.body.yakCatNamesHidden.split(',');
+	feed.yakCatId = [];
+	if(req.body.yakCatIdsHidden)
+		feed.yakCatId = req.body.yakCatIdsHidden.split(',');
+	feed.yakCatName = [];
+	if(req.body.yakCatNamesHidden)
+		feed.yakCatName = req.body.yakCatNamesHidden.split(',');
+	
 	if(req.body.tagsHidden == '' && req.body.freetag != '')
 		feed.tag = req.body.freetag.split(',');
 	else if(req.body.tagsHidden != '')		
@@ -554,6 +559,7 @@ exports.feed = function(req, res){
 				}else{ // if nothing in db we create it 
 					var place = new Place();
 					place.title = feed.defaultPlaceName;
+					place.slug = strLib(feed.defaultPlaceName).slugify().s;					
 					place.origin = "Yakwala";
 					place.access = 1;
 					place.licence = "Yakwala";
@@ -685,83 +691,50 @@ exports.info = function(req, res){
 	var Yakcat = db.model('Yakcat');
 	var obj_id = req.body.objid;
 	var place_id = req.body.placeid;
-	//console.log(req.body);
+	
+	console.log(req.body);
+	
 	var info = new Object();
 	var now = new Date();
-	info.XLconnector = 'parser';
-
-	info.humanName = req.body.humanName;
-	var strLib = require("string");
-	info.name = strLib(info.humanName).slugify().s;
-	if(req.body.linkSource == '' && req.body.source != '')
-		info.linkSource = req.body.source;
-	else if(req.body.linkSource != '')
-		info.linkSource = req.body.linkSource;
 	
-	info.yakCatId = req.body.yakCatIdsHidden.split(',');
-	info.yakCatName = req.body.yakCatNamesHidden.split(',');
+	info.title = req.body.title;
+	info.content = req.body.content;
+
+	var strLib = require("string");
+	info.slug = strLib(info.title).slugify().s;
+	info.likes = req.body.likes;
+	info.yakCat = [];
+	if(req.body.yakCatIdsHidden)
+		info.yakCat = req.body.yakCatIdsHidden.split(',');
+	info.yakCatName = [];
+	if(req.body.yakCatNamesHidden)
+		info.yakCatName = req.body.yakCatNamesHidden.split(',');
+
 	if(req.body.tagsHidden == '' && req.body.freetag != '')
-		info.tag = req.body.freetag.split(',');
+		info.freeTag = req.body.freetag.split(',');
 	else if(req.body.tagsHidden != '')		
-		info.tag = req.body.tagsHidden.split(',');
+		info.freeTag = req.body.tagsHidden.split(',');
 	else
-		info.tag = [];
+		info.freeTag = [];
 
-	info.defaultPlaceLocation = {lng:parseFloat(req.body.longitude),lat : parseFloat(req.body.latitude)};
-	info.defaultPlaceName = req.body.defaultPlaceName;
-	info.defaultPlaceSearchName = req.body.defaultPlaceSearchName;
-	info.defaultPrintFlag = req.body.defaultPrintFlag;
-
-
-	info.link = req.body.link;
+	
+	info.origin = req.body.origin;
+	info.outGoingLink = req.body.outGoingLink;
 	info.licence = req.body.licence;
 	info.yakType = req.body.yakType;
-
-
-	info.infoType = req.body.infoType;
-	info.fileSource = req.body.fileSource.split(',');
-	info.linkSource = req.body.linkSource.split(',');
-	info.persistDays = req.body.persistDays;
-	info.description = req.body.description;
+	
 	info.zone = req.body.zone;
 	info.zoneName = req.body.zoneName;
+
 	info.status = parseInt(req.body.status);
+	
 	info.lastModifDate = now;
 
-	info.rootElement = req.body.rootElement;
-	//console.log(req.body.lineToBegin);
-	if(req.body.lineToBegin != '' && typeof req.body.lineToBegin != 'undefined' )
-		info.lineToBegin = parseInt(req.body.lineToBegin);
-	else
-		info.lineToBegin = 1;
-
-	info.parsingFreq = req.body.parsingFreq;
-
-	info.parsingTemplate = {
-		title: req.body.infoTitle,
-		content: req.body.infoContent,
-		address: req.body.infoAddress,
-		geolocation: req.body.infoGeolocation,
-		latitude: req.body.infoLatitude,
-		longitude: req.body.infoLongitude,
-		outGoingLink: req.body.infoLink,
-		thumb: req.body.infoThumb,
-		yakCats: req.body.infoCat,
-		freeTag: req.body.infoTag,
-		place: req.body.infoPlace,
-		eventDate: req.body.infoEventDate,
-		pubDate: req.body.infoPubDate,
-		telephone: req.body.infoTel,
-		transportation: req.body.infoTransportation,
-		opening: req.body.infoOpening,
-		web: req.body.infoWeb,
-		mail: req.body.infoMail
-	};
-
+	
 	var infoThumb = new Object();
 	if(req.files.picture.size && req.files.picture.size > 0 && req.files.picture.size < 1048576*5){
 		var drawTool = require('../mylib/drawlib.js');
-		var size = mainConf.imgSizeAvatar;
+		var size = mainConf.imgSizeInfo;
 		var crypto = require('crypto');
 		var destFile = crypto.createHash('md5').update(req.files.picture.name).digest("hex")+'.jpeg';
 				
@@ -786,32 +759,41 @@ exports.info = function(req, res){
 	}
 		
 
-		// if placeid is set
-		//console.log(req.body);
-	if(typeof place_id != 'undefined' && place_id != ''){
-		info.defaultPlaceId = place_id;
+	var placeInput = JSON.parse(req.body.placeInput);
+	var location = placeInput.location;
+
+	// if placeid is set
+	console.log(info);
+	if(typeof place_id != 'undefined' && place_id != ''){ // edit mode
+		info.placeId = place_id;
+		info.address = placeInput.title;
+		info.location = {lng:parseFloat(location.lng),lat:parseFloat(location.lat)};		
 		Info.update(cond,info,{upsert:true},function (err){
 			if (!err)
-				formMessage.push("Flux sauvegardé.");
+				formMessage.push("Info sauvegardée.");
 			else{
-				formMessage.push("Erreur pendant la sauvegarde du flux !");
+				formMessage.push("Erreur pendant la sauvegarde de l'info !");
 				console.log(err);
 			}
 			req.session.message = formMessage;
 			res.redirect('info/list')
 		});
-	}else{ // if no place id we match against db
-		Place.findOne({title:info.defaultPlaceName},function(err,theplace){
+	}else{
+		// search for a place like this one in db
+		Place.findOne({title:placeInput.formatted_address,location:{$near:[parseFloat(location.lat),parseFloat(location.lng)],$maxDistance:0.1}},function(err,theplace){
 			if(err)
 				throw err;
 			else{	
 				if(theplace){
-					info.defaultPlaceId = theplace._id;
+					info.placeId = theplace._id;
+					info.address = placeInput.title; // here we take it from the input, not from the db => to check if it is a good choice
+					info.location = {lng:parseFloat(location.lng),lat:parseFloat(location.lat)};		
+		
 					Info.update(cond,info,{upsert:true},function (err){
 						if (!err)
-							formMessage.push("Flux sauvegardé.");
+							formMessage.push("Info sauvegardée.");
 						else{
-							formMessage.push("Erreur pendant la sauvegarde du flux !");
+							formMessage.push("Erreur pendant la sauvegarde de l'info !");
 							console.log(err);
 						}
 						req.session.message = formMessage;
@@ -819,28 +801,30 @@ exports.info = function(req, res){
 					});
 				}else{ // if nothing in db we create it 
 					var place = new Place();
-					place.title = info.defaultPlaceName;
+					place.title = placeInput.title;
+					place.slug = strLib(placeInput.title).slugify().s;					
 					place.origin = "Yakwala";
 					place.access = 1;
 					place.licence = "Yakwala";
-					place.location = info.defaultPlaceLocation;
+					place.location = placeInput.location;
 					place.status = 1;
 					place.user = req.session.user;
 					place.zone = parseInt(info.zone);
+					place.zoneName = info.zoneName;
 					place.creationDate = new Date();
 					place.lastModifDate = new Date();
-					place.formatted_address = req.body.formatted_address;
-					place.address = JSON.parse(req.body.address);
-					place.yakCat = [mongoose.Types.ObjectId("504d89f4fa9a958808000001"),mongoose.Types.ObjectId("51c00669fa9a95b40b000036")];
-					place.yakCatName = ["Géolocalisation","Info"];
+					place.formatted_address = placeInput.formatted_address;
+					place.address = placeInput.address;
+					place.yakCat = [mongoose.Types.ObjectId("504d89f4fa9a958808000001")];
+					place.yakCatName = ["Géolocalisation"];
 					place.save(function(err){console.log(err);});
-					info.defaultPlaceId = place._id;
+					info.placeId = place._id;
 					
 					Info.update(cond,info,{upsert:true},function (err){
 						if (!err)
-							formMessage.push("Flux sauvegardé.");
+							formMessage.push("Info sauvegardée.");
 						else{
-							formMessage.push("Erreur pendant la sauvegarde du flux !");
+							formMessage.push("Erreur pendant la sauvegarde de l'info !");
 							console.log(err);
 						}
 						req.session.message = formMessage;
@@ -851,9 +835,6 @@ exports.info = function(req, res){
 			
 
 		});
-
- 
-
 	}
 
 	
@@ -1255,6 +1236,9 @@ exports.place = function(req, res){
 		
 
 		place.title = req.body.title;
+		var strLib = require("string");
+		place.slug = strLib(place.title).slugify().s;
+	
 		place.content = req.body.content;
 
 		// NOTE : in the query below, order is important : in DB we have lat, lng but need to insert in reverse order : lng,lat  (=> bug mongoose ???)

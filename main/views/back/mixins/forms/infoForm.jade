@@ -8,7 +8,6 @@ mixin infoForm()
 		input#placeInput(type='hidden', name='placeInput', value='')
 		input#objid(type="hidden", name="objid", value='0')
 		input#placeid(type="hidden", name="placeid", value='0')
-		input#hiddenOrigin(type="hidden",data-provide="typeahead", name="hiddenOrigin", value='0')
 		input#zoneName(type="hidden", name="zoneName", value='')
 
 
@@ -45,9 +44,13 @@ mixin infoForm()
 							input(type='text', name='licence', id='licence', placeholder='Licence')
 						.span6
 							label Lien externe*:
-								i.icon-question-sign#linkHelp
+								i.icon-question-sign#outGoingLinkHelp
 							input(type='text', name='outGoingLink', id='outGoingLink', placeholder='Lien vers la news')
-					
+					div.row-fluid
+						.span12
+							label Origine*:
+								i.icon-question-sign#originHelp
+							input.big(type='text', name='origin', id='origin', placeholder='Origine')
 		div.row-fluid
 			legend Metadata:		
 			div.control-group#yakType.row-fluid
@@ -100,7 +103,7 @@ mixin infoForm()
 				div.controls.row-fluid	
 					.span12
 						div#spinnerLikes.spinner
-							input.small.spinner-input(type="text")
+							input.small.spinner-input(type="text",name="likes")
 							div.spinner-buttons.btn-group.btn-group-vertical
 								button.btn.spinner-up(type='button')
 									i.icon-chevron-up
@@ -148,7 +151,7 @@ mixin infoForm()
 			$('#titleHelp').popover({animation:true,title:'Le nom du flux',content:"<p>Le nom du flux apparait sur le front comme le nom d'un utilisateur.</p><br /><p><img width='100%' src='/images/back/help/cap1.jpg' /></p>",html:true});
 			$('#imagetteHelp').popover({animation:true,title:'Imagette',content:"<p>Cette image apparaîtra sur le profil du flux. Pour l'instant elle doit être carrée. </p><br /><p><img width='100%' src='/images/back/help/cap2.jpg' /></p>",html:true});
 			$('#licenceHelp').popover({animation:true,title:'Licence',content:"<p>Le type de licence, par défaut : Licence Ouverte</p>",html:true});
-			$('#linkHelp').popover({animation:true,title:'Line externe',content:"<p>Entrer le lien général vers le site ( ex : pour la version paris intra-muros du parsien : http://www.leparisien.fr/accueil/paris-75.php ) </p>",html:true});
+			$('#outGoingLinkHelp').popover({animation:true,title:'Line externe',content:"<p>Entrer le lien général vers le site ( ex : pour la version paris intra-muros du parsien : http://www.leparisien.fr/accueil/paris-75.php ) </p>",html:true});
 			$('#persistDaysHelp').popover({animation:true,title:"Temps de persistance de l'info sur le front.",content:"<p>Le nombre de jours que l'info restera sur le front.<br> S'il s'agit d'un évènement, c'est le nombre de jours que l'info restera sur le front après la date de fin de l'évènement.</p>",html:true});
 			$('#descriptionHelp').popover({animation:true,title:'description',content:"<p>La description apparait dans le profil du flux : <br><img width='100%' src='/images/back/help/cap2.jpg' /></p>",html:true});
 			$('#yakTypeHelp').popover({animation:true,title:"Le type d'info",content:"<p>Les Actus ont une date de publication.<br> Les évènements ont une date de début et de fin, et servent à annoncer des évènements.</p>",html:true});
@@ -165,19 +168,7 @@ mixin infoForm()
 			$('#lineToBeginHelp').popover({animation:true,title:'Ligne de commencement',content:"<p>Pour un type CSV, vous pouvez indiquer la ligne de départ afin de ne pas prendre en compte le header oudes lignes vides.</p>",html:true});
 			$('#parsingFreqHelp').popover({placement:'left',animation:true,title:'Fréquence de parsing',content:"<p>Vous devez ici vous aligner sur la fréquence de mise à jour de votre flux ou de votre fichier.</p>",html:true});
 
-			/*
-			listenerHandle = google.maps.event.addListener(map, 'click', function(event) {
-				placeMarker(event.latLng,markerLocation);
-				getformattedAddress(event.latLng);
-				reduceZoneOptions(event.latLng.lat(),event.latLng.lng());
-			});
-
-			listenerHandleDrag = google.maps.event.addListener(markerLocation, 'dragend', function() {
-				var position = markerLocation.getPosition();
-				getformattedAddress(position);
-				reduceZoneOptions(position.lat(),position.lng());
-
-			});*/
+			
 
 			$('#alertInfoType').hide();
 
@@ -255,9 +246,11 @@ mixin infoForm()
 
 			$("#pillYakcat ul").unbind('click').on('click','li',function(){
 				yakCatIds.cleanArrayByName($(this).attr('data-id'));
+				console.log($(this).attr('data-title'));
 				yakCatNames.cleanArrayByName($(this).attr('data-title'));
 				$('#yakCatIdsHidden').val(yakCatIds.join(','));
 				$('#yakCatNamesHidden').val(yakCatNames.join(','));
+				console.log(yakCatNames);
 			});
 			
 			
@@ -338,6 +331,7 @@ mixin infoForm()
 					$("#location").removeClass('searching');
 					var placeGmap = getPlaceFromGmapResult(obj);
 					$('#location').val(placeGmap.title);
+					$('#placeid').val(''); // clean the edit mode
 					placeArray = placeGmap;
 					$("#infoForm #placeInput").val(JSON.stringify(placeArray));
 					$('#infoLabel').first().remove();
@@ -346,12 +340,12 @@ mixin infoForm()
 					var latLng = new google.maps.LatLng(placeGmap.location.lat,placeGmap.location.lng);
 					map.panTo(latLng);
 					placeMarker(latLng,markerLocation);
-					reduceZoneOptions(placeGmap.location.lat,placeGmap.location.lng);
+					reduceZoneOptions(placeGmap.location.lat,placeGmap.location.lng,0);
 				}
 			});
 
 			/*EXTERNAL SOURCE LINK COMPLETION*/
-			$('#link').on('blur',function(){
+			$('#outGoingLink').on('blur',function(){
 				if($(this).val() != '' && $(this).val().slice(0,7) != "http://")
 					$(this).val('http://'+$(this).val());
 			});	
@@ -385,8 +379,8 @@ mixin infoForm()
 			}
 
 			
-			if($('#link').val() != "" && !$('#link').val().isUrl()){
-				setError('#link','Entrer une url valide');
+			if($('#outGoingLink').val() != "" && !$('#outGoingLink').val().isUrl()){
+				setError('#outGoingLink','Entrer une url valide');
 				err = true;
 			}				
 			
@@ -452,13 +446,21 @@ mixin infoForm()
 		
 		
 
-		function reduceZoneOptions(lat,lng){
+		function reduceZoneOptions(lat,lng,zoneSel){
 			if(lat && lng){
 				$.get('api/zonesContaining/'+lat+'/'+lng,function(data){
 					$('#zone').html('');	
 					$('#zone').append("<option value =''>Choisir une zone</option>");	
+					var sel = '';
 					$.each(data.zones, function (key,val) {
-						$('#zone').append('<option value ="'+val.num+'">'+val.name+'</option>');
+						if(zoneSel > 0){
+							if(val.num == zoneSel)
+								sel = 'selected';
+							else
+								sel = '';
+						}
+							
+						$('#zone').append('<option '+sel+' value ="'+val.num+'">'+val.name+'</option>');
 					});
 				});	
 			}

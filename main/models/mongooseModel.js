@@ -528,7 +528,8 @@ mongoose.model('infoTitles', infoTitles);
  * Schema definition
  */
 var Info = new Schema({
-    title     : { type: String,required: true,}
+    title     : { type: String,required: true,index:1}
+  , slug     : { type: String,required: true,index:1}
   , content	: {type: String}		
   , thumb	: {type: String}
   , thumbFlag :{type:Number,default:0}		
@@ -567,8 +568,8 @@ var Info = new Schema({
 
 Info.index({location : '2d',pubDate:-1,creationDate:-1,dateEndPrint:-1,yakType:1,print:1,status:1});
 Info.index({location : '2d',pubDate:-1,dateEndPrint:-1,yakType:1,print:1,status:1});
-Info.index({location : '2d',pubDate:-1,creationDate:-1,dateEndPrint:-1,yakType:1,print:1,status:1,title:1,content:1,freeTag:1,});
-Info.index({location : '2d',pubDate:-1,dateEndPrint:-1,yakType:1,print:1,status:1,origin:1,user:1,freeTag:1,});
+Info.index({location : '2d',pubDate:-1,creationDate:-1,dateEndPrint:-1,yakType:1,print:1,status:1,title:1,content:1,freeTag:1,yakCat:1});
+Info.index({location : '2d',pubDate:-1,dateEndPrint:-1,yakType:1,print:1,status:1,origin:1,user:1,freeTag:1,yakCat:1});
 
 
 //Info.index({location : '2d',pubDate:-1,yakType:1,print:1,status:1});
@@ -587,6 +588,7 @@ Info.statics.format = function (theinfo) {
 		var formattedInfo = {
 			_id:theinfo._id,
 			title:theinfo.title,
+			slug:theinfo.slug,
 			content:theinfo.content,
 			thumb:thethumb,
 			thumbFlag: theinfo.thumbFlag,
@@ -600,7 +602,7 @@ Info.statics.format = function (theinfo) {
 			eventDate:theinfo.eventDate,
 			pubDate:theinfo.pubDate,
 			freeTag:theinfo.freeTag,
-			yakTag:theinfo.yakTag,
+			//yakTag:theinfo.yakTag,
 			yakCatName:theinfo.yakCatName,
 			yakCat:theinfo.yakCat,
 			placeId:theinfo.placeId,
@@ -617,7 +619,9 @@ Info.statics.format = function (theinfo) {
 			feed: theinfo.feed,
 			status: theinfo.status,
 			heat: theinfo.heat,
-			socialThumbs : theinfo.socialThumbs
+			socialThumbs : theinfo.socialThumbs,
+			zone : theinfo.zone,
+			zoneName : theinfo.zoneName
 		};
 	  return formattedInfo;
 	}else
