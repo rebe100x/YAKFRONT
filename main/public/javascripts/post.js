@@ -14,6 +14,7 @@ $(document).ready(function() {
 		return disableEnterKey(event);
 	});
 
+	var now = new Date();
 	$('#yakTypeController').live('change', function() { 
 		if($("input[name='yakType']:checked").val()==2)
 			$('#eventDateController').slideDown();
@@ -26,6 +27,7 @@ $(document).ready(function() {
 		stepHour: 1,
 		stepMinute: 10,
 		//defaultValue:new Date(),
+		hour:now.getHours(),
 
 	});
 	$( "#eventDateEnd" ).datetimepicker({

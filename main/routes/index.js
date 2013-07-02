@@ -262,8 +262,7 @@ exports.news = function(req, res){
 			
 			formMessage.push(msg);
 		
-		}
-		else
+		}else
 			infoThumb.err = 0;
 
 		if(infoThumb.err == 0 ){
@@ -301,6 +300,9 @@ exports.news = function(req, res){
 				info.yakCatName = yakCatName;
 				info.yakCat = yakCat;
 				info.title = req.body.title;
+				var strLib = require("string");
+				info.slug = strLib(info.title).slugify().s;
+	
 				info.content = req.body.content;
 				
 				// NOTE : in the query below, order is important : in DB we have lat, lng but need to insert in reverse order : lng,lat  (=> bug mongoose ???)
@@ -317,12 +319,14 @@ exports.news = function(req, res){
 					place = new Place(item);
 					place.heat = 80;
 					place.user = mongoose.Types.ObjectId(req.session.user);
+					place.slug = strLib(item.title).slugify().s;					
 					place.save();
 					//info.placeId = mongoose.Types.ObjectId(place._id);
 					info.placeId = place._id;
+					info.placeName = place.title;
 				}else{
 					info.placeId = item._id;
-					//info.placeId = mongoose.Types.ObjectId(item._id);
+					info.placeName = item.title;
 				}
 					
 				

@@ -9,6 +9,8 @@ mixin infoForm()
 		input#objid(type="hidden", name="objid", value='0')
 		input#placeid(type="hidden", name="placeid", value='0')
 		input#zoneName(type="hidden", name="zoneName", value='')
+		input#thumbHidden(type="hidden", name="thumbHidden", value='')
+		
 
 
 		div.control-group.error
@@ -25,13 +27,18 @@ mixin infoForm()
 						.span6 
 							label Titre*: 
 								i.icon-question-sign#titleHelp
-							input(type='text', name='title', id='title', placeholder="Le titre de l'info")
+							input(type='text', name='title', id='title', placeholder="Le titre de l'info",autocomplete="off")
 						.span6
 							label Imagette:
 								i.icon-question-sign#imagetteHelp
 							span#picturePreview
 								img.img-rounded(style='width:100px;display:none;')
 							input.span6#picture(type="file",style="display:block",name="picture")
+							br
+							label Inclure dans le corps de l info
+								input#thumbFlag(type="checkbox",name="thumbFlag",style="margin:5px;")
+							
+							
 					div.row-fluid
 						.span12
 							label Text:
@@ -45,28 +52,44 @@ mixin infoForm()
 						.span6
 							label Lien externe*:
 								i.icon-question-sign#outGoingLinkHelp
-							input(type='text', name='outGoingLink', id='outGoingLink', placeholder='Lien vers la news')
+							input(type='text', name='outGoingLink', id='outGoingLink', placeholder='Lien vers la news',autocomplete="off")
 					div.row-fluid
-						.span12
+						.span6
 							label Origine*:
 								i.icon-question-sign#originHelp
-							input.big(type='text', name='origin', id='origin', placeholder='Origine')
+							input(type='text', name='origin', id='origin', placeholder='Origine',autocomplete="off")
 		div.row-fluid
 			legend Metadata:		
 			div.control-group#yakType.row-fluid
 				.span6
-					label Type info:
+					label Type info*:
 						i.icon-question-sign#yakTypeHelp
 					label.radio.inline Actu
 						input(type="radio", name="yakType", value="1")
 					label.radio.inline Agenda
 						input(type="radio", name="yakType", value="2")
+					label.radio.inline Yassala
+						input(type="radio", name="yakType", value="4")
+
+		div.control-group
+			div.controls.row-fluid			
+				.span6
+					div.control-group#dateController
+						label(for='pubDate') Date de publication:
+							div.controls
+								input#pubDatePicker.span6(type="text",name="pubDate", autocomplete="off", placeholder='Du...')
+								i.icon-question-sign#pubDateHelp
+								input#dateEndPrintPicker.span6(type="text",name="dateEndPrint", autocomplete="off", placeholder='Au...')	
+								i.icon-question-sign#dateEndPrintHelp
 				.span6
 					div.control-group#eventDateController
 						label(for='eventDate') Date de l événement :
 							div.controls
-								input#eventDateFrom.span6(style="float:left;margin-right:5px;	", type="text",name="eventDateFrom", autocomplete="off", placeholder='Du...')
+								input#eventDateFrom.span6(type="text",name="eventDateFrom", autocomplete="off", placeholder='Du...')
+								i.icon-question-sign#eventDateFromHelp
 								input#eventDateEnd.span6(type="text",name="eventDateEnd", autocomplete="off", placeholder='Au...')
+								i.icon-question-sign#eventDateEndHelp
+
 			div.control-group
 				div.controls.row-fluid
 					.span6
@@ -82,7 +105,16 @@ mixin infoForm()
 							input#freetag(type="text", data-provide="typeahead", name="freetag", autocomplete="off", placeholder='Entrer un tag...')
 							button.btn#btn-freetag-adder(type="button") Ajouter	
 						.pillbox#pillFreetag(style="display:none")
-							ul						
+							ul	
+
+			div.control-group
+				div.controls.row-fluid				
+					.span6
+						label Print flag:
+							i.icon-question-sign#printFlagHelp
+						input#printFlag(name="printFlag",type="checkbox",style="margin-top:-1px;") 
+						span &nbsp;Ne pas afficher sur la carte
+												
 		div.row-fluid
 			legend Localisation:						
 			div.control-group#locationGroup.clearBoth
@@ -111,7 +143,7 @@ mixin infoForm()
 									i.icon-chevron-down
 		div.row-fluid
 			div.control-group#statusGroup.clearBoth
-			legend Désactiver
+			legend Statut:
 			div.control-group
 				div.controls
 					label.radio Validé
@@ -145,31 +177,27 @@ mixin infoForm()
 		
 		$(document).ready(function() {
 
+			var now = new Date();
 			var spinner = $( "#spinnerLikes" ).spinner();
 
 			
-			$('#titleHelp').popover({animation:true,title:'Le nom du flux',content:"<p>Le nom du flux apparait sur le front comme le nom d'un utilisateur.</p><br /><p><img width='100%' src='/images/back/help/cap1.jpg' /></p>",html:true});
-			$('#imagetteHelp').popover({animation:true,title:'Imagette',content:"<p>Cette image apparaîtra sur le profil du flux. Pour l'instant elle doit être carrée. </p><br /><p><img width='100%' src='/images/back/help/cap2.jpg' /></p>",html:true});
-			$('#licenceHelp').popover({animation:true,title:'Licence',content:"<p>Le type de licence, par défaut : Licence Ouverte</p>",html:true});
-			$('#outGoingLinkHelp').popover({animation:true,title:'Line externe',content:"<p>Entrer le lien général vers le site ( ex : pour la version paris intra-muros du parsien : http://www.leparisien.fr/accueil/paris-75.php ) </p>",html:true});
-			$('#persistDaysHelp').popover({animation:true,title:"Temps de persistance de l'info sur le front.",content:"<p>Le nombre de jours que l'info restera sur le front.<br> S'il s'agit d'un évènement, c'est le nombre de jours que l'info restera sur le front après la date de fin de l'évènement.</p>",html:true});
-			$('#descriptionHelp').popover({animation:true,title:'description',content:"<p>La description apparait dans le profil du flux : <br><img width='100%' src='/images/back/help/cap2.jpg' /></p>",html:true});
-			$('#yakTypeHelp').popover({animation:true,title:"Le type d'info",content:"<p>Les Actus ont une date de publication.<br> Les évènements ont une date de début et de fin, et servent à annoncer des évènements.</p>",html:true});
-			$('#yakcatHelp').popover({animation:true,title:'Catégorie',content:"<p>Vous pouvez associer ce flux à une catégorie Yakwala, ainsi toutes les informations issues de ce flux seront tagguées avec cette catégorie.<br>NB: un dédoublement est automatiquement fait avec les tags et il n'y aura pas de redondance.<br><br> Par ex : le parsien.fr doit être associé avec la catégorie <b>Actualités</b></p>",html:true});
-			$('#freetagHelp').popover({animation:true,title:'Tags',content:"<p>Vous pouvez associer ce flux à un mot clé. Ainsi toutes les infos issues de ce flux seront taggués avec ce mot.<br><br> La liste de restaurant du guide Michelin doit être tagguée avec le mot clé <b>Restaurant</b></p>",html:true});
-			$('#locationHelp').popover({animation:true,title:'Localisation du flux',content:"<p>Le flux doit être localisé afin de permettre un meilleur filtrage des infos.<br> Selon l'option choisie dans la case suivante ( Si l'info n'est pas géolocalisée... ) L'info sera par défaut placée à ce point.<br><br>Pour le parisien 75, nous plaçons ce point à la mairie de Paris.</p>",html:true});
-			$('#defaultPrintFlagHelp').popover({placement:'left',animation:true,title:'Flag',content:"<p>Ce flag est très important, il permet de régler le comportement du système si l'info n'est pas géolocalisée.<br> En effet, parfois l'info n'est pas géolocalisable ( car elle ne contient pas d'info de lieux ou que l'algo plante ). Dans ce cas, on peut placer l'info soit au point défini juste avant( la localisation du flux ), soit ne pas l'afficher. Dans le cas où on l'affiche, on peut également choisir de ne l'afficher que sur le fil info et pas sur la carte. <br><br> Par exemple le parisen 75 est localisé à la mairie de paris, mais nous ne voulons pas que des infos apparaissent en masse sur la carte à ce point, par contre on veut les voir dans le fil info quand on est pas loin de Paris. Nous avons donc choisi <b>... ne pas afficher sur la carte mais afficher sur le fil info</b><br><br>Pour un flux relatif à un lieu, par exemple le flux du stade vélodrome à Marseille, nous ne faisons pas de géoloc et nous choisissons la <b>ne pas faire de géoloc et place l'info au point par défaut.</b> </p>",html:true});
-			$('#defaultPlaceSearchNameHelp').popover({animation:true,title:'Indice pour la recherche de lieu',content:"<p>Entrer ici un texte qui complète l'information de géolocalisation et donne une précision à l'algo de recherche de lieu afin de distinguer des lieux différents mais ayant le même nom.<br><br>Par exemple un lieu reconnu comme le Musée des Civilisations pourrait être à Marseille ou à Paris. Si votre flux est un flux local à Marseille, il vous faut entrer <b>Marseille, France</b>, ou <b>Bouches-du-Rhône, France</b>. La requète de géoloc sera alors bien plus précise et évitera les doublons avec d'autre lieux du même nom en France.<br><br> Si vous entrez une liste des musées de France, il vous suffit d'entrer <b>France</b>.<br><br> SI vous être trop précis vous perdrez des infos qui aurraient pu être géolocalisées, si vous êtes trop imprécis vous risquez les doublons.</p>",html:true});
-			$('#zoneHelp').popover({animation:true,title:'La zone',content:"<p>Les zones sont définies dans l'onglet Zones.<br> Elles permettent un filtrage des données : toute donnée géolocalisée en dehors de la zone définie est mise en erreur.<br> Cela permet de filtrer les infos nationales ou internationales présentes parfois dans les medias locaux.</p>",html:true});
-			$('#fileuploadHelp').popover({animation:true,title:'Source = Fichier',content:"<p>Vous pouvez uploader vos données sous forme de fichiers. <br> Vous pouvez ajouter autant de fichiers que vous voulez du moment qu'ils suivent le même schéma de parsing.</p>",html:true});
-			$('#sourceHelp').popover({animation:true,title:'Source = Url',content:"<p>Vous pouvez définit une url à parser. <br> Vous pouvez ajouter autant d'url que vous voulez du moment qu'elles suivent le même schéma de parsing.</p>",html:true});
-			$('#infoTypeHelp').popover({animation:true,title:'Type de flux',content:"<p>Regarder l'extension du fichier ou du flux pour définir un des 3 types.</p>",html:true});
-			$('#rootElementHelp').popover({animation:true,title:'Element racine',content:"<p>Ce champ n'est nécessaire que pour un type <b>XML</b> ou <b>JSON</b>.<br><br>Définir ici l'élément racine surlequel l'algo doit boucler.<br><br><b>Pour pré-remplir ce champ cliquer sur l'icône <i class='icon-search'></i></b> ( attention , c'est expérimental, il est préférable de vérifier manuellement.<br><br>Par exemple, un flux RSS a la plus part du temps un élément racine <b>/rss/channel/item</b> </p><br><br>Pour un type JSON, indiquer le nom de l'élément surlequel boucler ( souvent <b>item</b> )<br><br>",html:true});
-			$('#lineToBeginHelp').popover({animation:true,title:'Ligne de commencement',content:"<p>Pour un type CSV, vous pouvez indiquer la ligne de départ afin de ne pas prendre en compte le header oudes lignes vides.</p>",html:true});
-			$('#parsingFreqHelp').popover({placement:'left',animation:true,title:'Fréquence de parsing',content:"<p>Vous devez ici vous aligner sur la fréquence de mise à jour de votre flux ou de votre fichier.</p>",html:true});
-
+			$('#titleHelp').popover({animation:true,title:"Titre de l'info",content:"<p>Un slug du titre est automatiquement généré pour un accès SEO friendly de cette news.</p>",html:true});
+			$('#imagetteHelp').popover({animation:true,title:'Imagette',content:"<p>Cette image apparaîtra en haut à gauche de l'info réduite et dans le corps de l'info dépliée. <br> Fournir une image assez grande pour une meilleur qualité. ( > 512px de large) </p>",html:true});
+			$('#licenceHelp').popover({animation:true,title:'Licence',content:"<p>Le type de licence, par défaut : <b>Opensource</b></p>",html:true});
+			$('#originHelp').popover({animation:true,title:'Origine',content:"<p>L'origine de l'info apparait comme l'auteur de l'info : </p><br /><p><img width='100%' src='/images/back/help/cap1.jpg' /></p>",html:true});
+			$('#outGoingLinkHelp').popover({animation:true,title:'Lien externe',content:"<p>Entrer le lien vers la l'info source</p>",html:true});
+			$('#contentHelp').popover({animation:true,title:"Contenu de l'info",content:"<p>Vous pouvez utiliser des balises html et des iframes pour embeder des videos.</p>",html:true});
+			$('#yakTypeHelp').popover({animation:true,title:"Le type d'info",content:"<p>Les <i>Actus</i> ont une date de publication.<br> Les <i>Agendas</i> ont une date de début et de fin, et servent à annoncer des évènements.</p>",html:true});
+			$('#yakcatHelp').popover({animation:true,title:'Catégorie',content:"<p>Vous pouvez associer cette info à une catégorie Yakwala<br>NB: un dédoublement est automatiquement fait avec les tags et il n'y aura pas de redondance.<br></p>",html:true});
+			$('#freetagHelp').popover({animation:true,title:'Tags',content:"<p>Vous pouvez associer cette info à un mot clé. Un complétion automatique est proposée sur la base des mots clés déjà utilisés mais vous pouvez entrer n'importe quel mot. <br> Attention il est préférable de n'utiliser qu'un mot clé pour toutes les infos se rattachant à un même sujet (attention à l'orthographe et les majuscules.)  </p>",html:true});
+			$('#locationHelp').popover({animation:true,title:"Localisation de l'info",content:"<p>Entrer une addresse et choisir une proposition ou bien cliquer sur la carte à gauche et déplacer le marqueur.</p>",html:true});
+			$('#zoneHelp').popover({animation:true,title:'La zone',content:"<p>Les zones sont définies dans l'onglet Zones.<br> </p>",html:true});
+			$('#pubDateHelp').popover({placement:'left',animation:true,title:'Date de publication',content:"<p>C'est la date de parution de l'info. <br> L'info apparaitra sur le front à cette date.</p>",html:true});
+			$('#dateEndPrintHelp').popover({placement:'left',animation:true,title:'Date de fin de publication',content:"<p>L'info ne sera plus visible après cette date.</p>",html:true});
+			$('#printFlagHelp').popover({placement:'left',animation:true,title:'Print Flag',content:"<p>En cochant cette case, vous afficherez l'info seulement sur le fil info et pas sur la carte.</p>",html:true});
+			$('#eventDateFromHelp').popover({placement:'left',animation:true,title:"Date de début de l'évènement",content:"<p>Pour un évènement, la date de début et de fin est affichée après le titre de l'info.<br>Si le jour entre la date de début et de fin est le même, on affichera : <b>leJour à heure de début</b><br> Sinon on affichera : <b>Du lejourDébut au lejourFin</b></p>",html:true});
+			$('#eventDateEndHelp').popover({placement:'left',animation:true,title:"Date de fin de l'évènement",content:"<p>Pour un évènement, la date de début et de fin est affichée après le titre de l'info.<br>Si le jour entre la date de début et de fin est le même, on affichera : <b>leJour à heure de début</b><br> Sinon on affichera : <b>Du lejourDébut au lejourFin</b></p>",html:true});
 			
-
 			$('#alertInfoType').hide();
 
 			// ZONE
@@ -186,23 +214,36 @@ mixin infoForm()
 
 			/* EVENTDATE */
 			$('#yakType').unbind('change').change(function() { 
-				if($("input[name='yakType']:checked").val()==2)
+				if($("input[name='yakType']:checked").val()==2){
 					$('#eventDateController').fadeIn();
-				else
+					$( "#eventDateFrom" ).datetimepicker({
+						timeFormat: 'HH:mm',
+						stepHour: 1,
+						stepMinute: 10,
+					});
+					$( "#eventDateEnd" ).datetimepicker({
+						timeFormat: 'HH:mm',
+						stepHour: 1,
+						stepMinute: 10,
+					});
+				}else
 					$('#eventDateController').hide();
 			});
 			
-			/*$( "#eventDateFrom" ).datetimepicker({
+			
+	
+			$( "#pubDatePicker").datetimepicker({
 				timeFormat: 'HH:mm',
 				stepHour: 1,
 				stepMinute: 10,
+				hour:now.getHours(),
 			});
-			$( "#eventDateEnd" ).datetimepicker({
+			$( "#dateEndPrintPicker").datetimepicker({
 				timeFormat: 'HH:mm',
 				stepHour: 1,
 				stepMinute: 10,
-			});*/
-
+				hour:now.getHours(),
+			});
 			/*THUMB*/
 			$('#picture').live('change', function () {
 				if ( window.FileReader ) {
@@ -215,6 +256,7 @@ mixin infoForm()
 						var src = "data:"+file.type+";base64," + binimage1;
 						$("#picturePreview").show();
 						$("#picturePreview img").attr('src',src).show();
+						$("#infoForm #thumbHidden").val('');
 					};
 					r.readAsDataURL(file);
 				}
@@ -361,81 +403,37 @@ mixin infoForm()
 			var err = false;
 
 			$('.alert-error').hide();
-			if($('#humanName').val() == ""){
-				setError('#humanName','Entrer un nom pour ce flux');
+			if($('#title').val() == ""){
+				setError('#title','Entrer un titre pour cette info');
 				err = true;
-			}else{
-				var infoName = S($('#humanName').val()).slugify();
-				if($('#objid').val() == ''){
-					$.get('/api/infoExist/'+infoName,function(data){
-						if(data.info){
-							setError('#humanName','Ce flux existe déjà: '+data.info.humanName+' / '+data.info.name+'.xml');
-							err=true;
-						}else
-							$('#humanName').append(' File : '+infoName+'.xml');
-					});
-				}
-				
 			}
 
 			
-			if($('#outGoingLink').val() != "" && !$('#outGoingLink').val().isUrl()){
-				setError('#outGoingLink','Entrer une url valide');
+			if($('#origin').val() == ""){
+				setError('#origin','Entrer une origine pour cette info');
 				err = true;
-			}				
-			
+			}
+
 			if($('#licence').val() == ""){
-				setError('#licence','Entrer un nom de licence');
-				err = true;
+				$('#licence').val('Opensource');
 			}
-			if($('#persistDays input').val() == "" || !$('#persistDays input').val().isInt()){
-				setError('#persistDays','Entrer un chiffre');
-				err = true;
-			}
+			
+
 			if(typeof $('input:radio[name=yakType]:checked').val() == "undefined" ){
 				setError('#yakType','Choisir un type info');
 				err = true;
 			}
-			if($('#location').val() == ""){
-				setError('#location','Définir une géoloc par défaut');
-				err = true;
-			}
-			if($('#defaultPlaceSearchName').val() == ""){
-				setError('#defaultPlaceSearchName','Définir un texte de recherche par défaut');
-				err = true;
-			}
-			if($('#linkSource').val() == "" && $('#fileSource').val() == "" ){
-				setError('#dataSource','Définir soit un fichier source, soit une url source');
-				err = true;
-			}
-			if($('#infoTitle').val() == ""){
-				setError('#infoTitle','Définir le champ contenant le titre de la news.');
-				setError('#parsing','Définir le champ contenant le titre de la news.');
-				err = true;
-			}
-			if($('#rootElement').val() == "" && $('#infoType').val() == 'XML'){
-				setError('#rootElement','Pour un flux XML, définir un élément racine');
-				err = true;
-			}	
-			if($('#lineToBegin').val() == "" && $('#infoType').val() == 'CSV'){
-				setError('#lineToBegin','Pour un flux CSV, indiquez la première ligne à prendre en compte.');
+
+			if($('#placeInput').val() == "null" || $('#placeInput').val() == "" ){
+				setError('#location','Définir une géolocalisation de cette info!');
 				err = true;
 			}
 			
-			if(!$('#parsingFreq').val()){
-				setError('#parsingFreq','Indiquez la fréquence de mise à jour du flux.');
+			if(typeof $('input:radio[name=status]:checked').val() == "undefined" ){
+				setError('#statusGroup','Choisir un statut !');
 				err = true;
 			}
 
-			if(!$('#infoType').val()){
-				setError('#infoType','Indiquez le type de flux.');
-				err = true;
-			}
-
-			if(!$('#zone').val()){
-				setError('#zone','Indiquez une zone.');
-				err = true;
-			}
 
 			if (err){
 				$('#err').show();

@@ -44,7 +44,7 @@ mixin list()
 						option(value="1,2,3,4,10,11,12,13,14") Tous les lieux
 						option(value="2,10,11,12,13") En attente
 						option(value="1") Validés
-						option(value="3") Rejetés
+						option(value="3") Blacklistés
 						
 					.dateSort.datagrid-header-right
 						.input-prepend
@@ -101,7 +101,13 @@ mixin list()
 		$("#pillFreetag").show();
 		
 
-		
+		$(document).ready(function() {
+			var idplace = "!{idplace}";
+			if(idplace){
+				editPlace(idplace,0);
+			}
+		});
+				
 		/****************************************************************** LIST GRID ***************************************************************************/
 
 		var ApiDataSource = function (options) {
@@ -304,6 +310,9 @@ mixin list()
 			var title_title = "";
 
 			res += '<div class="liens">';
+
+			res += '<a href="#" id="'+item._id+'" class="duplicateItem listIcon" title="Dupliquer"><i class="icon-random"></i></a>';
+
 			if (item.outGoingLink)
 				res += '<a href=\''+ item.outGoingLink + '\' target="_blank" title="Lien externe"><i class="icon-share-alt "></i></a>';
 
@@ -324,7 +333,6 @@ mixin list()
 
 			res += '<a class="editPlace" id="' + item._id + '" href="#">';
 
-			console.log(item.status);
 			if (item.status == 1) {
 				icon = 'icon-ok-sign';
 				title_icon = "Validée";
@@ -728,11 +736,13 @@ mixin list()
 				editPlace(this.id,1);
 			});
 
+
 		});
 
 
 		function editPlace(id,flagDuplicate){
-
+			console.log(id);
+			
 			listenerHandle = google.maps.event.addListener(map, 'click', function(event) {
 				getformattedAddress(event.latLng);
 				placeMarker(event.latLng,markerLocation);
@@ -743,7 +753,6 @@ mixin list()
 				getformattedAddress(position);
 				reduceZoneOptions(position.lat(),position.lng());
 			});
-
 			$("#MyGrid").hide();
 			// We remove the error class when we open a form for editing a place
 			$('#placeForm #titleGroup').removeClass("error");
@@ -763,7 +772,7 @@ mixin list()
 			
 
 			var url = '/api/places/'+id;
-
+			console.log(url);
 				// We search for the place in mongo and we fill the form with the place's values
 				$.ajax({
 					url: url,
@@ -773,20 +782,34 @@ mixin list()
 					{
 						var place = response.place;
 
-						var latlng = new google.maps.LatLng(place.location.lat, place.location.lng);
-						getformattedAddress(latlng);
-						placeMarker(latlng,markerLocation);
-						map.setCenter(markerLocation.getPosition());
+						console.log(response);
+						if(flagDuplicate == 1){
+							$("#placeForm legend.mainlegend").html("Dupliquer un lieu");
+							$("#placeForm #title").val(place.title+'_copy').focus();
+							$("#placeForm #objid").val('');
+							$("#placeForm #thumbHidden").val(place.thumbName);
+						}else{	
+							$("#placeForm legend.mainlegend").html("Modifier un lieu");
+							$("#placeForm #objid").val(id);
+							$("#placeForm #title").val(place.title).focus();
 
-						$("#placeForm #objid").val(place._id);
+						}	
 
+						if(typeof place.location != 'undefined' && place.location.lat && place.location.lng){
+							var latlng = new google.maps.LatLng(place.location.lat, place.location.lng);
+							getformattedAddress(latlng);
+							placeMarker(latlng,markerLocation);
+							map.setCenter(markerLocation.getPosition());							
+						}
+						
+						
 						$("#placeForm #licence").val(place.licence);
 						$("#placeForm #origine").val(place.origin);
 						$("#placeForm #hiddenOrigin").val(place.origin);
 						$("#placeForm #origine").prop('disabled', true);
 
 						$("#placeForm #outgoinglink").val(place.outGoingLink);
-						$("#placeForm #title").val(place.title);
+						
 						$("#placeForm #content").val(place.content);
 						
 						if(typeof place.zone)

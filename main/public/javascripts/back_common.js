@@ -1,5 +1,5 @@
 	
-setInterval("$('.alert-error').fadeOut('slow');", 5000);
+setInterval("$('.alert-error').fadeOut('slow');", 30000);
 
 /*READY FUNCTIONS*/	
 $(document).ready(function() {

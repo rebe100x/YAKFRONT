@@ -122,6 +122,7 @@ app.get('/api/zones/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:sta
 
 // PLACE
 app.get('/place/list', back.requiresLogin, back.place_list);
+app.get('/place/list/:id', back.requiresLogin, back.place_list);
 app.post('/place', back.requiresLogin, back.place);
 app.get('/api/places/search/:str/:status', back.requiresLogin, back.searchByTitleAndStatus);
 app.get('/api/places/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status/:limit', back.requiresLogin, back.gridPlaces);
@@ -130,7 +131,8 @@ app.get('/api/places/validate/:ids', back.requiresLogin, back.validatePlaces);
 app.get('/api/places/delete/:ids', back.requiresLogin, back.deletePlaces);
 app.get('/api/places/wait/:ids', back.requiresLogin, back.waitPlaces);
 app.get('/api/validplaces', back.requiresLogin, back.countUnvalidatedPlaces);
-
+app.get('/api/placeExist/:title',back.requiresLogin, back.findPlaceBySlug);
+app.post('/place/setStatus', back.requiresLogin, back.place_setstatus);
 
 //FEED
 app.get('/feed/list', back.requiresLogin, back.feed_list);
@@ -162,7 +164,7 @@ app.get('/api/geoinfos/:x1/:y1/:x2/:y2/:heat/:type', back.requiresLogin, back.ge
 app.get('/api/info/:id', back.requiresLogin, back.findInfoById);
 app.get('/info/list', back.requiresLogin, back.info_list);
 app.get('/api/infos/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status/:type/:limit',back.requiresLogin, back.gridInfos);
-
+app.post('/info/setStatus', back.requiresLogin, back.info_setstatus);
 
 // YAKNE
 app.get('/yakNE/list', back.requiresLogin, back.yakNE_list);
@@ -206,7 +208,7 @@ new compressor.minify({
   
    __dirname+'/public/javascripts/lib/jquery/js/jquery-1.8.2.min.js'
   , __dirname+'/public/javascripts/lib/jquery/js/jquery-ui-1.8.24.custom.min.js'
-  
+  , __dirname+'/public/javascripts/lib/plugin/jquery-ui-timepicker-addon.js'
   , __dirname+'/public/javascripts/lib/plugin/jquery.form.js'
   , __dirname+'/public/javascripts/lib/toastr/toastr.js'
   , __dirname+'/public/javascripts/lib/jquery/js/timeago.js'

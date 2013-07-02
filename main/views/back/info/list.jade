@@ -11,18 +11,21 @@ mixin list()
 					.datagrid-header-right
 						label
 							input#limit10days(type="checkbox",style="margin-top:-1px;",checked="checked") 
-							span &nbsp;Limiter aux 10 derniers jours
+							span &nbsp;Limiter aux 10 derniers jours &nbsp;&nbsp;&nbsp;
+							button.btn#btnAdd
+								i.icon-plus
+								span Ajouter
 			tr.headerControle
 				td(colspan=5)
 					select#filterStatus
 						option(value="all") Tous les statuts
 						option(value="1") Validé
-						option(value="3") Blacklisté
-						option(value="alert") Toutes les alertes
+						option(value="3") Désactivé
+						option(value="alert", selected="selected") Toutes les alertes
 						option(value="2")  - Alerte: En attente de validation
 						option(value="10") - Alerte: Gmap a échoué
-						option(value="11") - Alerte: Le lieu matché est blacklisté
-						option(value="12") - Alerte: La localisation est en dehors de la zone
+						option(value="11") - Alerte: Le lieu matché est désactivé
+						option(value="12") - Alerte: Localisation hors zone
 						option(value="13") - Alerte: La géoloc a échoué
 					select#filterType
 						option(value="all") Tous les types
@@ -162,19 +165,31 @@ mixin list()
 					sortable: true
 				},
 				{
+					property: 'status',
+					label: "Statut <i class='icon-question-sign' id='statusHelp'></i>",
+					sortable: true
+				},
+				{
+					property: 'print',
+					label: "Print<i class='icon-question-sign' id='printHelp'></i>",
+					sortable: true
+				},
+				{
 					property: 'origin',
 					label: 'Origine',
 					sortable: true
 				},
 				{
-					property: 'creationDate',
-					label: 'Création',
+					property: 'pubDate',
+					label: 'Publication',
 					sortable: true
 				}],
 				formatter: function (items) {
 					$.each(items, function (index, item) {
 						item.title = fillContent(item);
-						item.creationDate = formatDate(item.creationDate);
+						item.status = makeStatusDropDown(item);
+						item.print = makePrintDropDown(item);
+						item.pubDate = formatDate(item.pubDate);
 						item.zoneName = getZone(item);
 					});
 				}
@@ -207,6 +222,97 @@ mixin list()
 			});
 		});
 		
+		function makeStatusDropDown(item){
+			var select = $("<div />");
+			select.attr("class", "selectStatus");
+			select.html('<select onchange="setNewStatus(this)" placeId="'+item.placeId+'"  class="selectStatus" rel="'+item._id+'"><option value="0">Changer le statut</option><option value="1">Valider</option><option value="2">En attente</option><option value="3">Désactiver info</option><option value="4">Désactiver info & lieu</option></select>');
+			select.find("option").each(function(){
+				if($(this).attr("value") == 0)
+					$(this).attr("selected", "selected");
+			});
+			return select.html();
+		}
+
+		function setNewStatus(el){
+			var _id = $(el).attr("rel");
+			console.log(_id+'  '+$(el).val());
+			if($(el).val() > 0){
+				$.post("/info/setStatus", {status: $(el).val(), _id : $(el).attr("rel")}, function(data){
+					if(data.meta.code == "200"){
+						console.log(data);
+						icon = 'icon-ok-sign';
+						title_icon = "validé";
+						if ($(el).val() == 1) {
+							icon = 'icon-ok-sign';
+							title_icon = "Validée";
+						}else if($(el).val() == 2){
+							icon = 'icon-ban-circle';
+							title_icon = "Rejetée";
+						}
+						else {
+							icon = 'icon-warning-sign';
+							if($(el).val() == 10)
+								title_icon = "Alerte: GMAP n'a pas retourné de valeur";
+							if($(el).val() == 11)
+								title_icon = "Alerte: matching sur un lieu désactivé";
+							if($(el).val() == 12)
+								title_icon = "Alerte: le lieu trouvé est hors de la zone";
+							if($(el).val() == 13)
+								title_icon = "Alerte: pas de lieu trouvé";
+						}
+						$("#icon_"+_id).attr('class',icon).attr('title',title_icon);
+
+						$(".liens").each(function(){
+							if($(this).attr('placeId') == $(el).attr('placeId'))
+								$(this).parent().parent().fadeOut();
+						});
+					}
+				});
+			}
+		}
+			
+
+		function makePrintDropDown(item){
+			var select = $("<div />");
+			select.attr("class", "selectStatus");
+			select.html('<select onchange="setNewPrint(this)" class="selectStatus" rel="'+item._id+'"><option value="1">Carte + fil info</option><option value="0">Fil info</option></select>');
+			select.find("option").each(function(){
+				if($(this).attr("value") == item.print)
+					$(this).attr("selected", "selected");
+			});
+			return select.html();
+		}
+
+		function setNewPrint(el){
+			var _id = $(el).attr("rel");
+			$.post("/info/setPrint", {status: $(el).val(), _id : $(el).attr("rel")}, function(data){
+					if(data.meta.code == "200"){
+						console.log(data);
+						icon = 'icon-ok-sign';
+						title_icon = "validé";
+						if ($(el).val() == 1) {
+							icon = 'icon-ok-sign';
+							title_icon = "Validée";
+						}else if($(el).val() == 2){
+							icon = 'icon-ban-circle';
+							title_icon = "Rejetée";
+						}
+						else {
+							icon = 'icon-warning-sign';
+							if($(el).val() == 10)
+								title_icon = "Alerte: GMAP n'a pas retourné de valeur";
+							if($(el).val() == 11)
+								title_icon = "Alerte: matching sur un lieu désactivé";
+							if($(el).val() == 12)
+								title_icon = "Alerte: le lieu trouvé est hors de la zone";
+							if($(el).val() == 13)
+								title_icon = "Alerte: pas de lieu trouvé";
+						}
+						$("#icon_"+_id).attr('class',icon).attr('title',title_icon);
+					}
+				});
+		}
+
 		function getYakType(item){
 			switch(item.yakType){
 				case 1:
@@ -247,11 +353,15 @@ mixin list()
 			var title_icon = "En attente";
 			var title_title = "";
 			
-			res += '<div class="liens">';
+			res += '<div class="liens" placeId="'+item.placeId+'" infoId="'+item._id+'" >';
 			res += '<a href="#" id="'+item._id+'" class="duplicateItem listIcon" title="Dupliquer"><i class="icon-random"></i></a>';
 
 			if (item.link)
 				res += '<a href=\''+ item.outGoingLink + '\' target="_blank" class="listIcon" title="Lien externe"><i class="icon-share-alt "></i></a>';	
+
+			if (item.debugCallGmap)
+				res += '<a href=\''+ item.debugCallGmap + '\' target="_blank" class="listIcon" title="Degub GMAP"><i class="icon-check "></i></a>';	
+
 
 			if (typeof item.location != 'undefined'
 				&& typeof item.location.lat != 'undefined'
@@ -268,10 +378,20 @@ mixin list()
 			if (item.status == 1) {
 				icon = 'icon-ok-sign';
 				title_icon = "Validée";
-			}
-			else {
+			}else if(item.status == 2){
 				icon = 'icon-ban-circle';
 				title_icon = "Rejetée";
+			}
+			else {
+				icon = 'icon-warning-sign';
+				if(item.status == 10)
+					title_icon = "Alerte: GMAP n'a pas retourné de valeur";
+				if(item.status == 11)
+					title_icon = "Alerte: matching sur un lieu désactivé";
+				if(item.status == 12)
+					title_icon = "Alerte: le lieu trouvé est hors de la zone";
+				if(item.status == 13)
+					title_icon = "Alerte: pas de lieu trouvé";
 			}
 
 			var img = '';
@@ -280,15 +400,29 @@ mixin list()
 			
 			
 			var desc = '';
+			var address = '';
+			var tags = '';
 			if(typeof item.content != 'undefined' && item.content != '')
-				desc = "<br><small>"+item.content.substr(0,200)+"...</small>";
-
-
+				desc += "<br><small>"+item.content.substr(0,80)+"...</small>";
+			if(typeof item.address != 'undefined' && item.address != '')
+				address += "   <b><small>("+item.address+")</small></b>";
+			if(item.yakCatName.length > 0 || item.freeTag.length > 0)
+				tags += "<br><small><i>#"+item.yakCatName.join(', #')+item.freeTag.join(', #')+"</small></i>";
+			if(typeof item.placeId != 'undefined' && item.placeId != ''){
+				address = "<small>"+item.address+" ( "+item.placeId+" )<a href='/place/list/"+item.placeId+"' target='_blank'><i class='icon-eye-open' title='Voir le lieu'></i></a></small>";
+			}
+				
+			
 			res += 	'<div class="text-info"><i class="' + icon + ' status" title="' + title_icon + '" ></i>'+ img +'&nbsp;'+getYakType(item)+'&nbsp;'+item.title + desc +'</div>';
+			
+			res += '</a>';	
+
+			res += address;
+
+			res += tags.substr(0,100)+'...';
 
 
-
-			res += '</a>';
+			
 
 			return res;
 		}
@@ -380,29 +514,27 @@ mixin list()
 				{
 					/*FORM INITIALISATION*/
 					var info = response.info;
-
-					
+					$("#infoForm #placeid").val(info.placeId);					
 					if(flagDuplicate == 1){
 						$("#infoForm legend.mainlegend").html("Dupliquer une info");
 						$("#infoForm #title").val(info.title+'_copy').focus();
 						$("#infoForm #objid").val('');
 						$("#infoForm #placeid").val('');
-					}	
-					else{	
+						$("#infoForm #thumbHidden").val(info.thumbName);
+					}else{	
 						$("#infoForm legend.mainlegend").html("Modifier une info");
 						$("#infoForm #objid").val(id);
-						$("#infoForm #placeid").val(info.placeId);
 						$("#infoForm #title").val(info.title).focus();
 					}	
 						
 					$("#infoForm #content").val(info.content);
-				
-
+					console.log('info.thumbFlag'+info.thumbFlag);
+					if(info.thumbFlag == '1')
+						$("#infoForm #thumbFlag").attr('checked',false);
+					else
+						$("#infoForm #thumbFlag").attr('checked',true);
 					var spinner = $( "#spinnerLikes" ).spinner('value', info.likes);
 					
-					
-
-
 					if(info.thumb != '' && typeof info.thumb != 'undefined'){
 						$("#picturePreview").show();
 						$("#picturePreview img").attr('src',info.thumb).show();
@@ -412,6 +544,13 @@ mixin list()
 					$("#infoForm #origin").val(info.origin);
 					$('#infoForm #persistDaysValue').val(info.persistDays);
 					$("#infoForm #description").val(info.description);
+					if(info.print == 0)
+						$("#infoForm #printFlag").attr('checked','checked');
+
+					$("#infoForm #pubDatePicker").val(info.pubDate);
+					$("#infoForm #dateEndPrintPicker").val(info.dateEndPrint);
+					
+						
 					if(typeof info.yakCat != 'undefined' && info.yakCat.length > 0){
 						info.yakCat.forEach(function(cat){
 							if(cat != ""){
@@ -426,13 +565,7 @@ mixin list()
 						});	
 					}
 
-
-
-
-
-
-
-					if(typeof info.placeId != 'undefined' && info.placeId != ''){ // eidt mode
+					if(typeof info.placeId != 'undefined' && info.placeId != ''){ // edit mode
 						$.get('/api/places/'+info.placeId,function(data){
 							placeArray = data.place;
 							$("#infoForm #placeInput").val(JSON.stringify(placeArray));
@@ -457,17 +590,29 @@ mixin list()
 					
 					
 					if(typeof info.zone != 'undefined'){
-						$("#infoForm #zone").val(info.zone);
-						console.log($("#infoForm #zone").val());
+						$("#infoForm #zone").val(info.zone);						
 					}	
 					if(typeof info.zoneName != 'undefined')
 						$("#infoForm #zoneName").val(info.zoneName);
 
-					console.log(info);
 					$('#infoForm input:radio[name=yakType][value='+info.yakType+']').attr("checked", true);	
-					if(info.yakType==2)
+					if(info.yakType==2){
+						if(typeof info.eventDate[0] != 'undefined'){
+							$("#infoForm #eventDateFrom").val(info.eventDate[0].dateTimeFrom);
+							$("#infoForm #eventDateEnd").val(info.eventDate[0].dateTimeEnd);
+						}
+						$( "#eventDateFrom" ).datetimepicker({
+							timeFormat: 'HH:mm',
+							stepHour: 1,
+							stepMinute: 10,
+						});
+						$( "#eventDateEnd" ).datetimepicker({
+							timeFormat: 'HH:mm',
+							stepHour: 1,
+							stepMinute: 10,
+						});
 						$('#eventDateController').fadeIn();
-					else
+					}else
 						$('#eventDateController').hide();
 					
 					$('#infoForm input:radio[name=status][value='+info.status+']').click();
@@ -494,6 +639,10 @@ mixin list()
 			$('#infoForm').clearForm();
 			$('#err').hide();
 			
+			$("#infoForm #placeInput").val('');
+			$('#placeid').val('');
+			$('#infoForm #placePreview ').html('');
+
 			$("#infoForm #objid").val("");
 			$("#infoForm #placeid").val("");
 			
@@ -529,6 +678,12 @@ mixin list()
 			$("#infoForm #objid").val("");
 			$("#infoForm #placeid").val("");
 			
+			$("#infoForm #placeInput").val('');
+			$('#placeid').val('');
+			$('#infoForm #placePreview ').html('');
+
+
+
 			// We remove the error class when we open a form for creating a new info
 			$('#infoForm #titleGroup').removeClass("error");
 			$('#infoForm #contentGroup').removeClass("error");
@@ -561,4 +716,7 @@ mixin list()
 		$('#infoForm input:radio[name=status][value=1]').click();
 
 
-		
+		$(document).ready(function() {
+			$('#statusHelp').popover({placement:'bottom',animation:true,title:"Changer le statut d'une info",content:"<p><ul><li><b>Valider: </b>L'info apparaîtra sur le front.<br><b>NB: </b>Quand vous valider une info le lieu associé est lui aussi validé ainsi que toutes les infos liées à ce lieu.</li><li><b>En attente: </b>L'info n'apparaîtra pas sur le front, vous pouvez utiliser ce status quand vous ne savez pas traiter une info.<br><b>NB: </b>Quand vous mettez en attente un info, le lieu associé est lui aussi mis en attente ainsi que toutes les infos liées à ce lieu.</li><li><b>Désactiver info: </b>L'info n'apparaîtra plus sur le front.<br><b>NB: </b> Seul l'info en question est désactivée. Le lieu auquel elle est rattachée ne sera pas désactivé. Les infos liées au même lieu ne seront pas désactivées.</li><b>Désactiver info & lieu: </b>L'info n'apparaîtra plus sur le front. <br><b>NB: </b>Le lieu auquel elle est rattachée sera lui aussi désactivé ainsi que toutes les infos rattachées à ce lieu.</li></ul></p>",html:true});
+			$('#printHelp').popover({placement:'bottom',animation:true,title:"Affichage de l'info uniquement sur le fil info",content:"<p>Si l'info n'est pas assez géolocalisée, on peut l'afficher uniquement dans la page du fil info et non sur la carte.</p>",html:true});
+		});

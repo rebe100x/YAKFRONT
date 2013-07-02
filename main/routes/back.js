@@ -700,6 +700,11 @@ exports.info = function(req, res){
 	info.title = req.body.title;
 	info.content = req.body.content;
 
+	if(req.body.thumbFlag == 'on')
+		info.thumbFlag = 2; // include img in info desc
+	else
+		info.thumbFlag = 1;// do not include img in info desc
+
 	var strLib = require("string");
 	info.slug = strLib(info.title).slugify().s;
 	info.likes = req.body.likes;
@@ -717,21 +722,30 @@ exports.info = function(req, res){
 	else
 		info.freeTag = [];
 
-	
+	if( typeof req.body.printFlag != 'undefined' && req.body.printFlag == 'on')
+		info.print = 0;
+	else
+		info.print = 1;
+
+	info.user = req.session.user;
+	info.dateEndPrint = req.body.dateEndPrint;
+	info.pubDate = req.body.pubDate;
 	info.origin = req.body.origin;
 	info.outGoingLink = req.body.outGoingLink;
 	info.licence = req.body.licence;
 	info.yakType = req.body.yakType;
-	
-	info.zone = req.body.zone;
-	info.zoneName = req.body.zoneName;
-
+	info.access = 1;
+	info.heat = 80;
+	if(typeof req.body.zone != 'undefined' && req.body.zone != null)
+		info.zone = req.body.zone;
+	if(typeof req.body.zoneName != 'undefined' && req.body.zoneName != null)
+		info.zoneName = req.body.zoneName;
 	info.status = parseInt(req.body.status);
-	
 	info.lastModifDate = now;
-
-	
 	var infoThumb = new Object();
+	if(req.body.thumbHidden != '')
+		info.thumb = req.body.thumbHidden;
+
 	if(req.files.picture.size && req.files.picture.size > 0 && req.files.picture.size < 1048576*5){
 		var drawTool = require('../mylib/drawlib.js');
 		var size = mainConf.imgSizeInfo;
@@ -742,20 +756,23 @@ exports.info = function(req, res){
 			infoThumb = drawTool.StoreImg(req.files.picture,destFile,{w:size[i].width,h:size[i].height},conf);
 		}
 		info.thumb = infoThumb.name;
-	}
-
-	else{
+	}else{
 		infoThumb.err = 0;
 	}
 		
-	
+	// event date for agenda
+	if(Math.floor(req.body.yakType) == 2){
+		info.eventDate = {dateTimeFrom : new Date(req.body.eventDateFrom), dateTimeEnd : new Date(req.body.eventDateEnd)};
+	}
+
+
 	
 	if(typeof obj_id != 'undefined' && obj_id != ''){
 		var cond = {_id:obj_id};
 	}else{
 		info.creationDate = now;
 		info.lastExecDate = now;
-		var cond = {name:"anameimpossibletochoose007"};
+		var cond = {title:"anameimpossibletochoose007"};
 	}
 		
 
@@ -763,11 +780,12 @@ exports.info = function(req, res){
 	var location = placeInput.location;
 
 	// if placeid is set
-	console.log(info);
+	
 	if(typeof place_id != 'undefined' && place_id != ''){ // edit mode
 		info.placeId = place_id;
 		info.address = placeInput.title;
-		info.location = {lng:parseFloat(location.lng),lat:parseFloat(location.lat)};		
+		info.location = {lat:parseFloat(location.lat),lng:parseFloat(location.lng)};	
+		console.log(info);	
 		Info.update(cond,info,{upsert:true},function (err){
 			if (!err)
 				formMessage.push("Info sauvegardée.");
@@ -779,6 +797,9 @@ exports.info = function(req, res){
 			res.redirect('info/list')
 		});
 	}else{
+
+		info.location = {lat:parseFloat(location.lat),lng:parseFloat(location.lng)};	
+					
 		// search for a place like this one in db
 		Place.findOne({title:placeInput.formatted_address,location:{$near:[parseFloat(location.lat),parseFloat(location.lng)],$maxDistance:0.1}},function(err,theplace){
 			if(err)
@@ -787,8 +808,7 @@ exports.info = function(req, res){
 				if(theplace){
 					info.placeId = theplace._id;
 					info.address = placeInput.title; // here we take it from the input, not from the db => to check if it is a good choice
-					info.location = {lng:parseFloat(location.lng),lat:parseFloat(location.lat)};		
-		
+					console.log(info);
 					Info.update(cond,info,{upsert:true},function (err){
 						if (!err)
 							formMessage.push("Info sauvegardée.");
@@ -809,8 +829,10 @@ exports.info = function(req, res){
 					place.location = placeInput.location;
 					place.status = 1;
 					place.user = req.session.user;
-					place.zone = parseInt(info.zone);
-					place.zoneName = info.zoneName;
+					if(info.zone)
+						place.zone = parseInt(info.zone);
+					if(info.zoneName)
+						place.zoneName = info.zoneName;
 					place.creationDate = new Date();
 					place.lastModifDate = new Date();
 					place.formatted_address = placeInput.formatted_address;
@@ -836,14 +858,60 @@ exports.info = function(req, res){
 
 		});
 	}
-
-	
-
-	
-
-	
-	
 };
+
+
+exports.info_setstatus = function (req, res){
+	var Info = db.model('Info');
+
+	var status = req.body.status;
+	var placeStatus = 1;
+	if(status == 1)
+		placeStatus = 1;
+	else if(status == 2)
+		placeStatus = 2;
+	else if(status == 3)
+		placeStatus = 0; // we don't blacklist the place
+	else if(status == 4){
+		placeStatus = 3;
+		status = 3;
+	}
+		
+
+	Info.findOne({_id:req.body._id},function(err,theinfo){
+		if(theinfo != null && typeof theinfo != 'undefined'){
+			Info.update({_id: mongoose.Types.ObjectId(req.body._id)},{$set:{'status':status}}, function(err){
+				if(!err){
+					if(placeStatus >  0 && theinfo.placeId != '' && theinfo.placeId != null && theinfo.placeId != 'null' && typeof theinfo.placeId != 'undefined' ){
+						// update all other info linked to this place
+						Info.update({placeId: theinfo.placeId},{$set:{'status':status}},{ multi: true }, function(err){
+							if(!err){
+								// update the place linked
+								var Place = db.model("Place");
+								Place.update({_id:theinfo.placeId},{$set:{status:placeStatus}}, function(err,docs){
+									if(!err){
+										res.json({meta:{code:200,msg:'Info and Place updated'}});		
+									}else
+										res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+								});
+							}else
+								res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});	
+						});
+							
+					}else
+						res.json({meta:{code:200,msg:'Info updated'}});
+				}else
+					res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+			});
+
+		}
+	});		
+	
+
+			
+
+};
+
 
 /******************************************************************************************************************************************************************
 #YAKNE
@@ -1174,7 +1242,7 @@ exports.place_add = function(req, res){
 
 exports.place_list = function(req, res){
 	delete req.session.message;
-	res.render('place/index');
+	res.render('place/index',{idplace:req.params.id});
 };
 
 exports.place = function(req, res){
@@ -1189,6 +1257,11 @@ exports.place = function(req, res){
 	
 	var place = new Object();
 	var now = new Date();
+
+	if(req.body.thumbHidden != '')
+		place.thumb = req.body.thumbHidden;
+
+
 	// we need a title, a location and a user
 	if(req.body.placeInput && req.body.title && req.session.user){
 		var placeThumb = new Object();
@@ -1406,6 +1479,16 @@ exports.gridPlaces = function (req, res) {
 };
 
 
+exports.findPlaceBySlug = function (req, res) {
+	var Place = db.model('Place');
+   	Place.findBySlug(req.params.title, function (err, theplace){
+   		res.json({
+			place: theplace
+		});
+	});
+};
+
+
 exports.searchByTitleAndStatus = function (req, res) {
 	var Place = db.model('Place');
 	var status = [];
@@ -1549,10 +1632,7 @@ exports.user_setstatus = function (req, res){
 			});
 		}else
 			res.json({meta:{code:404,mail:0,error_type:'operation failed',error_description:err.toString()}});
-	});
-
-			
-
+	});		
 }
 
 exports.user_settype = function (req, res){
@@ -1763,7 +1843,7 @@ exports.changeStatusIllicite = function(req, res){
 				User.update({_id: content_id},{$set:{'status':userStatus}}, function(err){
 					if(!err){
 						var Info = db.model("Info");
-						Info.update({user:mongoose.Types.ObjectId(content_id)},{$set:{status:infoStatus}}, function(err,docs){
+						Info.update({user:mongoose.Types.ObjectId(content_id)},{$set:{status:infoStatus}}, { multi: true }, function(err,docs){
 							if(!err){
 								Illicite.update({_id : _id},{$set:{status:illiciteStatus,dateProcessed:new Date()}},function(err){
 									if(err)

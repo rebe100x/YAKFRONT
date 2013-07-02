@@ -9,6 +9,8 @@ mixin placeForm()
 		input#objid(type="hidden",data-provide="typeahead", name="objid", value='0')
 		input#hiddenOrigin(type="hidden",data-provide="typeahead", name="hiddenOrigin", value='0')
 		input#zoneName(type="hidden", name="zoneName", value='')
+		input#thumbHidden(type="hidden", name="thumbHidden", value='')
+
 
 		legend.mainlegend Ajouter un lieu
 		div.control-group.error
@@ -21,6 +23,7 @@ mixin placeForm()
 					div.row-fluid
 						.span6
 							label Nom: 
+								i.icon-question-sign#titleHelp
 							input.hashtagMaker(type='text', name='title', id='title', placeholder='Nom du lieu')
 						.span6
 							label(for='picture').clearBoth Photo: 
@@ -30,13 +33,17 @@ mixin placeForm()
 					div.row-fluid
 						.span6
 							label Description: 
+								i.icon-question-sign#descriptionHelp
 							textarea.hashtagMaker(type='text', id='content', name='content', placeholder="Quelques détails sur le lieu à ajouter, avec la possibilité d'ajouter des #hashtags.", rows='8')
 						.span6
 							label Licence:
+								i.icon-question-sign#licenceHelp
 							input(type='text', name='licence', id='licence', placeholder='Type de licence', autocomplete="off")
 							label Lien vers la source:
+								i.icon-question-sign#outgoinglinkHelp
 							input.big(type='text', name='outgoinglink', id='outgoinglink', placeholder='Lien web', , autocomplete="off")
 							label Origine:
+								i.icon-question-sign#origineHelp
 							input(type='text', name='origine', id='origine', placeholder='Qui a crée le lieu ?', autocomplete="off")
 							
 					
@@ -47,10 +54,12 @@ mixin placeForm()
 					div.row-fluid
 						.span6
 							label(for='Place') Adresse:
+								i.icon-question-sign#placeHelp
 							div#placePreview
 							input(type="text",data-provide="typeahead", id="place", name="place", autocomplete="on", placeholder="Cliquer sur la carte ou entrer l'adresse")
 						.span6
 							label(for='zone') Zone:
+								i.icon-question-sign#zoneHelp
 							select#zone(name='zone')
 		div.row-fluid
 			legend Catégories & tags:
@@ -58,11 +67,13 @@ mixin placeForm()
 				div.controls
 					.col
 						label(for='category') Catégories: 
+							i.icon-question-sign#yakcatHelp
 						input(type="text", data-provide="typeahead", id="yakcat", name="yakcat", autocomplete="off", placeholder='Un ou plusieurs thèmes')
 						.pillbox#pillYakcat(style="display:none")
 							ul
 					.col
 						label Tags :
+							i.icon-question-sign#freetagHelp
 						.input-append
 							input#freetag(type="text", data-provide="typeahead", name="freetag", autocomplete="off", placeholder='Entrer un tag...')
 							button.btn#btn-freetag-adder(type="button") Ajouter	
@@ -71,6 +82,7 @@ mixin placeForm()
 		div.row-fluid
 			legend Sémantique: 
 				small.inline Ajouter ce lieu aux dictionnaires de reconnaissance sémantique (ontology matcher)	
+					i.icon-question-sign#semanticHelp
 			div.control-group#ontologyGroup
 				div.controls
 					label.checkbox.inline
@@ -125,6 +137,18 @@ script
 	
 
 	$(document).ready(function() {
+
+		$('#titleHelp').popover({animation:true,title:"Titre du lieu",content:"<p>Un slug du titre est automatiquement généré pour un accès SEO friendly de ce lieu.</p>",html:true});
+		$('#licenceHelp').popover({animation:true,title:'Licence',content:"<p>Le type de licence, par défaut : <b>Opensource</b></p>",html:true});
+		$('#origineHelp').popover({animation:true,title:'Origine',content:"<p>La personne ou le batch qui a crée ce lieu.</p>",html:true});
+		$('#outgoinglinkHelp').popover({animation:true,title:'Lien externe',content:"<p>Entrer le lien vers le site du lieu.</p>",html:true});
+		$('#descriptionHelp').popover({animation:true,title:"Description",content:"<p>Une description du lieu.</p>",html:true});
+		$('#yakcatHelp').popover({animation:true,title:'Catégorie',content:"<p>Vous pouvez associer ce lieu à une catégorie Yakwala</p>",html:true});
+		$('#freetagHelp').popover({animation:true,title:'Tags',content:"<p>Vous pouvez associer ce lieu à un mot clé. Un complétion automatique est proposée sur la base des mots clés déjà utilisés mais vous pouvez entrer n'importe quel mot. <br> Attention il est préférable de n'utiliser qu'un mot clé pour toutes les infos se rattachant à un même sujet (attention à l'orthographe et les majuscules.)  </p>",html:true});
+		$('#placeHelp').popover({animation:true,title:"Localisation de l'info",content:"<p>Entrer une addresse et choisir une proposition ou bien cliquer sur la carte à gauche et déplacer le marqueur.</p>",html:true});
+		$('#zoneHelp').popover({animation:true,title:'La zone',content:"<p>Les zones sont définies dans l'onglet Zones.<br> </p>",html:true});
+		$('#semanticHelp').popover({placement:'left',animation:true,title:'Sémantique',content:"<p>Ce lieu peut être intégré aux dictionnaires d'ontologie utilisés par Exalead pour l'analyse sémantique.<br> <br> Le dictionnaire des villes ne doit contenir que des villes.<br>Le dictionnaire Yakdico est un dictionnaire de lieux.</p>",html:true});
+		
 
 		// YAKCATS
 		$('#yakcat').typeahead({
@@ -332,7 +356,22 @@ script
 		if ($('#placeForm #title').val() == ""){
 			setError('#title','Entrer un nom pour ce lieu');
 			err = true;
+		}else{
+			var placeName = S($('#title').val()).slugify();
+			if($('#objid').val() == ''){
+				$.get('/api/placeExist/'+placeName,function(data){
+					if(data.place){
+						setError('#title','Ce lieu existe déjà: '+data.place.title);
+						err=true;
+					}
+				});
+			}
 		}
+
+		if ($('#licence').val() == ""){
+			$('#licence').val('Opensource');
+		}
+
 
 		if (placeArray == null || placeArray.length == 0){
 			setError('#place','Définissez la position de ce lieu en cliquant sur la carte ou en entrant une addresse ci dessous:');
@@ -345,100 +384,6 @@ script
 			return false;
 		}else
 			return true;
-
-
-
-
-		/*if (err)
-		{
-			$('#err').show();
-			return false;
-		}
-
-		var err = false;
-
-		$('.alert-error').hide();
-		if($('#humanName').val() == ""){
-			setError('#humanName','Entrer un nom pour ce flux');
-			err = true;
-		}else{
-			var feedName = S($('#humanName').val()).slugify();
-			if($('#objid').val() == ''){
-				$.get('/api/feedExist/'+feedName,function(data){
-					if(data.feed){
-						setError('#humanName','Ce flux existe déjà: '+data.feed.humanName+' / '+data.feed.name+'.xml');
-						err=true;
-					}else
-						$('#humanName').append(' File : '+feedName+'.xml');
-				});
-			}
-			
-		}
-
-		
-		if($('#link').val() != "" && !$('#link').val().isUrl()){
-			setError('#link','Entrer une url valide');
-			err = true;
-		}				
-		
-		if($('#licence').val() == ""){
-			setError('#licence','Entrer un nom de licence');
-			err = true;
-		}
-		if($('#persistDays input').val() == "" || !$('#persistDays input').val().isInt()){
-			setError('#persistDays','Entrer un chiffre');
-			err = true;
-		}
-		if(typeof $('input:radio[name=yakType]:checked').val() == "undefined" ){
-			setError('#yakType','Choisir un type info');
-			err = true;
-		}
-		if($('#defaultPlaceName').val() == ""){
-			setError('#defaultPlaceName','Définir une géoloc par défaut');
-			err = true;
-		}
-		if($('#defaultPlaceSearchName').val() == ""){
-			setError('#defaultPlaceSearchName','Définir un texte de recherche par défaut');
-			err = true;
-		}
-		if($('#linkSource').val() == "" && $('#fileSource').val() == "" ){
-			setError('#dataSource','Définir soit un fichier source, soit une url source');
-			err = true;
-		}
-		if($('#infoTitle').val() == ""){
-			setError('#infoTitle','Définir le champ contenant le titre de la news.');
-			setError('#parsing','Définir le champ contenant le titre de la news.');
-			err = true;
-		}
-		if($('#rootElement').val() == "" && $('#feedType').val() == 'XML'){
-			setError('#rootElement','Pour un flux XML, définir un élément racine');
-			err = true;
-		}	
-		if($('#lineToBegin').val() == "" && $('#feedType').val() == 'CSV'){
-			setError('#lineToBegin','Pour un flux CSV, indiquez la première ligne à prendre en compte.');
-			err = true;
-		}
-		
-		if(!$('#parsingFreq').val()){
-			setError('#parsingFreq','Indiquez la fréquence de mise à jour du flux.');
-			err = true;
-		}
-
-		if(!$('#feedType').val()){
-			setError('#feedType','Indiquez le type de flux.');
-			err = true;
-		}
-
-		if(!$('#zone').val()){
-			setError('#zone','Indiquez une zone.');
-			err = true;
-		}
-
-		if (err){
-			$('#err').show();
-			return false;
-		}else
-			return true;*/
 	});	
 
 

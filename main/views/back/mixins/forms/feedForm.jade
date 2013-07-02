@@ -31,7 +31,7 @@ mixin feedForm()
 						.span6 
 							label Nom*: 
 								i.icon-question-sign#titleHelp
-							input(type='text', name='humanName', id='humanName', placeholder='Le nom du flux')
+							input(type='text', name='humanName', id='humanName', placeholder='Le nom du flux',autocomplete='off')
 						.span6
 							label Imagette:
 								i.icon-question-sign#imagetteHelp
@@ -42,11 +42,11 @@ mixin feedForm()
 						.span6
 							label Licence*:
 								i.icon-question-sign#licenceHelp
-							input(type='text', name='licence', id='licence', placeholder='Licence')
+							input(type='text', name='licence', id='licence', placeholder='Licence',autocomplete='off')
 						.span6
 							label Lien externe:
 								i.icon-question-sign#linkHelp
-							input(type='text', name='link', id='link', placeholder='Lien vers la source de la donnée')
+							input(type='text', name='link', id='link', placeholder='Lien vers la source de la donnée',autocomplete='off')
 					div.row-fluid
 						.span6
 							label Combien de jours l info restera sur le front ?*
@@ -346,7 +346,7 @@ mixin feedForm()
 
 			$('#titleHelp').popover({animation:true,title:'Le nom du flux',content:"<p>Le nom du flux apparait sur le front comme le nom d'un utilisateur.</p><br /><p><img width='100%' src='/images/back/help/cap1.jpg' /></p>",html:true});
 			$('#imagetteHelp').popover({animation:true,title:'Imagette',content:"<p>Cette image apparaîtra sur le profil du flux. Pour l'instant elle doit être carrée. </p><br /><p><img width='100%' src='/images/back/help/cap2.jpg' /></p>",html:true});
-			$('#licenceHelp').popover({animation:true,title:'Licence',content:"<p>Le type de licence, par défaut : Licence Ouverte</p>",html:true});
+			$('#licenceHelp').popover({animation:true,title:'Licence',content:"<p>Le type de licence, par défaut : <b>Opensource</b></p>",html:true});
 			$('#linkHelp').popover({animation:true,title:'Line externe',content:"<p>Entrer le lien général vers le site ( ex : pour la version paris intra-muros du parsien : http://www.leparisien.fr/accueil/paris-75.php ) </p>",html:true});
 			$('#persistDaysHelp').popover({animation:true,title:"Temps de persistance de l'info sur le front.",content:"<p>Le nombre de jours que l'info restera sur le front.<br> S'il s'agit d'un évènement, c'est le nombre de jours que l'info restera sur le front après la date de fin de l'évènement.</p>",html:true});
 			$('#descriptionHelp').popover({animation:true,title:'description',content:"<p>La description apparait dans le profil du flux : <br><img width='100%' src='/images/back/help/cap2.jpg' /></p>",html:true});
@@ -764,7 +764,6 @@ mixin feedForm()
 							$('#humanName').append(' File : '+feedName+'.xml');
 					});
 				}
-				
 			}
 
 			
@@ -774,9 +773,9 @@ mixin feedForm()
 			}				
 			
 			if($('#licence').val() == ""){
-				setError('#licence','Entrer un nom de licence');
-				err = true;
+				$('#licence').val('Opensource');
 			}
+			
 			if($('#persistDays input').val() == "" || !$('#persistDays input').val().isInt()){
 				setError('#persistDays','Entrer un chiffre');
 				err = true;

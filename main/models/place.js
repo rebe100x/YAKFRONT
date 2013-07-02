@@ -77,6 +77,7 @@ Place.statics.format = function (theplace) {
 			title: theplace.title,
 			slug: theplace.slug,
 			content: theplace.content, 
+			thumbName: theplace.thumb,
 			thumb: thethumb,
 			thumbmedium: thethumbmedium,
 			thumbbig: thethumbbig,
@@ -311,6 +312,9 @@ Place.statics.findByIds = function (ids,callback) {
 }
 Place.statics.findByName = function (title,callback) {
   return this.findOne({'title': title}, callback);
+}
+Place.statics.findBySlug = function (title,callback) {
+  return this.findOne({'slug': title}, callback);
 }
 Place.statics.searchByTitleAndStatus = function (str,status,callback) {
   return this.find({'title': new RegExp(str, 'i'),'status':{$in:status}}, callback);

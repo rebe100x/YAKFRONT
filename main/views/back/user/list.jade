@@ -193,32 +193,31 @@ mixin list()
 		});
 
 		
-		function setNewStatus(el)
-		{
+		function setNewStatus(el){
 			var _id = $(el).attr("rel");
 			$.post("/user/setStatus", {status: $(el).val(), _id : $(el).attr("rel")}, function(data){
 					if(data.meta.code == "200"){
-						console.log(data);
 						if(data.meta.mail == 1){
 							$('#err').html('Un email a été envoyé !');
 							$('#errContainer').show();
 						}
-							
 						icon = 'icon-ok-sign';
 						title_icon = "validé";
-						if($(el).val() == 2){
-								icon = 'icon-ban-circle';
-								title_icon = "Inactive";
-						}else if($(el).val() == 1){
-								icon = 'icon-ok-sign';
-								title_icon = "Active";
-						}else if (item.status == 3) {
-								icon = 'icon-ban-circle';
-								title_icon = "Blacklisté";
-						}else if (item.status == 4) {
-								icon = 'icon-warning-sign';
-								title_icon = "Doit remplir le formulaire de première visite";
-							}
+						if ($(el).val() == 1) {
+							icon = 'icon-ok-sign';
+							title_icon = "validé";
+						}
+						else if ($(el).val() == 2) {
+							icon = 'icon-exclamation-sign';
+							title_icon = "Waiting for validation";
+						}
+						else if ($(el).val() == 3) {
+							icon = 'icon-ban-circle';
+							title_icon = "Blacklisté";
+						}else if ($(el).val() == 4) {
+							icon = 'icon-warning-sign';
+							title_icon = "Doit remplir le formulaire de première visite";
+						}	
 						$("#icon_"+_id).attr('class',icon).attr('title',title_icon);
 					}
 				});
@@ -284,7 +283,7 @@ mixin list()
 				title_icon = "validé";
 			}
 			else if (item.status == 2) {
-				icon = 'icon-ban-circle';
+				icon = 'icon-exclamation-sign';
 				title_icon = "Waiting for validation";
 			}
 			else if (item.status == 3) {

@@ -564,6 +564,7 @@ var Info = new Schema({
   , yakunlikeUsersIds : {type: [String]}
   , yakComments : {type : [Schema.Types.Comment]}
   , socialThumbs : { type : [String]}
+  ,debugCallGmap :{type : String}
 }, { collection: 'info' });
 
 Info.index({location : '2d',pubDate:-1,creationDate:-1,dateEndPrint:-1,yakType:1,print:1,status:1});
@@ -590,6 +591,7 @@ Info.statics.format = function (theinfo) {
 			title:theinfo.title,
 			slug:theinfo.slug,
 			content:theinfo.content,
+			thumbName:theinfo.thumb,
 			thumb:thethumb,
 			thumbFlag: theinfo.thumbFlag,
 			yakType:theinfo.yakType,
@@ -602,7 +604,7 @@ Info.statics.format = function (theinfo) {
 			eventDate:theinfo.eventDate,
 			pubDate:theinfo.pubDate,
 			freeTag:theinfo.freeTag,
-			//yakTag:theinfo.yakTag,
+			debugCallGmap:theinfo.debugCallGmap,
 			yakCatName:theinfo.yakCatName,
 			yakCat:theinfo.yakCat,
 			placeId:theinfo.placeId,

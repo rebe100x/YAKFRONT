@@ -497,7 +497,7 @@ width: 270px;
    #locationChooser {top:40%;}
    #userChooser { top: 40%;}
    .theContent iframe.youtubeFrame { height: 450px; width: 100%;}
-   .infowindow .yakTypeImage1 {  background-image: url('/images/yakwala_sprite.png'); background-position: -133px 739px; width: 15px;}
+   .infowindow .yakTypeImage1, .infowindow .yakTypeImage2, .infowindow .yakTypeImage3 {  background-image: url('/images/yakwala_sprite.png'); background-position: -133px 739px; width: 15px;}
    .infowindow .yakTypeImage4 {  background-image: url('/images/yakwala_sprite.png'); background-position: -133px 613px; width: 15px;}
  }
 
