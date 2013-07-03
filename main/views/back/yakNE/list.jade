@@ -56,6 +56,37 @@ mixin list()
 	
 		var firstLoad = true;
 
+		$(document).ready(function() {
+			
+			if($.cookie("statusYakNE")){
+				var status = $.cookie("statusYakNE");
+				$('#filterStatus').val(status);
+			}
+
+			$('#MyGrid').datagrid({
+				dataSource: new ApiDataSource({
+					columns: [
+					{
+						property: 'title',
+						label: 'Mot clé',
+						sortable: true
+					},
+					{
+						property: 'creationDate',
+						label: 'Création',
+						sortable: true
+					}],
+					formatter: function (items) {
+						$.each(items, function (index, item) {
+							item.title = fillContent(item);
+							item.creationDate = formatDate(item.creationDate);
+						});
+					}
+				})
+			});
+		});
+
+
 		var ApiDataSource = function (options) {
 			this._formatter = options.formatter;
 			this._columns = options.columns;
@@ -129,27 +160,7 @@ mixin list()
 			}
 		};
 
-		$('#MyGrid').datagrid({
-			dataSource: new ApiDataSource({
-				columns: [
-				{
-					property: 'title',
-					label: 'Mot clé',
-					sortable: true
-				},
-				{
-					property: 'creationDate',
-					label: 'Création',
-					sortable: true
-				}],
-				formatter: function (items) {
-					$.each(items, function (index, item) {
-						item.title = fillContent(item);
-						item.creationDate = formatDate(item.creationDate);
-					});
-				}
-			})
-		});
+		
 
 		/*bind form edition on the loaded datagrid event to avoid double loading*/
 		$('#MyGrid').unbind('loaded').on('loaded',function(){
@@ -171,7 +182,8 @@ mixin list()
 		
 
 		$('#filterStatus').live('change', function() {
-			//var currentSelection = $('#filterStatus :selected').val();
+			var currentSelection = $('#filterStatus :selected').val();
+			$.cookie("statusYakNE",currentSelection,{ expires: 100000, path : '/' });
 			refreshDatagrid();
 		});
 

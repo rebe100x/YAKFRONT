@@ -196,8 +196,13 @@ Place.statics.countSearch = function (searchTerm, status, yakcats, users, feeds,
 		"title" : search
 	};
 
-	conditions["status"] = {$in:status};
-	
+	if (status != 'all') {
+		if (status == 'alert') 
+			conditions["status"] = {$in:[2,10,11,12,13]};
+		else
+			conditions["status"] = {$in:status};
+	}
+
 	if (0 < yakcats.length)
 		conditions["yakCat"] = { $all: yakcats };
 
@@ -270,9 +275,15 @@ Place.statics.findGridPlaces = function (pageIndex, pageSize, searchTerm, sortPr
 			desc = -1;
 		sortBy[sortProperties[index]] = desc;
 	}
-
-	conditions["status"] = {$in:status};
 	
+	if (status != 'all') {
+		if (status == 'alert') 
+			conditions["status"] = {$in:[2,10,11,12,13]};
+		else
+			conditions["status"] = {$in:status};
+	}
+
+	console.log(conditions);
 	if (users.length > 0)
 		conditions["user"] = { $in: users };
 

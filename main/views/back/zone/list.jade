@@ -58,6 +58,49 @@ mixin list()
 
 		var firstLoad = true;
 
+
+		$(document).ready(function() {
+			if($.cookie("statusZone")){
+				var status = $.cookie("statusZone");
+				$('#filterStatus').val(status);
+			}
+
+			$('#MyGrid').datagrid({
+				dataSource: new ApiDataSource({
+					columns: [
+					{
+						property: 'name',
+						label: 'Nom',
+						sortable: true
+					},
+					{
+						property: 'num',
+						label: 'Numéro',
+						sortable: true
+					},
+					{
+						property: 'status',
+						label: 'Status',
+						sortable: true
+					},
+					{
+						property: 'creationDate',
+						label: 'Création',
+						sortable: true
+					}],
+					formatter: function (items) {
+						$.each(items, function (index, item) {
+							item.name = fillContent(item);
+							item.num= item.num;
+							item.status = makeStatusDropDown(item);
+							item.creationDate = formatDate(item.creationDate);
+						});
+					}
+				})
+			});
+				
+		});
+
 		var ApiDataSource = function (options) {
 			this._formatter = options.formatter;
 			this._columns = options.columns;
@@ -135,39 +178,7 @@ mixin list()
 			}
 		};
 
-		$('#MyGrid').datagrid({
-			dataSource: new ApiDataSource({
-				columns: [
-				{
-					property: 'name',
-					label: 'Nom',
-					sortable: true
-				},
-				{
-					property: 'num',
-					label: 'Numéro',
-					sortable: true
-				},
-				{
-					property: 'status',
-					label: 'Status',
-					sortable: true
-				},
-				{
-					property: 'creationDate',
-					label: 'Création',
-					sortable: true
-				}],
-				formatter: function (items) {
-					$.each(items, function (index, item) {
-						item.name = fillContent(item);
-						item.num= item.num;
-						item.status = makeStatusDropDown(item);
-						item.creationDate = formatDate(item.creationDate);
-					});
-				}
-			})
-		});
+		
 
 		
 		
@@ -357,6 +368,8 @@ mixin list()
 
 		// Refresh on sort selection
 		$('#filterStatus').live('change', function() {
+			var currentSelection = $('#filterStatus :selected').val();
+			$.cookie("statusZone",currentSelection,{ expires: 100000, path : '/' });
 			refreshDatagridAndMenu();
 		});
 

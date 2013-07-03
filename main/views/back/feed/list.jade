@@ -61,6 +61,53 @@ mixin list()
 	
 		var firstLoad = true;
 
+		$(document).ready(function() {
+
+			if($.cookie("statusFeed")){
+						var status = $.cookie("statusFeed");
+						$('#filterStatus').val(status);
+			}
+
+			if($.cookie("typeFeed")){
+						var type = $.cookie("typeFeed");
+						$('#filterType').val(type);
+			}
+
+			$('#MyGrid').datagrid({
+				dataSource: new ApiDataSource({
+					columns: [
+					{
+						property: 'name',
+						label: 'Flux',
+						sortable: true
+					},
+					{
+						property: 'feedType',
+						label: 'Type',
+						sortable: true
+					},
+					{
+						property: 'zoneName',
+						label: 'Zone',
+						sortable: true
+					},
+					{
+						property: 'creationDate',
+						label: 'Création',
+						sortable: true
+					}],
+					formatter: function (items) {
+						$.each(items, function (index, item) {
+							item.name = fillContent(item);
+							item.creationDate = formatDate(item.creationDate);
+							item.zoneName = getZone(item);
+						});
+					}
+				})
+			});
+
+		});
+
 		var ApiDataSource = function (options) {
 			this._formatter = options.formatter;
 			this._columns = options.columns;
@@ -150,38 +197,7 @@ mixin list()
 			}
 		};
 
-		$('#MyGrid').datagrid({
-			dataSource: new ApiDataSource({
-				columns: [
-				{
-					property: 'name',
-					label: 'Flux',
-					sortable: true
-				},
-				{
-					property: 'feedType',
-					label: 'Type',
-					sortable: true
-				},
-				{
-					property: 'zoneName',
-					label: 'Zone',
-					sortable: true
-				},
-				{
-					property: 'creationDate',
-					label: 'Création',
-					sortable: true
-				}],
-				formatter: function (items) {
-					$.each(items, function (index, item) {
-						item.name = fillContent(item);
-						item.creationDate = formatDate(item.creationDate);
-						item.zoneName = getZone(item);
-					});
-				}
-			})
-		});
+		
 
 		/*bind form edition on the loaded datagrid event to avoid double loading*/
 		$('#MyGrid').unbind('loaded').on('loaded',function(){
@@ -278,12 +294,14 @@ mixin list()
 		
 
 		$('#filterStatus').live('change', function() {
-			//var currentSelection = $('#filterStatus :selected').val();
+			var currentSelection = $('#filterStatus :selected').val();
+			$.cookie("statusFeed",currentSelection,{ expires: 100000, path : '/' });
 			refreshDatagrid();
 		});
 
 		$('#filterType').live('change', function() {
-			//var currentSelection = $('#filterType :selected').val();
+			var currentSelection = $('#filterType :selected').val();
+			$.cookie("typeFeed",currentSelection,{ expires: 100000, path : '/' });
 			refreshDatagrid();
 		});
 
@@ -442,7 +460,7 @@ mixin list()
 								var sourceText = source.substring(0,40)+'...';
 							else
 								var sourceText = source;
-							$("#pillSourceLink ul").append("<li class='source-val status-warning' data-value='"+source+"'>"+sourceText+"</li>");
+							$("#pillSourceLink ul").append("<li class='source-val status-warning' title='Right click to open the URL!' data-value='"+source+"'>"+sourceText+"</li>");
 							linkSource.push(source);
 						}
 					});

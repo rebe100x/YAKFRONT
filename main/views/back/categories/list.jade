@@ -71,6 +71,45 @@ mixin list()
 		var placeArray;
 		var firstLoad = true;
 
+		$(document).ready(function() {
+			
+			if($.cookie("statusYakCat")){
+						var status = $.cookie("statusYakCat");
+						$('#filterStatus').val(status);
+			}
+
+			$('#MyGrid').datagrid({
+				dataSource: new ApiDataSource({
+					columns: [
+					{
+						property: 'title',
+						label: 'Nom',
+						sortable: true
+					},
+					{
+						property: 'status',
+						label: 'Statut',
+						sortable: true
+					},
+					{
+						property: 'creationDate',
+						label: 'Creation Date',
+						sortable: true
+					},
+					],
+					formatter: function (items) {
+						$.each(items, function (index, item) {
+							item.creationDate = formatDate(item.creationDate);
+							item.title = fillContent(item);
+							item.status = makeStatus(item.status, item._id);
+							
+						});
+					}
+				})
+			});
+
+		});
+
 		var ApiDataSource = function (options) {
 			this._formatter = options.formatter;
 			this._columns = options.columns;
@@ -152,35 +191,7 @@ mixin list()
 			}
 		};
 
-		$('#MyGrid').datagrid({
-			dataSource: new ApiDataSource({
-				columns: [
-				{
-					property: 'title',
-					label: 'Nom',
-					sortable: true
-				},
-				{
-					property: 'status',
-					label: 'Statut',
-					sortable: true
-				},
-				{
-					property: 'creationDate',
-					label: 'Creation Date',
-					sortable: true
-				},
-				],
-				formatter: function (items) {
-					$.each(items, function (index, item) {
-						item.creationDate = formatDate(item.creationDate);
-						item.title = fillContent(item);
-						item.status = makeStatus(item.status, item._id);
-						
-					});
-				}
-			})
-		});
+		
 
 
 	
@@ -269,6 +280,7 @@ mixin list()
 		// Refresh on sort selection
 		$('#filterStatus').live('change', function() {
 			var currentSelection = $('#filterStatus :selected').val();
+			$.cookie("statusYakCat",currentSelection,{ expires: 100000, path : '/' });
 			refreshDatagridAndMenu();
 		});
 

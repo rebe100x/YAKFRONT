@@ -10,6 +10,7 @@ mixin placeForm()
 		input#hiddenOrigin(type="hidden",data-provide="typeahead", name="hiddenOrigin", value='0')
 		input#zoneName(type="hidden", name="zoneName", value='')
 		input#thumbHidden(type="hidden", name="thumbHidden", value='')
+		input#status(type="hidden", name="status", value='')
 
 
 		legend.mainlegend Ajouter un lieu
@@ -113,16 +114,15 @@ mixin placeForm()
 						input#special(type="text", data-provide="typeahead", name="special", placeholder='Ouverture exceptionnelle')
 					.col
 						input#transportation(type="text", data-provide="typeahead", name="transportation", placeholder='Comment y arriver? (ex: métro ligne 2 station Jaurès)')
-			div.control-group
-				div.controls
-					label.radio.inline Valider
-						input#option1(type="radio", name="status", value="1" , checked)
-					label.radio.inline En attente
-						input#option4(type="radio", name="status", value="2")
-					label.radio.inline Rejeter
-						input#option2(type="radio", name="status", value="3")
-					label.radio.inline Erreur de localisation
-						input#options3(type="radio", name="status", value="10")
+			//
+				div.control-group
+					div.controls
+						label.radio.inline Valider
+							input#option1(type="radio", name="status", value="1" , checked)
+						label.radio.inline En attente
+							input#option4(type="radio", name="status", value="2")
+						label.radio.inline Désactiver
+							input#option2(type="radio", name="status", value="3")
 			div.control-group
 				div.controls
 					button.btn.btn-large.btn-inverse(type='submit', name='submit', id='submit', value='Enregistrer') Enregistrer

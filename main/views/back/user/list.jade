@@ -72,6 +72,56 @@ mixin list()
 		var hashtagTmp = [];
 		var firstLoad = true;
 
+
+		$(document).ready(function() {
+			
+			if($.cookie("statusUser")){
+						var status = $.cookie("statusUser");
+						$('#filterStatus').val(status);
+			}
+
+			if($.cookie("typeUser")){
+						var type = $.cookie("typeUser");
+						$('#filterType').val(type);
+			}
+
+			$('#statusHelp').popover({animation:true,title:"Vous pouvez ici blacklister un utilisateur ou bien le débloquer en validant sont compte.",content:"<p><b>NB:</b>Si vous blacklistez un utilisateur, son compte sera immédiatement bloqué et les contenus postés via ce compte seront désactivés.<br> Un email lui sera envoyé pour le prévenir que son compte a été bloqué.<br><br> Cette opération de blacklistage est réversible, il suffit de remettre le statut à <i>Validé</i> et le compte est à nouveau opérationnel. Ses yassalas ré-apparaissent également.</p>",html:true});
+
+			$('#MyGrid').datagrid({
+				dataSource: new ApiDataSource({
+					columns: [
+					{
+						property: 'name',
+						label: 'Utilisateur',
+						sortable: true
+					},
+					{
+						property: 'type',
+						label: 'Type de compte',
+						sortable: true
+					},
+					{
+						property: 'status',
+						label: "Statut <i class='icon-question-sign' id='statusHelp'></i>",
+						sortable: true
+					},
+					{
+						property: 'creationDate',
+						label: 'Création',
+						sortable: true
+					}],
+					formatter: function (items) {
+						$.each(items, function (index, item) {
+							item.name = fillContent(item);
+							item.status = makeStatusDropDown(item);
+							item.creationDate = formatDate(item.creationDate);
+							item.type = makeTypeDropDown(item);
+						});
+					}
+				})
+			});
+		});
+
 		var ApiDataSource = function (options) {
 			this._formatter = options.formatter;
 			this._columns = options.columns;
@@ -158,39 +208,7 @@ mixin list()
 			}
 		};
 
-		$('#MyGrid').datagrid({
-			dataSource: new ApiDataSource({
-				columns: [
-				{
-					property: 'name',
-					label: 'Utilisateur',
-					sortable: true
-				},
-				{
-					property: 'type',
-					label: 'Type de compte',
-					sortable: true
-				},
-				{
-					property: 'status',
-					label: "Statut <i class='icon-question-sign' id='statusHelp'></i>",
-					sortable: true
-				},
-				{
-					property: 'creationDate',
-					label: 'Création',
-					sortable: true
-				}],
-				formatter: function (items) {
-					$.each(items, function (index, item) {
-						item.name = fillContent(item);
-						item.status = makeStatusDropDown(item);
-						item.creationDate = formatDate(item.creationDate);
-						item.type = makeTypeDropDown(item);
-					});
-				}
-			})
-		});
+		
 
 		
 		function setNewStatus(el){
@@ -351,10 +369,13 @@ mixin list()
 		// Refresh on sort selection
 		$('#filterStatus').live('change', function() {
 			var currentSelection = $('#filterStatus :selected').val();
+			$.cookie("statusUser",currentSelection,{ expires: 100000, path : '/' });
 			refreshDatagridAndMenu();
 		});
 
 		$('#filterType').live('change', function() {
+			var currentSelection = $('#filterType :selected').val();
+			$.cookie("typeUser",currentSelection,{ expires: 100000, path : '/' });
 			refreshDatagridAndMenu();
 		});
 
@@ -374,6 +395,4 @@ mixin list()
 		}
 
 
-		$(document).ready(function() {
-			$('#statusHelp').popover({animation:true,title:"Vous pouvez ici blacklister un utilisateur ou bien le débloquer en validant sont compte.",content:"<p><b>NB:</b>Si vous blacklistez un utilisateur, son compte sera immédiatement bloqué et les contenus postés via ce compte seront désactivés.<br> Un email lui sera envoyé pour le prévenir que son compte a été bloqué.<br><br> Cette opération de blacklistage est réversible, il suffit de remettre le statut à <i>Validé</i> et le compte est à nouveau opérationnel. Ses yassalas ré-apparaissent également.</p>",html:true});
-		});
+		

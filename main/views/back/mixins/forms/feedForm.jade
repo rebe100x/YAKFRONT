@@ -333,6 +333,12 @@ mixin feedForm()
 		
 		$(document).ready(function() {
 
+			$('#pillSourceLink ul li').live('mousedown',function(event) {
+				if(event.which != 1) {
+					window.open($(this).attr('data-value'))
+				}
+			});	
+
 			$('#description').on('keyup',function(){
 				var len = $(this).val().length;
 				if (len > 120) {
@@ -358,7 +364,7 @@ mixin feedForm()
 			$('#defaultPlaceSearchNameHelp').popover({animation:true,title:'Indice pour la recherche de lieu',content:"<p>Entrer ici un texte qui complète l'information de géolocalisation et donne une précision à l'algo de recherche de lieu afin de distinguer des lieux différents mais ayant le même nom.<br><br>Par exemple un lieu reconnu comme le Musée des Civilisations pourrait être à Marseille ou à Paris. Si votre flux est un flux local à Marseille, il vous faut entrer <b>Marseille, France</b>, ou <b>Bouches-du-Rhône, France</b>. La requète de géoloc sera alors bien plus précise et évitera les doublons avec d'autre lieux du même nom en France.<br><br> Si vous entrez une liste des musées de France, il vous suffit d'entrer <b>France</b>.<br><br> SI vous être trop précis vous perdrez des infos qui aurraient pu être géolocalisées, si vous êtes trop imprécis vous risquez les doublons.</p>",html:true});
 			$('#zoneHelp').popover({animation:true,title:'La zone',content:"<p>Les zones sont définies dans l'onglet Zones.<br> Elles permettent un filtrage des données : toute donnée géolocalisée en dehors de la zone définie est mise en erreur.<br> Cela permet de filtrer les infos nationales ou internationales présentes parfois dans les medias locaux.</p>",html:true});
 			$('#fileuploadHelp').popover({animation:true,title:'Source = Fichier',content:"<p>Vous pouvez uploader vos données sous forme de fichiers. <br> Vous pouvez ajouter autant de fichiers que vous voulez du moment qu'ils suivent le même schéma de parsing.</p>",html:true});
-			$('#sourceHelp').popover({animation:true,title:'Source = Url',content:"<p>Vous pouvez définit une url à parser. <br> Vous pouvez ajouter autant d'url que vous voulez du moment qu'elles suivent le même schéma de parsing.</p>",html:true});
+			$('#sourceHelp').popover({animation:true,title:'Source = Url',content:"<p>Vous pouvez définit une url à parser. <br> Vous pouvez ajouter autant d'url que vous voulez du moment qu'elles suivent le même schéma de parsing.<br>Une fois l'url entrée, vous pouvez vérifier le lien avec un click DROIT de la souris.</p>",html:true});
 			$('#feedTypeHelp').popover({animation:true,title:'Type de flux',content:"<p>Regarder l'extension du fichier ou du flux pour définir un des 3 types.</p>",html:true});
 			$('#rootElementHelp').popover({animation:true,title:'Element racine',content:"<p>Ce champ n'est nécessaire que pour un type <b>XML</b> ou <b>JSON</b>.<br><br>Définir ici l'élément racine surlequel l'algo doit boucler.<br><br><b>Pour pré-remplir ce champ cliquer sur l'icône <i class='icon-search'></i></b> ( attention , c'est expérimental, il est préférable de vérifier manuellement.<br><br>Par exemple, un flux RSS a la plus part du temps un élément racine <b>/rss/channel/item</b> </p><br><br>Pour un type JSON, indiquer le nom de l'élément surlequel boucler ( souvent <b>item</b> )<br><br>",html:true});
 			$('#lineToBeginHelp').popover({animation:true,title:'Ligne de commencement',content:"<p>Pour un type CSV, vous pouvez indiquer la ligne de départ afin de ne pas prendre en compte le header oudes lignes vides.</p>",html:true});
@@ -488,7 +494,7 @@ mixin feedForm()
 					var linkText = $('#source').val().substring(0,40)+'...';
 				else
 					var linkText = $('#source').val();
-				$("#pillSourceLink ul").append("<li class='source-val status-warning' data-value='"+$('#source').val()+"'>"+linkText+"</li>");
+				$("#pillSourceLink ul").append("<li class='source-val status-warning' title='Right click to open the URL!' data-value='"+$('#source').val()+"'>"+linkText+"</li>");
 				$('#pillSourceLink').val('').focus();
 				linkSource.push($('#source').val());
 				$("#linkSource").val(linkSource.join(','));

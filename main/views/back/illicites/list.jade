@@ -82,6 +82,15 @@ mixin list()
 		var validillicites = 0;
 
 		$(document).ready(function() {
+			if($.cookie("statusIllicite")){
+						var status = $.cookie("statusIllicite");
+						$('#filterStatus').val(status);
+			}
+			if($.cookie("typeIllicite")){
+						var type = $.cookie("typeIllicite");
+						$('#filterType').val(type);
+			}
+
 			setInterval(function() {
 				$.getJSON('/api/validillicites', function(data) {
 					if(validillicites != data.info){
@@ -93,11 +102,50 @@ mixin list()
 					if (data.info != 0)
 						$('#illicitenumber').addClass('badge badge-important').html(data.info);
 				});
-
-				
-
 			}, 5000	);
 
+			$('#MyGrid').datagrid({
+				dataSource: new ApiDataSource({
+					columns: [
+					{
+						property: 'content',
+						label: 'La donnée',
+						sortable: true
+					},
+					{
+						property: 'content_type',
+						label: 'Type de donnée',
+						sortable: true
+					},
+					{
+						property: 'last_date_mark',
+						label: 'Date de signalement',
+						sortable: true
+					},
+					{
+						property: 'count',
+						label: 'Signalé',
+						sortable: true
+					},
+					{
+						property: 'delete',
+						label: 'Supprimer',
+						label: '<i class="icon-delete"></i>',
+						sortable: true
+					}
+					],
+					formatter: function (items) {
+						$.each(items, function (index, item) {
+							item.checked = makeCheckBox(item);
+							item.delete = makeDeleteOption(item);
+							item.last_date_mark = formatDate(item.last_date_mark);
+							item.content_type = makeContentType(item.content_type);
+							item.content = fillContent(item);
+							item.count = item.count + ' fois';
+						});
+					}
+				})
+			});
 			
 		});
 		var ApiDataSource = function (options) {
@@ -191,48 +239,7 @@ mixin list()
 			}
 		};
 
-		$('#MyGrid').datagrid({
-			dataSource: new ApiDataSource({
-				columns: [
-				{
-					property: 'content',
-					label: 'La donnée',
-					sortable: true
-				},
-				{
-					property: 'content_type',
-					label: 'Type de donnée',
-					sortable: true
-				},
-				{
-					property: 'last_date_mark',
-					label: 'Date de signalement',
-					sortable: true
-				},
-				{
-					property: 'count',
-					label: 'Signalé',
-					sortable: true
-				},
-				{
-					property: 'delete',
-					label: 'Supprimer',
-					label: '<i class="icon-delete"></i>',
-					sortable: true
-				}
-				],
-				formatter: function (items) {
-					$.each(items, function (index, item) {
-						item.checked = makeCheckBox(item);
-						item.delete = makeDeleteOption(item);
-						item.last_date_mark = formatDate(item.last_date_mark);
-						item.content_type = makeContentType(item.content_type);
-						item.content = fillContent(item);
-						item.count = item.count + ' fois';
-					});
-				}
-			})
-		});
+		
 
 	
 		function makeContent(item){
@@ -400,6 +407,10 @@ mixin list()
 
 		// Datagrid checkbox
 		$('#filterStatus , #filterType , #limit10days').unbind('click').live('change', function() {
+			var currentSelection = $('#filterStatus :selected').val();
+			$.cookie("statusIllicite",currentSelection,{ expires: 100000, path : '/' });
+			currentSelection = $('#filterType :selected').val();
+			$.cookie("typeIllicite",currentSelection,{ expires: 100000, path : '/' });
 			refreshDatagridAndMenu();
 		});
 		

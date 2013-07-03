@@ -20,7 +20,7 @@ mixin list()
 				tr.headerControle.advancedSearch
 					td.searchPanel(colspan=5, style="display:none")
 						.yakCatFilter
-							input#yakCat.typeahead(type="text", data-provide="typeahead", autocomplete="off", placeholder="Filtrer par thème")
+							input#yakCat.typeahead(type="text", data-provide="typeahead", autocomplete="off", placeholder="Filtrer par catégorie")
 							.pillbox#yakCatFilter(style="display:none")
 								ul
 						.userFilter
@@ -33,18 +33,24 @@ mixin list()
 								ul
 			tr.headerControle
 				td(colspan=5)
-					.btn-group.batchActions
-						button.btn.btn-small.validerPlaces(title="Valider les lieux")
-							i.icon-ok-sign
-						button.btn.btn-small.disabled.enattentePlaces(title="Mettre les lieux en attente")
-							i.icon-time
-						button.btn.btn-small.supprimerPlaces(title="Rejeter les lieux")
-							i.icon-ban-circle
+					//
+						.btn-group.batchActions
+							button.btn.btn-small.validerPlaces(title="Valider les lieux")
+								i.icon-ok-sign
+							button.btn.btn-small.disabled.enattentePlaces(title="Mettre les lieux en attente")
+								i.icon-time
+							button.btn.btn-small.supprimerPlaces(title="Rejeter les lieux")
+								i.icon-ban-circle
 					select#filterStatus
-						option(value="1,2,3,4,10,11,12,13,14") Tous les lieux
-						option(value="2,10,11,12,13") En attente
-						option(value="1") Validés
-						option(value="3") Blacklistés
+						option(value="all") Tous les statuts
+						option(value="1") Validé
+						option(value="3") Désactivé
+						option(value="alert", selected="selected") En alerte
+						option(value="2") - Alerte: En attente
+						option(value="10") - Alerte: Gmap a échoué
+						option(value="11") - Alerte: Le lieu matché est désactivé
+						option(value="12") - Alerte: Localisation hors zone
+						option(value="13") - Alerte: La géoloc a échoué
 						
 					.dateSort.datagrid-header-right
 						.input-prepend
@@ -102,10 +108,54 @@ mixin list()
 		
 
 		$(document).ready(function() {
+			if($.cookie("statusPlace")){
+					var status = $.cookie("statusPlace");
+					$('#filterStatus').val(status);
+			}
+			
 			var idplace = "!{idplace}";
 			if(idplace){
 				editPlace(idplace,0);
 			}
+
+			$('#MyGrid').datagrid({
+				dataSource: new ApiDataSource({
+					columns: [/*{
+						property: 'checked',
+						label: '<input id="selectAllPlaces" type="checkbox" />',
+						sortable: false
+					},*/
+					{
+						property: 'title',
+						label: 'Lieux',
+						sortable: true
+					},
+					{
+						property: 'status',
+						label: "Statut <i class='icon-question-sign' id='statusHelp'></i>",
+						sortable: true
+					},
+					{
+						property: 'origin',
+						label: 'Origine',
+						sortable: true
+					},
+					{
+						property: 'creationDate',
+						label: 'Création',
+						sortable: true
+					}],
+					formatter: function (items) {
+						$.each(items, function (index, item) {
+							item.checked = makeCheckBox(item);
+							item.title = fillContent(item);
+							item.status = makeStatusDropDown(item);
+							item.origin = formatOrigin(item);
+							item.creationDate = formatDate(item.creationDate);
+						});
+					}
+				})
+			});
 		});
 				
 		/****************************************************************** LIST GRID ***************************************************************************/
@@ -157,6 +207,9 @@ mixin list()
 				//  - Passed as query to allow for null
 				var queryChar = '?';
 
+				var limit10days = ($("#limit10days").is(":checked"));
+				url += '/' + limit10days;
+
 				// Filter by yakCats
 				var catPillboxItems = $(".pillbox#yakCatFilter").pillbox("items");
 				if (catPillboxItems.length) {
@@ -195,8 +248,7 @@ mixin list()
 					url += queryChar + "feeds=" + feedArray.join();
 				}
 
-				var limit10days = ($("#limit10days").is(":checked"));
-				url += '/' + limit10days;
+				
 
 				$.ajax(url, {
 					type: 'GET'
@@ -227,38 +279,55 @@ mixin list()
 			}
 		};
 
-		$('#MyGrid').datagrid({
-			dataSource: new ApiDataSource({
-				columns: [{
-					property: 'checked',
-					label: '<input id="selectAllPlaces" type="checkbox" />',
-					sortable: false
-				},
-				{
-					property: 'title',
-					label: 'Lieux',
-					sortable: true
-				},
-				{
-					property: 'origin',
-					label: 'Origine',
-					sortable: true
-				},
-				{
-					property: 'creationDate',
-					label: 'Création',
-					sortable: true
-				}],
-				formatter: function (items) {
-					$.each(items, function (index, item) {
-						item.checked = makeCheckBox(item);
-						item.title = fillContent(item);
-						item.origin = formatOrigin(item);
-						item.creationDate = formatDate(item.creationDate);
-					});
-				}
-			})
-		});
+		
+
+		function makeStatusDropDown(item){
+			var select = $("<div />");
+			select.attr("class", "selectStatus");
+			select.html('<select onchange="setNewStatus(this)" class="selectStatus" rel="'+item._id+'"><option value="0">Changer le statut</option><option value="1">Valider (lieu + infos liées)</option><option value="2">En attente (lieu + infos liées)</option><option value="3">Désactiver lieu uniquement</option><option value="4">Désactiver lieu + infos liées</option></select>');
+			select.find("option").each(function(){
+				if($(this).attr("value") == 0)
+					$(this).attr("selected", "selected");
+			});
+			return select.html();
+		}
+
+		function setNewStatus(el){
+			var _id = $(el).attr("rel");
+			console.log(_id+'  '+$(el).val());
+			if($(el).val() > 0){
+				$.post("/place/setStatus", {status: $(el).val(), _id : $(el).attr("rel")}, function(data){
+					if(data.meta.code == "200"){
+						console.log(data);
+						icon = 'icon-ok-sign';
+						title_icon = "Validé";
+						if ($(el).val() == 1) {
+							icon = 'icon-ok-sign';
+							title_icon = "Validé";
+						}else if($(el).val() == 2){
+							icon = 'icon-exclamation-sign';
+							title_icon = "En Attente";
+						}else if($(el).val() == 3){
+							icon = 'icon-ban-circle';
+							title_icon = "Désactivé";
+						}else {
+							icon = 'icon-warning-sign';
+							if($(el).val() == 10)
+								title_icon = "Alerte: GMAP n'a pas retourné de valeur";
+							if($(el).val() == 11)
+								title_icon = "Alerte: matching sur un lieu désactivé";
+							if($(el).val() == 12)
+								title_icon = "Alerte: le lieu trouvé est hors de la zone";
+							if($(el).val() == 13)
+								title_icon = "Alerte: pas de lieu trouvé";
+						}
+						$("#icon_"+_id).attr('class',icon).attr('title',title_icon);
+
+						refreshDatagridAndMenu();
+					}
+				});
+			}
+		}
 
 		function formatOrigin(item) {
 			if (item.origin)
@@ -339,7 +408,7 @@ mixin list()
 			}
 			else if (item.status == 3) {
 				icon = 'icon-ban-circle';
-				title_icon = "Rejetée";
+				title_icon = "Désactivé";
 			}
 			else{
 				icon = 'icon-warning-sign';
@@ -350,8 +419,14 @@ mixin list()
 				title_title = "title = '" + item.title + "'";
 				item.title = item.title.slice(0, 50) + "...";
 			}
-
-
+			var flags = '';
+			if(typeof item.yakCat != 'undefined' && item.yakCat != ''){
+				if( item.yakCat.inArray('5056b7aafa9a95180b000000'))
+					flags = "<span class='badge badge-important'>Dico</span>";
+				if( item.yakCat.inArray('507e5a9a1d22b30c44000068') )
+					flags = "<span class='badge badge-warning'>Ville</span>";
+			}
+			
 			res += '<div class="text-info" '+ title_title + '>';
 			res += '<i class="' + icon + ' status" title="' + title_icon + '" ></i>';
 			res += item.title + '</div>';
@@ -367,7 +442,7 @@ mixin list()
 				res += item.formatted_address;
 			
 			res += "</div>";
-
+			res += flags;
 			res += "<i>";			
 			if(typeof item.yakCatName != 'undefined' && item.yakCatName.length > 0)
 				res += '#'+item.yakCatName.join(', #');
@@ -375,8 +450,8 @@ mixin list()
 			if(typeof item.freeTag != 'undefined' && item.freeTag.length > 0 ) {
 				res += ', #'+item.freeTag.join(', #');				
 			}
-
 			res += "</i>";
+			res += item._id;
 			res += '</small></a>';
 			return res;
 		}
@@ -391,12 +466,12 @@ mixin list()
 			var search = $gridsearch.find('input').val();
 			$gridsearch.trigger('searched', search);
 			$.getJSON('/api/validplaces', function(data) {
-				$('#placenumber').removeClass('badge badge-important');
+				$('#placenumber').html('').removeClass('badge badge-important');
 				if (data.info != 0)
 					$('#placenumber').addClass('badge badge-important').html(data.info);
 			});
 			$.getJSON('/api/validinfos', function(data) {
-				$('#infonumber').removeClass('badge badge-important');
+				$('#infonumber').html('').removeClass('badge badge-important');
 				if (data.info != 0)
 					$('#infonumber').addClass('badge badge-important').html(data.info);
 			});
@@ -541,6 +616,7 @@ mixin list()
 		// Refresh on sort selection
 		$('#filterStatus').live('change', function() {
 			var currentSelection = $('#filterStatus :selected').val();
+			$.cookie("statusPlace",currentSelection,{ expires: 100000, path : '/' });
 			if (currentSelection == 1) {
 				$('.validerPlaces').addClass('disabled');
 				$('.supprimerPlaces').removeClass('disabled');
@@ -741,8 +817,6 @@ mixin list()
 
 
 		function editPlace(id,flagDuplicate){
-			console.log(id);
-			
 			listenerHandle = google.maps.event.addListener(map, 'click', function(event) {
 				getformattedAddress(event.latLng);
 				placeMarker(event.latLng,markerLocation);
@@ -772,28 +846,26 @@ mixin list()
 			
 
 			var url = '/api/places/'+id;
-			console.log(url);
 				// We search for the place in mongo and we fill the form with the place's values
 				$.ajax({
 					url: url,
 					type: 'GET',
 					async: false,
-					success: function (response)
-					{
+					success: function (response){
 						var place = response.place;
-
-						console.log(response);
 						if(flagDuplicate == 1){
 							$("#placeForm legend.mainlegend").html("Dupliquer un lieu");
 							$("#placeForm #title").val(place.title+'_copy').focus();
 							$("#placeForm #objid").val('');
 							$("#placeForm #thumbHidden").val(place.thumbName);
+							$("#placeForm #status").val(1); // if duplication : we validate by default
 						}else{	
 							$("#placeForm legend.mainlegend").html("Modifier un lieu");
 							$("#placeForm #objid").val(id);
 							$("#placeForm #title").val(place.title).focus();
+							$("#placeForm #status").val(place.status); // if no duplication : we set the edit status as it should be
+						}
 
-						}	
 
 						if(typeof place.location != 'undefined' && place.location.lat && place.location.lng){
 							var latlng = new google.maps.LatLng(place.location.lat, place.location.lng);
@@ -905,6 +977,8 @@ mixin list()
 			$('#placeForm').clearForm();
 			$("#placeForm")[0].reset();
 			$("#placeForm #objid").val("");
+
+			$("#placeForm #status").val(1);
 
 			$("#placeForm legend.mainlegend").html("Ajouter un lieu");
 		

@@ -95,6 +95,7 @@ exports.getFileSample = function(req,res){
 			var htmlparser = require("htmlparser2");
 			var parser = new htmlparser.Parser({
 				onopentag: function(name, attribs){
+					//console.log('openTag:'+name);
 					if(tagArray[name])
 						tagArray[name] = tagArray[name] +1;
 					else
@@ -108,17 +109,28 @@ exports.getFileSample = function(req,res){
 					}
 				},
 				ontext: function(text){
+				var S = require('string');
+				var itemValTmp = S(text.trim()).stripTags().s;	
+				if(itemValTmp.length>0){
+					itemVal = itemValTmp;
+				}else	
+					itemVal = "?";
+
+				/*	
+				console.log('onText:'+text);
 				var S = require('string');	
 				itemVal = S(text).stripTags().s;
 				},
 				onattribute: function(attr,val){
+				console.log('onAttr:'+attr);	
 				//console.log(oldItemKey+' '+itemKey+' '+attr+' '+val);
 					if(val != ''){
 						attribute.push({attr:attr,val:val});
 					}
-						
+				*/		
 				},
 				onclosetag: function(tagname){
+					//console.log('closeTag:'+tagname);
 					var itemToLoopOnArray = req.body.param.split('/');
 					var itemToLoopOn = itemToLoopOnArray[itemToLoopOnArray.length-1];
 					if(tagname == itemToLoopOn){
@@ -128,6 +140,7 @@ exports.getFileSample = function(req,res){
 							item[itemKey] += '#'+itemVal;
 						else
 							item[itemKey] = itemVal;
+						
 						if(attribute.length>0){
 							attribute.forEach(function(obj){
 								item[itemKey+'->'+obj['attr']] = obj['val'];
@@ -668,10 +681,14 @@ exports.gridInfos = function (req, res) {
 		req.params.searchTerm,sortProperties,sortDirections,
         req.params.status,req.params.type, req.params.limit,  function (err, info){
 
+			var infoFormated = new Array();
+			if(info){
+				var infoFormated = info.map(function(item){
+					return Info.format(item);
+				});	
+			}
+			
 			var data = {};
-			var infoFormated = info.map(function(item){
-				return Info.format(item);
-			});
 			data['info'] = infoFormated;
 			data['pageIndex'] = req.params.pageIndex;
 			data['pageSize'] = req.params.pageSize;
@@ -682,6 +699,10 @@ exports.gridInfos = function (req, res) {
 		});
 	};
 
+/* Note : when you create or modify an info, only the info is changed (if you change the status, only the info will be changed and not the plac elinked and the other infos
+linked to the same place)
+	
+*/
 exports.info = function(req, res){
 
 	var formMessage = new Array();
@@ -696,6 +717,8 @@ exports.info = function(req, res){
 	
 	var info = new Object();
 	var now = new Date();
+	var in3days = new Date();
+	in3days.setDate(now.getDate() + 3);
 	
 	info.title = req.body.title;
 	info.content = req.body.content;
@@ -728,8 +751,14 @@ exports.info = function(req, res){
 		info.print = 1;
 
 	info.user = req.session.user;
-	info.dateEndPrint = req.body.dateEndPrint;
-	info.pubDate = req.body.pubDate;
+	if(req.body.dateEndPrint)
+		info.dateEndPrint = req.body.dateEndPrint;
+	else
+		info.dateEndPrint = in3days;
+	if(req.body.pubDate)
+		info.pubDate = req.body.pubDate;
+	else
+		info.pubDate = now;
 	info.origin = req.body.origin;
 	info.outGoingLink = req.body.outGoingLink;
 	info.licence = req.body.licence;
@@ -779,36 +808,38 @@ exports.info = function(req, res){
 	var placeInput = JSON.parse(req.body.placeInput);
 	var location = placeInput.location;
 
-	// if placeid is set
+	// if placeid is set. 
+	// Note : placeId is reset as soon as the location is changed
 	
-	if(typeof place_id != 'undefined' && place_id != ''){ // edit mode
+	if(typeof place_id != 'undefined' && place_id != ''){ // edit mode without changing the location of the info
 		info.placeId = place_id;
 		info.address = placeInput.title;
 		info.location = {lat:parseFloat(location.lat),lng:parseFloat(location.lng)};	
 		console.log(info);	
 		Info.update(cond,info,{upsert:true},function (err){
-			if (!err)
+			if (!err){
 				formMessage.push("Info sauvegardée.");
-			else{
+			}else{
 				formMessage.push("Erreur pendant la sauvegarde de l'info !");
 				console.log(err);
 			}
 			req.session.message = formMessage;
 			res.redirect('info/list')
 		});
-	}else{
-
+	}else{ // we changed the location of the news ( or insert a new one )
+		/* NOTE : because place matching is done only on validated places ( status = 1 ), we do not need to 
+		*  		
+		*/
 		info.location = {lat:parseFloat(location.lat),lng:parseFloat(location.lng)};	
 					
 		// search for a place like this one in db
-		Place.findOne({title:placeInput.formatted_address,location:{$near:[parseFloat(location.lat),parseFloat(location.lng)],$maxDistance:0.1}},function(err,theplace){
+		Place.findOne({title:placeInput.formatted_address,location:{$near:[parseFloat(location.lat),parseFloat(location.lng)],$maxDistance:0.1},status:1},function(err,theplace){
 			if(err)
 				throw err;
 			else{	
-				if(theplace){
+				if(theplace){ // place is already in db, we match it
 					info.placeId = theplace._id;
-					info.address = placeInput.title; // here we take it from the input, not from the db => to check if it is a good choice
-					console.log(info);
+					info.address = theplace.title; 
 					Info.update(cond,info,{upsert:true},function (err){
 						if (!err)
 							formMessage.push("Info sauvegardée.");
@@ -841,7 +872,8 @@ exports.info = function(req, res){
 					place.yakCatName = ["Géolocalisation"];
 					place.save(function(err){console.log(err);});
 					info.placeId = place._id;
-					
+					info.placeName = placeInput.title;
+					info.address = placeInput.title; 
 					Info.update(cond,info,{upsert:true},function (err){
 						if (!err)
 							formMessage.push("Info sauvegardée.");
@@ -865,15 +897,15 @@ exports.info_setstatus = function (req, res){
 	var Info = db.model('Info');
 
 	var status = req.body.status;
-	var placeStatus = 1;
+	var placeStatus = 0;
 	if(status == 1)
-		placeStatus = 1;
+		placeStatus = 0;// we don't validate the place
 	else if(status == 2)
-		placeStatus = 2;
+		placeStatus = 0;// we don't wait the place
 	else if(status == 3)
-		placeStatus = 0; // we don't blacklist the place
+		placeStatus = 0; // we don't disable the place
 	else if(status == 4){
-		placeStatus = 3;
+		placeStatus = 3;// we disable the place
 		status = 3;
 	}
 		
@@ -906,10 +938,6 @@ exports.info_setstatus = function (req, res){
 
 		}
 	});		
-	
-
-			
-
 };
 
 
@@ -1325,7 +1353,7 @@ exports.place = function(req, res){
 		place.origin = req.body.hiddenOrigin;
 		place.outGoingLink = req.body.outgoinglink;
 
-		place.status = req.body.status;
+		place.status = parseInt(req.body.status);
 
 		place.access = 1;
 		place.licence = req.body.licence;
@@ -1461,12 +1489,15 @@ exports.gridPlaces = function (req, res) {
 	Place.findGridPlaces(req.params.pageIndex,req.params.pageSize,
 		req.params.searchTerm,sortProperties,sortDirections,
         status, yakcats, users, feeds, req.params.limit, function (err, place){
+        var placeFormated = new Array();
+        if(place){
+        	var placeFormated = place.map(function(item){
+				return Place.format(item);
+			});	
+        }
 
-		var data = {};
-		var placeFormated = place.map(function(item){
-			return Place.format(item);
-		});
-
+		
+        var data = {};
         data['place'] = placeFormated;
 		data['pageIndex'] = req.params.pageIndex;
 		data['pageSize'] = req.params.pageSize;
@@ -1501,6 +1532,40 @@ exports.searchByTitleAndStatus = function (req, res) {
 	});
 };
 
+exports.place_setstatus = function (req, res){
+	var Place = db.model('Place');
+	var Info = db.model('Info');
+
+	var status = req.body.status;
+	var infoStatus = 1;
+	if(status == 1)
+		infoStatus = 1;
+	else if(status == 2)
+		infoStatus = 2;
+	else if(status == 3)
+		infoStatus = 0; // we don't blacklist the infos linked to this place
+	else if(status == 4){
+		infoStatus = 3;
+		status = 3;
+	}
+		
+	Place.update({_id: mongoose.Types.ObjectId(req.body._id)},{$set:{'status':status}}, function(err){
+		if(!err){
+			if(infoStatus >  0){
+				// update all other infos linked to this place
+				Info.update({placeId: req.body._id},{$set:{'status':infoStatus}},{ multi: true }, function(err){
+					if(!err){
+						res.json({meta:{code:200,msg:'Le lieu et toutes les infos liées ont été modifiés'}});		
+					}else
+						res.json({meta:{code:404,error_type:'Operation failed',error_description:err.toString()}});	
+				});
+			}else
+				res.json({meta:{code:200,msg:'Lieu modifié'}});
+		}else
+			res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+	});
+
+};
 
 /******************************************************************************************************************************************************************
 #USER 

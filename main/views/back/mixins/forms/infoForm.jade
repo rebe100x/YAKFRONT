@@ -10,7 +10,7 @@ mixin infoForm()
 		input#placeid(type="hidden", name="placeid", value='0')
 		input#zoneName(type="hidden", name="zoneName", value='')
 		input#thumbHidden(type="hidden", name="thumbHidden", value='')
-		
+		input#status(type="hidden", name="status", value='')
 
 
 		div.control-group.error
@@ -141,25 +141,27 @@ mixin infoForm()
 									i.icon-chevron-up
 								button.btn.spinner-down(type='button')
 									i.icon-chevron-down
-		div.row-fluid
-			div.control-group#statusGroup.clearBoth
-			legend Statut:
-			div.control-group
-				div.controls
-					label.radio Validé
-						input(type="radio", name="status", value="1", checked)
-					label.radio  Blacklisté
-						input(type="radio", name="status", value="3")
-					label.radio.inline Alerte : En attente de validation
-						input(type="radio", name="status", value="2")	
-					label.radio Alerte: Gmap a échoué
-						input(type="radio", name="status", value="10")
-					label.radio Alerte : Le lieu matché est blacklisté
-						input(type="radio", name="status", value="11")
-					label.radio Alerte : La localisation est en dehors de la zone
-						input(type="radio", name="status", value="12")
-					label.radio Alerte : La géoloc, a échoué
-						input(type="radio", name="status", value="13")
+		//
+			div.row-fluid
+				div.control-group#statusGroup.clearBoth
+				legend Statut: 
+					i.icon-question-sign#etatHelp
+				div.control-group
+					div.controls
+						label.radio Validé
+							input(type="radio", name="status", value="1", checked)
+						label.radio  Blacklisté
+							input(type="radio", name="status", value="3")
+						label.radio.inline Alerte : En attente de validation
+							input(type="radio", name="status", value="2")	
+						label.radio Alerte: Gmap a échoué
+							input(type="radio", name="status", value="10")
+						label.radio Alerte : Le lieu matché est blacklisté
+							input(type="radio", name="status", value="11")
+						label.radio Alerte : La localisation est en dehors de la zone
+							input(type="radio", name="status", value="12")
+						label.radio Alerte : La géoloc, a échoué
+							input(type="radio", name="status", value="13")
 							
 		br				
 		div.control-group
@@ -192,11 +194,12 @@ mixin infoForm()
 			$('#freetagHelp').popover({animation:true,title:'Tags',content:"<p>Vous pouvez associer cette info à un mot clé. Un complétion automatique est proposée sur la base des mots clés déjà utilisés mais vous pouvez entrer n'importe quel mot. <br> Attention il est préférable de n'utiliser qu'un mot clé pour toutes les infos se rattachant à un même sujet (attention à l'orthographe et les majuscules.)  </p>",html:true});
 			$('#locationHelp').popover({animation:true,title:"Localisation de l'info",content:"<p>Entrer une addresse et choisir une proposition ou bien cliquer sur la carte à gauche et déplacer le marqueur.</p>",html:true});
 			$('#zoneHelp').popover({animation:true,title:'La zone',content:"<p>Les zones sont définies dans l'onglet Zones.<br> </p>",html:true});
-			$('#pubDateHelp').popover({placement:'left',animation:true,title:'Date de publication',content:"<p>C'est la date de parution de l'info. <br> L'info apparaitra sur le front à cette date.</p>",html:true});
-			$('#dateEndPrintHelp').popover({placement:'left',animation:true,title:'Date de fin de publication',content:"<p>L'info ne sera plus visible après cette date.</p>",html:true});
+			$('#pubDateHelp').popover({placement:'left',animation:true,title:'Date de publication',content:"<p>C'est la date de parution de l'info. <br> L'info apparaitra sur le front à cette date.<br>Par défaut, c'est maintenant.</p>",html:true});
+			$('#dateEndPrintHelp').popover({placement:'left',animation:true,title:'Date de fin de publication',content:"<p>L'info ne sera plus visible après cette date.<br>Par défaut, c'et dans 3 jours.</p>",html:true});
 			$('#printFlagHelp').popover({placement:'left',animation:true,title:'Print Flag',content:"<p>En cochant cette case, vous afficherez l'info seulement sur le fil info et pas sur la carte.</p>",html:true});
 			$('#eventDateFromHelp').popover({placement:'left',animation:true,title:"Date de début de l'évènement",content:"<p>Pour un évènement, la date de début et de fin est affichée après le titre de l'info.<br>Si le jour entre la date de début et de fin est le même, on affichera : <b>leJour à heure de début</b><br> Sinon on affichera : <b>Du lejourDébut au lejourFin</b></p>",html:true});
 			$('#eventDateEndHelp').popover({placement:'left',animation:true,title:"Date de fin de l'évènement",content:"<p>Pour un évènement, la date de début et de fin est affichée après le titre de l'info.<br>Si le jour entre la date de début et de fin est le même, on affichera : <b>leJour à heure de début</b><br> Sinon on affichera : <b>Du lejourDébut au lejourFin</b></p>",html:true});
+			$('#etatHelp').popover({placement:'top',animation:true,title:"Statut de l'info",content:"<p>Ici le changement de statut n'affecte que l'info concernée. <br> Si vous voulez modifier le statut de la news et du lieu auquel elle se rattache ainsi que celui de toutes les infos attachées à ce lieu, il faut passer par la page principale</p>",html:true});
 			
 			$('#alertInfoType').hide();
 
@@ -244,6 +247,7 @@ mixin infoForm()
 				stepMinute: 10,
 				hour:now.getHours(),
 			});
+			
 			/*THUMB*/
 			$('#picture').live('change', function () {
 				if ( window.FileReader ) {
@@ -429,10 +433,11 @@ mixin infoForm()
 				err = true;
 			}
 			
-			if(typeof $('input:radio[name=status]:checked').val() == "undefined" ){
+
+			/*if(typeof $('input:radio[name=status]:checked').val() == "undefined" ){
 				setError('#statusGroup','Choisir un statut !');
 				err = true;
-			}
+			}*/
 
 
 			if (err){

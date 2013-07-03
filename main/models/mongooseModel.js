@@ -633,7 +633,7 @@ Info.statics.format = function (theinfo) {
 
 Info.statics.countUnvalidated = function (callback) {
 	var last10Days = new Date() - 10*24*60*60*1000;	
-	return this.count( {'status': { $in: [2, 10]},creationDate : {$gte:last10Days}}, callback );
+	return this.count( {'status': { $in: [2, 10, 11, 12, 13]},creationDate : {$gte:last10Days}}, callback );
 }
 
 Info.statics.findByTitle = function (title, callback) {
@@ -1179,6 +1179,7 @@ Info.statics.findGridInfos = function (pageIndex, pageSize, searchTerm, sortProp
 		else
 			conditions["status"] = status;
 	}
+	console.log(status);
 
 	
 
