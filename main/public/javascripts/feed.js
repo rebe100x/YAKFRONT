@@ -996,15 +996,17 @@ yakComments.unbind("click").on('click',function(){
 
 			}
 
-
-			more = $("<a />");
-			more.attr("class", "more");
-			more.attr("href", val.outGoingLink);
-			more.attr("target", "_blank");
-			more.attr("rel", val._id);
-			more.attr("data-toggle", "data-toggle");
-			more.html(" plus de détails...");
-			more.hide();			
+			if(val.outGoingLink){
+				more = $("<a />");
+				more.attr("class", "more");
+				more.attr("href", val.outGoingLink);
+				more.attr("target", "_blank");
+				more.attr("rel", val._id);
+				more.attr("data-toggle", "data-toggle");
+				more.html(" plus de détails...");
+				more.hide();	
+			}
+					
 			
 			content.append("<div class='shareMe' userid='"+user._id+"'><i style='background: none' rel='"+val._id+"'' class='icon-share' title=''><div class='ftgIcon'></div></i></div>");
 			

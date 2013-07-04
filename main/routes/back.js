@@ -236,6 +236,7 @@ exports.getFileSample = function(req,res){
 			
 		break;
 		case 'JSON':
+			console.log(req.body);
 			if(req.body.isLink == 1 ){
 				var request = require('request');
 				var thepath = req.body.file;
@@ -253,7 +254,12 @@ exports.getFileSample = function(req,res){
 							if(values[i].length > 5) // searching for a big array
 								rootElement = keys[i];
 						}
-						dataObj[req.body.param].forEach(function(item){
+						if(req.body.param && typeof dataObj[req.body.param] != 'undefined')
+							var dataObjToLoop = dataObj[req.body.param];
+						else
+							var dataObjToLoop = dataObj;
+
+						dataObjToLoop.forEach(function(item){
 							output.push(item);
 						});
 						res.json({code:200, rootElement:rootElement, fileSample:JSON.stringify(output.slice(0,4))});
@@ -265,7 +271,12 @@ exports.getFileSample = function(req,res){
 				data.setEncoding('utf8');
 				data.on('data',function(data){
 					var dataObj = JSON.parse(data.toString('utf8'));
-					dataObj[req.body.param].forEach(function(item){
+					if(req.body.param && typeof dataObj[req.body.param] != 'undefined')
+						var dataObjToLoop = dataObj[req.body.param];
+					else
+						var dataObjToLoop = dataObj;
+
+					dataObjToLoop.forEach(function(item){
 						output.push(item);
 					});
 					res.json({code:200, rootElement:rootElement, fileSample:JSON.stringify(output.slice(0,4))});
@@ -898,6 +909,7 @@ exports.info_setstatus = function (req, res){
 
 	var status = req.body.status;
 	var placeStatus = 0;
+
 	if(status == 1)
 		placeStatus = 0;// we don't validate the place
 	else if(status == 2)
@@ -907,6 +919,9 @@ exports.info_setstatus = function (req, res){
 	else if(status == 4){
 		placeStatus = 3;// we disable the place
 		status = 3;
+	}else if(status == 5){ // BL place and set in alert linked infos
+		placeStatus = 3;// we disable the place
+		status = 2;
 	}
 		
 

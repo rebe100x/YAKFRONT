@@ -146,6 +146,9 @@ mixin feedForm()
 					.span6
 						label Source(s) web
 							i.icon-question-sign#sourceHelp
+						div
+							a.socialFeeds.twitterFeed(title="Aide pour parser un flux TWITTER",rel='tw')
+							a.socialFeeds.dailyMotionFeed(title="Aide pour parser un flux DAILYMOTION",rel='dm')
 						.input-append	
 							input.big(type='text', name='source', id='source', placeholder='http://...',autocomplete='off')
 							button.btn#btn-source-adder(type="button") Ajouter
@@ -224,7 +227,21 @@ mixin feedForm()
 				button.btn.btn-large.btn-inverse(type='submit', name='submit', id='submit', value='Enregistrer') Enregistrer
 			br
 			br
-			br		
+			br
+		div#sourceHelpModal.modal.hide.fade
+			div.modal-header
+				button.big(type="button", class="close", data-dismiss="modal", aria-hidden="true") X
+				h3(id="myModalLabel") Aide à la création d url source:
+			div.modal-body
+				input#sourceHelpHidden(type="hidden", name="sourceHelpHidden", value='')
+				label Entrer un texte:
+				.input-append
+					input#sourceHelpInput(type="text",name="sourceHelpInput",placeholder="",value='',autocomplete='off')
+					button.btn#btn-sourceHelpGO(type="button") GO	
+
+			br
+			br
+			br	
 		div#parsingModal.modal.hide.fade.big
 			div.modal-header
 				button.big(type="button", class="close", data-dismiss="modal", aria-hidden="true") X
@@ -240,8 +257,8 @@ mixin feedForm()
 							input(type='text', name='infoTitle', id='infoTitle', placeholder="Titre")
 							label Corps de l&rsquo; info:
 							input(type='text', name='infoContent', id='infoContent', placeholder="Corps")
-							label Lien web vers l&rsquo;info, ou identifiant unique:*
-							input(type='text', name='infoLink', id='infoLink', placeholder="Lien web vers l'info")
+							label Lien web vers l&rsquo;info <u>ou bien</u> identifiant unique:*
+							input(type='text', name='infoLink', id='infoLink', placeholder="Lien web vers l'info ou identifiant unique")
 							legend Paramètres optionels:
 							label Imagette:
 							input(type='text', name='infoThumb', id='infoThumb', placeholder="Imagette")
@@ -281,7 +298,7 @@ mixin feedForm()
 									li
 										a(tabindex="-1", href="#", key='infoContent') Corps de l&rsquo; info
 									li
-										a(tabindex="-1", href="#", key='infoLink') Lien web vers l&rsquo;info
+										a(tabindex="-1", href="#", key='infoLink') Lien web vers l&rsquo;info <u>ou bien</u> identifiant unique
 									li.divider
 									li
 										a(tabindex="-1", href="#", key='infoThumb') Imagette
@@ -364,7 +381,7 @@ mixin feedForm()
 			$('#defaultPlaceSearchNameHelp').popover({animation:true,title:'Indice pour la recherche de lieu',content:"<p>Entrer ici un texte qui complète l'information de géolocalisation et donne une précision à l'algo de recherche de lieu afin de distinguer des lieux différents mais ayant le même nom.<br><br>Par exemple un lieu reconnu comme le Musée des Civilisations pourrait être à Marseille ou à Paris. Si votre flux est un flux local à Marseille, il vous faut entrer <b>Marseille, France</b>, ou <b>Bouches-du-Rhône, France</b>. La requète de géoloc sera alors bien plus précise et évitera les doublons avec d'autre lieux du même nom en France.<br><br> Si vous entrez une liste des musées de France, il vous suffit d'entrer <b>France</b>.<br><br> SI vous être trop précis vous perdrez des infos qui aurraient pu être géolocalisées, si vous êtes trop imprécis vous risquez les doublons.</p>",html:true});
 			$('#zoneHelp').popover({animation:true,title:'La zone',content:"<p>Les zones sont définies dans l'onglet Zones.<br> Elles permettent un filtrage des données : toute donnée géolocalisée en dehors de la zone définie est mise en erreur.<br> Cela permet de filtrer les infos nationales ou internationales présentes parfois dans les medias locaux.</p>",html:true});
 			$('#fileuploadHelp').popover({animation:true,title:'Source = Fichier',content:"<p>Vous pouvez uploader vos données sous forme de fichiers. <br> Vous pouvez ajouter autant de fichiers que vous voulez du moment qu'ils suivent le même schéma de parsing.</p>",html:true});
-			$('#sourceHelp').popover({animation:true,title:'Source = Url',content:"<p>Vous pouvez définit une url à parser. <br> Vous pouvez ajouter autant d'url que vous voulez du moment qu'elles suivent le même schéma de parsing.<br>Une fois l'url entrée, vous pouvez vérifier le lien avec un click DROIT de la souris.</p>",html:true});
+			$('#sourceHelp').popover({animation:true,title:'Source = Url',content:"<p>Vous pouvez définit une url à parser. <br> Vous pouvez ajouter autant d'url que vous voulez du moment qu'elles suivent le même schéma de parsing.<br>Une fois l'url entrée, vous pouvez vérifier le lien avec un click DROIT de la souris.<br>Un jeu de bouton de préselection est disponible ci dessous pour certains flux : TWITTER, RSS, DAILYMOTION...</p>",html:true});
 			$('#feedTypeHelp').popover({animation:true,title:'Type de flux',content:"<p>Regarder l'extension du fichier ou du flux pour définir un des 3 types.</p>",html:true});
 			$('#rootElementHelp').popover({animation:true,title:'Element racine',content:"<p>Ce champ n'est nécessaire que pour un type <b>XML</b> ou <b>JSON</b>.<br><br>Définir ici l'élément racine surlequel l'algo doit boucler.<br><br><b>Pour pré-remplir ce champ cliquer sur l'icône <i class='icon-search'></i></b> ( attention , c'est expérimental, il est préférable de vérifier manuellement.<br><br>Par exemple, un flux RSS a la plus part du temps un élément racine <b>/rss/channel/item</b> </p><br><br>Pour un type JSON, indiquer le nom de l'élément surlequel boucler ( souvent <b>item</b> )<br><br>",html:true});
 			$('#lineToBeginHelp').popover({animation:true,title:'Ligne de commencement',content:"<p>Pour un type CSV, vous pouvez indiquer la ligne de départ afin de ne pas prendre en compte le header oudes lignes vides.</p>",html:true});
@@ -487,6 +504,72 @@ mixin feedForm()
 	
 			});
 			
+			/*HELP ON SOURCE LINK*/
+			$('.socialFeeds').unbind('click').on('click',function(){
+				$('#sourceHelpModal').modal('show');
+				$('#sourceHelpHidden').val($(this).attr('rel'));
+				$('#sourceHelpInput').focus();
+				var labelText = '';
+				switch($(this).attr('rel')){
+					case 'tw':
+						labelText = "Entrer le <i>screen name</i> de l'utilisateur dont vous voulez parser les tweets";
+					break;
+					case 'dm':
+					//https://api.dailymotion.com/user/villedemontpellier
+					//https://api.dailymotion.com/user/x32f7b/videos?fields=country%2Ccreated_time%2Cdescription%2Ctags%2Ctitle%2Cgeoloc%2Cembed_url%2Cthumbnail_120_url%2Curl%2Cviews_total%2Cembed_html&sort=recent
+						labelText = "Entrer le <i>screen name</i> de l'utilisateur dont vous voulez parser le flux Dailymotion";
+					break;
+				}
+				$('#sourceHelpModal label').html(labelText);
+			});
+
+			$('#btn-sourceHelpGO').unbind('click').on('click',function(){
+				var url2parse = '';
+				var screen_name = $('#sourceHelpInput').val();
+				
+
+				switch($('#sourceHelpHidden').val()){
+					case 'tw':
+						url2parse = conf.batchurl.replace('BACKEND','BATCH')+'twitterReader.php?screen_name='+screen_name;
+						if(url2parse.length > 40)
+							var url2parseText = url2parse.substring(0,40)+'...';
+						else
+							var url2parseText = url2parse;
+						$("#pillSourceLink ul").append("<li class='source-val status-warning' title='Right click to open the URL!' data-value='"+url2parse+"'>"+url2parseText+"</li>");
+						linkSource.push(url2parse);
+						$('#source').val(url2parse);
+						$("#linkSource").val(linkSource.join(','));
+						/*empty the sourcefile*/
+						fileSource = [];
+						$("#fileSource").val('');
+						$("#pillSourceFile ul").html('');		
+						$('#sourceHelpModal').modal('hide');
+						$('#feedType').val('JSON');
+						$('#parsing').trigger('click');
+					break;
+					case 'dm':
+						$.getJSON('https://api.dailymotion.com/user/'+screen_name,function(data){
+							url2parse = "https://api.dailymotion.com/user/"+data.id+"/videos?fields=country%2Ccreated_time%2Cdescription%2Ctags%2Ctitle%2Cgeoloc%2Cembed_url%2Cthumbnail_120_url%2Curl%2Cviews_total%2Cembed_html&sort=recent";
+							if(url2parse.length > 40)
+								var url2parseText = url2parse.substring(0,40)+'...';
+							else
+								var url2parseText = url2parse;
+							$("#pillSourceLink ul").append("<li class='source-val status-warning' title='Right click to open the URL!' data-value='"+url2parse+"'>"+url2parseText+"</li>");
+							linkSource.push(url2parse);
+							$('#source').val(url2parse);
+							$("#linkSource").val(linkSource.join(','));
+							/*empty the sourcefile*/
+							fileSource = [];
+							$("#fileSource").val('');
+							$("#pillSourceFile ul").html('');		
+							$('#sourceHelpModal').modal('hide');
+							$('#feedType').val('JSON');
+							$('#parsing').trigger('click');
+						});
+					break;
+				}
+			});
+
 			/*SOURCE LINK*/
 			$('#btn-source-adder').unbind('click').on('click',function(){
 				$("#pillSourceLink").show();
@@ -548,7 +631,8 @@ mixin feedForm()
 				$('#parsingModal').modal('show');
 				var thesource = '';
 				
-					if( !( ($('#feedType').val() == 'CSV' && $('#lineToBegin').val() == '' )  ||  ( ($('#feedType').val() == 'XML' || $('#feedType').val() == 'JSON') && $('#rootElement').val() == '' ) ) ){
+					//if( !( ($('#feedType').val() == 'CSV' && $('#lineToBegin').val() == '' )  ||  ( ($('#feedType').val() == 'XML' || $('#feedType').val() == 'JSON') && $('#rootElement').val() == '' ) ) ){
+					if( !( ($('#feedType').val() == 'CSV' && $('#lineToBegin').val() == '' ) ) ){
 					if(typeof fileSource[0] != 'undefined' || typeof linkSource[0] != 'undefined'){
 						if(typeof fileSource[0] != 'undefined'){
 							thesource = fileSource[0];
@@ -611,8 +695,8 @@ mixin feedForm()
 				}else{
 					if($('#feedType').val() == 'CSV')
 						$('#parsingEditor').html('<span class="alert alert-error">Veuillez définir une linge de début.</span>');		
-					if($('#feedType').val() == 'XML' || $('#feedType').val() == 'JSON')
-						$('#parsingEditor').html('<span class="alert alert-error">Veuillez définir un élément racine.</span>');		
+					//if($('#feedType').val() == 'XML' || $('#feedType').val() == 'JSON')
+					//	$('#parsingEditor').html('<span class="alert alert-error">Veuillez définir un élément racine.</span>');		
 				}	
 					
 			});
@@ -741,7 +825,7 @@ mixin feedForm()
 
 			/*EXTERNAL SOURCE LINK COMPLETION*/
 			$('#link').on('blur',function(){
-				if($(this).val() != '' && $(this).val().slice(0,7) != "http://")
+				if($(this).val() != '' && $(this).val().slice(0,7) != "http://" && $(this).val().slice(0,7) != "https://")
 					$(this).val('http://'+$(this).val());
 			});	
 				

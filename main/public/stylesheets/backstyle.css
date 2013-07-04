@@ -51,6 +51,10 @@ table tr.success{background-color: #DFF0D8;}
 .favplacelist li span { cursor: pointer;}
 
 /*FEED FORM*/
+.socialFeeds{height: 37px;  width: 37px; position: relative; display:inline-block; background: url('/images/back/feeds.png') no-repeat; background-position: -62px -62px;}
+.socialFeeds.twitterFeed{background-position: -105px -62px;}
+.socialFeeds.dailyMotionFeed{background-position: -277px -62px;}
+.socialFeeds.rssFeed{background-position: -192px -62px;}
 .colTableParsingOn{background-color:#f89406;color:#FFF;}
 #parsingEditor{font-size:10px;}
 

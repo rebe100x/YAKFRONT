@@ -242,7 +242,7 @@ mixin list()
 		function makeStatusDropDown(item){
 			var select = $("<div />");
 			select.attr("class", "selectStatus");
-			select.html('<select onchange="setNewStatus(this)" placeId="'+item.placeId+'"  class="selectStatus" rel="'+item._id+'"><option value="0">Changer le statut</option><option value="1">Valider cette info</option><option value="2">Mettre en attente cette info.</option><option value="3">Désactiver cette info</option><option value="4">Désactiver info + lieu lié + infos liées à ce lieu</option></select>');
+			select.html('<select onchange="setNewStatus(this)" placeId="'+item.placeId+'"  class="selectStatus" rel="'+item._id+'"><option value="0">Changer le statut</option><option value="1">Valider cette info</option><option value="2">Mettre en attente cette info.</option><option value="3">Désactiver cette info</option><option value="5">Blacklister le lieu et mettre en alerte les infos associées</option><option value="4">Désactiver info + lieu lié + infos liées à ce lieu</option></select>');
 			select.find("option").each(function(){
 				if($(this).attr("value") == 0)
 					$(this).attr("selected", "selected");
@@ -354,7 +354,9 @@ mixin list()
 
 			if (typeof item.location != 'undefined'
 				&& typeof item.location.lat != 'undefined'
-				&& typeof item.location.lng != 'undefined' ){
+				&& typeof item.location.lng != 'undefined' 
+				&& (item.location.lat >0 && item.location.lng > 0)
+				){
 				res += '<a class="centerMap listIcon" id="' + item._id + '" lat="' + item.location.lat + '" lng="' + item.location.lng + '"   href="#">';
 			res += '<i class = "icon-map-marker" title="Localiser"></i>';
 			res += '</a>';
