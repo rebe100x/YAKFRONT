@@ -44,11 +44,11 @@ mixin list()
 					select#filterStatus
 						option(value="all") Tous les statuts
 						option(value="1") Validé
-						option(value="3") Blacklisté
+						option(value="3") Désactivé
 						option(value="alert", selected="selected") En alerte
 						option(value="2") - Alerte: En attente
 						option(value="10") - Alerte: Gmap a échoué
-						option(value="11") - Alerte: Le lieu matché est blacklisté
+						option(value="11") - Alerte: Le lieu matché est désactivé
 						option(value="12") - Alerte: Localisation hors zone
 						option(value="13") - Alerte: La géoloc a échoué
 						
@@ -284,7 +284,7 @@ mixin list()
 		function makeStatusDropDown(item){
 			var select = $("<div />");
 			select.attr("class", "selectStatus");
-			select.html('<select onchange="setNewStatus(this)" class="selectStatus" rel="'+item._id+'"><option value="0">Changer le statut</option><option value="1">Valider (lieu + infos liées)</option><option value="2">En attente (lieu + infos liées)</option><option value="3">Désactiver lieu uniquement</option><option value="4">Désactiver lieu + infos liées</option></select>');
+			select.html('<select onchange="setNewStatus(this)" class="selectStatus" rel="'+item._id+'"><option value="0">Changer le statut</option><option value="1">Valider (lieu + infos liées)</option><option value="2">En attente (lieu + infos liées)</option><option value="3">Désactiver ce lieu uniquement</option><option value="4">Désactiver ce lieu + infos liées</option></select>');
 			select.find("option").each(function(){
 				if($(this).attr("value") == 0)
 					$(this).attr("selected", "selected");
@@ -309,13 +309,13 @@ mixin list()
 							title_icon = "En Attente";
 						}else if($(el).val() == 3){
 							icon = 'icon-ban-circle';
-							title_icon = "Blacklisté";
+							title_icon = "Désactivé";
 						}else {
 							icon = 'icon-warning-sign';
 							if($(el).val() == 10)
 								title_icon = "Alerte: GMAP n'a pas retourné de valeur";
 							if($(el).val() == 11)
-								title_icon = "Alerte: matching sur un lieu blacklisté";
+								title_icon = "Alerte: matching sur un lieu désactivé";
 							if($(el).val() == 12)
 								title_icon = "Alerte: le lieu trouvé est hors de la zone";
 							if($(el).val() == 13)
@@ -408,7 +408,7 @@ mixin list()
 			}
 			else if (item.status == 3) {
 				icon = 'icon-ban-circle';
-				title_icon = "Blacklisté";
+				title_icon = "Désactivé";
 			}
 			else{
 				icon = 'icon-warning-sign';
@@ -722,9 +722,9 @@ mixin list()
 
 			$.get(url, function(data) {
 				if (data.result == -1 || typeof data.result == 'undefined')
-					toastr.error('Erreur de blacklistage');
+					toastr.error('Erreur de désactivage');
 				else {
-					toastr.info('Blacklistage de ' + data.result + ' lieu(x)');
+					toastr.info('Désactivage de ' + data.result + ' lieu(x)');
 					refreshDatagridAndMenu();
 				}
 			});
@@ -993,6 +993,7 @@ mixin list()
 			$("#pillFreetag ul").show();	
 			$("#pillYakcat ul").html('');
 			$("#pillFreetag ul").html('');
+			$("#placePreview").html('');
 			$("#placeForm #title").focus();
 			$("#placeForm #hiddenOrigin").val(user.login);
 			$("#placeForm #origine").val(user.login);

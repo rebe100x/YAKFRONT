@@ -401,6 +401,20 @@ exports.findAllFeed = function (req, res) {
 
 };
 
+exports.findAllActiveFeed = function (req, res) {
+	var Feed = db.model('Feed');
+   	Feed.findAllActive(function (err, feeds){
+   		var data = {};
+		var feedFormated = feeds.map(function(item){
+			return Feed.format(item);
+		});
+		res.json({
+			feeds: feedFormated
+		});
+	});
+
+};
+
 exports.gridFeeds = function (req, res) {
 	var Feed = db.model('Feed');
     
@@ -1013,7 +1027,7 @@ exports.gridYakNE = function (req, res) {
 				res.json(data);
 			});	
 		});
-	};
+};
 
 exports.yakNE = function(req, res){
 
@@ -1068,6 +1082,111 @@ exports.yakNE = function(req, res){
 		}
 		req.session.message = formMessage;
 		res.redirect('yakNE/list')
+	});	
+};
+
+
+/******************************************************************************************************************************************************************
+#YAKBL
+*******	*/
+exports.yakBL_list = function(req, res){
+	delete req.session.message;
+	res.render('yakBL/index');
+};
+
+exports.findYakBLByTitle = function (req, res) {
+	var YakBL = db.model('YakBL');
+   	YakBL.findByTitle(req.params.title, function (err, theYakBL){
+   		res.json({
+			yakBL: theYakBL
+		});
+	});
+};
+
+
+
+exports.findYakBLById = function (req, res) {
+	var YakBL = db.model('YakBL');
+   	YakBL.findById(req.params.id, function (err, theYakBL){
+		res.json({
+			yakBL: theYakBL
+		});
+	});
+};
+
+
+exports.gridYakBL = function (req, res) {
+	var YakBL = db.model('YakBL');
+    
+    var sortProperties = [];
+    if (req.params.sortBy) {
+        sortProperties = req.params.sortBy.split(',');
+    }
+
+    var sortDirections = [];
+    if (req.params.sortDirection) {
+        sortDirections = req.params.sortDirection.split(',');
+    }
+
+   
+
+	YakBL.findGridYakBL(req.params.pageIndex,req.params.pageSize,
+		req.params.searchTerm,sortProperties,sortDirections,
+        req.params.status, function (err, yakBLs){
+			var data = {};
+			data['yakBL'] = yakBLs;
+			data['pageIndex'] = req.params.pageIndex;
+			data['pageSize'] = req.params.pageSize;
+			YakBL.countSearch(req.params.searchTerm, req.params.status, function (err, count){
+				data['count'] = count;
+				res.json(data);
+			});	
+		});
+	};
+
+exports.yakBL = function(req, res){
+
+	var formMessage = new Array();
+	delete req.session.message;
+	var YakBL = db.model('YakBL');
+	var yakBL = new Object();
+
+	var obj_id = req.body.objid;
+	console.log(req.body);
+	var now = new Date();
+
+	yakBL.title = req.body.title;
+	if(req.body.zoneHidden != '')
+		yakBL.zone = req.body.zoneHidden.split(',');
+	if(req.body.feedHidden != '')
+		yakBL.feed = req.body.feedHidden.split(',');
+	if(req.body.zoneNameHidden != '')
+		yakBL.zoneName = req.body.zoneNameHidden.split(',');
+	if(req.body.feedNameHidden != '')
+		yakBL.feedName = req.body.feedNameHidden.split(',');
+			
+	yakBL.caseSensitive = req.body.caseSensitive;
+	
+	yakBL.status = parseInt(req.body.status);
+	yakBL.lastModifDate = now;
+	
+	if(typeof obj_id != 'undefined' && obj_id != ''){
+		var cond = {_id:obj_id};
+	}else{
+		yakBL.creationDate = now;
+		yakBL.lastModif = now;
+		var cond = {title:"anameimpossibletochoose007"};
+	}
+		
+	YakBL.update(cond,yakBL,{upsert:true},function (err){
+		if (!err)
+			formMessage.push("Mot blacklisté sauvegardé.");
+		else{
+			formMessage.push("Erreur pendant la sauvegarde du mot blacklisté !"+err);
+			//console.log(err);
+		}
+		req.session.message = formMessage;
+		res.redirect('yakBL/list')
 	});	
 };
 
@@ -1213,7 +1332,7 @@ exports.zone_list = function(req, res){
 
 exports.zones = function(req, res){
 	var Zone = db.model('Zone');
-    Zone.find({},{},{sort:{name:1}},function (err, docs){
+    Zone.find({status:1},{},{sort:{name:1}},function (err, docs){
       res.json({
         zone: docs
       });

@@ -137,6 +137,7 @@ app.post('/place/setStatus', back.requiresLogin, back.place_setstatus);
 //FEED
 app.get('/feed/list', back.requiresLogin, back.feed_list);
 app.get('/api/feedList',back.requiresLogin, back.findAllFeed);
+app.get('/api/feedListActive',back.requiresLogin, back.findAllActiveFeed);
 app.post('/feed', back.requiresLogin, back.feed);
 app.get('/api/feed/:id',back.requiresLogin, back.findFeedById);
 app.get('/api/feedExist/:name',back.requiresLogin, back.findFeedByName);
@@ -173,6 +174,15 @@ app.post('/yakNE', back.requiresLogin, back.yakNE);
 app.get('/api/yakNE/:id',back.requiresLogin, back.findyakNEById);
 app.get('/api/yakNEExist/:title',back.requiresLogin, back.findYakNEByTitle);
 app.get('/api/yakNE/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status',back.requiresLogin, back.gridYakNE);
+
+
+// YAKBL
+app.get('/yakBL/list', back.requiresLogin, back.yakBL_list);
+app.get('/api/yakBL/:id', back.requiresLogin, api.yakBL);
+app.post('/yakBL', back.requiresLogin, back.yakBL);
+app.get('/api/yakBL/:id',back.requiresLogin, back.findyakBLById);
+app.get('/api/yakBLExist/:title',back.requiresLogin, back.findYakBLByTitle);
+app.get('/api/yakBL/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status',back.requiresLogin, back.gridYakBL);
 
 
 // FAV PLACE

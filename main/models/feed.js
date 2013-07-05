@@ -172,6 +172,9 @@ Feed.statics.findAll = function (callback) {
 	return this.find({},{},{sort:{humanName:1}}, callback);
 }
 
+Feed.statics.findAllActive = function (callback) {
+	return this.find({status:1},{},{sort:{humanName:1}}, callback);
+}
 
 
 Feed.statics.countSearch = function (searchTerm, status, type, callback) {

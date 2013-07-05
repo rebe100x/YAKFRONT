@@ -1437,5 +1437,6 @@ mongoose.model('Client', Client);
 require('./place.js');
 require('./feed.js');
 require('./yakNE.js');
+require('./yakBL.js');
 require('./zone.js');
 require('./stat.js');

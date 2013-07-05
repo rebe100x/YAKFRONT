@@ -30,7 +30,7 @@ mixin menu(active)
 								- else
 									li
 										a(href="/") Dashboard
-										
+								li.divider-vertical
 								- if (active == 'info')
 									li.active
 										a(href="/info/list") Infos
@@ -57,15 +57,7 @@ mixin menu(active)
 									li
 										a(href="/illicites/list") Modération
 											span1#illicitenumber
-								
-								- if (active == 'user')
-									li.active
-										a(href="/user/list") Utilisateurs
-											span1#usernumber
-								- else
-									li
-										a(href="/user/list") Utilisateurs
-											span1#usernumber
+								li.divider-vertical			
 								- if (active == 'feed')
 									li.active
 										a(href="feed/list") Flux de Données
@@ -82,16 +74,31 @@ mixin menu(active)
 										a(href="zone/list") Zones
 								- if (active == 'yakNE')
 									li.active
-										a(href="/yakNE/list") Mots clés
+										a(href="/yakNE/list") Mots clés 
 								- else
 									li
 										a(href="/yakNE/list") Mots clés
+								if (active == 'yakBL')
+									li.active
+										a(href="/yakBL/list") Mots blacklistés
+								- else
+									li
+										a(href="/yakBL/list") Mots blacklistés
+								li.divider-vertical		
 								- if (active == 'yakcat')
 									li.active
 										a(href="/categories/list") Catégories
 								- else
 									li
 										a(href="/categories/list") Catégories
+								- if (active == 'user')
+									li.active
+										a(href="/user/list") Utilisateurs
+											span1#usernumber
+								- else
+									li
+										a(href="/user/list") Utilisateurs
+											span1#usernumber
 								
 		div#alertInfo.alert.alert-info
 			button.close(type="button",data-dismiss="alert") x

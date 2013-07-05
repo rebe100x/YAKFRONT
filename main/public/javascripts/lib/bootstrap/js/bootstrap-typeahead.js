@@ -17,6 +17,9 @@
  * limitations under the License.
  * This is an extension to Bootstrap Typeahead that adds minimal but powerful
  * extensions.
+
+ === modifyed by rebeb100x for accents support ===
+ === modifyed by rebeb100x for white char support (*) === line
  * ============================================================ */
 
 !function( $ ){
@@ -128,25 +131,44 @@
         return this.shown ? this.hide() : this
       }
 
-      items = $.grep(results, function (item) {
-        if (!that.strings)
-          if($.inArray(that.options.property, item)) {
+      if (this.query == '*') {
+        items = $.grep(results, function (item) {
+          if (!that.strings)
             if(typeof item != 'undefined') {
               item = item[that.options.property]
             } else {
               item = '';
             }
-          }
-        if (that.matcher(item)) return item
-      })
+          
+          return item
+        })
 
+      }
+      else{
+        items = $.grep(results, function (item) {
+          if (!that.strings)
+            if($.inArray(that.options.property, item)) {
+              if(typeof item != 'undefined') {
+                item = item[that.options.property]
+              } else {
+                item = '';
+              }
+            }
+          if (that.matcher(item)) return item
+        })
+  
+      }
+      
       items = this.sorter(items)
 
       if (!items.length) {
         return this.shown ? this.hide() : this
       }
 
-      return this.render(items.slice(0, this.options.items)).show()
+      if(this.query == '*')
+        return this.render(items).show()
+      else
+        return this.render(items.slice(0, this.options.items)).show()
     }
 
   , matcher: function (item) {
@@ -175,12 +197,16 @@
   , highlighter: function (item) {
       var search_item = makeSortString(item.toLowerCase());
       var query = makeSortString(this.query.toLowerCase());
-      search_item = search_item.replace(new RegExp('(' + query + ')', 'ig'), function ($1, match) {
-        return '<strong>' + match + '</strong>'
-      });
+      if(query != '*')
+        search_item = search_item.replace(new RegExp('(' + query + ')', 'ig'), function ($1, match) {
+          return '<strong>' + match + '</strong>'
+        });
 
       item = item.split('');
-      var re = new RegExp('<strong>(' + query + ')<\/strong>', 'ig');
+      if(query == '*'){
+        var re = new RegExp('/^/', 'ig');
+      }else
+        var re = new RegExp('<strong>(' + query + ')<\/strong>', 'ig');
       var reg_match_count = 0;
       var mod = 0;
       var arr_count = 0;

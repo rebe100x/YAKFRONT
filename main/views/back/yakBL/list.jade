@@ -58,8 +58,8 @@ mixin list()
 
 		$(document).ready(function() {
 			
-			if($.cookie("statusYakNE")){
-				var status = $.cookie("statusYakNE");
+			if($.cookie("statusYakBL")){
+				var status = $.cookie("statusYakBL");
 				$('#filterStatus').val(status);
 			}
 
@@ -68,7 +68,7 @@ mixin list()
 					columns: [
 					{
 						property: 'title',
-						label: 'Mot clé',
+						label: 'Mot Blacklisté',
 						sortable: true
 					},
 					{
@@ -98,7 +98,7 @@ mixin list()
 			},
 			data: function (options, callback) {
 
-				var url = '/api/yakNE';
+				var url = '/api/yakBL';
 				var self = this;
 
 				if (!options.search) {
@@ -143,7 +143,7 @@ mixin list()
 						firstLoad = false;
 					}
 					// Prepare data to return to Datagrid
-					var data = response.yakNE;
+					var data = response.yakBL;
 					var count = response.count;
 					var startIndex = (response.pageIndex - 1) * response.pageSize;
 					var endIndex = parseInt(startIndex) + parseInt(response.pageSize);
@@ -165,10 +165,10 @@ mixin list()
 		/*bind form edition on the loaded datagrid event to avoid double loading*/
 		$('#MyGrid').unbind('loaded').on('loaded',function(){
 				// Edit YAKNE function
-			$("#MyGrid .editYakNE").on('click', function(event){
+			$("#MyGrid .editYakBL").on('click', function(event){
 				event.preventDefault();
 				event.stopPropagation();
-				editYakNE(this.id,0);
+				editYakBL(this.id,0);
 				
 			});
 
@@ -176,14 +176,14 @@ mixin list()
 			$("#MyGrid a.duplicateItem").on('click', function(event){
 				event.preventDefault();
 				event.stopPropagation();
-				editYakNE(this.id,1);
+				editYakBL(this.id,1);
 			});
 		});
 		
 
 		$('#filterStatus').live('change', function() {
 			var currentSelection = $('#filterStatus :selected').val();
-			$.cookie("statusYakNE",currentSelection,{ expires: 100000, path : '/' });
+			$.cookie("statusYakBL",currentSelection,{ expires: 100000, path : '/' });
 			refreshDatagrid();
 		});
 
@@ -198,7 +198,7 @@ mixin list()
 			res += '<a href="#" id="'+item._id+'" class="duplicateItem listIcon" title="Dupliquer"><i class="icon-random"></i></a>';
 			res += "</div>";
 
-			res += '<a class="editYakNE" id="' + item._id + '" href="#">';
+			res += '<a class="editYakBL" id="' + item._id + '" href="#">';
 
 			if (item.status == 1) {
 				icon = 'icon-ok-sign';
@@ -211,19 +211,7 @@ mixin list()
 
 	
 			res += 	'<div class="text-info"><i class="' + icon + ' status" title="' + title_icon + '" ></i>' + item.title + '</div>';
-			if(item.description)
-				res += '<div><small>'+item.description+'</small></div>';
-
-			res += '<small> ( ';
-			if(item.match.length > 0){
-				var i = 0;
-				item.match.forEach(function(val){
-					if(i<10)
-						res += val.title+', ';
-					i++;
-				});
-			}
-			res += '... ) </small>';
+			
 			res += '</a>';
 
 			return res;
@@ -247,10 +235,10 @@ mixin list()
 
 		
 		$("#btnBack").unbind('click').on('click',function(){
-			$("#yakNEForm").hide();
+			$("#yakBLForm").hide();
 			$("#MyGrid").show();
-			$("#yakNEForm input[type=hidden]").val('');
-			$('#yakNEForm').clearForm();
+			$("#yakBLForm input[type=hidden]").val('');
+			$('#yakBLForm').clearForm();
 			$('#err').hide();
 			$("#btnBack").hide();
 			$("#pillNormalizedTag ul").empty();
@@ -266,18 +254,18 @@ mixin list()
 		
 		
 
-		/* get data and edit yakNE in the form
-			flagDuplicate = 1 for duplicating the yakNE
+		/* get data and edit yakBL in the form
+			flagDuplicate = 1 for duplicating the yakBL
 		*/
-		function editYakNE(id,flagDuplicate){
+		function editYakBL(id,flagDuplicate){
 			$("#btnBack").show();
 			$("#MyGrid").hide();
 			
 			// We remove the error class when we open a form for editing a place
-			$('#yakNEForm').removeClass("error");
+			$('#yakBLForm').removeClass("error");
 
 			/*INIT FORM FOR EDITION*/
-			$("#yakNEForm").show();
+			$("#yakBLForm").show();
 			
 			$("#pillNormalizedTag ul").html('');
 			$("#pillExactTag ul").html('');
@@ -285,8 +273,8 @@ mixin list()
 			$("#pillNormalizedTag").show();
 			$("#pillExactTag").show();
 			$("#pillYakcat").show();
-			$("#yakNEForm input[type=hidden]").val('');
-			$('#yakNEForm').clearForm();	
+			$("#yakBLForm input[type=hidden]").val('');
+			$('#yakBLForm').clearForm();	
 			$('#err').hide();
 			yakCatIds = new Array();
 			yakCatNames = new Array();
@@ -294,9 +282,9 @@ mixin list()
 			normalizedTags = new Array();
 			
 			
-			var url = '/api/yakNE/'+id;
+			var url = '/api/yakBL/'+id;
 			
-			// We search for the yakNE in mongo and we fill the form with the yakNE's values
+			// We search for the yakBL in mongo and we fill the form with the yakBL's values
 			$.ajax({
 				url: url,
 				type: 'GET',
@@ -304,27 +292,27 @@ mixin list()
 				success: function (response)
 				{
 					/*FORM INITIALISATION*/
-					var yakNE = response.data.yakNE;
+					var yakBL = response.data.yakBL;
 	
 					if(flagDuplicate == 1){
-						$("#yakNEForm legend.mainlegend").html("Dupliquer un mot clé : ");
-						$("#yakNEForm #title").val(yakNE.title+'_copy').focus();
-						$("#yakNEForm #objid").val('');
-						$("#yakNEForm #titleNormalized").html(yakNE.title+'_copy');
-						$("#yakNEForm #titleNormalizedHidden").val(yakNE.title+'_copy');
+						$("#yakBLForm legend.mainlegend").html("Dupliquer un mot clé : ");
+						$("#yakBLForm #title").val(yakBL.title+'_copy').focus();
+						$("#yakBLForm #objid").val('');
+						$("#yakBLForm #titleNormalized").html(yakBL.title+'_copy');
+						$("#yakBLForm #titleNormalizedHidden").val(yakBL.title+'_copy');
 					}	
 					else{	
-						$("#yakNEForm legend.mainlegend").html("Modifier un mot clé :");
-						$("#yakNEForm #objid").val(yakNE._id);
-						$("#yakNEForm #title").val(yakNE.title).focus();
-						$("#yakNEForm #titleNormalized").html(yakNE.title);
-						$("#yakNEForm #titleNormalizedHidden").val(yakNE.title);
+						$("#yakBLForm legend.mainlegend").html("Modifier un mot clé :");
+						$("#yakBLForm #objid").val(yakBL._id);
+						$("#yakBLForm #title").val(yakBL.title).focus();
+						$("#yakBLForm #titleNormalized").html(yakBL.title);
+						$("#yakBLForm #titleNormalizedHidden").val(yakBL.title);
 					}							
 
 					
 
 					var tmpArr = new Array();
-					tmpArr = yakNE.match;
+					tmpArr = yakBL.match;
 					tmpArr.forEach(function(m){
 						if(m.title.length>0){
 							if(m.level == 'exact'){
@@ -344,8 +332,8 @@ mixin list()
 					$("#exactTagsHidden").val(exactTags.join(','));
 
 					
-					if(yakNE.yakCatId.length > 0){
-						yakNE.yakCatId.forEach(function(cat){
+					if(yakBL.yakCatId.length > 0){
+						yakBL.yakCatId.forEach(function(cat){
 							if(cat != ""){
 
 								$.get('/api/cats/'+cat,function(data){
@@ -359,12 +347,12 @@ mixin list()
 						});	
 					}
 
-					$('#yakNEForm #description').val(yakNE.description);
+					$('#yakBLForm #description').val(yakBL.description);
 
-					$('#yakNEForm input:radio[name=status][value='+yakNE.status+']').click();
+					$('#yakBLForm input:radio[name=status][value='+yakBL.status+']').click();
 					
 
-					$("#yakNEForm #title").focus();
+					$("#yakBLForm #title").focus();
 					
 					
 				}
@@ -372,24 +360,24 @@ mixin list()
 		}
 		
 
-		// Add New YakNE
+		// Add New YakBL
 		$("#btnAdd").click(function(){
 			$("#MyGrid").hide();
-			$("#yakNEForm")[0].reset();
-			// We remove the error class when we open a form for creating a new yakNE
-			$('#yakNEForm #titleGroup').removeClass("error");
+			$("#yakBLForm")[0].reset();
+			// We remove the error class when we open a form for creating a new yakBL
+			$('#yakBLForm #titleGroup').removeClass("error");
 			$("#btnBack").fadeIn();
-			$("#yakNEForm").fadeIn();
-			$("#yakNEForm #objid").val("");
+			$("#yakBLForm").fadeIn();
+			$("#yakBLForm #objid").val("");
 			$("#pillNormalizedTag ul").empty();
 			$("#pillExactTag ul").empty();
 			$("#pillYakcat ul").empty();
 			$('#err').hide();
-			$("#yakNEForm #title").focus();
+			$("#yakBLForm #title").focus();
 
 		});
 			
-		$('#yakNEForm input:radio[name=status][value=1]').click();
+		$('#yakBLForm input:radio[name=status][value=1]').click();
 
 
 		
