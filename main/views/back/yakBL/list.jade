@@ -241,14 +241,13 @@ mixin list()
 			$('#yakBLForm').clearForm();
 			$('#err').hide();
 			$("#btnBack").hide();
-			$("#pillNormalizedTag ul").empty();
-			$("#pillExactTag ul").empty();
-			$("#pillYakcat ul").empty();
-			$("#titleNormalized").html('');
-			yakCatIds = new Array();
-			yakCatNames = new Array();
-			exactTags = new Array();
-			normalizedTags = new Array();
+			$("#pillZone ul").empty();
+			$("#pillFeed ul").empty();
+			$("#caseSensitive").attr('checked',false);
+			zone = new Array();
+			feed = new Array();
+			zoneName = new Array();
+			feedName = new Array();
 		});
 
 		
@@ -267,19 +266,17 @@ mixin list()
 			/*INIT FORM FOR EDITION*/
 			$("#yakBLForm").show();
 			
-			$("#pillNormalizedTag ul").html('');
-			$("#pillExactTag ul").html('');
-			$("#pillYakcat ul").html('');
-			$("#pillNormalizedTag").show();
-			$("#pillExactTag").show();
-			$("#pillYakcat").show();
+			$("#pillZone ul").html('');
+			$("#pillFeed ul").html('');
+			$("#pillFeed").show();
+			$("#pillZone").show();
 			$("#yakBLForm input[type=hidden]").val('');
 			$('#yakBLForm').clearForm();	
 			$('#err').hide();
-			yakCatIds = new Array();
-			yakCatNames = new Array();
-			exactTags = new Array();
-			normalizedTags = new Array();
+			zone = new Array();
+			feed = new Array();
+			zoneName = new Array();
+			feedName = new Array();
 			
 			
 			var url = '/api/yakBL/'+id;
@@ -295,59 +292,38 @@ mixin list()
 					var yakBL = response.data.yakBL;
 	
 					if(flagDuplicate == 1){
-						$("#yakBLForm legend.mainlegend").html("Dupliquer un mot clé : ");
+						$("#yakBLForm legend.mainlegend").html("Dupliquer un mot blacklisté : ");
 						$("#yakBLForm #title").val(yakBL.title+'_copy').focus();
 						$("#yakBLForm #objid").val('');
-						$("#yakBLForm #titleNormalized").html(yakBL.title+'_copy');
-						$("#yakBLForm #titleNormalizedHidden").val(yakBL.title+'_copy');
 					}	
 					else{	
-						$("#yakBLForm legend.mainlegend").html("Modifier un mot clé :");
+						$("#yakBLForm legend.mainlegend").html("Modifier un mot blacklisté :");
 						$("#yakBLForm #objid").val(yakBL._id);
 						$("#yakBLForm #title").val(yakBL.title).focus();
-						$("#yakBLForm #titleNormalized").html(yakBL.title);
-						$("#yakBLForm #titleNormalizedHidden").val(yakBL.title);
 					}							
 
 					
 
-					var tmpArr = new Array();
-					tmpArr = yakBL.match;
-					tmpArr.forEach(function(m){
-						if(m.title.length>0){
-							if(m.level == 'exact'){
-								
-								$("#pillExactTag ul").append("<li class='source-val status-important' data-value='"+m.title+"'>"+m.title+"</li>");
-								exactTags.push(m.title);								
-							}
-							if(m.level == 'normalized'){
-								$("#pillNormalizedTag").show();
-								$("#pillNormalizedTag ul").append("<li class='source-val status-warning' data-value='"+m.title+"'>"+m.title+"</li>");
-								normalizedTags.push(m.title);	
-							}
-						}
-					});
-
-					$("#normalizedTagsHidden").val(normalizedTags.join(','));								
-					$("#exactTagsHidden").val(exactTags.join(','));
+					$("#zoneHidden").val(yakBL.zone.join(','));								
+					$("#zoneNameHidden").val(yakBL.zoneName.join(','));								
+					$("#feedHidden").val(yakBL.feed.join(','));								
+					$("#feedNameHidden").val(yakBL.feedName.join(','));								
 
 					
-					if(yakBL.yakCatId.length > 0){
-						yakBL.yakCatId.forEach(function(cat){
-							if(cat != ""){
+					if(yakBL.zone.length > 0){
+						yakBL.zone.forEach(function(z){
+							if(z != ""){
 
-								$.get('/api/cats/'+cat,function(data){
-									$("#pillYakcat ul").append("<li class='yakcat-val status-success' data-id='"+data.cats._id+"'>"+data.cats.title+"</li>");
-									yakCatIds.push(data.cats._id);
-									yakCatNames.push(data.cats.title);	
-									$("#yakCatIdsHidden").val(yakCatIds.join(','));
-									$("#yakCatNamesHidden").val(yakCatNames.join(','));
+								$.get('/api/zone/'+z,function(data){
+									$("#pillZone ul").append("<li class='zone-val status-success' data-id='"+data.zone._id+"'>"+data.zone.title+"</li>");
+									zone.push(data.zone._id);
+									zoneName.push(data.zone.title);	
+									$("#zoneHidden").val(zone.join(','));
+									$("#zoneNameHidden").val(zoneName.join(','));
 								});
 							}
 						});	
 					}
-
-					$('#yakBLForm #description').val(yakBL.description);
 
 					$('#yakBLForm input:radio[name=status][value='+yakBL.status+']').click();
 					
