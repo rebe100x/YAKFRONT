@@ -19,10 +19,9 @@ var YakNE = new Schema({
 
 YakNE.index({"match.title":1});
 
-YakNE.statics.findByTitle = function (str,callback) {
-  searchStr = new RegExp(str,'i');
-  var cond = {'title': {$regex:searchStr},"status":1};
-  return this.find( cond,{title:1}, callback );
+YakNE.statics.findByTitle = function (str,callback) {  
+  var cond = {'title': str,"status":1};
+  return this.findOne( cond,{title:1}, callback );
 }
 
 

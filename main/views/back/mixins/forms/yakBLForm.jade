@@ -13,7 +13,7 @@ mixin yakBLForm()
 				div.controls
 					label.alert#err(type="text", id="err", name="err", style='display:none') Les champs en rouge sont obligatoires.
 		
-		legend.mainlegend Ajouter un mot blacklisté :
+		legend.mainlegend Blacklister une expression :
 		
 		div.row-fluid
 			div.control-group#titleGroup
@@ -23,7 +23,7 @@ mixin yakBLForm()
 						label Entrer un mot ou une expression *: 
 							i.icon-question-sign#titleHelp
 						input(type='text', name='title', id='title', placeholder='Un mot ou une expression',autocomplete="off")
-						span#alertOnTitle
+						div#alertOnTitle
 					.span6 
 						label 
 							input#caseSensitive(type="checkbox",name="caseSensitive",style="margin:5px;")	
@@ -79,11 +79,11 @@ mixin yakBLForm()
 			$('#pillZone').show();
 			$('#pillFeed').show();
 			$('#title').on('keyup',function(){
-				$.get('/api/yakBLExist/'+$(this).val(),function(data){
-					if(data.yakBL.length > 0 ){
-						$('#alertOnTitle').html('<span class="alert">Ce mot est déjà blacklisté! </span>');
-					}
-				});
+				checkIfExists();
+			});
+
+			$('#caseSensitive').unbind('click').on('click',function(){
+				checkIfExists();
 			});
 
 			$('#titleHelp').popover({placement:'bottom',animation:true,title:'Le mot à blacklister',content:"<p>Entrer un mot ou une expression, mais pas de tags html ou javascript</p>",html:true});
@@ -108,7 +108,7 @@ mixin yakBLForm()
 					$('#zone').val('').focus();
 					zone.push(obj._id);
 					$('#zoneHidden').val(zone.join(','));
-					zoneName.push(obj._id);
+					zoneName.push(obj.name);
 					$('#zoneNameHidden').val(zone.join(','));
 						
 				}
@@ -139,7 +139,7 @@ mixin yakBLForm()
 					$('#feed').val('').focus();
 					feed.push(obj._id);
 					$('#feedHidden').val(feed.join(','));
-					feedName.push(obj._id);
+					feedName.push(obj.name);
 					$('#feedNameHidden').val(feed.join(','));
 						
 				}
@@ -165,10 +165,18 @@ mixin yakBLForm()
 				setError('#title','Entrer un mot !');
 				err = true;
 			}else{
-				$.get('/api/yakBLExist/'+title,function(data){
+				if($("#caseSensitive").attr('checked') == 'undefined' )
+					var caseSensitive = 0;
+				else
+					var caseSensitive = 1;	
+
+				$.post('/api/yakBLExist/',{title:stringSearch,caseSensitive:caseSensitive},function(data){
 					if(data.yakBL){
-						setError('#title','Ce mot est déjà blacklisté !');
-						err=true;
+						if($('#objid').val() != data.yakBL._id)	{
+							setError('#title','Ce mot est déjà blacklisté !');
+							err=true;
+						}
+							
 					}
 				});
 			}
@@ -182,4 +190,20 @@ mixin yakBLForm()
 		
 		
 
-	
+		function checkIfExists(){
+			var stringSearch = ($('#title').val()).trim();
+			var caseSensitive = 1;
+			if($("#caseSensitive").attr('checked') == 'checked' )
+				caseSensitive = 1;
+			else
+				caseSensitive = 0;	
+
+			$.post('/api/yakBLExist/',{title:stringSearch,caseSensitive:caseSensitive},function(data){
+				if(data.yakBL){
+						if($('#objid').val() != data.yakBL._id)
+							$('#alertOnTitle').html("<span class='alert'>"+stringSearch+" est déjà blacklisté! </span>");
+
+				}else
+					$('#alertOnTitle').html("");
+			});
+		}

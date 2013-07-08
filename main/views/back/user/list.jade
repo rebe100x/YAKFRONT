@@ -7,12 +7,14 @@ mixin list()
 			tr.headerControle
 				th
 					.datagrid-header-left
-						.input-append.search
-							input#search.input-medium(type='text', placeholder='Recherche', data-provide="typeahead", autocomplete="off")
-							button.btn
-								i.icon-search
+						span.pageTitle GESTION DES UTILISATEURS
+						
 			tr.headerControle
 				td(colspan=6)
+					.input-append.search
+						input#search.input-medium(type='text', placeholder='Recherche', data-provide="typeahead", autocomplete="off")
+						button.btn
+							i.icon-search
 					select#filterStatus
 						option(value="-1", "selected"="selected") Tous les utilisateurs
 						option(value="2") En attente de validation

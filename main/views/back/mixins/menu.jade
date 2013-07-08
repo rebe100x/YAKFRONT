@@ -20,8 +20,7 @@ mixin menu(active)
 									span.btn#zoneLocButton(title="Mes endroits favoris")
 										i.icon-star
 										&nbsp;Mes endroits favoris
-								&nbsp;&nbsp;&nbsp;
-
+								&nbsp;&nbsp;&nbsp;	
 						div.nav-collapse
 							ul.nav
 								- if (active == 'dashboard')
@@ -30,75 +29,47 @@ mixin menu(active)
 								- else
 									li
 										a(href="/") Dashboard
-								li.divider-vertical
-								- if (active == 'info')
-									li.active
-										a(href="/info/list") Infos
-											span1#infonumber
-								- else
-									li
-										a(href="info/list") Infos
-											span1#infonumber
-								
-								- if(active == 'place')
-									li.active
-										a(href="/place/list") Lieux
-											span1#placenumber
-								- else
-									li
-										a(href="/place/list") Lieux
-											span1#placenumber
 
-								- if (active == 'illicite')
-									li.active
-										a(href="/illicites/list") Modération
-											span1#illicitenumber
-								- else
-									li
-										a(href="/illicites/list") Modération
-											span1#illicitenumber
+								li.divider-vertical
+								li.dropdown(class= (active == 'info' || active == 'place' || active == 'illicite') ? "active" : "")
+										a.dropdown-toggle#dLabel(role="button", data-toggle="dropdown", data-target="#", href="#")
+											| Curation
+											b.caret
+										ul.dropdown-menu(role="menu", aria-labelledby="dLabel")
+											li(class= active == 'info' ? "active" : "")
+												a(href="/info/list") 
+													span1#infonumber
+													| Infos
+											li(class= active == 'place' ? "active" : "")
+												a(href="/place/list") 
+													span1#placenumber
+													| Lieux
+											li(class= active == 'illicite' ? "active" : "")
+												a(href="/illicites/list") 
+													span1#illicitenumber
+													| Modération
+								li.divider-vertical	
+									li.dropdown(class= (active == 'feed' || active == 'yakNE' || active == 'yakBL' || active == 'zone' || active == 'yakcat') ? "active" : "")
+										a.dropdown-toggle#dLabel(role="button", data-toggle="dropdown", data-target="#", href="#")
+											| Flux de données
+											b.caret
+										ul.dropdown-menu(role="menu", aria-labelledby="dLabel")	
+											li(class= active == 'feed' ? "active" : "")
+												a(href="feed/list") Flux
+													span1#feednumber
+											li(class= active == 'yakNE' ? "active" : "")
+												a(href="/yakNE/list") Mots-clés
+											li(class= active == 'yakBL' ? "active" : "")
+												a(href="/yakBL/list") Mots blacklistés
+											li(class= active == 'zone' ? "active" : "")
+												a(href="zone/list") Zones
+											li(class= active == 'yakCat' ? "active" : "")
+												a(href="/categories/list") Catégories
 								li.divider-vertical			
-								- if (active == 'feed')
-									li.active
-										a(href="feed/list") Flux de Données
-											span1#feednumber
-								- else
-									li
-										a(href="feed/list") Flux de données
-											span1#feednumber
-								- if (active == 'zone')
-									li.active
-										a(href="zone/list") Zones
-								- else
-									li
-										a(href="zone/list") Zones
-								- if (active == 'yakNE')
-									li.active
-										a(href="/yakNE/list") Mots clés 
-								- else
-									li
-										a(href="/yakNE/list") Mots clés
-								if (active == 'yakBL')
-									li.active
-										a(href="/yakBL/list") Mots blacklistés
-								- else
-									li
-										a(href="/yakBL/list") Mots blacklistés
-								li.divider-vertical		
-								- if (active == 'yakcat')
-									li.active
-										a(href="/categories/list") Catégories
-								- else
-									li
-										a(href="/categories/list") Catégories
-								- if (active == 'user')
-									li.active
+									li(class= active == 'user' ? "active" : "")
 										a(href="/user/list") Utilisateurs
 											span1#usernumber
-								- else
-									li
-										a(href="/user/list") Utilisateurs
-											span1#usernumber
+								li.divider-vertical
 								
 		div#alertInfo.alert.alert-info
 			button.close(type="button",data-dismiss="alert") x

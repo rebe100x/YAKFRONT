@@ -6,6 +6,7 @@
 
 /* GENERAL
 -------------------------------------------------- */
+.pageTitle{font-weight:bold;font-size:1.2em;line-height:2.2em;color:#111111;text-shadow: 0px 1px 1px #FFFFFF;}
 i {margin : 0 3px;}
 #alertInfo{display:none;position:relative;z-index:20000000;}
 .icon-pointer{cursor:pointer;margin:2px;}
@@ -14,6 +15,7 @@ i {margin : 0 3px;}
 .searching{background-image:url('/images/loader.gif');padding-left:20px;background-repeat:no-repeat;background-position: 0px 5px;}
 .searchInput{background-repeat:no-repeat;background-position: 0px 5px;padding-left:0px;background-image: none;}
 
+#MyGrid thead a.showSearchPanel{color:#999999;font-size:2em;font-variant:small-caps;font-weight:bolder;}
 input.error{background-color:#FF0000;}
 
 /*jquery fix*/
@@ -94,13 +96,13 @@ legend.mainlegend{color:#d51820;font-weight:bold;border-bottom:0px;}
 #MyGrid i.status {margin-right: 5px;}
 #MyGrid .liens {float: right; display: block;}
 #MyGrid .editFeed{cursor:pointer;}
-#MyGrid #iconSearchPanel {margin-top: -1px;}
+#MyGrid #iconSearchPanel {margin-top: 8px;}
 #MyGrid input#yakCat {display: inline;}
 #MyGrid .pillbox#yakCatFilter, #MyGrid input#userFilter, #MyGrid .pillbox#userFilter , #MyGrid input#feedFilter, #MyGrid .pillbox#feedFilter {display: inline-table; margin-top: 5px;}
 #MyGrid a.listIcon {padding: 5px;}
 #MyGrid .batchActions {padding-bottom: 11px; margin-right: 3px;}
 #MyGrid .batchActions > button {height: 30px;}
-#MyGrid tr.headerControle > td > select {max-width: 2000px;}
+#MyGrid tr.headerControle > td > select {max-width: 2000px;margin-bottom:10px;margin-left:5px;}
 #MyGrid select#sortPlaces {width: 150px;}
 #MyGrid select{margin-bottom: 0px;font-size:12px;width: auto;}
 
@@ -108,7 +110,9 @@ legend.mainlegend{color:#d51820;font-weight:bold;border-bottom:0px;}
 -------------------------------------------------- */
   /*TOP SEARCH LOCATION BOX*/
   #searchPlaceStr { height: 26px;position:relative;top:5px;left:-15px;}
-
+@media only screen and (max-width : 768px) {
+  #searchPlaceStr {display:none;}
+}
 	/*MAP TOP CONTROLLER*/
 #newsfeedMenu{margin:10px auto;padding:10px;text-align:center;width:100%;float:left;opacity:0.85;background:#FFFFFF;}
 		/*heat module*/
@@ -182,7 +186,7 @@ span.help-inline.small{font-size:0.65em;font-style:italic;}
 
 /* MAIN MENU
 -------------------------------------------------- */
-.nav-collapse .badge-important {position: relative; top: 7px; left: 1 px;  }
+.nav-collapse .badge-important {position: relative; top: 0px; left: -5px;  }
 
 
 

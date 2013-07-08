@@ -4,16 +4,17 @@ mixin list()
 			tr.headerControle
 				th
 					.datagrid-header-left
-						.input-append.search
-							input#search.input-medium(type='text', placeholder='Recherche', data-provide="typeahead", autocomplete="off")
-							button.btn
-								i.icon-search
+						span.pageTitle MOTS-CLES 
 					.datagrid-header-right
 						button.btn#btnAdd
 							i.icon-plus
 							span Ajouter
 			tr.headerControle
 				td(colspan=6)
+					.input-append.search
+						input#search.input-medium(type='text', placeholder='Recherche', data-provide="typeahead", autocomplete="off")
+						button.btn
+							i.icon-search
 					select#filterStatus
 						option(value="-1", "selected"="selected") Toutes les zones
 						option(value="0") Désactivées

@@ -4,16 +4,17 @@ mixin list()
 			tr.headerControle
 				th
 					.datagrid-header-left
-						.input-append.search
-							input#search.input-medium(type='text', placeholder='Recherche', data-provide="typeahead", autocomplete="off")
-							button.btn
-								i.icon-search
+						span.pageTitle GESTION DES FLUX
 					.datagrid-header-right
 						button.btn#btnAdd
 							i.icon-plus
 							span Ajouter
 			tr.headerControle
 				td(colspan=5)
+					.input-append.search
+						input#search.input-medium(type='text', placeholder='Recherche', data-provide="typeahead", autocomplete="off")
+						button.btn
+							i.icon-search
 					select#filterStatus
 						option(value="1") Actifs
 						option(value="0") Inactifs

@@ -1096,7 +1096,7 @@ exports.yakBL_list = function(req, res){
 
 exports.findYakBLByTitle = function (req, res) {
 	var YakBL = db.model('YakBL');
-   	YakBL.findByTitle(req.params.title, function (err, theYakBL){
+   	YakBL.findByTitle(req.body.title,req.body.caseSensitive, function (err, theYakBL){
    		res.json({
 			yakBL: theYakBL
 		});
@@ -1158,14 +1158,25 @@ exports.yakBL = function(req, res){
 	yakBL.title = req.body.title;
 	if(req.body.zoneHidden != '')
 		yakBL.zone = req.body.zoneHidden.split(',');
+	else
+		yakBL.zone = [];	
 	if(req.body.feedHidden != '')
 		yakBL.feed = req.body.feedHidden.split(',');
+	else
+		yakBL.feed = [];
 	if(req.body.zoneNameHidden != '')
 		yakBL.zoneName = req.body.zoneNameHidden.split(',');
+	else
+		yakBL.zoneName = [];
 	if(req.body.feedNameHidden != '')
 		yakBL.feedName = req.body.feedNameHidden.split(',');
+	else
+		yakBL.feedName = [];
 			
-	yakBL.caseSensitive = req.body.caseSensitive;
+	if(req.body.caseSensitive && req.body.caseSensitive == 'on')
+		yakBL.caseSensitive = 1;
+	else
+		yakBL.caseSensitive = 0;	
 	
 	yakBL.status = parseInt(req.body.status);
 	yakBL.lastModifDate = now;

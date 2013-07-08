@@ -4,16 +4,17 @@ mixin list()
 			tr.headerControle
 				th
 					.datagrid-header-left
-						.input-append.search
-							input#search.input-medium(type='text', placeholder='Recherche', data-provide="typeahead", autocomplete="off")
-							button.btn
-								i.icon-search
+						span.pageTitle MOTS BLACKLISTES
 					.datagrid-header-right
 						button.btn#btnAdd
 							i.icon-plus
 							span Ajouter
 			tr.headerControle
 				td(colspan=5)
+					.input-append.search
+						input#search.input-medium(type='text', placeholder='Recherche', data-provide="typeahead", autocomplete="off")
+						button.btn
+							i.icon-search
 					select#filterStatus
 						option(value="1") Actifs
 						option(value="0") Inactifs
@@ -243,7 +244,6 @@ mixin list()
 			$("#btnBack").hide();
 			$("#pillZone ul").empty();
 			$("#pillFeed ul").empty();
-			$("#caseSensitive").attr('checked',false);
 			zone = new Array();
 			feed = new Array();
 			zoneName = new Array();
@@ -289,7 +289,7 @@ mixin list()
 				success: function (response)
 				{
 					/*FORM INITIALISATION*/
-					var yakBL = response.data.yakBL;
+					var yakBL = response.yakBL;
 	
 					if(flagDuplicate == 1){
 						$("#yakBLForm legend.mainlegend").html("Dupliquer un mot blacklisté : ");
@@ -313,17 +313,37 @@ mixin list()
 					if(yakBL.zone.length > 0){
 						yakBL.zone.forEach(function(z){
 							if(z != ""){
-
 								$.get('/api/zone/'+z,function(data){
-									$("#pillZone ul").append("<li class='zone-val status-success' data-id='"+data.zone._id+"'>"+data.zone.title+"</li>");
+
+									$("#pillZone ul").append("<li class='zone-val status-info' data-title='"+data.zone.name+"' status-success' data-id='"+data.zone._id+"'>"+data.zone.name+"</li>");
 									zone.push(data.zone._id);
-									zoneName.push(data.zone.title);	
+									zoneName.push(data.zone.name);	
 									$("#zoneHidden").val(zone.join(','));
 									$("#zoneNameHidden").val(zoneName.join(','));
 								});
 							}
 						});	
 					}
+
+					if(yakBL.feed.length > 0){
+						yakBL.feed.forEach(function(f){
+							if(f != ""){
+								$.get('/api/feed/'+f,function(data){
+
+									$("#pillFeed ul").append("<li class='feed-val status-warning' data-title='"+data.feed.name+"' status-success' data-id='"+data.feed._id+"'>"+data.feed.name+"</li>");
+									feed.push(data.feed._id);
+									feedName.push(data.feed.name);	
+									$("#feedHidden").val(feed.join(','));
+									$("#feedNameHidden").val(feedName.join(','));
+								});
+							}
+						});	
+					}
+					
+					if(yakBL.caseSensitive == 1)
+						$("#caseSensitive").attr('checked',true);
+					else
+						$("#caseSensitive").attr('checked',false);
 
 					$('#yakBLForm input:radio[name=status][value='+yakBL.status+']').click();
 					

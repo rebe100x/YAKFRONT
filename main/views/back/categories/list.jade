@@ -8,22 +8,13 @@ mixin list()
 			tr.headerControle
 				th
 					.datagrid-header-left
-						.input-append.search
-							input#search.input-medium(type='text', placeholder='Recherche', data-provide="typeahead", autocomplete="off")
-							button.btn
-								i.icon-search
-				tr.headerControle.advancedSearch
-					td.searchPanel(colspan=6, style="display:none")
-						.yakCatFilter
-							input#yakCat.typeahead(type="text", data-provide="typeahead", autocomplete="off", placeholder="Filtrer par thème")
-							.pillbox#yakCatFilter(style="display:none")
-								ul
-						.userFilter
-							input#userFilter.typeahead(type="text", data-provide="typeahead", autocomplete="off", placeholder="Filtrer par utilisateur")
-							.pillbox#userFilter(style="display:none")
-								ul
+						span.pageTitle GESTION DES CATEORIES
 			tr.headerControle
 				td(colspan=6)
+					.input-append.search
+						input#search.input-medium(type='text', placeholder='Recherche', data-provide="typeahead", autocomplete="off")
+						button.btn
+							i.icon-search
 					select#filterStatus
 						option(value="-1") Toutes les catégories
 						option(value="1") Actives

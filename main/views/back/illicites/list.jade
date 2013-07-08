@@ -7,18 +7,14 @@ mixin list()
 			tr.headerControle
 				th
 					.datagrid-header-left
-						.input-append.search
-							input#search.input-medium(type='text', placeholder='Recherche', data-provide="typeahead", autocomplete="off")
-							button.btn
-								i.icon-search
-					.datagrid-header-right
-						label 
-							input#limit10days(type="checkbox",style="margin-top:-1px;",checked="checked") 
-							span &nbsp;Limiter aux 10 derniers jours
-						
+						span.pageTitle MODERATION
 						
 			tr.headerControle
 				td(colspan=6)
+					.input-append.search
+						input#search.input-medium(type='text', placeholder='Recherche', data-provide="typeahead", autocomplete="off")
+						button.btn
+							i.icon-search
 					select#filterType
 						option(value="0") Tous les types
 						option(value="1") Info
@@ -29,13 +25,17 @@ mixin list()
 						option(value="2") Déjà vérifié
 
 					.dateSort.datagrid-header-right
-						.input-prepend
-							span.add-on Ordonner par
-							select#sortSelectBtn
-								option(value="last_date_mark")	Dernier signalement
-								option(value="type") Type
-								option(value="content")	Contenu
-								option(value="count") Nb de signalements
+						label 
+							input#limit10days(type="checkbox",style="margin-top:-1px;") 
+							span &nbsp;Limiter aux 10 derniers jours
+						//	
+							.input-prepend
+								span.add-on Ordonner par
+								select#sortSelectBtn
+									option(value="last_date_mark")	Dernier signalement
+									option(value="type") Type
+									option(value="content")	Contenu
+									option(value="count") Nb de signalements
 
 		tfoot
 			tr
@@ -91,6 +91,10 @@ mixin list()
 						$('#filterType').val(type);
 			}
 
+			if($.cookie("limit10days")){
+					var checked = $.cookie("limit10days");
+					$('#limit10days').attr('checked',checked);
+			}
 			setInterval(function() {
 				$.getJSON('/api/validillicites', function(data) {
 					if(validillicites != data.info){
@@ -181,8 +185,9 @@ mixin list()
 					sortDirectionArray.push(options.sortDirection);
 				}
 
+				// sort by name by default
 				if(sortPropertyArray.length == 0)
-					sortPropertyArray.push( $('#sortSelectBtn :selected').val() );
+					sortPropertyArray.push( "last_date_mark");
 				if(sortDirectionArray.length == 0)
 					sortDirectionArray.push("desc");
 
@@ -412,6 +417,14 @@ mixin list()
 			currentSelection = $('#filterType :selected').val();
 			$.cookie("typeIllicite",currentSelection,{ expires: 100000, path : '/' });
 			refreshDatagridAndMenu();
+		});
+		
+		$('#limit10days').live('change', function() {
+			var currentSelection = $('#limit10days').attr('checked');
+			if(typeof currentSelection == 'undefined')
+				$.cookie("limit10days","",{ expires: 100000, path : '/' });	
+			else
+				$.cookie("limit10days",currentSelection,{ expires: 100000, path : '/' });
 		});
 		
 		function refreshDatagridAndMenu () {

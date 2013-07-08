@@ -101,7 +101,8 @@ mixin yakNEForm()
 				$.get('/api/yakNEExist/'+titleNormalized,function(data){
 					if(data.yakNE.length > 0 ){
 						$('#titleNormalized').html('<span class="alert">Ce mot clé existe déjà ! </span>'+ titleNormalized);
-					}
+					}else
+						$('#titleNormalized').html('');
 				});
 			});
 

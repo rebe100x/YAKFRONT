@@ -178,10 +178,9 @@ app.get('/api/yakNE/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:sta
 
 // YAKBL
 app.get('/yakBL/list', back.requiresLogin, back.yakBL_list);
-app.get('/api/yakBL/:id', back.requiresLogin, api.yakBL);
 app.post('/yakBL', back.requiresLogin, back.yakBL);
-app.get('/api/yakBL/:id',back.requiresLogin, back.findyakBLById);
-app.get('/api/yakBLExist/:title',back.requiresLogin, back.findYakBLByTitle);
+app.get('/api/yakBL/:id', back.requiresLogin, back.findYakBLById);
+app.post('/api/yakBLExist',back.requiresLogin, back.findYakBLByTitle);
 app.get('/api/yakBL/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status',back.requiresLogin, back.gridYakBL);
 
 

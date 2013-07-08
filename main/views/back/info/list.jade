@@ -4,19 +4,19 @@ mixin list()
 			tr.headerControle
 				th
 					.datagrid-header-left
-						.input-append.search
-							input#search.input-medium(type='text', placeholder='Recherche', data-provide="typeahead", autocomplete="off")
-							button.btn
-								i.icon-search
+						span.pageTitle GESTION DES INFOS
 					.datagrid-header-right
 						label
-							input#limit10days(type="checkbox",style="margin-top:-1px;",checked="checked") 
-							span &nbsp;Limiter aux 10 derniers jours &nbsp;&nbsp;&nbsp;
 							button.btn#btnAdd
 								i.icon-plus
 								span Ajouter
 			tr.headerControle
 				td(colspan=5)
+					.datagrid-header-left
+						.input-append.search
+							input#search.input-medium(type='text', placeholder='Recherche', data-provide="typeahead", autocomplete="off")
+							button.btn
+								i.icon-search
 					select#filterStatus
 						option(value="all") Tous les statuts
 						option(value="1") Validé
@@ -33,6 +33,10 @@ mixin list()
 						option(value="2") Agenda
 						//option(value="3") Info pratique
 						option(value="4") Yassala
+					.datagrid-header-right	
+						input#limit10days(type="checkbox",style="margin-top:-1px;") 
+						span &nbsp;Limiter aux 10 derniers jours &nbsp;&nbsp;&nbsp;
+								
 					
 		tfoot
 			tr
@@ -80,6 +84,11 @@ mixin list()
 			if($.cookie("typeInfo")){
 					var type = $.cookie("typeInfo");
 					$('#filterType').val(type);
+			}
+
+			if($.cookie("limit10days")){
+					var checked = $.cookie("limit10days");
+					$('#limit10days').attr('checked',checked);
 			}
 
 			$('#statusHelp').popover({placement:'bottom',animation:true,title:"Changer le statut d'une info",content:"<p><ul><li><b>Valider: </b>L'info apparaîtra sur le front.<br><b>NB: </b>Quand vous valider une info seule cette info est validée: le lieu associé ainsi que toutes les infos liées à ce lieu ne sont pas affectées.<br>Si vous voulez changez le statut de toutes les infos rattachées à un lieu, passer par l'onglet LIEU.</li><li><b>En attente: </b>L'info n'apparaîtra pas sur le front, vous pouvez utiliser ce statut quand vous ne savez pas traiter une info.<br><b>NB: </b>Quand vous mettez en attente une info seule cette info est affectée: le lieu associé ainsi que toutes les infos liées à ce lieu ne sont pas affectés.<br>Si vous voulez changez le statut de toutes les infos rattachées à un lieu, passer par l'onglet LIEU.</li><li><b>Désactiver info: </b>L'info n'apparaîtra plus sur le front.<br><b>NB: </b> Seule l'info en question est désactivée. Le lieu auquel elle est rattachée ne sera pas désactivé. Les infos liées au même lieu ne seront pas désactivées.</li><b>Désactiver info & lieu: </b>L'info n'apparaîtra plus sur le front. <br><b>NB: </b>Le lieu auquel elle est rattachée sera lui aussi désactivé ainsi que toutes les infos rattachées à ce lieu.</li></ul></p>",html:true});
@@ -467,7 +476,14 @@ mixin list()
 		$('#filterStatus , #filterType , #limit10days').unbind('click').live('change', function() {
 			refreshDatagrid();
 		});
-		
+
+		$('#limit10days').live('change', function() {
+			var currentSelection = $('#limit10days').attr('checked');
+			if(typeof currentSelection == 'undefined')
+				$.cookie("limit10days","",{ expires: 100000, path : '/' });	
+			else
+				$.cookie("limit10days",currentSelection,{ expires: 100000, path : '/' });
+		});
 		
 
 		/****************************************************************** ADD / EDIT / DUPLICATE A PLACE ***************************************************************************/

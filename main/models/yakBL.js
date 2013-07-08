@@ -8,7 +8,7 @@ var mongoose = require('mongoose')
 
 var YakBL = new Schema({
 	title	: {type :String, index: true}
-	,casesensitive : Number
+	,caseSensitive : Number
 	,zone : {type: [Schema.ObjectId]}
 	,zoneName : [String]
 	,feed : {type: [Schema.ObjectId]}
@@ -21,12 +21,16 @@ var YakBL = new Schema({
 YakBL.index({"title":1});
 YakBL.index({"zone":1});
 YakBL.index({"feed":1});
-YakBL.index({"title":1,"feed":1,"zone":1});
 
-YakBL.statics.findByTitle = function (str,callback) {
-  searchStr = new RegExp(str,'i');
+YakBL.statics.findByTitle = function (str, cs, callback) {
+  if(cs == 1){
+  	var searchStr = new RegExp('^'+str+'$');
+  }else{
+  	var searchStr = new RegExp('^'+str+'$','i');
+  }
+  	
   var cond = {'title': {$regex:searchStr},"status":1};
-  return this.find( cond,{title:1}, callback );
+  return this.findOne( cond,{title:1}, callback );
 }
 YakBL.statics.findByTitleZoneFeed = function (str, zone, feed, callback) {
   searchStr = new RegExp(str,'i');
