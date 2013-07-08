@@ -1159,19 +1159,19 @@ exports.yakBL = function(req, res){
 	if(req.body.zoneHidden != '')
 		yakBL.zone = req.body.zoneHidden.split(',');
 	else
-		yakBL.zone = [];	
+		yakBL.zone = [0];	
 	if(req.body.feedHidden != '')
 		yakBL.feed = req.body.feedHidden.split(',');
 	else
-		yakBL.feed = [];
+		yakBL.feed = ['0'];
 	if(req.body.zoneNameHidden != '')
 		yakBL.zoneName = req.body.zoneNameHidden.split(',');
 	else
-		yakBL.zoneName = [];
+		yakBL.zoneName = ['All'];
 	if(req.body.feedNameHidden != '')
 		yakBL.feedName = req.body.feedNameHidden.split(',');
 	else
-		yakBL.feedName = [];
+		yakBL.feedName = ['All'];
 			
 	if(req.body.caseSensitive && req.body.caseSensitive == 'on')
 		yakBL.caseSensitive = 1;
@@ -1189,6 +1189,7 @@ exports.yakBL = function(req, res){
 		var cond = {title:"anameimpossibletochoose007"};
 	}
 		
+	console.log(yakBL);	
 	YakBL.update(cond,yakBL,{upsert:true},function (err){
 		if (!err)
 			formMessage.push("Mot blacklisté sauvegardé.");

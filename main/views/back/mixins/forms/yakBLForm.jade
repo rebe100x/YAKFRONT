@@ -104,12 +104,12 @@ mixin yakBLForm()
 						})},
 				property: "name",
 				onselect: function(obj) { 
-					$("#pillZone ul").append("<li class='zone-val status-info' data-id='"+obj._id+"' data-title='"+obj.name+"' >"+obj.name+"</li>");
+					$("#pillZone ul").append("<li class='zone-val status-info' data-id='"+obj.num+"' data-title='"+obj.name+"' >"+obj.name+"</li>");
 					$('#zone').val('').focus();
-					zone.push(obj._id);
+					zone.push(obj.num);
 					$('#zoneHidden').val(zone.join(','));
 					zoneName.push(obj.name);
-					$('#zoneNameHidden').val(zone.join(','));
+					$('#zoneNameHidden').val(zoneName.join(','));
 						
 				}
 			});
@@ -140,7 +140,7 @@ mixin yakBLForm()
 					feed.push(obj._id);
 					$('#feedHidden').val(feed.join(','));
 					feedName.push(obj.name);
-					$('#feedNameHidden').val(feed.join(','));
+					$('#feedNameHidden').val(feedName.join(','));
 						
 				}
 			});

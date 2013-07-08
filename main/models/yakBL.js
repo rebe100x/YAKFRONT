@@ -9,9 +9,9 @@ var mongoose = require('mongoose')
 var YakBL = new Schema({
 	title	: {type :String, index: true}
 	,caseSensitive : Number
-	,zone : {type: [Schema.ObjectId]}
+	,zone : {type: [Number]}
 	,zoneName : [String]
-	,feed : {type: [Schema.ObjectId]}
+	,feed : {type: [String]}
 	,feedName : [String]
 	,creationDate : {type: Date, required: true, default: Date.now}
 	,lastModifDate: {type: Date, required: true, default: Date.now}

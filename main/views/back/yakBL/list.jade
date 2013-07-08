@@ -313,10 +313,10 @@ mixin list()
 					if(yakBL.zone.length > 0){
 						yakBL.zone.forEach(function(z){
 							if(z != ""){
-								$.get('/api/zone/'+z,function(data){
+								$.get('/api/zoneByNum/'+z,function(data){
 
-									$("#pillZone ul").append("<li class='zone-val status-info' data-title='"+data.zone.name+"' status-success' data-id='"+data.zone._id+"'>"+data.zone.name+"</li>");
-									zone.push(data.zone._id);
+									$("#pillZone ul").append("<li class='zone-val status-info' data-title='"+data.zone.name+"' status-success' data-id='"+data.zone.num+"'>"+data.zone.name+"</li>");
+									zone.push(data.zone.num);
 									zoneName.push(data.zone.name);	
 									$("#zoneHidden").val(zone.join(','));
 									$("#zoneNameHidden").val(zoneName.join(','));
