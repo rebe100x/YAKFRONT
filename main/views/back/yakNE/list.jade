@@ -258,6 +258,12 @@ mixin list()
 			$("#pillExactTag ul").empty();
 			$("#pillYakcat ul").empty();
 			$("#titleNormalized").html('');
+			$("#pillZone ul").empty();
+			$("#pillFeed ul").empty();
+			zone = new Array();
+			feed = new Array();
+			zoneName = new Array();
+			feedName = new Array();
 			yakCatIds = new Array();
 			yakCatNames = new Array();
 			exactTags = new Array();
@@ -283,6 +289,10 @@ mixin list()
 			$("#pillNormalizedTag ul").html('');
 			$("#pillExactTag ul").html('');
 			$("#pillYakcat ul").html('');
+			$("#pillZone ul").html('');
+			$("#pillFeed ul").html('');
+			$("#pillFeed").show();
+			$("#pillZone").show();
 			$("#pillNormalizedTag").show();
 			$("#pillExactTag").show();
 			$("#pillYakcat").show();
@@ -293,6 +303,10 @@ mixin list()
 			yakCatNames = new Array();
 			exactTags = new Array();
 			normalizedTags = new Array();
+			zone = new Array();
+			feed = new Array();
+			zoneName = new Array();
+			feedName = new Array();
 			
 			
 			var url = '/api/yakNE/'+id;
@@ -322,7 +336,41 @@ mixin list()
 						$("#yakNEForm #titleNormalizedHidden").val(yakNE.title);
 					}							
 
-					
+					$("#zoneHidden").val(yakNE.zone.join(','));								
+					$("#zoneNameHidden").val(yakNE.zoneName.join(','));								
+					$("#feedHidden").val(yakNE.feed.join(','));								
+					$("#feedNameHidden").val(yakNE.feedName.join(','));								
+
+
+					if(yakNE.zone.length > 0){
+						yakNE.zone.forEach(function(z){
+							if(z > 0){
+								$.get('/api/zoneByNum/'+z,function(data){
+
+									$("#pillZone ul").append("<li class='zone-val status-info' data-title='"+data.zone.name+"' status-success' data-id='"+data.zone.num+"'>"+data.zone.name+"</li>");
+									zone.push(data.zone.num);
+									zoneName.push(data.zone.name);	
+									$("#zoneHidden").val(zone.join(','));
+									$("#zoneNameHidden").val(zoneName.join(','));
+								});
+							}
+						});	
+					}
+
+					if(yakNE.feed.length > 0){
+						yakNE.feed.forEach(function(f){
+							if(f != "0"){
+								$.get('/api/feed/'+f,function(data){
+
+									$("#pillFeed ul").append("<li class='feed-val status-warning' data-title='"+data.feed.name+"' status-success' data-id='"+data.feed._id+"'>"+data.feed.name+"</li>");
+									feed.push(data.feed._id);
+									feedName.push(data.feed.name);	
+									$("#feedHidden").val(feed.join(','));
+									$("#feedNameHidden").val(feedName.join(','));
+								});
+							}
+						});	
+					}
 
 					var tmpArr = new Array();
 					tmpArr = yakNE.match;
@@ -377,16 +425,37 @@ mixin list()
 		$("#btnAdd").click(function(){
 			$("#MyGrid").hide();
 			$("#yakNEForm")[0].reset();
+			$("#yakNEForm input[type=hidden]").val('');
+			$('#yakNEForm').clearForm();	
+			
 			// We remove the error class when we open a form for creating a new yakNE
 			$('#yakNEForm #titleGroup').removeClass("error");
 			$("#btnBack").fadeIn();
 			$("#yakNEForm").fadeIn();
 			$("#yakNEForm #objid").val("");
-			$("#pillNormalizedTag ul").empty();
-			$("#pillExactTag ul").empty();
-			$("#pillYakcat ul").empty();
 			$('#err').hide();
 			$("#yakNEForm #title").focus();
+
+			$("#pillNormalizedTag ul").html('');
+			$("#pillExactTag ul").html('');
+			$("#pillYakcat ul").html('');
+			$("#pillZone ul").html('');
+			$("#pillFeed ul").html('');
+			$("#pillFeed").show();
+			$("#pillZone").show();
+			$("#pillNormalizedTag").show();
+			$("#pillExactTag").show();
+			$("#pillYakcat").show();
+			
+			yakCatIds = new Array();
+			yakCatNames = new Array();
+			exactTags = new Array();
+			normalizedTags = new Array();
+			zone = new Array();
+			feed = new Array();
+			zoneName = new Array();
+			feedName = new Array();
+			
 
 		});
 			

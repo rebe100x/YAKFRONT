@@ -289,7 +289,7 @@ mixin list()
 				if(typeof item.info_id != 'undefined' && item.info_id != '')
 					removeIcon.attr("val_infoid", item.info_id);
 				removeIcon.css("cursor", "pointer");
-				removeIcon.attr("title", "Supprimer cette donnée");
+				removeIcon.attr("title", "Modérer cette donnée");
 				removeIcon.attr("onclick", "changeStatusIllicite(this,2)");
 			}else{
 				removeIcon.attr("class", "icon-ok deleteAcomment");

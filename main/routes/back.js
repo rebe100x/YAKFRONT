@@ -1065,6 +1065,23 @@ exports.yakNE = function(req, res){
 	yakNE.status = parseInt(req.body.status);
 	yakNE.lastModifDate = now;
 	
+	if(req.body.zoneHidden != '')
+		yakNE.zone = req.body.zoneHidden.split(',');
+	else
+		yakNE.zone = [0];	
+	if(req.body.feedHidden != '')
+		yakNE.feed = req.body.feedHidden.split(',');
+	else
+		yakNE.feed = ['0'];
+	if(req.body.zoneNameHidden != '')
+		yakNE.zoneName = req.body.zoneNameHidden.split(',');
+	else
+		yakNE.zoneName = ['All'];
+	if(req.body.feedNameHidden != '')
+		yakNE.feedName = req.body.feedNameHidden.split(',');
+	else
+		yakNE.feedName = ['All'];
+
 	if(typeof obj_id != 'undefined' && obj_id != ''){
 		var cond = {_id:obj_id};
 	}else{
@@ -1152,10 +1169,11 @@ exports.yakBL = function(req, res){
 	var yakBL = new Object();
 
 	var obj_id = req.body.objid;
-	console.log(req.body);
+	//console.log(req.body);
 	var now = new Date();
 
 	yakBL.title = req.body.title;
+	
 	if(req.body.zoneHidden != '')
 		yakBL.zone = req.body.zoneHidden.split(',');
 	else
@@ -1189,7 +1207,7 @@ exports.yakBL = function(req, res){
 		var cond = {title:"anameimpossibletochoose007"};
 	}
 		
-	console.log(yakBL);	
+	//console.log(yakBL);	
 	YakBL.update(cond,yakBL,{upsert:true},function (err){
 		if (!err)
 			formMessage.push("Mot blacklisté sauvegardé.");
@@ -1950,6 +1968,7 @@ exports.changeStatusIllicite = function(req, res){
 	var User = db.model("User");
 	var Info = db.model("Info");
 	var Illicite = db.model("contenuIllicite");
+	var Tag = db.model('Tag');
 
 	Illicite.findOne({_id:_id},function(err,il){
 
@@ -1969,15 +1988,56 @@ exports.changeStatusIllicite = function(req, res){
 		}
 
 		switch(content_type){
-			case "1":
+			case "1": // INFO
 				Info.update({_id:content_id},{$set:{status:infoStatus}},function(err){
 					if(!err){
 						Illicite.update({_id : _id},{$set:{status:illiciteStatus,dateProcessed:new Date()}},function(err){
 							if(err)
 								res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});	
 							else{
-								// send email if moderate
+
+								if(status == 1){ // add hottags
+									Info.findOne({_id: content_id},function(err,theinfo){
+										if(theinfo){
+											if(theinfo.freeTag.length > 0){
+												var freeTags = theinfo.freeTag;
+												freeTags.forEach(function(ft){
+													console.log(ft);
+													
+													Tag.findOne({'title':ft,"location" : {  "$near" : [parseFloat(theinfo.location.lat),parseFloat(theinfo.location.lng)], $maxDistance : 0.1 }},function(err,thetag){
+															//console.log(thetag);
+															// here we don't create the tag since the info has been bl, it exists, so we we only increment
+															if(thetag)
+																Tag.update({_id: thetag._id}, {usageDate:theinfo.pubDate,$inc:{numUsed:1}}, {upsert: false}, function(err){if (err) console.log(err);});
+													});
+												});
+											}
+										}
+
+									});
+								}
+								// send email if moderate + delete hottags
 								if(status == 2){
+
+									// delete hottags
+									Info.findOne({_id: content_id},function(err,theinfo){
+										if(theinfo){
+											if(theinfo.freeTag.length > 0){
+												var freeTags = theinfo.freeTag;
+												freeTags.forEach(function(ft){
+													Tag.findOne({'title':ft,"location" : {  "$near" : [parseFloat(theinfo.location.lat),parseFloat(theinfo.location.lng)], $maxDistance : 0.1 }},function(err,thetag){
+															console.log(thetag);
+															if(thetag)
+																Tag.update({_id: thetag._id}, {usageDate:theinfo.pubDate,$inc:{numUsed:-1}}, {upsert: false}, function(err){if (err) console.log(err);});						
+													});
+												});
+											}
+										}
+
+									});
+									
+
+									// send email to user
 									if(typeof poster_id != 'undefined'){
 										User.findOne({_id:poster_id},function(err,theuser){
 											if(theuser != null && typeof theuser != 'undefined' && typeof theuser.mail != 'undefined'){

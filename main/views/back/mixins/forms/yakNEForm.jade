@@ -7,7 +7,12 @@ mixin yakNEForm()
 		input#yakCatNamesHidden(type='hidden', name='yakCatNamesHidden', value='')
 		input#normalizedTagsHidden(type='hidden', name='normalizedTagsHidden', value='')
 		input#exactTagsHidden(type='hidden', name='exactTagsHidden', value='')
+		input#zoneHidden(type='hidden', name='zoneHidden', value='')		
+		input#zoneNameHidden(type='hidden', name='zoneNameHidden', value='')		
+		input#feedHidden(type='hidden', name='feedHidden', value='')		
+		input#feedNameHidden(type='hidden', name='feedNameHidden', value='')		
 		
+
 		input#objid(type="hidden", name="objid", value='0')
 		
 
@@ -59,6 +64,25 @@ mixin yakNEForm()
 						input#yakcat(type="text", data-provide="typeahead", name="yakcat", autocomplete="off", placeholder='Chercher une catégorie...')
 						.pillbox#pillYakcat(style="display:none")
 							ul
+		div.row-fluid						
+			div.control-group#restrictionGroup
+				legend Restrictions:
+				div.controls
+					.span6
+						label Restreindre à une zone
+							i.icon-question-sign#zoneHelp
+						.input-append
+							input#zone(type="text", data-provide="typeahead", name="zone", autocomplete="off", placeholder='Chercher une zone...')
+						.pillbox#pillZone(style="display:none")
+							ul
+					.span6
+						label Restreindre à un flux
+							i.icon-question-sign#feedHelp
+						.input-append
+							input#feed(type="text", data-provide="typeahead", name="feed", autocomplete="off", placeholder='Chercher un flux...')
+						.pillbox#pillFeed(style="display:none")
+							ul	
+
 		div.row-fluid	
 			div.control-group#otherGroup
 				legend Description
@@ -90,10 +114,16 @@ mixin yakNEForm()
 		var yakCatNames = new Array();
 		var exactTags = new Array();
 		var normalizedTags = new Array();
-		
+		var zone = new Array();
+		var feed = new Array();
+		var zoneName = new Array();
+		var feedName = new Array();
 		
 		$(document).ready(function() {
 
+			$('#pillZone').show();
+			$('#pillFeed').show();
+			
 			$('#title').on('keyup',function(){
 				var titleNormalized = normalizeTag($(this).val()).slice(1,$(this).val().length+1);
 				$('#titleNormalized').html(titleNormalized);				
@@ -112,8 +142,9 @@ mixin yakNEForm()
 			$('#yakcatHelp').popover({animation:true,title:'Catégorie',content:"<p>Vous pouvez associer des catégories à ce mot clé. Lorsqu'un élément de queue est détecté dans un texte, on attribura automatiquement cette catégorie à la news.</p>",html:true});
 			$('#normalizedTagHelp').popover({animation:true,title:'Queue normalisée',content:"<p>Les tags de la queue normalisée font l'objet d'une détection <b>non sensible à la casse</b> et </b>non sensible la ponctuation</b>.<br> Vous pouvez donc mettre ici les expressions plus souples qui peuvent changer de forme ( majuscule de début de phrase, ponctuation acollé... ) </p>",html:true});
 			$('#exactTagHelp').popover({animation:true,title:'Queue exact',content:"<p>Les tags de la queue exacte font l'objet d'une détection <b>sensible à la casse</b> et <b>sensible la ponctuation</b>.<br> Vous pouvez donc mettre ici les expressions rigoureusement cherchées. Par exemple: les expressions qui peuvent porter à confusion : <b>Croix-Rouge</b>  ou encore les sigles : <b>CARE</b> (pour l'ONG).</p>",html:true});	
+			$('#zoneHelp').popover({animation:true,title:'Restreindre le mot clé à une ou plusieurs zones',content:"<p>Dans ce cas le mot ne sera détecté que si l'info est géolocalisée dans la/les zones sélectionnées.<br>Laissez vide pour appliquer le mot clé à toutes les zones.</p>",html:true});
+			$('#feedHelp').popover({animation:true,title:'Restreindre le mot clé à un ou plusieurs flux',content:"<p>Dans ce cas le mot ne sera détecté que si l'info provient du/des flux sélectionnés.<br>Laissez vide pour appliquer le mot clé à tous les flux.</p>",html:true});
 			
-
 			$('#yakcat').typeahead({
 				minLength : 3,
 				source: function (typeahead, query) {
@@ -182,7 +213,65 @@ mixin yakNEForm()
 				$('#exactTagsHidden').val(exactTags.join(','));
 			});
 			
-				
+			$('#zone').typeahead({
+				minLength : 3,
+				source: function (typeahead, query) {
+					$.ajax({
+							dataType: "json",
+							url: "/api/zones",				
+							success: function( ajax ) {
+								typeahead.process(ajax.zone);
+							}
+						})},
+				property: "name",
+				onselect: function(obj) { 
+					$("#pillZone ul").append("<li class='zone-val status-info' data-id='"+obj.num+"' data-title='"+obj.name+"' >"+obj.name+"</li>");
+					$('#zone').val('').focus();
+					zone.push(obj.num);
+					$('#zoneHidden').val(zone.join(','));
+					zoneName.push(obj.name);
+					$('#zoneNameHidden').val(zoneName.join(','));
+						
+				}
+			});
+
+			$("#pillZone ul").unbind('click').on('click','li',function(){
+				zone.cleanArrayByName($(this).attr('data-id'));
+				zoneName.cleanArrayByName($(this).attr('data-title'));
+				$('#zoneHidden').val(zone.join(','));
+				$('#zoneNameHidden').val(zoneName.join(','));
+			});
+			
+			
+			
+			$('#feed').typeahead({
+				minLength : 3,
+				source: function (typeahead, query) {
+					$.ajax({
+							dataType: "json",
+							url: "/api/feedListActive",				
+							success: function( ajax ) {
+								typeahead.process(ajax.feeds);
+							}
+						})},
+				property: "name",
+				onselect: function(obj) { 
+					$("#pillFeed ul").append("<li class='feed-val status-warning' data-id='"+obj._id+"' data-title='"+obj.name+"' >"+obj.name+"</li>");
+					$('#feed').val('').focus();
+					feed.push(obj._id);
+					$('#feedHidden').val(feed.join(','));
+					feedName.push(obj.name);
+					$('#feedNameHidden').val(feedName.join(','));
+						
+				}
+			});
+
+			$("#pillFeed ul").unbind('click').on('click','li',function(){
+				feed.cleanArrayByName($(this).attr('data-id'));
+				feedName.cleanArrayByName($(this).attr('data-title'));
+				$('#feedHidden').val(feed.join(','));
+				$('#feedNameHidden').val(feedName.join(','));
+			});	
 		});
 		
 		

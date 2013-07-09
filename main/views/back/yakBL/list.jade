@@ -312,7 +312,7 @@ mixin list()
 					
 					if(yakBL.zone.length > 0){
 						yakBL.zone.forEach(function(z){
-							if(z != ""){
+							if(z > 0){
 								$.get('/api/zoneByNum/'+z,function(data){
 
 									$("#pillZone ul").append("<li class='zone-val status-info' data-title='"+data.zone.name+"' status-success' data-id='"+data.zone.num+"'>"+data.zone.name+"</li>");
@@ -327,7 +327,7 @@ mixin list()
 
 					if(yakBL.feed.length > 0){
 						yakBL.feed.forEach(function(f){
-							if(f != ""){
+							if(f != "0"){
 								$.get('/api/feed/'+f,function(data){
 
 									$("#pillFeed ul").append("<li class='feed-val status-warning' data-title='"+data.feed.name+"' status-success' data-id='"+data.feed._id+"'>"+data.feed.name+"</li>");
@@ -366,11 +366,18 @@ mixin list()
 			$("#yakBLForm").fadeIn();
 			$("#yakBLForm #objid").val("");
 			$("#pillNormalizedTag ul").empty();
-			$("#pillExactTag ul").empty();
-			$("#pillYakcat ul").empty();
 			$('#err').hide();
 			$("#yakBLForm #title").focus();
 
+			$("#pillZone ul").html('');
+			$("#pillFeed ul").html('');
+			$("#pillFeed").show();
+			$("#pillZone").show();
+
+			zone = new Array();
+			feed = new Array();
+			zoneName = new Array();
+			feedName = new Array();
 		});
 			
 		$('#yakBLForm input:radio[name=status][value=1]').click();

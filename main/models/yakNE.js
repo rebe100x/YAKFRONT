@@ -12,12 +12,18 @@ var YakNE = new Schema({
 	,description : {type: String}
 	,yakCatName : [String]
 	,yakCatId : [String]
+	,zone : {type: [Number]}
+	,zoneName : [String]
+	,feed : {type: [String]}
+	,feedName : [String]
 	,creationDate : {type: Date, required: true, default: Date.now}
 	,lastModifDate: {type: Date, required: true, default: Date.now}
 	,status : {type :Number, index: true}
 },{ collection: 'yakNE' });
 
 YakNE.index({"match.title":1});
+YakNE.index({"zone":1});
+YakNE.index({"feed":1});
 
 YakNE.statics.findByTitle = function (str,callback) {  
   var cond = {'title': str,"status":1};

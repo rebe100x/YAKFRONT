@@ -342,7 +342,6 @@ width: 270px;
 /* bootsrap override*/
 .dropdown-menu a {cursor:pointer;}
 
-
 .yakbtn { background-color: #b6070f; width: 140px; padding-top: 6px; padding-bottom: 6px; color: #ffffff; text-transform: uppercase; border: 0px; font-weight: bold; margin-bottom: 50px;}
 .yakbtn:hover { background-color: #fae8e8; color: #cd131b}
 
@@ -1032,11 +1031,29 @@ width: 270px;
 #rangeSelectorTrigger{padding: 9px 5px 11px;}
 /* FOOTER
 ----------------------------------------------------*/
-#footer { background-color: #ffffff; height: 20px; font-size: 12px; padding-top: 2px;}
-#footer .copyright { color: #b3b3b3; margin-left: 12px; padding-right:12px;  border-right: 1px solid #b3b3b3}
-#footer .alink { color: #505050; margin-left: 12px; padding-right: 12px; border-right: 1px solid #505050}
+#footer { background-color: #ffffff; font-size: 12px; padding-top: 2px;height: auto;}
+#footer .copyright { color: #b3b3b3; margin-left: 12px; }
+#footer .alink { color: #505050; margin-left: 12px;}
+.navbar-fixed-bottom {
+position: fixed;
+}
+ @media only screen and ( max-width: 768px ) {
+.navbar-fixed-bottom {
+position: static;
+}
+}
 
+@media only screen and ( max-width: 768px ) {
+	.myLogin .innerSplitter {
+	border-left: 0px solid #cecece;
+	padding-left: 0px;
+	clear: both;
+	}
+}
 
+@media only screen and ( min-width: 768px ) {
+.	myLogin .innerSplitter { border-left: 1px solid #cecece; padding-left: 60px;}
+}
 /* OTHER
 ----------------------------------------------------*/
 
@@ -1131,7 +1148,7 @@ border-bottom: 1px solid #e5e5e5; width: 100%}
 .myLogin { background-color: #FFFFFF; margin-top: 60px;-webkit-box-shadow: 10px 10px 5px #888888;-moz-box-shadow: 10px 10px 5px #888888;box-shadow: 10px 10px 5px #888888;min-height: 200px;}
 .myLogin .loginHeader { color: #4c4c4c; font-size: 20px; width: 100%; text-align: center;}
 .myLogin a { color: #b71105; }
-.myLogin .innerSplitter { border-left: 1px solid #cecece; padding-left: 60px;}
+
 
 #signinButton.g-signin { display: none;}
 
