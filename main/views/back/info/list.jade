@@ -354,11 +354,11 @@ mixin list()
 			res += '<div class="liens" placeId="'+item.placeId+'" infoId="'+item._id+'" >';
 			res += '<a href="#" id="'+item._id+'" class="duplicateItem listIcon" title="Dupliquer"><i class="icon-random"></i></a>';
 
-			if (item.link)
-				res += '<a href=\''+ item.outGoingLink + '\' target="_blank" class="listIcon" title="Lien externe"><i class="icon-share-alt "></i></a>';	
-
 			if (item.debugCallGmap)
-				res += '<a href=\''+ item.debugCallGmap + '\' target="_blank" class="listIcon" title="Degub GMAP"><i class="icon-check "></i></a>';	
+				res += '<a href=\''+ item.debugCallGmap + '\' target="_blank" class="listIcon" title="Degub GMAP"><i class="icon-check"></i></a>';	
+
+			if (item.outGoingLink)
+				res += '<a href=\''+ item.outGoingLink + '\' target="_blank" class="listIcon" title="External Link"><i class="icon-share-alt"></i></a>';	
 
 
 			if (typeof item.location != 'undefined'

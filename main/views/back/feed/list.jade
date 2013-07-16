@@ -528,6 +528,7 @@ mixin list()
 			$("#picturePreview").hide();
 			$("#picturePreview img").attr('src','').hide();
 
+
 			yakCatIds = new Array();
 			yakCatNames = new Array();
 			freeTags = new Array();
@@ -583,9 +584,10 @@ mixin list()
 			linkSource = new Array();
 			fileSource = new Array();
 
+			$('#feedForm input:radio[name=status][value=1]').click();
 		});
 			
-		$('#feedForm input:radio[name=status][value=1]').click();
+		
 
 
 		

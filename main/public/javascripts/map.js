@@ -1393,16 +1393,16 @@
 
 			}
 
-			if(val.outGoingLink){
-				more = $("<a />");
-				more.attr("class", "more");
-				more.attr("href", val.outGoingLink);
-				more.attr("target", "_blank");
-				more.attr("rel", val._id);
-				more.attr("data-toggle", "data-toggle");
+		
+			more = $("<a />");
+			more.attr("class", "more");
+			more.attr("href", val.outGoingLink);
+			more.attr("target", "_blank");
+			more.attr("rel", val._id);
+			more.attr("data-toggle", "data-toggle");
+			if(val.outGoingLink && val.outGoingLink.isUrl())
 				more.html(" plus de détails...");
-				more.hide();				
-			}
+			more.hide();				
 			
 			content.append("<div class='shareMe' userid='"+user._id+"'><i style='background: none' class='icon-share' rel='"+val._id+"' title=''><div class='ftgIcon'></div></i></div>");
 			

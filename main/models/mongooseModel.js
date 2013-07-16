@@ -811,13 +811,13 @@ Info.statics.findTopHots = function(x1, y1, x2, from, type, limit, callback){
 Info.statics.findByUser = function (userid, count, from, callback) {
 	var limit = (typeof(count) != 'undefined' && count > 0) ? count : 100;		
 	var skip = (typeof(from) != 'undefined' && from > 0) ? from : 0;	
-  return this.find({ user: userid,status :1 },{},{limit:limit,skip:skip,sort:{pudDate:-1}}, callback);
+  return this.find({ user: userid,status :1 }).sort({pudDate:-1}).limit(limit).skip(skip).exec(callback);
 }
 
 Info.statics.findByFeed = function (feedid, count, from, callback) {
 	var limit = (typeof(count) != 'undefined' && count > 0) ? count : 100;		
 	var skip = (typeof(from) != 'undefined' && from > 0) ? from : 0;	
-  return this.find({ feed: feedid,status :1 },{},{limit:limit,skip:skip,sort:{pudDate:-1}}, callback);
+  return this.find({ feed: feedid,status :1 }).sort({pubDate: -1}).limit(limit).skip(skip).exec(callback);
 }
 
 Info.statics.countUserInfo = function (userid, callback) {

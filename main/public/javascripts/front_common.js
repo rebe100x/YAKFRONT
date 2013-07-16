@@ -1678,7 +1678,7 @@ function checkByWidth()
 				{
 					if(addAlert == 0)
 					{
-						currHtml = "<img src='images/uc_plus.png' />Ajouter a mes alertes";
+						currHtml = "Ajouter a mes alertes";
 						$("#userChooser #uc_profile_yaks_alerts.mybtn").html(currHtml);		
 						if(typeof(user.feedsubs) != 'undefined')
 						{
@@ -1691,7 +1691,7 @@ function checkByWidth()
 					}
 					else
 					{
-						currHtml = "<img src='images/uc_minus.png' />Supprimer de mes alertes";
+						currHtml = "Supprimer de mes alertes";
 						$("#userChooser #uc_profile_yaks_alerts.mybtn").html(currHtml);		
 						user.feedsubs = user.feedsubs.concat(alertUser);
 						addAlert = 0;
@@ -1715,7 +1715,7 @@ function checkByWidth()
 				{
 					if(addAlert == 0)
 					{
-						currHtml = "<img src='images/uc_plus.png' />Ajouter a mes alertes";
+						currHtml = "Ajouter a mes alertes";
 						$("#userChooser #uc_profile_yaks_alerts.mybtn").html(currHtml);		
 						if(typeof(user.feedsubs) != 'undefined')
 						{
@@ -1727,7 +1727,7 @@ function checkByWidth()
 					}
 					else
 					{
-						currHtml = "<img src='images/uc_minus.png' />Supprimer de mes alertes";
+						currHtml = "Supprimer de mes alertes";
 						$("#userChooser #uc_profile_yaks_alerts.mybtn").html(currHtml);		
 						user.usersubs = user.usersubs.concat(alertUser);
 						addAlert = 0;
@@ -1780,7 +1780,7 @@ function checkByWidth()
 					{
 
 						addAlert = 0;
-						var currHtml  = "<img src='images/uc_minus.png' />Supprimer de mes alertes";
+						var currHtml  = "Supprimer de mes alertes";
 						$("#userChooser #uc_profile_yaks_alerts.mybtn").html(currHtml);		
 						$("#userChooser #uc_profile_yaks_alerts.mybtn").unbind('click').click(function(){
 							bindClickAlertUser(theuser._id, theuser.name, theuser.login, theuser.thumb);
@@ -1790,7 +1790,7 @@ function checkByWidth()
 					else
 					{
 						addAlert = 1;
-						var currHtml = "<img src='images/uc_plus.png' />Ajouter a mes alertes";
+						var currHtml = "Ajouter a mes alertes";
 						$("#userChooser #uc_profile_yaks_alerts.mybtn").html(currHtml);		
 						$("#userChooser #uc_profile_yaks_alerts.mybtn").unbind('click').click(function(){
 							bindClickAlertUser(theuser._id, theuser.name, theuser.login, theuser.thumb);
@@ -1840,7 +1840,7 @@ function checkByWidth()
 						if($.inArray(userid,user.usersubs) && user.usersubs.length > 0)
 						{
 							addAlert = 0;
-							var currHtml  = "<img src='images/uc_minus.png' />Supprimer de mes alertes";
+							var currHtml  = "Supprimer de mes alertes";
 							$("#userChooser #uc_profile_yaks_alerts.mybtn").html(currHtml);	
 
 							$("#userChooser #uc_profile_yaks_alerts.mybtn").unbind('click').click(function(){
@@ -1851,7 +1851,7 @@ function checkByWidth()
 						else
 						{
 							addAlert = 1;
-							var currHtml = "<img src='images/uc_plus.png' />Ajouter a mes alertes";
+							var currHtml = "Ajouter a mes alertes";
 							$("#userChooser #uc_profile_yaks_alerts.mybtn").html(currHtml);		
 							$("#userChooser #uc_profile_yaks_alerts.mybtn").unbind('click').click(function(){
 								bindClickAlertUser(theuser._id, userName, userLogin, userThumb);
@@ -1895,9 +1895,8 @@ function checkByWidth()
 					
 
 				$("#userChooser p.alertText").html("");
-
 				if(typeof theuser.thumb != 'undefined')
-					userThumb = theuser.thumb;
+					userThumb = "<span class='theimage span5'><img src='" + theuser.thumb +"' /></span>";
 
 				if(typeof theuser.bio != 'undefined')
 					userBio = theuser.bio;
@@ -1927,7 +1926,7 @@ function checkByWidth()
 					thetags = "<b>Tags: </b>"+thetags;
 
 
-				$("#userChooser #uc_profile_brief").html("<span class='theimage span5'><img src='" + userThumb +"' /></span><span class='theinfo span7'><div class='thename' id='uc_username'>" + userName + "</div>" + "<div class='thelogin '>@"+ userLogin+ "</div><div class='thebio'>" + userBio + "</div><div class='thelink'><a href='" + userWeb +"' target='_blank'>" + userWeb + "</a></div><div id='thealerts'>"+thetags+"</div></span>");
+				$("#userChooser #uc_profile_brief").html(userThumb+"<span class='theinfo span7'><div class='thename' id='uc_username'>" + userName + "</div>" + "<div class='thelogin '>@"+ userLogin+ "</div><div class='thebio'>" + userBio + "</div><div class='thelink'><a href='" + userWeb +"' target='_blank'>" + userWeb + "</a></div><div id='thealerts'>"+thetags+"</div></span>");
 				
 				$.getJSON('/api/countUserInfo/' + userid ,function(data) {
 					if(typeof data.count != 'undefined')
@@ -2038,8 +2037,9 @@ function checkByWidth()
 
 				$("#userChooser p.alertText").html("");
 
-				if(typeof theuser.thumb != 'undefined')
-					userThumb = theuser.thumbBig;
+				if(typeof theuser.thumbBig != 'undefined')
+					userThumb = "<span class='theimage span5'><img src='" + theuser.thumbBig +"' /></span>";
+				
 
 				if(typeof theuser.description != 'undefined')
 					userBio = theuser.description;
@@ -2064,7 +2064,7 @@ function checkByWidth()
 					thetags = '<b>Tags :</b>'+thetags;
 
 
-				$("#userChooser #uc_profile_brief").html("<span class='theimage span5'><img src='" + userThumb +"' /></span><span class='theinfo span7'><div class='thename' id='uc_username'>" + userName + "</div>" + "<div class='thelogin'>@"+ userLogin+ "</div><div class='thebio'>" + userBio + "</div><div class='thelink'><a href='" + userWeb +"' target='_blank'>" + userWeb + "</a></div><div id='thealerts'>"+thetags+"</div></span>");
+				$("#userChooser #uc_profile_brief").html(userThumb+"<span class='theinfo span7'><div class='thename' id='uc_username'>" + userName + "</div>" + "<div class='thelogin'>@"+ userLogin+ "</div><div class='thebio'>" + userBio + "</div><div class='thelink'><a href='" + userWeb +"' target='_blank'>" + userWeb + "</a></div><div id='thealerts'>"+thetags+"</div></span>");
 				
 				$.getJSON('/api/countFeedInfo/' + userid ,function(data) {
 					if(typeof data.count != 'undefined')
@@ -2077,7 +2077,7 @@ function checkByWidth()
 				{
 
 					addAlert = 0;
-					var currHtml  = "<img src='images/uc_minus.png' />Supprimer de mes alertes";
+					var currHtml  = "Supprimer de mes alertes";
 					$("#userChooser #uc_profile_yaks_alerts.mybtn").html(currHtml);		
 					$("#userChooser #uc_profile_yaks_alerts.mybtn").unbind('click').click(function(){
 						bindClickAlertFeed(theuser.id, theuser.humanName, theuser.name);
@@ -2087,7 +2087,7 @@ function checkByWidth()
 				else
 				{
 					addAlert = 1;
-					var currHtml = "<img src='images/uc_plus.png' />Ajouter a mes alertes";
+					var currHtml = "Ajouter a mes alertes";
 					$("#userChooser #uc_profile_yaks_alerts.mybtn").html(currHtml);		
 					$("#userChooser #uc_profile_yaks_alerts.mybtn").unbind('click').click(function(){
 						

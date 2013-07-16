@@ -57,7 +57,7 @@ exports.getFileSample = function(req,res){
 	switch(req.body.type){
 		case 'CSV':
 			var csv = require('csv-stream');
-			var options = {delimiter : ';', endLine : '\n', escapeChar : '"', enclosedChar : '"',encoding:'utf8'}
+			var options = {delimiter : ';', endLine : '\n', escapeChar : '"', enclosedChar : '"',encoding:'utf8',columns :false}
 			var csvStream = csv.createStream(options);
 			var line = 1;
 			if(req.body.isLink == 1 ){
@@ -116,18 +116,12 @@ exports.getFileSample = function(req,res){
 				}else	
 					itemVal = "?";
 
-				/*	
-				console.log('onText:'+text);
-				var S = require('string');	
-				itemVal = S(text).stripTags().s;
 				},
+
 				onattribute: function(attr,val){
-				console.log('onAttr:'+attr);	
-				//console.log(oldItemKey+' '+itemKey+' '+attr+' '+val);
 					if(val != ''){
 						attribute.push({attr:attr,val:val});
 					}
-				*/		
 				},
 				onclosetag: function(tagname){
 					//console.log('closeTag:'+tagname);
@@ -236,7 +230,7 @@ exports.getFileSample = function(req,res){
 			
 		break;
 		case 'JSON':
-			console.log(req.body);
+			//console.log(req.body);
 			if(req.body.isLink == 1 ){
 				var request = require('request');
 				var thepath = req.body.file;
@@ -249,20 +243,40 @@ exports.getFileSample = function(req,res){
 						// try to detect the loop element
 						var values = Object.keys( dataObj ).map(function ( key ) { return dataObj[key]; });
 						var keys = Object.keys( dataObj );
-						var level = 0;
+						var maxLoop = 0;
+						while(keys.length == 1 && maxLoop < 5){
+							maxLoop++;
+							dataObj =dataObj[keys[0]];
+							values = Object.keys( dataObj ).map(function ( key ) { return dataObj[key]; });
+							keys = Object.keys( dataObj );
+						}
+
 						for(var i=0;i<keys.length;i++) {
 							if(values[i].length > 5) // searching for a big array
 								rootElement = keys[i];
 						}
-						if(req.body.param && typeof dataObj[req.body.param] != 'undefined')
-							var dataObjToLoop = dataObj[req.body.param];
-						else
-							var dataObjToLoop = dataObj;
 
-						dataObjToLoop.forEach(function(item){
-							output.push(item);
-						});
-						res.json({code:200, rootElement:rootElement, fileSample:JSON.stringify(output.slice(0,4))});
+						if(req.body.param && typeof dataObj[req.body.param] != 'undefined' && req.body.param != ''){
+							var dataObjToLoop = dataObj[req.body.param];
+						}else{
+							
+							if( Object.prototype.toString.call( dataObj ) === '[object Array]' ) {
+								var dataObjToLoop = dataObj;
+							}else if(rootElement != ''){
+								if( Object.prototype.toString.call( dataObj[rootElement] ) === '[object Array]' ) {
+									var dataObjToLoop = dataObj[rootElement];
+								}
+							}
+						}	
+						if(dataObjToLoop){
+							dataObjToLoop.forEach(function(item){
+								output.push(item);
+							});
+							res.json({code:200, rootElement:rootElement, fileSample:JSON.stringify(output.slice(0,4))});	
+						}else{
+							res.json({code:400,rootElement:"No data to parse", error:"No data to parse"});
+						}
+						
 					}
 				});
 			}else{
@@ -457,7 +471,7 @@ exports.feed = function(req, res){
 	var Yakcat = db.model('Yakcat');
 	var obj_id = req.body.objid;
 	var place_id = req.body.placeid;
-	//console.log(req.body);
+	console.log(req.body);
 	var feed = new Object();
 	var now = new Date();
 	feed.XLconnector = 'parser';
@@ -614,6 +628,7 @@ exports.feed = function(req, res){
 					place.save(function(err){console.log(err);});
 					feed.defaultPlaceId = place._id;
 					
+						console.log(feed);
 					Feed.update(cond,feed,{upsert:true},function (err){
 						if (!err)
 							formMessage.push("Flux sauvegardé.");
