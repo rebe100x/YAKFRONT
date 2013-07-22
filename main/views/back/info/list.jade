@@ -77,6 +77,8 @@ mixin list()
 		
 		$(document).ready(function() {
 
+
+
 			if($.cookie("statusInfo")){
 					var status = $.cookie("statusInfo");
 					$('#filterStatus').val(status);
@@ -246,6 +248,10 @@ mixin list()
 				event.stopPropagation();
 				editInfo(this.id,1);
 			});
+
+			
+
+			
 		});
 		
 		function makeStatusDropDown(item){
@@ -308,7 +314,7 @@ mixin list()
 
 		function setNewPrint(el){
 			var _id = $(el).attr("rel");
-			$.post("/info/setPrint", {status: $(el).val(), _id : $(el).attr("rel")}, function(data){});
+			$.post("/info/setPrint", {print: $(el).val(), _id : $(el).attr("rel")}, function(data){});
 		}
 
 		function getYakType(item){
@@ -352,6 +358,7 @@ mixin list()
 			var title_title = "";
 			
 			res += '<div class="liens" placeId="'+item.placeId+'" infoId="'+item._id+'" >';
+
 			res += '<a href="#" id="'+item._id+'" class="duplicateItem listIcon" title="Dupliquer"><i class="icon-random"></i></a>';
 
 			if (item.debugCallGmap)
@@ -404,8 +411,8 @@ mixin list()
 			var desc = '';
 			var address = '';
 			var tags = '';
-			if(typeof item.content != 'undefined' && item.content != '')
-				desc += "<br><small>"+item.content.substr(0,80)+"...</small>";
+			//if(typeof item.content != 'undefined' && item.content != '')
+			//	desc += "<br><small>"+item.content.substr(0,80)+"...</small>";
 			if(typeof item.address != 'undefined' && item.address != '')
 				address += "   <b><small>("+item.address+")</small></b>";
 			if(item.yakCatName.length > 0 || item.freeTag.length > 0)

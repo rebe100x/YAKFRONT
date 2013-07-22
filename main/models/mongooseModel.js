@@ -644,6 +644,11 @@ Info.statics.findById = function (id, callback) {
   return this.findOne({ _id: id }, callback);
 }
 
+Info.statics.findByPlace = function (id, callback) {
+  return this.find({ placeId: id }, callback);
+}
+
+
 Info.statics.findByLink = function (link, callback) {
   return this.find({ outGoingLink: link }, callback);
 }

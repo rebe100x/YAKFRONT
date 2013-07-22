@@ -164,8 +164,10 @@ app.get('/api/validinfos', back.requiresLogin, back.countUnvalidatedInfos);
 app.get('/api/geoinfos/:x1/:y1/:x2/:y2/:heat/:type', back.requiresLogin, back.geoinfos);
 app.get('/api/info/:id', back.requiresLogin, back.findInfoById);
 app.get('/info/list', back.requiresLogin, back.info_list);
+app.get('/api/infobyPlace/:id', back.requiresLogin, back.findInfoByPlace);
 app.get('/api/infos/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status/:type/:limit',back.requiresLogin, back.gridInfos);
 app.post('/info/setStatus', back.requiresLogin, back.info_setstatus);
+app.post('/info/setPrint', back.requiresLogin, back.info_setprint);
 
 // YAKNE
 app.get('/yakNE/list', back.requiresLogin, back.yakNE_list);

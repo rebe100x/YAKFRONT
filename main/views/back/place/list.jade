@@ -122,6 +122,8 @@ mixin list()
 				editPlace(idplace,0);
 			}
 
+			$('#statusHelp').popover({placement:'bottom',animation:true,title:"Changer le statut d'un lieu",content:"<p><ul><li><b>Valider lieu + infos liées: </b>Le lieu sera validé et toutes les infos liées seront également validées et affichées sur la carte.</li><li><b>En attente lieu + infos liées: </b>Le lieu ne sera pas matché et les infos n'apparaitront pas sur le front. <br> Vous pouvez utiliser ce statut quand vous ne savez pas traiter un lieu.</li><li><b>Désactiver le lieu uniquement: </b>Le lieu ne sera plus matché mais les infos liées seront toujours visibles sur le front.</li><b>Désactiver info & lieu: </b>Le lieu ne sera plus matché et  les infos liées n'apparaîtront plus sur le front.</li></ul></p>",html:true});
+			
 			$('#MyGrid').datagrid({
 				dataSource: new ApiDataSource({
 					columns: [/*{
@@ -140,6 +142,11 @@ mixin list()
 						sortable: true
 					},
 					{
+						property: 'zoneName',
+						label: 'Zone',
+						sortable: true
+					},
+					{
 						property: 'origin',
 						label: 'Origine',
 						sortable: true
@@ -155,6 +162,7 @@ mixin list()
 							item.title = fillContent(item);
 							item.status = makeStatusDropDown(item);
 							item.origin = formatOrigin(item);
+							item.zoneName = formatZone(item);
 							item.creationDate = formatDate(item.creationDate);
 						});
 					}
@@ -286,6 +294,7 @@ mixin list()
 		};
 
 		
+		
 
 		function makeStatusDropDown(item){
 			var select = $("<div />");
@@ -300,11 +309,9 @@ mixin list()
 
 		function setNewStatus(el){
 			var _id = $(el).attr("rel");
-			console.log(_id+'  '+$(el).val());
 			if($(el).val() > 0){
 				$.post("/place/setStatus", {status: $(el).val(), _id : $(el).attr("rel")}, function(data){
 					if(data.meta.code == "200"){
-						console.log(data);
 						icon = 'icon-ok-sign';
 						title_icon = "Validé";
 						if ($(el).val() == 1) {
@@ -333,6 +340,13 @@ mixin list()
 					}
 				});
 			}
+		}
+
+		function formatZone(item){
+			if (item.zoneName)
+				return item.zoneName+' ('+item.zone+')';
+			else
+				return "Pas de zone";
 		}
 
 		function formatOrigin(item) {
@@ -385,6 +399,9 @@ mixin list()
 			var title_title = "";
 
 			res += '<div class="liens">';
+
+
+			res += '<a href="#" id="'+item._id+'" class="viewInfos listIcon" title="Voir les infos liées"><i class="icon-info-sign"></i></a>';
 
 			res += '<a href="#" id="'+item._id+'" class="duplicateItem listIcon" title="Dupliquer"><i class="icon-random"></i></a>';
 
@@ -459,6 +476,8 @@ mixin list()
 			res += "</i>";
 			res += item._id;
 			res += '</small></a>';
+			res += '<ul class="viewInfosListContainer" id="viewInfosListContainer_'+item._id+'"></ul>';
+			
 			return res;
 		}
 
@@ -592,6 +611,8 @@ mixin list()
 				refreshDatagridAndMenu();
 			}
 		});
+
+
 
 		// Searchpanel feed input
 		$('input#feedFilter').typeahead({
@@ -827,7 +848,34 @@ mixin list()
 			});
 
 
+			$("#MyGrid a.viewInfos").on('click', function(event){
+				event.preventDefault();
+				event.stopPropagation();
+				var placeId = this.id;
+				$.get('/api/infoByPlace/'+this.id,function(data){
+					var viewInfoslist = '';
+					data.infos.forEach(function(item){
+						var img = '';
+						if(typeof item.thumb != 'undefined' && item.thumb != '' && item.thumb != 'no-user.png')
+							img = '<img src=\''+ item.thumb + '\' width="50" /> ';	
+
+						if (item.outGoingLink)
+							outGoingLink = '<a href=\''+ item.outGoingLink + '\' target="_blank" class="listIcon" title="External Link"><i class="icon-share-alt"></i></a>';	
+
+
+						viewInfoslist += "<li>"+img+item.title+"&nbsp;"+outGoingLink+"<br><i>"+item.address+"</i></li>";	
+						
+					});
+
+				$('#viewInfosListContainer_'+placeId).html(viewInfoslist).fadeIn();	
+					
+				});
+					
+			});
+
+
 		});
+
 
 
 		function editPlace(id,flagDuplicate){

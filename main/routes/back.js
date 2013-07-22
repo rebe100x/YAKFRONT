@@ -687,6 +687,20 @@ exports.findInfoById = function (req, res) {
 	});
 };
 
+exports.findInfoByPlace = function (req, res) {
+	var Info = db.model('Info');
+   	Info.findByPlace(req.params.id, function (err, infos){
+		var data = {};
+		var infoFormated = infos.map(function(item){
+			return Info.format(item);
+		});
+		res.json({
+			infos: infoFormated
+		});
+		
+	});
+};
+
 
 exports.findAllInfo = function (req, res) {
 	var Info = db.model('Info');
@@ -932,6 +946,18 @@ exports.info = function(req, res){
 	}
 };
 
+exports.info_setprint = function (req, res){
+	var Info = db.model('Info');
+
+	var print = req.body.print;
+
+	Info.update({_id: mongoose.Types.ObjectId(req.body._id)},{$set:{'print':print}}, function(err){
+		if(!err){
+			res.json({meta:{code:200,msg:'Info updated'}});		
+		}else
+			res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+	});	
+}
 
 exports.info_setstatus = function (req, res){
 	var Info = db.model('Info');
@@ -958,6 +984,7 @@ exports.info_setstatus = function (req, res){
 		if(theinfo != null && typeof theinfo != 'undefined'){
 			Info.update({_id: mongoose.Types.ObjectId(req.body._id)},{$set:{'status':status}}, function(err){
 				if(!err){
+
 					if(placeStatus >  0 && theinfo.placeId != '' && theinfo.placeId != null && theinfo.placeId != 'null' && typeof theinfo.placeId != 'undefined' ){
 						// update all other info linked to this place
 						Info.update({placeId: theinfo.placeId},{$set:{'status':status}},{ multi: true }, function(err){
@@ -979,7 +1006,6 @@ exports.info_setstatus = function (req, res){
 				}else
 					res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
 			});
-
 		}
 	});		
 };
@@ -1728,21 +1754,26 @@ exports.place_setstatus = function (req, res){
 		status = 3;
 	}
 		
-	Place.update({_id: mongoose.Types.ObjectId(req.body._id)},{$set:{'status':status}}, function(err){
-		if(!err){
-			if(infoStatus >  0){
-				// update all other infos linked to this place
-				Info.update({placeId: req.body._id},{$set:{'status':infoStatus}},{ multi: true }, function(err){
-					if(!err){
-						res.json({meta:{code:200,msg:'Le lieu et toutes les infos liées ont été modifiés'}});		
-					}else
-						res.json({meta:{code:404,error_type:'Operation failed',error_description:err.toString()}});	
-				});
+
+	Place.findOne({_id: mongoose.Types.ObjectId(req.body._id)},function(err,theplace){
+		Place.update({_id: mongoose.Types.ObjectId(req.body._id)},{$set:{'status':status}}, function(err){
+			if(!err){
+				if(infoStatus >  0){
+					// update all other infos linked to this place
+					Info.update({placeId: req.body._id},{$set:{'status':infoStatus,'address':theplace.formatted_address,'print':1}},{ multi: true }, function(err){
+						if(!err){
+							res.json({meta:{code:200,msg:'Le lieu et toutes les infos liées ont été modifiés!'}});		
+						}else
+							res.json({meta:{code:404,error_type:'Operation failed',error_description:err.toString()}});	
+					});
+				}else
+					res.json({meta:{code:200,msg:'Lieu modifié'}});
 			}else
-				res.json({meta:{code:200,msg:'Lieu modifié'}});
-		}else
-			res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
-	});
+				res.json({meta:{code:404,error_type:'operation failed',error_description:err.toString()}});
+		});
+
+	});	
+	
 
 };
 

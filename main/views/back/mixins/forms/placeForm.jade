@@ -372,6 +372,10 @@ script
 			$('#licence').val('Opensource');
 		}
 
+		if(!$('#zone').val()){
+			setError('#zone','Choisir une zone !');
+			err = true;
+		}
 
 		if (placeArray == null || placeArray.length == 0){
 			setError('#place','Définissez la position de ce lieu en cliquant sur la carte ou en entrant une addresse ci dessous:');
@@ -396,12 +400,18 @@ script
 
 	function reduceZoneOptions(lat,lng){
 		if(lat && lng){
+			var oldZone = $("#placeForm #zone").val();
 			$.get('api/zonesContaining/'+lat+'/'+lng,function(data){
 				$('#zone').html('');	
 				$('#zone').append("<option value =''>Choisir une zone</option>");	
 				$.each(data.zones, function (key,val) {
 					$('#zone').append('<option value ="'+val.num+'">'+val.name+'</option>');
+					if(val.num == oldZone)
+						$("#placeForm #zone").val(val.num);
 				});
 			});	
+
+			
+
 		}
 	}

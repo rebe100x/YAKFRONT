@@ -106,7 +106,10 @@ legend.mainlegend{color:#d51820;font-weight:bold;border-bottom:0px;}
 #MyGrid select#sortPlaces {width: 150px;}
 #MyGrid select{margin-bottom: 0px;font-size:12px;width: auto;}
 
+.viewInfosListContainer{display:none;font-size:9px;}
+.viewInfosListContainer li {list-style:none; }
 /* MAP
+
 -------------------------------------------------- */
   /*TOP SEARCH LOCATION BOX*/
   #searchPlaceStr { height: 26px;position:relative;top:5px;left:-15px;}
