@@ -63,6 +63,7 @@ table tr.success{background-color: #DFF0D8;}
 /*ZONE FORM*/
 #boxArea{padding-left:20px;}
 /*FORMS*/
+#placePreview{padding:5px;background-color:#b94a48;color:white;font-weight:bold;}
 legend.mainlegend{color:#d51820;font-weight:bold;border-bottom:0px;}
 .fuelux .btn .caret {margin-top: 8px;margin-left: 8px;}
 .fuelux .modal.fade.in.big {width:90%;top:40%;left:23%;}

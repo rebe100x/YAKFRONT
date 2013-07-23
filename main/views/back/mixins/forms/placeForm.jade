@@ -42,6 +42,7 @@ mixin placeForm()
 							input(type='text', name='licence', id='licence', placeholder='Type de licence', autocomplete="off")
 							label Lien vers la source:
 								i.icon-question-sign#outgoinglinkHelp
+								i.icon-share-alt#outGoingLinkIcon
 							input.big(type='text', name='outgoinglink', id='outgoinglink', placeholder='Lien web', , autocomplete="off")
 							label Origine:
 								i.icon-question-sign#origineHelp
@@ -182,6 +183,11 @@ script
 			$('#yakCatNamesHidden').val(yakCatNames.join(','));
 		});
 
+		$('#outGoingLinkIcon').unbind('click').on('click',function(){
+			if($('#outgoinglink').val())
+				window.open($('#outgoinglink').val());
+		});
+
 		// FREE TAGS
 		$('#btn-freetag-adder').unbind('click').on('click',function(event){
 			event.preventDefault();
@@ -197,27 +203,31 @@ script
 			return false;
 		});	
 
+		
+
 		$('#freetag').typeahead({
-			minLength : 3,
-			source: function (typeahead, query) {
-				if(query.length>=1){
-					$.ajax({
-							dataType: "json",
-							url: "/api/yakNEExist/"+query,				
-							success: function( ajax ) {
-								typeahead.process(ajax.yakNE);
-							}
-						})
+				minLength : 3,
+				source: function (typeahead, query) {
+					if(query.length>1){
+						$.ajax({
+								dataType: "json",
+								url: "/api/yakNE/search/"+query,				
+								success: function( ajax ) {
+									if(ajax.yakNE)
+										typeahead.process(ajax.yakNE);
+								}
+							})
+					}
+				},
+				property: "title",
+				onselect: function(obj) { 
+					$("#pillFreetag ul").append("<li class='freetag-val status-info' data-value='"+obj.title+"'>"+obj.title+"</li>");
+					$('#freetag').val('').focus();
+					freeTags.push(obj.title);
+					$('#tagsHidden').val(freeTags.join(','));
 				}
-			},
-			property: "title",
-			onselect: function(obj) { 
-				$("#pillFreetag ul").append("<li class='freetag-val status-info' data-value='"+obj.title+"'>"+obj.title+"</li>");
-				$('#freetag').val('').focus();
-				freeTags.push(obj.title);
-				$('#tagsHidden').val(freeTags.join(','));
-			}
-		});
+			});
+
 
 		$("#pillFreetag ul").unbind('click').on('click','li',function(){
 			freeTags.cleanArrayByName($(this).attr('data-value'));
@@ -289,7 +299,10 @@ script
 				if(query.length >= 3){
 					encodeURIComponent(query);
 					$("#placeForm #place").addClass('searching');
-					var addressQuery = {"address": query ,"region":"fr","language":"fr"};
+					var sw = new google.maps.LatLng(41.3423276,-5.1412279);
+					var ne = new google.maps.LatLng(51.0889618,9.5600678000001);
+					var bounds = new google.maps.LatLngBounds(sw, ne);
+					var addressQuery = {"address": query ,"region":"fr","language":"fr","bounds":bounds};
 					var geocoder = new google.maps.Geocoder();
 					geocoder.geocode( addressQuery, function(results, status) {						
 						if (status == google.maps.GeocoderStatus.OK) {

@@ -46,6 +46,12 @@ YakNE.statics.searchOne = function (str,exact,callback) {
   return this.find(cond,{},{limit:1}, callback);
 }
 
+YakNE.statics.search = function (str,callback) {
+ 	searchStr = new RegExp(str,'i');
+  
+  var cond = { "status":1,'title': {$regex:searchStr}	};
+  return this.find(cond,{}, callback);
+}
 
 YakNE.statics.findById = function (id, callback) {
 	return this.findOne({'_id': id}, callback);

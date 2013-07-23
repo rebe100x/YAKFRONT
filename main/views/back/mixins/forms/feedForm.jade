@@ -747,9 +747,10 @@ mixin feedForm()
 					if(query.length>1){
 						$.ajax({
 								dataType: "json",
-								url: "/api/yakNEExist/"+query,				
+								url: "/api/yakNE/search/"+query,				
 								success: function( ajax ) {
-									typeahead.process(ajax.yakNE);
+									if(ajax.yakNE)
+										typeahead.process(ajax.yakNE);
 								}
 							})
 					}

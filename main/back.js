@@ -125,6 +125,7 @@ app.get('/place/list', back.requiresLogin, back.place_list);
 app.get('/place/list/:id', back.requiresLogin, back.place_list);
 app.post('/place', back.requiresLogin, back.place);
 app.get('/api/places/search/:str/:status', back.requiresLogin, back.searchByTitleAndStatus);
+app.get('/api/places/search/:string/:count/:from/:sensitive/:lat/:lng/:maxd', back.requiresLogin, back.searchPlace);
 app.get('/api/places/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status/:limit', back.requiresLogin, back.gridPlaces);
 app.get('/api/places/:id', back.requiresLogin, back.findPlaceById);
 app.get('/api/places/validate/:ids', back.requiresLogin, back.validatePlaces);
@@ -175,6 +176,7 @@ app.get('/api/yakNE/:id', back.requiresLogin, api.yakNE);
 app.post('/yakNE', back.requiresLogin, back.yakNE);
 app.get('/api/yakNE/:id',back.requiresLogin, back.findyakNEById);
 app.get('/api/yakNEExist/:title',back.requiresLogin, back.findYakNEByTitle);
+app.get('/api/yakNE/search/:title',back.requiresLogin, back.searchYakNE);
 app.get('/api/yakNE/:pageIndex/:pageSize/:searchTerm/:sortBy/:sortDirection/:status',back.requiresLogin, back.gridYakNE);
 
 

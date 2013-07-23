@@ -869,7 +869,6 @@ exports.info = function(req, res){
 		info.placeId = place_id;
 		info.address = placeInput.title;
 		info.location = {lat:parseFloat(location.lat),lng:parseFloat(location.lng)};	
-		console.log(info);	
 		Info.update(cond,info,{upsert:true},function (err){
 			if (!err){
 				formMessage.push("Info sauvegardée.");
@@ -881,68 +880,79 @@ exports.info = function(req, res){
 			res.redirect('info/list')
 		});
 	}else{ // we changed the location of the news ( or insert a new one )
-		/* NOTE : because place matching is done only on validated places ( status = 1 ), we do not need to 
-		*  		
-		*/
 		info.location = {lat:parseFloat(location.lat),lng:parseFloat(location.lng)};	
-					
-		// search for a place like this one in db
-		Place.findOne({title:placeInput.formatted_address,location:{$near:[parseFloat(location.lat),parseFloat(location.lng)],$maxDistance:0.1},status:1},function(err,theplace){
-			if(err)
-				throw err;
-			else{	
-				if(theplace){ // place is already in db, we match it
-					info.placeId = theplace._id;
-					info.address = theplace.title; 
-					Info.update(cond,info,{upsert:true},function (err){
-						if (!err)
-							formMessage.push("Info sauvegardée.");
-						else{
-							formMessage.push("Erreur pendant la sauvegarde de l'info !");
-							console.log(err);
-						}
-						req.session.message = formMessage;
-						res.redirect('info/list')
-					});
-				}else{ // if nothing in db we create it 
-					var place = new Place();
-					place.title = placeInput.title;
-					place.slug = strLib(placeInput.title).slugify().s;					
-					place.origin = "Yakwala";
-					place.access = 1;
-					place.licence = "Yakwala";
-					place.location = placeInput.location;
-					place.status = 1;
-					place.user = req.session.user;
-					if(info.zone)
-						place.zone = parseInt(info.zone);
-					if(info.zoneName)
-						place.zoneName = info.zoneName;
-					place.creationDate = new Date();
-					place.lastModifDate = new Date();
-					place.formatted_address = placeInput.formatted_address;
-					place.address = placeInput.address;
-					place.yakCat = [mongoose.Types.ObjectId("504d89f4fa9a958808000001")];
-					place.yakCatName = ["Géolocalisation"];
-					place.save(function(err){console.log(err);});
-					info.placeId = place._id;
-					info.placeName = placeInput.title;
-					info.address = placeInput.title; 
-					Info.update(cond,info,{upsert:true},function (err){
-						if (!err)
-							formMessage.push("Info sauvegardée.");
-						else{
-							formMessage.push("Erreur pendant la sauvegarde de l'info !");
-							console.log(err);
-						}
-						req.session.message = formMessage;
-						res.redirect('info/list')
-					});
-				}
-			}
 			
-
-		});
+		var placematchedid = req.body.placematchedid;			
+		if(typeof placematchedid != 'undefined' && placematchedid != '' ){ // info was matched with an existing place
+			info.placeId = placematchedid;
+			info.address = placeInput.title;
+			Info.update(cond,info,{upsert:true},function (err){
+				if (!err)
+					formMessage.push("Info sauvegardée.");
+				else{
+					formMessage.push("Erreur pendant la sauvegarde de l'info !");
+					console.log(err);
+				}
+				req.session.message = formMessage;
+				res.redirect('info/list')
+			}); 
+		}else{ 
+			// search for a place like this one in db
+			Place.findOne({title:placeInput.formatted_address,location:{$near:[parseFloat(location.lat),parseFloat(location.lng)],$maxDistance:0.1},status:1},function(err,theplace){
+				if(err)
+					throw err;
+				else{	
+					if(theplace){ // place is already in db, we match it
+						info.placeId = theplace._id;
+						info.address = theplace.title; 
+						Info.update(cond,info,{upsert:true},function (err){
+							if (!err)
+								formMessage.push("Info sauvegardée.");
+							else{
+								formMessage.push("Erreur pendant la sauvegarde de l'info !");
+								console.log(err);
+							}
+							req.session.message = formMessage;
+							res.redirect('info/list')
+						});
+					}else{ // if nothing in db we create it 
+						var place = new Place();
+						place.title = placeInput.title;
+						place.slug = strLib(placeInput.title).slugify().s;					
+						place.origin = "Yakwala";
+						place.access = 1;
+						place.licence = "Yakwala";
+						place.location = placeInput.location;
+						place.status = 1;
+						place.user = req.session.user;
+						if(info.zone)
+							place.zone = parseInt(info.zone);
+						if(info.zoneName)
+							place.zoneName = info.zoneName;
+						place.creationDate = new Date();
+						place.lastModifDate = new Date();
+						place.formatted_address = placeInput.formatted_address;
+						place.address = placeInput.address;
+						place.yakCat = [mongoose.Types.ObjectId("504d89f4fa9a958808000001")];
+						place.yakCatName = ["Géolocalisation"];
+						place.save(function(err){console.log(err);});
+						info.placeId = place._id;
+						info.placeName = placeInput.title;
+						info.address = placeInput.title; 
+						Info.update(cond,info,{upsert:true},function (err){
+							if (!err)
+								formMessage.push("Info sauvegardée.");
+							else{
+								formMessage.push("Erreur pendant la sauvegarde de l'info !");
+								console.log(err);
+							}
+							req.session.message = formMessage;
+							res.redirect('info/list')
+						});
+					}
+				}
+			});
+		}			
 	}
 };
 
@@ -1028,6 +1038,14 @@ exports.findYakNEByTitle = function (req, res) {
 	});
 };
 
+exports.searchYakNE = function (req, res) {
+	var YakNE = db.model('YakNE');
+   	YakNE.search(req.params.title, function (err, theYakNE){
+   		res.json({
+			yakNE: theYakNE
+		});
+	});
+};
 
 
 exports.findYakNEById = function (req, res) {
@@ -1724,6 +1742,25 @@ exports.findPlaceBySlug = function (req, res) {
 	});
 };
 
+
+exports.searchPlace = function (req, res) {
+	var Place = db.model('Place');
+	var string = req.params.string;
+	var count = req.params.count;
+	var from = req.params.from;
+	var sensitive = req.params.sensitive;
+	var lat = req.params.lat;
+	var lng = req.params.lng;
+	var maxd = req.params.maxd;
+	Place.search(string,count,from,sensitive,lat,lng,maxd, function (err, places){
+  		var placeFormated = places.map(function(item){
+		return Place.format(item);
+		});	
+		res.json({
+			places: placeFormated
+		});
+	});
+};
 
 exports.searchByTitleAndStatus = function (req, res) {
 	var Place = db.model('Place');

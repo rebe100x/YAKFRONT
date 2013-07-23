@@ -8,6 +8,7 @@ mixin infoForm()
 		input#placeInput(type='hidden', name='placeInput', value='')
 		input#objid(type="hidden", name="objid", value='0')
 		input#placeid(type="hidden", name="placeid", value='0')
+		input#placematchedid(type="hidden", name="placeid", value='0')
 		input#zoneName(type="hidden", name="zoneName", value='')
 		input#thumbHidden(type="hidden", name="thumbHidden", value='')
 		input#status(type="hidden", name="status", value='')
@@ -52,6 +53,7 @@ mixin infoForm()
 						.span6
 							label Lien externe*:
 								i.icon-question-sign#outGoingLinkHelp
+								i.icon-share-alt#outGoingLinkIcon
 							input(type='text', name='outGoingLink', id='outGoingLink', placeholder='Lien vers la news',autocomplete="off")
 					div.row-fluid
 						.span6
@@ -120,14 +122,21 @@ mixin infoForm()
 			div.control-group#locationGroup.clearBoth
 				div.controls.row-fluid	
 					.span6
-						label(for='location') Localisation:
-							i.icon-question-sign#locationHelp
+						br
 						div#placePreview
-						input(type="text",data-provide="typeahead", id="location", name="location", autocomplete="off", placeholder="Chercher...")
+						label(for='location') Par Gmap:
+							i.icon-question-sign#locationHelp
+						input(type="text",data-provide="typeahead", id="location", name="location", autocomplete="off", placeholder="Une adresse...")
 					.span6
 						label(for='zone') Zone:
 							i.icon-question-sign#zoneHelp
 						select.big#zone(name='zone')
+				div.controls.row-fluid	
+					.span6
+						label(for='matchPlace') Matcher avec un lieu :
+							i.icon-question-sign#matchPlaceHelp
+						div#matchPlacePreview
+						input(type="text",data-provide="typeahead", id="matchPlace", name="matchPlace", autocomplete="off", placeholder="Un lieu...")
 
 		div.row-fluid
 			div.control-group#likesGroup.clearBoth
@@ -193,6 +202,7 @@ mixin infoForm()
 			$('#yakcatHelp').popover({animation:true,title:'Catégorie',content:"<p>Vous pouvez associer cette info à une catégorie Yakwala<br>NB: un dédoublement est automatiquement fait avec les tags et il n'y aura pas de redondance.<br></p>",html:true});
 			$('#freetagHelp').popover({animation:true,title:'Tags',content:"<p>Vous pouvez associer cette info à un mot clé. Un complétion automatique est proposée sur la base des mots clés déjà utilisés mais vous pouvez entrer n'importe quel mot. <br> Attention il est préférable de n'utiliser qu'un mot clé pour toutes les infos se rattachant à un même sujet (attention à l'orthographe et les majuscules.)  </p>",html:true});
 			$('#locationHelp').popover({animation:true,title:"Localisation de l'info",content:"<p>Entrer une addresse et choisir une proposition ou bien cliquer sur la carte à gauche et déplacer le marqueur.</p>",html:true});
+			$('#matchPlaceHelp').popover({animation:true,title:"Matcher avec un lieu",content:"<p>Entrer un nom de lieu pour le matcher avec la base Yakwala.</p>",html:true});
 			$('#zoneHelp').popover({animation:true,title:'La zone',content:"<p>Les zones sont définies dans l'onglet Zones.<br> </p>",html:true});
 			$('#pubDateHelp').popover({placement:'left',animation:true,title:'Date de publication',content:"<p>C'est la date de parution de l'info. <br> L'info apparaitra sur le front à cette date.<br>Par défaut, c'est maintenant.</p>",html:true});
 			$('#dateEndPrintHelp').popover({placement:'left',animation:true,title:'Date de fin de publication',content:"<p>L'info ne sera plus visible après cette date.<br>Par défaut, c'et dans 3 jours.</p>",html:true});
@@ -202,6 +212,7 @@ mixin infoForm()
 			$('#etatHelp').popover({placement:'top',animation:true,title:"Statut de l'info",content:"<p>Ici le changement de statut n'affecte que l'info concernée. <br> Si vous voulez modifier le statut de la news et du lieu auquel elle se rattache ainsi que celui de toutes les infos attachées à ce lieu, il faut passer par la page principale</p>",html:true});
 			
 			$('#alertInfoType').hide();
+
 
 			// ZONE
 			$.get('api/zones',function(data){
@@ -315,15 +326,18 @@ mixin infoForm()
 				return false;
 			});	
 
+			
+
 			$('#freetag').typeahead({
 				minLength : 3,
 				source: function (typeahead, query) {
 					if(query.length>1){
 						$.ajax({
 								dataType: "json",
-								url: "/api/yakNEExist/"+query,				
+								url: "/api/yakNE/search/"+query,				
 								success: function( ajax ) {
-									typeahead.process(ajax.yakNE);
+									if(ajax.yakNE)
+										typeahead.process(ajax.yakNE);
 								}
 							})
 					}
@@ -336,6 +350,7 @@ mixin infoForm()
 					$('#tagsHidden').val(freeTags.join(','));
 				}
 			});
+
 
 			$("#pillFreetag ul").unbind('click').on('click','li',function(){
 				freeTags.cleanArrayByName($(this).attr('data-value'));
@@ -361,14 +376,17 @@ mixin infoForm()
 					if(query.length >= 3){
 						encodeURIComponent(query);
 						$("#location").addClass('searching');
-						var addressQuery = {"address": query ,"region":"fr","language":"fr"};
+						var sw = new google.maps.LatLng(41.3423276,-5.1412279);
+						var ne = new google.maps.LatLng(51.0889618,9.5600678000001);
+						var bounds = new google.maps.LatLngBounds(sw, ne);
+						var addressQuery = {"address": query ,"region":"fr","language":"fr","bounds":bounds};
 						var geocoder = new google.maps.Geocoder();
 						geocoder.geocode( addressQuery, function(results, status) {						
-						if (status == google.maps.GeocoderStatus.OK) {
-							$.map( results, function( item ) {fixGmapResult(item);});
-							typeahead.process(results);
-							$("#location").removeClass('searching');
-						} 
+							if (status == google.maps.GeocoderStatus.OK) {
+								$.map( results, function( item ) {fixGmapResult(item);});
+								typeahead.process(results);
+								$("#location").removeClass('searching');
+							} 							
 						});
 					}
 				},
@@ -390,12 +408,63 @@ mixin infoForm()
 				}
 			});
 
+			
+			$('#matchPlace').typeahead({
+				source: function (typeahead, query) {
+					if(query.length >= 3){
+						encodeURIComponent(query);
+						$("#matchPlace").addClass('searching');
+						var placeInput = null;
+						if($("#placeInput").val())
+							var placeInput = JSON.parse($("#placeInput").val());
+						if(placeInput){
+							var lat = placeInput.location.lat;
+							var lng = placeInput.location.lng;
+							var url = '/api/places/search/'+query+'/5/0/0/'+lat+'/'+lng+'/1';
+						}else
+							var url = '/api/places/search/'+query+'/5/0/0/0/0/1';
+
+						$.get(url,function(data){
+							typeahead.process(data.places);
+							$("#matchPlace").removeClass('searching');
+						});
+
+
+
+							
+					}
+				},
+				property: "title",
+				onselect: function(obj) { 
+					$("#matchPlace").removeClass('searching');
+					var place = obj;
+					$('#matchPlace').val(place.title);
+					$('#placematchedid').val(place._id); 
+					$('#placeid').val(''); // clean the edit mode
+					placeArray = place;
+					$("#infoForm #placeInput").val(JSON.stringify(placeArray));
+					$('#infoLabel').first().remove();
+					$('#infoForm #placePreview').html("<div id='placeLabel'><i class='icon-remove icon-pointer' onclick='placeArray=null;$(\"#placeForm #placeInput\").val(JSON.stringify(placeArray));$(this).parent().remove();'></i> "+place.formatted_address+"</div>");
+					$("#infoForm #matchPlace").val("");
+					var latLng = new google.maps.LatLng(place.location.lat,place.location.lng);
+					map.panTo(latLng);
+					placeMarker(latLng,markerLocation);
+					reduceZoneOptions(place.location.lat,place.location.lng,0);
+				}
+			});
+
 			/*EXTERNAL SOURCE LINK COMPLETION*/
 			$('#outGoingLink').on('blur',function(){
 				if($(this).val() != '' && $(this).val().slice(0,7) != "http://")
 					$(this).val('http://'+$(this).val());
 			});	
 				
+			$('#outGoingLinkIcon').unbind('click').on('click',function(){
+				
+				if($('#outGoingLink').val())
+					window.open($('#outGoingLink').val());
+
+			});
 
 			$('#infoForm #licence').typeahead({
 				source: ["Opensource", "Reserved","Yakwala"]
@@ -410,12 +479,17 @@ mixin infoForm()
 			var err = false;
 
 			$('.alert-error').hide();
+			
 			if($('#title').val() == ""){
 				setError('#title','Entrer un titre pour cette info');
 				err = true;
 			}
 
-			
+			if($('#zone').val() == ""){
+				setError('#zone','Choisissez une zone !');
+				err = true;
+			}
+
 			if($('#origin').val() == ""){
 				setError('#origin','Entrer une origine pour cette info');
 				err = true;
@@ -454,6 +528,7 @@ mixin infoForm()
 
 		function reduceZoneOptions(lat,lng,zoneSel){
 			if(lat && lng){
+				var oldZone = $("#zone").val();
 				$.get('api/zonesContaining/'+lat+'/'+lng,function(data){
 					$('#zone').html('');	
 					$('#zone').append("<option value =''>Choisir une zone</option>");	
@@ -464,7 +539,13 @@ mixin infoForm()
 								sel = 'selected';
 							else
 								sel = '';
+						}else{
+							if(val.num == oldZone)
+								sel = 'selected';
+							else
+								sel = '';
 						}
+
 							
 						$('#zone').append('<option '+sel+' value ="'+val.num+'">'+val.name+'</option>');
 					});
